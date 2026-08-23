@@ -1,0 +1,127 @@
+/* Homepage — mobile layout, tap targets, and touch polish */
+
+@media (width < theme(--breakpoint-md)) {
+  /*
+   * Underlap the app bar; cinema floor (not a collapsed content height).
+   */
+  .home-marketing-layout:has(#home-hero) .home-hero,
+  .home-marketing-layout:has([data-testid="homepage-hero"]) .home-hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: clamp(34rem, 72dvh, 46rem);
+    margin-top: calc(-1 * (3.25rem + env(safe-area-inset-top, 0px)));
+    padding-top: calc(3.25rem + env(safe-area-inset-top, 0px));
+    padding-bottom: var(--space-5);
+  }
+
+  .home-marketing-layout:has(#home-hero) .home-hero__layout,
+  .home-marketing-layout:has([data-testid="homepage-hero"]) .home-hero__layout {
+    flex: 1 1 auto;
+    width: 100%;
+    gap: var(--space-3);
+    padding-block: var(--space-4) var(--space-8);
+    align-content: center;
+  }
+
+  .home-hero__copy .home-kicker {
+    width: 100%;
+    text-align: center;
+  }
+
+  .home-hero__copy .home-actions {
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .home-hero__copy .home-actions a,
+  .home-hero__copy .home-actions button {
+    width: auto;
+    max-width: 100%;
+    align-self: center;
+  }
+
+  .home-marketing-layout:has(#home-hero) .home-hero__copy,
+  .home-marketing-layout:has([data-testid="homepage-hero"]) .home-hero__copy {
+    padding-bottom: 0;
+  }
+
+  .home-marketing-layout:has(#home-hero) .home-hero__copy > :not([hidden]) ~ :not([hidden]),
+  .home-marketing-layout:has([data-testid="homepage-hero"])
+    .home-hero__copy
+    > :not([hidden])
+    ~ :not([hidden]) {
+    margin-top: var(--space-3);
+  }
+
+  .home-marketing-layout:has(#home-hero) .home-hero-glass-stack,
+  .home-marketing-layout:has([data-testid="homepage-hero"]) .home-hero-glass-stack {
+    padding-bottom: 0;
+  }
+
+  .home-collections {
+    padding-bottom: calc(var(--cookie-consent-bar-offset, 0px) + var(--space-2));
+  }
+
+  .home-collections .grid {
+    gap: var(--space-4);
+  }
+
+  .home-collection-card__footer {
+    padding: var(--space-4) var(--space-5);
+  }
+
+  .home-collection-card__arrow {
+    height: 2.5rem;
+    width: 2.5rem;
+  }
+
+  .home-collections-arrow {
+    min-height: var(--control-height-sm);
+    min-width: var(--control-height-sm);
+  }
+
+  .home-showcase-nav-button {
+    min-height: var(--control-height-sm);
+    min-width: var(--control-height-sm);
+  }
+
+  .home-showcase-browse-link {
+    min-height: var(--control-height-sm);
+    align-items: center;
+    margin-left: 0;
+    margin-top: var(--space-2);
+  }
+
+  .home-faq-question {
+    display: flex;
+    align-items: center;
+    min-height: var(--control-height-sm);
+    padding-block: var(--space-3);
+  }
+
+  .home-solutions-panel {
+    padding: 1.5rem 1.125rem;
+  }
+
+  .home-solutions-title {
+    font-size: clamp(1.75rem, 8vw, 2.35rem);
+  }
+
+  @media (hover: none) {
+    .home-collection-card:hover {
+      transform: none;
+    }
+  }
+}
+
+@media (width < theme(--breakpoint-sm)) {
+  .home-trust-kpi {
+    padding-block: var(--space-2);
+  }
+
+  .home-collections .flex.gap-6 {
+    gap: var(--space-4);
+  }
+}

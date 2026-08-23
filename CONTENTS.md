@@ -1,0 +1,42 @@
+# Contents
+
+[`START.md`](./START.md) · [`DOC-MAP.md`](./DOC-MAP.md)  · Evidence `results/**`
+
+## Root
+
+| № | File | Role |
+|---|------|------|
+| 01 | [`START.md`](./START.md) | First read |
+| 02 | [`CONTENTS.md`](./CONTENTS.md) | This index |
+| 03 | [`DOC-MAP.md`](./DOC-MAP.md) | Authority / placement |
+| 04 | [`OPERATIONS_RUNBOOK.md`](./OPERATIONS_RUNBOOK.md) | Deploy / migrate / rollback |
+| 05 | [`AGENTS.md`](./AGENTS.md) | Process floor · Next agent rules · prod FS |
+| 06 | [`README.md`](./README.md) | Product / routes / checks |
+| 07 | [`Testing-handbook.md`](./Testing-handbook.md) | How to test |
+| 08 | [`Failures.md`](./Failures.md) | Open blockers only |
+| 09 | [`owners.md`](./owners.md) | Code and document ownership map · playbook |
+| 10 | [`ORIGINAL_REQUEST.md`](./ORIGINAL_REQUEST.md) | Authoritative user request & requirements |
+| 11 | [`plans/README.md`](./plans/README.md) | Plans index |
+| 12 | [`plans/PLAN.md`](./plans/PLAN.md) | Active execution plan |
+
+## Agents / docs / tooling
+
+| № | File | |
+|---|------|--|
+| 13 | [`Agents/INDEX.md`](./Agents/INDEX.md) | Handbooks |
+| 14–20 | [`Agents/01`…`07`](./Agents/) | Session rules |
+| 21 | [`docs/README.md`](./docs/README.md) | Docs index |
+| 21 | [`docs/architecture/layout.md`](./docs/architecture/layout.md) | Repo directory map |
+| 22 | [`docs/architecture/product-map.md`](./docs/architecture/product-map.md) | Placement + tech-docs |
+| 23 | [`docs/architecture/stack.md`](./docs/architecture/stack.md) | Toolchain · Next 16 · i18n honesty |
+| 24 | [`docs/architecture/routes.md`](./docs/architecture/routes.md) | Pages + API |
+| 25 | [`docs/architecture/css.md`](./docs/architecture/css.md) | FOCSS |
+| 26 | [`docs/database/schema.md`](./docs/database/schema.md) | Tables / RLS |
+| 27 | [`docs/database/drizzle.md`](./docs/database/drizzle.md) | Drizzle wiring |
+| 28 | [`docs/database/ops.md`](./docs/database/ops.md) | Modes / seed / restore |
+| 29–32 | [`docs/governance/*`](./docs/governance/) | Rules / charter / benchmarks / FOCSS debt |
+| 40 | [`agent-reports/README.md`](./agent-reports/README.md) | Pointer only |
+| 50 | [`tech-docs-generator/README.md`](./tech-docs-generator/README.md) | Inventory SPA |
+| 51–54 | [`.github/instructions/*`](./.github/instructions/) | JIT |
+
+Not docs: `results/` · do not recreate Phase A under `.archive/audit/`.

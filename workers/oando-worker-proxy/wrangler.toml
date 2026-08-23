@@ -1,0 +1,15 @@
+name = "oando-worker-proxy"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+
+# R2 bucket binding
+[[r2_buckets]]
+binding = "ASSET_BUCKET"
+bucket_name = "oando-asset-cdn"
+
+# Environment variables
+[vars]
+VERCEL_ORIGIN = "https://oando1408.vercel.app"
+# Comma-separated hosts that must NOT inherit Vercel preview noindex.
+# (Worker rewrites Host to *.vercel.app for origin routing.)
+PUBLIC_INDEXABLE_HOSTS = "oando.co.in,www.oando.co.in"

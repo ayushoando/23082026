@@ -1,0 +1,37 @@
+import { NextResponse } from "next/server";
+import path from "node:path";
+import { promises as fs } from "node:fs";
+import { PROJECTS_DIR, ensureStorageDirs, safeFilename } from "@planner/server/plannerStore";
+import { withAuth, type AuthContext } from "@/features/shared/api/withAuth";
+import type { NextRequest } from "next/server";
+import { diskFileUnavailableResponse } from "../../_lib/diskFileAccess";
+
+type Ctx = { params: Promise<{ filename: string }> };
+
+export const GET = withAuth(
+  async (_request: NextRequest, _auth: AuthContext, context: Ctx) => {
+    const unavailable = diskFileUnavailableResponse("planner");
+    if (unavailable) return unavailable;
+
+    const { filename } = await context.params;
+    const safe = safeFilename(filename);
+    if (!safe) return NextResponse.json({ detail: "Bad filename" }, { status: 400 });
+    await ensureStorageDirs();
+    try {
+      const data = await fs.readFile(path.join(PROJECTS_DIR, safe));
+      const ext = path.extname(safe).toLowerCase();
+      const type =
+        ext === ".svg" ? "image/svg+xml" : ext === ".png" ? "image/png" : "application/octet-stream";
+      return new NextResponse(data, {
+        headers: { "Content-Type": type, "Cache-Control": "private, max-age=60" },
+      });
+    } catch {
+      return NextResponse.json({ detail: "Not found" }, { status: 404 });
+    }
+  },
+  {
+    role: "member",
+    rateLimitScope: "files-projects:get",
+    rateLimit: 60,
+  },
+);

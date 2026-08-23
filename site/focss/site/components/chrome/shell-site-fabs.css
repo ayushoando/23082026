@@ -1,0 +1,152 @@
+/* Floating action buttons — explicit viewport anchoring (avoids missing dynamic Tailwind offsets). */
+
+:root {
+  --site-fab-bottom: calc(1.25rem + env(safe-area-inset-bottom, 0));
+  --site-fab-bottom-raised: calc(6.25rem + env(safe-area-inset-bottom, 0px));
+  --site-fab-clearance: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+  --site-fab-side-left: 0px;
+  --site-fab-side-right: 0px;
+  --site-fab-row-gap: 0.625rem;
+}
+
+@media (width >= theme(--breakpoint-sm)) {
+  :root {
+    --site-fab-side-left: 0px;
+    --site-fab-side-right: calc(2 * 3rem + var(--site-fab-row-gap) + 1.25rem);
+  }
+}
+
+html:has([data-compare-dock]) {
+  --site-fab-bottom: calc(5.75rem + env(safe-area-inset-bottom, 0));
+  --site-fab-bottom-raised: calc(11rem + env(safe-area-inset-bottom, 0px));
+  --site-fab-clearance: calc(12.5rem + env(safe-area-inset-bottom, 0px));
+}
+
+html:has([data-cookie-consent-bar]) {
+  --site-fab-bottom-raised: calc(7.5rem + env(safe-area-inset-bottom, 0px));
+  /*
+   * Only raise the FAB for the (transient) consent bar — do NOT inflate
+   * --site-fab-clearance here. That variable is consumed solely by the footer's
+   * legal row padding-bottom; inflating it to 12rem left a large empty band of
+   * dead space under the copyright. The base clearance already clears the
+   * resting FAB, and the centred copyright never overlaps an edge-anchored FAB.
+   */
+}
+
+@media (width < theme(--breakpoint-md)) {
+  html:has(.mobile-tab-bar) {
+    --site-fab-bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px));
+    --site-fab-bottom-raised: calc(8.5rem + env(safe-area-inset-bottom, 0px));
+    --site-fab-clearance: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  html:has(.mobile-tab-bar):has([data-cookie-consent-bar]) {
+    --site-fab-bottom-raised: calc(11.5rem + env(safe-area-inset-bottom, 0px));
+    /* See note above — keep footer clearance at the phone base; don't inflate
+       it for the transient consent bar (avoids ~200px of dead footer space). */
+  }
+}
+
+@utility site-fab-anchor {
+  position: fixed;
+  z-index: 40;
+}
+
+@utility site-fab-anchor--left {
+  right: auto;
+  left: 0.75rem;
+  @media (width >= theme(--breakpoint-sm)) {
+    left: 1rem;
+  }
+}
+
+@utility site-fab-anchor--right {
+  /* Explicit left:auto so left anchors never stick FAB mid-content. */
+  left: auto;
+  right: 0.75rem;
+  @media (width >= theme(--breakpoint-sm)) {
+    right: 1.25rem;
+  }
+}
+
+/* Vertically centered on the right edge (assistant / secondary FAB option). */
+@utility site-fab-anchor--center-y {
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-50%);
+}
+
+@utility site-fab-anchor--inset-x {
+  left: 0.75rem;
+  right: 0.75rem;
+}
+
+@utility site-fab-anchor--bottom {
+  bottom: var(--site-fab-bottom);
+}
+
+@utility site-fab-anchor--bottom-raised {
+  bottom: var(--site-fab-bottom-raised);
+}
+
+@utility site-fab-anchor--panel {
+  bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+}
+
+@utility site-fab-anchor--panel-raised {
+  bottom: calc(10.5rem + env(safe-area-inset-bottom, 0px));
+}
+
+.site-fab-row {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--site-fab-row-gap);
+}
+
+@utility site-fab-launcher {
+  display: inline-flex;
+  height: 3rem;
+  width: 3rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  box-shadow: 0 1.5rem 3rem -28px var(--overlay-inverse-35);
+  transition-property: transform, background-color, border-color, box-shadow;
+  transition-duration: var(--motion-fast);
+  transition-timing-function: var(--ease-standard);
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+@utility site-fab-launcher--assistant {
+  border: 0.0625rem solid var(--color-bronze-500);
+  background-color: var(--color-bronze-400);
+  color: var(--text-inverse);
+  &:hover {
+    border-color: var(--color-bronze-500);
+    background-color: var(--color-bronze-500);
+  }
+}
+
+@utility site-fab-launcher--whatsapp {
+  border: 0.0625rem solid var(--color-whatsapp-hover);
+  background-color: var(--color-whatsapp);
+  color: var(--text-inverse);
+  &:hover {
+    border-color: var(--color-whatsapp-hover);
+    background-color: var(--color-whatsapp-hover);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-fab-launcher {
+    transition: none;
+  }
+
+  .site-fab-launcher:hover {
+    transform: none;
+  }
+}

@@ -1,0 +1,169 @@
+/* Mobile inline-link tap targets — typ-label text links used as CTAs (≥44px). */
+
+@media (width < theme(--breakpoint-md)) {
+  .home-catalog-cta {
+    min-height: var(--control-height-sm);
+    padding-inline: 0.125rem;
+  }
+
+  .catalog-page-header a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--control-height-sm);
+    padding-block: 0.25rem;
+  }
+
+  .planner-landing-features-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--control-height-sm);
+    padding-block: 0.375rem;
+  }
+
+  nav[aria-label="Breadcrumb"] a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--control-height-sm);
+    padding-block: 0.375rem;
+  }
+
+  .pfp-inline-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--control-height-sm);
+    min-width: var(--control-height-sm);
+    padding-block: 0.375rem;
+    padding-inline: 0.25rem;
+  }
+
+  .pfp-card-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--control-height-sm);
+    padding-block: 0.375rem;
+  }
+
+  .shell-access-back a {
+    min-height: var(--control-height-sm);
+    padding-block: 0.5rem;
+    padding-inline: 0.125rem;
+  }
+
+  .catalog-toolbar__actions .btn-outline,
+  .catalog-toolbar__actions a {
+    min-height: var(--control-height-sm);
+  }
+
+  .pdp-mobile-bar button {
+    min-height: var(--control-height-sm);
+    outline: none;
+  }
+
+  .pdp-mobile-bar button:focus-visible {
+    box-shadow: var(--focus-ring);
+  }
+
+  /* MOB-TAP: 44×44 floor — icon buttons use :where() low-specificity min-width/min-height, links use min-height+padding */
+
+  :where(.sitemap-section__link) {
+    min-height: var(--control-height-sm);
+    padding-block: 0.375rem;
+  }
+
+  :where(.catalog-filter-choice, .catalog-checklist__label, .catalog-filter-shell__clear) {
+    min-height: var(--control-height-sm);
+  }
+
+  :where(.catalog-card__compare) {
+    min-height: var(--control-height-sm);
+    min-width: var(--control-height-sm);
+  }
+
+  :where(.drawer-subcategory-link) {
+    min-height: var(--control-height-sm);
+  }
+
+  :where(.compare-count) {
+    min-height: var(--control-height-sm);
+  }
+
+  :where(.site-footer__link, .site-footer__legal, .compare-jump__link, .catalog-summary-band__link, .home-showcase-browse-link) {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--control-height-sm);
+    padding-block: 0.375rem;
+  }
+
+  :where(.site-footer__social) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: var(--control-height-sm);
+    min-height: var(--control-height-sm);
+  }
+
+  :where(.catalog-active-chip) {
+    min-height: var(--control-height-sm);
+    padding-block: 0.375rem;
+  }
+
+  :where([data-cookie-consent-bar] button) {
+    min-height: var(--control-height-sm);
+  }
+
+  :where([data-cookie-consent-bar] a) {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--control-height-sm);
+    padding-block: 0.25rem;
+  }
+
+  /* MOB-TAP: generic icon-button floor — exclude carousel / hero pagination */
+  :where(button:where([aria-label]):not(.home-showcase-dot):not(.home-hero-progress-btn)) {
+    min-width: var(--control-height-sm);
+    min-height: var(--control-height-sm);
+  }
+
+  :where(.contact-form-intro a, .contact-form-consent__link) {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--control-height-sm);
+    padding-block: 0.25rem;
+  }
+
+  a.contact-form-consent__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--touch-target-min);
+    padding-block: 0.625rem;
+  }
+
+  :where(.admin-btn--md) {
+    min-height: var(--control-height-sm);
+  }
+
+  :where(.site-footer__legal) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--control-height-sm);
+    min-width: var(--control-height-sm);
+    padding-block: 0.375rem;
+    padding-inline: 0.5rem;
+  }
+
+  :where(.link-arrow, .home-showcase-browse-link) {
+    min-height: var(--control-height-sm);
+  }
+
+  /* Carousel dots: expand hit area without turning 0.5rem pills into 44px blocks */
+  :where(.home-showcase-dot) {
+    box-sizing: content-box;
+    padding: calc((var(--control-height-sm) - 0.5rem) / 2);
+    background-clip: content-box;
+  }
+
+  :where([data-testid="contact-form-submit"]) {
+    min-height: var(--control-height-sm);
+  }
+}

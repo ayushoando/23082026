@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>oando1408 Monorepo Master Code Review & Architecture Audit</title>
+
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous">
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+      integrity="sha384-CK2SzKma4jA5H/MXDUU7i1TqZlCFaD4T01vtyDFvPlD97JQyS+IsSh1nI2EFbpyk"
+      crossorigin="anonymous">
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css"
+      integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH"
+      crossorigin="anonymous">
+
+<style>
+  [id] { scroll-margin-top: 5rem; }
+  pre { position: relative; margin-bottom: 1.25rem; }
+  pre code.hljs { padding-right: 4rem; border-radius: var(--bs-border-radius); font-size: .875rem; }
+  .copy-btn { position: absolute; top: .5rem; right: .5rem; opacity: .4; transition: opacity .15s; }
+  pre:hover .copy-btn, .copy-btn:focus-visible { opacity: 1; }
+  .tab-pane:focus-visible { outline: 0; box-shadow: 0 0 0 .2rem rgba(var(--bs-emphasis-color-rgb), .15); }
+  .metric-card { border-left: 4px solid var(--bs-primary); }
+  @media print {
+    .nav-tabs, .copy-btn { display: none !important; }
+    .tab-content > .tab-pane { display: block !important; opacity: 1 !important; page-break-inside: avoid; }
+    .tab-pane::before { content: attr(data-print-title); display: block; font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 .5rem; }
+  }
+</style>
+</head>
+
+<body class="bg-body">
+
+<nav class="navbar navbar-expand-lg sticky-top bg-body-tertiary border-bottom">
+  <div class="container">
+    <span class="navbar-brand fw-semibold"><i class="bi bi-shield-check me-2 text-primary"></i>oando1408 Master Code Review Report</span>
+    <span class="navbar-text small text-body-secondary d-none d-md-inline">Multi-Agent Full Repository Audit</span>
+  </div>
+</nav>
+
+<main class="container py-4" style="max-width: 76rem">
+
+  <header class="mb-4">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+      <div>
+        <h1 class="display-6 fw-semibold mb-1">Repository-Wide Code Review & Audit</h1>
+        <p class="lead text-body-secondary mb-2">Comprehensive multi-agent architecture synthesis covering all 7 subsystems and 959 files.</p>
+      </div>
+      <div class="text-md-end">
+        <div class="badge text-bg-success fs-5 p-2 px-3"><i class="bi bi-activity me-1"></i>Health Score: 88 / 100</div>
+      </div>
+    </div>
+    <div class="d-flex flex-wrap gap-2 mt-2">
+      <span class="badge text-bg-primary">8 Specialist Subagents</span>
+      <span class="badge text-bg-info text-dark">959 Files Scanned</span>
+      <span class="badge text-bg-secondary">Zero Boundary Bleed</span>
+      <span class="badge text-bg-warning text-dark">Action Plan Defined</span>
+    </div>
+  </header>
+
+  <ul class="nav nav-tabs mb-4" id="doc-tabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="tab-summary" data-bs-toggle="tab" data-bs-target="#pane-summary"
+              type="button" role="tab" aria-controls="pane-summary" aria-selected="true">
+        <i class="bi bi-speedometer2 me-1"></i>Executive Summary
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="tab-findings" data-bs-toggle="tab" data-bs-target="#pane-findings"
+              type="button" role="tab" aria-controls="pane-findings" aria-selected="false">
+        <i class="bi bi-exclamation-triangle me-1"></i>Critical Findings Matrix
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="tab-subsystems" data-bs-toggle="tab" data-bs-target="#pane-subsystems"
+              type="button" role="tab" aria-controls="pane-subsystems" aria-selected="false">
+        <i class="bi bi-boxes me-1"></i>Subsystem Breakdown
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="tab-rules" data-bs-toggle="tab" data-bs-target="#pane-rules"
+              type="button" role="tab" aria-controls="pane-rules" aria-selected="false">
+        <i class="bi bi-check2-all me-1"></i>Non-Negotiable Rules Audit
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="tab-roadmap" data-bs-toggle="tab" data-bs-target="#pane-roadmap"
+              type="button" role="tab" aria-controls="pane-roadmap" aria-selected="false">
+        <i class="bi bi-signpost-split me-1"></i>4-Phase Action Plan
+      </button>
+    </li>
+  </ul>
+
+  <div class="tab-content" id="doc-tabs-content">
+
+    <!-- 1. SUMMARY PANE -->
+    <div class="tab-pane fade show active" id="pane-summary" role="tabpanel" aria-labelledby="tab-summary" tabindex="0" data-print-title="Executive Summary">
+      <div class="card mb-4 border-primary">
+        <div class="card-body">
+          <h5 class="card-title text-primary"><i class="bi bi-trophy me-2"></i>Key Architectural Strengths</h5>
+          <ul class="text-body-secondary mb-0">
+            <li><strong>Zero Boundary Bleed:</strong> Studio (<code>/oostudio</code>) and Planner (<code>/ooplanner</code>) forks maintain flawless isolation with zero cross-product edges across 959 files.</li>
+            <li><strong>Canvas Scale Precision:</strong> Strict coordinate scaling (<strong>0.2 px/mm</strong> Studio vs <strong>0.05 px/mm</strong> Planner) strictly observed in all geometry engines, snapping calculators, and DXF exporters.</li>
+            <li><strong>Edge Security:</strong> Modern Next.js 16 <code>proxy.ts</code> interceptor (no <code>middleware.ts</code>), dynamic per-request CSP nonces, and constant-time CSRF verification.</li>
+            <li><strong>FOCSS Token Purity:</strong> Zero hardcoded color hex values in product TSX, clean zone boundaries, and clean GSAP vs Framer Motion separation.</li>
+          </ul>
+        </div>
+      </div>
+
+      <h4 class="fw-semibold mb-3">Health Score by Architecture Dimension</h4>
+      <div class="table-responsive mb-4">
+        <table class="table table-hover align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Dimension</th>
+              <th>Weight</th>
+              <th>Score</th>
+              <th>Key Evaluation Highlights</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Fork Separation & Boundaries</strong></td>
+              <td>15%</td>
+              <td><span class="badge text-bg-success">100 / 100</span></td>
+              <td>Flawless Studio &harr; Planner isolation; 0 cross-import edges detected.</td>
+            </tr>
+            <tr>
+              <td><strong>Canvas Engines & Geometry</strong></td>
+              <td>15%</td>
+              <td><span class="badge text-bg-success">95 / 100</span></td>
+              <td>Strict 0.2 px/mm vs 0.05 px/mm conformance; DXF exports and snap engines verified.</td>
+            </tr>
+            <tr>
+              <td><strong>Security, Edge Proxy & Routing</strong></td>
+              <td>15%</td>
+              <td><span class="badge text-bg-primary">92 / 100</span></td>
+              <td>Pure <code>proxy.ts</code>, robust CSP nonces, CSRF double-submit; raw auth actions need rate limits.</td>
+            </tr>
+            <tr>
+              <td><strong>FOCSS & UI Architecture</strong></td>
+              <td>15%</td>
+              <td><span class="badge text-bg-primary">86 / 100</span></td>
+              <td>Clean zone boundaries; orphaned component CSS and custom non-RAC tooltips/menus found.</td>
+            </tr>
+            <tr>
+              <td><strong>Test Suite & Verification Harness</strong></td>
+              <td>10%</td>
+              <td><span class="badge text-bg-warning text-dark">84 / 100</span></td>
+              <td>Two-lane Vitest operational; glob path typo in auth tests, hollow test auditor limitations.</td>
+            </tr>
+            <tr>
+              <td><strong>Tech-Docs & Repository Tooling</strong></td>
+              <td>10%</td>
+              <td><span class="badge text-bg-warning text-dark">81 / 100</span></td>
+              <td>Linter targeting stale pre-fork directories, Supabase migrations omitted from extractor.</td>
+            </tr>
+            <tr>
+              <td><strong>Persistence & Dual-DB Isolation</strong></td>
+              <td>20%</td>
+              <td><span class="badge text-bg-danger">78 / 100</span></td>
+              <td>Client routing cross-talk (2 routes query wrong DB) and raw disk writes in serverless prod paths.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 2. FINDINGS PANE -->
+    <div class="tab-pane fade" id="pane-findings" role="tabpanel" aria-labelledby="tab-findings" tabindex="0" data-print-title="Critical Findings">
+      <h4 class="fw-semibold mb-3">Critical Findings & Anti-Patterns Matrix</h4>
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th>ID</th>
+              <th>Severity</th>
+              <th>File / Subsystem</th>
+              <th>Issue Description</th>
+              <th>Target Remediation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="table-danger">
+              <td><strong>SEC-01</strong></td>
+              <td><span class="badge text-bg-danger">HIGH</span></td>
+              <td><code>workspaceConfigurationRepository.server.ts</code></td>
+              <td>Uses Products DB credentials to query <code>workspace_editor_configs</code> (lives on Admin DB).</td>
+              <td>Switch <code>serviceClient()</code> to <code>createSupabaseAuthAdminClient()</code>.</td>
+            </tr>
+            <tr class="table-danger">
+              <td><strong>SEC-02</strong></td>
+              <td><span class="badge text-bg-danger">HIGH</span></td>
+              <td><code>site/app/api/admin/themes/route.ts</code></td>
+              <td>Uses Admin DB client to query <code>block_themes</code> (lives on Products DB).</td>
+              <td>Switch client to <code>createAdminServiceClient()</code> targeting Products DB.</td>
+            </tr>
+            <tr class="table-danger">
+              <td><strong>STO-01</strong></td>
+              <td><span class="badge text-bg-danger">HIGH</span></td>
+              <td><code>furniture/[id]/publish/route.ts</code></td>
+              <td>Unconditionally reads <code>_top.png</code> via <code>fs.readFile</code> from disk during publish.</td>
+              <td>Fetch buffer from Supabase Storage or fallback to <code>item.top_png_checksum</code> in prod.</td>
+            </tr>
+            <tr class="table-danger">
+              <td><strong>DOC-01</strong></td>
+              <td><span class="badge text-bg-danger">HIGH</span></td>
+              <td><code>extract-database.mjs</code></td>
+              <td>Only inspects Drizzle migrations (2 files), omitting all 60 Supabase migrations.</td>
+              <td>Extend extractor to parse <code>site/platform/supabase/migrations</code>.</td>
+            </tr>
+            <tr class="table-warning">
+              <td><strong>SEC-03</strong></td>
+              <td><span class="badge text-bg-warning text-dark">MED</span></td>
+              <td><code>supabaseServerActions.ts</code></td>
+              <td><code>loginWithSupabase</code> & <code>signupWithSupabase</code> lack Zod validation & rate limits.</td>
+              <td>Wrap with <code>next-safe-action</code> and <code>assertActionRateLimit("auth", 10)</code>.</td>
+            </tr>
+            <tr class="table-warning">
+              <td><strong>CSS-01</strong></td>
+              <td><span class="badge text-bg-warning text-dark">MED</span></td>
+              <td><code>site/focss/site/components/products/</code></td>
+              <td>4 stylesheets not imported in zone barrels (e.g. <code>catalog-category-hero.css</code>).</td>
+              <td>Add <code>@import</code> lines in <code>products/index.css</code> and <code>chrome/index.css</code>.</td>
+            </tr>
+            <tr class="table-warning">
+              <td><strong>TOOL-01</strong></td>
+              <td><span class="badge text-bg-warning text-dark">MED</span></td>
+              <td><code>lint-ui-contract.mjs</code></td>
+              <td>Inspects deleted pre-fork paths (e.g. <code>features/planner/workspace</code>).</td>
+              <td>Update search paths to <code>site/features/{Planner,Studio}</code>.</td>
+            </tr>
+            <tr class="table-warning">
+              <td><strong>DB-01</strong></td>
+              <td><span class="badge text-bg-warning text-dark">MED</span></td>
+              <td><code>supabase/migrations.admin/</code></td>
+              <td>8 legacy Admin DB migrations lack <code>-- rollback</code> statements.</td>
+              <td>Add reverse DDL blocks and ratchet baseline to 0.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 3. SUBSYSTEMS PANE -->
+    <div class="tab-pane fade" id="pane-subsystems" role="tabpanel" aria-labelledby="tab-subsystems" tabindex="0" data-print-title="Subsystem Breakdown">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="card h-100 bg-body-tertiary border-0 p-3">
+            <h5 class="fw-bold text-primary"><i class="bi bi-router me-2"></i>1. App Router, Routing & Security</h5>
+            <p class="small text-body-secondary">
+              Strict <code>proxy.ts</code> edge interceptor, dynamic CSP nonces, fail-closed maintenance mode. Needs Zod validation and IP rate-limiting on raw auth server actions in <code>supabaseServerActions.ts</code>.
+            </p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card h-100 bg-body-tertiary border-0 p-3">
+            <h5 class="fw-bold text-success"><i class="bi bi-brush me-2"></i>2. Studio Fork & Canvas Engine</h5>
+            <p class="small text-body-secondary">
+              Isolated fork, <strong>0.2 px/mm</strong> scale maintained across Fabric v7 layers and DXF exporters. Publish route needs EROFS guard for serverless read-only filesystems.
+            </p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card h-100 bg-body-tertiary border-0 p-3">
+            <h5 class="fw-bold text-info"><i class="bi bi-grid-3x3 me-2"></i>3. Planner Fork & Space Engine</h5>
+            <p class="small text-body-secondary">
+              Strict <strong>0.05 px/mm</strong> scaling, single-source-of-truth persistence in <code>oando_plans</code>, priority snapping. Coordinate divisions in auto-arrange should use canonical <code>pxToMm</code>.
+            </p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card h-100 bg-body-tertiary border-0 p-3">
+            <h5 class="fw-bold text-warning"><i class="bi bi-database me-2"></i>4. Backend, Dual DB & Persistence</h5>
+            <p class="small text-body-secondary">
+              Clean separation of Admin DB vs Products DB schemas. Fix client targeting cross-talk in <code>workspaceConfigurationRepository</code> and <code>themes/route.ts</code>.
+            </p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card h-100 bg-body-tertiary border-0 p-3">
+            <h5 class="fw-bold text-danger"><i class="bi bi-palette me-2"></i>5. FOCSS Design System</h5>
+            <p class="small text-body-secondary">
+              100% boundary isolation across CSS zones, zero hex literals in TSX. Connect 4 unlinked component stylesheets into zone barrels and upgrade custom tooltips to React Aria.
+            </p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card h-100 bg-body-tertiary border-0 p-3">
+            <h5 class="fw-bold text-secondary"><i class="bi bi-check-circle me-2"></i>6. Test Suite & Tech-Docs Tooling</h5>
+            <p class="small text-body-secondary">
+              Two-lane Vitest operational. Fix auth test glob in <code>vitest.config.ts</code>, update <code>lint-ui-contract.mjs</code> paths, and extend database extractors to parse Supabase migrations.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. RULES PANE -->
+    <div class="tab-pane fade" id="pane-rules" role="tabpanel" aria-labelledby="tab-rules" tabindex="0" data-print-title="Rules Audit">
+      <h4 class="fw-semibold mb-3">Non-Negotiable Monorepo Rules Audit</h4>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Rule</th>
+              <th>Standard</th>
+              <th>Status</th>
+              <th>Audit Evidence</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Fork Isolation</strong></td>
+              <td>Studio &harr; Planner zero cross-imports</td>
+              <td><span class="badge text-bg-success">PASS</span></td>
+              <td><code>scan:boundaries</code>: 0 cross-product edges across 959 files.</td>
+            </tr>
+            <tr>
+              <td><strong>Canvas Scale</strong></td>
+              <td>Studio 0.2 px/mm, Planner 0.05 px/mm</td>
+              <td><span class="badge text-bg-success">PASS</span></td>
+              <td>Exact constants enforced across all coordinate transformers and DXF exports.</td>
+            </tr>
+            <tr>
+              <td><strong>FOCSS Tokens</strong></td>
+              <td>Zero hardcoded hex colors in TSX</td>
+              <td><span class="badge text-bg-success">PASS</span></td>
+              <td><code>check:style-tokens</code> passes with zero invalid raw color escapes.</td>
+            </tr>
+            <tr>
+              <td><strong>Dual DB Split</strong></td>
+              <td>Admin DB vs Products DB query isolation</td>
+              <td><span class="badge text-bg-danger">ACTION</span></td>
+              <td>2 routes query incorrect credentials (SEC-01, SEC-02).</td>
+            </tr>
+            <tr>
+              <td><strong>Mode Persistence</strong></td>
+              <td>Zero raw FS writes in production (EROFS)</td>
+              <td><span class="badge text-bg-danger">ACTION</span></td>
+              <td>Publish route and price-book audit need production DB/Storage fallbacks.</td>
+            </tr>
+            <tr>
+              <td><strong>Migration Rollback</strong></td>
+              <td>Every SQL migration requires <code>-- rollback</code></td>
+              <td><span class="badge text-bg-warning text-dark">ACTION</span></td>
+              <td>Products DB is 100% compliant; 8 legacy Admin DB files missing rollback.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 5. ROADMAP PANE -->
+    <div class="tab-pane fade" id="pane-roadmap" role="tabpanel" aria-labelledby="tab-roadmap" tabindex="0" data-print-title="Action Plan">
+      <h4 class="fw-semibold mb-3">Prioritized 4-Phase Execution Roadmap</h4>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="card h-100 border-danger p-3">
+            <h6 class="fw-bold text-danger"><i class="bi bi-1-circle me-1"></i> Phase 1: Stability & Security (Immediate)</h6>
+            <ul class="small text-body-secondary ps-3 mb-0">
+              <li>Correct DB client factory in <code>workspaceConfigurationRepository.server.ts</code>.</li>
+              <li>Correct DB client factory in <code>site/app/api/admin/themes/route.ts</code>.</li>
+              <li>Guard <code>furniture/[id]/publish</code> and <code>priceBookGovernance</code> against serverless EROFS crashes.</li>
+              <li>Wrap raw auth server actions with Zod schemas and rate limits.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="card h-100 border-warning p-3">
+            <h6 class="fw-bold text-warning"><i class="bi bi-2-circle me-1"></i> Phase 2: Tooling & Test Harness (Days 1–2)</h6>
+            <ul class="small text-body-secondary ps-3 mb-0">
+              <li>Update search paths in <code>lint-ui-contract.mjs</code> to target active forked directories.</li>
+              <li>Extend <code>extract-database.mjs</code> to parse all 60 Supabase migrations.</li>
+              <li>Fix Vitest auth glob prefix in <code>vitest.config.ts</code>.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="card h-100 border-info p-3">
+            <h6 class="fw-bold text-info"><i class="bi bi-3-circle me-1"></i> Phase 3: UI, CSS & Accessibility (Days 2–3)</h6>
+            <ul class="small text-body-secondary ps-3 mb-0">
+              <li>Wire 4 unlinked FOCSS stylesheets into <code>products/index.css</code> and <code>chrome/index.css</code>.</li>
+              <li>Upgrade custom tooltip and context menu to <code>react-aria-components</code>.</li>
+              <li>Convert Tech-Docs SPA to <code>React.lazy()</code> code splitting.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="card h-100 border-success p-3">
+            <h6 class="fw-bold text-success"><i class="bi bi-4-circle me-1"></i> Phase 4: Database Governance & Quality (Days 3–4)</h6>
+            <ul class="small text-body-secondary ps-3 mb-0">
+              <li>Add <code>-- rollback</code> statements to 8 legacy Admin DB migrations.</li>
+              <li>Ratchet governance baseline (<code>check-governance.mjs --update</code>) down to 0.</li>
+              <li>Upgrade hollow test auditor to evaluate assertions per test block.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"
+        integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU"
+        crossorigin="anonymous"></script>
+
+<script>
+(function () {
+  'use strict';
+  var sources = new WeakMap();
+  document.querySelectorAll('pre > code').forEach(function (code) {
+    sources.set(code, code.textContent.replace(/\n$/, ''));
+  });
+
+  if (window.hljs) hljs.highlightAll();
+
+  function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text).then(function () { return true; }, function () { return legacyCopy(text); });
+    }
+    return Promise.resolve(legacyCopy(text));
+  }
+
+  function legacyCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;';
+    document.body.appendChild(ta);
+    ta.select();
+    ta.setSelectionRange(0, ta.value.length);
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  document.querySelectorAll('pre > code').forEach(function (code) {
+    var pre = code.parentElement;
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'btn btn-sm btn-outline-secondary copy-btn';
+    btn.innerHTML = '<i class="bi bi-clipboard"></i>';
+    btn.setAttribute('aria-label', 'Copy code');
+    btn.addEventListener('click', function () {
+      copyText(sources.get(code) || code.textContent).then(function (ok) {
+        btn.innerHTML = ok ? '<i class="bi bi-check-lg"></i>' : '<i class="bi bi-x-lg"></i>';
+        btn.classList.toggle('btn-outline-success', ok);
+        btn.classList.toggle('btn-outline-danger', !ok);
+        btn.classList.remove('btn-outline-secondary');
+        setTimeout(function () {
+          btn.innerHTML = '<i class="bi bi-clipboard"></i>';
+          btn.className = 'btn btn-sm btn-outline-secondary copy-btn';
+        }, 1500);
+      });
+    });
+    pre.appendChild(btn);
+  });
+
+  var tabs = document.querySelectorAll('[data-bs-toggle="tab"]');
+  if (!tabs.length) return;
+
+  function activateFromHash() {
+    var hash = window.location.hash;
+    if (!hash || hash.length < 2) return;
+    var target = document.querySelector(hash);
+    if (!target) return;
+    var pane = target.closest('.tab-pane') || (target.classList.contains('tab-pane') ? target : null);
+    if (!pane) return;
+    var trigger = document.querySelector('[data-bs-target="#' + CSS.escape(pane.id) + '"]');
+    if (trigger) bootstrap.Tab.getOrCreateInstance(trigger).show();
+    var scrollTo = target !== pane ? target : (trigger && trigger.closest('[role="tablist"]')) || pane;
+    requestAnimationFrame(function () { scrollTo.scrollIntoView({ block: 'start' }); });
+  }
+
+  tabs.forEach(function (t) {
+    t.addEventListener('shown.bs.tab', function (e) {
+      var id = (e.target.getAttribute('data-bs-target') || '').slice(1);
+      if (id) history.replaceState(null, '', '#' + id);
+    });
+  });
+
+  window.addEventListener('hashchange', activateFromHash);
+  activateFromHash();
+})();
+</script>
+</body>
+</html>

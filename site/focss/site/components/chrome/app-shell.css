@@ -1,0 +1,189 @@
+/* Marketing app shell — phone only (< md). Tablet+ uses fixed SiteHeader (nav.css @ 1280 desktop). */
+
+.mobile-app-bar,
+.mobile-tab-bar {
+  display: none;
+}
+
+@media (width < theme(--breakpoint-md)) {
+  .site-header {
+    display: none !important;
+  }
+
+  .site-main-under-header,
+  .site-main-under-header:has(.page-hero:first-child),
+  .site-main-under-header:has(#page-hero.page-hero:first-child) {
+    padding-top: 0;
+  }
+
+  /*
+   * Phone shell: fixed chrome + scrollable main (document scroll breaks on many
+   * mobile browsers when top/bottom bars are position:fixed).
+   */
+  html:has(.mobile-app-shell),
+  body:has(.mobile-app-shell) {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .mobile-app-shell {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .mobile-app-main {
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    padding-top: calc(3.25rem + env(safe-area-inset-top, 0px));
+    padding-bottom: calc(3.5rem + env(safe-area-inset-bottom, 0px));
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .mobile-app-main::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* min-h-screen is 100vh; this pane is already 100dvh minus chrome. */
+  .mobile-app-main .home-marketing-layout {
+    min-height: 0;
+  }
+
+  /* Document footer sits after the 100dvh shell — keep the in-pane copy only. */
+  .route-chrome-site-footer {
+    display: none;
+  }
+
+  /*
+   * The cookie consent bar is fixed at bottom:0, but so is the tab bar (z-60),
+   * so the bar's action buttons rendered *behind* the tab bar. Lift the bar to
+   * sit directly on top of the tab bar (height = 3.5rem tab + 1px border).
+   */
+  [data-cookie-consent-bar] {
+    bottom: calc(3.5rem + 1px + env(safe-area-inset-bottom, 0px));
+  }
+
+  /*
+   * The floating assistant/contact FABs raise themselves to clear the consent
+   * bar, but on a phone the stacked (tall) consent bar + tab bar pushes them up
+   * into page content. Hide them while consent is pending; once the bar is
+   * dismissed they reappear just above the tab bar (--site-fab-bottom = 4.25rem).
+   */
+  html:has([data-cookie-consent-bar]) .site-fab-launcher {
+    display: none;
+  }
+
+  .mobile-app-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    width: 100%;
+    height: 3.25rem;
+    padding-inline: var(--space-3);
+    padding-top: env(safe-area-inset-top, 0px);
+    border-bottom: 1px solid var(--border-soft);
+    background-color: var(--surface-glass-strong);
+    backdrop-filter: blur(16px);
+  }
+
+  .mobile-app-bar__brand {
+    display: inline-flex;
+    min-width: 0;
+    min-height: var(--control-height-sm);
+    align-items: center;
+    padding-block: 0.25rem;
+  }
+
+  .mobile-app-bar__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .mobile-app-bar__cta {
+    min-height: 2.25rem;
+    padding-inline: var(--space-3);
+    border-radius: var(--radius-pill);
+    font-size: 0.875rem;
+  }
+
+  .mobile-app-bar__menu,
+  .mobile-app-bar__search {
+    display: inline-flex;
+    height: 2.75rem;
+    width: 2.75rem;
+    min-height: 2.75rem;
+    min-width: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-strong);
+  }
+
+  .mobile-tab-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 60;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    width: 100%;
+    border-top: 1px solid var(--border-soft);
+    background-color: var(--surface-panel-strong);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .mobile-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-height: 3.5rem;
+    padding-block: var(--space-1);
+    color: var(--text-muted);
+    font-size: 0.6875rem;
+  }
+
+  .mobile-tab:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: -2px;
+  }
+
+  .mobile-tab--active {
+    color: var(--text-strong);
+  }
+
+  .mobile-tab__label {
+    line-height: 1;
+  }
+}
+
+@media (width >= theme(--breakpoint-md)) {
+  .mobile-app-bar,
+  .mobile-tab-bar {
+    display: none !important;
+  }
+
+  .mobile-app-footer {
+    display: none;
+  }
+}

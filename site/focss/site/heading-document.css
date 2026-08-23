@@ -1,0 +1,13 @@
+/* Marketing heading chrome — site zone only (was entries/document-base). */
+@layer base {
+  .home-heading,
+  .hero-title,
+  .typ-h1,
+  .typ-h2,
+  .typ-display,
+  .typ-section,
+  .typ-page-title {
+    font-family: var(--font-cisco-sans), var(--font-display), sans-serif;
+    color: var(--text-strong, var(--color-ink-900));
+  }
+}

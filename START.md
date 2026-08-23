@@ -1,0 +1,47 @@
+# Start here
+
+Onboarding for the **oando1408** monorepo. Everything is terse and linked from here.
+
+**Truth order:** user > live code + fresh commands > `AGENTS.md` > `Agents/` > `docs/`.
+
+## 1. Read (in order)
+
+| # | File | Why |
+|---|------|-----|
+| 1 | [`AGENTS.md`](./AGENTS.md) | The non-negotiable rules — incl. "this is NOT the Next.js you know" |
+| 2 | [`README.md`](./README.md) | Product, surface routes, platform facts |
+| 3 | [`CONTENTS.md`](./CONTENTS.md) | Full index of everything |
+| 4 | [`DOC-MAP.md`](./DOC-MAP.md) | Where each kind of doc lives + authority |
+| 5 | [`Testing-handbook.md`](./Testing-handbook.md) | How to run tests (two lanes) |
+
+## 2. Install + run
+
+```bash
+pnpm install      # root only — never inside site/ or tech-docs-generator/
+pnpm dev          # http://localhost:3000 — never 127.0.0.1
+pnpm run ops:list # long tail
+```
+
+Secrets → repo-root `.env.local` (+ `site/.env.local`). Deploy: `pnpm run vercel:prod` · `pnpm run worker:deploy`. R2: `pnpm run r2:backup`.
+
+## 3. Orient (durable reference)
+
+| Topic | Open |
+|-------|------|
+| Repo directory map | [`docs/architecture/layout.md`](./docs/architecture/layout.md) |
+| Tech stack / toolchain | [`docs/architecture/stack.md`](./docs/architecture/stack.md) |
+| Routes (pages + API) | [`docs/architecture/routes.md`](./docs/architecture/routes.md) |
+| CSS / FOCSS | [`docs/architecture/css.md`](./docs/architecture/css.md) |
+| Database schema / ops | [`docs/database/schema.md`](./docs/database/schema.md) · [`ops.md`](./docs/database/ops.md) · [`drizzle.md`](./docs/database/drizzle.md) |
+| Governance / rules | [`docs/governance/rules.md`](./docs/governance/rules.md) · [`benchmarks.md`](./docs/governance/benchmarks.md) · [`charter.md`](./docs/governance/charter.md) |
+| Deploy / migrate / rollback | [`OPERATIONS_RUNBOOK.md`](./OPERATIONS_RUNBOOK.md) |
+
+## 4. Core rules (just enough to not break things)
+
+- `pnpm` from repo root; never install inside `site/` or `tech-docs-generator/`.
+- No worktrees; UI at `http://localhost:3000` only.
+- Edge is `site/proxy.ts`, **not** `middleware.ts`.
+- Studio ↔ Planner forks: run `pnpm run scan:boundaries`.
+- Migrations need `-- rollback`; run `check:governance`.
+- `pnpm run test` = **two** vitest lanes — check both summaries.
+- Do not recreate Phase A audit dumps under `.archive/audit/`.

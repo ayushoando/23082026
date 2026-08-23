@@ -1,0 +1,125 @@
+.workspace-hub {
+  background: linear-gradient(
+    180deg,
+    var(--surface-soft) 0%,
+    var(--surface-page) 42%,
+    var(--surface-muted) 100%
+  );
+}
+
+.workspace-hub__hero {
+  border-color: var(--border-soft);
+  background: var(--overlay-panel-95);
+  box-shadow: var(--shadow-panel);
+}
+
+.workspace-hub__hero--media {
+  position: relative;
+  overflow: hidden;
+}
+
+.workspace-hub__hero-ambient {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    linear-gradient(125deg, color-mix(in srgb, var(--surface-panel) 94%, transparent) 0%, color-mix(in srgb, var(--surface-panel) 72%, transparent) 55%, color-mix(in srgb, var(--surface-soft) 40%, transparent) 100%),
+    url("/media/planner/planner-landing-poster.webp") center 38% / cover no-repeat;
+  opacity: 0.28;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .workspace-hub__hero-ambient {
+    opacity: 0.2;
+  }
+}
+
+.workspace-hub__bronze-mark {
+  background: var(--color-bronze-400);
+}
+
+.workspace-hub__eyebrow {
+  color: var(--color-accent-strong);
+}
+
+.workspace-hub__title {
+  color: var(--text-heading);
+}
+
+.workspace-hub__lead {
+  color: var(--text-muted);
+}
+
+.workspace-hub__meta {
+  color: var(--text-subtle);
+}
+
+.workspace-hub__primary-btn {
+  background: var(--color-primary);
+  color: var(--text-inverse);
+  text-decoration: none;
+}
+
+.workspace-hub__primary-btn:hover {
+  filter: brightness(1.05);
+}
+
+.workspace-hub__ghost-btn {
+  border-color: var(--border-soft);
+  color: var(--text-body);
+  background: var(--surface-page);
+}
+
+.workspace-hub__section-title {
+  color: var(--text-heading);
+}
+
+.workspace-hub__section-copy {
+  color: var(--text-muted);
+}
+
+.workspace-hub-card {
+  border-color: var(--border-soft);
+  background: var(--surface-page);
+}
+
+.workspace-hub-card--link:hover {
+  border-color: color-mix(in srgb, var(--color-primary) 35%, var(--border-soft));
+  box-shadow: var(--shadow-soft);
+  transform: translateY(-2px);
+}
+
+.workspace-hub-card--locked {
+  opacity: 0.72;
+  background: color-mix(in srgb, var(--surface-soft) 65%, var(--surface-page));
+}
+
+.workspace-hub-card__icon {
+  color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 12%, white);
+}
+
+.workspace-hub-card__title {
+  color: var(--text-heading);
+}
+
+.workspace-hub-card__desc {
+  color: var(--text-muted);
+}
+
+.workspace-hub-card__cta {
+  color: var(--color-primary);
+}
+
+.workspace-hub-card__lock {
+  color: var(--text-subtle);
+  background: var(--surface-soft);
+}
+
+.workspace-hub-card__locked {
+  color: var(--text-subtle);
+}
+
+.workspace-hub-card__arrow {
+  color: var(--color-primary);
+}
