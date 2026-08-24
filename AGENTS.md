@@ -21,7 +21,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 ## 2. Work
 
 - Repo root only. **Never create worktrees.** **`pnpm`** only.
-- **Agents:** Max 1 agent only — single-agent execution only; no multi-agent fanouts or parallel subagents.
+- **Agents:** Max 3 agent only
 - Smallest sound change. No handwritten `any`.
 - Secrets: `.env.local` (and `site/.env.local`).
 - UI: `http://localhost:3000` only — never `127.0.0.1`.

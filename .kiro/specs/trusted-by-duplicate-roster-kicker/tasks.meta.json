@@ -1,0 +1,59 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1. Write the bug-condition exploration test before implementing the fix": [
+      {
+        "executionId": "a92682ea-abad-4864-8e05-7e396e0a1704",
+        "chatSessionId": "sess_342df391-47e2-40e0-ba24-db91dfc2be6f",
+        "timestamp": 1787570296432
+      },
+      {
+        "executionId": "a92682ea-abad-4864-8e05-7e396e0a1704",
+        "chatSessionId": "sess_342df391-47e2-40e0-ba24-db91dfc2be6f",
+        "timestamp": 1787570303417
+      }
+    ],
+    "2. Write preservation property tests before implementing the fix": [
+      {
+        "executionId": "a92682ea-abad-4864-8e05-7e396e0a1704",
+        "chatSessionId": "sess_342df391-47e2-40e0-ba24-db91dfc2be6f",
+        "timestamp": 1787570296526
+      }
+    ],
+    "3.1 Implement the narrow call-site correction": [
+      {
+        "executionId": "a92682ea-abad-4864-8e05-7e396e0a1704",
+        "chatSessionId": "sess_342df391-47e2-40e0-ba24-db91dfc2be6f",
+        "timestamp": 1787570296568
+      }
+    ],
+    "3.2 Verify the bug-condition exploration test now passes": [
+      {
+        "executionId": "a92682ea-abad-4864-8e05-7e396e0a1704",
+        "chatSessionId": "sess_342df391-47e2-40e0-ba24-db91dfc2be6f",
+        "timestamp": 1787570296616
+      }
+    ],
+    "3.3 Verify preservation tests still pass": [
+      {
+        "executionId": "a92682ea-abad-4864-8e05-7e396e0a1704",
+        "chatSessionId": "sess_342df391-47e2-40e0-ba24-db91dfc2be6f",
+        "timestamp": 1787570296659
+      }
+    ],
+    "4. Run the repository validation gates": [
+      {
+        "executionId": "a92682ea-abad-4864-8e05-7e396e0a1704",
+        "chatSessionId": "sess_342df391-47e2-40e0-ba24-db91dfc2be6f",
+        "timestamp": 1787570296715
+      }
+    ],
+    "5. Check the final diff and checkpoint": [
+      {
+        "executionId": "a92682ea-abad-4864-8e05-7e396e0a1704",
+        "chatSessionId": "sess_342df391-47e2-40e0-ba24-db91dfc2be6f",
+        "timestamp": 1787570296767
+      }
+    ]
+  }
+}
