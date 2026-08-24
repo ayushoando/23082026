@@ -114,6 +114,42 @@ describe("app/(site)/trusted-by/page.tsx", () => {
     expect(authoritativeRosterKickerAttributes).toHaveLength(1);
   });
 
+  it("preserves every non-roster TrustedByPageView prop mapping", () => {
+    // **Validates: Requirements 3.1, 3.2, 3.3**
+    expect(trustedByPageViewInvocation).toBeDefined();
+
+    const propMappings =
+      trustedByPageViewInvocation?.match(/^\s+\w+=\{[^}\r\n]+\}$/gm)?.map((mapping) => mapping.trim()) ?? [];
+    const rosterMappings = propMappings.filter((mapping) => mapping.startsWith("rosterKicker="));
+    const nonRosterMappings = propMappings.filter((mapping) => !mapping.startsWith("rosterKicker="));
+
+    expect(rosterMappings.length).toBeGreaterThan(0);
+    expect(new Set(rosterMappings)).toEqual(new Set(["rosterKicker={TRUSTED_BY_PAGE_COPY.rosterKicker}"]));
+    expect(nonRosterMappings).toEqual([
+      "heroTitleLead={TRUSTED_BY_PAGE_COPY.heroTitleLead}",
+      "heroTitleAccent={TRUSTED_BY_PAGE_COPY.heroTitleAccent}",
+      "heroSubtitle={TRUSTED_BY_PAGE_COPY.heroSubtitle}",
+      "overviewKicker={TRUSTED_BY_PAGE_COPY.overviewKicker}",
+      "overviewTitle={TRUSTED_BY_PAGE_COPY.overviewTitle}",
+      "overviewDescription={TRUSTED_BY_PAGE_COPY.overviewDescription}",
+      "statsKicker={TRUSTED_BY_PAGE_COPY.statsKicker}",
+      "clients={TRUSTED_BY_CLIENTS}",
+      "quotesKicker={TRUSTED_BY_PAGE_COPY.quotesKicker}",
+      "quotesTitle={TRUSTED_BY_PAGE_COPY.quotesTitle}",
+      "quotes={TRUSTED_BY_PAGE_COPY.quotes}",
+      "sectors={sectors}",
+      "sectorsKicker={TRUSTED_BY_PAGE_COPY.sectorsKicker}",
+      "sectorsTitle={TRUSTED_BY_PAGE_COPY.sectorsTitle}",
+      "sectorsDescription={TRUSTED_BY_PAGE_COPY.sectorsDescription}",
+      "ctaKicker={TRUSTED_BY_PAGE_COPY.ctaKicker}",
+      "ctaTitleLead={TRUSTED_BY_PAGE_COPY.ctaTitleLead}",
+      "ctaTitleAccent={TRUSTED_BY_PAGE_COPY.ctaTitleAccent}",
+      "ctaDescription={TRUSTED_BY_PAGE_COPY.ctaDescription}",
+      "ctaPrimary={TRUSTED_BY_PAGE_COPY.ctaPrimary}",
+      "ctaSecondary={TRUSTED_BY_PAGE_COPY.ctaSecondary}",
+    ]);
+  });
+
   it("exports canonical SEO metadata with absolute single-brand title", () => {
     expect(TRUSTED_BY_PAGE_METADATA.alternates?.canonical).toMatch(/\/trusted-by\/?$/);
     const titleValue =

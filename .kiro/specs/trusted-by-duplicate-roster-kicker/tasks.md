@@ -68,7 +68,7 @@ No implementation or validation task may begin before the required pre-fix explo
 
 # Implementation Plan
 
-- [-] 1. Write the bug-condition exploration test before implementing the fix
+- [~] 1. Write the bug-condition exploration test before implementing the fix
   - **Property 1: Bug Condition** - Unique authoritative roster kicker
   - **IMPORTANT**: Write and run this exploration check against the unfixed source before changing `site/app/(site)/trusted-by/page.tsx`.
   - **GOAL**: Surface the concrete counterexample proving that the failure is caused by the repeated JSX attribute, not by the `TrustedByPageView` prop contract or route-copy source.

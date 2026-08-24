@@ -59,7 +59,6 @@ export default function TrustedByPage() {
         quotesTitle={TRUSTED_BY_PAGE_COPY.quotesTitle}
         quotes={TRUSTED_BY_PAGE_COPY.quotes}
         sectors={sectors}
-        rosterKicker={TRUSTED_BY_PAGE_COPY.rosterKicker}
         sectorsKicker={TRUSTED_BY_PAGE_COPY.sectorsKicker}
         sectorsTitle={TRUSTED_BY_PAGE_COPY.sectorsTitle}
         sectorsDescription={TRUSTED_BY_PAGE_COPY.sectorsDescription}
