@@ -16,6 +16,10 @@ export const metadata = TRUSTED_BY_PAGE_METADATA;
 export default function TrustedByPage() {
   const sectors = Array.from(new Set(TRUSTED_BY_CLIENTS.map((client) => client.sector)));
 
+  // #region agent log
+  fetch("http://127.0.0.1:7849/ingest/be88d5c5-6cda-4fd6-945a-b8e1c64da733", { method: "POST", headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "6bcf28" }, body: JSON.stringify({ sessionId: "6bcf28", runId: "initial", hypothesisId: "H1,H2,H3", location: "site/app/(site)/trusted-by/page.tsx:18", message: "TrustedByPage runtime entry", data: { clientCount: TRUSTED_BY_CLIENTS.length, sectorCount: sectors.length, rosterKickerType: typeof TRUSTED_BY_PAGE_COPY.rosterKicker }, timestamp: Date.now() }) }).catch(() => {});
+  // #endregion
+
   const trustedByJsonLd = buildPageJsonLd(SITE_URL, {
     path: "/trusted-by",
     title: `${TRUSTED_BY_PAGE_COPY.heroTitle} | One&Only`,
@@ -26,6 +30,10 @@ export default function TrustedByPage() {
     { name: "Home", path: "/" },
     { name: "Trusted by", path: "/trusted-by" },
   ]);
+
+  // #region agent log
+  fetch("http://127.0.0.1:7849/ingest/be88d5c5-6cda-4fd6-945a-b8e1c64da733", { method: "POST", headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "6bcf28" }, body: JSON.stringify({ sessionId: "6bcf28", runId: "initial", hypothesisId: "H1,H2", location: "site/app/(site)/trusted-by/page.tsx:34", message: "TrustedByPage props prepared", data: { hasRosterKicker: Boolean(TRUSTED_BY_PAGE_COPY.rosterKicker), hasSectors: sectors.length > 0, quoteCount: TRUSTED_BY_PAGE_COPY.quotes.length }, timestamp: Date.now() }) }).catch(() => {});
+  // #endregion
 
   return (
     <HomeMarketingLayout>
