@@ -1,0 +1,14 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Installed Power Capability Index",
+      "trigger": "SessionStart",
+      "description": "Indexes the installed powers at session start and reminds the agent to activate only the capability relevant to the current task.",
+      "action": {
+        "type": "agent",
+        "prompt": "The workspace has these installed powers available: design-system-power-builder for design-system scaffolding and governance; nova-act for browser and human-style QA; postman for API collections, environments, and testing; cast-imaging for structural codebase impact and architecture analysis; context7 for current library and SDK documentation; exa for web research and code search; datadog for logs, metrics, traces, RUM, incidents, and monitors. When a request clearly matches one of these capabilities, activate that power before using it. Do not activate unrelated powers or perform external operations without a task-specific reason. Preserve existing project rules and use the Postman power only for Postman operations."
+      }
+    }
+  ]
+}

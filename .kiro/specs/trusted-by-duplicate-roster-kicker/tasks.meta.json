@@ -1,9 +1,9 @@
 {
   "pbtResults": {
     "1. Write the bug-condition exploration test before implementing the fix": {
-      "status": "passed",
-      "failingExample": "Expected [ 'rosterKicker=', 'rosterKicker=' ] to have a length of 1 but got 2 at tests/unit/app/(site)/trusted-by/page.test.tsx:113:36. The focused assertion correctly fails on the unfixed invocation because it contains two rosterKicker attributes.",
-      "lastRunTimestamp": 1787586475362
+      "status": "unexpected_pass",
+      "failingExample": "The exploration assertion expected the unfixed call site to contain two rosterKicker attributes, but the current working tree contains exactly one authoritative rosterKicker={TRUSTED_BY_PAGE_COPY.rosterKicker} mapping because the duplicate-after-sectors line is already removed. The focused Vitest run passed 6/6 tests; pnpm run typecheck passed, so TS17001 is not present in the current working tree.",
+      "lastRunTimestamp": 1787589010790
     },
     "2. Write preservation property tests before implementing the fix": {
       "status": "passed",
@@ -27,6 +27,11 @@
         "executionId": "1ded2d2d-075f-4966-8bad-cea79fc52dc8",
         "chatSessionId": "sess_3b951d04-a1df-4d60-8f38-f1300042e842",
         "timestamp": 1787588159872
+      },
+      {
+        "executionId": "fee3a59f-3fbe-494c-8eae-882220eda95b",
+        "chatSessionId": "sess_6c27da25-2643-4f6d-acb8-07743e4c206e",
+        "timestamp": 1787588425536
       }
     ],
     "2. Write preservation property tests before implementing the fix": [

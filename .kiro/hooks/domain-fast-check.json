@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Domain Fast Check on Save",
+      "trigger": "PostFileSave",
+      "description": "Routes saved files to domain-specific fast checks: UI/CSS → verify:focss + lint:ui:strict, DB → typecheck, Planner/Studio → scan:boundaries, Tests → typecheck:tests, fallback → typecheck.",
+      "matcher": "\\.(ts|tsx|css|mjs|sql)$",
+      "action": {
+        "type": "command",
+        "command": "powershell -NoProfile -Command \"$input = [Console]::In.ReadToEnd() | ConvertFrom-Json; $f = $input.filePath; if ($f -match 'focss|components|\\.css|postcss|tailwind') { pnpm run verify:focss; pnpm run lint:ui:strict } elseif ($f -match 'supabase|drizzle|migrations|scripts[\\\\/]db_') { pnpm run typecheck } elseif ($f -match 'lib[\\\\/]ai|mastra|advisor|lancedb|rag') { pnpm run typecheck } elseif ($f -match 'lib[\\\\/]seo|robots|sitemap|analytics|routeMetadata') { pnpm run typecheck } elseif ($f -match 'tests[\\\\/]|vitest|playwright') { pnpm run typecheck:tests } elseif ($f -match 'Planner|ooplanner') { pnpm run scan:boundaries } elseif ($f -match 'Studio|oostudio') { pnpm run scan:boundaries } elseif ($f -match 'app[\\\\/]api|lib[\\\\/]api|lib[\\\\/]auth|lib[\\\\/]security|rateLimit|safe-action') { pnpm run typecheck } else { pnpm run typecheck }\"",
+        "timeout": 120
+      }
+    }
+  ]
+}

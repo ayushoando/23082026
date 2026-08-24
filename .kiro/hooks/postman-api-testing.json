@@ -3,7 +3,8 @@
   "hooks": [
     {
       "name": "Postman API Testing",
-      "trigger": "SessionStart",
+      "trigger": "PostFileSave",
+      "matcher": "(^|[\\\\/])(site[\\\\/]app[\\\\/]api|site[\\\\/]platform|site[\\\\/]lib|scripts)([\\\\/]).*\\.(ts|tsx|mjs|js|json|yaml|yml)$|(^|[\\\\/])(package\\.json|pnpm-lock\\.yaml|openapi\\.(json|yaml|yml))$",
       "action": {
         "type": "agent",
         "prompt": "An API source or configuration file was saved. Follow the Postman power steering guide: check whether .postman.json exists in the project root. If it is missing or empty, explain that no Postman resources are configured and ask the user whether they want to create a workspace, collection, and environment. If it exists, inspect its IDs and verify the referenced resources before proposing any update. Never create duplicate Postman resources without explicit user confirmation. Use Postman MCP tools only for Postman operations and validate collections against Collection Format v2.1.0."
