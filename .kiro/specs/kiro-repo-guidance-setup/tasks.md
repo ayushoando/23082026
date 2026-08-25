@@ -85,11 +85,11 @@ The post-wave Integration_Validation_Gate alone owns `scripts/kiro-repo-guidance
     - Use at least 100 iterations to prove the highest-ranked applicable claim wins, losing claims/provenance/rationale remain contextual, and an unconfirmed rule remains `Unverified`.
     - **Validates: Requirements 2.3, 3.3, 3.6, 14.6–14.7; Design: Correctness Property 2**
 
-  - [-] 2.7 Write the property-based test for **Property 3: Inventory and record schemas are total**.
+  - [x] 2.7 Write the property-based test for **Property 3: Inventory and record schemas are total**.
     - Generate artifact kinds with missing/unsafe fields and assert exactly one inventory status, required owner/scope/evidence/disposition/provenance/validation/rollback fields, allowed maintenance risk, and no persisted secret values.
     - **Validates: Requirements 2.1, 2.4, 3.1, 3.4, 6.1, 7.1, 8.4, 11.2, 12.2, 13.5–13.6, 14.3; Design: Correctness Property 3**
 
-  - [ ] 2.8 Add Lane A example and edge-case tests.
+  - [-] 2.8 Add Lane A example and edge-case tests.
     - Cover canonical-source status, unreadable/absent/unknown paths, contradictory sources, redirected/inaccessible relevant pages, excluded candidates, exact completion wording, and rejection of unapproved network or secret-bearing operations.
     - **Validates: Requirements 1.3–1.5, 2.1–2.3, 3.3, 13.3, 14.8; Design: Example and edge-case tests, Error handling_
 
@@ -123,11 +123,11 @@ The post-wave Integration_Validation_Gate alone owns `scripts/kiro-repo-guidance
     - Generate mismatched surfaces/versions, historical evidence, registrations, and changed artifacts; assert only a fresh post-change run for the exact target satisfies validation.
     - **Validates: Requirements 3.2, 4.2–4.6, 12.5, 12.8, 13.7; Design: Correctness Property 5**
 
-  - [-] 3.7 Write the property-based test for **Property 7: Scope and permission records do not broaden access**.
+  - [x] 3.7 Write the property-based test for **Property 7: Scope and permission records do not broaden access**.
     - Generate pending approvals and precedence conflicts; assert separate scope fields, blocked actions, and no global/user/external mutation intent while approval or deny precedence is unresolved.
     - **Validates: Requirements 5.1–5.2, 5.4–5.6, 10.9, 11.6; Design: Correctness Property 7**
 
-  - [ ] 3.8 Add Lane B example and edge-case tests.
+  - [-] 3.8 Add Lane B example and edge-case tests.
     - Cover CLI 2.x evidence not satisfying CLI 3.x, Web/Mobile non-applicability, Crew uninstallation/conflict, every unresolved OD fallback, precedence conflicts, pending boundaries, max-four rejection, and preservation of the general one-agent rule.
     - **Validates: Requirements 4.2–4.5, 5.2–5.5, 9.2–9.3, 9.8–9.12, 10.3–10.13; Design: Surface/version model, Crew compatibility guard, Error handling_
 
@@ -161,11 +161,11 @@ The post-wave Integration_Validation_Gate alone owns `scripts/kiro-repo-guidance
     - Mutate one hook rule at a time for timeout placement, event casing, action, matcher, enabled state, command, dependency, overlap, and side effect; assert invalid/unsafe hooks remain blocked or disabled.
     - **Validates: Requirements 7.2, 7.5–7.9, 12.1; Design: Correctness Property 9**
 
-  - [-] 4.7 Write the property-based test for **Property 10: Extension routing and execution plans are bounded**.
+  - [x] 4.7 Write the property-based test for **Property 10: Extension routing and execution plans are bounded**.
     - Generate power formats, repository-answer results, external boundaries, custom-agent resource values, subagent graphs, concurrency, approvals, and review ceilings; assert missing/incompatible values produce inactive dispositions.
     - **Validates: Requirements 8.1, 8.3–8.4, 8.6–8.8, 9.2; Design: Correctness Property 10**
 
-  - [ ] 4.8 Write the property-based test for **Property 11: Incompatible Crew behavior is blocked**.
+  - [-] 4.8 Write the property-based test for **Property 11: Incompatible Crew behavior is blocked**.
     - Generate worktree, concurrency, retry/replan, auto-approval, policy-exception, and validation states; assert incompatible behavior is deferred/excluded and cannot become enabled-valid through OD-04.
     - **Validates: Requirements 9.3, 10.6, 10.11, 14.5; Design: Correctness Property 11**
 
@@ -205,11 +205,11 @@ The post-wave Integration_Validation_Gate alone owns `scripts/kiro-repo-guidance
     - Generate unresolved OD records and assert IDE-only limitation, preserved hook states, manual graph loop, no-worktree/default-one-agent/explicit-approval safeguards, inactive extensions, no activation-scope claim, unchanged global settings, and no enabled-valid status.
     - **Validates: Requirements 10.3–10.10; Design: Correctness Property 13**
 
-  - [-] 5.7 Write the property-based test for **Property 14: Disposition and handover projections are one-to-one**.
+  - [x] 5.7 Write the property-based test for **Property 14: Disposition and handover projections are one-to-one**.
     - Generate duplicate/incomplete artifacts and assert one allowed disposition, one canonical path, duplicate resolution, evidence/reason, activation condition, owner, rollback value, and incomplete status when official-family coverage is incomplete.
     - **Validates: Requirements 11.1–11.5, 13.1–13.4; Design: Correctness Property 14**
 
-  - [ ] 5.8 Write the property-based test for **Property 15: Repository policy invariants survive every plan**.
+  - [-] 5.8 Write the property-based test for **Property 15: Repository policy invariants survive every plan**.
     - Generate commands, hooks, task graphs, powers, agents, and reviewer plans; assert root-only `pnpm`, no worktrees, default one-agent ceiling, read-only production behavior, mode-aware persistence, database/fork isolation, both Vitest lanes, and required gates.
     - **Validates: Requirements 9.2, 11.6, 14.2, 14.5; Design: Correctness Property 15**
 
