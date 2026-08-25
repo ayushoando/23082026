@@ -551,3 +551,132 @@ describe("RepositoryPolicyGuard — agent-count boundaries and preserved default
     );
   });
 });
+
+// --- Additional deterministic malformed-input edges -------------------------
+
+describe("Lane B malformed-input and duplicate-record edges", () => {
+  it("keeps all seven surface/version records while rejecting a malformed target and duplicate validation run", () => {
+    const result = assessCompatibility(
+      compatibilityInput({
+        records: [{ surface: "CLI 2.x" }] as unknown as CompatibilityInput["records"],
+        validationRuns: [
+          passingRun("duplicate-validation", "CLI 2.x", "2.19.1"),
+          passingRun("duplicate-validation", "CLI 2.x", "2.19.1"),
+        ],
+      }),
+    );
+
+    expect(result.status).toBe("partial");
+    expect(result.output?.records).toHaveLength(7);
+    expect(result.output?.transferViolations).toContain(
+      "a compatibility record has an unknown or malformed surface/version target",
+    );
+    expect(result.output?.transferViolations).toContain(
+      "validation run duplicate-validation is duplicated and cannot be transferred between targets",
+    );
+  });
+
+  it("rejects duplicate and missing-field scope records instead of inferring precedence", () => {
+    const records = [
+      ...DOCUMENTED_SCOPE_ORDER
+        .filter((scope) => scope !== "agent")
+        .map((scope) => scopeRecord(scope)),
+      scopeRecord("project"),
+      scopeRecord("agent", { actions: [], pathOrService: "", rollbackPathRef: "" }),
+    ];
+
+    const result = assessScopePrecedence(scopeInput({ records }));
+
+    expect(result.status).toBe("partial");
+    expect(result.output?.map.records).toHaveLength(DOCUMENTED_SCOPE_ORDER.length - 1);
+    expect(result.blockers).toContain(
+      "duplicate scope record project::Local_Repository_Surface::.kiro/project cannot establish precedence",
+    );
+    expect(result.blockers).toContain(
+      "a scope record is malformed and cannot be used for precedence assessment",
+    );
+    expect(result.blockers).toContain("required configuration scope agent is missing");
+  });
+
+  it("blocks an empty permission-probe set and a boundary with missing required fields", () => {
+    const result = assessApprovalBoundaryOperation({
+      boundary: approvedBoundary({
+        boundaryId: "",
+        requestedChange: "",
+        owner: "",
+        preChangeStateRef: "",
+        securityBoundary: "",
+        expectedSideEffects: [],
+        rollbackPathRef: "",
+      }),
+      permissionProbes: [],
+      requiredProbeOutcomes: ["allowed", "denied", "prompted", "restricted"],
+    });
+
+    expect(result.status).toBe("blocked");
+    expect(result.output?.canProceed).toBe(false);
+    expect(result.output?.preservedPriorState).toBe(true);
+    expect(result.blockers).toContain("approval boundary requires a stable boundaryId");
+    expect(result.blockers).toContain("approval boundary requires a requested change");
+    expect(result.blockers).toContain("approval boundary requires an owner");
+    expect(result.blockers).toContain("approval boundary requires pre-change state");
+    expect(result.blockers).toContain("approval boundary requires a security or data boundary");
+    expect(result.blockers).toContain("approval boundary requires expected side effects");
+    expect(result.blockers).toContain("approval boundary requires a rollback path");
+    for (const outcome of ["allowed", "denied", "prompted", "restricted"] as const) {
+      expect(result.blockers).toContain(`required permission probe outcome ${outcome} was not recorded`);
+    }
+  });
+
+  it("blocks duplicate owner decisions and missing required decision fields", () => {
+    const malformedOd01 = {
+      ...OWNER_DECISIONS[0],
+      owner: "",
+      decisionDate: "not-a-date",
+      scope: "",
+      requiredValidation: [],
+      rollbackBoundary: "",
+      evidenceRef: "",
+    } as OwnerDecision;
+    const result = validateOwnerDecisions([
+      malformedOd01,
+      ...OWNER_DECISIONS.slice(1),
+      malformedOd01,
+    ]);
+
+    expect(result.status).toBe("blocked");
+    expect(result.blockers).toContain("OD-01 requires an owner");
+    expect(result.blockers).toContain("OD-01 requires an ISO decision date");
+    expect(result.blockers).toContain("OD-01 requires a scope");
+    expect(result.blockers).toContain("OD-01 requires validation actions");
+    expect(result.blockers).toContain("OD-01 requires a rollback boundary");
+    expect(result.blockers).toContain("OD-01 requires evidence");
+    expect(result.blockers).toContain("owner decision OD-01 is duplicated");
+  });
+
+  it("fails closed when policy inputs are missing, unsafe, or outside the agent-count range", () => {
+    const result = assessRepositoryPolicy(
+      {
+        ...compliantPolicyRequest(),
+        workingDirectory: "",
+        packageManager: "npm",
+        activeAgentCount: 5,
+        explicitApprovalRecorded: false,
+        completedGates: [],
+        vitestLanes: { default: true, techDocs: false },
+      },
+      OWNER_DECISIONS,
+    );
+
+    expect(result.status).toBe("blocked");
+    expect(result.output?.generalRepositoryRulePreserved).toBe(true);
+    expect(result.output?.preservedPriorState).toBe(true);
+    expect(result.blockers).toContain("commands must run from D:\\23082026");
+    expect(result.blockers).toContain("repository commands must use root-only pnpm");
+    expect(result.blockers).toContain("explicit approval is required before the proposed action");
+    expect(result.blockers).toContain("required repository gate check:layout was not completed");
+    expect(result.blockers).toContain("required repository gate gate:fast was not completed");
+    expect(result.blockers).toContain("both default and tech-docs Vitest lanes must pass when Vitest is recorded");
+    expect(result.blockers).toContain("the general repository rule permits no more than one active agent");
+  });
+});

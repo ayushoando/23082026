@@ -54,7 +54,7 @@ The post-wave Integration_Validation_Gate alone owns `scripts/kiro-repo-guidance
     - Preserve prior state and prevent Lane B/C/D dependent mutation when the freeze is missing, stale, or inconsistent with the ownership manifest.
     - _Requirements: 9.8–9.10, 10.12–10.13, 11.7–11.8, 14.10–14.12; Design: Shared_Contract_Freeze, Record lifecycle_
 
-- [ ] 2. Lane A — implement contracts, discovery, inventory, provenance, coverage, and exclusions
+- [x] 2. Lane A — implement contracts, discovery, inventory, provenance, coverage, and exclusions
   - Lane A owns only the files listed for Lane A in the ownership contract. It may read the frozen contracts and repository sources but must acquire a reservation for every mutation.
   - [x] 2.1 Implement `DiscoveryCollector` and repository-local source discovery.
     - Record official sitemap/search discovery method, ISO review date, Active_Surface, URL/path, availability, and discovery evidence before using a candidate as decision evidence; emit unavailable `Unverified_Finding` records when retrieval is unavailable or unapproved.
@@ -89,11 +89,11 @@ The post-wave Integration_Validation_Gate alone owns `scripts/kiro-repo-guidance
     - Generate artifact kinds with missing/unsafe fields and assert exactly one inventory status, required owner/scope/evidence/disposition/provenance/validation/rollback fields, allowed maintenance risk, and no persisted secret values.
     - **Validates: Requirements 2.1, 2.4, 3.1, 3.4, 6.1, 7.1, 8.4, 11.2, 12.2, 13.5–13.6, 14.3; Design: Correctness Property 3**
 
-  - [-] 2.8 Add Lane A example and edge-case tests.
+  - [x] 2.8 Add Lane A example and edge-case tests.
     - Cover canonical-source status, unreadable/absent/unknown paths, contradictory sources, redirected/inaccessible relevant pages, excluded candidates, exact completion wording, and rejection of unapproved network or secret-bearing operations.
     - **Validates: Requirements 1.3–1.5, 2.1–2.3, 3.3, 13.3, 14.8; Design: Example and edge-case tests, Error handling_
 
-- [ ] 3. Lane B — implement compatibility, scope, owner decisions, approval boundaries, and policy guards
+- [x] 3. Lane B — implement compatibility, scope, owner decisions, approval boundaries, and policy guards
   - Lane B owns only the files listed for Lane B in the ownership contract. It may read frozen contracts and Lane A outputs but must not mutate Lane A files.
   - [x] 3.1 Implement `CompatibilityMatrix` with exactly seven surface/version records.
     - Create one record each for IDE, CLI 2.x, CLI 3.x, Web, Mobile, Cloud/Crew, and Local_Repository_Surface; isolate the observed IDE session and `kiro-cli-chat 2.19.1` to exact targets and classify missing/changed target evidence as `Unverified`.
@@ -127,7 +127,7 @@ The post-wave Integration_Validation_Gate alone owns `scripts/kiro-repo-guidance
     - Generate pending approvals and precedence conflicts; assert separate scope fields, blocked actions, and no global/user/external mutation intent while approval or deny precedence is unresolved.
     - **Validates: Requirements 5.1–5.2, 5.4–5.6, 10.9, 11.6; Design: Correctness Property 7**
 
-  - [-] 3.8 Add Lane B example and edge-case tests.
+  - [x] 3.8 Add Lane B example and edge-case tests.
     - Cover CLI 2.x evidence not satisfying CLI 3.x, Web/Mobile non-applicability, Crew uninstallation/conflict, every unresolved OD fallback, precedence conflicts, pending boundaries, max-four rejection, and preservation of the general one-agent rule.
     - **Validates: Requirements 4.2–4.5, 5.2–5.5, 9.2–9.3, 9.8–9.12, 10.3–10.13; Design: Surface/version model, Crew compatibility guard, Error handling_
 
@@ -165,15 +165,15 @@ The post-wave Integration_Validation_Gate alone owns `scripts/kiro-repo-guidance
     - Generate power formats, repository-answer results, external boundaries, custom-agent resource values, subagent graphs, concurrency, approvals, and review ceilings; assert missing/incompatible values produce inactive dispositions.
     - **Validates: Requirements 8.1, 8.3–8.4, 8.6–8.8, 9.2; Design: Correctness Property 10**
 
-  - [-] 4.8 Write the property-based test for **Property 11: Incompatible Crew behavior is blocked**.
+  - [x] 4.8 Write the property-based test for **Property 11: Incompatible Crew behavior is blocked**.
     - Generate worktree, concurrency, retry/replan, auto-approval, policy-exception, and validation states; assert incompatible behavior is deferred/excluded and cannot become enabled-valid through OD-04.
     - **Validates: Requirements 9.3, 10.6, 10.11, 14.5; Design: Correctness Property 11**
 
-  - [ ] 4.9 Write the property-based test for **Property 12: Continuity evidence does not cross data boundaries**.
+  - [x] 4.9 Write the property-based test for **Property 12: Continuity evidence does not cross data boundaries**.
     - Generate local, CLI, Crew, and LTM records; assert separate capabilities and that Crew memory/knowledge documentation cannot satisfy local LTM execution while the stub remains.
     - **Validates: Requirements 9.4–9.6; Design: Correctness Property 12**
 
-  - [ ] 4.10 Add Lane C example and edge-case tests.
+  - [-] 4.10 Add Lane C example and edge-case tests.
     - Cover all six manifests, `repo-map` primary designation, duplicate resolution, unavailable prerequisites, action-level hook timeout, semicolon versus unrelated `&&`, disabled LTM, legacy power observations, empty MCP config, missing plugin manifest, unverified registration, `None` resource URIs, bounded graphs, and separate continuity records.
     - **Validates: Requirements 2.6, 6.1–6.7, 7.3–7.10, 8.1–8.8, 9.1–9.7, 10.4–10.8; Design: Example and edge-case tests_
 
@@ -209,16 +209,16 @@ The post-wave Integration_Validation_Gate alone owns `scripts/kiro-repo-guidance
     - Generate duplicate/incomplete artifacts and assert one allowed disposition, one canonical path, duplicate resolution, evidence/reason, activation condition, owner, rollback value, and incomplete status when official-family coverage is incomplete.
     - **Validates: Requirements 11.1–11.5, 13.1–13.4; Design: Correctness Property 14**
 
-  - [-] 5.8 Write the property-based test for **Property 15: Repository policy invariants survive every plan**.
+  - [x] 5.8 Write the property-based test for **Property 15: Repository policy invariants survive every plan**.
     - Generate commands, hooks, task graphs, powers, agents, and reviewer plans; assert root-only `pnpm`, no worktrees, default one-agent ceiling, read-only production behavior, mode-aware persistence, database/fork isolation, both Vitest lanes, and required gates.
     - **Validates: Requirements 9.2, 11.6, 14.2, 14.5; Design: Correctness Property 15**
 
-  - [ ] 5.9 Write the property-based test for **Property 16: The feature implementation wave is bounded and fail-closed**.
+  - [x] 5.9 Write the property-based test for **Property 16: The feature implementation wave is bounded and fail-closed**.
     - Generate wave plans with zero through four agents, overlapping/disjoint ownership, reservation states, freeze states, scope violations, shared-output writes, partial/abandoned agents, integration conflicts, and reviewer outcomes.
     - Assert max four, disjoint writes, reservation-before-mutation, freeze-before-dependent-work, root-only `pnpm`, no worktree/hidden spawn/retry/replan, fail-closed conflict handling, preserved/restored state, exactly one integration gate, and sequential reviewers before enablement.
     - **Validates: Requirements 9.8–9.12, 10.12–10.13, 11.7–11.8, 14.10–14.12; Design: Correctness Property 16**
 
-  - [ ] 5.10 Add Lane D contract, example, and controlled rollback tests.
+  - [-] 5.10 Add Lane D contract, example, and controlled rollback tests.
     - Cover max-four enforcement, zero-agent/default-one-agent behavior, ownership conflicts, stale/missing reservations, shared-contract freeze, shared generated-output rejection, partial/abandoned agents, no automatic retry/replan, reviewer restrictions, rollback failure, and `no rollback applies` records.
     - **Validates: Requirements 9.8–9.12, 10.12–10.13, 11.7–11.8, 12.6–12.7, 13.5, 13.8, 14.10–14.12; Design: Failure and rollback testing, implementation review DAG_
 

@@ -62,21 +62,6 @@ const NO_CHANGE_DISPOSITIONS = new Set<CapabilityDisposition>([
   "exclude",
 ]);
 
-const ARTIFACT_KINDS: readonly ArtifactKind[] = [
-  "Kiro_Skill",
-  "Steering_File",
-  "Hook_Manifest",
-  "Kiro_Power",
-  "Custom_Agent",
-  "MCP_Service",
-  "Tool_Surface",
-  "Subagent",
-  "Specification",
-  "Permission_Configuration",
-  "Ignore_Configuration",
-  "Relevant_Setting",
-];
-
 // Only project-local scopes are used so the projection never derives an
 // approval boundary that would require extra evidence; the mapping itself is
 // what Property 14 constrains.
