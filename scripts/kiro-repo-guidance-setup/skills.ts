@@ -13,7 +13,6 @@ import { relative, resolve } from "node:path";
 import {
   INITIAL_SKILL_CANDIDATES,
   REPOSITORY_ROOT,
-  type CapabilityDisposition,
   type EvidenceState,
   type IsoDate,
   type KiroSurface,
@@ -28,7 +27,8 @@ import {
 } from "./contracts";
 
 export const SKILL_ROOT = ".kiro/skills" as const;
-export const STEERING_PATH = ".kiro/steering/powers-skills-model.md" as const;
+export const STEERING_ROOT = ".kiro/steering" as const;
+export const STEERING_PATH = `${STEERING_ROOT}/powers-skills-model.md` as const;
 export const PRIMARY_REPOSITORY_GUIDANCE_SKILL = "repo-map" as const satisfies SkillCandidate;
 export const SKILL_OWNER = "repository owner" as const;
 export const OD08_DECISION_ID = "OD-08" as const;
@@ -68,6 +68,7 @@ export interface SkillEvaluatorInput {
 export interface SkillManifestFields {
   readonly name: string;
   readonly description: string;
+  readonly sensitiveContentDetected: boolean;
 }
 
 export interface SkillOverlapResolution {
@@ -329,7 +330,7 @@ const STEERING_RULES = [
 ] as const;
 
 const SCOPE_WORDS = /\b(?:repo|repository|codebase|files?|graph|tests?|gate|ship|Studio|Planner|CSS|Tailwind|SQL|schema|database|migration|skills?|guidance|surface|zone|imports?)\b/i;
-const ACTIVATION_WORDS = /\buse\s+when\b/i;
+const ACTIVATION_WORDS = /\buse\s+(?:when|before|for|on)\b/i;
 const SENSITIVE_CONTENT = /(?:token|secret|password|api[_-]?key)\s*[:=]\s*\S+|https?:\/\/[^\s]+/gi;
 
 function unique<T>(values: readonly T[]): T[] {
@@ -379,7 +380,13 @@ function pathExists(repositoryRoot: string, repositoryPath: string): boolean {
 }
 
 function safeDescription(value: string): string {
+  SENSITIVE_CONTENT.lastIndex = 0;
   return value.replace(SENSITIVE_CONTENT, "[REDACTED]").trim();
+}
+
+function hasSensitiveContent(value: string): boolean {
+  SENSITIVE_CONTENT.lastIndex = 0;
+  return SENSITIVE_CONTENT.test(value);
 }
 
 function parseFrontmatter(text: string): SkillManifestFields | null {
@@ -401,9 +408,11 @@ function parseFrontmatter(text: string): SkillManifestFields | null {
   }
 
   if (closingIndex < 0) return null;
+  const rawDescription = fields.get("description") ?? "";
   return {
     name: fields.get("name") ?? "",
-    description: safeDescription(fields.get("description") ?? ""),
+    description: safeDescription(rawDescription),
+    sensitiveContentDetected: hasSensitiveContent(rawDescription),
   };
 }
 
@@ -414,7 +423,7 @@ function descriptionErrors(description: string): string[] {
     errors.push("description must be specific and contain at least ten words");
   }
   if (!ACTIVATION_WORDS.test(description)) {
-    errors.push("description must state activation with a Use when clause");
+    errors.push("description must state a concrete activation condition");
   }
   if (!SCOPE_WORDS.test(description)) {
     errors.push("description must state a concrete repository or domain scope");
@@ -469,6 +478,9 @@ function inspectManifest(repositoryRoot: string, folder: SkillCandidate, skillRo
   if (fields.name !== folder) {
     errors.push(`${path} name ${fields.name || "<empty>"} does not match folder ${folder}`);
   }
+  if (fields.sensitiveContentDetected) {
+    errors.push(`${path} description contains sensitive content and cannot be accepted`);
+  }
   errors.push(...descriptionErrors(fields.description).map((error) => `${path}: ${error}`));
 
   return {
@@ -486,20 +498,39 @@ function discoverExtraManifests(repositoryRoot: string, skillRoot: RepositoryPat
   const absoluteRoot = resolveRepositoryPath(repositoryRoot, skillRoot);
   if (!absoluteRoot) return [normalizePath(skillRoot)];
 
-  try {
-    const entries = readdirSync(absoluteRoot, { withFileTypes: true });
-    const extras: string[] = [];
+  const discovered: string[] = [];
+  const visit = (absoluteDirectory: string, relativeDirectory: string): void => {
+    let entries;
+    try {
+      entries = readdirSync(absoluteDirectory, { withFileTypes: true });
+    } catch {
+      return;
+    }
+
     for (const entry of entries) {
-      if (!entry.isDirectory()) continue;
-      const candidate = `${normalizePath(skillRoot)}/${entry.name}/SKILL.md`;
-      if (!INITIAL_SKILL_CANDIDATES.includes(entry.name as SkillCandidate) && pathExists(repositoryRoot, candidate)) {
-        extras.push(candidate);
+      const relativePath = relativeDirectory
+        ? `${relativeDirectory}/${entry.name}`
+        : entry.name;
+      const absolutePath = resolve(absoluteDirectory, entry.name);
+      if (entry.isFile() && entry.name === "SKILL.md") {
+        discovered.push(`${normalizePath(skillRoot)}/${relativePath}`);
+      } else if (entry.isDirectory()) {
+        visit(absolutePath, relativePath);
       }
     }
-    return extras;
+  };
+
+  try {
+    lstatSync(absoluteRoot);
   } catch {
-    return [normalizePath(skillRoot)];
+    return [];
   }
+  visit(absoluteRoot, "");
+
+  const expected = new Set(
+    INITIAL_SKILL_CANDIDATES.map((skill) => manifestPath(skill, skillRoot)),
+  );
+  return discovered.filter((path) => !expected.has(path)).sort();
 }
 
 function packageScripts(repositoryRoot: string): Readonly<Record<string, string>> {
@@ -560,14 +591,22 @@ function prerequisiteRecords(repositoryRoot: string, paths: readonly RepositoryP
 function od08Recorded(input: SkillEvaluatorInput): boolean {
   if (input.od08Approved === true) return true;
   return (input.ownerDecisions ?? []).some(
-    (decision) => decision.decisionId === OD08_DECISION_ID && decision.selectedPolicy === "enable after validation",
+    (decision) =>
+      decision.decisionId === OD08_DECISION_ID &&
+      decision.owner.trim().length > 0 &&
+      decision.selectedPolicy === "enable after validation" &&
+      (decision.approvalStatus === "owner-approved" || decision.approvalStatus === "owner-approved-conditional") &&
+      decision.unresolvedStatus !== "unresolved",
   );
 }
 
 function isPassingLocalValidation(run: ValidationRun): boolean {
   return (
+    typeof run.validationId === "string" &&
+    run.validationId.trim().length > 0 &&
     run.surface === LOCAL_REPOSITORY_SURFACE &&
     run.version === LOCAL_REPOSITORY_VERSION &&
+    run.executionLayer === "surface_validation" &&
     run.result === "pass" &&
     run.blocker === "none" &&
     run.unverifiedItems.length === 0
@@ -613,17 +652,43 @@ function overlapResolution(
   targetPath: RepositoryPath,
   resolution: OverlapResolutionKind,
   reason: string,
+  authoritativePath: RepositoryPath = targetPath,
 ): SkillOverlapResolution {
   return {
     sourcePath,
     targetPath,
     resolution,
-    authoritativePath: ".kiro/skills/repo-map/SKILL.md",
+    authoritativePath,
     reason,
   };
 }
 
-function buildOverlapResolutions(): SkillOverlapResolution[] {
+const STEERING_SKILL_DELEGATIONS: Readonly<Record<string, SkillCandidate>> = {
+  "graph-layer.md": "graph-impact",
+  "testing.md": "verify-and-gate",
+  "planner-studio.md": "fork-boundaries",
+  "ui-css.md": "focss-css",
+  "database.md": "db-migrations",
+} as const;
+
+function discoverSteeringPaths(repositoryRoot: string): RepositoryPath[] {
+  const absoluteRoot = resolveRepositoryPath(repositoryRoot, STEERING_ROOT);
+  if (!absoluteRoot) return [STEERING_PATH];
+
+  try {
+    const paths = readdirSync(absoluteRoot, { withFileTypes: true })
+      .filter((entry) => entry.isFile() && entry.name.endsWith(".md"))
+      .map((entry) => `${STEERING_ROOT}/${entry.name}` as RepositoryPath)
+      .sort();
+    return paths.length > 0 ? paths : [STEERING_PATH];
+  } catch {
+    return [STEERING_PATH];
+  }
+}
+
+function buildOverlapResolutions(
+  steeringPaths: readonly RepositoryPath[] = [STEERING_PATH],
+): SkillOverlapResolution[] {
   const primaryPath = ".kiro/skills/repo-map/SKILL.md" as const;
   const resolutions: SkillOverlapResolution[] = [];
   for (const skill of INITIAL_SKILL_CANDIDATES) {
@@ -637,23 +702,34 @@ function buildOverlapResolutions(): SkillOverlapResolution[] {
       ),
     );
   }
-  resolutions.push(
-    overlapResolution(
-      STEERING_PATH,
-      primaryPath,
-      "delegate",
-      "the relationship model delegates repository authority and onboarding orientation to repo-map and does not replace AGENTS.md",
-    ),
-  );
-  for (const skill of INITIAL_SKILL_CANDIDATES) {
-    resolutions.push(
-      overlapResolution(
-        STEERING_PATH,
-        `.kiro/skills/${skill}/SKILL.md`,
-        "delegate",
-        `the steering relationship model delegates ${skill}-specific operating rules to the skill manifest`,
-      ),
-    );
+
+  for (const path of steeringPaths) {
+    const normalizedPath = normalizePath(path);
+    if (normalizedPath === STEERING_PATH) {
+      resolutions.push(
+        overlapResolution(
+          normalizedPath,
+          primaryPath,
+          "delegate",
+          "the relationship model delegates repository authority and onboarding orientation to repo-map and does not replace AGENTS.md",
+        ),
+      );
+    }
+
+    const steeringFile = normalizedPath.slice(normalizedPath.lastIndexOf("/") + 1);
+    const delegatedSkill = STEERING_SKILL_DELEGATIONS[steeringFile];
+    if (delegatedSkill) {
+      const targetPath = `.kiro/skills/${delegatedSkill}/SKILL.md` as RepositoryPath;
+      resolutions.push(
+        overlapResolution(
+          normalizedPath,
+          targetPath,
+          "delegate",
+          `${normalizedPath} delegates ${delegatedSkill}-specific operating rules to the specialized skill while retaining only steering scope and domain context`,
+          targetPath,
+        ),
+      );
+    }
   }
   return resolutions;
 }
@@ -691,7 +767,9 @@ function steeringRecord(
   const missingSources = sourceErrors(repositoryRoot, STEERING_CANONICAL_SOURCES);
   blockers.push(...missingSources);
   const related = overlapResolutions.filter((item) => item.sourcePath === path);
-  if (related.length === 0) blockers.push(`steering file ${path} has no recorded overlap resolution`);
+  const overlapDescription = related.length > 0
+    ? related.map((item) => `${item.resolution}: ${item.targetPath}`).join("; ")
+    : "retain: no selected skill duplicates this steering file's domain-specific rules";
 
   return {
     record: {
@@ -700,8 +778,7 @@ function steeringRecord(
       inventoryStatus: "present and readable",
       ownedRules: [...STEERING_RULES],
       referencedCanonicalSources: [...STEERING_CANONICAL_SOURCES],
-      overlapResolution:
-        "delegate: repository authority and onboarding orientation to .kiro/skills/repo-map/SKILL.md; retain only the powers/skills/steering/MCP relationship model",
+      overlapResolution: overlapDescription,
       disposition: blockers.length === 0 ? "retain" : "defer",
       evidenceRefs: [evidenceRef, ...STEERING_CANONICAL_SOURCES.map((source) => `observed:source:${source}`)],
       rollbackPath: `restore ${path} and prior steering inclusion state`,
@@ -800,9 +877,11 @@ function blockedResult(
 export function evaluateSkills(input: SkillEvaluatorInput = {}): StageResult<SkillEvaluationResult> {
   const repositoryRoot = resolve(input.repositoryRoot ?? REPOSITORY_ROOT);
   const skillRoot = normalizePath(input.skillRoot ?? SKILL_ROOT);
-  const steeringPaths = input.steeringPaths ?? [STEERING_PATH];
+  const steeringPaths = input.steeringPaths
+    ? unique(input.steeringPaths.map(normalizePath))
+    : discoverSteeringPaths(repositoryRoot);
   const od08 = od08Recorded(input);
-  const overlapResolutions = buildOverlapResolutions();
+  const overlapResolutions = buildOverlapResolutions(steeringPaths);
   const inspections = INITIAL_SKILL_CANDIDATES.map((folder) => inspectManifest(repositoryRoot, folder, skillRoot));
   const extraManifests = discoverExtraManifests(repositoryRoot, skillRoot);
   const structuralBlockers = extraManifests.length > 0

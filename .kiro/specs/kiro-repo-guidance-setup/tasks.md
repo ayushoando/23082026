@@ -76,20 +76,20 @@ The post-wave Integration_Validation_Gate alone owns `scripts/kiro-repo-guidance
     - Record out-of-scope billing/marketing/unrelated/Crew candidates with reason, owner, scope boundary, and reconsideration trigger; emit the exact complete-review statement only when every relevant candidate has reviewed, excluded, or unavailable status.
     - _Requirements: 1.2–1.5, 3.1, 11.1, 13.3, 13.6; Design: Coverage Matrix, Exclusion Register_
 
-  - [ ] 2.5 Write the property-based test for **Property 1: Discovery evidence is complete and ordered**.
+  - [~] 2.5 Write the property-based test for **Property 1: Discovery evidence is complete and ordered**.
     - Use `fast-check` with at least 100 iterations to prove every candidate used as decision evidence has Source_Inventory and Coverage_Matrix records first, exclusions and unavailable findings remain distinct, unavailable candidates are listed, and the required completion statement is used.
     - Write only under `tests/kiro-repo-guidance-setup/lane-a/`.
     - **Validates: Requirements 1.1–1.5, 2.2, 13.3; Design: Correctness Property 1**
 
-  - [ ] 2.6 Write the property-based test for **Property 2: Authority resolution preserves evidence**.
+  - [~] 2.6 Write the property-based test for **Property 2: Authority resolution preserves evidence**.
     - Use at least 100 iterations to prove the highest-ranked applicable claim wins, losing claims/provenance/rationale remain contextual, and an unconfirmed rule remains `Unverified`.
     - **Validates: Requirements 2.3, 3.3, 3.6, 14.6–14.7; Design: Correctness Property 2**
 
-  - [ ] 2.7 Write the property-based test for **Property 3: Inventory and record schemas are total**.
+  - [~] 2.7 Write the property-based test for **Property 3: Inventory and record schemas are total**.
     - Generate artifact kinds with missing/unsafe fields and assert exactly one inventory status, required owner/scope/evidence/disposition/provenance/validation/rollback fields, allowed maintenance risk, and no persisted secret values.
     - **Validates: Requirements 2.1, 2.4, 3.1, 3.4, 6.1, 7.1, 8.4, 11.2, 12.2, 13.5–13.6, 14.3; Design: Correctness Property 3**
 
-  - [ ] 2.8 Add Lane A example and edge-case tests.
+  - [~] 2.8 Add Lane A example and edge-case tests.
     - Cover canonical-source status, unreadable/absent/unknown paths, contradictory sources, redirected/inaccessible relevant pages, excluded candidates, exact completion wording, and rejection of unapproved network or secret-bearing operations.
     - **Validates: Requirements 1.3–1.5, 2.1–2.3, 3.3, 13.3, 14.8; Design: Example and edge-case tests, Error handling_
 
@@ -115,25 +115,25 @@ The post-wave Integration_Validation_Gate alone owns `scripts/kiro-repo-guidance
     - Validate exactly OD-01 through OD-10, preserve the broad conditional `enable after validation` selection, and keep unresolved decisions on safe fallbacks; OD-04 never changes `AGENTS.md` or authorizes Crew worktrees, general concurrency, hidden spawning, retries/replans, or auto-approval.
     - _Requirements: 9.2–9.3, 9.8–9.12, 10.1–10.13, 11.6–11.8, 14.2, 14.5, 14.10–14.12; Design: RepositoryPolicyGuard, Owner Decision Records, Crew compatibility guard_
 
-  - [ ] 3.5 Write the property-based test for **Property 4: Fixed candidate and decision sets are exact**.
+  - [~] 3.5 Write the property-based test for **Property 4: Fixed candidate and decision sets are exact**.
     - Use at least 100 iterations to assert the exact six-skill set, exactly seven compatibility records, separate specification/execution/continuity capabilities, and exactly one each of OD-01 through OD-10.
     - **Validates: Requirements 2.6, 4.1, 9.1, 9.4, 10.1; Design: Correctness Property 4**
 
-  - [ ] 3.6 Write the property-based test for **Property 5: Evidence is isolated by surface and freshness**.
+  - [~] 3.6 Write the property-based test for **Property 5: Evidence is isolated by surface and freshness**.
     - Generate mismatched surfaces/versions, historical evidence, registrations, and changed artifacts; assert only a fresh post-change run for the exact target satisfies validation.
     - **Validates: Requirements 3.2, 4.2–4.6, 12.5, 12.8, 13.7; Design: Correctness Property 5**
 
-  - [ ] 3.7 Write the property-based test for **Property 7: Scope and permission records do not broaden access**.
+  - [~] 3.7 Write the property-based test for **Property 7: Scope and permission records do not broaden access**.
     - Generate pending approvals and precedence conflicts; assert separate scope fields, blocked actions, and no global/user/external mutation intent while approval or deny precedence is unresolved.
     - **Validates: Requirements 5.1–5.2, 5.4–5.6, 10.9, 11.6; Design: Correctness Property 7**
 
-  - [ ] 3.8 Add Lane B example and edge-case tests.
+  - [~] 3.8 Add Lane B example and edge-case tests.
     - Cover CLI 2.x evidence not satisfying CLI 3.x, Web/Mobile non-applicability, Crew uninstallation/conflict, every unresolved OD fallback, precedence conflicts, pending boundaries, max-four rejection, and preservation of the general one-agent rule.
     - **Validates: Requirements 4.2–4.5, 5.2–5.5, 9.2–9.3, 9.8–9.12, 10.3–10.13; Design: Surface/version model, Crew compatibility guard, Error handling_
 
 - [ ] 4. Lane C — implement skills, steering, hooks, powers, MCP, agents, capabilities, and continuity
   - Lane C owns only the files listed for Lane C in the ownership contract. It may read frozen contracts and Lane A/B records but must not mutate those files or external services.
-  - [-] 4.1 Implement `SkillEvaluator` and steering overlap resolution.
+  - [x] 4.1 Implement `SkillEvaluator` and steering overlap resolution.
     - Validate exactly the six `SKILL.md` manifests, folder/name matching, specific descriptions, canonical sources, root commands, constraints, prerequisites, activation scope, owner, risk, evidence, and rollback.
     - Designate exactly `repo-map` as the primary `Repository_Guidance_Skill`; resolve every overlap through merge/delegate/retire/reject and make no activation-scope claim without OD-08 and fresh validation.
     - _Requirements: 2.6, 3.4, 6.1–6.7, 10.8, 13.2; Design: Skills and steering evaluator interface, Skills/Steering plan_
@@ -153,27 +153,27 @@ The post-wave Integration_Validation_Gate alone owns `scripts/kiro-repo-guidance
     - Preserve the manual graph-impact loop, cap automation at three iterations, enforce default/native concurrency `0 | 1`, reviewer ceilings `0..3`, and classify Crew worktrees, concurrency above one, retries/replans, hidden spawning, or auto-approval as deferred/excluded.
     - _Requirements: 9.1–9.7, 10.4–10.7, 10.11, 14.5; Design: Continuity and LTM interface, Graph-impact automation interface, Native Spec DAGs/Task Waves/Review Loops, Crew compatibility guard_
 
-  - [ ] 4.5 Write the property-based test for **Property 8: Skill authority is unique and prerequisites are explicit**.
+  - [~] 4.5 Write the property-based test for **Property 8: Skill authority is unique and prerequisites are explicit**.
     - Generate overlap graphs and missing prerequisites for at least 100 iterations; assert exactly one primary (`repo-map`), a resolution for every non-authoritative path, and no activation claim without OD-08, valid manifest, approved prerequisites, and rollback validation.
     - **Validates: Requirements 6.2, 6.4–6.6; Design: Correctness Property 8**
 
-  - [ ] 4.6 Write the property-based test for **Property 9: Approved hooks satisfy schema and safety bounds**.
+  - [~] 4.6 Write the property-based test for **Property 9: Approved hooks satisfy schema and safety bounds**.
     - Mutate one hook rule at a time for timeout placement, event casing, action, matcher, enabled state, command, dependency, overlap, and side effect; assert invalid/unsafe hooks remain blocked or disabled.
     - **Validates: Requirements 7.2, 7.5–7.9, 12.1; Design: Correctness Property 9**
 
-  - [ ] 4.7 Write the property-based test for **Property 10: Extension routing and execution plans are bounded**.
+  - [~] 4.7 Write the property-based test for **Property 10: Extension routing and execution plans are bounded**.
     - Generate power formats, repository-answer results, external boundaries, custom-agent resource values, subagent graphs, concurrency, approvals, and review ceilings; assert missing/incompatible values produce inactive dispositions.
     - **Validates: Requirements 8.1, 8.3–8.4, 8.6–8.8, 9.2; Design: Correctness Property 10**
 
-  - [ ] 4.8 Write the property-based test for **Property 11: Incompatible Crew behavior is blocked**.
+  - [~] 4.8 Write the property-based test for **Property 11: Incompatible Crew behavior is blocked**.
     - Generate worktree, concurrency, retry/replan, auto-approval, policy-exception, and validation states; assert incompatible behavior is deferred/excluded and cannot become enabled-valid through OD-04.
     - **Validates: Requirements 9.3, 10.6, 10.11, 14.5; Design: Correctness Property 11**
 
-  - [ ] 4.9 Write the property-based test for **Property 12: Continuity evidence does not cross data boundaries**.
+  - [~] 4.9 Write the property-based test for **Property 12: Continuity evidence does not cross data boundaries**.
     - Generate local, CLI, Crew, and LTM records; assert separate capabilities and that Crew memory/knowledge documentation cannot satisfy local LTM execution while the stub remains.
     - **Validates: Requirements 9.4–9.6; Design: Correctness Property 12**
 
-  - [ ] 4.10 Add Lane C example and edge-case tests.
+  - [~] 4.10 Add Lane C example and edge-case tests.
     - Cover all six manifests, `repo-map` primary designation, duplicate resolution, unavailable prerequisites, action-level hook timeout, semicolon versus unrelated `&&`, disabled LTM, legacy power observations, empty MCP config, missing plugin manifest, unverified registration, `None` resource URIs, bounded graphs, and separate continuity records.
     - **Validates: Requirements 2.6, 6.1–6.7, 7.3–7.10, 8.1–8.8, 9.1–9.7, 10.4–10.8; Design: Example and edge-case tests_
 
@@ -197,28 +197,28 @@ The post-wave Integration_Validation_Gate alone owns `scripts/kiro-repo-guidance
     - Enforce handoff order and blocked behavior for missing/stale/contradictory inputs, incomplete outputs, policy violations, failed rollback, and partial/failed wave state.
     - _Requirements: 1.6, 4.5–4.6, 9.11–9.12, 10.2, 10.6–10.7, 10.11, 11.5, 12.6–12.8, 13.4–13.8, 14.8–14.9; Design: EvidenceCompatibilityReviewer, SafetyRollbackReviewer, implementation review DAG_
 
-  - [ ] 5.5 Write the property-based test for **Property 6: Enablement is fail-closed and side-effect-free when incomplete**.
+  - [~] 5.5 Write the property-based test for **Property 6: Enablement is fail-closed and side-effect-free when incomplete**.
     - Generate each enablement predicate and assert enabled-valid only when owner approval, fresh exact-target validation, schema pass, repository compatibility, security confirmation, rollback readiness, no blocking gap, and policy pass are all true; otherwise assert blocked/inactive status and preserved state.
     - **Validates: Requirements 1.6, 2.7, 5.5, 6.7, 8.5, 9.7, 10.2, 11.5, 12.6–12.7, 14.8–14.9; Design: Correctness Property 6**
 
-  - [ ] 5.6 Write the property-based test for **Property 13: Unresolved owner decisions preserve safe fallbacks**.
+  - [~] 5.6 Write the property-based test for **Property 13: Unresolved owner decisions preserve safe fallbacks**.
     - Generate unresolved OD records and assert IDE-only limitation, preserved hook states, manual graph loop, no-worktree/default-one-agent/explicit-approval safeguards, inactive extensions, no activation-scope claim, unchanged global settings, and no enabled-valid status.
     - **Validates: Requirements 10.3–10.10; Design: Correctness Property 13**
 
-  - [ ] 5.7 Write the property-based test for **Property 14: Disposition and handover projections are one-to-one**.
+  - [~] 5.7 Write the property-based test for **Property 14: Disposition and handover projections are one-to-one**.
     - Generate duplicate/incomplete artifacts and assert one allowed disposition, one canonical path, duplicate resolution, evidence/reason, activation condition, owner, rollback value, and incomplete status when official-family coverage is incomplete.
     - **Validates: Requirements 11.1–11.5, 13.1–13.4; Design: Correctness Property 14**
 
-  - [ ] 5.8 Write the property-based test for **Property 15: Repository policy invariants survive every plan**.
+  - [~] 5.8 Write the property-based test for **Property 15: Repository policy invariants survive every plan**.
     - Generate commands, hooks, task graphs, powers, agents, and reviewer plans; assert root-only `pnpm`, no worktrees, default one-agent ceiling, read-only production behavior, mode-aware persistence, database/fork isolation, both Vitest lanes, and required gates.
     - **Validates: Requirements 9.2, 11.6, 14.2, 14.5; Design: Correctness Property 15**
 
-  - [ ] 5.9 Write the property-based test for **Property 16: The feature implementation wave is bounded and fail-closed**.
+  - [~] 5.9 Write the property-based test for **Property 16: The feature implementation wave is bounded and fail-closed**.
     - Generate wave plans with zero through four agents, overlapping/disjoint ownership, reservation states, freeze states, scope violations, shared-output writes, partial/abandoned agents, integration conflicts, and reviewer outcomes.
     - Assert max four, disjoint writes, reservation-before-mutation, freeze-before-dependent-work, root-only `pnpm`, no worktree/hidden spawn/retry/replan, fail-closed conflict handling, preserved/restored state, exactly one integration gate, and sequential reviewers before enablement.
     - **Validates: Requirements 9.8–9.12, 10.12–10.13, 11.7–11.8, 14.10–14.12; Design: Correctness Property 16**
 
-  - [ ] 5.10 Add Lane D contract, example, and controlled rollback tests.
+  - [~] 5.10 Add Lane D contract, example, and controlled rollback tests.
     - Cover max-four enforcement, zero-agent/default-one-agent behavior, ownership conflicts, stale/missing reservations, shared-contract freeze, shared generated-output rejection, partial/abandoned agents, no automatic retry/replan, reviewer restrictions, rollback failure, and `no rollback applies` records.
     - **Validates: Requirements 9.8–9.12, 10.12–10.13, 11.7–11.8, 12.6–12.7, 13.5, 13.8, 14.10–14.12; Design: Failure and rollback testing, implementation review DAG_
 
@@ -228,7 +228,7 @@ The post-wave Integration_Validation_Gate alone owns `scripts/kiro-repo-guidance
     - The gate must collect every agent output, reservation status, changed-file manifest, contract-freeze record, validation result, and conflict report before any reviewer or enablement stage.
     - _Requirements: 1.1–14.9, especially 9.11–9.12, 11.7–11.8, 12.2–12.8, 13.5–13.8; Design: IntegrationValidationGate, High-level flow, Phased rollout Phase 5_
 
-  - [ ] 6.2 Add integration tests for collection, ownership, and conflict handling.
+  - [~] 6.2 Add integration tests for collection, ownership, and conflict handling.
     - Use synthetic agents to prove the gate rejects missing/stale reservations, overlapping writes, shared generated-output writes, mutation before freeze, out-of-scope mutation, more than four agents, partial/abandoned output, unresolved conflicts, and missing reviewer inputs; assert affected-wave stop, no dependent enablement, no automatic retry/replan, and preserve/restore behavior.
     - Write only under `tests/kiro-repo-guidance-setup/integration/`.
     - **Validates: Requirements 9.8–9.12, 10.12–10.13, 11.7–11.8, 12.6, 14.10–14.12; Design: IntegrationValidationGate, Error handling, Failure and rollback testing_
@@ -239,7 +239,7 @@ The post-wave Integration_Validation_Gate alone owns `scripts/kiro-repo-guidance
     - _Requirements: 12.2–12.5, 12.7, 13.5–13.7, 14.5; Design: Validation Gates and Evidence Outputs, Smoke and repository gates_
 
 - [ ] 7. Run the first sequential review stage: `EvidenceCompatibilityReviewer`
-  - [ ] 7.1 Add contract tests for reviewer ordering and read-only restrictions.
+  - [~] 7.1 Add contract tests for reviewer ordering and read-only restrictions.
     - Assert the only permitted order is `Integration_Validation_Gate -> EvidenceCompatibilityReviewer -> SafetyRollbackReviewer -> final owner-approved gate`; assert one reviewer at a time, maximum concurrency 1, iteration ceiling 3, no mutation/spawning/worktrees/retries/replans/approval bypass, and no external/global/Crew enablement.
     - **Validates: Requirements 9.11–9.12, 10.2, 10.6–10.7, 11.5, 14.8–14.9; Design: Implementation review task execution and DAG plan_
 
@@ -254,7 +254,7 @@ The post-wave Integration_Validation_Gate alone owns `scripts/kiro-repo-guidance
     - Record `maximumConcurrency: 1`, `iterationCeiling: 3`, read-only status, no mutation/spawning/worktree/retry/replan/approval bypass/external-global-Crew enablement, and `no rollback applies` for the review stage.
     - _Requirements: 1.6, 5.1–5.7, 7.9, 8.4–8.8, 9.2, 9.7, 9.11–9.12, 10.2, 10.11–10.13, 11.2–11.8, 12.6–12.7, 13.4–13.8, 14.1–14.12; Design: SafetyRollbackReviewer_
 
-  - [ ] 8.2 Add safety-review integration tests for failed/partial handoffs.
+  - [~] 8.2 Add safety-review integration tests for failed/partial handoffs.
     - Prove SafetyRollbackReviewer cannot start a successful enablement path from partial EvidenceCompatibilityReviewer output and cannot repair, approve, mutate, spawn, or bypass an unresolved boundary; assert prior state remains preserved.
     - **Validates: Requirements 9.11–9.12, 10.2, 10.11–10.13, 11.5, 12.6, 13.7–13.8, 14.8–14.12; Design: Error handling, implementation review DAG_
 
@@ -264,7 +264,7 @@ The post-wave Integration_Validation_Gate alone owns `scripts/kiro-repo-guidance
     - Otherwise retain `blocked`, `deferred`, `observe`, `disable`, or `exclude`; do not enable LTM, incompatible Crew behavior, unvalidated powers/MCP/agents/subagents, unvalidated surfaces, or unrepaired hooks.
     - _Requirements: 1.6, 4.5, 5.5, 7.3, 7.6, 8.5, 9.7, 10.2–10.11, 11.4–11.5, 12.6–12.8, 13.7–13.8, 14.8–14.9; Design: Enablement predicate, Gate sequence_
 
-  - [ ] 9.2 Add the end-to-end local-surface integration test.
+  - [~] 9.2 Add the end-to-end local-surface integration test.
     - Exercise inventory through both reviewers and final gate with incomplete discovery, failed schema, unresolved approval, Crew conflict, stubbed LTM, ownership conflict, partial agent, failed rollback, and successful local artifact validation; assert exact statuses, generated evidence, preserved state, and no unsafe side effects.
     - **Validates: Requirements 1.6, 2.7, 4.5, 5.5, 7.3, 7.6, 8.5, 9.7, 10.2–10.13, 11.4–11.8, 12.6–12.8, 13.5–13.8, 14.8–14.12; Design: Error handling, Failure and rollback testing_
 
