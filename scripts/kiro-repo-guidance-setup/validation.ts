@@ -248,7 +248,11 @@ function normalizeExecution(
     blockers.push("validation was interrupted before completion");
   }
 
-  if (execution.blocker && execution.blocker !== "none") blockers.push(execution.blocker);
+  if (execution.blocker && execution.blocker !== "none") {
+    blockers.push(execution.blocker);
+    if (result === "pass") result = "blocked";
+  }
+  if (unverifiedItems.length > 0 && result === "pass") result = "blocked";
   if (result === "fail") blockers.push("validation command failed");
   if (result === "blocked") blockers.push("validation was blocked");
   if (result === "partial") blockers.push("validation completed only partially");

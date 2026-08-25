@@ -61,22 +61,22 @@ The post-wave Integration_Validation_Gate alone owns `scripts/kiro-repo-guidance
     - Inspect required repository authority sources, visible `.kiro` artifacts, package scripts, and referenced paths without claiming external or surface success from static data.
     - _Requirements: 1.1–1.5, 2.1–2.2, 3.1, 13.3; Design: DiscoveryCollector, Discovery and source inventory_
 
-  - [~] 2.2 Implement `RepositoryInventory` for canonical guidance and every visible Kiro artifact.
+  - [x] 2.2 Implement `RepositoryInventory` for canonical guidance and every visible Kiro artifact.
     - Assign every required source and visible skill, steering file, hook, power, agent, MCP/setting/ignore/spec artifact exactly one status: `present and readable`, `present but unreadable`, `absent`, or `unknown`.
     - Keep the six initial skills exactly `{repo-map, graph-impact, verify-and-gate, fork-boundaries, focss-css, db-migrations}` and record owner, scope, activation condition, canonical source, evidence state, disposition candidate, and one maintenance-risk value.
     - _Requirements: 2.1–2.6, 2.7, 11.1–11.2; Design: RepositoryInventory, Artifact records_
 
-  - [~] 2.3 Implement `ProvenanceLedger` and `AuthorityResolver`.
+  - [x] 2.3 Implement `ProvenanceLedger` and `AuthorityResolver`.
     - Preserve every claim, source, date, surface, version, provenance, authority rank, selected claim, losing contextual claim, rationale, and unresolved impact using `user > live code/fresh commands > AGENTS.md > Agents/* > canonical docs/*`.
     - Hash artifacts only where safe, redact secrets/tokens/private URLs/personal data, and keep historical evidence separate from fresh validation evidence.
     - _Requirements: 2.3–2.5, 3.1–3.6, 14.1, 14.3, 14.6–14.7; Design: ProvenanceLedger, Authority resolution, Validation and rollback records_
 
-  - [~] 2.4 Implement `CoverageMatrixBuilder` and `ExclusionRegister`.
+  - [x] 2.4 Implement `CoverageMatrixBuilder` and `ExclusionRegister`.
     - Create one coverage record for each discovered official candidate and expand mandatory families page-by-page; classify relevant inaccessible/redirected/contradictory/impossible-to-match pages as unavailable `Unverified`, not excluded.
     - Record out-of-scope billing/marketing/unrelated/Crew candidates with reason, owner, scope boundary, and reconsideration trigger; emit the exact complete-review statement only when every relevant candidate has reviewed, excluded, or unavailable status.
     - _Requirements: 1.2–1.5, 3.1, 11.1, 13.3, 13.6; Design: Coverage Matrix, Exclusion Register_
 
-  - [~] 2.5 Write the property-based test for **Property 1: Discovery evidence is complete and ordered**.
+  - [x] 2.5 Write the property-based test for **Property 1: Discovery evidence is complete and ordered**.
     - Use `fast-check` with at least 100 iterations to prove every candidate used as decision evidence has Source_Inventory and Coverage_Matrix records first, exclusions and unavailable findings remain distinct, unavailable candidates are listed, and the required completion statement is used.
     - Write only under `tests/kiro-repo-guidance-setup/lane-a/`.
     - **Validates: Requirements 1.1–1.5, 2.2, 13.3; Design: Correctness Property 1**
@@ -100,22 +100,22 @@ The post-wave Integration_Validation_Gate alone owns `scripts/kiro-repo-guidance
     - Record documented/observed behavior, freshness, version sensitivity, validation action, migration constraints, unsupported claims, enablement status, and rollback path without transferring evidence across surfaces or versions.
     - _Requirements: 4.1–4.6, 10.3, 12.5, 12.8, 13.4, 13.7; Design: Surface/version model, CompatibilityRecord_
 
-  - [~] 3.2 Implement `ScopePrecedenceMapper`.
+  - [x] 3.2 Implement `ScopePrecedenceMapper`.
     - Record global `~/.kiro`/`KIRO_HOME`, project `.kiro`, agent, file-match, manual, workspace-root permission, user permission, and external-service scopes with separate documented and observed precedence fields.
     - Represent `denyOverridesAllow` as `observed`, `Unverified`, or `contradicted`; do not infer absent user-level files or permission state from repository-local inspection.
     - _Requirements: 5.1–5.2, 5.6, 11.6; Design: Configuration and Permission Scopes, Permission precedence contract_
 
-  - [~] 3.3 Implement approval-boundary records and safe permission probes.
+  - [x] 3.3 Implement approval-boundary records and safe permission probes.
     - Require scope, requested change, target surface, owner/date/status, pre-change state, security/data boundary, expected side effects, and rollback path before global, credential, external, permission-broadening, or Cloud/Crew operations.
     - Model allowed, denied, prompted, and restricted outcomes where applicable; unresolved or pending boundaries block without mutation.
     - _Requirements: 5.3–5.5, 8.4–8.5, 10.2, 10.9, 11.5–11.6, 14.8; Design: Approval boundary interface_
 
-  - [~] 3.4 Implement `RepositoryPolicyGuard` and owner-decision validation.
+  - [x] 3.4 Implement `RepositoryPolicyGuard` and owner-decision validation.
     - Enforce root-only `pnpm`, no worktrees, default maximum one active agent, explicit approvals, production read-only filesystem, mode-aware persistence/no dual-write, Admin/Products routing, Studio/Planner isolation, both Vitest lanes, required gates, and the feature-only OD-04 maximum-four exception.
     - Validate exactly OD-01 through OD-10, preserve the broad conditional `enable after validation` selection, and keep unresolved decisions on safe fallbacks; OD-04 never changes `AGENTS.md` or authorizes Crew worktrees, general concurrency, hidden spawning, retries/replans, or auto-approval.
     - _Requirements: 9.2–9.3, 9.8–9.12, 10.1–10.13, 11.6–11.8, 14.2, 14.5, 14.10–14.12; Design: RepositoryPolicyGuard, Owner Decision Records, Crew compatibility guard_
 
-  - [~] 3.5 Write the property-based test for **Property 4: Fixed candidate and decision sets are exact**.
+  - [x] 3.5 Write the property-based test for **Property 4: Fixed candidate and decision sets are exact**.
     - Use at least 100 iterations to assert the exact six-skill set, exactly seven compatibility records, separate specification/execution/continuity capabilities, and exactly one each of OD-01 through OD-10.
     - **Validates: Requirements 2.6, 4.1, 9.1, 9.4, 10.1; Design: Correctness Property 4**
 
@@ -138,12 +138,12 @@ The post-wave Integration_Validation_Gate alone owns `scripts/kiro-repo-guidance
     - Designate exactly `repo-map` as the primary `Repository_Guidance_Skill`; resolve every overlap through merge/delegate/retire/reject and make no activation-scope claim without OD-08 and fresh validation.
     - _Requirements: 2.6, 3.4, 6.1–6.7, 10.8, 13.2; Design: Skills and steering evaluator interface, Skills/Steering plan_
 
-  - [~] 4.2 Implement `HookEvaluator` and hook schema/safety checks.
+  - [x] 4.2 Implement `HookEvaluator` and hook schema/safety checks.
     - Validate standalone `.kiro/hooks/*.json`, `version: "v1"`, PascalCase events, supported command/agent actions, JSON stdin contract, narrow target-only matchers, hook-level boolean `enabled`, hook-level timeout, referenced paths, root commands, surface availability, dependencies, overlap, owner, and rollback.
     - Keep `domain-fast-check.json` action-level timeout placement `Unverified`; preserve semicolon command evidence; classify an unrelated PowerShell `&&` error as unrelated unless fresh stored-command evidence identifies it; keep file-hook evidence agent-made-only absent fresh proof.
     - _Requirements: 7.1–7.9, 12.1, 12.6, 14.2; Design: Hook evaluator interface, Hook acceptance algorithm, Hook Schema/Repair/Safety plan_
 
-  - [~] 4.3 Implement local/installed power, MCP, tool, custom-agent, and subagent capability evaluators.
+  - [-] 4.3 Implement local/installed power, MCP, tool, custom-agent, and subagent capability evaluators.
     - Classify power format exactly as `Legacy_POWER`, `Agent_Plugin`, `Both`, or `Neither`; preserve separate observations for local `oando-workflow` `POWER.md`, empty `mcp.json`, absent `plugin.json`, and unverified `registryId: local`.
     - Perform the repository-answer check before external routing; record provenance, revision/license or unavailable, trust/integrity, secrets, permissions, named service/data boundary, resource URIs or `None`, owner approval, target validation, DAG/review graph, concurrency, failure behavior, and rollback.
     - _Requirements: 8.1–8.8; Design: Capability evaluator, Local power, External MCP and installed powers, Custom agents and subagents_
@@ -179,11 +179,11 @@ The post-wave Integration_Validation_Gate alone owns `scripts/kiro-repo-guidance
 
 - [ ] 5. Lane D — implement wave coordination, validation, rollback, handover, and reviewer modules
   - Lane D owns the coordinator and review infrastructure paths listed in the ownership contract. Its early coordinator files are preparation artifacts; its later modules may read every frozen contract and lane output but may not mutate another lane’s files.
-  - [~] 5.1 Implement `ValidationRunner` and typed gate adapters.
+  - [x] 5.1 Implement `ValidationRunner` and typed gate adapters.
     - Record artifact, repository, focused, fast, two-lane test, ship, surface, security, rollback, and handover runs with action, root/surface, scope, UTC date, result, command/interaction, outcome, evidence, Unverified items, and `blocker: none` when clear; interrupted work is `partial`/`blocked`, never PASS.
     - _Requirements: 12.2–12.5, 12.7, 13.5–13.7; Design: ValidationRunner, Validation and rollback records, Validation Gates_
 
-  - [~] 5.2 Implement `RollbackManager` and snapshot-first restore/disable behavior.
+  - [x] 5.2 Implement `RollbackManager` and snapshot-first restore/disable behavior.
     - Capture pre-change bytes/settings, expected success signal, restore or disable without deleting unrelated work, verify by hash/bytes or a documented no-change result, and block later enablement after rollback failure or unverified rollback readiness.
     - _Requirements: 5.7, 7.9, 11.2, 12.6–12.7, 13.5, 13.8, 14.3; Design: RollbackManager, Failure and rollback testing_
 

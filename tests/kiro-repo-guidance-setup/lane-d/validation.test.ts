@@ -143,6 +143,22 @@ describe("ValidationRunnerService", () => {
     expect(result.output?.blocker).toContain("interrupted");
   });
 
+  it("blocks a nominal pass that reports a blocker or Unverified item", () => {
+    const blocker = createRunner(
+      passingExecution({ blocker: "approval boundary is pending" }),
+    ).run(createRequest());
+    const unverified = createRunner(
+      passingExecution({ unverifiedItems: ["CLI 3.x surface validation"] }),
+    ).run(createRequest());
+
+    expect(blocker.status).toBe("blocked");
+    expect(blocker.output?.result).toBe("blocked");
+    expect(blocker.output?.blocker).toContain("approval boundary is pending");
+    expect(unverified.status).toBe("blocked");
+    expect(unverified.output?.result).toBe("blocked");
+    expect(unverified.output?.unverifiedItems).toEqual(["CLI 3.x surface validation"]);
+  });
+
   it("preserves a failed gate result and identifies the failure", () => {
     const result = createRunner(
       passingExecution({ result: "fail", exitCodeOrOutcome: "exit 1" }),

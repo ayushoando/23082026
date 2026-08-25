@@ -4,13 +4,21 @@ import {
   type CompatibilityRecord,
   type CompatibilityStatus,
   type CompatibilityResult,
+  type ConfigurationPrecedenceMap,
+  type ConfigurationScope,
   type EvidenceFreshness,
   type KiroSurface,
+  type ScopeInput,
+  type ScopeRecord,
+  type ScopeResult,
   type StageResult,
   type SurfaceVersion,
   type ValidationRun,
 } from "./contracts";
-import type { CompatibilityMatrix as CompatibilityMatrixContract } from "./contracts";
+import type {
+  CompatibilityMatrix as CompatibilityMatrixContract,
+  ScopePrecedenceMapper as ScopePrecedenceMapperContract,
+} from "./contracts";
 
 export const COMPATIBILITY_REVIEW_DATE = "2026-08-25" as const;
 export const OBSERVED_IDE_SESSION = "The active environment is a Kiro IDE session." as const;
@@ -497,3 +505,252 @@ export const assessCompatibility = (input: CompatibilityInput): StageResult<Comp
   compatibilityMatrix.assess(input);
 
 export default compatibilityMatrix;
+
+
+/**
+ * The documented scope sequence is a contract for caller-provided documentation
+ * evidence, not a claim that local user settings were inspected.  Observed
+ * precedence is projected separately and is never synthesized from this list.
+ */
+export const DOCUMENTED_SCOPE_ORDER = [
+  "global",
+  "project",
+  "agent",
+  "file_match",
+  "manual",
+  "workspace_root_permission",
+  "user_permission",
+  "external_service",
+] as const satisfies readonly ConfigurationScope[];
+
+const CONFIGURATION_SCOPES = new Set<ConfigurationScope>(DOCUMENTED_SCOPE_ORDER);
+const KIRO_SURFACES = new Set<KiroSurface>([
+  "IDE",
+  "CLI 2.x",
+  "CLI 3.x",
+  "Web",
+  "Mobile",
+  "Cloud/Crew",
+  "Local_Repository_Surface",
+]);
+const APPLICABILITY_VALUES = new Set(["applicable", "not_applicable_with_reason", "unresolved"]);
+const ACCESS_MODES = new Set(["read", "write", "read_write", "none"]);
+
+function isConfigurationScope(value: unknown): value is ConfigurationScope {
+  return typeof value === "string" && CONFIGURATION_SCOPES.has(value as ConfigurationScope);
+}
+
+function isStringArray(value: unknown, requireValues = false): value is readonly string[] {
+  return (
+    Array.isArray(value) &&
+    value.every((item) => typeof item === "string") &&
+    (!requireValues || value.some((item) => item.trim().length > 0))
+  );
+}
+
+function isIsoTimestamp(value: unknown): value is string {
+  return (
+    typeof value === "string" &&
+    /^\d{4}-\d{2}-\d{2}T/.test(value) &&
+    !Number.isNaN(Date.parse(value))
+  );
+}
+
+function scopeEvidenceRefs(record: ScopeRecord): string[] {
+  return record.evidenceRefs.length > 0
+    ? [...record.evidenceRefs]
+    : [`scope:${record.scope}:${record.surface}`];
+}
+
+function isScopeRecord(value: unknown): value is ScopeRecord {
+  if (!isObject(value)) return false;
+
+  return (
+    isConfigurationScope(value.scope) &&
+    typeof value.surface === "string" &&
+    KIRO_SURFACES.has(value.surface as KiroSurface) &&
+    typeof value.pathOrService === "string" &&
+    value.pathOrService.trim().length > 0 &&
+    typeof value.applicability === "string" &&
+    APPLICABILITY_VALUES.has(value.applicability) &&
+    typeof value.access === "string" &&
+    ACCESS_MODES.has(value.access) &&
+    isStringArray(value.actions, true) &&
+    isStringArray(value.documentedPrecedence) &&
+    isStringArray(value.observedPrecedence) &&
+    isStringArray(value.evidenceRefs, true) &&
+    typeof value.rollbackPathRef === "string" &&
+    value.rollbackPathRef.trim().length > 0 &&
+    (value.approvalBoundaryRef === undefined ||
+      (typeof value.approvalBoundaryRef === "string" &&
+        value.approvalBoundaryRef.trim().length > 0)) &&
+    (value.denyOverridesAllow === "observed" ||
+      value.denyOverridesAllow === "Unverified" ||
+      value.denyOverridesAllow === "contradicted")
+  );
+}
+
+function normalizedPrecedence(
+  values: readonly string[],
+  record: ScopeRecord,
+  field: "documented" | "observed",
+  blockers: string[],
+): ConfigurationScope[] {
+  const precedence: ConfigurationScope[] = [];
+
+  for (const value of values) {
+    if (!isConfigurationScope(value)) {
+      blockers.push(`${record.scope} ${field} precedence contains unknown scope ${String(value)}`);
+      continue;
+    }
+    if (!precedence.includes(value)) precedence.push(value);
+  }
+
+  return precedence;
+}
+
+function sameOrder(
+  left: readonly ConfigurationScope[],
+  right: readonly ConfigurationScope[],
+): boolean {
+  return left.length === right.length && left.every((value, index) => value === right[index]);
+}
+
+function mergeOrder(
+  sequences: readonly (readonly ConfigurationScope[])[],
+): ConfigurationScope[] {
+  const merged: ConfigurationScope[] = [];
+  for (const sequence of sequences) {
+    for (const scope of sequence) {
+      if (!merged.includes(scope)) merged.push(scope);
+    }
+  }
+  return merged;
+}
+
+function uniqueIdentifiers(values: readonly string[]): string[] {
+  return [...new Set(values.filter((value) => value.trim().length > 0))];
+}
+
+/**
+ * Builds a fail-closed configuration precedence projection.  The mapper only
+ * projects caller-supplied observations: missing user-level files or probes
+ * remain unresolved rather than becoming an inferred permission state.
+ */
+export function assessScopePrecedenceRecords(input: ScopeInput): StageResult<ScopeResult> {
+  const blockers: string[] = [];
+  const conflicts: string[] = [];
+  const unresolved: string[] = [];
+  const records: ScopeRecord[] = [];
+  const seenScopeSurfacePath = new Set<string>();
+
+  if (!isIsoTimestamp(input.generatedAtUtc)) {
+    blockers.push("generatedAtUtc must be a valid ISO UTC timestamp");
+  }
+
+  for (const value of input.records as readonly unknown[]) {
+    if (!isScopeRecord(value)) {
+      blockers.push("a scope record is malformed and cannot be used for precedence assessment");
+      continue;
+    }
+
+    const key = `${value.scope}::${value.surface}::${value.pathOrService}`;
+    if (seenScopeSurfacePath.has(key)) {
+      blockers.push(`duplicate scope record ${key} cannot establish precedence`);
+      conflicts.push(...scopeEvidenceRefs(value));
+      continue;
+    }
+
+    seenScopeSurfacePath.add(key);
+    records.push(value);
+  }
+
+  for (const scope of DOCUMENTED_SCOPE_ORDER) {
+    if (!records.some((record) => record.scope === scope)) {
+      blockers.push(`required configuration scope ${scope} is missing`);
+      unresolved.push(`scope:${scope}:missing`);
+    }
+  }
+
+  const documentedSequences: ConfigurationScope[][] = [];
+  const observedSequences: ConfigurationScope[][] = [];
+
+  for (const record of records) {
+    const documented = normalizedPrecedence(
+      record.documentedPrecedence,
+      record,
+      "documented",
+      blockers,
+    );
+    const observed = normalizedPrecedence(
+      record.observedPrecedence,
+      record,
+      "observed",
+      blockers,
+    );
+    const evidenceRefs = scopeEvidenceRefs(record);
+
+    if (documented.length === 0) {
+      blockers.push(`${record.scope} has no documented precedence evidence`);
+      unresolved.push(...evidenceRefs);
+    } else {
+      documentedSequences.push(documented);
+    }
+
+    if (observed.length > 0) observedSequences.push(observed);
+
+    if (record.denyOverridesAllow !== "observed") {
+      blockers.push(`${record.scope} deny-overrides-allow is ${record.denyOverridesAllow}`);
+      unresolved.push(...evidenceRefs);
+    }
+
+    if (documented.length > 0 && observed.length > 0 && !sameOrder(documented, observed)) {
+      blockers.push(`${record.scope} observed precedence conflicts with documented precedence`);
+      conflicts.push(...evidenceRefs);
+    }
+  }
+
+  const documentedOrder = mergeOrder(documentedSequences);
+  const observedOrder = mergeOrder(observedSequences);
+  const map: ConfigurationPrecedenceMap = {
+    records,
+    documentedOrder,
+    observedOrder,
+    conflicts: uniqueIdentifiers(conflicts),
+    unresolved: uniqueIdentifiers(unresolved),
+    generatedAtUtc: input.generatedAtUtc,
+  };
+  const output: ScopeResult = {
+    map,
+    // Approval boundary creation belongs to task 3.3. This pure mapper never
+    // fabricates a requested change, owner approval, or pre-change state.
+    approvalBoundaries: [],
+    blockers: unique(blockers),
+  };
+
+  if (output.blockers.length > 0) {
+    return {
+      status: "partial",
+      output,
+      blockers: output.blockers,
+      evidenceRefs: uniqueIdentifiers(records.flatMap(scopeEvidenceRefs)),
+    };
+  }
+
+  return {
+    status: "pass",
+    output,
+    blockers: [],
+    evidenceRefs: uniqueIdentifiers(records.flatMap(scopeEvidenceRefs)),
+  };
+}
+
+export class ScopePrecedenceMapper implements ScopePrecedenceMapperContract {
+  assess(input: ScopeInput): StageResult<ScopeResult> {
+    return assessScopePrecedenceRecords(input);
+  }
+}
+
+export const scopePrecedenceMapper = new ScopePrecedenceMapper();
+export const assessScopePrecedence = (input: ScopeInput): StageResult<ScopeResult> =>
+  scopePrecedenceMapper.assess(input);
