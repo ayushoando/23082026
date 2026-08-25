@@ -29,6 +29,7 @@
 
 import {
   COMPLETE_REVIEW_STATEMENT,
+  REQUIRED_SURFACE_VERSIONS,
   REVIEWER_ITERATION_CEILING,
   REVIEWER_MAXIMUM_CONCURRENCY,
   REVIEWER_ORDER,
@@ -48,16 +49,6 @@ import {
 } from "./contracts";
 
 const REVIEWER_ROLLBACK_PATH = "no rollback applies" as const;
-
-const REQUIRED_COMPATIBILITY_SURFACES: readonly CompatibilityRecord["surface"][] = [
-  "IDE",
-  "CLI 2.x",
-  "CLI 3.x",
-  "Web",
-  "Mobile",
-  "Cloud/Crew",
-  "Local_Repository_Surface",
-];
 
 const APPROVED_BOUNDARY_STATUS = "approved" as const;
 const CLEAN_ROLLBACK_RESULT = "pass" as const;
@@ -217,6 +208,9 @@ function reviewEvidenceInputsPresent(input: EvidenceReviewRequest): string[] {
   if (input.coverageMatrix.entries.length === 0) {
     blockers.push("coverage matrix has no entries to review");
   }
+  if (input.artifactInventory.length === 0) {
+    blockers.push("artifact inventory has no records to review");
+  }
   if (input.compatibilityRecords.length === 0) {
     blockers.push("no surface/version compatibility records were provided");
   }
@@ -224,6 +218,42 @@ function reviewEvidenceInputsPresent(input: EvidenceReviewRequest): string[] {
     blockers.push("no owner-decision records were provided");
   }
   return blockers;
+}
+
+function reviewArtifactInventory(input: EvidenceReviewRequest): {
+  findings: string[];
+  blockers: string[];
+} {
+  const findings: string[] = [];
+  const blockers: string[] = [];
+
+  for (const artifact of input.artifactInventory) {
+    if (!nonEmpty(artifact.artifactId) || !nonEmpty(artifact.path)) {
+      blockers.push("artifact inventory contains a record without an artifact id and path");
+    }
+    if (!nonEmpty(artifact.owner) || !nonEmpty(artifact.configurationScope)) {
+      blockers.push(
+        `artifact ${artifact.artifactId || "unknown"} is missing owner or configuration scope`,
+      );
+    }
+    if (!nonEmpty(artifact.canonicalSource) || !nonEmpty(artifact.activationCondition)) {
+      blockers.push(
+        `artifact ${artifact.artifactId || "unknown"} is missing canonical source or activation condition`,
+      );
+    }
+    if (artifact.inventoryStatus !== "present and readable") {
+      findings.push(
+        `artifact ${artifact.artifactId || artifact.path} is ${artifact.inventoryStatus} and remains inactive until its contents are validated`,
+      );
+    }
+    if (artifact.evidenceState === "Unverified") {
+      findings.push(
+        `artifact ${artifact.artifactId || artifact.path} remains Unverified; inventory evidence cannot establish compatibility`,
+      );
+    }
+  }
+
+  return { findings, blockers };
 }
 
 function reviewCoverageCompleteness(input: EvidenceReviewRequest): {
@@ -243,6 +273,23 @@ function reviewCoverageCompleteness(input: EvidenceReviewRequest): {
     if (nonEmpty(gapBlocker)) blockers.push(`coverage matrix blocker: ${gapBlocker}`);
   }
 
+  const sourceIds = new Set(input.sourceInventory.records.map((record) => record.sourceId));
+  const coveredSourceIds = new Set(
+    input.coverageMatrix.entries.map((entry) => entry.sourceId),
+  );
+  for (const sourceId of sourceIds) {
+    if (!coveredSourceIds.has(sourceId)) {
+      blockers.push(`source inventory record ${sourceId} has no Coverage_Matrix entry`);
+    }
+  }
+  for (const entry of input.coverageMatrix.entries) {
+    if (!sourceIds.has(entry.sourceId)) {
+      blockers.push(
+        `Coverage_Matrix entry ${entry.coverageId} references missing source inventory record ${entry.sourceId}`,
+      );
+    }
+  }
+
   for (const finding of input.sourceInventory.unavailableFindings) {
     findings.push(
       `unavailable candidate ${finding.sourceRef} is Unverified (${finding.availability}); it cannot become enabled-valid evidence`,
@@ -253,6 +300,21 @@ function reviewCoverageCompleteness(input: EvidenceReviewRequest): {
   const unavailableIds = new Set(
     input.sourceInventory.unavailableFindings.map((finding) => finding.sourceRef),
   );
+  const matrixUnavailableIds = new Set(input.coverageMatrix.unavailableCandidateRefs);
+  for (const unavailableId of unavailableIds) {
+    if (!matrixUnavailableIds.has(unavailableId)) {
+      blockers.push(
+        `unavailable candidate ${unavailableId} is missing from Coverage_Matrix unavailableCandidateRefs`,
+      );
+    }
+  }
+  for (const unavailableId of matrixUnavailableIds) {
+    if (!unavailableIds.has(unavailableId)) {
+      findings.push(
+        `Coverage_Matrix preserves unavailable candidate ${unavailableId}; its Unverified finding remains required before enablement`,
+      );
+    }
+  }
   for (const excludedId of excludedIds) {
     if (unavailableIds.has(excludedId)) {
       blockers.push(
@@ -270,49 +332,95 @@ function reviewCompatibilityFreshness(input: EvidenceReviewRequest): {
 } {
   const findings: string[] = [];
   const blockers: string[] = [];
+  const targetKey = (surface: string, version: string): string => `${surface}\u0000${version}`;
+  const requiredTargets = new Set(
+    REQUIRED_SURFACE_VERSIONS.map((target) => targetKey(target.surface, target.version)),
+  );
+  const recordsByTarget = new Map<string, CompatibilityRecord[]>();
 
-  const seenSurfaces = new Set(input.compatibilityRecords.map((record) => record.surface));
-  for (const surface of REQUIRED_COMPATIBILITY_SURFACES) {
-    if (!seenSurfaces.has(surface)) {
-      blockers.push(`compatibility record for surface ${surface} is missing`);
+  for (const record of input.compatibilityRecords) {
+    const key = targetKey(record.surface, record.version);
+    const records = recordsByTarget.get(key) ?? [];
+    records.push(record);
+    recordsByTarget.set(key, records);
+    if (!requiredTargets.has(key)) {
+      blockers.push(
+        `compatibility record ${record.surface} ${record.version} is not one of the seven required surface/version targets`,
+      );
     }
   }
 
+  for (const target of REQUIRED_SURFACE_VERSIONS) {
+    const records = recordsByTarget.get(targetKey(target.surface, target.version)) ?? [];
+    if (records.length === 0) {
+      blockers.push(
+        `compatibility record for surface/version ${target.surface} ${target.version} is missing`,
+      );
+    } else if (records.length > 1) {
+      blockers.push(
+        `compatibility record for surface/version ${target.surface} ${target.version} is duplicated`,
+      );
+    }
+  }
+
+  const validationRunsById = new Map(input.validationRuns.map((run) => [run.validationId, run]));
   const validationRunIds = new Set(input.validationRuns.map((run) => run.validationId));
 
   for (const record of input.compatibilityRecords) {
-    if (record.enablementStatus !== "enabled-valid") continue;
-
-    if (record.evidenceFreshness !== "fresh") {
-      blockers.push(
-        `${record.surface} ${record.version} claims enabled-valid without fresh evidence (freshness: ${record.evidenceFreshness})`,
-      );
-    }
-    if (record.validationRunRefs.length === 0) {
-      blockers.push(
-        `${record.surface} ${record.version} claims enabled-valid without any Validation_Run reference`,
-      );
-    }
-    const hasFreshExactRun = record.validationRunRefs.some((ref) => {
-      const run = input.validationRuns.find((candidate) => candidate.validationId === ref);
+    const exactTarget = targetKey(record.surface, record.version);
+    const exactPassingRun = record.validationRunRefs.some((ref) => {
+      const run = validationRunsById.get(ref);
       return (
         run !== undefined &&
         run.result === "pass" &&
-        run.surface === record.surface &&
-        run.version === record.version
+        run.blocker === "none" &&
+        run.unverifiedItems.length === 0 &&
+        targetKey(run.surface, run.version) === exactTarget &&
+        nonEmpty(run.startedAtUtc)
       );
     });
-    if (record.validationRunRefs.length > 0 && !hasFreshExactRun) {
-      blockers.push(
-        `${record.surface} ${record.version} has no passing exact-target Validation_Run; evidence may be transferred from another surface or version`,
-      );
-    }
+
     for (const ref of record.validationRunRefs) {
+      const run = validationRunsById.get(ref);
       if (!validationRunIds.has(ref)) {
         blockers.push(
           `${record.surface} ${record.version} references Validation_Run ${ref} that was not provided to the reviewer`,
         );
+      } else if (
+        run !== undefined &&
+        targetKey(run.surface, run.version) !== exactTarget
+      ) {
+        blockers.push(
+          `${record.surface} ${record.version} references Validation_Run ${ref} for ${run.surface} ${run.version}; transferred evidence cannot establish compatibility`,
+        );
       }
+    }
+
+    if (record.enablementStatus === "enabled-valid") {
+      if (record.status !== "applicable") {
+        blockers.push(
+          `${record.surface} ${record.version} claims enabled-valid while its compatibility status is ${record.status}`,
+        );
+      }
+      if (record.evidenceFreshness !== "fresh") {
+        blockers.push(
+          `${record.surface} ${record.version} claims enabled-valid without fresh evidence (freshness: ${record.evidenceFreshness})`,
+        );
+      }
+      if (record.validationRunRefs.length === 0) {
+        blockers.push(
+          `${record.surface} ${record.version} claims enabled-valid without any Validation_Run reference`,
+        );
+      }
+      if (!exactPassingRun) {
+        blockers.push(
+          `${record.surface} ${record.version} has no passing fresh exact-target Validation_Run; evidence may be transferred from another surface or version`,
+        );
+      }
+    } else if (record.evidenceFreshness === "fresh" && !exactPassingRun) {
+      findings.push(
+        `${record.surface} ${record.version} is marked fresh without a passing fresh exact-target Validation_Run; it remains unavailable for enablement`,
+      );
     }
   }
 
@@ -361,17 +469,20 @@ export class EvidenceCompatibilityReviewerService
 {
   public review(input: EvidenceReviewRequest): StageResult<ReviewResult> {
     const presenceBlockers = reviewEvidenceInputsPresent(input);
+    const artifactInventory = reviewArtifactInventory(input);
     const coverage = reviewCoverageCompleteness(input);
     const compatibility = reviewCompatibilityFreshness(input);
     const ownerDecisions = reviewOwnerDecisionResolution(input);
 
     const blockers = unique([
       ...presenceBlockers,
+      ...artifactInventory.blockers,
       ...coverage.blockers,
       ...compatibility.blockers,
       ...ownerDecisions.blockers,
     ]);
     const findings = unique([
+      ...artifactInventory.findings,
       ...coverage.findings,
       ...compatibility.findings,
       ...ownerDecisions.findings,
@@ -379,6 +490,33 @@ export class EvidenceCompatibilityReviewerService
     const evidenceRefs = unique([
       nonEmpty(input.inputStageRef) ? input.inputStageRef : "",
       "reviewer:EvidenceCompatibilityReviewer",
+      ...input.sourceInventory.records.map((record) => record.sourceId),
+      ...input.sourceInventory.unavailableFindings.flatMap((finding) => [
+        finding.findingId,
+        finding.sourceRef,
+      ]),
+      ...input.coverageMatrix.entries.flatMap((entry) => [
+        entry.coverageId,
+        entry.sourceId,
+        entry.evidenceProvenanceRef,
+      ]),
+      ...input.coverageMatrix.unavailableCandidateRefs,
+      ...input.exclusions.entries.flatMap((entry) => [
+        entry.exclusionId,
+        entry.candidateRef,
+        entry.evidenceRef,
+      ]),
+      ...input.artifactInventory.flatMap((artifact) => [
+        artifact.artifactId,
+        ...artifact.evidenceRefs,
+        ...artifact.validationRunRefs,
+      ]),
+      ...input.compatibilityRecords.flatMap((record) => [
+        record.rollbackPathRef,
+        ...record.validationRunRefs,
+      ]),
+      ...input.ownerDecisions.map((decision) => decision.evidenceRef),
+      ...input.validationRuns.flatMap((run) => [run.validationId, ...run.evidenceRefs]),
     ]);
 
     const { result, status } = buildReviewResult({
@@ -401,22 +539,38 @@ export class EvidenceCompatibilityReviewerService
 // ---------------------------------------------------------------------------
 
 /**
- * The safety reviewer may only start after the evidence reviewer completed.  A
- * partial or failed evidence review blocks the start unless that failure is
- * explicitly represented as a recorded blocker in the sequential handoff.
+ * The safety reviewer may only start after the evidence reviewer completed. A
+ * partial or failed evidence review is permitted to reach this read-only stage
+ * only when the failure is explicitly represented by the recorded handoff; it
+ * can never become a clean sequential enablement result.
  */
 function reviewHandoffPrecondition(input: SafetyReviewRequest): string[] {
   const blockers: string[] = [];
   const evidence = input.evidenceReview;
+  const handoff = evidence.handoff;
+  const orderedFirst = REVIEWER_ORDER[0];
+  const expectedEvidenceOutputRef = "reviewer:EvidenceCompatibilityReviewer";
 
   if (evidence.reviewer !== "EvidenceCompatibilityReviewer") {
     blockers.push(
       "SafetyRollbackReviewer requires the EvidenceCompatibilityReviewer output as its input stage",
     );
   }
+  if (evidence.stage.reviewer !== "EvidenceCompatibilityReviewer") {
+    blockers.push("evidence-review stage identifies a different reviewer");
+  }
+  if (evidence.stage.executionLayer !== "reviewer_stage") {
+    blockers.push("evidence-review stage is not a reviewer-stage record");
+  }
+  if (
+    !evidence.stage.readOnly ||
+    evidence.stage.maximumConcurrency !== REVIEWER_MAXIMUM_CONCURRENCY ||
+    evidence.stage.iterationCeiling !== REVIEWER_ITERATION_CEILING ||
+    evidence.stage.rollbackPath !== REVIEWER_ROLLBACK_PATH
+  ) {
+    blockers.push("evidence-review stage violates the sequential read-only reviewer bounds");
+  }
 
-  const handoff = evidence.handoff;
-  const orderedFirst = REVIEWER_ORDER[0];
   if (handoff.fromStage !== "Integration_Validation_Gate") {
     blockers.push("evidence-review handoff did not originate from the Integration_Validation_Gate");
   }
@@ -429,10 +583,36 @@ function reviewHandoffPrecondition(input: SafetyReviewRequest): string[] {
   if (evidence.reviewer !== orderedFirst) {
     blockers.push("reviewer order was not preserved: EvidenceCompatibilityReviewer must run first");
   }
+  if (
+    !handoff.readOnly ||
+    handoff.maximumConcurrency !== REVIEWER_MAXIMUM_CONCURRENCY ||
+    handoff.iterationCeiling !== REVIEWER_ITERATION_CEILING
+  ) {
+    blockers.push("evidence-review handoff violates the sequential read-only reviewer bounds");
+  }
+  if (!handoff.inputRefs.includes(evidence.stage.inputStageRef)) {
+    blockers.push("evidence-review handoff does not reference its Integration_Validation_Gate input");
+  }
+  if (!handoff.outputRefs.includes(expectedEvidenceOutputRef)) {
+    blockers.push("evidence-review handoff does not reference the completed EvidenceCompatibilityReviewer output");
+  }
+
+  if (handoff.status !== evidence.stage.status) {
+    blockers.push("evidence-review stage status and recorded handoff status disagree");
+  }
+  const evidenceBlockerRecorded = evidence.blockers.length > 0;
+  const stageBlockerRecorded = evidence.stage.blocker !== "none";
+  const handoffBlockerRecorded = handoff.blocker !== "none" && nonEmpty(handoff.blocker);
+  if (evidenceBlockerRecorded !== stageBlockerRecorded) {
+    blockers.push("evidence-review blocker list and stage blocker disagree");
+  }
+  if (stageBlockerRecorded !== handoffBlockerRecorded || evidence.stage.blocker !== handoff.blocker) {
+    blockers.push("evidence-review stage blocker and sequential handoff blocker disagree");
+  }
 
   const evidenceStatus = handoff.status;
   const evidenceHasRecordedBlocker =
-    evidence.blockers.length > 0 || (handoff.blocker !== "none" && nonEmpty(handoff.blocker));
+    evidenceBlockerRecorded || stageBlockerRecorded || handoffBlockerRecorded;
   if (
     (evidenceStatus === "fail" || evidenceStatus === "blocked" || evidenceStatus === "pending") &&
     !evidenceHasRecordedBlocker
@@ -451,20 +631,61 @@ function reviewApprovalBoundaries(input: SafetyReviewRequest): {
 } {
   const findings: string[] = [];
   const blockers: string[] = [];
+  if (input.approvalBoundaries.length === 0) {
+    blockers.push("no Approval_Boundary record was provided; safety review cannot approve an unbounded change");
+  }
+
   for (const boundary of input.approvalBoundaries) {
+    const boundaryRef = boundary.boundaryId || "unknown boundary";
+    if (!nonEmpty(boundary.scope) || !nonEmpty(boundary.requestedChange) || !nonEmpty(boundary.targetSurface)) {
+      blockers.push(`${boundaryRef} is missing scope, requested change, or target surface`);
+    }
+    if (!nonEmpty(boundary.owner) || !nonEmpty(boundary.approvalDate)) {
+      blockers.push(`${boundaryRef} is missing owner or approval date`);
+    }
     if (boundary.approvalStatus !== APPROVED_BOUNDARY_STATUS) {
       blockers.push(
-        `approval boundary ${boundary.boundaryId} (${boundary.scope}) is ${boundary.approvalStatus}; the requested change must not proceed`,
+        `approval boundary ${boundaryRef} (${boundary.scope}) is ${boundary.approvalStatus}; the requested change must not proceed`,
       );
     }
     if (!nonEmpty(boundary.preChangeStateRef)) {
       blockers.push(
-        `approval boundary ${boundary.boundaryId} has no pre-change state reference; the change is not rollback-ready`,
+        `approval boundary ${boundaryRef} has no pre-change state reference; the change is not rollback-ready`,
       );
     }
     if (!nonEmpty(boundary.securityBoundary)) {
-      findings.push(
-        `approval boundary ${boundary.boundaryId} does not name a security/data boundary`,
+      blockers.push(
+        `approval boundary ${boundaryRef} does not name a security/data boundary; the boundary is unsafe`,
+      );
+    }
+    if (!nonEmpty(boundary.rollbackPathRef)) {
+      blockers.push(`approval boundary ${boundaryRef} has no rollback path reference`);
+    }
+  }
+  return { findings, blockers };
+}
+
+function reviewSnapshotReadiness(input: SafetyReviewRequest): {
+  findings: string[];
+  blockers: string[];
+} {
+  const findings: string[] = [];
+  const blockers: string[] = [];
+  const snapshotRefs = new Set(input.snapshots.filter(nonEmpty));
+  if (snapshotRefs.size === 0) {
+    blockers.push("no pre-change snapshot was provided; safety review cannot establish preserved prior state");
+  }
+  for (const boundary of input.approvalBoundaries) {
+    if (nonEmpty(boundary.preChangeStateRef) && !snapshotRefs.has(boundary.preChangeStateRef)) {
+      blockers.push(
+        `approval boundary ${boundary.boundaryId} references missing pre-change snapshot ${boundary.preChangeStateRef}`,
+      );
+    }
+  }
+  for (const record of input.rollbackRecords) {
+    if (nonEmpty(record.preChangeStateRef) && !snapshotRefs.has(record.preChangeStateRef)) {
+      blockers.push(
+        `rollback ${record.rollbackId} references missing pre-change snapshot ${record.preChangeStateRef}`,
       );
     }
   }
@@ -477,6 +698,10 @@ function reviewRollbackReadiness(input: SafetyReviewRequest): {
 } {
   const findings: string[] = [];
   const blockers: string[] = [];
+  if (input.rollbackRecords.length === 0) {
+    blockers.push("no rollback record was provided; rollback readiness is incomplete");
+  }
+
   for (const record of input.rollbackRecords) {
     if (record.result !== CLEAN_ROLLBACK_RESULT) {
       blockers.push(
@@ -488,8 +713,17 @@ function reviewRollbackReadiness(input: SafetyReviewRequest): {
         `rollback ${record.rollbackId} has no pre-change state reference to restore`,
       );
     }
+    if (!nonEmpty(record.rollbackAction) || !nonEmpty(record.expectedSuccessSignal)) {
+      blockers.push(`rollback ${record.rollbackId} is missing its restore action or expected success signal`);
+    }
+    if (!nonEmpty(record.observedEvidence)) {
+      blockers.push(`rollback ${record.rollbackId} has no observed verification evidence`);
+    }
     if (!nonEmpty(record.verificationRunRef)) {
-      findings.push(`rollback ${record.rollbackId} is not linked to a verification run`);
+      blockers.push(`rollback ${record.rollbackId} is not linked to a verification run`);
+    }
+    if (!nonEmpty(record.owner)) {
+      blockers.push(`rollback ${record.rollbackId} has no owner`);
     }
   }
   return { findings, blockers };
@@ -578,6 +812,7 @@ export class SafetyRollbackReviewerService implements SafetyRollbackReviewerCont
   public review(input: SafetyReviewRequest): StageResult<ReviewResult> {
     const preconditionBlockers = reviewHandoffPrecondition(input);
     const approvals = reviewApprovalBoundaries(input);
+    const snapshots = reviewSnapshotReadiness(input);
     const rollback = reviewRollbackReadiness(input);
     const knownGaps = reviewKnownGaps(input);
     const policy = reviewPolicyFindings(input);
@@ -586,6 +821,7 @@ export class SafetyRollbackReviewerService implements SafetyRollbackReviewerCont
     const blockers = unique([
       ...preconditionBlockers,
       ...approvals.blockers,
+      ...snapshots.blockers,
       ...rollback.blockers,
       ...knownGaps.blockers,
       ...policy.blockers,
@@ -593,6 +829,7 @@ export class SafetyRollbackReviewerService implements SafetyRollbackReviewerCont
     ]);
     const findings = unique([
       ...approvals.findings,
+      ...snapshots.findings,
       ...rollback.findings,
       ...knownGaps.findings,
       ...handover.findings,

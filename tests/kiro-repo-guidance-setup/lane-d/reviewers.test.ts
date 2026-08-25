@@ -147,7 +147,24 @@ function evidenceRequest(
       blockers: [],
     },
     exclusions: { entries: [] },
-    artifactInventory: [],
+    artifactInventory: [
+      {
+        artifactId: "artifact:reviewer-fixture",
+        kind: "Kiro_Skill",
+        path: ".kiro/skills/repo-map/SKILL.md",
+        inventoryStatus: "present and readable",
+        owner: "repository owner",
+        configurationScope: "project",
+        activationCondition: "after exact-surface validation",
+        canonicalSource: "AGENTS.md",
+        evidenceState: "Observed",
+        disposition: "retain",
+        maintenanceRisk: "low",
+        evidenceRefs: ["src-1"],
+        validationRunRefs: [],
+        rollbackPath: "no rollback applies",
+      },
+    ],
     compatibilityRecords: completeCompatibilityRecords(),
     ownerDecisions: [
       {
@@ -296,6 +313,45 @@ describe("EvidenceCompatibilityReviewer", () => {
     expect(result.blockers.join(" ")).toContain("coverage matrix");
   });
 
+  it("blocks when artifact inventory evidence is missing", () => {
+    const reviewer = createEvidenceCompatibilityReviewer();
+    const result = reviewer.review(evidenceRequest({ artifactInventory: [] }));
+    expect(result.status).toBe("blocked");
+    expect(result.blockers.join(" ")).toContain("artifact inventory");
+  });
+
+  it("requires exact surface/version pairs rather than surface names alone", () => {
+    const reviewer = createEvidenceCompatibilityReviewer();
+    const records = completeCompatibilityRecords().map((record) =>
+      record.surface === "CLI 2.x"
+        ? ({ ...record, version: "3.x" } as unknown as CompatibilityRecord)
+        : record,
+    );
+    const result = reviewer.review(evidenceRequest({ compatibilityRecords: records }));
+    expect(result.status).toBe("blocked");
+    expect(result.blockers.join(" ")).toContain("CLI 2.x 2.x");
+  });
+
+  it("blocks an enabled-valid claim that transfers validation from another target", () => {
+    const reviewer = createEvidenceCompatibilityReviewer();
+    const run = passingValidationRun("IDE");
+    const records = completeCompatibilityRecords().map((record) =>
+      record.surface === "CLI 3.x"
+        ? compatibilityRecord("CLI 3.x", {
+            status: "applicable",
+            enablementStatus: "enabled-valid",
+            evidenceFreshness: "fresh",
+            validationRunRefs: [run.validationId],
+          })
+        : record,
+    );
+    const result = reviewer.review(
+      evidenceRequest({ compatibilityRecords: records, validationRuns: [run] }),
+    );
+    expect(result.status).toBe("blocked");
+    expect(result.blockers.join(" ")).toContain("transferred evidence");
+  });
+
   it("blocks a missing surface/version compatibility record", () => {
     const reviewer = createEvidenceCompatibilityReviewer();
     const records = completeCompatibilityRecords().filter((r) => r.surface !== "Mobile");
@@ -395,13 +451,42 @@ describe("SafetyRollbackReviewer", () => {
     expect(output.handoff.order).toBe(2);
   });
 
+  it.each([
+    ["approval boundary", { approvalBoundaries: [] }, "no Approval_Boundary"],
+    ["pre-change snapshot", { snapshots: [] }, "no pre-change snapshot"],
+    ["rollback record", { rollbackRecords: [] }, "no rollback record"],
+  ] as const)("blocks missing %s evidence", (_label, overrides, blocker) => {
+    const result = createSafetyRollbackReviewer().review(safetyRequest(overrides));
+    expect(result.status).toBe("blocked");
+    expect(result.blockers.join(" ")).toContain(blocker);
+    expect(result.output?.stage.readOnly).toBe(true);
+    expect(result.output?.stage.rollbackPath).toBe("no rollback applies");
+  });
+
   it("blocks a pending approval boundary", () => {
-    const reviewer = createSafetyRollbackReviewer();
-    const result = reviewer.review(
+    const result = createSafetyRollbackReviewer().review(
       safetyRequest({ approvalBoundaries: [approvalBoundary({ approvalStatus: "pending" })] }),
     );
     expect(result.status).toBe("blocked");
     expect(result.blockers.join(" ")).toContain("pending");
+  });
+
+  it("blocks a handoff that loses the evidence reviewer output reference", () => {
+    const evidence = evidenceReviewFixture("pass");
+    const result = createSafetyRollbackReviewer().review(
+      safetyRequest({
+        evidenceReview: {
+          ...evidence,
+          handoff: {
+            ...evidence.handoff,
+            outputRefs: [],
+          },
+        },
+      }),
+    );
+
+    expect(result.status).toBe("blocked");
+    expect(result.blockers.join(" ")).toContain("does not reference the completed");
   });
 
   it("blocks a failed rollback record", () => {

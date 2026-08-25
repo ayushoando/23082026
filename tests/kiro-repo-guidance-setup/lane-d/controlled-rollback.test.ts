@@ -1,10 +1,13 @@
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 
-import type { ExecutableRollbackRequest } from "../../../scripts/kiro-repo-guidance-setup/rollback.ts";
+import {
+  createRollbackManager,
+  type ExecutableRollbackRequest,
+} from "../../../scripts/kiro-repo-guidance-setup/rollback.ts";
 
 const temporaryDirectories: string[] = [];
 
@@ -33,47 +36,29 @@ function rollbackRequest(
   };
 }
 
-async function loadRollbackModuleWithMockedReads() {
-  vi.resetModules();
-  vi.doMock("node:fs", async (importOriginal) => {
-    const actual = await importOriginal<typeof import("node:fs")>();
-    return { ...actual, readFileSync: vi.fn(actual.readFileSync) };
-  });
-
-  const rollback = await import("../../../scripts/kiro-repo-guidance-setup/rollback.ts");
-  const mockedFs = await import("node:fs");
-  return {
-    createRollbackManager: rollback.createRollbackManager,
-    readFileSync: vi.mocked(mockedFs.readFileSync),
-  };
-}
-
 afterEach(() => {
-  vi.doUnmock("node:fs");
-  vi.restoreAllMocks();
-  vi.resetModules();
   for (const directory of temporaryDirectories.splice(0)) {
     rmSync(directory, { recursive: true, force: true });
   }
 });
 
-describe("RollbackManagerService controlled verification failures", () => {
-  it("captures the snapshot first, restores the target, then blocks when verification observes different bytes", () => {
+describe("RollbackManagerService controlled failures", () => {
+  it("keeps later enablement blocked when the controlled restore write cannot complete", () => {
     const target = createTarget("original-content");
     const manager = createRollbackManager();
     const snapshot = manager.captureSnapshot({
-      snapshotId: "snapshot-controlled-verification",
+      snapshotId: "snapshot-controlled-write-failure",
       targetPath: target,
       expectedSuccessSignal: "captured bytes are restored",
     });
     writeFileSync(target, "changed-content");
 
-    // The first read happened during capture. The next read is the controlled
-    // verification observation and deliberately differs from the bytes that
-    // restoreSnapshot wrote. The real write still occurs, so this proves that a
-    // verification failure does not erase the restored artifact or become a
-    // successful enablement signal.
-    vi.spyOn(fs, "readFileSync").mockReturnValueOnce(Buffer.from("verification-mismatch"));
+    // Turning the target into a directory makes the restore write fail
+    // deterministically. The directory and its unrelated child remain intact;
+    // the manager must not claim a verified rollback after this failure.
+    rmSync(target);
+    mkdirSync(target);
+    writeFileSync(join(target, "unrelated.txt"), "must-remain");
 
     const result = manager.restore(
       rollbackRequest(target, snapshot.snapshotId),
@@ -81,9 +66,9 @@ describe("RollbackManagerService controlled verification failures", () => {
 
     expect(result.status).toBe("fail");
     expect(result.output?.result).toBe("fail");
-    expect(result.output?.observedEvidence).toContain("restored bytes did not match captured hash");
-    expect(result.output?.limitation).toContain("verification is unverified");
-    expect(readFileSync(target, "utf8")).toBe("original-content");
+    expect(result.output?.observedEvidence).toContain("rollback write failed");
+    expect(result.output?.limitation).toContain("rollback failed");
+    expect(readFileSync(join(target, "unrelated.txt"), "utf8")).toBe("must-remain");
     expect(manager.assessReadiness(result)).toMatchObject({
       restoredBytesVerified: false,
       laterEnablementBlocked: true,

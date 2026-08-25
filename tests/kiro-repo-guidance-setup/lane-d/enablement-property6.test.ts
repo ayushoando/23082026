@@ -285,7 +285,24 @@ function cleanEvidenceRequest(
       blockers: [],
     },
     exclusions: { entries: [] },
-    artifactInventory: [],
+    artifactInventory: [
+      {
+        artifactId: "artifact:enablement-review",
+        kind: "Kiro_Skill",
+        path: ".kiro/skills/repo-map/SKILL.md",
+        inventoryStatus: "present and readable",
+        owner: "repository owner",
+        configurationScope: "project",
+        activationCondition: "after exact-surface validation",
+        canonicalSource: "AGENTS.md",
+        evidenceState: "Observed",
+        disposition: "retain",
+        maintenanceRisk: "low",
+        evidenceRefs: ["src-1"],
+        validationRunRefs: [],
+        rollbackPath: "no rollback applies",
+      },
+    ],
     compatibilityRecords: completeCompatibilityRecords(),
     ownerDecisions: [
       {

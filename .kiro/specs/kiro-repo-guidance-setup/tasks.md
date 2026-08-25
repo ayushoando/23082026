@@ -131,7 +131,7 @@ The post-wave Integration_Validation_Gate alone owns `scripts/kiro-repo-guidance
     - Cover CLI 2.x evidence not satisfying CLI 3.x, Web/Mobile non-applicability, Crew uninstallation/conflict, every unresolved OD fallback, precedence conflicts, pending boundaries, max-four rejection, and preservation of the general one-agent rule.
     - **Validates: Requirements 4.2–4.5, 5.2–5.5, 9.2–9.3, 9.8–9.12, 10.3–10.13; Design: Surface/version model, Crew compatibility guard, Error handling_
 
-- [ ] 4. Lane C — implement skills, steering, hooks, powers, MCP, agents, capabilities, and continuity
+- [x] 4. Lane C — implement skills, steering, hooks, powers, MCP, agents, capabilities, and continuity
   - Lane C owns only the files listed for Lane C in the ownership contract. It may read frozen contracts and Lane A/B records but must not mutate those files or external services.
   - [x] 4.1 Implement `SkillEvaluator` and steering overlap resolution.
     - Validate exactly the six `SKILL.md` manifests, folder/name matching, specific descriptions, canonical sources, root commands, constraints, prerequisites, activation scope, owner, risk, evidence, and rollback.
@@ -173,11 +173,11 @@ The post-wave Integration_Validation_Gate alone owns `scripts/kiro-repo-guidance
     - Generate local, CLI, Crew, and LTM records; assert separate capabilities and that Crew memory/knowledge documentation cannot satisfy local LTM execution while the stub remains.
     - **Validates: Requirements 9.4–9.6; Design: Correctness Property 12**
 
-  - [-] 4.10 Add Lane C example and edge-case tests.
+  - [x] 4.10 Add Lane C example and edge-case tests.
     - Cover all six manifests, `repo-map` primary designation, duplicate resolution, unavailable prerequisites, action-level hook timeout, semicolon versus unrelated `&&`, disabled LTM, legacy power observations, empty MCP config, missing plugin manifest, unverified registration, `None` resource URIs, bounded graphs, and separate continuity records.
     - **Validates: Requirements 2.6, 6.1–6.7, 7.3–7.10, 8.1–8.8, 9.1–9.7, 10.4–10.8; Design: Example and edge-case tests_
 
-- [ ] 5. Lane D — implement wave coordination, validation, rollback, handover, and reviewer modules
+- [x] 5. Lane D — implement wave coordination, validation, rollback, handover, and reviewer modules
   - Lane D owns the coordinator and review infrastructure paths listed in the ownership contract. Its early coordinator files are preparation artifacts; its later modules may read every frozen contract and lane output but may not mutate another lane’s files.
   - [x] 5.1 Implement `ValidationRunner` and typed gate adapters.
     - Record artifact, repository, focused, fast, two-lane test, ship, surface, security, rollback, and handover runs with action, root/surface, scope, UTC date, result, command/interaction, outcome, evidence, Unverified items, and `blocker: none` when clear; interrupted work is `partial`/`blocked`, never PASS.
@@ -218,76 +218,76 @@ The post-wave Integration_Validation_Gate alone owns `scripts/kiro-repo-guidance
     - Assert max four, disjoint writes, reservation-before-mutation, freeze-before-dependent-work, root-only `pnpm`, no worktree/hidden spawn/retry/replan, fail-closed conflict handling, preserved/restored state, exactly one integration gate, and sequential reviewers before enablement.
     - **Validates: Requirements 9.8–9.12, 10.12–10.13, 11.7–11.8, 14.10–14.12; Design: Correctness Property 16**
 
-  - [-] 5.10 Add Lane D contract, example, and controlled rollback tests.
+  - [x] 5.10 Add Lane D contract, example, and controlled rollback tests.
     - Cover max-four enforcement, zero-agent/default-one-agent behavior, ownership conflicts, stale/missing reservations, shared-contract freeze, shared generated-output rejection, partial/abandoned agents, no automatic retry/replan, reviewer restrictions, rollback failure, and `no rollback applies` records.
     - **Validates: Requirements 9.8–9.12, 10.12–10.13, 11.7–11.8, 12.6–12.7, 13.5, 13.8, 14.10–14.12; Design: Failure and rollback testing, implementation review DAG_
 
-- [ ] 6. Integrate the completed concurrent wave through one post-wave `Integration_Validation_Gate`
-  - [ ] 6.1 Implement the integration-owned gate and pipeline wiring.
+- [x] 6. Integrate the completed concurrent wave through one post-wave `Integration_Validation_Gate`
+  - [x] 6.1 Implement the integration-owned gate and pipeline wiring.
     - Create only `integration-gate.ts`, `pipeline.ts`, and the integration-owned final-gate interface after all four lanes complete; consume every lane output through frozen contracts and preserve the manual graph-impact/sequential fallbacks.
     - The gate must collect every agent output, reservation status, changed-file manifest, contract-freeze record, validation result, and conflict report before any reviewer or enablement stage.
     - _Requirements: 1.1–14.9, especially 9.11–9.12, 11.7–11.8, 12.2–12.8, 13.5–13.8; Design: IntegrationValidationGate, High-level flow, Phased rollout Phase 5_
 
-  - [ ] 6.2 Add integration tests for collection, ownership, and conflict handling.
+  - [x] 6.2 Add integration tests for collection, ownership, and conflict handling.
     - Use synthetic agents to prove the gate rejects missing/stale reservations, overlapping writes, shared generated-output writes, mutation before freeze, out-of-scope mutation, more than four agents, partial/abandoned output, unresolved conflicts, and missing reviewer inputs; assert affected-wave stop, no dependent enablement, no automatic retry/replan, and preserve/restore behavior.
     - Write only under `tests/kiro-repo-guidance-setup/integration/`.
     - **Validates: Requirements 9.8–9.12, 10.12–10.13, 11.7–11.8, 12.6, 14.10–14.12; Design: IntegrationValidationGate, Error handling, Failure and rollback testing_
 
-  - [ ] 6.3 Run the integration gate’s focused tests and required repository gates.
+  - [x] 6.3 Run the integration gate’s focused tests and required repository gates.
     - Verify all lane outputs and changed-file ownership, resolve only declared integration conflicts, run focused evaluator tests, `pnpm run check:layout`, applicable documentation checks, and `pnpm run gate:fast`; record generated `.json`/`.txt` evidence under `results/kiro-repo-guidance-setup/` and never hand-write Markdown there.
     - If `pnpm run test` is used, record default and tech-docs Vitest lanes independently; do not claim a full ship gate unless `pnpm run gate` actually runs.
     - _Requirements: 12.2–12.5, 12.7, 13.5–13.7, 14.5; Design: Validation Gates and Evidence Outputs, Smoke and repository gates_
 
 - [ ] 7. Run the first sequential review stage: `EvidenceCompatibilityReviewer`
-  - [ ] 7.1 Add contract tests for reviewer ordering and read-only restrictions.
+  - [x] 7.1 Add contract tests for reviewer ordering and read-only restrictions.
     - Assert the only permitted order is `Integration_Validation_Gate -> EvidenceCompatibilityReviewer -> SafetyRollbackReviewer -> final owner-approved gate`; assert one reviewer at a time, maximum concurrency 1, iteration ceiling 3, no mutation/spawning/worktrees/retries/replans/approval bypass, and no external/global/Crew enablement.
     - **Validates: Requirements 9.11–9.12, 10.2, 10.6–10.7, 11.5, 14.8–14.9; Design: Implementation review task execution and DAG plan_
 
-  - [ ] 7.2 Execute `EvidenceCompatibilityReviewer` only after the integration gate passes or explicitly records a blocked handoff.
+  - [-] 7.2 Execute `EvidenceCompatibilityReviewer` only after the integration gate passes or explicitly records a blocked handoff.
     - Review source inventory, coverage/exclusions, artifact inventory, all seven surface/version records, owner decisions, and Validation_Run freshness; report transferred claims, missing evidence, unavailable candidates, and blockers without repair or mutation.
     - Record `maximumConcurrency: 1`, `iterationCeiling: 3`, read-only status, evidence references, and `no rollback applies` for the review stage.
     - _Requirements: 1.1–1.6, 2.1–2.7, 3.1–3.6, 4.1–4.6, 9.11, 10.2, 12.2, 12.5, 12.8, 13.3, 13.7; Design: EvidenceCompatibilityReviewer_
 
-- [ ] 8. Run the second sequential review stage: `SafetyRollbackReviewer`
-  - [ ] 8.1 Execute `SafetyRollbackReviewer` only after the EvidenceCompatibilityReviewer handoff.
+- [x] 8. Run the second sequential review stage: `SafetyRollbackReviewer`
+  - [x] 8.1 Execute `SafetyRollbackReviewer` only after the EvidenceCompatibilityReviewer handoff.
     - Review approval boundaries, secret/permission/network results, repository invariants, pre-change snapshots, Known_Gaps_Register, rollback records, and proposed handover; block missing approval, unsafe boundary, failed rollback, policy violation, incomplete evidence, or handover inconsistency.
     - Record `maximumConcurrency: 1`, `iterationCeiling: 3`, read-only status, no mutation/spawning/worktree/retry/replan/approval bypass/external-global-Crew enablement, and `no rollback applies` for the review stage.
     - _Requirements: 1.6, 5.1–5.7, 7.9, 8.4–8.8, 9.2, 9.7, 9.11–9.12, 10.2, 10.11–10.13, 11.2–11.8, 12.6–12.7, 13.4–13.8, 14.1–14.12; Design: SafetyRollbackReviewer_
 
-  - [ ] 8.2 Add safety-review integration tests for failed/partial handoffs.
+  - [x] 8.2 Add safety-review integration tests for failed/partial handoffs.
     - Prove SafetyRollbackReviewer cannot start a successful enablement path from partial EvidenceCompatibilityReviewer output and cannot repair, approve, mutate, spawn, or bypass an unresolved boundary; assert prior state remains preserved.
     - **Validates: Requirements 9.11–9.12, 10.2, 10.11–10.13, 11.5, 12.6, 13.7–13.8, 14.8–14.12; Design: Error handling, implementation review DAG_
 
-- [ ] 9. Apply the final owner-approved validation/enablement gate after both reviewers
-  - [ ] 9.1 Implement the integration-owned `EnablementGate` in `enablement.ts` and consume both reviewer outputs.
+- [x] 9. Apply the final owner-approved validation/enablement gate after both reviewers
+  - [x] 9.1 Implement the integration-owned `EnablementGate` in `enablement.ts` and consume both reviewer outputs.
     - Grant `enabled-valid` only when scope-specific owner approval, fresh exact-target validation, schema/artifact pass, repository compatibility, security-boundary confirmation, rollback readiness, no blocking known gap, policy pass, and both reviewer passes are present.
     - Otherwise retain `blocked`, `deferred`, `observe`, `disable`, or `exclude`; do not enable LTM, incompatible Crew behavior, unvalidated powers/MCP/agents/subagents, unvalidated surfaces, or unrepaired hooks.
     - _Requirements: 1.6, 4.5, 5.5, 7.3, 7.6, 8.5, 9.7, 10.2–10.11, 11.4–11.5, 12.6–12.8, 13.7–13.8, 14.8–14.9; Design: Enablement predicate, Gate sequence_
 
-  - [ ] 9.2 Add the end-to-end local-surface integration test.
+  - [x] 9.2 Add the end-to-end local-surface integration test.
     - Exercise inventory through both reviewers and final gate with incomplete discovery, failed schema, unresolved approval, Crew conflict, stubbed LTM, ownership conflict, partial agent, failed rollback, and successful local artifact validation; assert exact statuses, generated evidence, preserved state, and no unsafe side effects.
     - **Validates: Requirements 1.6, 2.7, 4.5, 5.5, 7.3, 7.6, 8.5, 9.7, 10.2–10.13, 11.4–11.8, 12.6–12.8, 13.5–13.8, 14.8–14.12; Design: Error handling, Failure and rollback testing_
 
-  - [ ] 9.3 Execute the final owner-approved gate only after both sequential reviewers have recorded results.
+  - [x] 9.3 Execute the final owner-approved gate only after both sequential reviewers have recorded results.
     - Record the exact target surface/version, predicates, reviewer handoffs, enabled/blocked disposition, evidence references, limitations, and rollback readiness; no reviewer may be treated as an approval substitute.
     - _Requirements: 10.2, 11.4–11.5, 12.7–12.8, 13.7–13.8; Design: Enablement predicate, Handover Record Design_
 
 - [ ] 10. Regenerate the operational handover and complete final validation
-  - [ ] 10.1 Run the final applicable artifact, documentation, repository, test, security, rollback, and handover validation sequence from `D:\23082026`.
+  - [-] 10.1 Run the final applicable artifact, documentation, repository, test, security, rollback, and handover validation sequence from `D:\23082026`.
     - Run artifact checks, `pnpm run check:layout`, applicable `pnpm run check:docs-all`, focused tests, `pnpm run gate:fast`, and both Vitest lanes independently when `pnpm run test` is used; run `pnpm run gate` only when the ship bar is requested.
     - Run `pnpm run scan:boundaries` only if a future implementation touches Studio or Planner; otherwise record that it is not applicable. Do not claim browser, hook, external-service, surface, build, or ship success without fresh evidence.
     - _Requirements: 12.2–12.5, 12.7, 13.5–13.7, 14.5; Design: Gate sequence, Smoke and repository gates_
 
-  - [ ] 10.2 Regenerate and validate the final Handover_Record and generated evidence.
+  - [-] 10.2 Regenerate and validate the final Handover_Record and generated evidence.
     - Confirm every artifact has exactly one handover disposition, every enabled-valid claim has exact-surface evidence/approval/schema/security/rollback/reviewer proof, every other claim is explicitly labeled, all blocking gaps have disposition/owner/next run, and the exact complete-review sentence is accurate.
     - Confirm no lane wrote outside its ownership, no generated result is hand-written Markdown, no Crew exception was implied, and the final rollback path can restore or disable each changed artifact.
     - _Requirements: 1.5–1.6, 4.6, 11.1–11.8, 12.7–12.8, 13.1–13.8, 14.3–14.9; Design: Handover Record Design, Validation Gates and Evidence Outputs_
 
-  - [ ] 10.3 Record the final wave, integration, reviewer, enablement, and rollback statuses as append-only validation evidence.
+  - [-] 10.3 Record the final wave, integration, reviewer, enablement, and rollback statuses as append-only validation evidence.
     - Include all agent outputs, reservations released/stale/conflicting status, shared-contract freeze, changed-file ownership, conflict resolutions, both reviewer results, final gate predicates, generated evidence references, limitations, and blockers (`none` when absent).
     - _Requirements: 9.8–9.12, 10.12–10.13, 11.7–11.8, 12.2, 13.5–13.8, 14.10–14.12; Design: Record lifecycle, IntegrationValidationGateRecord, ValidationRun_
 
-- [ ] 11. Final checkpoint — ensure the selected implementation and validation tasks are complete
+- [~] 11. Final checkpoint — ensure the selected implementation and validation tasks are complete
   - Confirm the general repository default remains one active agent/no worktrees, the only concurrency above one was the feature-scoped OD-04 wave capped at four, and no `AGENTS.md` change, Crew worktree, hidden spawn, automatic retry/replan, external/global/secret-bearing operation, production write, dependency change, or unrelated file mutation occurred.
   - Confirm all reservations are released or explicitly recorded, all generated outputs are owned by the integration/final-gate owner, both reviewer stages ran sequentially or are explicitly blocked, and the final enablement decision is fail-closed.
 
