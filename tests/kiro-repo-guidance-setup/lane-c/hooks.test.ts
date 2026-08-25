@@ -87,6 +87,43 @@ describe("HookEvaluator", () => {
     expect(hook?.disposition).toBe("observe");
   });
 
+  it("keeps the LTM capture hook disabled behind explicit stub prerequisites", () => {
+    const root = createRoot();
+    mkdirSync(join(root, "ltm", "bin"), { recursive: true });
+    writeFileSync(join(root, "ltm", "bin", "ltm.py"), "# capture-turn is a no-op stub\\n", "utf8");
+    writeManifest(root, "ltm-postturn-capture.json", {
+      version: "v1",
+      hooks: [{
+        name: "LTM Post-Turn Capture",
+        trigger: "Stop",
+        enabled: false,
+        timeout: 30,
+        action: { type: "command", command: "python ltm/bin/ltm.py capture-turn" },
+      }],
+    });
+
+    const result = evaluateHooks({ repositoryRoot: root });
+    const hook = result.output?.hooks[0];
+
+    expect(result.status).toBe("partial");
+    expect(hook?.enabled).toBe(false);
+    expect(hook?.disposition).toBe("disable");
+    expect(hook?.hookLevelTimeoutSeconds).toBe(30);
+    expect(hook?.prerequisites).toEqual([
+      {
+        id: "ltm-capture-implementation",
+        status: "blocked",
+        evidence: "ltm/bin/ltm.py capture-turn is a documented no-op stub",
+      },
+      {
+        id: "ltm-stop-hook-validation",
+        status: "unverified",
+        evidence: "fresh Stop-hook execution Validation_Run is required after implementation replacement",
+      },
+    ]);
+    expect(hook?.blockers).toContain("LTM capture depends on a documented stub and must remain disabled");
+  });
+
   it("fails closed for an unsafe file hook and records the exact safety violations", () => {
     const root = createRoot();
     writeManifest(root, "unsafe.json", {

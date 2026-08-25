@@ -6,6 +6,7 @@
       "description": "Records agent activity to LTM memory store after each turn. Disabled: ltm/bin/ltm.py capture-turn is a stub no-op; enable only after installing the full LTM script.",
       "trigger": "Stop",
       "enabled": false,
+      "timeout": 30,
       "action": {
         "type": "command",
         "command": "python ltm/bin/ltm.py capture-turn"

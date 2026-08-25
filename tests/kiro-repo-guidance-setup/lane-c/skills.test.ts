@@ -27,15 +27,15 @@ function createValidationRun(skill: string): ValidationRun {
   const path = `.kiro/skills/${skill}/SKILL.md`;
   return {
     validationId,
-    action: "validate skill manifest and activation",
+    action: "validate local skill manifest and prerequisites",
     repositoryRootOrActiveSurface: repositoryRoot,
     surface: "Local_Repository_Surface",
     version: "repository",
-    scope: `${path}; activation behavior; rollback path`,
+    scope: `${path}; manifest; prerequisites; repository-local evidence; rollback path`,
     executionLayer: "surface_validation",
     startedAtUtc: "2026-08-25T12:00:00Z",
     result: "pass",
-    commandOrInteraction: "read-only local skill activation validation",
+    commandOrInteraction: "read-only repository-local skill manifest and prerequisite validation",
     exitCodeOrOutcome: "exit 0",
     evidenceRefs: [validationId],
     unverifiedItems: [],
@@ -181,7 +181,7 @@ describe("SkillEvaluator", () => {
   it("claims activation scope only with OD-08 and a fresh passing local validation for every skill", () => {
     const od08 = OWNER_DECISIONS.find((decision) => decision.decisionId === "OD-08") as OwnerDecision;
     const validationRuns = INITIAL_SKILL_CANDIDATES.map((skill) => createValidationRun(skill));
-    const result = evaluateSkills({ repositoryRoot, ownerDecisions: [od08], validationRuns });
+    const result = evaluateSkills({ repositoryRoot, reviewDateUtc: "2026-08-25", ownerDecisions: [od08], validationRuns });
 
     expect(result.status).toBe("pass");
     expect(result.output?.activationScopeClaimsAllowed).toBe(true);
@@ -199,7 +199,7 @@ describe("SkillEvaluator", () => {
       unresolvedStatus: "unresolved",
     } as OwnerDecision;
     const validationRuns = INITIAL_SKILL_CANDIDATES.map((skill) => createValidationRun(skill));
-    const result = evaluateSkills({ repositoryRoot, ownerDecisions: [unresolvedOd08], validationRuns });
+    const result = evaluateSkills({ repositoryRoot, reviewDateUtc: "2026-08-25", ownerDecisions: [unresolvedOd08], validationRuns });
 
     expect(result.status).toBe("partial");
     expect(result.output?.activationScopeClaimsAllowed).toBe(false);

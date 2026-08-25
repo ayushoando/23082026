@@ -8,6 +8,7 @@ vi.mock('@phosphor-icons/react', () => ({
   CaretDown: () => <span data-testid="caret-icon" />,
   List: () => <span data-testid="list-icon" />,
   MagnifyingGlass: () => <span data-testid="magnifier-icon" />,
+  X: () => <span data-testid="close-icon" />,
   Sparkle: () => <span data-testid="sparkle-icon" />,
 }));
 
@@ -244,10 +245,10 @@ describe('SiteHeader Component', () => {
     expect(screen.getByRole('menuitem', { name: 'Login' })).toHaveAttribute('href', '/login');
   });
 
-  it('does not own the mobile drawer or hamburger', async () => {
+  it('renders the mobile navigation trigger with the drawer closed', async () => {
     await renderSettledHeader();
 
-    expect(screen.queryByRole('button', { name: /Open menu/i })).toBeNull();
+    expect(screen.getByRole('button', { name: /Open menu/i })).toBeInTheDocument();
     expect(screen.queryByTestId('mobile-drawer')).toBeNull();
     expect(screen.getByRole('banner')).toHaveClass('site-header');
   });

@@ -99,9 +99,18 @@ export interface HookEvaluatorInput {
   readonly approvedOverlapRefs?: readonly Identifier[];
 }
 
+export type HookPrerequisiteStatus = "satisfied" | "blocked" | "unverified";
+
+export interface HookPrerequisite {
+  readonly id: string;
+  readonly status: HookPrerequisiteStatus;
+  readonly evidence: string;
+}
+
 export interface EvaluatedHookRecord extends HookRecord {
   readonly blockers: readonly string[];
   readonly evidence: readonly string[];
+  readonly prerequisites: readonly HookPrerequisite[];
   readonly fileHookEvidenceScope?: "agent-made changes only";
   readonly storedCommandSeparator?: "semicolon" | "none";
 }
@@ -392,6 +401,47 @@ function isLtmCapture(path: RepositoryPath, name: string, command: string): bool
   );
 }
 
+function prerequisitesFor(
+  path: RepositoryPath,
+  domainFastCheck: boolean,
+  ltmCapture: boolean,
+  actionTimeoutPresent: boolean,
+): readonly HookPrerequisite[] {
+  const prerequisites: HookPrerequisite[] = [];
+
+  if (domainFastCheck) {
+    prerequisites.push({
+      id: "domain-fast-check-schema-repair",
+      status: actionTimeoutPresent ? "blocked" : "unverified",
+      evidence: actionTimeoutPresent
+        ? "timeout must be moved from action to hook level before schema validation"
+        : "hook-level timeout is present; a fresh post-repair schema Validation_Run is still required",
+    });
+    prerequisites.push({
+      id: "domain-fast-check-surface-validation",
+      status: "unverified",
+      evidence: "fresh target-surface validation is required before enablement",
+    });
+  }
+
+  if (ltmCapture) {
+    prerequisites.push(
+      {
+        id: "ltm-capture-implementation",
+        status: "blocked",
+        evidence: "ltm/bin/ltm.py capture-turn is a documented no-op stub",
+      },
+      {
+        id: "ltm-stop-hook-validation",
+        status: "unverified",
+        evidence: "fresh Stop-hook execution Validation_Run is required after implementation replacement",
+      },
+    );
+  }
+
+  return prerequisites;
+}
+
 function dispositionFor(
   enabled: boolean,
   schema: HookSchemaResult,
@@ -597,6 +647,7 @@ function evaluateOneHook(
     rollbackPath: `disable ${name} and restore the original bytes from snapshot:${path}`,
     blockers: unique([...commandReview.blockers, ...blockers]),
     evidence,
+    prerequisites: prerequisitesFor(path, domainFastCheck, ltmCapture, actionTimeoutPresent),
     ...(isFileHook ? { fileHookEvidenceScope: "agent-made changes only" as const } : {}),
     ...(type === "command" ? { storedCommandSeparator: semicolon as "semicolon" | "none" } : {}),
   };

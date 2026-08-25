@@ -600,49 +600,82 @@ function od08Recorded(input: SkillEvaluatorInput): boolean {
   );
 }
 
-function isPassingLocalValidation(run: ValidationRun): boolean {
+function isPassingLocalValidation(
+  run: ValidationRun,
+  repositoryRoot: string,
+  reviewDateUtc: IsoDate | undefined,
+): boolean {
+  if (!reviewDateUtc) return false;
+
+  const reviewTime = Date.parse(reviewDateUtc);
+  const validationTime = Date.parse(run.startedAtUtc);
+  if (!Number.isFinite(reviewTime) || !Number.isFinite(validationTime) || validationTime < reviewTime) {
+    return false;
+  }
+
+  const validationRoot = run.repositoryRootOrActiveSurface;
+  if (validationRoot === LOCAL_REPOSITORY_SURFACE) return false;
+
   return (
     typeof run.validationId === "string" &&
     run.validationId.trim().length > 0 &&
+    normalizePath(resolve(String(validationRoot))).toLowerCase() === normalizePath(resolve(repositoryRoot)).toLowerCase() &&
     run.surface === LOCAL_REPOSITORY_SURFACE &&
     run.version === LOCAL_REPOSITORY_VERSION &&
     run.executionLayer === "surface_validation" &&
     run.result === "pass" &&
     run.blocker === "none" &&
-    run.unverifiedItems.length === 0
+    run.unverifiedItems.length === 0 &&
+    run.evidenceRefs.length > 0
   );
 }
 
-function validationMatchesSkill(run: ValidationRun, skill: SkillCandidate, path: RepositoryPath): boolean {
-  if (!isPassingLocalValidation(run)) return false;
-  const searchable = `${run.action} ${run.scope} ${run.commandOrInteraction} ${run.evidenceRefs.join(" ")}`.toLowerCase();
+function validationMatchesSkill(
+  run: ValidationRun,
+  skill: SkillCandidate,
+  path: RepositoryPath,
+  repositoryRoot: string,
+  reviewDateUtc: IsoDate | undefined,
+): boolean {
+  if (!isPassingLocalValidation(run, repositoryRoot, reviewDateUtc)) return false;
+
+  const searchable = `${run.action} ${run.scope} ${run.commandOrInteraction}`.toLowerCase();
+  const scoped = run.scope.toLowerCase();
   const exactPath = path.toLowerCase();
   const skillPath = `.kiro/skills/${skill}/skill.md`;
-  const allSkills = /all\s+six\s+(?:local\s+)?skills|six\s+(?:local\s+)?skill\s+manifests/.test(searchable);
-  const namespaced = searchable.includes(exactPath) || searchable.includes(skillPath);
-  const skillNamed = searchable.includes(skill.toLowerCase());
-  const activationMentioned = /activation|manifest|skill/.test(searchable);
-  return activationMentioned && (namespaced || skillNamed || allSkills);
+  const allSkills = /all\s+six\s+(?:local\s+)?skills|six\s+(?:local\s+)?skill\s+manifests/.test(scoped);
+  const namespaced = scoped.includes(exactPath) || scoped.includes(skillPath) || allSkills;
+  const manifestAndPrerequisiteChecks = /\bmanifest\b/.test(searchable) && /\bprerequisite(?:s)?\b/.test(searchable);
+  return manifestAndPrerequisiteChecks && namespaced;
 }
 
 function freshValidationRefs(
   input: SkillEvaluatorInput,
   skill: SkillCandidate,
   path: RepositoryPath,
+  repositoryRoot: string,
 ): string[] {
   return unique(
     (input.validationRuns ?? [])
-      .filter((run) => validationMatchesSkill(run, skill, path))
+      .filter((run) => validationMatchesSkill(run, skill, path, repositoryRoot, input.reviewDateUtc))
       .map((run) => run.validationId),
   );
 }
 
-function validationBlocker(skill: SkillCandidate, od08: boolean, refs: readonly string[]): string | null {
+function validationBlocker(
+  skill: SkillCandidate,
+  od08: boolean,
+  refs: readonly string[],
+  reviewDateUtc: IsoDate | undefined,
+): string | null {
   if (!od08) {
     return `${skill}: activation scope is unverified because OD-08 is not recorded`;
   }
+  if (!reviewDateUtc) {
+    return `${skill}: activation scope is unverified because no review date is available to establish fresh validation`;
+  }
   if (refs.length === 0) {
-    return `${skill}: activation scope is unverified because no fresh passing Local_Repository_Surface validation exists`;
+    return `${skill}: activation scope is unverified because no fresh passing Local_Repository_Surface validation exists for this repository root and skill manifest prerequisites`;
   }
   return null;
 }
@@ -811,8 +844,8 @@ function recordForSkill(
   const sourceBlockers = sourceErrors(repositoryRoot, metadata.canonicalSources);
   const prerequisite = prerequisiteRecords(repositoryRoot, metadata.prerequisites);
   const commandBlockers = commandErrors(repositoryRoot, metadata.rootCommands);
-  const validationRefs = freshValidationRefs(input, inspection.folder, inspection.path);
-  const activationBlockers = [validationBlocker(inspection.folder, od08, validationRefs)].filter(
+  const validationRefs = freshValidationRefs(input, inspection.folder, inspection.path, repositoryRoot);
+  const activationBlockers = [validationBlocker(inspection.folder, od08, validationRefs, input.reviewDateUtc)].filter(
     (value): value is string => value !== null,
   );
   const structuralBlockers = [

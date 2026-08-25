@@ -26,6 +26,7 @@ import {
   type HandoverInput,
   type HandoverRecord,
   type Identifier,
+  type IntegrationValidationGateRecord,
   type KnownGap,
   type KnownGapKind,
   type KnownGapsRegister,
@@ -33,6 +34,8 @@ import {
   type StageResult,
   type SurfaceVersion,
 } from "./contracts";
+import type { FinalOwnerApprovedGateProjection } from "./enablement";
+import type { SequentialReviewOutput } from "./reviewers";
 
 export const HANDOVER_REVIEWER_STAGE_REFS = [
   "reviewer-stage:EvidenceCompatibilityReviewer",
