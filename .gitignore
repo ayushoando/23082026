@@ -69,3 +69,17 @@ site/public/assets/others/misc/from-recovery/
 
 # Wrangler / Miniflare local dev state (transient SQLite cache, R2 blobs)
 workers/**/.wrangler/
+
+# --- ltm-power ---
+ltm/store/*.jsonl
+ltm/runtime/*
+ltm/reports/*
+ltm/snapshots/*
+# --- /ltm-power ---
+
+# Python cache (never commit compiled bytecode)
+__pycache__/
+*.pyc
+
+# MCP local data caches (repo-local Datadog index; regenerated, not source)
+mcp/Datadog/
