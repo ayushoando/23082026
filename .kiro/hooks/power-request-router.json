@@ -4,10 +4,11 @@
     {
       "name": "Installed Power Request Router",
       "trigger": "UserPromptSubmit",
-      "description": "Routes each user request to the smallest relevant installed power without invoking unrelated powers.",
+      "description": "Routes requests to the smallest relevant installed power without unrelated activation.",
+      "enabled": true,
       "action": {
         "type": "agent",
-        "prompt": "Before acting on this request, check whether it matches an installed power: design-system-power-builder (design systems and scaffolding), nova-act (browser automation and QA), postman (API testing and collections), cast-imaging (structural impact and architecture), context7 (current technical documentation), exa (web research), or datadog (observability data). Activate the smallest relevant power first and follow its steering instructions. If no power matches, proceed normally. Never activate all powers by default. For Postman work, inspect the project's .postman.json first, verify referenced resources, avoid duplicate resources, use Postman MCP tools only, and validate collections as Collection Format v2.1.0."
+        "prompt": "Match each request to the smallest installed power: design-system-power-builder, nova-act, postman, cast-imaging, context7, exa, datadog, ltm-power, cubic-code-review, kane-cli, cloudinary, or supabase-hosted. Activate only when needed; if none matches, proceed without activation. For Postman, inspect .postman.json first, use Postman MCP only, avoid duplicate resources, and validate Collection Format v2.1.0."
       }
     }
   ]

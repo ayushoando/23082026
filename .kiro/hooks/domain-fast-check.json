@@ -5,6 +5,7 @@
       "name": "Domain Fast Check on Save",
       "trigger": "PostFileSave",
       "description": "Routes saved files to domain-specific fast checks: UI/CSS → verify:focss + lint:ui:strict, DB → typecheck, Planner/Studio → scan:boundaries, Tests → typecheck:tests, fallback → typecheck.",
+      "enabled": true,
       "matcher": "\\.(ts|tsx|css|mjs|sql)$",
       "action": {
         "type": "command",

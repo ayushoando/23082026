@@ -4,10 +4,11 @@
     {
       "name": "Installed Power Capability Index",
       "trigger": "SessionStart",
-      "description": "Indexes the installed powers at session start and reminds the agent to activate only the capability relevant to the current task.",
+      "description": "Indexes installed powers and limits activation to the smallest task-relevant capability.",
+      "enabled": true,
       "action": {
         "type": "agent",
-        "prompt": "The workspace has these installed powers available: design-system-power-builder for design-system scaffolding and governance; nova-act for browser and human-style QA; postman for API collections, environments, and testing; cast-imaging for structural codebase impact and architecture analysis; context7 for current library and SDK documentation; exa for web research and code search; datadog for logs, metrics, traces, RUM, incidents, and monitors. When a request clearly matches one of these capabilities, activate that power before using it. Do not activate unrelated powers or perform external operations without a task-specific reason. Preserve existing project rules and use the Postman power only for Postman operations."
+        "prompt": "Installed powers: design-system-power-builder (design systems); nova-act and kane-cli (browser QA); postman (API resources); cast-imaging (architecture impact); context7 (current docs); exa (web research); datadog (observability); ltm-power (project memory); cubic-code-review (code review); cloudinary (media); supabase-hosted (Supabase). Activate only the smallest relevant power, or none when no capability matches. Do not use external services without task-specific need. Use Postman MCP only for Postman operations and preserve repository rules."
       }
     }
   ]

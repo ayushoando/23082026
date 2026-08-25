@@ -3,7 +3,7 @@ Nova Act demo — simple browser automation with Python.
 
 Run after setting your API key:
     $env:NOVA_ACT_API_KEY = "your_key_here"
-    python nova-act-demo.py
+    python scripts/nova-act-demo.py
 
 Get your key from https://nova.amazon.com/act?tab=dev_tools
 """
