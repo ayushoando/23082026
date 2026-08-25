@@ -21,7 +21,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 ## 2. Work
 
 - Repo root only. **Never create worktrees.** **`pnpm`** only.
-- **Agents:** Max 3 agent only
+- **Agents:** Max 4 agent only
 - Smallest sound change. No handwritten `any`.
 - Secrets: `.env.local` (and `site/.env.local`).
 - UI: `http://localhost:3000` only — never `127.0.0.1`.
@@ -90,7 +90,6 @@ Seed: `pnpm run seed:furniture` (off the read path).
 5. `127.0.0.1` instead of `localhost`.
 6. Hand-written Markdown reports under `results/`.
 7. Recreating Phase A audit dumps, or PNG under `agent-reports/`.
-8. Spawning multiple concurrent agents (strictly max 1 agent only).
 
 ## 9. Handbooks
 
