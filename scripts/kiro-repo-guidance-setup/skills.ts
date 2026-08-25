@@ -600,6 +600,9 @@ function od08Recorded(input: SkillEvaluatorInput): boolean {
   );
 }
 
+// This predicate validates only repository-local artifact/prerequisite evidence.
+// It never proves that Kiro activated a skill on IDE, CLI, Web, Mobile,
+// Cloud/Crew, or any other external execution surface.
 function isPassingLocalValidation(
   run: ValidationRun,
   repositoryRoot: string,

@@ -29,6 +29,10 @@ import {
   type FinalOwnerApprovedGateRequest,
 } from "./enablement";
 import {
+  createIntegrationHandoffPersistence,
+  type IntegrationHandoffPersistence,
+} from "./handover";
+import {
   IntegrationValidationGateService,
   type IntegrationGateCollection,
   collectIntegrationGateEvidence,
@@ -79,6 +83,8 @@ export interface IntegrationPipelineResult {
   readonly reviewerOutput?: SequentialReviewOutput;
   readonly reviewerHandoffRefs: readonly Identifier[];
   readonly finalGate?: StageResult<FinalOwnerApprovedGateProjection>;
+  /** Exact integration/reviewer/final-gate state handed to HandoverGenerator. */
+  readonly integrationHandoff: IntegrationHandoffPersistence;
   readonly enablementAllowed: boolean;
   readonly policy: IntegrationPipelinePolicy;
   readonly preservedPriorState: true;
@@ -243,12 +249,20 @@ export class IntegrationPipelineService implements IntegrationPipeline {
       finalGate.status === "pass" &&
       finalGate.output?.disposition === "enabled-valid";
     const enablementAllowed = reviewerPasses && finalGatePass;
+    const integrationHandoff = createIntegrationHandoffPersistence({
+      waveId: input.wave.waveId,
+      integrationValidationGate: integrationGate,
+      reviewerOutput,
+      finalGate,
+      limitations: input.finalGate?.limitations,
+    });
     const result: IntegrationPipelineResult = {
       integrationGate,
       collection,
       reviewerOutput,
       reviewerHandoffRefs,
       finalGate,
+      integrationHandoff,
       enablementAllowed,
       policy: INTEGRATION_PIPELINE_POLICY,
       preservedPriorState: true,
@@ -256,6 +270,7 @@ export class IntegrationPipelineService implements IntegrationPipeline {
     const evidenceRefs = unique([
       ...collection.evidenceRefs,
       ...reviewerHandoffRefs,
+      ...integrationHandoff.evidenceRefs,
       ...(reviewerOutput?.evidenceReview.evidenceRefs ?? []),
       ...(reviewerOutput?.safetyReview?.evidenceRefs ?? []),
       ...(finalGate?.evidenceRefs ?? []),

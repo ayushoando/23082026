@@ -133,6 +133,172 @@ export interface HandoverGeneratorOptions {
   readonly now?: () => Date;
 }
 
+/**
+ * The integration-owned handoff projection is kept separate from the static
+ * handover inputs so the final gate can be persisted without changing any
+ * reviewer or enablement state.  Optional reviewer/final-gate values are
+ * intentional: blocked and partial runs must remain representable.
+ */
+export interface IntegrationHandoffPersistence {
+  readonly implementationWaveRef: Identifier;
+  readonly integrationValidationGateRef: Identifier;
+  readonly integrationValidationGate: IntegrationValidationGateRecord;
+  readonly reviewerStageRefs: readonly [
+    "EvidenceCompatibilityReviewer",
+    "SafetyRollbackReviewer",
+  ];
+  readonly reviewerHandoffRefs: readonly Identifier[];
+  readonly reviewerOutput?: SequentialReviewOutput;
+  readonly finalGate?: StageResult<FinalOwnerApprovedGateProjection>;
+  readonly status: "pass" | "pending" | "fail" | "blocked" | "partial";
+  readonly enablementAllowed: boolean;
+  readonly evidenceRefs: readonly Identifier[];
+  readonly limitations: readonly string[];
+}
+
+/** Handover input accepted after the integration gate has produced its record. */
+export interface HandoverGenerationInput extends HandoverInput {
+  readonly integrationHandoff?: IntegrationHandoffPersistence;
+}
+
+/** Handover output with the integration/reviewer handoff attached verbatim. */
+export interface PersistedHandoverRecord extends HandoverRecord {
+  readonly integrationHandoff?: IntegrationHandoffPersistence;
+}
+
+export interface IntegrationHandoffPersistenceInput {
+  readonly waveId: Identifier;
+  readonly integrationValidationGate: IntegrationValidationGateRecord;
+  readonly reviewerOutput?: SequentialReviewOutput;
+  readonly finalGate?: StageResult<FinalOwnerApprovedGateProjection>;
+  readonly limitations?: readonly string[];
+}
+
+function integrationHandoffStatus(
+  input: IntegrationHandoffPersistenceInput,
+): IntegrationHandoffPersistence["status"] {
+  if (input.integrationValidationGate.status !== "pass") {
+    return input.integrationValidationGate.status;
+  }
+  if (input.reviewerOutput?.bothReviewerStagesPass !== true) return "blocked";
+  if (
+    input.finalGate === undefined ||
+    input.finalGate.status !== "pass" ||
+    input.finalGate.output?.disposition !== "enabled-valid"
+  ) {
+    return "blocked";
+  }
+  return "pass";
+}
+
+function integrationHandoffEnablementAllowed(
+  input: IntegrationHandoffPersistenceInput,
+): boolean {
+  return (
+    input.integrationValidationGate.enablementAllowed &&
+    input.reviewerOutput?.bothReviewerStagesPass === true &&
+    input.finalGate?.status === "pass" &&
+    input.finalGate.output?.disposition === "enabled-valid"
+  );
+}
+
+function integrationHandoffEvidenceRefs(
+  input: IntegrationHandoffPersistenceInput,
+  reviewerHandoffRefs: readonly Identifier[],
+): Identifier[] {
+  return unique([
+    input.waveId,
+    input.integrationValidationGate.gateId,
+    input.integrationValidationGate.waveId,
+    ...input.integrationValidationGate.repositoryValidationRuns,
+    ...input.integrationValidationGate.sequentialReviewerHandoffRefs,
+    ...reviewerHandoffRefs,
+    ...(input.reviewerOutput?.evidenceReview.evidenceRefs ?? []),
+    ...(input.reviewerOutput?.safetyReview?.evidenceRefs ?? []),
+    ...(input.finalGate?.evidenceRefs ?? []),
+  ]);
+}
+
+/**
+ * Persist the exact integration/reviewer/final-gate projection for handover
+ * generation.  Missing stages remain missing; the projection only records a
+ * blocked state and never manufactures a successful reviewer or enablement
+ * result.
+ */
+export function createIntegrationHandoffPersistence(
+  input: IntegrationHandoffPersistenceInput,
+): IntegrationHandoffPersistence {
+  const reviewerHandoffRefs = unique(
+    input.reviewerOutput?.handoffRefs ?? [
+      "handoff-EvidenceCompatibilityReviewer-blocked",
+    ],
+  );
+  const limitations = unique([
+    ...(input.limitations ?? []),
+    ...(input.reviewerOutput === undefined
+      ? [
+          "Sequential reviewer output is not present; the final owner-approved gate remains blocked.",
+        ]
+      : input.reviewerOutput.bothReviewerStagesPass
+        ? []
+        : ["Sequential reviewer handoff is blocked; no enabled-valid claim is made."]),
+    ...(input.finalGate === undefined
+      ? ["Final owner-approved gate output is not present; enabled-valid remains blocked."]
+      : []),
+  ]);
+
+  return {
+    implementationWaveRef: input.waveId,
+    integrationValidationGateRef: input.integrationValidationGate.gateId,
+    integrationValidationGate: input.integrationValidationGate,
+    reviewerStageRefs: [
+      "EvidenceCompatibilityReviewer",
+      "SafetyRollbackReviewer",
+    ],
+    reviewerHandoffRefs,
+    reviewerOutput: input.reviewerOutput,
+    finalGate: input.finalGate,
+    status: integrationHandoffStatus(input),
+    enablementAllowed: integrationHandoffEnablementAllowed(input),
+    evidenceRefs: integrationHandoffEvidenceRefs(input, reviewerHandoffRefs),
+    limitations,
+  };
+}
+
+function integrationHandoffBlockers(
+  handoff: IntegrationHandoffPersistence,
+): string[] {
+  const blockers: string[] = [];
+  if (!nonEmpty(handoff.implementationWaveRef)) {
+    blockers.push("integration handoff requires an implementation-wave reference");
+  }
+  if (!nonEmpty(handoff.integrationValidationGateRef)) {
+    blockers.push("integration handoff requires an Integration_Validation_Gate reference");
+  }
+  if (handoff.integrationValidationGate.gateId !== handoff.integrationValidationGateRef) {
+    blockers.push("integration handoff gate reference does not match its gate record");
+  }
+  if (handoff.reviewerStageRefs.length !== 2) {
+    blockers.push("integration handoff must preserve both reviewer stage references");
+  }
+  if (handoff.reviewerHandoffRefs.length === 0) {
+    blockers.push("integration handoff requires a reviewer handoff reference, including blocked handoffs");
+  }
+  if (handoff.reviewerOutput !== undefined) {
+    if (handoff.reviewerOutput.handoffRefs.length !== handoff.reviewerHandoffRefs.length) {
+      blockers.push("integration handoff reviewer references do not match reviewer output");
+    }
+    if (!handoff.reviewerOutput.blockedHandoff && !handoff.reviewerOutput.bothReviewerStagesPass) {
+      blockers.push("integration handoff cannot report an unblocked reviewer handoff without both reviewer stages passing");
+    }
+  }
+  if (handoff.finalGate?.output?.reviewerHandoffRefs !== undefined &&
+      handoff.finalGate.output.reviewerHandoffRefs.length !== handoff.reviewerHandoffRefs.length) {
+    blockers.push("integration handoff final-gate reviewer references do not match the persisted handoff");
+  }
+  return unique(blockers);
+}
+
 function nonEmpty(value: unknown): value is string {
   return typeof value === "string" && value.trim().length > 0;
 }
@@ -539,7 +705,7 @@ function generatedAt(now: () => Date): string {
   return Number.isNaN(date.getTime()) ? new Date(0).toISOString() : date.toISOString();
 }
 
-function handoverReferences(input: HandoverInput): Identifier[] {
+function handoverReferences(input: HandoverGenerationInput): Identifier[] {
   return unique([
     `coverage-matrix:${slug(input.reviewDateUtc)}`,
     `exclusion-register:${slug(input.reviewDateUtc)}`,
@@ -548,14 +714,23 @@ function handoverReferences(input: HandoverInput): Identifier[] {
     ...input.ownerDecisions.map((decision) => decision.evidenceRef),
     ...input.validationRuns.map((run) => run.validationId),
     ...input.rollbackRecords.map((record) => record.rollbackId),
+    ...(input.integrationHandoff === undefined
+      ? []
+      : [
+          input.integrationHandoff.implementationWaveRef,
+          input.integrationHandoff.integrationValidationGateRef,
+          ...input.integrationHandoff.reviewerHandoffRefs,
+          ...input.integrationHandoff.evidenceRefs,
+          ...(input.integrationHandoff.finalGate?.evidenceRefs ?? []),
+        ]),
   ].filter(nonEmpty));
 }
 
 function buildHandover(
-  input: HandoverInput,
+  input: HandoverGenerationInput,
   now: () => Date,
   normalizedGaps: readonly KnownGap[],
-): { readonly output: HandoverRecord; readonly blockers: readonly string[] } {
+): { readonly output: PersistedHandoverRecord; readonly blockers: readonly string[] } {
   const complete = coverageIsComplete(input);
   const coverageBlockers = complete ? [] : [
     "official-family status/evidence or Coverage_Matrix completeness is missing; complete-review remains incomplete",
@@ -563,6 +738,9 @@ function buildHandover(
   const compatibilityErrors = compatibilityBlockers(input.compatibilityRecords);
   const ownerDecisionErrors = decisionBlockers(input);
   const precedenceErrors = precedenceBlockers(input.precedenceMap);
+  const integrationErrors = input.integrationHandoff === undefined
+    ? []
+    : integrationHandoffBlockers(input.integrationHandoff);
   const unavailable = input.coverageMatrix.unavailableCandidateRefs.length > 0
     ? `Unavailable candidates: ${input.coverageMatrix.unavailableCandidateRefs.join(", ")}.`
     : "Unavailable candidates: none recorded.";
@@ -572,9 +750,10 @@ function buildHandover(
     ...input.officialFamilyStatuses.filter((status) => /unverified|unavailable|incomplete/i.test(status)),
     ...input.compatibilityRecords.flatMap((record) => record.unsupportedClaims),
     ...normalizedGaps.filter((gap) => gap.evidenceState === "Unverified").map((gap) => `Unverified: ${gap.title}`),
+    ...(input.integrationHandoff?.limitations ?? []),
     "Static repository evidence does not prove Kiro loading, hook execution, external-service success, or cross-surface compatibility.",
   ]);
-  const output: HandoverRecord = {
+  const output: PersistedHandoverRecord = {
     generatedAtUtc: generatedAt(now),
     reviewDateUtc: input.reviewDateUtc,
     completeReviewStatement: complete
@@ -596,10 +775,23 @@ function buildHandover(
     rollbackRecords: [...input.rollbackRecords],
     maintenanceTriggers: [...HANDOVER_MAINTENANCE_TRIGGERS],
     limitations,
+    ...(input.integrationHandoff === undefined
+      ? {}
+      : {
+          implementationWaveRef: input.integrationHandoff.implementationWaveRef,
+          integrationValidationGateRef: input.integrationHandoff.integrationValidationGateRef,
+          integrationHandoff: input.integrationHandoff,
+        }),
   };
   return {
     output,
-    blockers: unique([...coverageBlockers, ...compatibilityErrors, ...ownerDecisionErrors, ...precedenceErrors]),
+    blockers: unique([
+      ...coverageBlockers,
+      ...compatibilityErrors,
+      ...ownerDecisionErrors,
+      ...precedenceErrors,
+      ...integrationErrors,
+    ]),
   };
 }
 
@@ -611,7 +803,7 @@ export class HandoverGeneratorService implements HandoverGeneratorContract {
     this.now = options.now ?? (() => new Date());
   }
 
-  public generate(input: HandoverInput): StageResult<HandoverRecord> {
+  public generate(input: HandoverGenerationInput): StageResult<PersistedHandoverRecord> {
     const gapResult = buildKnownGapsRegister(input.knownGaps);
     const blockers = [...gapResult.blockers];
     if (!isoDate(input.reviewDateUtc)) blockers.push("handover reviewDateUtc must be an ISO date");
@@ -637,7 +829,7 @@ export class HandoverGeneratorService implements HandoverGeneratorContract {
 }
 
 export const handoverGenerator = new HandoverGeneratorService();
-export const generateHandover = (input: HandoverInput): StageResult<HandoverRecord> =>
+export const generateHandover = (input: HandoverGenerationInput): StageResult<PersistedHandoverRecord> =>
   handoverGenerator.generate(input);
 export const HandoverGenerator = HandoverGeneratorService;
 

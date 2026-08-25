@@ -486,6 +486,18 @@ describe("end-to-end local-surface integration gate", () => {
       ],
     });
     expect(output.reviewerOutput?.bothReviewerStagesPass).toBe(true);
+    expect(output.integrationHandoff).toMatchObject({
+      implementationWaveRef: WAVE_ID,
+      integrationValidationGateRef: "integration-gate-local-surface-e2e",
+      reviewerHandoffRefs: [
+        "handoff-EvidenceCompatibilityReviewer",
+        "handoff-SafetyRollbackReviewer",
+      ],
+      status: "pass",
+      enablementAllowed: true,
+      finalGate: { status: "pass" },
+    });
+    expect(output.integrationHandoff.reviewerOutput?.bothReviewerStagesPass).toBe(true);
     expect(output.reviewerOutput?.reviewerStages).toEqual([
       "EvidenceCompatibilityReviewer",
       "SafetyRollbackReviewer",
@@ -538,6 +550,17 @@ describe("end-to-end local-surface integration gate", () => {
 
     expect(pipelineResult.status).toBe("blocked");
     expect(output.reviewerOutput).toBeUndefined();
+    expect(output.integrationHandoff).toMatchObject({
+      implementationWaveRef: WAVE_ID,
+      integrationValidationGateRef: "integration-gate-local-surface-e2e",
+      reviewerHandoffRefs: ["handoff-EvidenceCompatibilityReviewer-blocked"],
+      status: "blocked",
+      enablementAllowed: false,
+      finalGate: { status: "blocked" },
+    });
+    expect(output.integrationHandoff.finalGate?.output?.executionStatus).toBe(
+      "blocked-before-evaluation",
+    );
     expect(output.finalGate?.status).toBe("blocked");
     expect(output.finalGate?.output).toMatchObject({
       disposition: "blocked",

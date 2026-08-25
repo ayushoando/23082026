@@ -22,7 +22,7 @@ import {
 const repositoryRoot = resolve("D:\\23082026");
 const temporaryRoots: string[] = [];
 
-function createValidationRun(skill: string): ValidationRun {
+function createValidationRun(skill: string, overrides: Partial<ValidationRun> = {}): ValidationRun {
   const validationId = `validation:skill:${skill}`;
   const path = `.kiro/skills/${skill}/SKILL.md`;
   return {
@@ -40,6 +40,7 @@ function createValidationRun(skill: string): ValidationRun {
     evidenceRefs: [validationId],
     unverifiedItems: [],
     blocker: "none",
+    ...overrides,
   };
 }
 
@@ -207,6 +208,44 @@ describe("SkillEvaluator", () => {
     expect(result.output?.activationBlockers).toHaveLength(6);
   });
 
+
+  it("does not treat a passing record as fresh without the review-date anchor", () => {
+    const od08 = OWNER_DECISIONS.find((decision) => decision.decisionId === "OD-08") as OwnerDecision;
+    const validationRuns = INITIAL_SKILL_CANDIDATES.map((skill) => createValidationRun(skill));
+    const result = evaluateSkills({ repositoryRoot, ownerDecisions: [od08], validationRuns });
+
+    expect(result.status).toBe("partial");
+    expect(result.output?.activationScopeClaimsAllowed).toBe(false);
+    expect(result.output?.skills.every((skill) => skill.activationClaimed === false)).toBe(true);
+    expect(result.output?.activationBlockers.every((blocker) => blocker.includes("no review date"))).toBe(true);
+  });
+
+  it("requires fresh local evidence for this repository root and explicit manifest prerequisites", () => {
+    const od08 = OWNER_DECISIONS.find((decision) => decision.decisionId === "OD-08") as OwnerDecision;
+    const cases: readonly Partial<ValidationRun>[] = [
+      { startedAtUtc: "2026-08-24T12:00:00Z" },
+      { repositoryRootOrActiveSurface: resolve("D:/other-repository") },
+      {
+        action: "validate local skill manifest",
+        scope: ".kiro/skills/repo-map/SKILL.md; manifest; repository-local evidence; rollback path",
+        commandOrInteraction: "read-only repository-local skill manifest validation",
+      },
+    ];
+
+    for (const overrides of cases) {
+      const validationRuns = INITIAL_SKILL_CANDIDATES.map((skill) => createValidationRun(skill, overrides));
+      const result = evaluateSkills({
+        repositoryRoot,
+        reviewDateUtc: "2026-08-25",
+        ownerDecisions: [od08],
+        validationRuns,
+      });
+
+      expect(result.status).toBe("partial");
+      expect(result.output?.activationScopeClaimsAllowed).toBe(false);
+      expect(result.output?.skills.every((skill) => skill.activationClaimed === false)).toBe(true);
+    }
+  });
 
   it("blocks a folder/name mismatch and preserves fail-closed disposition", () => {
     const root = createFixture({ wrongName: "not-repo-map" });

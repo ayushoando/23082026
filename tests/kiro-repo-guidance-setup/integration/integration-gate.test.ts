@@ -225,6 +225,15 @@ describe("integration-owned wave collection", () => {
       "handoff-EvidenceCompatibilityReviewer-blocked",
     ]);
     expect(result.output?.reviewerOutput).toBeUndefined();
+    expect(result.output?.integrationHandoff).toMatchObject({
+      implementationWaveRef: WAVE_ID,
+      integrationValidationGateRef: CANONICAL_WAVE.integrationValidationGateRef,
+      reviewerHandoffRefs: ["handoff-EvidenceCompatibilityReviewer-blocked"],
+      status: "blocked",
+      enablementAllowed: false,
+    });
+    expect(result.output?.integrationHandoff.reviewerOutput).toBeUndefined();
+    expect(result.output?.integrationHandoff.finalGate).toBeUndefined();
     expect(result.output?.enablementAllowed).toBe(false);
     expect(result.output?.preservedPriorState).toBe(true);
     expect(blockerText(result)).toContain("reviewer inputs are required");

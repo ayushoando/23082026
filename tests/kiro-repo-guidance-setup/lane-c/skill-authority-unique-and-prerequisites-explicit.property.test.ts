@@ -44,19 +44,19 @@ function passingValidationRun(skill: string): ValidationRun {
   const path = `.kiro/skills/${skill}/SKILL.md`;
   return {
     validationId,
-    action: "validate skill manifest and activation",
+    action: "validate local skill manifest and prerequisites",
     repositoryRootOrActiveSurface: repositoryRoot,
     surface: "Local_Repository_Surface",
     version: "repository",
-    scope: `${path}; activation behavior; rollback path`,
+    scope: `${path}; manifest; prerequisites; repository-local evidence; rollback path`,
     executionLayer: "surface_validation",
     startedAtUtc: "2026-08-25T12:00:00Z",
     result: "pass",
-    commandOrInteraction: "read-only local skill activation validation",
+    blocker: "none",
+    commandOrInteraction: "read-only repository-local skill manifest and prerequisite validation",
     exitCodeOrOutcome: "exit 0",
     evidenceRefs: [validationId],
     unverifiedItems: [],
-    blocker: "none",
   };
 }
 
@@ -214,7 +214,7 @@ describe("Property 8: Skill authority is unique and prerequisites are explicit",
           const evidenceUsable = evidenceChoice.kind === "fresh";
           const shouldClaim = od08Usable && evidenceUsable;
 
-          const result = evaluateSkills({ repositoryRoot, ownerDecisions, validationRuns });
+          const result = evaluateSkills({ repositoryRoot, reviewDateUtc: "2026-08-25", ownerDecisions, validationRuns });
           const output = result.output;
           expect(output).toBeDefined();
           if (!output) return;
