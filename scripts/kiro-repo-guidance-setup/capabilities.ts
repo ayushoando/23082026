@@ -9,11 +9,10 @@
  */
 
 import { lstatSync, readFileSync, readdirSync } from "node:fs";
-import { join, relative, resolve } from "node:path";
+import { relative, resolve } from "node:path";
 
 import {
   INITIAL_SKILL_CANDIDATES,
-  OWNER_DECISIONS,
   REQUIRED_SURFACE_VERSIONS,
   REPOSITORY_ROOT,
   type ArtifactInventoryRecord,
@@ -31,10 +30,10 @@ import {
   type ExtensionRecord,
   type FailureBehavior,
   type Identifier,
-  type IntegrityResult as ContractIntegrityResult,
   type KiroSurface,
   type KnownGap,
   type OwnerDecision,
+  type ReviewerIterationCeiling,
   type PermissionBoundary,
   type PowerFormat,
   type PowerRecord,
@@ -188,6 +187,7 @@ export interface CapabilityEvidenceRecord {
 export interface EvaluatedPowerRecord extends PowerRecord {
   readonly capabilityId: Identifier;
   readonly name: string;
+  readonly external: boolean;
   readonly observations: readonly PowerObservation[];
   readonly evidence: CapabilityEvidenceRecord;
   readonly blockers: readonly string[];
@@ -197,6 +197,7 @@ export interface EvaluatedPowerRecord extends PowerRecord {
 export interface EvaluatedExtensionRecord extends ExtensionRecord {
   readonly capabilityId: Identifier;
   readonly name: string;
+  readonly external: boolean;
   readonly evidence: CapabilityEvidenceRecord;
   readonly repositoryAnswerCheck: RepositoryAnswerCheck;
   readonly blockers: readonly string[];
@@ -230,6 +231,11 @@ interface PowerInspection {
   readonly observations: readonly PowerObservation[];
 }
 
+interface NormalizedPowerLocator {
+  readonly locator: string;
+  readonly local: boolean;
+}
+
 interface GapSpec {
   readonly kind: KnownGap["kind"];
   readonly title: string;
@@ -256,6 +262,7 @@ interface NormalizedExtension {
   readonly metadata: CapabilityMetadataInput;
   readonly missingFields: readonly string[];
   readonly resourceUrisWereExplicit: boolean;
+  readonly surfaceAvailabilityWasExplicit: boolean;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -264,6 +271,19 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function nonEmpty(value: unknown): value is string {
   return typeof value === "string" && value.trim().length > 0;
+}
+
+function isPlaceholderBoundary(value: unknown): boolean {
+  return !nonEmpty(value) || /(?:requires?\s+(?:explicit|a\s+named)|must\s+be\s+(?:named|recorded)|required\s+before|pending\s+owner)/i.test(value);
+}
+
+function isNamedBoundary(value: unknown): boolean {
+  return nonEmpty(value) && value !== "none_declared" && !isPlaceholderBoundary(value);
+}
+
+function boundaryState(value: unknown): SecretBoundary | PermissionBoundary {
+  if (value === "none_declared") return "none_declared";
+  return nonEmpty(value) && !isPlaceholderBoundary(value) ? "named_boundary" : "none_declared";
 }
 
 function unique<T>(values: readonly T[]): T[] {
@@ -282,6 +302,32 @@ function normalizeLocator(locator: string): string {
   return /^[A-Za-z][A-Za-z0-9+.-]*:\/\//.test(locator)
     ? locator.trim()
     : normalizePath(locator);
+}
+
+function isUrlLocator(locator: string): boolean {
+  return /^[A-Za-z][A-Za-z0-9+.-]*:\/\//.test(locator.trim());
+}
+
+function normalizeRepositoryLocator(root: string, locator: string): NormalizedPowerLocator {
+  const normalized = normalizeLocator(locator);
+  if (isUrlLocator(locator)) return { locator: normalized, local: false };
+
+  const absoluteRoot = resolve(root);
+  const absoluteCandidate = resolve(absoluteRoot, locator);
+  if (!insideRoot(absoluteRoot, absoluteCandidate)) return { locator: normalized, local: false };
+
+  const relativeLocator = normalizePath(relative(absoluteRoot, absoluteCandidate));
+  const local = relativeLocator === POWER_ROOT || relativeLocator.startsWith(`${POWER_ROOT}/`);
+  return { locator: relativeLocator || normalized, local };
+}
+
+function isRepositoryPathLocator(root: string, locator: string): boolean {
+  if (isUrlLocator(locator)) return false;
+  const trimmed = locator.trim();
+  const pathLike = trimmed.startsWith(".") || trimmed.includes("/") || trimmed.includes("\\") || /^[A-Za-z]:[\\/]/.test(trimmed);
+  if (!pathLike) return false;
+  const absoluteRoot = resolve(root);
+  return insideRoot(absoluteRoot, resolve(absoluteRoot, locator));
 }
 
 function slug(value: string): string {
@@ -338,7 +384,7 @@ function asStringArray(value: unknown): string[] {
 }
 
 function asResourceUris(value: unknown): ResourceUri[] {
-  return asStringArray(value).map((item) => item === "None" ? "None" : item);
+  return asStringArray(value).map((item) => item === "None" ? "None" : redact(item));
 }
 
 function surface(value: unknown): KiroSurface | null {
@@ -412,6 +458,7 @@ function powerObservation(
   evidenceState: EvidenceState,
   provenanceResult: string,
   empty?: boolean,
+  cwdOrSurface: string = REPOSITORY_ROOT,
 ): PowerObservation {
   return {
     observationId: `observation:power:${slug(String(path))}:${slug(component)}`,
@@ -419,13 +466,13 @@ function powerObservation(
     path,
     present,
     ...(empty === undefined ? {} : { empty }),
-    value,
+    value: redact(value),
     evidenceState,
     provenance: {
       observer: POWER_OWNER,
-      cwdOrSurface: REPOSITORY_ROOT,
-      commandOrPath: String(path),
-      result: provenanceResult,
+      cwdOrSurface,
+      commandOrPath: redact(String(path)),
+      result: redact(provenanceResult),
     },
   };
 }
@@ -448,15 +495,18 @@ function inspectPower(root: string, locator: string, registryObservation?: strin
       manifest.status === "present and readable" ? "present and readable" : manifest.status,
       manifest.status === "present and readable" ? "Observed" : "Unverified",
       `POWER.md ${manifest.status}`,
+      undefined,
+      root,
     ),
     powerObservation(
       mcpPath,
       "mcp.json",
       mcp.status !== "absent",
       summary.summary,
-      mcp.status === "present and readable" ? "Observed" : "Unverified",
+      mcp.status === "present and readable" && summary.summary !== "present but invalid JSON" ? "Observed" : "Unverified",
       `mcp.json ${summary.summary}`,
       summary.empty,
+      root,
     ),
     powerObservation(
       pluginPath,
@@ -465,6 +515,8 @@ function inspectPower(root: string, locator: string, registryObservation?: strin
       plugin.status === "absent" ? "absent" : plugin.status,
       plugin.status === "absent" ? "Observed" : plugin.status === "present and readable" ? "Observed" : "Unverified",
       `plugin.json ${plugin.status}`,
+      undefined,
+      root,
     ),
   ];
 
@@ -477,6 +529,8 @@ function inspectPower(root: string, locator: string, registryObservation?: strin
         registryObservation ?? "registryId: local; registration is Unverified and does not establish loading",
         "Unverified",
         "registryId: local registration was not treated as a loading validation",
+        undefined,
+        root,
       ),
     );
   }
@@ -511,20 +565,12 @@ function defaultProvenance(
   result: string,
   supplied?: EvidenceProvenance,
 ): EvidenceProvenance {
-  if (supplied && nonEmpty(supplied.observer) && nonEmpty(supplied.commandOrPath)) {
-    return {
-      observer: redact(supplied.observer),
-      cwdOrSurface: redact(supplied.cwdOrSurface),
-      commandOrPath: redact(supplied.commandOrPath),
-      result: redact(supplied.result),
-      ...(supplied.integrityBasis ? { integrityBasis: redact(supplied.integrityBasis) } : {}),
-    };
-  }
   return {
-    observer: POWER_OWNER,
-    cwdOrSurface: root,
-    commandOrPath: locator,
-    result: redact(result),
+    observer: supplied && nonEmpty(supplied.observer) ? redact(supplied.observer) : POWER_OWNER,
+    cwdOrSurface: supplied && nonEmpty(supplied.cwdOrSurface) ? redact(supplied.cwdOrSurface) : root,
+    commandOrPath: supplied && nonEmpty(supplied.commandOrPath) ? redact(supplied.commandOrPath) : locator,
+    result: supplied && nonEmpty(supplied.result) ? redact(supplied.result) : redact(result),
+    ...(supplied && nonEmpty(supplied.integrityBasis) ? { integrityBasis: redact(supplied.integrityBasis) } : {}),
   };
 }
 
@@ -554,14 +600,15 @@ function validationRefs(
 ): Identifier[] {
   const requested = uniqueStrings(refs);
   if (requested.length === 0) return [];
-  if (validationRuns.length === 0) return requested;
 
   return requested.filter((ref) => {
     const run = validationRuns.find((candidate) => candidate.validationId === ref);
     if (!run || run.result !== "pass" || run.blocker !== "none" || run.unverifiedItems.length > 0) return false;
     if (run.executionLayer !== "surface_validation") return false;
     if (targetSurface && (run.surface !== targetSurface.surface || run.version !== targetSurface.version)) return false;
-    return surfaces.includes(run.surface);
+    if (!surfaces.includes(run.surface)) return false;
+    const expectedVersion = REQUIRED_SURFACE_VERSIONS.find((candidate) => candidate.surface === run.surface)?.version;
+    return expectedVersion === run.version;
   });
 }
 
@@ -576,12 +623,12 @@ type CapabilityEvaluatorResultSurface = (typeof REQUIRED_SURFACE_VERSIONS)[numbe
 
 function repositoryAnswerEvidence(root: string, supplied: readonly string[] | undefined, local: boolean): string[] {
   if (supplied && supplied.length > 0) return uniqueStrings(supplied).map(redact);
-  if (local || pathExists(root, "AGENTS.md")) {
+  if (local) {
     return [
       "AGENTS.md",
       ".kiro/skills/repo-map/SKILL.md",
       "scripts/graph-impact.mjs",
-    ];
+    ].filter((path) => pathExists(root, path));
   }
   return [];
 }
@@ -599,12 +646,11 @@ export interface RepositoryAnswerRequest {
 
 export function checkRepositoryAnswer(input: RepositoryAnswerRequest): RepositoryAnswerCheck {
   const root = resolve(input.repositoryRoot ?? REPOSITORY_ROOT);
-  const locator = input.locator ?? input.name;
-  const local = normalizePath(locator).startsWith(`${POWER_ROOT}/`) || input.kind !== "MCP_Service" && input.kind !== "Kiro_Power";
+  const rawLocator = input.locator ?? input.name;
+  const normalizedLocator = normalizeRepositoryLocator(root, rawLocator);
+  const local = normalizedLocator.local || isRepositoryPathLocator(root, rawLocator);
   const evidence = repositoryAnswerEvidence(root, input.repositoryAnswerEvidence, local);
-  const result = input.repositoryAnswer ?? (
-    local ? "Answered" : evidence.length > 0 ? "Answered" : "Not_Testable"
-  );
+  const result = input.repositoryAnswer ?? (local && evidence.length > 0 ? "Answered" : "Not_Testable");
   const externalRoutingRequested = input.externalRoutingRequested === true || !local;
   return {
     checkId: `repository-answer:${slug(input.capabilityId)}`,
@@ -617,7 +663,7 @@ export function checkRepositoryAnswer(input: RepositoryAnswerRequest): Repositor
     provenance: {
       observer: POWER_OWNER,
       cwdOrSurface: root,
-      commandOrPath: input.locator ?? input.name,
+      commandOrPath: normalizedLocator.locator,
       result: `repository-answer check classified as ${result} before external routing`,
     },
     evaluatedBeforeExternalRouting: true,
@@ -659,8 +705,8 @@ function addGap(context: EvaluationContext, capabilityId: string, spec: GapSpec)
 }
 
 function approvalBoundaryFor(kind: "Kiro_Power" | ExtensionKind, external: boolean): string {
+  if (kind === "Kiro_Power") return external ? "approval-boundary:OD-05" : "no_boundary";
   if (!external) return "no_boundary";
-  if (kind === "Kiro_Power") return "approval-boundary:OD-06";
   if (kind === "MCP_Service") return "approval-boundary:OD-06";
   return "approval-boundary:OD-07";
 }
@@ -741,7 +787,7 @@ function provenanceEvidence(
     integrityResult,
     secrets,
     permissions,
-    serviceAndDataBoundary: nonEmpty(serviceAndDataBoundary) ? redact(serviceAndDataBoundary) : "unavailable",
+    serviceAndDataBoundary: isNamedBoundary(serviceAndDataBoundary) ? redact(serviceAndDataBoundary) : "unavailable",
     resourceUris: resourceUris.length > 0 ? resourceUris : ["None"],
     ownerApprovalRef,
     targetValidationRefs,
@@ -761,7 +807,7 @@ function powerDispositionRecord(
   knownGapRefs: readonly string[],
   reason: string,
 ): CapabilityDispositionRecord {
-  const external = record.pathOrInstallation.startsWith("http://") || record.pathOrInstallation.startsWith("https://");
+  const external = record.external;
   return {
     capabilityId: record.capabilityId,
     kind: "Kiro_Power",
@@ -773,7 +819,7 @@ function powerDispositionRecord(
     activationCondition: "after repository-answer, provenance, owner approval, exact-surface loading validation, and rollback validation",
     owner: POWER_OWNER,
     approvalBoundaryRef: approvalBoundaryFor("Kiro_Power", external),
-    evidenceRefs: unique([...record.evidence.surfaceValidationRefs, ...record.evidence.repositoryAnswerEvidence, ...knownGapRefs]),
+    evidenceRefs: unique([...record.surfaceValidationRefs, ...record.evidence.repositoryAnswerEvidence, ...knownGapRefs]),
     validationAction: "run a fresh exact Active_Surface power-loading Validation_Run without external side effects",
     expectedSideEffects: ["no external routing until the repository-answer check and named boundary pass"],
     rollbackPath: record.rollbackPath,
@@ -835,7 +881,7 @@ function extensionMetadata(input: ExtensionCandidateInput): CapabilityMetadataIn
     ownerApprovalRef: asString(raw, "ownerApprovalRef"),
     approvalBoundaryRef: asString(raw, "approvalBoundaryRef"),
     targetValidationRefs: asStringArray(raw.targetValidationRefs) as Identifier[],
-    provenance: isRecord(raw.provenance) ? raw.provenance as EvidenceProvenance : undefined,
+    provenance: isRecord(raw.provenance) ? raw.provenance as unknown as EvidenceProvenance : undefined,
     expectedSideEffects: asStringArray(raw.expectedSideEffects),
     externalRoutingRequested: raw.externalRoutingRequested === true,
   };
@@ -848,9 +894,9 @@ function normalizeExtension(input: ExtensionCandidateInput, fallbackKind?: Exten
     ? raw.kind as ExtensionKind
     : fallbackKind ?? "Tool_Surface";
   const metadata = extensionMetadata(input);
-  const source = metadata.canonicalSource ?? fallbackSource ?? `${kind}`;
+  const source = redact(metadata.canonicalSource ?? fallbackSource ?? `${kind}`);
   const configuredName = metadata.name ?? asString(raw, "displayName");
-  const name = configuredName ?? `${kind}:${source}`;
+  const name = redact(configuredName ?? `${kind}:${source}`);
   const executionLayerValues: readonly ExecutionLayer[] = [
     "default_native_task",
     "reviewer_stage",
@@ -865,6 +911,7 @@ function normalizeExtension(input: ExtensionCandidateInput, fallbackKind?: Exten
   const executionLayer = executionLayerValues.includes(raw.executionLayer as ExecutionLayer)
     ? raw.executionLayer as ExecutionLayer
     : "default_native_task";
+  const surfaceAvailabilityProvided = Array.isArray(raw.surfaceAvailability);
   const surfaceAvailability = surfacesFrom(raw.surfaceAvailability);
   const resourcesValueProvided = Array.isArray(raw.resourceUris);
   const resourceUris = resourcesValueProvided ? asResourceUris(raw.resourceUris) : [];
@@ -873,12 +920,15 @@ function normalizeExtension(input: ExtensionCandidateInput, fallbackKind?: Exten
     ? rawMaximum as DefaultTaskConcurrency
     : 0;
   const rawIteration = raw.iterationCeiling;
-  const iterationCeiling = typeof rawIteration === "number" && Number.isInteger(rawIteration) && rawIteration >= 0 && rawIteration <= 3
-    ? rawIteration
+  const iterationCeiling: ReviewerIterationCeiling = typeof rawIteration === "number" && Number.isInteger(rawIteration) && rawIteration >= 0 && rawIteration <= 3
+    ? rawIteration as ReviewerIterationCeiling
     : 0;
   const missingFields: string[] = [];
   if (!nonEmpty(raw.configurationFormat)) missingFields.push("configuration format");
-  if (surfaceAvailability.length === 0) missingFields.push("surface availability");
+  if (!surfaceAvailabilityProvided || surfaceAvailability.length === 0) missingFields.push("surface availability (IDE/CLI applicability)");
+  if (kind === "Custom_Agent" && !surfaceAvailability.some((item) => item === "IDE" || item === "CLI 2.x" || item === "CLI 3.x")) {
+    missingFields.push("IDE or CLI availability");
+  }
   if (!nonEmpty(raw.scope)) missingFields.push("scope");
   if (!nonEmpty(raw.activation)) missingFields.push("activation");
   if (!nonEmpty(raw.authorityRelationship)) missingFields.push("authority relationship");
@@ -892,24 +942,24 @@ function normalizeExtension(input: ExtensionCandidateInput, fallbackKind?: Exten
   if (!nonEmpty(raw.rollbackPath)) missingFields.push("rollback path");
   if (kind === "Subagent" && !nonEmpty(raw.dagOrReviewGraph)) missingFields.push("DAG or review graph");
   if (kind === "MCP_Service") {
-    if (!nonEmpty(raw.serviceAndDataBoundary)) missingFields.push("named service/data boundary");
-    if (!nonEmpty(raw.secretBoundary)) missingFields.push("secret boundary");
-    if (!nonEmpty(raw.permissionBoundary)) missingFields.push("permission boundary");
+    if (!isNamedBoundary(raw.serviceAndDataBoundary)) missingFields.push("named service/data boundary");
+    if (isPlaceholderBoundary(raw.secretBoundary)) missingFields.push("secret boundary");
+    if (isPlaceholderBoundary(raw.permissionBoundary)) missingFields.push("permission boundary");
   }
 
   const record: ExtensionRecord = {
     kind,
     executionLayer,
-    configurationFormat: asString(raw, "configurationFormat") ?? "unavailable",
+    configurationFormat: redact(asString(raw, "configurationFormat") ?? "unavailable"),
     surfaceAvailability: surfaceAvailability.length > 0 ? surfaceAvailability : ["Local_Repository_Surface"],
-    scope: asString(raw, "scope") ?? "unavailable",
-    activation: asString(raw, "activation") ?? "unavailable",
-    authorityRelationship: asString(raw, "authorityRelationship") ?? "unavailable",
+    scope: redact(asString(raw, "scope") ?? "unavailable"),
+    activation: redact(asString(raw, "activation") ?? "unavailable"),
+    authorityRelationship: redact(asString(raw, "authorityRelationship") ?? "unavailable"),
     resourceUris: resourceUris.length > 0 ? resourceUris : ["None"],
-    ...(nonEmpty(raw.serviceAndDataBoundary) ? { serviceAndDataBoundary: raw.serviceAndDataBoundary.trim() } : {}),
-    ...(nonEmpty(raw.secretBoundary) ? { secretBoundary: raw.secretBoundary.trim() } : {}),
-    ...(nonEmpty(raw.permissionBoundary) ? { permissionBoundary: raw.permissionBoundary.trim() } : {}),
-    ...(nonEmpty(raw.dagOrReviewGraph) ? { dagOrReviewGraph: raw.dagOrReviewGraph.trim() } : {}),
+    ...(nonEmpty(raw.serviceAndDataBoundary) ? { serviceAndDataBoundary: redact(raw.serviceAndDataBoundary.trim()) } : {}),
+    ...(nonEmpty(raw.secretBoundary) ? { secretBoundary: redact(raw.secretBoundary.trim()) } : {}),
+    ...(nonEmpty(raw.permissionBoundary) ? { permissionBoundary: redact(raw.permissionBoundary.trim()) } : {}),
+    ...(nonEmpty(raw.dagOrReviewGraph) ? { dagOrReviewGraph: redact(raw.dagOrReviewGraph.trim()) } : {}),
     maximumConcurrency,
     iterationCeiling,
     approvalBehavior: approvalValues.includes(raw.approvalBehavior as (typeof approvalValues)[number])
@@ -922,9 +972,9 @@ function normalizeExtension(input: ExtensionCandidateInput, fallbackKind?: Exten
       ? raw.repositoryCompatibility as RepositoryCompatibility
       : "Unverified",
     validationRunRefs: asStringArray(raw.validationRunRefs) as Identifier[],
-    owner: asString(raw, "owner") ?? "unassigned",
+    owner: redact(asString(raw, "owner") ?? "unassigned"),
     disposition: "defer",
-    rollbackPath: asString(raw, "rollbackPath") ?? "",
+    rollbackPath: redact(asString(raw, "rollbackPath") ?? ""),
   };
 
   return {
@@ -934,6 +984,7 @@ function normalizeExtension(input: ExtensionCandidateInput, fallbackKind?: Exten
     metadata,
     missingFields: unique(missingFields),
     resourceUrisWereExplicit: resourcesValueProvided && resourceUris.length > 0,
+    surfaceAvailabilityWasExplicit: surfaceAvailabilityProvided && surfaceAvailability.length > 0,
   };
 }
 
@@ -992,7 +1043,7 @@ function discoverAgentExtensions(root: string, artifact: ArtifactInventoryRecord
   const read = readRepositoryFile(root, artifact.path);
   const parsed = parseJson(read.text);
   if (!isRecord(parsed)) return [];
-  const configuredAgents = Array.isArray(parsed.agents)
+  const configuredAgents: Record<string, unknown>[] = Array.isArray(parsed.agents)
     ? parsed.agents.filter(isRecord)
     : isRecord(parsed.agents)
       ? Object.entries(parsed.agents).filter((entry): entry is [string, Record<string, unknown>] => isRecord(entry[1])).map(([name, value]) => ({ ...value, name }))
@@ -1035,23 +1086,28 @@ function discoverArtifactExtensions(root: string, artifacts: readonly ArtifactIn
 }
 
 function externalForExtension(record: ExtensionRecord, metadata: CapabilityMetadataInput): boolean {
-  return record.kind === "MCP_Service" || metadata.externalRoutingRequested === true || nonEmpty(record.serviceAndDataBoundary);
+  return record.kind === "MCP_Service"
+    || metadata.externalRoutingRequested === true
+    || isUrlLocator(metadata.canonicalSource ?? "")
+    || isNamedBoundary(record.serviceAndDataBoundary);
 }
 
 function evaluatePower(
   candidate: PowerCandidateInput,
   context: EvaluationContext,
-  index: number,
+  _index: number,
 ): { readonly record: EvaluatedPowerRecord; readonly disposition: CapabilityDispositionRecord; readonly answer: RepositoryAnswerCheck; readonly evidence: CapabilityEvidenceRecord } {
   const root = context.repositoryRoot;
-  const locator = normalizeLocator(candidate.pathOrInstallation);
-  const local = normalizePath(locator).startsWith(`${POWER_ROOT}/`);
-  const inspection = local ? inspectPower(root, locator, candidate.registryObservation) : undefined;
-  const powerManifestPresent = candidate.powerManifestPresent ?? inspection?.manifestStatus !== "absent";
-  const pluginManifestPresent = candidate.pluginManifestPresent ?? inspection?.pluginStatus !== "absent";
+  const rawLocator = normalizeLocator(candidate.pathOrInstallation);
+  const normalizedLocator = normalizeRepositoryLocator(root, rawLocator);
+  const locator = redact(normalizedLocator.locator);
+  const local = normalizedLocator.local;
+  const inspection = local ? inspectPower(root, normalizedLocator.locator, candidate.registryObservation) : undefined;
+  const powerManifestPresent = candidate.powerManifestPresent ?? (inspection !== undefined && inspection.manifestStatus !== "absent");
+  const pluginManifestPresent = candidate.pluginManifestPresent ?? (inspection !== undefined && inspection.pluginStatus !== "absent");
   const format = classifyPowerFormat(powerManifestPresent, pluginManifestPresent);
-  const capabilityId = candidate.capabilityId ?? `capability:power:${slug(locator)}`;
-  const name = candidate.name ?? (local ? normalizePath(locator).slice(`${POWER_ROOT}/`.length) : locator);
+  const capabilityId = candidate.capabilityId ?? `capability:power:${slug(normalizedLocator.locator)}`;
+  const name = redact(candidate.name ?? (local ? normalizePath(normalizedLocator.locator).slice(`${POWER_ROOT}/`.length) : normalizedLocator.locator));
   const answer = checkRepositoryAnswer({
     capabilityId,
     name,
@@ -1060,16 +1116,18 @@ function evaluatePower(
     repositoryAnswer: candidate.repositoryAnswer,
     repositoryAnswerEvidence: candidate.repositoryAnswerEvidence,
     externalRoutingRequested: candidate.externalRoutingRequested ?? !local,
-    locator,
+    locator: normalizedLocator.locator,
   });
   const decision = decisionFor(context.ownerDecisions, OD05_DECISION_ID);
   const ownerApproved = decisionApproved(decision);
   const suppliedValidationRefs = candidate.surfaceValidationRefs ?? candidate.targetValidationRefs ?? [];
   const targetValidationRefs = validationRefs(suppliedValidationRefs, context.validationRuns, DEFAULT_POWER_SURFACES, context.targetSurface);
   const trustDecision: TrustDecision = candidate.trustDecision ?? (local ? "trusted" : "unresolved");
-  const integrityResult: IntegrityResult = candidate.integrityResult ?? (local && powerManifestPresent ? "pass" : "unverified");
-  const secrets: SecretBoundary = candidate.secrets ?? "none_declared";
-  const permissions: PermissionBoundary = candidate.permissions ?? "none_declared";
+  const integrityResult: IntegrityResult = candidate.integrityResult ?? (local && (powerManifestPresent || pluginManifestPresent) ? "pass" : "unverified");
+  const secrets: SecretBoundary = candidate.secrets ?? boundaryState(candidate.secretBoundary);
+  const permissions: PermissionBoundary = candidate.permissions ?? boundaryState(candidate.permissionBoundary);
+  const secretsDeclared = candidate.secrets !== undefined || !isPlaceholderBoundary(candidate.secretBoundary);
+  const permissionsDeclared = candidate.permissions !== undefined || !isPlaceholderBoundary(candidate.permissionBoundary);
   const external = !local;
   const serviceBoundary = candidate.serviceAndDataBoundary ?? (local ? "repository-local power; no external service" : "");
   const rollbackPath = candidate.rollbackPath ?? `${CAPABILITY_ROLLBACK_PREFIX}:${slug(name)}:remove activation or restore prior registration`;
@@ -1081,7 +1139,7 @@ function evaluatePower(
   const revision = candidate.revisionOrVersion ?? "unavailable";
   const license = candidate.licenseOrSource ?? "unavailable";
   const provenance = defaultProvenance(
-    locator,
+    normalizedLocator.locator,
     root,
     inspection
       ? inspection.observations.map((observation) => `${observation.component}: ${observation.value}`).join("; ")
@@ -1089,6 +1147,9 @@ function evaluatePower(
     candidate.provenance,
   );
   const evidenceRefs = [`evidence:${capabilityId}:provenance`, answer.checkId];
+  const ownerApprovalEvidenceRef = ownerApproved
+    ? candidate.ownerApprovalRef ?? decisionEvidenceRef(decision)
+    : "none";
   const evidence = provenanceEvidence(
     capabilityId,
     "Kiro_Power",
@@ -1102,7 +1163,7 @@ function evaluatePower(
     permissions,
     serviceBoundary,
     ["None"],
-    decisionEvidenceRef(decision),
+    ownerApprovalEvidenceRef,
     targetValidationRefs,
     answer,
     "not applicable to power loading",
@@ -1142,6 +1203,22 @@ function evaluatePower(
       evidenceRefs,
     }));
   }
+  if (external && !secretsDeclared) {
+    blockers.push("external power requires an explicit secret boundary or none_declared record");
+  }
+  if (external && !permissionsDeclared) {
+    blockers.push("external power requires an explicit permission boundary or none_declared record");
+  }
+  if (external && (!secretsDeclared || !permissionsDeclared)) {
+    gapRefs.push(addGap(context, capabilityId, {
+      kind: "missing_prerequisite",
+      title: "external power boundary declarations are incomplete",
+      blockedAction: `external routing for ${name}`,
+      disposition: "defer",
+      limitation: "record secret and permission boundaries explicitly, including none_declared where applicable",
+      evidenceRefs,
+    }));
+  }
   if (!ownerApproved) {
     blockers.push(`owner approval ${OD05_DECISION_ID} is missing or unresolved`);
     const gap = approvalGap(capabilityId, OD05_DECISION_ID, ownerApproved, context, evidenceRefs);
@@ -1174,7 +1251,7 @@ function evaluatePower(
     pluginManifestPresent,
     mcpConfigSummary: candidate.mcpConfigSummary ?? inspection?.mcpSummary ?? "unavailable",
     ...(candidate.registryObservation || inspection?.observations.some((observation) => observation.component === "registryId: local")
-      ? { registryObservation: candidate.registryObservation ?? "registryId: local; loading remains Unverified" }
+      ? { registryObservation: redact(candidate.registryObservation ?? "registryId: local; loading remains Unverified") }
       : {}),
     repositoryAnswer: answer.result,
     migrationOrRetainPath: migration,
@@ -1187,6 +1264,7 @@ function evaluatePower(
     rollbackPath,
     capabilityId,
     name,
+    external,
     observations: inspection?.observations ?? [],
     evidence,
     blockers: unique(blockers),
@@ -1217,6 +1295,7 @@ function evaluateExtension(
   const decisionId = base.kind === "MCP_Service" ? OD06_DECISION_ID : OD07_DECISION_ID;
   const decision = decisionFor(context.ownerDecisions, decisionId);
   const ownerApproved = decisionApproved(decision);
+  const ownerApprovalEvidenceRef = ownerApproved ? metadata.ownerApprovalRef ?? decisionEvidenceRef(decision) : "none";
   const targetValidationRefs = validationRefs(base.validationRunRefs, context.validationRuns, base.surfaceAvailability, context.targetSurface);
   const trustDecision: TrustDecision = metadata.trustDecision ?? "unresolved";
   const integrityResult: IntegrityResult = metadata.integrityResult ?? "unverified";
@@ -1224,6 +1303,7 @@ function evaluateExtension(
   const serviceBoundary = metadata.serviceAndDataBoundary ?? base.serviceAndDataBoundary ?? (base.kind === "MCP_Service" ? "" : "repository-local extension scope");
   const secretBoundary = metadata.secretBoundary ?? base.secretBoundary ?? "";
   const permissionBoundary = metadata.permissionBoundary ?? base.permissionBoundary ?? "";
+  const recordedServiceBoundary = isPlaceholderBoundary(serviceBoundary) ? "" : serviceBoundary;
   const rollbackPath = base.rollbackPath;
   const evidenceRefs = [`evidence:${capabilityId}:provenance`, answer.checkId];
   const evidence = provenanceEvidence(
@@ -1235,11 +1315,11 @@ function evaluateExtension(
     metadata.licenseOrSource ?? "unavailable",
     trustDecision,
     integrityResult,
-    base.kind === "MCP_Service" ? "named_boundary" : "none_declared",
-    base.kind === "MCP_Service" ? "named_boundary" : "none_declared",
-    serviceBoundary,
+    boundaryState(secretBoundary),
+    boundaryState(permissionBoundary),
+    recordedServiceBoundary,
     base.resourceUris,
-    decisionEvidenceRef(decision),
+    ownerApprovalEvidenceRef,
     targetValidationRefs,
     answer,
     base.dagOrReviewGraph ?? "not applicable",
@@ -1352,6 +1432,7 @@ function evaluateExtension(
     ...base,
     capabilityId,
     name: normalized.name,
+    external,
     disposition,
     evidence,
     repositoryAnswerCheck: answer,
@@ -1399,11 +1480,15 @@ function collectPowerCandidates(input: CapabilityEvaluatorInput, root: string): 
       .map((artifact) => artifact.path),
     ...discoverPowerPaths(root),
   ];
-  const seen = new Set(candidates.map((candidate) => normalizeLocator(candidate.pathOrInstallation)));
+  const candidateKey = (locator: string): string => {
+    const normalized = normalizeRepositoryLocator(root, locator);
+    return normalized.local ? normalized.locator : normalizeLocator(locator);
+  };
+  const seen = new Set(candidates.map((candidate) => candidateKey(candidate.pathOrInstallation)));
   for (const path of paths) {
     const normalized = normalizeLocator(path);
-    if (seen.has(normalized)) continue;
-    seen.add(normalized);
+    if (seen.has(candidateKey(normalized))) continue;
+    seen.add(candidateKey(normalized));
     candidates.push({ pathOrInstallation: normalized });
   }
   return candidates;

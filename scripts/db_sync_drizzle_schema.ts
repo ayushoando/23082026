@@ -123,8 +123,8 @@ export async function checkDrizzleSchema(
     );
 
     const failures: TableCheckFailure[] = [];
-    if (!planner.ok) failures.push(planner);
-    if (!products.ok) failures.push(products);
+    if (planner.ok === false) failures.push(planner);
+    if (products.ok === false) failures.push(products);
     if (failures.length > 0) {
       return {
         ok: false,

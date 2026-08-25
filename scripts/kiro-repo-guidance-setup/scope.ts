@@ -43,7 +43,7 @@ const PERMISSION_PROBE_OUTCOMES = new Set<PermissionProbeOutcome>([
   "restricted",
 ]);
 
-const SECRET_VALUE_PATTERN = /(?:api[_-]?key|authorization|bearer|secret|token)\s*(?:[:=]|\s)\s*[^\s<>{}\[\]]+/i;
+const SECRET_VALUE_PATTERN = /(?:api[_-]?key|authorization|bearer|secret|token)\s*(?:[:=]|\s)\s*[^\s<>{}[\]]+/i;
 
 export interface ApprovalBoundaryOperationInput {
   readonly boundary: ApprovalBoundary;

@@ -1,5 +1,5 @@
 import { lstatSync, readFileSync, readdirSync } from "node:fs";
-import { basename, relative, resolve } from "node:path";
+import { relative, resolve } from "node:path";
 
 import {
   INITIAL_SKILL_CANDIDATES,

@@ -81,7 +81,7 @@ The post-wave Integration_Validation_Gate alone owns `scripts/kiro-repo-guidance
     - Write only under `tests/kiro-repo-guidance-setup/lane-a/`.
     - **Validates: Requirements 1.1–1.5, 2.2, 13.3; Design: Correctness Property 1**
 
-  - [ ] 2.6 Write the property-based test for **Property 2: Authority resolution preserves evidence**.
+  - [x] 2.6 Write the property-based test for **Property 2: Authority resolution preserves evidence**.
     - Use at least 100 iterations to prove the highest-ranked applicable claim wins, losing claims/provenance/rationale remain contextual, and an unconfirmed rule remains `Unverified`.
     - **Validates: Requirements 2.3, 3.3, 3.6, 14.6–14.7; Design: Correctness Property 2**
 
@@ -119,11 +119,11 @@ The post-wave Integration_Validation_Gate alone owns `scripts/kiro-repo-guidance
     - Use at least 100 iterations to assert the exact six-skill set, exactly seven compatibility records, separate specification/execution/continuity capabilities, and exactly one each of OD-01 through OD-10.
     - **Validates: Requirements 2.6, 4.1, 9.1, 9.4, 10.1; Design: Correctness Property 4**
 
-  - [-] 3.6 Write the property-based test for **Property 5: Evidence is isolated by surface and freshness**.
+  - [x] 3.6 Write the property-based test for **Property 5: Evidence is isolated by surface and freshness**.
     - Generate mismatched surfaces/versions, historical evidence, registrations, and changed artifacts; assert only a fresh post-change run for the exact target satisfies validation.
     - **Validates: Requirements 3.2, 4.2–4.6, 12.5, 12.8, 13.7; Design: Correctness Property 5**
 
-  - [ ] 3.7 Write the property-based test for **Property 7: Scope and permission records do not broaden access**.
+  - [-] 3.7 Write the property-based test for **Property 7: Scope and permission records do not broaden access**.
     - Generate pending approvals and precedence conflicts; assert separate scope fields, blocked actions, and no global/user/external mutation intent while approval or deny precedence is unresolved.
     - **Validates: Requirements 5.1–5.2, 5.4–5.6, 10.9, 11.6; Design: Correctness Property 7**
 
@@ -143,25 +143,25 @@ The post-wave Integration_Validation_Gate alone owns `scripts/kiro-repo-guidance
     - Keep `domain-fast-check.json` action-level timeout placement `Unverified`; preserve semicolon command evidence; classify an unrelated PowerShell `&&` error as unrelated unless fresh stored-command evidence identifies it; keep file-hook evidence agent-made-only absent fresh proof.
     - _Requirements: 7.1–7.9, 12.1, 12.6, 14.2; Design: Hook evaluator interface, Hook acceptance algorithm, Hook Schema/Repair/Safety plan_
 
-  - [ ] 4.3 Implement local/installed power, MCP, tool, custom-agent, and subagent capability evaluators.
+  - [x] 4.3 Implement local/installed power, MCP, tool, custom-agent, and subagent capability evaluators.
     - Classify power format exactly as `Legacy_POWER`, `Agent_Plugin`, `Both`, or `Neither`; preserve separate observations for local `oando-workflow` `POWER.md`, empty `mcp.json`, absent `plugin.json`, and unverified `registryId: local`.
     - Perform the repository-answer check before external routing; record provenance, revision/license or unavailable, trust/integrity, secrets, permissions, named service/data boundary, resource URIs or `None`, owner approval, target validation, DAG/review graph, concurrency, failure behavior, and rollback.
     - _Requirements: 8.1–8.8; Design: Capability evaluator, Local power, External MCP and installed powers, Custom agents and subagents_
 
-  - [ ] 4.4 Implement continuity, graph-impact, specification, task-wave, review-loop, and Crew compatibility records.
+  - [x] 4.4 Implement continuity, graph-impact, specification, task-wave, review-loop, and Crew compatibility records.
     - Keep local compaction, checkpoints/rewind, CLI sessions, Crew memory, Crew knowledge, and LTM capture separate; keep LTM disabled while the capture command is a stub and do not use Crew documentation as LTM execution evidence.
     - Preserve the manual graph-impact loop, cap automation at three iterations, enforce default/native concurrency `0 | 1`, reviewer ceilings `0..3`, and classify Crew worktrees, concurrency above one, retries/replans, hidden spawning, or auto-approval as deferred/excluded.
     - _Requirements: 9.1–9.7, 10.4–10.7, 10.11, 14.5; Design: Continuity and LTM interface, Graph-impact automation interface, Native Spec DAGs/Task Waves/Review Loops, Crew compatibility guard_
 
-  - [ ] 4.5 Write the property-based test for **Property 8: Skill authority is unique and prerequisites are explicit**.
+  - [x] 4.5 Write the property-based test for **Property 8: Skill authority is unique and prerequisites are explicit**.
     - Generate overlap graphs and missing prerequisites for at least 100 iterations; assert exactly one primary (`repo-map`), a resolution for every non-authoritative path, and no activation claim without OD-08, valid manifest, approved prerequisites, and rollback validation.
     - **Validates: Requirements 6.2, 6.4–6.6; Design: Correctness Property 8**
 
-  - [ ] 4.6 Write the property-based test for **Property 9: Approved hooks satisfy schema and safety bounds**.
+  - [x] 4.6 Write the property-based test for **Property 9: Approved hooks satisfy schema and safety bounds**.
     - Mutate one hook rule at a time for timeout placement, event casing, action, matcher, enabled state, command, dependency, overlap, and side effect; assert invalid/unsafe hooks remain blocked or disabled.
     - **Validates: Requirements 7.2, 7.5–7.9, 12.1; Design: Correctness Property 9**
 
-  - [ ] 4.7 Write the property-based test for **Property 10: Extension routing and execution plans are bounded**.
+  - [-] 4.7 Write the property-based test for **Property 10: Extension routing and execution plans are bounded**.
     - Generate power formats, repository-answer results, external boundaries, custom-agent resource values, subagent graphs, concurrency, approvals, and review ceilings; assert missing/incompatible values produce inactive dispositions.
     - **Validates: Requirements 8.1, 8.3–8.4, 8.6–8.8, 9.2; Design: Correctness Property 10**
 
@@ -187,25 +187,25 @@ The post-wave Integration_Validation_Gate alone owns `scripts/kiro-repo-guidance
     - Capture pre-change bytes/settings, expected success signal, restore or disable without deleting unrelated work, verify by hash/bytes or a documented no-change result, and block later enablement after rollback failure or unverified rollback readiness.
     - _Requirements: 5.7, 7.9, 11.2, 12.6–12.7, 13.5, 13.8, 14.3; Design: RollbackManager, Failure and rollback testing_
 
-  - [ ] 5.3 Implement `HandoverGenerator`, `CapabilityDispositionTable`, and `KnownGapsRegister` projections.
+  - [x] 5.3 Implement `HandoverGenerator`, `CapabilityDispositionTable`, and `KnownGapsRegister` projections.
     - Produce one non-empty record per audited artifact/capability, one allowed disposition, canonical path, owner, evidence, activation condition, expected side effects, validation action, and rollback value; use `no rollback applies` for no-change dispositions.
     - Include the ordered first-read path, complete-review statement, Coverage_Matrix, Exclusion_Register, official-family statuses, seven-surface statement, precedence map, OD-01..OD-10, evidence labels, known gaps, validation runs, rollback records, maintenance triggers, and limitations.
     - _Requirements: 1.5–1.6, 4.6, 8.5, 9.5–9.7, 11.1–11.8, 13.1–13.8, 14.3–14.9; Design: Capability disposition and handover records, Handover Record Design, Known Gaps Register_
 
-  - [ ] 5.4 Implement the two review-only roles and their bounded handoff contracts.
+  - [x] 5.4 Implement the two review-only roles and their bounded handoff contracts.
     - Implement `EvidenceCompatibilityReviewer` and `SafetyRollbackReviewer` as read-only, sequential stages with `maximumConcurrency: 1` and `iterationCeiling: 3`; they may inspect and emit findings but may not mutate configuration, spawn agents, create worktrees, retry/replan automatically, bypass approval, or enable external/global/Crew capabilities.
     - Enforce handoff order and blocked behavior for missing/stale/contradictory inputs, incomplete outputs, policy violations, failed rollback, and partial/failed wave state.
     - _Requirements: 1.6, 4.5–4.6, 9.11–9.12, 10.2, 10.6–10.7, 10.11, 11.5, 12.6–12.8, 13.4–13.8, 14.8–14.9; Design: EvidenceCompatibilityReviewer, SafetyRollbackReviewer, implementation review DAG_
 
-  - [ ] 5.5 Write the property-based test for **Property 6: Enablement is fail-closed and side-effect-free when incomplete**.
+  - [x] 5.5 Write the property-based test for **Property 6: Enablement is fail-closed and side-effect-free when incomplete**.
     - Generate each enablement predicate and assert enabled-valid only when owner approval, fresh exact-target validation, schema pass, repository compatibility, security confirmation, rollback readiness, no blocking gap, and policy pass are all true; otherwise assert blocked/inactive status and preserved state.
     - **Validates: Requirements 1.6, 2.7, 5.5, 6.7, 8.5, 9.7, 10.2, 11.5, 12.6–12.7, 14.8–14.9; Design: Correctness Property 6**
 
-  - [ ] 5.6 Write the property-based test for **Property 13: Unresolved owner decisions preserve safe fallbacks**.
+  - [x] 5.6 Write the property-based test for **Property 13: Unresolved owner decisions preserve safe fallbacks**.
     - Generate unresolved OD records and assert IDE-only limitation, preserved hook states, manual graph loop, no-worktree/default-one-agent/explicit-approval safeguards, inactive extensions, no activation-scope claim, unchanged global settings, and no enabled-valid status.
     - **Validates: Requirements 10.3–10.10; Design: Correctness Property 13**
 
-  - [ ] 5.7 Write the property-based test for **Property 14: Disposition and handover projections are one-to-one**.
+  - [-] 5.7 Write the property-based test for **Property 14: Disposition and handover projections are one-to-one**.
     - Generate duplicate/incomplete artifacts and assert one allowed disposition, one canonical path, duplicate resolution, evidence/reason, activation condition, owner, rollback value, and incomplete status when official-family coverage is incomplete.
     - **Validates: Requirements 11.1–11.5, 13.1–13.4; Design: Correctness Property 14**
 
