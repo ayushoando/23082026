@@ -18,7 +18,7 @@
     "**/results/**",
     "**/site/data/**",
     "**/site/inventory/**",
-    "**/mcps/**"
+    "**/mcp/**"
   ],
   "rules": {
     "eqeqeq": "error",
