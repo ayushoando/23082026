@@ -125,6 +125,9 @@ describe("app/(site)/trusted-by/page.tsx", () => {
 
     expect(rosterMappings.length).toBeGreaterThan(0);
     expect(new Set(rosterMappings)).toEqual(new Set(["rosterKicker={TRUSTED_BY_PAGE_COPY.rosterKicker}"]));
+    // Preservation baseline: the full set of non-roster prop mappings must remain present,
+    // in order, so removing the duplicate rosterKicker cannot drop any sibling prop.
+    expect(nonRosterMappings).toHaveLength(21);
     expect(nonRosterMappings).toEqual([
       "heroTitleLead={TRUSTED_BY_PAGE_COPY.heroTitleLead}",
       "heroTitleAccent={TRUSTED_BY_PAGE_COPY.heroTitleAccent}",

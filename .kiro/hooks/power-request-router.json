@@ -1,4 +1,4 @@
-{
+﻿{
   "version": "v1",
   "hooks": [
     {
@@ -8,7 +8,7 @@
       "enabled": true,
       "action": {
         "type": "agent",
-        "prompt": "Match each request to the smallest installed power: design-system-power-builder, nova-act, postman, cast-imaging, context7, exa, datadog, ltm-power, cubic-code-review, kane-cli, cloudinary, or supabase-hosted. Activate only when needed; if none matches, proceed without activation. For Postman, inspect .postman.json first, use Postman MCP only, avoid duplicate resources, and validate Collection Format v2.1.0."
+        "prompt": "Match each request to the smallest installed power: design-system-power-builder, nova-act, postman, context7, exa, datadog, ltm-power, cubic-code-review, kane-cli, cloudinary, or supabase-hosted. For architecture impact analysis use the graph-impact skill (scripts/graph-impact.mjs), not an external power. Activate only when needed; if none matches, proceed without activation. For Postman, inspect .postman.json first, use Postman MCP only, avoid duplicate resources, and validate Collection Format v2.1.0."
       }
     }
   ]

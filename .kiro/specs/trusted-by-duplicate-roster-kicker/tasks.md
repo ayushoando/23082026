@@ -68,7 +68,7 @@ No implementation or validation task may begin before the required pre-fix explo
 
 # Implementation Plan
 
-- [-] 1. Write the bug-condition exploration test before implementing the fix
+- [ ] 1. Write the bug-condition exploration test before implementing the fix
   - **Property 1: Bug Condition** - Unique authoritative roster kicker
   - **IMPORTANT**: Write and run this exploration check against the unfixed source before changing `site/app/(site)/trusted-by/page.tsx`.
   - **GOAL**: Surface the concrete counterexample proving that the failure is caused by the repeated JSX attribute, not by the `TrustedByPageView` prop contract or route-copy source.
@@ -79,7 +79,7 @@ No implementation or validation task may begin before the required pre-fix explo
   - Document the counterexample: the same `rosterKicker={TRUSTED_BY_PAGE_COPY.rosterKicker}` mapping is supplied twice, so TypeScript rejects the JSX before production validation can pass.
   - _Requirements: 1.1, 1.2_
 
-- [~] 2. Write preservation property tests before implementing the fix
+- [ ] 2. Write preservation property tests before implementing the fix
   - **Property 2: Preservation** - All non-roster-kicker behavior
   - **IMPORTANT**: Follow the observation-first methodology and verify the preservation checks pass on the unfixed code before changing the source.
   - **Scoped PBT Approach**: For the non-bug condition (`NOT isBugCondition(input)`), compare the Trusted By invocation and rendered route behavior while excluding only the duplicate `rosterKicker` occurrence. Generate or inspect valid non-roster prop mappings and assert their names, source expressions, ordering semantics, and values remain unchanged.
@@ -94,7 +94,7 @@ No implementation or validation task may begin before the required pre-fix explo
   - _Preservation: Preserve the authoritative roster copy, every other existing `TrustedByPageView` prop and its source/value semantics, route assembly, metadata, JSON-LD, clients, sectors, layout, `ContactTeaser`, and unrelated application behavior.
   - _Requirements: 2.1, 2.2, 2.3, 3.1, 3.2, 3.3_
 
-  - [~] 3.1 Implement the narrow call-site correction
+  - [ ] 3.1 Implement the narrow call-site correction
     - Modify only `site/app/(site)/trusted-by/page.tsx` in the `TrustedByPage` component’s `TrustedByPageView` JSX invocation.
     - Delete exactly one duplicate `rosterKicker={TRUSTED_BY_PAGE_COPY.rosterKicker}` attribute: remove the second occurrence after `sectors` and retain the existing occurrence before `quotesKicker`.
     - Do not replace the remaining mapping with a literal, another copy field, or a derived value; it must remain `TRUSTED_BY_PAGE_COPY.rosterKicker`.
@@ -102,7 +102,7 @@ No implementation or validation task may begin before the required pre-fix explo
     - Do not modify `TrustedByPageView`, route-copy data, client data, shared components, unrelated routes, or any other source file.
     - _Requirements: 2.1, 2.3, 3.1, 3.2, 3.3_
 
-  - [~] 3.2 Verify the bug-condition exploration test now passes
+  - [ ] 3.2 Verify the bug-condition exploration test now passes
     - **Property 1: Expected Behavior** - Unique authoritative roster kicker
     - Re-run the same Property 1 exploration check from task 1; do not write a replacement test.
     - Assert the invocation now contains exactly one `rosterKicker` attribute and that its expression is `TRUSTED_BY_PAGE_COPY.rosterKicker`.
@@ -110,21 +110,21 @@ No implementation or validation task may begin before the required pre-fix explo
     - Run `pnpm run build:site` from the repository root to completion and require a successful production site build with no Trusted By type-check failure.
     - _Requirements: 2.1, 2.2_
 
-  - [~] 3.3 Verify preservation tests still pass
+  - [ ] 3.3 Verify preservation tests still pass
     - **Property 2: Preservation** - All non-roster-kicker behavior
     - Re-run the same Property 2 checks from task 2; do not write replacement tests.
     - Run `pnpm exec vitest run --config tests/vitest.config.ts "tests/unit/app/(site)/trusted-by/page.test.tsx"` and require the existing Trusted By rendering, copy, roster, sectors, CTA, metadata, JSON-LD, and `ContactTeaser` assertions to pass.
     - Confirm the diff contains no changes to any non-duplicate prop mapping, copy source, route assembly, component, data source, or unrelated application area.
     - _Requirements: 2.3, 3.1, 3.2, 3.3_
 
-- [~] 4. Run the repository validation gates
+- [ ] 4. Run the repository validation gates
   - Run commands from the repository root using `pnpm` only; do not substitute npm, yarn, or another package manager.
   - Run `pnpm run check:layout` first, as required by the repository process floor.
   - Run `pnpm run gate:fast` and require all included checks to pass, including type checking, test/typecheck lanes, lint, UI validation, launch checks, documentation checks, style-token checks, and governance checks.
   - If a validation command fails, record the fresh command, working directory, exit code, relevant output, and blocker in `Failures.md`; do not claim the task is complete from a partial green result.
   - _Requirements: 2.2, 3.3_
 
-- [~] 5. Check the final diff and checkpoint
+- [ ] 5. Check the final diff and checkpoint
   - Run `git diff --check` and inspect `git status --short` from the repository root.
   - Inspect `git diff -- "site/app/(site)/trusted-by/page.tsx"` and confirm the source diff removes exactly one duplicate `rosterKicker` JSX attribute and makes no other source changes.
   - Confirm the single remaining roster mapping still uses `TRUSTED_BY_PAGE_COPY.rosterKicker`, all other props and behavior remain preserved, and no unrelated file is modified.
