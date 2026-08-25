@@ -1,0 +1,304 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Select and create the frozen implementation/test roots and coordinator manifest.": [
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787646872033
+      },
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787646881455
+      },
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787646998355
+      }
+    ],
+    "1.2 Define and implement Lane A-owned shared contracts before dependent lane work.": [
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787646872096
+      },
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787647006862
+      },
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787647249038
+      }
+    ],
+    "1.3 Declare all four agents’ read/write ownership and shared-output ownership.": [
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787646872203
+      },
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787647375615
+      },
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787647684109
+      }
+    ],
+    "1.4 Implement reservation acquisition and wave preflight checks before mutation.": [
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787646872259
+      },
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787647687830
+      },
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787647988066
+      }
+    ],
+    "1.5 Complete `Shared_Contract_Freeze` and block dependent lanes until it passes.": [
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787646872315
+      },
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787647992620
+      },
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787648463817
+      }
+    ],
+    "2.1 Implement `DiscoveryCollector` and repository-local source discovery.": [
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787646872368
+      },
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787648468719
+      },
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787649054096
+      }
+    ],
+    "2.2 Implement `RepositoryInventory` for canonical guidance and every visible Kiro artifact.": [
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787646872421
+      }
+    ],
+    "2.3 Implement `ProvenanceLedger` and `AuthorityResolver`.": [
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787646872473
+      }
+    ],
+    "2.4 Implement `CoverageMatrixBuilder` and `ExclusionRegister`.": [
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787646872528
+      }
+    ],
+    "3.1 Implement `CompatibilityMatrix` with exactly seven surface/version records.": [
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787646872581
+      },
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787649058092
+      },
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787649388615
+      }
+    ],
+    "3.2 Implement `ScopePrecedenceMapper`.": [
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787646872635
+      }
+    ],
+    "3.3 Implement approval-boundary records and safe permission probes.": [
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787646872702
+      }
+    ],
+    "3.4 Implement `RepositoryPolicyGuard` and owner-decision validation.": [
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787646872753
+      }
+    ],
+    "4.1 Implement `SkillEvaluator` and steering overlap resolution.": [
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787646872808
+      },
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787649392954
+      }
+    ],
+    "4.2 Implement `HookEvaluator` and hook schema/safety checks.": [
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787646872886
+      }
+    ],
+    "4.3 Implement local/installed power, MCP, tool, custom-agent, and subagent capability evaluators.": [
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787646872978
+      }
+    ],
+    "4.4 Implement continuity, graph-impact, specification, task-wave, review-loop, and Crew compatibility records.": [
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787646873034
+      }
+    ],
+    "5.1 Implement `ValidationRunner` and typed gate adapters.": [
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787646873087
+      }
+    ],
+    "5.2 Implement `RollbackManager` and snapshot-first restore/disable behavior.": [
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787646873140
+      }
+    ],
+    "5.3 Implement `HandoverGenerator`, `CapabilityDispositionTable`, and `KnownGapsRegister` projections.": [
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787646873195
+      }
+    ],
+    "5.4 Implement the two review-only roles and their bounded handoff contracts.": [
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787646873247
+      }
+    ],
+    "6.1 Implement the integration-owned gate and pipeline wiring.": [
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787646873302
+      }
+    ],
+    "6.3 Run the integration gate’s focused tests and required repository gates.": [
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787646873365
+      }
+    ],
+    "7.2 Execute `EvidenceCompatibilityReviewer` only after the integration gate passes or explicitly records a blocked handoff.": [
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787646873421
+      }
+    ],
+    "8.1 Execute `SafetyRollbackReviewer` only after the EvidenceCompatibilityReviewer handoff.": [
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787646873476
+      }
+    ],
+    "9.1 Implement the integration-owned `EnablementGate` in `enablement.ts` and consume both reviewer outputs.": [
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787646873539
+      }
+    ],
+    "9.3 Execute the final owner-approved gate only after both sequential reviewers have recorded results.": [
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787646873597
+      }
+    ],
+    "10.1 Run the final applicable artifact, documentation, repository, test, security, rollback, and handover validation sequence from `D:\\23082026`.": [
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787646873662
+      }
+    ],
+    "10.2 Regenerate and validate the final Handover_Record and generated evidence.": [
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787646873718
+      }
+    ],
+    "10.3 Record the final wave, integration, reviewer, enablement, and rollback statuses as append-only validation evidence.": [
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787646873777
+      }
+    ],
+    "11. Final checkpoint — ensure the selected implementation and validation tasks are complete": [
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787646873837
+      }
+    ],
+    "1. Prepare and freeze the feature-scoped `Concurrent_Implementation_Wave`": [
+      {
+        "executionId": "cc6f121f-662f-486a-8e19-fb7fe7fc85ea",
+        "chatSessionId": "sess_eba91ac4-aa38-499f-bc7e-15ad79b9e487",
+        "timestamp": 1787648463920
+      }
+    ]
+  }
+}

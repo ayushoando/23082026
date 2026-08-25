@@ -1,5 +1,5 @@
-﻿---
-inclusion: manual
+---
+inclusion: always
 ---
 
 # Powers, Skills, Steering, MCP — how they relate
