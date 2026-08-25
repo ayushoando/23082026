@@ -24,6 +24,14 @@ const required = [
   "INDEX.md",
 ];
 
+const workflowGuideFiles = new Set([
+  "app.js",
+  "index.html",
+  "README.md",
+  "sources.js",
+  "styles.css",
+]);
+
 if (!fs.existsSync(agentsDir) || !fs.statSync(agentsDir).isDirectory()) {
   violations.push("missing: Agents/");
 } else {
@@ -37,6 +45,28 @@ if (!fs.existsSync(agentsDir) || !fs.statSync(agentsDir).isDirectory()) {
   const entries = fs.readdirSync(agentsDir, { withFileTypes: true });
   for (const entry of entries) {
     if (entry.isDirectory()) {
+      if (entry.name === "kiro-workflow-guide") {
+        const guideEntries = fs.readdirSync(
+          path.join(agentsDir, entry.name),
+          { withFileTypes: true },
+        );
+        for (const nested of guideEntries) {
+          if (nested.isDirectory()) {
+            violations.push(
+              `extra directory under Agents/kiro-workflow-guide/: ${nested.name}`,
+            );
+          } else if (nested.isFile() && !workflowGuideFiles.has(nested.name)) {
+            violations.push(
+              `extra file under Agents/kiro-workflow-guide/: ${nested.name}`,
+            );
+          } else if (!nested.isFile()) {
+            violations.push(
+              `unexpected entry under Agents/kiro-workflow-guide/: ${nested.name}`,
+            );
+          }
+        }
+        continue;
+      }
       if (entry.name !== "review") {
         violations.push(`extra directory under Agents/: ${entry.name}`);
         continue;

@@ -802,6 +802,11 @@
         "executionId": "d3a20b72-42d9-4260-930b-28d90e7e8c37",
         "chatSessionId": "sess_9c313112-0446-434e-a881-79a209958087",
         "timestamp": 1787665723578
+      },
+      {
+        "executionId": "d3a20b72-42d9-4260-930b-28d90e7e8c37",
+        "chatSessionId": "sess_9c313112-0446-434e-a881-79a209958087",
+        "timestamp": 1787671315391
       }
     ],
     "8.1 Execute `SafetyRollbackReviewer` only after the EvidenceCompatibilityReviewer handoff.": [
@@ -1005,6 +1010,11 @@
         "executionId": "d3a20b72-42d9-4260-930b-28d90e7e8c37",
         "chatSessionId": "sess_9c313112-0446-434e-a881-79a209958087",
         "timestamp": 1787667991942
+      },
+      {
+        "executionId": "d3a20b72-42d9-4260-930b-28d90e7e8c37",
+        "chatSessionId": "sess_9c313112-0446-434e-a881-79a209958087",
+        "timestamp": 1787671318810
       }
     ],
     "10.2 Regenerate and validate the final Handover_Record and generated evidence.": [
@@ -1052,6 +1062,11 @@
         "executionId": "d3a20b72-42d9-4260-930b-28d90e7e8c37",
         "chatSessionId": "sess_9c313112-0446-434e-a881-79a209958087",
         "timestamp": 1787667995716
+      },
+      {
+        "executionId": "d3a20b72-42d9-4260-930b-28d90e7e8c37",
+        "chatSessionId": "sess_9c313112-0446-434e-a881-79a209958087",
+        "timestamp": 1787671322244
       }
     ],
     "10.3 Record the final wave, integration, reviewer, enablement, and rollback statuses as append-only validation evidence.": [
@@ -1099,6 +1114,11 @@
         "executionId": "d3a20b72-42d9-4260-930b-28d90e7e8c37",
         "chatSessionId": "sess_9c313112-0446-434e-a881-79a209958087",
         "timestamp": 1787667999692
+      },
+      {
+        "executionId": "d3a20b72-42d9-4260-930b-28d90e7e8c37",
+        "chatSessionId": "sess_9c313112-0446-434e-a881-79a209958087",
+        "timestamp": 1787671324941
       }
     ],
     "11. Final checkpoint — ensure the selected implementation and validation tasks are complete": [
@@ -1141,6 +1161,16 @@
         "executionId": "d3a20b72-42d9-4260-930b-28d90e7e8c37",
         "chatSessionId": "sess_9c313112-0446-434e-a881-79a209958087",
         "timestamp": 1787666201699
+      },
+      {
+        "executionId": "d3a20b72-42d9-4260-930b-28d90e7e8c37",
+        "chatSessionId": "sess_9c313112-0446-434e-a881-79a209958087",
+        "timestamp": 1787671332549
+      },
+      {
+        "executionId": "d3a20b72-42d9-4260-930b-28d90e7e8c37",
+        "chatSessionId": "sess_9c313112-0446-434e-a881-79a209958087",
+        "timestamp": 1787671522566
       }
     ],
     "1. Prepare and freeze the feature-scoped `Concurrent_Implementation_Wave`": [
@@ -2155,6 +2185,20 @@
         "executionId": "d3a20b72-42d9-4260-930b-28d90e7e8c37",
         "chatSessionId": "sess_9c313112-0446-434e-a881-79a209958087",
         "timestamp": 1787667986774
+      }
+    ],
+    "7. Run the first sequential review stage: `EvidenceCompatibilityReviewer`": [
+      {
+        "executionId": "d3a20b72-42d9-4260-930b-28d90e7e8c37",
+        "chatSessionId": "sess_9c313112-0446-434e-a881-79a209958087",
+        "timestamp": 1787671315495
+      }
+    ],
+    "10. Regenerate the operational handover and complete final validation": [
+      {
+        "executionId": "d3a20b72-42d9-4260-930b-28d90e7e8c37",
+        "chatSessionId": "sess_9c313112-0446-434e-a881-79a209958087",
+        "timestamp": 1787671325072
       }
     ]
   }

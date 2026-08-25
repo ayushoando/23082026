@@ -6,6 +6,7 @@ import { trackSiteSearchSubmitted } from '@/lib/analytics/siteEvents';
 // Mock phosphor icons
 vi.mock('@phosphor-icons/react', () => ({
   CaretDown: () => <span data-testid="caret-icon" />,
+  List: () => <span data-testid="list-icon" />,
   MagnifyingGlass: () => <span data-testid="magnifier-icon" />,
   Sparkle: () => <span data-testid="sparkle-icon" />,
 }));
