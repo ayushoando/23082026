@@ -81,6 +81,8 @@ describe('App routes', () => {
 describe('Page content anchors', () => {
   it.each([
     ['/workflows', /vitest run/i],
+    ['/workflows', /Installed powers/i],
+    ['/workflows', /mcp\/chrome-devtools/i],
     ['/security', /db:advisors:security/i],
     ['/performance', /db:advisors:performance/i],
     ['/code-organization', /site\/features\/planner\//i],

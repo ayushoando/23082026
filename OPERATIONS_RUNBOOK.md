@@ -3,7 +3,7 @@
 Deploy · migrate · seed · roll back. **Repo root only.**
 
 - Daily + deploy/DB/R2: root `pnpm run <name>` (see `package.json`). Long tail: `pnpm run ops:list`.
-- Blockers: [`Failures.md`](./Failures.md) · Schema: [`docs/database/schema.md`](./docs/database/schema.md) · restore: [`docs/database/ops.md`](./docs/database/ops.md) · MCP workers: `mcps/`.
+- Blockers: [`Failures.md`](./Failures.md) · Schema: [`docs/database/schema.md`](./docs/database/schema.md) · restore: [`docs/database/ops.md`](./docs/database/ops.md) · MCP workers: `mcp/`.
 
 ---
 

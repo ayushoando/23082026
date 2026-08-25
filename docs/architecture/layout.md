@@ -20,7 +20,7 @@ One monorepo, `pnpm` workspace, Next.js App Router in `site/`. Truth order: **us
 | `results/` | Generated evidence (`.txt`/`.json`) — never plan status as `.md` |
 | `.github/` | CI workflows + agent instructions/skills |
 | `agent-reports/` | Agent report pointer |
-| `mcps/` | MCP tool definitions |
+| `mcp/` | MCP tool definitions |
 | `.archive/` / `.tmp/` / `.vercel/` / `.vscode/` / `node_modules/` / `.qoder/` | Legacy / local / tooling — not source of truth (`.qoder` = disposable AI repowiki, gitignored, regenerated locally) |
 
 ## Top-level files

@@ -79,6 +79,37 @@ const chosenSkills = [
   { name: 'chrome-devtools + a11y-debugging', desc: 'MCP tooling for inspection, screenshots, lighthouse audits, contrast/ARIA checks.' },
 ]
 
+const installedPowers = [
+  { name: 'design-system-power-builder', purpose: 'Design-system scaffolding and governance' },
+  { name: 'nova-act', purpose: 'Browser and human-style QA' },
+  { name: 'postman', purpose: 'API collections, environments, and testing' },
+  { name: 'cast-imaging', purpose: 'Structural codebase impact and architecture analysis' },
+  { name: 'context7', purpose: 'Current library and SDK documentation' },
+  { name: 'exa', purpose: 'Web research and code search' },
+  { name: 'datadog', purpose: 'Logs, metrics, traces, RUM, incidents, and monitors' },
+  { name: 'ltm-power', purpose: 'Project-local long-term memory and recall' },
+  { name: 'cubic-code-review', purpose: 'AI code review, security scans, and team patterns' },
+  { name: 'kane-cli', purpose: 'Browser, mobile, and QA workflow automation' },
+  { name: 'cloudinary', purpose: 'Image and video asset management' },
+  { name: 'supabase-hosted', purpose: 'Supabase database, auth, storage, and realtime' },
+]
+
+const workspaceHooks = [
+  { name: 'power-capability-index', trigger: 'SessionStart', behavior: 'Indexes installed powers and limits activation to the smallest relevant capability.' },
+  { name: 'power-request-router', trigger: 'UserPromptSubmit', behavior: 'Routes requests without activating unrelated powers.' },
+  { name: 'domain-fast-check', trigger: 'PostFileSave', behavior: 'Runs the domain-specific fast check for the saved file.' },
+  { name: 'postman-api-testing', trigger: 'PostFileSave', behavior: 'Prompts guarded Postman validation for API/configuration changes.' },
+  { name: 'ltm-postturn-capture', trigger: 'Stop', behavior: 'Captures agent activity to the project memory store.' },
+]
+
+const mcpAssets = [
+  { name: 'chrome-devtools', purpose: 'Browser inspection, screenshots, performance, and accessibility', path: 'mcp/chrome-devtools/tools/' },
+  { name: 'cloudflare-docs', purpose: 'Cloudflare documentation search and migration guidance', path: 'mcp/cloudflare-docs/tools/' },
+  { name: 'github', purpose: 'Repository, pull request, issue, and security tool schemas', path: 'mcp/github/tools/' },
+  { name: 'tasks', purpose: 'Task creation, updates, pausing, and result retrieval', path: 'mcp/tasks/tools/' },
+  { name: 'Datadog v11 data', purpose: 'Repository-local Datadog data index', path: 'mcp/Datadog/v11/' },
+]
+
 /** New site-workflows modules — beautiful static rendering (module nav + walkthrough/current/goal + mermaid + images + instructions).
  * Data lives here (min necessary; no new files). Matches main site theme via tokens. Polished, accessible, fast.
  * Refer to plan: start with /using-superpowers + superpowers spec + AGENTS.md.
@@ -212,6 +243,48 @@ export function Workflows() {
           All development follows the <strong>Global Standard (GS)</strong> framework. Significant work <strong>starts with <code className="text-brand-300">/using-superpowers</code></strong> (GS process, anti-copy, evidence). Chrome-devtools MCP and specialized skills (design, review, check-work, figma-*) are used throughout per the superpowers spec, archived 1b-5phase-agent-workflow plan, and AGENTS.md. Evidence is non-negotiable.
         </p>
 
+        <div className="mb-6 rounded-xl border border-brand-500/30 bg-panel/30 p-4">
+          <div className="flex items-center gap-3 mb-2">
+            <Shield size={18} className="text-brand-400" />
+            <h3 className="text-base font-semibold text-heading">Powers, Hooks &amp; MCP Inventory</h3>
+          </div>
+          <p className="text-xs text-muted mb-4">
+            Powers are optional capability packages; hooks are explicit workspace automation; MCP assets are repository-local tool schemas. This task keeps all five hooks enabled, routes only task-relevant powers, and stores repository MCP assets under root <code className="text-brand-400">mcp/</code>.
+          </p>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div className="card">
+              <h4 className="text-sm font-semibold text-heading mb-2">Installed powers (12)</h4>
+              <ul className="space-y-1.5">
+                {installedPowers.map(power => (
+                  <li key={power.name} className="text-xs text-subtle">
+                    <code className="text-brand-400">{power.name}</code> — {power.purpose}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="card">
+              <h4 className="text-sm font-semibold text-heading mb-2">Workspace hooks (enabled)</h4>
+              <ul className="space-y-1.5">
+                {workspaceHooks.map(hook => (
+                  <li key={hook.name} className="text-xs text-subtle">
+                    <code className="text-brand-400">{hook.name}</code> · {hook.trigger} — {hook.behavior}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="card">
+              <h4 className="text-sm font-semibold text-heading mb-2">Repository MCP assets</h4>
+              <ul className="space-y-1.5">
+                {mcpAssets.map(asset => (
+                  <li key={asset.name} className="text-xs text-subtle">
+                    <code className="text-brand-400">{asset.path}</code> — {asset.purpose}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+
         <div className="mb-6">
           <MermaidDiagram chart={governanceFlow} title="Governance Flow via using-superpowers (GS Lens)" />
         </div>
@@ -241,7 +314,7 @@ export function Workflows() {
               <li>Critic/review phases: visual anti-copy review, focus/contrast/ARIA audits, DOM inspection, performance traces.</li>
               <li>Screenshots + audit JSON preserved as evidence (never truncated/bypassed per testing-handbook).</li>
               <li>Used alongside Playwright a11y in 04-critic (see archive/1b-5phase-agent-workflow/ + reports).</li>
-              <li>mcps/chrome-devtools/tools/ (29+ JSON schemas) + integration in review skill.</li>
+              <li>mcp/chrome-devtools/tools/ (29 JSON schemas) + integration in review skill.</li>
             </ul>
           </div>
         </div>

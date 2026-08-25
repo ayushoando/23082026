@@ -47,7 +47,6 @@ user  >  live code + fresh commands  >  AGENTS.md  >  Agents/  >  docs/**
 | [`Testing-handbook.md`](./Testing-handbook.md) | Testing (two vitest lanes) |
 | [`Failures.md`](./Failures.md) | Open blockers only |
 | [`owners.md`](./owners.md) | Code and document ownership map |
-| [`ORIGINAL_REQUEST.md`](./ORIGINAL_REQUEST.md) | Authoritative record of user requests and requirements |
 
 ## Durable docs (`docs/`)
 

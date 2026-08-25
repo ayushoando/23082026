@@ -15,7 +15,6 @@
 | 07 | [`Testing-handbook.md`](./Testing-handbook.md) | How to test |
 | 08 | [`Failures.md`](./Failures.md) | Open blockers only |
 | 09 | [`owners.md`](./owners.md) | Code and document ownership map · playbook |
-| 10 | [`ORIGINAL_REQUEST.md`](./ORIGINAL_REQUEST.md) | Authoritative user request & requirements |
 | 11 | [`plans/README.md`](./plans/README.md) | Plans index |
 | 12 | [`plans/PLAN.md`](./plans/PLAN.md) | Active execution plan |
 
