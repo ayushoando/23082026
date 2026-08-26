@@ -4,16 +4,18 @@ import { DownloadsPageView } from "@/components/downloads/DownloadsPageView";
 import { DOWNLOADS_PAGE_COPY, DOWNLOADS_RESOURCE_CATEGORIES } from "@/features/site/data/routeCopy";
 import { DOWNLOADS_PAGE_METADATA } from "@/features/site/data/routeMetadata";
 import { buildBreadcrumbJsonLd, buildPageJsonLd } from "@/features/site/data/seo";
+import { withLocaleCopy } from "@/lib/i18n/withLocaleCopy";
 import { SITE_URL } from "@/lib/siteUrl";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
 export const metadata = DOWNLOADS_PAGE_METADATA;
 
-export default function DownloadsPage() {
+export default async function DownloadsPage() {
+  const copy = await withLocaleCopy({ ...DOWNLOADS_PAGE_COPY }, "downloads");
   const downloadsJsonLd = buildPageJsonLd(SITE_URL, {
     path: "/downloads",
-    title: `${DOWNLOADS_PAGE_COPY.heroTitle} | One&Only`,
-    description: DOWNLOADS_PAGE_COPY.heroSubtitle,
+    title: `${copy.heroTitle} | One&Only`,
+    description: copy.heroSubtitle,
     pageType: "WebPage",
   });
   const breadcrumbJsonLd = buildBreadcrumbJsonLd(SITE_URL, [
@@ -32,30 +34,30 @@ export default function DownloadsPage() {
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(breadcrumbJsonLd) }}
       />
       <DownloadsPageView
-        heroKicker={DOWNLOADS_PAGE_COPY.heroKicker}
-        heroTitleLead={DOWNLOADS_PAGE_COPY.heroTitleLead}
-        heroTitleAccent={DOWNLOADS_PAGE_COPY.heroTitleAccent}
-        heroSubtitle={DOWNLOADS_PAGE_COPY.heroSubtitle}
-        heroPrimaryCta={DOWNLOADS_PAGE_COPY.heroPrimaryCta}
-        resourceKicker={DOWNLOADS_PAGE_COPY.resourceKicker}
-        resourceTitle={DOWNLOADS_PAGE_COPY.resourceTitle}
-        resourceDescription={DOWNLOADS_PAGE_COPY.resourceDescription}
+        heroKicker={copy.heroKicker}
+        heroTitleLead={copy.heroTitleLead}
+        heroTitleAccent={copy.heroTitleAccent}
+        heroSubtitle={copy.heroSubtitle}
+        heroPrimaryCta={copy.heroPrimaryCta}
+        resourceKicker={copy.resourceKicker}
+        resourceTitle={copy.resourceTitle}
+        resourceDescription={copy.resourceDescription}
         resources={DOWNLOADS_RESOURCE_CATEGORIES}
-        processKicker={DOWNLOADS_PAGE_COPY.processKicker}
-        processTitle={DOWNLOADS_PAGE_COPY.processTitle}
-        processSteps={DOWNLOADS_PAGE_COPY.processSteps}
-        noteTitle={DOWNLOADS_PAGE_COPY.noteTitle}
-        noteBody={DOWNLOADS_PAGE_COPY.noteBody}
-        notePoints={DOWNLOADS_PAGE_COPY.notePoints}
-        urgentKicker={DOWNLOADS_PAGE_COPY.urgentKicker}
-        urgentDescription={DOWNLOADS_PAGE_COPY.urgentDescription}
-        primaryCta={DOWNLOADS_PAGE_COPY.primaryCta}
-        secondaryCta={DOWNLOADS_PAGE_COPY.secondaryCta}
-        tertiaryCta={DOWNLOADS_PAGE_COPY.tertiaryCta}
-        ctaKicker={DOWNLOADS_PAGE_COPY.ctaKicker}
-        ctaTitleLead={DOWNLOADS_PAGE_COPY.ctaTitleLead}
-        ctaTitleAccent={DOWNLOADS_PAGE_COPY.ctaTitleAccent}
-        ctaDescription={DOWNLOADS_PAGE_COPY.ctaDescription}
+        processKicker={copy.processKicker}
+        processTitle={copy.processTitle}
+        processSteps={copy.processSteps}
+        noteTitle={copy.noteTitle}
+        noteBody={copy.noteBody}
+        notePoints={copy.notePoints}
+        urgentKicker={copy.urgentKicker}
+        urgentDescription={copy.urgentDescription}
+        primaryCta={copy.primaryCta}
+        secondaryCta={copy.secondaryCta}
+        tertiaryCta={copy.tertiaryCta}
+        ctaKicker={copy.ctaKicker}
+        ctaTitleLead={copy.ctaTitleLead}
+        ctaTitleAccent={copy.ctaTitleAccent}
+        ctaDescription={copy.ctaDescription}
       />
       <ContactTeaser />
     </HomeMarketingLayout>

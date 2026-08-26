@@ -58,7 +58,7 @@ export function SiteFooter() {
   return (
     <footer className="site-footer w-full surface-inverse text-inverse">
       {/* home-shell-xl matches marketing body insets (shell-container is wider/off-axis). */}
-      <div className="home-shell-xl py-8 md:py-10">
+      <div className="home-shell-xl py-3 md:py-7">
         <div className="site-footer__columns">
           <div className="site-footer__brand-col flex min-w-0 flex-col gap-4">
             <Link
@@ -142,7 +142,7 @@ export function SiteFooter() {
       </div>
 
       <div className="site-footer__divider mt-2 border-t">
-        <div className="site-footer__legal-row typ-body-sm home-shell-xl py-5">
+        <div className="site-footer__legal-row typ-body-sm home-shell-xl py-2 md:py-4">
           <div className="site-footer__legal-links">
             <Link
               href="/refund-and-return-policy"

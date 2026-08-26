@@ -234,9 +234,7 @@ export function CareerPageView({
                 <span className="text-accent-italic-on-dark">{heroTitleAccent}</span>
               </span>
             </h1>
-            <p data-career-hero-reveal className="career-hero__subtitle">
-              {heroSubtitle}
-            </p>
+
             <div data-career-hero-reveal className="career-hero__actions flex flex-wrap gap-3">
               <MarketingCtaLink
                 href={`mailto:${careersEmail}`}

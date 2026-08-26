@@ -125,13 +125,14 @@ export const CONTACT_FORM_CONTEXT_COPY = {
 export const TRUSTED_BY_PAGE_COPY = {
   heroKicker: "Trust",
   heroTitleLead: "Trusted",
-  heroTitleAccent: "by.",
+  heroTitleAccent: "by",
   heroTitle: "Trusted by",
-  heroSubtitle: "Government, finance, industry, and institutional teams.",
-  overviewKicker: "Proof",
-  overviewTitle: "Repeatable delivery",
+  heroSubtitle:
+    "Banks, factories, government offices, and schools we have furnished since 2011.",
+  overviewKicker: "Since 2011",
+  overviewTitle: "Organisations we work with",
   overviewDescription:
-    "Enterprise offices, public institutions, and multi-city rollouts with clear planning and after-sales support.",
+    "Desking, seating, and full-floor fit-outs for teams that need furniture to last.",
   statsKicker: "At a glance",
   craftQuote:
     "Trust shows up in repeat programmes — coordinated delivery, accountable handover, and support that stays after install.",
@@ -140,30 +141,28 @@ export const TRUSTED_BY_PAGE_COPY = {
   rosterTitle: "Clients who rely on One and Only.",
   rosterDescription:
     "Names and marks from programmes we have delivered. Install photos are on the clients gallery.",
-  quotesKicker: "Voices",
-  quotesTitle: "What teams remember",
+  quotesKicker: "From the floor",
+  quotesTitle: "How the work landed",
   sectorsKicker: "Sectors",
-  sectorsTitle: "Cross-sector trust",
+  sectorsTitle: "Where we install",
   sectorsDescription:
-    "Durable products, accountable delivery, and support after handover.",
+    "Government, banking, manufacturing, automotive, education, and energy.",
   quotes: [
     {
-      quote:
-        "Scope stayed legible from planning through install — we knew what was arriving, when, and who owned each handover.",
-      attribution: "Facilities lead, multi-city rollout",
+      quote: "They installed on the dates we agreed, and the workstations matched the drawings.",
+      attribution: "Facilities team, Patna office",
     },
     {
-      quote:
-        "The programme felt coordinated, not transactional. Desking, meeting rooms, and support channels stayed aligned.",
-      attribution: "Project coordinator, institutional workspace",
+      quote: "Two floors went in without stopping the rest of the building.",
+      attribution: "Project coordinator, bank programme",
     },
   ],
   ctaKicker: "Next step",
-  ctaTitleLead: "Start your",
-  ctaTitleAccent: "brief.",
-  ctaDescription: "Planning, quote, or Resource Desk for packs and sheets.",
-  ctaPrimary: "Contact the team",
-  ctaSecondary: "See client work",
+  ctaTitleLead: "Tell us the",
+  ctaTitleAccent: "space",
+  ctaDescription: "City, headcount, and timing. We reply by phone or email.",
+  ctaPrimary: "Contact us",
+  ctaSecondary: "See installs",
 } as const;
 
 export const CLIENTS_PAGE_COPY = {
@@ -1009,7 +1008,7 @@ export const PRODUCTS_PAGE_COPY = {
 
 export const CATEGORY_ROUTE_COPY = {
   metadataSuffix: "One&Only",
-  metadataTail: "Compare specs, SKUs, and price bands for {category} — filter, compare, and request quotes.",
+  metadataTail: "{category} from One and Only — photos and specs.",
   browseAllCta: "Browse all categories",
   resourceDeskCta: "Open Resource Desk",
   compareIdleLabel: "Select up to 4 products to compare",
@@ -1019,8 +1018,7 @@ export const CATEGORY_ROUTE_COPY = {
   pricingFallback: "Pricing shared on request",
   pricingBandSuffix: "price band",
   filterSummaryTitle: "Filter the current category",
-  filterSummaryDescription:
-    "Use a few focused filters to narrow the list, then compare or request the right options.",
+  filterSummaryDescription: "Narrow this list, then compare or quote.",
   activeFiltersLabel: "Active filters",
   activeSearchLabel: "Search",
   activeCountLabel: "{count} active",
@@ -1030,22 +1028,18 @@ export const CATEGORY_ROUTE_COPY = {
   drawerResultsHint: "Filters update the current category only.",
   filterFallbackMessage:
     "Live filter sync is temporarily unavailable. Showing the current category snapshot instead.",
-  emptyTitle: "No products match this filter set",
-  emptyDescription:
-    "Clear filters, adjust your search, or return to the full category list.",
+  emptyTitle: "Nothing matches these filters",
+  emptyDescription: "Clear filters or browse the full list.",
   emptyPrimaryCta: "Clear all filters",
   emptySecondaryCta: "Browse all categories",
-  emptyCategoryTitle: "No products are published in this category yet",
-  emptyCategoryDescription:
-    "This category has no published products right now. Browse other categories or contact us for current availability.",
+  emptyCategoryTitle: "Nothing in this category yet",
+  emptyCategoryDescription: "Browse another range, or ask us what is in stock.",
   emptyCategoryPrimaryCta: "Browse all categories",
   emptyCategorySecondaryCta: "Contact us",
-  errorTitle: "We couldn't load this category",
-  errorDescription:
-    "Something went wrong loading these products. Please refresh the page or try again shortly.",
+  errorTitle: "This category did not load",
+  errorDescription: "Refresh, or try again in a minute.",
   offlineTitle: "Catalog is offline",
-  offlineDescription:
-    "Product data is reconnecting. Try again shortly.",
+  offlineDescription: "Try again in a minute.",
   offlinePrimaryCta: "Contact us",
   offlineSecondaryCta: "Back to home",
 } as const;
@@ -1119,9 +1113,8 @@ export const PDP_ROUTE_COPY = {
   fallbackDescription: "{name} from One and Only.",
   productBrand: "One and Only",
   summary: {
-    title: "Decision snapshot",
-    description:
-      "Review the core fit, configuration, and support signals before you request a quote or documentation pack.",
+    title: "At a glance",
+    description: "Size, materials, and what we can support.",
     visualCoverage: "{count} verified images",
     galleryOnly: "Image gallery available",
     modelReady: "3D / AR ready",
@@ -1129,13 +1122,11 @@ export const PDP_ROUTE_COPY = {
     bestFor: "Best for",
     dimensions: "Dimensions",
     materials: "Materials",
-    supportTitle: "Planning and documentation support",
-    supportDescription:
-      "Use Planning for layout guidance and the Resource Desk for technical sheets, finish options, and category packs where available.",
-    supportQuote: "Add this model to your quote cart to keep procurement options together.",
-    supportPlanning: "Use Planning when seat count, layout density, or workstation mix still needs work.",
-    supportResources:
-      "Use the Resource Desk when your team needs technical sheets, finish references, or documentation support.",
+    supportTitle: "Need help specifying this?",
+    supportDescription: "Ask for a layout, or download the sheet.",
+    supportQuote: "Add it to the quote cart to keep it on the list.",
+    supportPlanning: "Open Planning if the floor plan is not settled.",
+    supportResources: "Open Downloads for sheets and finish packs.",
     useCases: "Best-fit spaces",
   },
   trustBadges: {

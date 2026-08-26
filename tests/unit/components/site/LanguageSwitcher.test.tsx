@@ -98,4 +98,18 @@ describe('LanguageSwitcher Component', () => {
     const select = screen.getByLabelText('Select Language') as HTMLSelectElement;
     expect(select.className).toMatch(/min-h-11/);
   });
+
+  it('does not reuse a static id across two footer instances', () => {
+    const { container } = render(
+      <>
+        <LanguageSwitcher />
+        <LanguageSwitcher />
+      </>,
+    );
+    const selects = container.querySelectorAll('select');
+    expect(selects).toHaveLength(2);
+    expect(selects[0].id).toBeTruthy();
+    expect(selects[1].id).toBeTruthy();
+    expect(selects[0].id).not.toBe(selects[1].id);
+  });
 });

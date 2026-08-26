@@ -255,9 +255,7 @@ export function SustainabilityPageView({
                 <span className="text-accent-italic-on-dark">{heroTitleAccent}</span>
               </span>
             </h1>
-            <p data-sustainability-hero-reveal className="sustainability-hero__subtitle">
-              {heroSubtitle}
-            </p>
+
             <div data-sustainability-hero-reveal className="sustainability-hero__actions">
               <MarketingCtaLink
                 href="/products"

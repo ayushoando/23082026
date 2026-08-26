@@ -266,7 +266,6 @@
 .group:hover .home-collection-card__arrow {
   opacity: 1;
   background: var(--surface-glass-strong);
-  transform: translate(0.3125rem, -3px);
 }
 
 .shell-card {

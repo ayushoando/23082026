@@ -14,7 +14,7 @@ export function HomeMarketingLayout({
   return (
     <div
       data-testid="home-marketing-layout"
-      className="home-marketing-layout min-h-screen overflow-x-clip overflow-y-visible"
+      className="home-marketing-layout overflow-x-clip overflow-y-visible"
     >
       {children}
       {contactTeaser ? <ContactTeaser /> : null}

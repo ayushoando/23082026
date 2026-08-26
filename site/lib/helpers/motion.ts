@@ -2,7 +2,7 @@ import type { Transition, Variants } from "framer-motion";
 import { useReducedMotion } from "framer-motion";
 import { useEffect, useState } from "react";
 
-export const MOTION_EASE = [0.22, 1, 0.36, 1] as const;
+export const MOTION_EASE = [0.16, 1, 0.3, 1] as const;
 
 /** Durations in seconds — UI ≈150–400ms; one-shot reveal ≤900ms. */
 export const MOTION_TOKENS = {
@@ -22,9 +22,9 @@ export function fadeUp(distance: number = MOTION_TOKENS.distanceMd, delay = 0): 
   transition: Transition;
 } {
   return {
-    initial: { opacity: 0, y: distance },
+    initial: { opacity: 1, y: distance },
     whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, amount: 0.2 },
+    viewport: { once: true, amount: 0.12, margin: "0px 0px -8% 0px" },
     transition: { duration: MOTION_TOKENS.slow, delay, ease: MOTION_EASE },
   };
 }
@@ -55,23 +55,22 @@ export function useFadeUp(
 }
 
 export const staggerContainer: Variants = {
-  hidden: { opacity: 0 },
+  hidden: {},
   visible: {
-    opacity: 1,
     transition: {
-      staggerChildren: 0.08,
-      delayChildren: 0.06,
+      staggerChildren: 0.07,
+      delayChildren: 0,
     },
   },
 };
 
 export const staggerItem: Variants = {
-  hidden: { opacity: 0, y: MOTION_TOKENS.distanceMd },
+  hidden: { opacity: 1, y: MOTION_TOKENS.distanceMd },
   visible: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: MOTION_TOKENS.medium,
+      duration: MOTION_TOKENS.slow,
       ease: MOTION_EASE,
     },
   },
@@ -120,10 +119,10 @@ export const drawerTransition: Transition = {
 export const hoverLift = {
   rest: { y: 0, scale: 1 },
   hover: {
-    y: -4,
-    scale: 1.01,
+    y: -2,
+    scale: 1,
     transition: {
-      duration: MOTION_TOKENS.fast,
+      duration: MOTION_TOKENS.medium,
       ease: MOTION_EASE,
     },
   },

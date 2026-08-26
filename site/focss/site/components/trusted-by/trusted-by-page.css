@@ -1,5 +1,29 @@
-/* /trusted-by — roster, stats, quotes (photos stay on /clients) */
-@import "../clients/clients-page.css";
+/* /trusted-by — roster, stats, quotes (photos stay on /clients).
+ * Quote figure classes load from the clients sheet via components/index.css.
+ */
+
+.trusted-by-hero__title {
+  margin: 0;
+  color: var(--text-inverse);
+  font-family: var(--font-display);
+  font-size: var(--type-title-lg-size);
+  font-weight: var(--font-weight-display-light);
+  line-height: var(--type-leading-title);
+  letter-spacing: var(--type-letter-title);
+  text-wrap: pretty;
+  text-shadow:
+    0 2px 16px var(--overlay-inverse-50),
+    0 1px 3px var(--overlay-inverse-60);
+}
+
+.trusted-by-hero__subtitle {
+  margin: 0.75rem 0 0;
+  max-width: 22rem;
+  color: var(--text-inverse-body);
+  font-size: var(--type-body-lg-size);
+  line-height: var(--type-leading-copy-sm);
+  text-shadow: 0 1px 10px var(--overlay-inverse-55);
+}
 
 .trusted-by-story {
   display: grid;
@@ -11,8 +35,8 @@
 .trusted-by-story__lead {
   margin: 0.75rem 0 0;
   max-width: 34rem;
-  font-size: clamp(1.05rem, 2.4vw, 1.2rem);
-  line-height: 1.6;
+  font-size: var(--type-body-lg-size);
+  line-height: var(--type-leading-copy-sm);
   color: var(--text-body);
 }
 
@@ -63,9 +87,9 @@
   min-height: 2.75rem;
   padding-block: 0.45rem;
   border-block-end: 1px solid color-mix(in srgb, var(--color-bronze-400) 12%, transparent);
-  font-size: 0.9375rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
+  font-size: var(--type-small-size);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--type-letter-nav-sm);
   color: var(--text-strong);
 }
 

@@ -14,14 +14,12 @@ import {
 } from "@/lib/catalog/site/categories";
 import type { CompatCategory } from "@/lib/catalog/site/getProducts";
 import { getCatalog } from "@/lib/catalog/site/getProducts";
-import { getCategoryLastUpdated } from "@/lib/catalog/productStaticParams";
 import { CATEGORY_LISTING_HERO } from "@/features/site/data/productsPage";
 import { HomeCatalogLayout } from "@/components/home/layout";
 import { SITE_URL } from "@/lib/siteUrl";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
 import { FilterGrid } from "./FilterGrid";
-import { CatalogLastUpdated } from "./CatalogLastUpdated";
 
 const BASE_URL = SITE_URL;
 
@@ -94,9 +92,6 @@ export async function CategoryPageView({ categoryId }: { categoryId: string }) {
   ]);
   const faqs = getCategoryFaqs(categoryId);
   const faqJsonLd = faqs.length > 0 ? buildFaqJsonLd(BASE_URL, categoryPath, faqs) : null;
-  const lastUpdated = await getCategoryLastUpdated(categoryId);
-  const lastUpdatedIso = lastUpdated?.toISOString();
-
   return (
     <HomeCatalogLayout>
       <script
@@ -115,11 +110,6 @@ export async function CategoryPageView({ categoryId }: { categoryId: string }) {
       ) : null}
 
       <Suspense fallback={<GridSkeleton />}>
-        {lastUpdatedIso ? (
-          <div className="home-shell-xl pb-2 pt-6">
-            <CatalogLastUpdated isoDate={lastUpdatedIso} />
-          </div>
-        ) : null}
         <FilterGrid
           category={normalizedCategory}
           categoryId={categoryId}

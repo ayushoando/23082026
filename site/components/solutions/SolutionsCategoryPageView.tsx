@@ -8,7 +8,7 @@ import gsap from "gsap";
 import { HomeSection, HomeSectionInner } from "@/components/home/layout";
 import { RouteCtaBand } from "@/components/shared/RouteCtaBand";
 import { MarketingCtaLink } from "@/components/ui/MarketingCtaLink";
-import { CatalogLastUpdated } from "@/features/site/catalog/CatalogLastUpdated";
+
 import {
   gsapReducedMotion,
   GSAP_EASE_OUT,
@@ -44,7 +44,6 @@ export interface SolutionsCategoryPageViewProps {
   deskPrimaryCta: string;
   deskSecondaryCta: string;
   deskTertiaryCta: string;
-  lastUpdatedIso?: string;
 }
 
 export function SolutionsCategoryPageView({
@@ -72,7 +71,6 @@ export function SolutionsCategoryPageView({
   deskPrimaryCta,
   deskSecondaryCta,
   deskTertiaryCta,
-  lastUpdatedIso,
 }: SolutionsCategoryPageViewProps) {
   const heroRef = useRef<HTMLElement>(null);
   const overviewRef = useRef<HTMLElement>(null);
@@ -197,17 +195,6 @@ export function SolutionsCategoryPageView({
                 <span className="text-accent-italic-on-dark">{heroTitleAccent}</span>
               </span>
             </h1>
-            <p
-              data-solutions-category-hero-reveal
-              className="solutions-hero__subtitle"
-            >
-              {heroSubtitle}
-            </p>
-            {lastUpdatedIso ? (
-              <div data-solutions-category-hero-reveal className="mt-2">
-                <CatalogLastUpdated isoDate={lastUpdatedIso} />
-              </div>
-            ) : null}
             <div
               data-solutions-category-hero-reveal
               className="solutions-hero__actions flex flex-wrap gap-3"

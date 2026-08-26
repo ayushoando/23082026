@@ -86,8 +86,7 @@ describe("app/(site)/terms/page.tsx — behavior", () => {
     const h1 = screen.getByRole("heading", { level: 1, name: termsMessages.title });
     expect(h1).toHaveAttribute("id", "legal-hero-heading");
     expect(h1).toHaveTextContent(termsMessages.title);
-    expect(screen.getByText(termsMessages.heroSubtitle)).toBeInTheDocument();
-    expect(screen.getByText(termsMessages.heroSubtitle)).toHaveClass("legal-hero__subtitle");
+    expect(screen.queryByText(termsMessages.heroSubtitle)).not.toBeInTheDocument();
 
     const bronzeRule = container.querySelector(".legal-bronze-rule");
     expect(bronzeRule).not.toBeNull();

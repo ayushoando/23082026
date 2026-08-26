@@ -1,6 +1,4 @@
 /* /contact — pass #1: editorial hero, band rhythm, form-forward layout */
-@import "../shared/editorial-hero.css";
-
 /* Hero layout: align copy left edge with section gutter (solutions/clients parity) */
 .contact-hero__layout {
   width: 100%;

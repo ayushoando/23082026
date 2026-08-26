@@ -1,5 +1,6 @@
 import "server-only";
 
+import { cache } from "react";
 import { unstable_cache } from "next/cache";
 import { CATALOG_REVALIDATE_SECONDS } from "@/features/site/data/fallbacks";
 import { buildCatalogLive as buildCatalogTreeLive } from "@/lib/catalog/catalogTree";
@@ -74,7 +75,7 @@ const getCachedCatalog = unstable_cache(buildCatalogTreeLive, ["catalog-tree-v7"
   tags: ["catalog", "catalog-tree"],
 });
 
-export async function getCatalog(): Promise<CompatCategory[]> {
+async function loadCatalog(): Promise<CompatCategory[]> {
   const cached = (await getCachedCatalog()) as CompatCategory[];
   // Do not serve a cached empty tree (COST-S04) — retry live.
   if (Array.isArray(cached) && cached.length > 0) {
@@ -82,6 +83,9 @@ export async function getCatalog(): Promise<CompatCategory[]> {
   }
   return (await buildCatalogTreeLive()) as CompatCategory[];
 }
+
+/** Per-request dedupe so metadata + page + tree views share one load. */
+export const getCatalog = cache(loadCatalog);
 
 export async function getCategoryIds(): Promise<string[]> {
   return fetchCategoryIdsSource();

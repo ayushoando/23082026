@@ -8,6 +8,7 @@ import gsap from "gsap";
 import { HomeSection, HomeSectionInner } from "@/components/home/layout";
 import { RouteCtaBand } from "@/components/shared/RouteCtaBand";
 import { EditorialHeroMedia } from "@/components/site/EditorialHeroMedia";
+import { OfficeMap } from "@/components/shared/OfficeMap";
 import { MarketingCtaLink } from "@/components/ui/MarketingCtaLink";
 import { SHOWROOMS_HERO_IMAGE, SHOWROOMS_HERO_MEDIA } from "@/features/site/data/showroomsPage";
 import {
@@ -178,9 +179,7 @@ export function ShowroomsPageView({
                 <span className="text-accent-italic-on-dark">{heroTitleAccent}</span>
               </span>
             </h1>
-            <p data-showrooms-hero-reveal className="showrooms-hero__subtitle">
-              {heroSubtitle}
-            </p>
+
             <div data-showrooms-hero-reveal className="showrooms-hero__actions">
               <MarketingCtaLink
                 href="/contact"
@@ -245,6 +244,9 @@ export function ShowroomsPageView({
                 >
                   {visitCta}
                 </MarketingCtaLink>
+              </div>
+              <div data-showrooms-reveal className="mt-8">
+                <OfficeMap heading="Find the showroom" />
               </div>
             </div>
 

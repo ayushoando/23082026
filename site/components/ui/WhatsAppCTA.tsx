@@ -75,7 +75,7 @@ export function WhatsAppCTA() {
         animate={{ scale: 1, opacity: 1 }}
         className={`site-fab-launcher site-fab-launcher--whatsapp assistant-focus-ring ${fabAnchor}`}
       >
-        <WhatsappLogo className="h-5 w-5" aria-hidden="true" />
+        <WhatsappLogo className="h-6 w-6" aria-hidden="true" />
       </motion.button>
 
       <AnimatePresence>

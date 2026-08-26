@@ -58,9 +58,10 @@ export default function MeetingRoomCapacityCalculatorPage() {
   ]);
   return (
     <HomeMarketingLayout>
-      <script type="application/ld+json" suppressHydrationWarning>
-        {sanitizeJsonForScript(breadcrumbJsonLd)}
-      </script>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(breadcrumbJsonLd) }}
+      />
       <section className="home-section" aria-labelledby="tool-heading">
         <div className="home-section__inner">
           <p className="home-kicker">Free tools · India NBC norms</p>

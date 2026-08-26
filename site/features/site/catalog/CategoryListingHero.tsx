@@ -54,15 +54,12 @@ export function CategoryListingHero({
             {categoryName}
           </span>
         </nav>
-        <h1 data-catalog-reveal className="catalog-category-hero__title font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-heading">
-          {categoryName}{" "}
-          <span className="text-accent-italic italic text-primary">Collection</span>
+        <h1 data-catalog-reveal className="catalog-category-hero__title">
+          {categoryName}
+          {"\u00A0"}
+          <span className="text-accent-italic">Collection</span>
         </h1>
-        {description ? (
-          <p data-catalog-reveal className="catalog-category-hero__lead page-copy text-body mt-3">
-            {description}
-          </p>
-        ) : null}
+
         {subcategoryLinks.length > 0 ? (
           <div data-catalog-reveal className="catalog-category-hero__chips">
             {subcategoryLinks.map((label) => {

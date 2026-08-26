@@ -686,10 +686,10 @@ export function ProductViewer({
               <div className="pdp-cta-panel" data-testid="pdp-cta-panel">
                 <div className="mb-4">
                   <p className="mb-2 text-sm font-medium text-strong">
-                    Take the next step
+                    Next step
                   </p>
                   <p className="text-sm leading-relaxed text-muted">
-                    Add this product to your shortlist, send a direct enquiry, or move into planning support.
+                    Add to quote, or send an enquiry.
                   </p>
                 </div>
                 <button
@@ -938,9 +938,9 @@ export function ProductViewer({
 
       <div className="home-shell-xl pdp-route-cta-band pb-6 pt-8 md:pt-10">
         <RouteCtaBand
-          kicker="Planning desk"
-          title="Specify this product in a real layout"
-          description="Share seat count, finish preferences, and site constraints — we propose a practical path from catalog to install."
+          kicker="Quote"
+          title="Ask about this model"
+          description="City, quantity, and finish. We reply by phone or email."
           actions={[
             { href: "/contact", label: PDP_ROUTE_COPY.ctas.requestQuote, variant: "primary" },
             { href: "/planner", label: PDP_ROUTE_COPY.ctas.designInPlanner, variant: "outline-light" },

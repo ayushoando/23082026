@@ -208,9 +208,7 @@ export function ServicePageView({
                 <span className="text-accent-italic-on-dark">{heroTitleAccent}</span>
               </span>
             </h1>
-            <p data-service-hero-reveal className="service-hero__subtitle">
-              {heroSubtitle}
-            </p>
+
             <div data-service-hero-reveal className="service-hero__actions">
               <MarketingCtaLink
                 href="/contact"

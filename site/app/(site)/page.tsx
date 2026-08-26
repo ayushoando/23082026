@@ -5,11 +5,9 @@ import { HomepageHero } from "@/components/home/HomepageHero";
 import { HomeDeferredSections } from "@/components/home/HomeDeferredSections";
 import { HomeMarketingLayout } from "@/components/home/layout";
 import { Collections } from "@/components/home/Collections";
-import { TrustStrip } from "@/components/home/TrustStrip";
 
 import { SITE_BRAND } from "@/lib/analytics/seo";
 import { buildPageJsonLd, buildPageMetadata } from "@/lib/analytics/seo";
-import { getBusinessStats } from "@/features/crm/businessStats";
 import { SITE_URL } from "@/lib/siteUrl";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
@@ -22,7 +20,6 @@ export const metadata: Metadata = buildPageMetadata(SITE_URL, {
 
 export default async function Home() {
   const t = await getTranslations("home");
-  const { stats } = await getBusinessStats();
   // Organization / FurnitureStore live in (site)/layout sitewide graph — home only adds WebPage.
   const homeJsonLd = buildPageJsonLd(SITE_URL, {
     path: "/",
@@ -51,7 +48,6 @@ export default async function Home() {
 
       <HomepageHero />
       <Collections />
-      <TrustStrip stats={stats} />
       <HomeDeferredSections
         showcase={{
           sectionLabel,

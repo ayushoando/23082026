@@ -9,8 +9,9 @@ import {
   MOTION_TOKENS,
   useMotionSafeHover,
 } from "@/lib/helpers/motion";
+import { useTranslations } from "next-intl";
 import { PlannerHeroDemo } from "@/components/home/PlannerHeroDemo";
-import { PLANNER_HERO, PLANNER_PROOF } from "./plannerLandingData";
+import { PLANNER_HERO } from "./plannerLandingData";
 
 const containerVariants: Variants = {
   hidden: {},
@@ -18,17 +19,16 @@ const containerVariants: Variants = {
 };
 
 const titleVariants: Variants = {
-  hidden: { y: "105%", opacity: 0, rotate: 2 },
+  hidden: { y: 12, opacity: 1 },
   visible: {
     y: 0,
     opacity: 1,
-    rotate: 0,
-    transition: { duration: MOTION_TOKENS.slow, ease: MOTION_EASE },
+    transition: { duration: MOTION_TOKENS.medium, ease: MOTION_EASE },
   },
 };
 
 const fadeUpVariants: Variants = {
-  hidden: { opacity: 0, y: MOTION_TOKENS.distanceSm },
+  hidden: { opacity: 1, y: MOTION_TOKENS.distanceSm },
   visible: {
     opacity: 1,
     y: 0,
@@ -37,7 +37,11 @@ const fadeUpVariants: Variants = {
 };
 
 export function PlannerFloorplanHero() {
-  const { titleLead, titleAccent, primaryCta, secondaryCta } = PLANNER_HERO;
+  const t = useTranslations("plannerLanding");
+  const { primaryCta, secondaryCta } = PLANNER_HERO;
+  const titleLead = t("titleLead");
+  const titleAccent = t("titleAccent");
+  const description = t("description");
   const primaryCtaHover = useMotionSafeHover({ scale: 1.02, y: -2 }, { scale: 0.98 });
   const secondaryCtaHover = useMotionSafeHover({ scale: 1.02, y: -2 }, { scale: 0.98 });
 
@@ -54,37 +58,29 @@ export function PlannerFloorplanHero() {
             initial="hidden"
             animate="visible"
           >
-            <h1 className="home-hero-title-homepage planner-landing-hero__title">
+            <h1 className="planner-landing-hero__title">
               <motion.span variants={titleVariants}>
-                {titleLead}{" "}
+                {titleLead}
+                {"\u00A0"}
                 <span className="text-accent-italic-on-dark">{titleAccent}</span>
               </motion.span>
             </h1>
+            <motion.p variants={fadeUpVariants} className="planner-landing-hero__lede">
+              {description}
+            </motion.p>
 
             <motion.div variants={fadeUpVariants} className="home-actions planner-landing-hero__actions">
               <motion.div {...primaryCtaHover}>
                 <Link href={primaryCta.href} className="btn-hero-primary btn-primary shadow-theme-panel">
-                  {primaryCta.label}
+                  {t("primaryCta")}
                   <ArrowRight size={16} weight="bold" aria-hidden="true" />
                 </Link>
               </motion.div>
-              <motion.div {...secondaryCtaHover}>
+              <motion.div {...secondaryCtaHover} className="planner-landing-hero__signin">
                 <Link href={secondaryCta.href} className="btn-hero-secondary btn-accent shadow-theme-panel">
-                  {secondaryCta.label}
+                  {t("secondaryCta")}
                 </Link>
               </motion.div>
-            </motion.div>
-
-            <motion.div
-              className="home-hero-proof-panel group typ-body-sm text-inverse planner-landing-hero-proof--row"
-              variants={fadeUpVariants}
-            >
-              {PLANNER_PROOF.map((item) => (
-                <div key={item.label} className="planner-landing-hero-proof__cell">
-                  <p className="home-hero-proof-panel__lead">{item.value}</p>
-                  <p className="planner-landing-hero-proof__detail text-inverse-body">{item.label}</p>
-                </div>
-              ))}
             </motion.div>
           </motion.div>
 

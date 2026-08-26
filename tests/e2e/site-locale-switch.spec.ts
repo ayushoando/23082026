@@ -7,7 +7,7 @@ const EN_ABOUT_SUBTITLE = "We plan, supply, and install workplaces teams use eve
 test.describe("site locale switch — wave 1", () => {
   test.use({ viewport: { width: 1280, height: 800 } });
 
-  test("about page stays English when NEXT_LOCALE=hi (static default locale)", async ({
+  test("about page uses Hindi when NEXT_LOCALE=hi", async ({
     page,
     context,
   }) => {
@@ -25,8 +25,7 @@ test.describe("site locale switch — wave 1", () => {
     await page.getByTestId("home-marketing-layout").waitFor({ state: "visible" });
     await prepareSiteUiCapture(page);
 
-    await expect(page.locator(".about-hero__subtitle")).toContainText(EN_ABOUT_SUBTITLE);
-    await expect(page.locator(".about-hero__subtitle")).not.toContainText(HI_ABOUT_SUBTITLE);
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("कुशलता से तैयार");
   });
 
   test("footer locale switcher stays on /about without a page crash", async ({ page }) => {
@@ -36,7 +35,7 @@ test.describe("site locale switch — wave 1", () => {
     await page.goto("/about");
     await page.getByTestId("home-marketing-layout").waitFor({ state: "visible" });
 
-    const switcher = page.locator("#locale-switcher");
+    const switcher = page.locator(".site-footer__locale-select").first();
     await switcher.scrollIntoViewIfNeeded();
     // LanguageSwitcher.handleChange sets NEXT_LOCALE then window.location.reload().
     await switcher.selectOption("hi");
@@ -46,9 +45,9 @@ test.describe("site locale switch — wave 1", () => {
     await page.waitForLoadState("load");
     await prepareSiteUiCapture(page);
 
-    await expect(page.locator(".about-hero__subtitle")).toContainText(EN_ABOUT_SUBTITLE);
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("कुशलता से तैयार");
     // The guard is "no application crash" — proven above by the layout staying
-    // visible and the subtitle staying English after the switch. The raw pageerror
+    // visible after the switch. The raw pageerror
     // list is filtered for transient `next dev` framework churn caused by the hard
     // window.location.reload(): the recompiling dev server can briefly serve a
     // partial/HTML chunk body ("Loading chunk … failed" + its paired "Invalid or

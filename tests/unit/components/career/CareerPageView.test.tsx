@@ -84,7 +84,7 @@ describe("CareerPageView Component", () => {
     expect(heading).toHaveTextContent(CAREER_PAGE_COPY.heroTitleLead);
     expect(heading).toHaveTextContent(CAREER_PAGE_COPY.heroTitleAccent);
     expect(screen.getByText(CAREER_PAGE_COPY.heroKicker)).toBeInTheDocument();
-    expect(screen.getByText(CAREER_PAGE_COPY.heroSubtitle)).toBeInTheDocument();
+    expect(screen.queryByText(CAREER_PAGE_COPY.heroSubtitle)).not.toBeInTheDocument();
     expect(screen.getByTestId("mock-career-hero-media")).toBeInTheDocument();
 
     const mailLink = screen.getByRole("link", { name: "Email careers" });

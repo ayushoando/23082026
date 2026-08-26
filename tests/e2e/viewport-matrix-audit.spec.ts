@@ -78,7 +78,7 @@ type SiteRoute = {
 
 const SITE_ROUTES: SiteRoute[] = [
   { id: "home", path: "/", heading: /Spaces that work/i },
-  { id: "products", path: "/products", heading: /Built to\s*Perform/i, marketing: true, requiresDb: true },
+  { id: "products", path: "/products", heading: /Office\s*furniture/i, marketing: true, requiresDb: true },
   { id: "planner-landing", path: "/planner", heading: /.+/ },
   { id: "about", path: "/about", marketing: true },
   { id: "contact", path: "/contact", marketing: true },

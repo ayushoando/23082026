@@ -1,16 +1,21 @@
 @keyframes home-reveal-up {
-  from { opacity: 0; transform: translate3d(0, 1.375rem, 0) scale(0.995); }
-  to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+  from {
+    opacity: 0.45;
+    transform: translate3d(0, 1.125rem, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
 }
 @utility home-reveal {
-  opacity: 0;
-  transform: translate3d(0, var(--space-5), 0);
+  opacity: 0.45;
+  transform: translate3d(0, 1.125rem, 0);
   animation-name: home-reveal-up;
-  animation-duration: 720ms;
+  animation-duration: 900ms;
   animation-delay: var(--home-reveal-delay, 0s);
-  animation-timing-function: var(--ease-standard);
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   animation-fill-mode: forwards;
-  will-change: transform, opacity;
 }
 @media (prefers-reduced-motion: reduce) {
   .home-reveal {
@@ -216,32 +221,6 @@
   @media (width >= theme(--breakpoint-lg)) {
     padding-bottom: 2.5rem;
     max-width: none;
-  }
-}
-@utility home-hero-title-homepage {
-  max-width: 13ch;
-  font-family: var(--font-display);
-  color: var(--text-inverse);
-  font-size: clamp(2.85rem, 10vw, 4rem);
-  font-weight: var(--font-weight-display-light);
-  line-height: var(--type-leading-title);
-  letter-spacing: var(--type-letter-title);
-  text-shadow: 0 2px 28px var(--scrim-black-40);
-  text-wrap: balance;
-  @media (width < theme(--breakpoint-lg)) {
-    text-align: center;
-    margin-inline: auto;
-  }
-  @media (width >= 40rem) and (width < theme(--breakpoint-lg)) {
-    max-width: none;
-    white-space: nowrap;
-    text-wrap: nowrap;
-    font-size: clamp(2.75rem, 5.8vw, 3.5rem);
-  }
-  @media (width >= theme(--breakpoint-lg)) {
-    max-width: 11ch;
-    white-space: normal;
-    font-size: clamp(3.5rem, 5.2vw, 5.25rem);
   }
 }
 @utility home-hero-glass-stack {

@@ -14,6 +14,12 @@
   padding-block: var(--section-space-lg);
 }
 
+@media (width < theme(--breakpoint-md)) {
+  .home-showcase-nav-button {
+    display: none;
+  }
+}
+
 @utility home-showcase-nav-button {
   display: inline-flex;
   height: 3rem;
@@ -29,11 +35,12 @@
 
 .home-showcase-nav-button:disabled {
   cursor: not-allowed;
-  opacity: 0.2;
+  opacity: 0.38;
 }
 
 .home-showcase-nav-button--light {
-  color: var(--text-body);
+  color: var(--text-heading);
+  background: var(--surface-page);
 }
 
 .home-showcase-nav-button--light:hover {
@@ -83,12 +90,12 @@
   position: absolute;
   inset: 0;
   background: linear-gradient(to top, var(--scrim-black-80), var(--scrim-black-20), transparent);
-  opacity: 0.8;
-  transition: opacity var(--motion-base) var(--ease-standard);
+  opacity: 0.78;
+  transition: opacity 900ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .group:hover .home-showcase-overlay {
-  opacity: 0.9;
+  opacity: 0.86;
 }
 
 @utility home-showcase-card__caption {
@@ -107,30 +114,61 @@
   font-family: var(--font-mono, var(--font-body));
 }
 
+.home-showcase-pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: var(--space-5);
+  padding-inline: 1rem;
+}
+
 @utility home-showcase-dot {
-  height: 0.5rem;
-  width: 0.5rem;
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
   border-radius: var(--radius-pill);
-  transition: width var(--motion-fast) var(--ease-standard),
-              background-color var(--motion-fast) var(--ease-standard);
 }
 
-.home-showcase-dot--active-light {
-  width: 2rem;
-  background: var(--text-strong);
+.home-showcase-dot::after {
+  content: "";
+  display: block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--text-heading) 32%, transparent);
+  transition: background-color var(--motion-fast) var(--ease-standard);
 }
 
-.home-showcase-dot--inactive-light {
-  background: var(--surface-soft);
+.home-showcase-dot--active-light::after {
+  background: var(--text-heading);
 }
 
-.home-showcase-dot--active-dark {
-  width: 2rem;
-  background: var(--color-primary);
+.home-showcase-dot--active-dark::after {
+  background: var(--text-inverse);
 }
 
-.home-showcase-dot--inactive-dark {
-  background: color-mix(in srgb, white 20%, transparent);
+.home-showcase-dot--inactive-light::after {
+  background: color-mix(in srgb, var(--text-heading) 32%, transparent);
+}
+
+.home-showcase-dot--inactive-dark::after {
+  background: color-mix(in srgb, white 40%, transparent);
+}
+
+.home-showcase-dot:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 @utility home-trust-kpi {

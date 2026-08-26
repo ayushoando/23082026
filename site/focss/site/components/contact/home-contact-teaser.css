@@ -140,7 +140,9 @@
 }
 
 .contact-teaser__input {
-  min-height: 3.125rem;
+  box-sizing: border-box;
+  min-height: 3rem;
+  height: 3rem;
   width: 100%;
   border-radius: 0.75rem;
   border: 1px solid color-mix(in srgb, var(--color-ocean-boat-blue-200) 50%, var(--border-soft));
@@ -172,7 +174,11 @@
   }
 }
 
-@utility contact-teaser__input--textarea { min-height: 7rem; resize: vertical; }
+@utility contact-teaser__input--textarea {
+  height: auto;
+  min-height: 7rem;
+  resize: vertical;
+}
 
 .contact-teaser__cta-stack {
   display: flex;

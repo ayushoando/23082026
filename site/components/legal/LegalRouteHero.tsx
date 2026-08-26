@@ -76,11 +76,7 @@ export function LegalRouteHero({ title, subtitle, testId = "legal-hero" }: Legal
               {title}
             </span>
           </h1>
-          {subtitle ? (
-            <p data-legal-hero-reveal className="legal-hero__subtitle">
-              {subtitle}
-            </p>
-          ) : null}
+
         </div>
       </div>
     </section>

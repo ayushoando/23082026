@@ -9,7 +9,7 @@ import { ClientBadge, type ClientBadgeData } from "@/components/ClientBadge";
 import { RouteCtaBand } from "@/components/shared/RouteCtaBand";
 import { EditorialHeroMedia } from "@/components/site/EditorialHeroMedia";
 import { MarketingCtaLink } from "@/components/ui/MarketingCtaLink";
-import { TRUSTED_BY_STATS } from "@/features/site/data/proof";
+
 import {
   TRUSTED_BY_HERO_IMAGE,
   TRUSTED_BY_HERO_MEDIA,
@@ -56,7 +56,7 @@ export function TrustedByPageView({
   overviewKicker,
   overviewTitle,
   overviewDescription,
-  statsKicker,
+  statsKicker: _statsKicker,
   clients,
   rosterKicker,
   quotesKicker,
@@ -269,13 +269,12 @@ export function TrustedByPageView({
           <div className="trusted-by-hero__copy">
             <h1 id="trusted-by-hero-heading" className="trusted-by-hero__title">
               <span data-trusted-hero-reveal className="block">
-                {heroTitleLead}{" "}
+                {heroTitleLead}
+                {"\u00A0"}
                 <span className="text-accent-italic-on-dark">{heroTitleAccent}</span>
               </span>
             </h1>
-            <p data-trusted-hero-reveal className="trusted-by-hero__subtitle">
-              {heroSubtitle}
-            </p>
+
             <div data-trusted-hero-reveal className="trusted-by-hero__actions">
               <MarketingCtaLink
                 href="/clients"
@@ -288,17 +287,6 @@ export function TrustedByPageView({
               </MarketingCtaLink>
             </div>
           </div>
-        </div>
-      </section>
-
-      <section className="proof-kpi-band" role="group" aria-label={statsKicker}>
-        <div className="home-shell-xl proof-kpi-band__grid">
-          {TRUSTED_BY_STATS.map((item) => (
-            <div key={item.label} className="proof-kpi-band__item">
-              <p className="proof-kpi-band__value">{item.value}</p>
-              <p className="proof-kpi-band__label">{item.label}</p>
-            </div>
-          ))}
         </div>
       </section>
 
@@ -361,7 +349,7 @@ export function TrustedByPageView({
           <div className="clients-pull-quotes">
             {quotes.map((item) => (
               <figure key={item.attribution} data-trusted-reveal className="clients-pull-quote">
-                <blockquote className="clients-pull-quote__text home-heading text-balance">
+                <blockquote className="clients-pull-quote__text text-balance">
                   {item.quote}
                 </blockquote>
                 <figcaption className="clients-pull-quote__attribution">{item.attribution}</figcaption>
@@ -400,7 +388,8 @@ export function TrustedByPageView({
             kicker={ctaKicker}
             title={
               <>
-                {ctaTitleLead}{" "}
+                {ctaTitleLead}
+                {"\u00A0"}
                 <span className="text-accent-italic-on-dark">{ctaTitleAccent}</span>
               </>
             }

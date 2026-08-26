@@ -14,7 +14,7 @@ import {
 } from "@/features/site/data/homepage";
 import { TrackedLink } from "@/components/ui/TrackedLink";
 import { runAfterIdleOrInteraction } from "@/lib/client/afterIdle";
-import { gsapReducedMotion } from "@/lib/helpers/gsapMotion";
+import { gsapPageScroller, gsapReducedMotion } from "@/lib/helpers/gsapMotion";
 
 const SLIDE_MS = 5000;
 const POSTER = HOMEPAGE_HERO_IMAGES[0];
@@ -26,10 +26,6 @@ export function HomepageHero() {
     HOMEPAGE_HERO_CONTENT.title,
   );
   const kicker = t("hero.kicker");
-  const secondaryCta = {
-    label: t("hero.secondaryCta.label"),
-    href: t("hero.secondaryCta.href"),
-  };
   const glassProof = {
     badge: t("hero.glassProof.badge"),
     lead: t("hero.glassProof.lead"),
@@ -118,7 +114,7 @@ export function HomepageHero() {
 
       gsap.registerPlugin(ScrollTrigger);
 
-      const scroller = sectionRef.current.closest(".mobile-app-main");
+      const scroller = gsapPageScroller(sectionRef.current);
 
       const ctx = gsap.context(() => {
         gsap.to(bgRef.current, {
@@ -225,17 +221,6 @@ export function HomepageHero() {
           <p className="home-kicker text-[color:var(--color-bronze-300)]">
             {kicker}
           </p>
-
-          <div className="home-actions">
-            <TrackedLink
-              href={secondaryCta.href}
-              label={secondaryCta.label}
-              surface="homepage-hero"
-              className="inline-flex min-h-11 btn-hero-secondary btn-accent shadow-theme-panel"
-            >
-              {secondaryCta.label}
-            </TrackedLink>
-          </div>
         </div>
 
         <div className="home-hero-glass-stack">

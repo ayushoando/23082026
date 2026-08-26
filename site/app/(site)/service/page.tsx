@@ -8,16 +8,18 @@ import {
 } from "@/features/site/data/routeCopy";
 import { SERVICE_PAGE_METADATA } from "@/features/site/data/routeMetadata";
 import { buildBreadcrumbJsonLd, buildPageJsonLd } from "@/features/site/data/seo";
+import { withLocaleCopy } from "@/lib/i18n/withLocaleCopy";
 import { SITE_URL } from "@/lib/siteUrl";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
 export const metadata = SERVICE_PAGE_METADATA;
 
-export default function ServicePage() {
+export default async function ServicePage() {
+  const copy = await withLocaleCopy({ ...SERVICE_PAGE_COPY }, "service");
   const serviceJsonLd = buildPageJsonLd(SITE_URL, {
     path: "/service",
-    title: `${SERVICE_PAGE_COPY.heroTitle} | One&Only`,
-    description: SERVICE_PAGE_COPY.heroSubtitle,
+    title: `${copy.heroTitle} | One&Only`,
+    description: copy.heroSubtitle,
     pageType: "WebPage",
   });
   const breadcrumbJsonLd = buildBreadcrumbJsonLd(SITE_URL, [
@@ -36,27 +38,27 @@ export default function ServicePage() {
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(breadcrumbJsonLd) }}
       />
       <ServicePageView
-        heroKicker={SERVICE_PAGE_COPY.heroKicker}
-        heroTitleLead={SERVICE_PAGE_COPY.heroTitleLead}
-        heroTitleAccent={SERVICE_PAGE_COPY.heroTitleAccent}
-        heroSubtitle={SERVICE_PAGE_COPY.heroSubtitle}
-        craftQuote={SERVICE_PAGE_COPY.craftQuote}
-        craftAttribution={SERVICE_PAGE_COPY.craftAttribution}
-        frameworkKicker={SERVICE_PAGE_COPY.frameworkKicker}
-        frameworkTitle={SERVICE_PAGE_COPY.frameworkTitle}
+        heroKicker={copy.heroKicker}
+        heroTitleLead={copy.heroTitleLead}
+        heroTitleAccent={copy.heroTitleAccent}
+        heroSubtitle={copy.heroSubtitle}
+        craftQuote={copy.craftQuote}
+        craftAttribution={copy.craftAttribution}
+        frameworkKicker={copy.frameworkKicker}
+        frameworkTitle={copy.frameworkTitle}
         pillars={SERVICE_PAGE_PILLARS}
-        channelsKicker={SERVICE_PAGE_COPY.channelsKicker}
-        channelsTitle={SERVICE_PAGE_COPY.channelsTitle}
+        channelsKicker={copy.channelsKicker}
+        channelsTitle={copy.channelsTitle}
         channels={SERVICE_PAGE_CHANNELS}
-        supportKicker={SERVICE_PAGE_COPY.supportKicker}
-        supportDescription={SERVICE_PAGE_COPY.supportDescription}
-        primaryCta={SERVICE_PAGE_COPY.primaryCta}
-        secondaryCta={SERVICE_PAGE_COPY.secondaryCta}
-        tertiaryCta={SERVICE_PAGE_COPY.tertiaryCta}
-        ctaKicker={SERVICE_PAGE_COPY.ctaKicker}
-        ctaTitleLead={SERVICE_PAGE_COPY.ctaTitleLead}
-        ctaTitleAccent={SERVICE_PAGE_COPY.ctaTitleAccent}
-        ctaDescription={SERVICE_PAGE_COPY.ctaDescription}
+        supportKicker={copy.supportKicker}
+        supportDescription={copy.supportDescription}
+        primaryCta={copy.primaryCta}
+        secondaryCta={copy.secondaryCta}
+        tertiaryCta={copy.tertiaryCta}
+        ctaKicker={copy.ctaKicker}
+        ctaTitleLead={copy.ctaTitleLead}
+        ctaTitleAccent={copy.ctaTitleAccent}
+        ctaDescription={copy.ctaDescription}
       />
       <ContactTeaser />
     </HomeMarketingLayout>

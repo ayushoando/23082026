@@ -204,9 +204,7 @@ export function ContactPageView({
                 <span className="text-accent-italic-on-dark">{heroTitleAccent}</span>
               </span>
             </h1>
-            <p data-contact-hero-reveal className="contact-hero__subtitle">
-              {heroSubtitle}
-            </p>
+
           </div>
         </div>
 

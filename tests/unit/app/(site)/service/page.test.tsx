@@ -1,3 +1,4 @@
+import "@/tests/helpers/nextIntlServerEnMock";
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import { SERVICE_PAGE_COPY, SERVICE_PAGE_CHANNELS, SERVICE_PAGE_PILLARS } from "@/features/site/data/routeCopy";
@@ -101,8 +102,8 @@ describe("app/(site)/service/page.tsx — behavior", () => {
     expect((SERVICE_PAGE_METADATA.alternates as { canonical?: string })?.canonical ?? SERVICE_PAGE_METADATA.openGraph?.url).toBeDefined();
   });
 
-  it("renders marketing shell, hero labelled region, editorial hero media, and craft quote", () => {
-    const { container } = render(<ServicePage />);
+  it("renders marketing shell, hero labelled region, editorial hero media, and craft quote", async () => {
+    const { container } = render(await ServicePage());
 
     expectHomeMarketingShell(container);
     expect(screen.getByTestId("home-marketing-layout")).toBeInTheDocument();
@@ -117,7 +118,7 @@ describe("app/(site)/service/page.tsx — behavior", () => {
     expect(h1).toHaveTextContent(SERVICE_PAGE_COPY.heroTitleAccent);
     expect(screen.getByText(SERVICE_PAGE_COPY.heroKicker)).toBeInTheDocument();
     expect(screen.getByText(SERVICE_PAGE_COPY.heroKicker)).toHaveClass("home-kicker");
-    expect(screen.getByText(SERVICE_PAGE_COPY.heroSubtitle)).toBeInTheDocument();
+    expect(screen.queryByText(SERVICE_PAGE_COPY.heroSubtitle)).not.toBeInTheDocument();
 
     expect(screen.getByTestId("mock-editorial-hero-media")).toBeInTheDocument();
     expect(screen.getByTestId("mock-editorial-hero-media")).toHaveAttribute("data-alt", SERVICE_HERO_IMAGE.alt);
@@ -137,8 +138,8 @@ describe("app/(site)/service/page.tsx — behavior", () => {
     expect(ldScripts.length).toBeGreaterThanOrEqual(2);
   });
 
-  it("iterates SERVICE_PAGE_PILLARS and SERVICE_PAGE_CHANNELS source-of-truth with computed attributes", () => {
-    const { container } = render(<ServicePage />);
+  it("iterates SERVICE_PAGE_PILLARS and SERVICE_PAGE_CHANNELS source-of-truth with computed attributes", async () => {
+    const { container } = render(await ServicePage());
 
     // pillars
     expect(screen.getByTestId("service-pillars")).toBeInTheDocument();
@@ -192,8 +193,8 @@ describe("app/(site)/service/page.tsx — behavior", () => {
     expect(screen.queryByText("Phone support unknown")).not.toBeInTheDocument();
   });
 
-  it("renders support panel, CTA band with computed hrefs, and contact teaser with absence checks", () => {
-    const { container } = render(<ServicePage />);
+  it("renders support panel, CTA band with computed hrefs, and contact teaser with absence checks", async () => {
+    const { container } = render(await ServicePage());
 
     expect(screen.getByText(SERVICE_PAGE_COPY.supportKicker)).toBeInTheDocument();
     expect(screen.getByText(SERVICE_PAGE_COPY.supportDescription)).toBeInTheDocument();

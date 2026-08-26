@@ -19,7 +19,7 @@ describe("HomeMarketingLayout", () => {
       "overflow-x-clip", "overflow-y-visible",
     );
     expect(screen.getByText("Page body")).toBeInTheDocument();
-    expect(container.querySelector(".min-h-screen")).toBeDefined();
+    expect(container.querySelector(".min-h-screen")).toBeNull();
     expect(screen.queryByTestId("ContactTeaser")).not.toBeInTheDocument();
   });
 

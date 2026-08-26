@@ -84,17 +84,22 @@ describe("app/(site)/about/page.tsx", () => {
     expect(hero).toHaveAttribute("aria-labelledby", "about-hero-heading");
     expect(hero).toHaveClass("about-hero");
 
-    const h1 = screen.getByRole("heading", { level: 1, name: /interiors executed with craft/i });
+    const h1 = screen.getByRole("heading", { level: 1, name: /about\s+us/i });
     expect(h1).toHaveAttribute("id", "about-hero-heading");
     expect(h1).toHaveTextContent(aboutMessages.heroTitleLead);
     expect(h1).toHaveTextContent(aboutMessages.heroTitleAccent);
     expect(screen.getByText(aboutMessages.heroKicker)).toBeInTheDocument();
-    expect(screen.getByText(aboutMessages.heroSubtitle)).toBeInTheDocument();
+    expect(screen.queryByText(aboutMessages.heroSubtitle)).not.toBeInTheDocument();
 
     expect(screen.getByRole("link", { name: aboutMessages.heroCta })).toHaveAttribute("href", "/clients");
     expect(screen.getByTestId("mock-about-hero-media")).toBeInTheDocument();
 
     expect(screen.getByTestId("about-story")).toBeInTheDocument();
+    expect(screen.getByTestId("office-map")).toBeInTheDocument();
+    expect(screen.getByTitle(/google maps/i)).toHaveAttribute(
+      "src",
+      expect.stringContaining("google.com/maps"),
+    );
     expect(screen.getByText(aboutMessages.storyKicker)).toBeInTheDocument();
     expect(screen.getByText(aboutMessages.storyLead)).toBeInTheDocument();
 

@@ -112,7 +112,7 @@ describe("ContactPageView Component", () => {
     expect(heading).toHaveAttribute("id", "contact-hero-heading");
     expect(heading).toHaveTextContent(`${contact.heroTitleLead} ${contact.heroTitleAccent}`);
     expect(screen.getByText(contact.heroKicker)).toBeInTheDocument();
-    expect(screen.getByText(contact.heroSubtitle)).toBeInTheDocument();
+    expect(screen.queryByText(contact.heroSubtitle)).not.toBeInTheDocument();
     expect(screen.getByTestId("mock-hero-media")).toBeInTheDocument();
   });
 

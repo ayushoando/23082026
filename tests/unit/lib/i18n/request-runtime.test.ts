@@ -1,14 +1,6 @@
 /**
- * Regression guard for plan 14's "English-only runtime" claim.
- *
- * `site/i18n/request.ts` must stay a *static* English-only config:
- *   - it loads `./messages/en.json` only (no other locale), and
- *   - it must NOT read a runtime locale from cookies / `next/headers`.
- *
- * Declares `defaultLocale` (en) so marketing HTML stays cache-friendly
- * (COST-S02). If anyone flips it to cookie-aware multi-locale, the cached-HTML
- * premise and the SEO/htmlLang honesty claim (02/14) both break — this test
- * catches that before it ships.
+ * Locale is prefixless (`localePrefix: never`). HTML language comes from the
+ * NEXT_LOCALE cookie via `site/i18n/request.ts`.
  */
 import { readFileSync, existsSync } from "node:fs";
 import path from "node:path";
@@ -22,23 +14,15 @@ const requestPath = path.join(siteRoot, "i18n", "request.ts");
 const rootShimPath = path.resolve(__dirname, "../../../../i18n", "request.ts");
 const source = readFileSync(requestPath, "utf8");
 
-describe("i18n runtime honesty (plan 14)", () => {
-  it("loads the English message file as the only locale", () => {
-    expect(source).toMatch(/"\.\/messages\/en\.json"/);
-    // No other locale file may be imported into the request config.
-    const otherLocale = /messages\/(?!en\.json)[a-z]+\.json"/.exec(source);
-    expect(otherLocale).toBeNull();
+describe("i18n runtime (cookie locale)", () => {
+  it("reads NEXT_LOCALE and can load Hindi messages", () => {
+    expect(source).toMatch(/NEXT_LOCALE/);
+    expect(source).toMatch(/from ["']next\/headers["']/);
+    expect(source).toMatch(/messages\/hi\.json/);
+    expect(source).toMatch(/messages\/en\.json/);
   });
 
-  it("does not read a runtime locale from cookies / next/headers", () => {
-    expect(source).not.toMatch(/NEXT_LOCALE/);
-    // The word may appear in a comment; forbid an actual import/call.
-    expect(source).not.toMatch(/from\s*["']next\/headers["']/);
-    expect(source).not.toMatch(/\bcookies\s*\(/);
-    expect(source).not.toMatch(/next-intl\/navigation/);
-  });
-
-  it("resolves to the configured English default locale", () => {
+  it("keeps English as the default locale", () => {
     expect(defaultLocale).toBe("en");
     expect(source).toMatch(/defaultLocale/);
   });

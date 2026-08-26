@@ -117,7 +117,7 @@ describe("CatalogMobile MOB-04", () => {
     expect(
       screen.getByRole("heading", {
         level: 2,
-        name: /Specs and photography/i,
+        name: /Open a/i,
       }),
     ).toBeInTheDocument();
   });

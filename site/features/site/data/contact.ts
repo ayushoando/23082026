@@ -84,6 +84,21 @@ export function toTelHref(phone: string) {
   return `tel:${cleaned}`;
 }
 
+export function officeMapsQuery(): string {
+  const { streetAddress, addressLocality, postalCode, addressRegion } = SITE_CONTACT.address;
+  return `${streetAddress}, ${addressLocality}, ${addressRegion} ${postalCode}`;
+}
+
+export function googleMapsEmbedSrc(): string {
+  const q = encodeURIComponent(officeMapsQuery());
+  return `https://www.google.com/maps?q=${q}&z=16&output=embed`;
+}
+
+export function googleMapsOpenHref(): string {
+  const q = encodeURIComponent(officeMapsQuery());
+  return `https://www.google.com/maps/search/?api=1&query=${q}`;
+}
+
 export function formatSitePostalAddress() {
   const { streetAddress, addressLocality, postalCode, addressRegion, addressCountry } =
     SITE_CONTACT.address;

@@ -1,6 +1,4 @@
 /* /showrooms — editorial hero, bronze punctuation, visit rows, dark CTA */
-@import "../shared/editorial-hero.css";
-
 .showrooms-content {
   display: grid;
   gap: clamp(2rem, 4vw, 3.5rem);

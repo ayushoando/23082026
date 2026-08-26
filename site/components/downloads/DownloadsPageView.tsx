@@ -243,9 +243,7 @@ export function DownloadsPageView({
                 <span className="text-accent-italic-on-dark">{heroTitleAccent}</span>
               </span>
             </h1>
-            <p data-downloads-hero-reveal className="downloads-hero__subtitle">
-              {heroSubtitle}
-            </p>
+
             <div data-downloads-hero-reveal className="downloads-hero__actions flex flex-wrap gap-3">
               <MarketingCtaLink
                 href="/contact"

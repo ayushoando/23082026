@@ -4,6 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { locales } from "@/i18n/config";
+import { namespacesForLocale } from "../../../scripts/check-i18n-key-parity.mjs";
 
 const siteRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -61,16 +62,6 @@ function subtree(
   }, messages);
 }
 
-function namespacesForLocale(
-  manifest: MarketingParityManifest,
-  locale: string,
-): string[] {
-  if (locale === "hi") return manifest.wave1Namespaces;
-  if (manifest.deferredLocales.includes(locale))
-    return manifest.allMarketingNamespaces;
-  return manifest.wave1Namespaces;
-}
-
 function loadLocaleMessages(locale: string): JsonObject {
   const file = path.join(messagesDir, `${locale}.json`);
   expect(fs.existsSync(file), `missing message file for ${locale}`).toBe(true);
@@ -105,7 +96,11 @@ describe("i18n/messages", () => {
 
     for (const locale of parityLocales) {
       const localeMessages = loadLocaleMessages(locale);
-      for (const namespace of namespacesForLocale(manifest, locale)) {
+      for (const namespace of namespacesForLocale(
+        manifest,
+        enMessages,
+        locale,
+      )) {
         const baseSubtree = subtree(enMessages, namespace);
         expect(baseSubtree, `en missing namespace ${namespace}`).toBeDefined();
 
@@ -150,29 +145,4 @@ describe("i18n/messages", () => {
     }
   });
 
-  it("ships 100% leaf-key parity in hi.json across all 23 top-level namespaces", () => {
-    const hiMessages = loadLocaleMessages("hi");
-    const enTopLevel = Object.keys(enMessages);
-
-    for (const namespace of enTopLevel) {
-      const baseSubtree = subtree(enMessages, namespace);
-      expect(baseSubtree, `en missing namespace ${namespace}`).toBeDefined();
-
-      const localeSubtree = subtree(hiMessages, namespace);
-      expect(localeSubtree, `hi missing namespace ${namespace}`).toBeDefined();
-
-      const baseKeys = new Set(
-        collectKeys(baseSubtree as JsonValue, namespace),
-      );
-      const localeKeys = new Set(
-        collectKeys(localeSubtree as JsonValue, namespace),
-      );
-
-      const missing = [...baseKeys].filter((key) => !localeKeys.has(key));
-      const extra = [...localeKeys].filter((key) => !baseKeys.has(key));
-
-      expect(missing, `hi/${namespace} missing leaf keys`).toEqual([]);
-      expect(extra, `hi/${namespace} extra leaf keys`).toEqual([]);
-    }
-  });
 });

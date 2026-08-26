@@ -1,7 +1,4 @@
 /* /planning — editorial hero still, bronze seam, tightened deliverables band */
-@import "../shared/editorial-hero.css";
-@import "../about/about-page.css";
-
 .planning-hero__img {
   object-position: 46% 36%;
 }

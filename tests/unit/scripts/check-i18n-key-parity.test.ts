@@ -8,6 +8,7 @@ import {
   auditKeyParity,
   collectKeys,
   extractPlaceholders,
+  namespacesForLocale,
   runCheck,
   subtree,
 } from "../../../scripts/check-i18n-key-parity.mjs";
@@ -58,6 +59,26 @@ describe("check-i18n-key-parity (name-mirror)", () => {
       ),
     ).toEqual(["{count}", "{format}", "{name}"]);
     expect(extractPlaceholders("Static text without placeholders")).toEqual([]);
+  });
+
+  it("namespacesForLocale uses full en.json keys for hi, not wave1Namespaces", () => {
+    const manifest = {
+      wave1Namespaces: ["home"],
+      allMarketingNamespaces: ["home", "about"],
+      deferredLocales: ["fr"],
+    };
+    const baseMessages = { home: {}, about: {}, workspace: {} };
+
+    expect(namespacesForLocale(manifest, baseMessages, "hi")).toEqual([
+      "home",
+      "about",
+      "workspace",
+    ]);
+    expect(namespacesForLocale(manifest, baseMessages, "fr")).toEqual([
+      "home",
+      "about",
+    ]);
+    expect(namespacesForLocale(manifest, baseMessages, "en")).toEqual(["home"]);
   });
 
   it("auditKeyParity detects interpolation placeholder mismatches", () => {

@@ -314,8 +314,8 @@ export function PlannerHeroDemo() {
               className="pl-selection"
             />
             <motion.g
-              animate={reduced ? undefined : { x: [0, 4, 0], y: [0, -3, 0] }}
-              transition={{ duration: 1.2, delay: 3.1, repeat: Infinity, repeatDelay: 2.5 }}
+              animate={reduced ? undefined : { x: [0, 2, 0], y: [0, -2, 0] }}
+              transition={{ duration: 2.4, delay: 3.1, repeat: Infinity, repeatDelay: 4 }}
             >
               <polygon points="178,198 178,210 190,204" className="pl-cursor" />
             </motion.g>

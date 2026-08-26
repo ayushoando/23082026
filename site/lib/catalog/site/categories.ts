@@ -22,12 +22,12 @@ export const Catalog_CATEGORY_LABELS: Record<RequestedCategoryId, string> = {
 };
 
 export const Catalog_CATEGORY_DESCRIPTIONS: Record<RequestedCategoryId, string> = {
-  seating: "Leather, mesh, training and cafe chair collections.",
-  workstations: "Height-adjustable, panel and desking workstation systems.",
-  tables: "Cabin, meeting, training and cafe table collections.",
-  storages: "Compactor, metal and prelam storage systems.",
-  "soft-seating": "Lounge and comfort-focused seating collections.",
-  education: "Classroom, auditorium, hostel and library furniture systems.",
+  seating: "Task, visitor, and cafe chairs.",
+  workstations: "Desks and panel systems.",
+  tables: "Meeting, cabin, and cafe tables.",
+  storages: "Cabinets, lockers, and compactors.",
+  "soft-seating": "Lounge seating and sofas.",
+  education: "Classroom, library, and hostel furniture.",
 };
 
 type CanonicalSubcategoryDefinition = {

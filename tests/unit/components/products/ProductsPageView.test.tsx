@@ -139,16 +139,16 @@ describe("ProductsPageView — behavior", () => {
     expect(heading.textContent).toContain(products.headlineLead);
     expect(heading.textContent).toContain(products.headlineAccent);
 
-    expect(screen.getByText(products.heroSubtitle)).toHaveClass("products-hero__subtitle");
+    expect(screen.queryByText(products.heroSubtitle)).not.toBeInTheDocument();
 
     const primaryCta = screen.getByRole("link", { name: products.heroPrimaryCta });
     expect(primaryCta).toHaveAttribute("href", "#products-categories");
     expect(primaryCta).toHaveAttribute("data-variant", "primary");
     expect(primaryCta).toHaveAttribute("data-surface", "products-hero");
 
-    const secondaryCta = screen.getByRole("link", { name: products.heroSecondaryCta });
-    expect(secondaryCta).toHaveAttribute("href", "/contact");
-    expect(secondaryCta).toHaveAttribute("data-variant", "outline-light");
+    expect(
+      screen.queryByRole("link", { name: products.heroSecondaryCta }),
+    ).not.toBeInTheDocument();
 
     expect(screen.queryByText("non-existent-cta-xyz")).not.toBeInTheDocument();
   });
@@ -159,15 +159,14 @@ describe("ProductsPageView — behavior", () => {
     const fold = screen.getByTestId("products-intro");
     expect(fold).toHaveClass("products-strategy");
 
-    expect(screen.getByText(products.introKicker)).toHaveClass("home-kicker");
+    expect(screen.queryByText(products.introKicker)).not.toBeInTheDocument();
 
     const strategyHeading = screen.getByRole("heading", { level: 2, name: new RegExp(products.introTitleLead.slice(0, 12), "i") });
     expect(strategyHeading.textContent).toContain(products.introTitleLead);
     expect(strategyHeading.textContent).toContain(products.introTitleAccent);
 
     expect(screen.getByText(products.introDescription)).toHaveClass("page-copy");
-    expect(screen.getByText(products.craftQuote)).toHaveClass("products-strategy__quote-text");
-    expect(screen.getByText(products.craftAttribution)).toHaveClass("products-strategy__quote-source");
+    expect(screen.queryByText(products.craftQuote)).not.toBeInTheDocument();
 
     // Source-of-truth iteration: every bullet renders with correct class and mark
     expect(products.featureBullets.length).toBeGreaterThan(0);
@@ -182,7 +181,7 @@ describe("ProductsPageView — behavior", () => {
       expect(mark.textContent).toBe("+");
     });
 
-    expect(screen.queryByText("Specs and photography")).not.toBeNull();
+    expect(screen.queryByText("Open a")).not.toBeNull();
   });
 
   it("renders category tiles iterating categories source-of-truth with computed href, tile count, and meta", () => {
@@ -235,10 +234,6 @@ describe("ProductsPageView — behavior", () => {
       expect(tile).not.toBeNull();
       expect(tile).toHaveAttribute("href", category.href);
     });
-
-    // Route chips also iterate categories
-    const chips = document.querySelectorAll(".products-strategy__chips a.btn-outline");
-    expect(chips.length).toBe(expandedCategories.length);
   });
 
   it("renders pillars iterating pillars source-of-truth with icon mapping, heading ids, and card classes", () => {

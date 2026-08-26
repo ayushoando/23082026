@@ -17,14 +17,14 @@ test.describe("site navigation smoke", () => {
     await expect(secondDot).toHaveAttribute("aria-current", "true", { timeout: 10_000 });
   });
 
-  test("homepage hero exposes products CTA and trusted-by glass proof", async ({
+  test("homepage hero exposes trusted-by glass proof", async ({
     page,
   }) => {
     await page.goto("/");
 
-    const browseProducts = page.getByRole("link", { name: /Browse products/i }).first();
-    await expect(browseProducts).toBeVisible();
-    await expect(browseProducts).toHaveAttribute("href", /\/products\/?/);
+    await expect(
+      page.getByRole("link", { name: /Browse products/i }),
+    ).toHaveCount(0);
 
     const glassProof = page.getByRole("link", { name: /View clients/i });
     await expect(glassProof).toBeVisible();
@@ -84,7 +84,7 @@ test.describe("site navigation smoke", () => {
     }
     await page.goto("/products", { waitUntil: "domcontentloaded", timeout: 60_000 });
 
-    await expect(page.getByRole("heading", { level: 1 })).toContainText(/Built to\s*Perform/i);
+    await expect(page.getByRole("heading", { level: 1 })).toContainText(/Office\s*furniture/i);
     await expect(
       page.getByRole("heading", { name: /Specification-led guidance/i }),
     ).toBeVisible();
@@ -127,7 +127,7 @@ test.describe("site navigation smoke", () => {
     await megaMenu.getByRole("link", { name: "All Products >" }).click();
 
     await expect(page).toHaveURL(/\/products\/?$/);
-    await expect(page.getByRole("heading", { level: 1 })).toContainText(/Built to\s*Perform/i);
+    await expect(page.getByRole("heading", { level: 1 })).toContainText(/Office\s*furniture/i);
   });
 
   test("mobile drawer opens and All Products closes drawer on /products", async ({ page }) => {

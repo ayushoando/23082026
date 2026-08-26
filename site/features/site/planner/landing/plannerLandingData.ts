@@ -53,10 +53,10 @@ export const PLANNER_LANDING_FEATURE_SLUGS = [
 ] as const;
 
 export const PLANNER_LANDING_FEATURE_CARDS = [
-  { slug: "measure", title: "Room sizes" },
-  { slug: "catalog", title: "Catalog drop-in" },
-  { slug: "ai-assist", title: "AI assist" },
-  { slug: "export", title: "PDF export" },
+  { slug: "measure", title: "Room sizes", tagline: "Draw walls to millimetres." },
+  { slug: "catalog", title: "Catalog", tagline: "Drop in real furniture." },
+  { slug: "ai-assist", title: "AI assist", tagline: "A first layout when you are stuck." },
+  { slug: "export", title: "PDF", tagline: "Export the plan." },
 ] as const;
 
 export const PLANNER_LANDING_FEATURES = PLANNER_LANDING_FEATURE_CARDS.map((card) => {
@@ -66,7 +66,7 @@ export const PLANNER_LANDING_FEATURES = PLANNER_LANDING_FEATURE_CARDS.map((card)
     slug: card.slug,
     href: `/planner/features/${page.slug}/`,
     title: card.title,
-    tagline: page.tagline,
+    tagline: card.tagline,
   };
 });
 

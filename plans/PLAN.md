@@ -1,6 +1,6 @@
 # Plan — Marketing i18n parity hardening
 
-**Status:** ready-for-agent  
+**Status:** done (2026-08-25, this session)  
 **Scope:** Uncommitted marketing i18n work + three medium findings from code review (2026-08-22).  
 **Truth:** Live code + `pnpm run gate:fast` > this file.
 
@@ -128,12 +128,12 @@ Ship the current Hindi / marketing i18n pipeline safely: one parity contract, co
 
 ## Done checklist
 
-- [ ] Tool pages use standard JSON-LD injection
-- [ ] One `namespacesForLocale` (or equivalent) shared by script + tests
-- [ ] `sync-hi-wave1` dry-run by default; `--write` documented
-- [ ] `HI_OVERRIDES` matches live message shape
-- [ ] `pnpm run check:layout`
-- [ ] `pnpm run gate:fast`
+- [x] Tool pages use standard JSON-LD injection
+- [x] One `namespacesForLocale` (or equivalent) shared by script + tests
+- [x] `sync-hi-wave1` dry-run by default; `--write` documented
+- [x] `HI_OVERRIDES` matches live message shape
+- [x] `pnpm run check:layout`
+- [x] `pnpm run gate:fast`
 
 ---
 

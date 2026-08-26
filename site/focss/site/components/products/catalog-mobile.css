@@ -6,6 +6,9 @@
 }
 
 @media (width < theme(--breakpoint-md)) {
+  .catalog-category-hero__chips {
+    padding-bottom: 3.25rem;
+  }
   /* Keep mobile on the same token ladder (no one-off rem values). */
   .home-section.section-y {
     padding-block: var(--section-space-md);

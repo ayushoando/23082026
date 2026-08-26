@@ -1,6 +1,11 @@
 /* /planner/ marketing — mobile touch UX and layout refinements */
 
 @media (width < theme(--breakpoint-md)) {
+  .planner-landing-hero__signin,
+  .planner-landing-features-link {
+    display: none;
+  }
+
   .planner-landing-features {
     grid-template-columns: minmax(0, 1fr);
   }

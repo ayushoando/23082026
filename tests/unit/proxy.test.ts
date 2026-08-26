@@ -292,6 +292,9 @@ describe('proxy.ts', () => {
       expect(response.headers.get('X-Content-Type-Options')).toBe('nosniff');
       expect(response.headers.get('X-Frame-Options')).toBe('SAMEORIGIN');
       expect(response.headers.get('Content-Security-Policy')).toContain("default-src 'self'");
+      expect(response.headers.get('Content-Security-Policy')).toContain(
+        "frame-src 'self' https://www.google.com https://maps.google.com",
+      );
     });
 
     it('redirects unauthenticated /admin to /access when DEV_AUTH_BYPASS is off', async () => {

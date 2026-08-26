@@ -145,7 +145,7 @@ describe("app/(site)/clients/page.tsx — behavior", () => {
 
     // hero subtitle is template-filled with clients value
     const heroSubtitle = CLIENTS_PAGE_COPY.heroSubtitleTemplate.replace("{clients}", "120+");
-    expect(screen.getByText(heroSubtitle)).toBeInTheDocument();
+    expect(screen.queryByText(heroSubtitle)).not.toBeInTheDocument();
 
     expect(screen.getByTestId("kpi-monitor")).toBeInTheDocument();
     expect(screen.getByTestId("kpi-monitor")).toHaveAttribute("data-page", "clients");
@@ -162,38 +162,8 @@ describe("app/(site)/clients/page.tsx — behavior", () => {
     const pageElement = await ClientsPage();
     const { container } = render(pageElement);
 
-    const proofStrip = container.querySelector(".clients-proof-strip") as HTMLElement | null;
-    expect(proofStrip).not.toBeNull();
-    expect(proofStrip).toHaveAttribute("aria-label", "Delivery proof metrics");
-    expect(proofStrip).toHaveClass("clients-proof-strip");
-
-    // iterate proofItems source-of-truth
-    const expectedItems = [
-      { id: "client-organisations", label: "Client organisations", value: "120+" },
-      { id: "projects-delivered", label: "Projects delivered", value: "500+" },
-      { id: "sectors-served", label: "Sectors served", value: "10+" },
-    ] as const;
-
-    for (const item of expectedItems) {
-      const label = screen.getByText(item.label);
-      expect(label).toBeInTheDocument();
-      expect(label).toHaveClass("clients-proof-strip__label");
-      const value = screen.getByTestId(`kpi-${item.id}-clients`);
-      expect(value).toBeInTheDocument();
-      expect(value).toHaveClass("clients-proof-strip__value");
-      expect(value).toHaveTextContent(item.value);
-      const dt = label.closest("div")?.querySelector("dt");
-      expect(dt).not.toBeNull();
-    }
-
-    // asOf uses formatKpiAsOf → "As of 26 Jun 2026" (en-IN, Asia/Kolkata)
-    const asOf = screen.getByTestId("kpi-as-of-clients");
-    expect(asOf).toBeInTheDocument();
-    expect(asOf).toHaveClass("clients-proof-strip__as-of");
-    expect(asOf.textContent).toMatch(/As of 26 Jun 2026/);
-    expect(asOf).not.toHaveTextContent("2026-06-26");
-
-    expect(screen.queryByTestId("kpi-unknown-clients")).not.toBeInTheDocument();
+    expect(container.querySelector(".clients-proof-strip")).toBeNull();
+    expect(screen.queryByTestId("kpi-client-organisations-clients")).not.toBeInTheDocument();
   });
 
   it("iterates CLIENTS_WORK source-of-truth into case studies with computed ids, mosaics, and alt", async () => {

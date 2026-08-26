@@ -107,9 +107,9 @@ describe('HomepageHero Component', () => {
 
     expect(screen.getByText(hero.kicker)).toBeInTheDocument();
 
-    const primaryBtn = screen.getByRole('link', { name: hero.secondaryCta.label });
-    expect(primaryBtn).toHaveAttribute('href', hero.secondaryCta.href);
-
+    expect(
+      screen.queryByRole('link', { name: hero.secondaryCta.label }),
+    ).not.toBeInTheDocument();
     expect(screen.queryByRole('link', { name: hero.primaryCta.label })).not.toBeInTheDocument();
 
     expect(screen.getByText(hero.glassProof.badge)).toBeInTheDocument();
@@ -122,13 +122,15 @@ describe('HomepageHero Component', () => {
     ).toBeInTheDocument();
   });
 
-  it('tracks hero CTAs via links', () => {
+  it('tracks hero proof via the glass link', () => {
     render(<HomepageHero />);
 
-    const browseProducts = screen.getByRole('link', {
-      name: hero.secondaryCta.label,
+    const proof = screen.getByRole('link', {
+      name: new RegExp(hero.glassProof.cta, 'i'),
     });
-    expect(browseProducts).toHaveAttribute('href', hero.secondaryCta.href);
-    expect(screen.queryByRole('link', { name: hero.primaryCta.label })).not.toBeInTheDocument();
+    expect(proof).toHaveAttribute('href', hero.glassProof.href);
+    expect(
+      screen.queryByRole('link', { name: hero.secondaryCta.label }),
+    ).not.toBeInTheDocument();
   });
 });

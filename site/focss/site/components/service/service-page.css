@@ -1,7 +1,4 @@
 /* /service — editorial hero, bronze punctuation, pillar/channel rows, dark CTA */
-@import "../shared/editorial-hero.css";
-@import "../about/about-page.css";
-
 /* Craft strip hugs hero — avoid dead air before bronze punctuation (oando-premium-motion) */
 .service-hero {
   padding-block-end: clamp(0.75rem, 1.8vw, 1.15rem);

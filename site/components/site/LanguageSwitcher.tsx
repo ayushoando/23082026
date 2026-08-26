@@ -28,8 +28,7 @@ export function LanguageSwitcher({
   className,
 }: LanguageSwitcherProps) {
   const reactId = useId();
-  const selectId =
-    variant === "header" ? `locale-switcher-header-${reactId}` : "locale-switcher";
+  const selectId = `locale-switcher-${variant}-${reactId}`;
   const [currentLocale, setCurrentLocale] = useState("en");
 
   useEffect(() => {

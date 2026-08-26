@@ -1,6 +1,4 @@
 /* /sustainability — editorial hero, bronze punctuation, pillar rows */
-@import "../shared/editorial-hero.css";
-
 .sustainability-pillars {
   display: grid;
   gap: 0;

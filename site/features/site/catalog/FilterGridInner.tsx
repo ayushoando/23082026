@@ -131,11 +131,13 @@ export function AdvancedFilterGridInner({
 
   const { data: filterQueryData, isFetching, isPending, error } = useQuery({
     queryKey: ["category-products", categoryId, apiQueryString],
-    queryFn: async (): Promise<FilterResponse> => {
+    enabled: hasFilterQuery,
+    queryFn: async ({ signal }): Promise<FilterResponse> => {
       const response = await fetch(`/api/products/filter/?${apiQueryString}`, {
         method: "GET",
         headers: { Accept: "application/json" },
         cache: "no-store",
+        signal,
       });
       if (!response.ok) {throw new Error(`Filter request failed: ${response.status}`);}
       return (await response.json()) as FilterResponse;

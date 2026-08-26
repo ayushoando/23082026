@@ -78,7 +78,7 @@ test.describe("Planner guest workspace — plan 06 UI bar", () => {
 test("planner landing exceeds generic benchmark proof points", async ({ page }) => {
   await page.goto("/planner/", { waitUntil: "domcontentloaded", timeout: 60_000 });
   await expect(page.getByRole("heading", { level: 1 })).toContainText(/Plan your office/i);
-  await expect(page.locator(".planner-landing-hero-proof--row")).toContainText(/Import sketch/i);
+  await expect(page.getByRole("link", { name: /Start free/i }).first()).toBeVisible();
 });
 
 test.describe("a11y — key flows", () => {

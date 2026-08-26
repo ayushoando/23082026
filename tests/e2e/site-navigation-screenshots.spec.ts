@@ -39,7 +39,7 @@ for (const [viewportKey, viewport] of Object.entries(VIEWPORTS) as [
 
     test("02 products catalog", async ({ page }) => {
       await page.goto("/products");
-      await page.getByRole("heading", { level: 1, name: /Built to\s*Perform/i }).waitFor();
+      await page.getByRole("heading", { level: 1, name: /Office\s*furniture/i }).waitFor();
       const outPath = shotPath(viewportKey, "02-products.png");
       await page.screenshot({ path: outPath, fullPage: true });
       expect(fs.existsSync(outPath)).toBe(true);
@@ -120,7 +120,7 @@ for (const [viewportKey, viewport] of Object.entries(VIEWPORTS) as [
         const mobileNav = page.getByRole("navigation", { name: "Mobile primary navigation" });
         await mobileNav.getByRole("button", { name: "Products" }).click();
         await mobileNav.getByRole("link", { name: "All Products", exact: true }).click();
-        await page.getByRole("heading", { level: 1, name: /Built to\s*Perform/i }).waitFor();
+        await page.getByRole("heading", { level: 1, name: /Office\s*furniture/i }).waitFor();
         const outPath = shotPath(viewportKey, "05-products-via-mobile-nav.png");
         await page.screenshot({
           path: outPath,
@@ -149,7 +149,7 @@ for (const [viewportKey, viewport] of Object.entries(VIEWPORTS) as [
         const megaMenu = page.locator("#products-mega-menu");
         await megaMenu.waitFor({ state: "visible" });
         await megaMenu.getByRole("link", { name: "All Products >" }).click();
-        await page.getByRole("heading", { level: 1, name: /Built to\s*Perform/i }).waitFor();
+        await page.getByRole("heading", { level: 1, name: /Office\s*furniture/i }).waitFor();
         const outPath = shotPath(viewportKey, "05-products-via-mega-menu.png");
         await page.screenshot({
           path: outPath,

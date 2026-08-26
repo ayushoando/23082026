@@ -26,7 +26,7 @@ test.describe("site assistant shell", () => {
 
   test("products catalog page loads category grid links", async ({ page }) => {
     await page.goto("/products");
-    await page.getByRole("heading", { level: 1, name: /Built to\s*Perform/i }).waitFor();
+    await page.getByRole("heading", { level: 1, name: /Office\s*furniture/i }).waitFor();
     await expect(page.locator('a[href^="/products/"]').first()).toBeVisible({ timeout: 20_000 });
   });
 });

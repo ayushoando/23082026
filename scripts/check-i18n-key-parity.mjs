@@ -110,6 +110,31 @@ export function auditKeyParity({
   return failures;
 }
 
+/**
+ * Namespaces to audit for a locale.
+ *
+ * - `hi` parity bar = every top-level key in `en.json`.
+ * - deferred locales = `manifest.allMarketingNamespaces`.
+ * - otherwise = `manifest.wave1Namespaces` (sync-hi-wave1 write scope, not a
+ *   weaker Hindi parity bar).
+ *
+ * @param {{
+ *   deferredLocales?: string[];
+ *   allMarketingNamespaces?: string[];
+ *   wave1Namespaces?: string[];
+ * }} manifest
+ * @param {Record<string, unknown>} baseMessages
+ * @param {string} locale
+ * @returns {string[]}
+ */
+export function namespacesForLocale(manifest, baseMessages, locale) {
+  if (locale === "hi") return Object.keys(baseMessages);
+  if (manifest.deferredLocales?.includes(locale)) {
+    return manifest.allMarketingNamespaces ?? [];
+  }
+  return manifest.wave1Namespaces ?? [];
+}
+
 export function runCheck({
   manifestPath = manifestFile,
   messagesDirectory = messagesDir,
@@ -130,16 +155,9 @@ export function runCheck({
     manifest.parityLocales ??
     manifest.wave1Locales.filter((l) => l !== baseLocale);
 
-  function namespacesForLocale(locale) {
-    if (locale === "hi") return Object.keys(baseMessages);
-    if (manifest.deferredLocales?.includes(locale))
-      return manifest.allMarketingNamespaces;
-    return manifest.wave1Namespaces;
-  }
-
   for (const locale of parityLocales) {
     const localeMessages = loadLocale(locale, messagesDirectory);
-    const namespaces = namespacesForLocale(locale);
+    const namespaces = namespacesForLocale(manifest, baseMessages, locale);
     const failures = auditKeyParity({
       baseLocale,
       baseMessages,

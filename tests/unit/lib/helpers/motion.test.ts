@@ -16,7 +16,7 @@ vi.mock("framer-motion", () => ({
 
 describe("motion helpers", () => {
   it("should have correct constants defined", () => {
-    expect(MOTION_EASE).toEqual([0.22, 1, 0.36, 1]);
+    expect(MOTION_EASE).toEqual([0.16, 1, 0.3, 1]);
     expect(MOTION_TOKENS.fast).toBe(0.26);
     expect(MOTION_TOKENS.slow).toBe(0.72);
   });
@@ -68,12 +68,15 @@ describe("motion helpers", () => {
 
   describe("variants", () => {
     it("should define staggerContainer", () => {
-      expect(staggerContainer.hidden).toEqual({ opacity: 0 });
+      expect(staggerContainer.hidden).toEqual({});
       expect(staggerContainer.visible).toBeDefined();
     });
 
     it("should define staggerItem", () => {
-      expect(staggerItem.hidden).toEqual({ opacity: 0, y: MOTION_TOKENS.distanceMd });
+      expect(staggerItem.hidden).toEqual({
+        opacity: 1,
+        y: MOTION_TOKENS.distanceMd,
+      });
     });
   });
 });

@@ -122,7 +122,7 @@ async function assertPlannerLanding(page: Page, viewport: (typeof VIEWPORTS)[num
   expect(scroll.scrollHeight).toBeGreaterThan(scroll.clientHeight + 80);
   expect(scroll.bodyOverflow).not.toBe("hidden");
 
-  await expect(page.getByRole("heading", { name: /Built for/i })).toBeVisible({
+  await expect(page.getByRole("heading", { name: /What it/i })).toBeVisible({
     timeout: 15_000,
   });
 

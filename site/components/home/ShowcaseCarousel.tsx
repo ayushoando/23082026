@@ -11,11 +11,8 @@ import { CaretLeft as ChevronLeft, CaretRight as ChevronRight } from "@phosphor-
 import { PartnershipPanel } from "@/components/home/PartnershipBanner";
 import {
   gsapReducedMotion,
-  GSAP_EASE_OUT,
-  GSAP_SCROLL_REVEAL,
   registerGsapPlugins,
 } from "@/lib/helpers/gsapMotion";
-import { MOTION_TOKENS } from "@/lib/helpers/motion";
 
 registerGsapPlugins();
 
@@ -104,14 +101,13 @@ export function ShowcaseCarousel({
         const headerEls = headerRef.current?.querySelectorAll("[data-showcase-reveal]");
         if (headerEls?.length) {
           gsap.from(headerEls, {
-            y: GSAP_SCROLL_REVEAL.y,
-            opacity: GSAP_SCROLL_REVEAL.opacity,
-            duration: GSAP_SCROLL_REVEAL.duration,
-            stagger: GSAP_SCROLL_REVEAL.stagger,
-            ease: GSAP_EASE_OUT,
+            y: 18,
+            duration: 0.9,
+            stagger: 0.08,
+            ease: "power4.out",
             scrollTrigger: {
               trigger: headerRef.current,
-              start: "top 82%",
+              start: "top 92%",
               once: true,
             },
           });
@@ -120,14 +116,13 @@ export function ShowcaseCarousel({
         const cards = trackRef.current?.querySelectorAll("[data-showcase-card]");
         if (cards?.length) {
           gsap.from(cards, {
-            y: 40,
-            opacity: 0,
-            duration: MOTION_TOKENS.slow,
-            stagger: 0.12,
-            ease: GSAP_EASE_OUT,
+            y: 20,
+            duration: 0.95,
+            stagger: 0.09,
+            ease: "power4.out",
             scrollTrigger: {
               trigger: trackRef.current,
-              start: "top 85%",
+              start: "top 92%",
               once: true,
             },
           });
@@ -233,7 +228,7 @@ export function ShowcaseCarousel({
                       fill
                       quality={85}
                       sizes="(max-width: 768px) 88vw, (max-width: 1280px) 42vw, 28rem"
-                      className="home-showcase-card__media object-cover transition-transform duration-1000 group-hover:scale-105"
+                      className="home-showcase-card__media object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.03]"
                     />
                     <div className="home-showcase-overlay" aria-hidden="true" />
                     <div className="home-showcase-card__caption">
@@ -247,7 +242,7 @@ export function ShowcaseCarousel({
           </div>
         </div>
 
-        <div className="mt-8 flex items-center justify-between gap-4">
+        <div className="home-showcase-pager">
           {items.length > 5 ? (
             <p
               className={`home-showcase-mobile-count ${
@@ -257,7 +252,7 @@ export function ShowcaseCarousel({
               {selectedIndex + 1} / {items.length}
             </p>
           ) : (
-            <div className="flex gap-2">
+            <div className="flex items-center justify-center">
               {items.map((_, index) => (
                 <button
                   key={index}

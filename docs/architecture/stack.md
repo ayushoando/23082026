@@ -216,6 +216,7 @@ Do not claim DB release authority without a live publish path and proof.
 | Framework | `next-intl` **^4.13.6** — marketing site only |
 | Config | `site/i18n/{config,routing,request}.ts`; locales `en`, `hi` only (default `en`). Hindi is machine-generated. |
 | Messages | `site/i18n/messages/{en,hi}.json` |
+| Parity | `hi` must match **every** top-level namespace in `en.json`. `wave1Namespaces` in `site/i18n/marketing-parity-manifest.json` is the **sync-hi-wave1** write scope, not a weaker parity bar. |
 | **Runtime** | `request.ts` **always loads English** (`messages/en.json` + `defaultLocale`) for COST-S02 cache — LanguageSwitcher cookie does **not** switch HTML today |
 | Plugin | `createNextIntlPlugin("./i18n/request.ts")` in `site/next.config.js` |
 | Root shim | `i18n/request.ts` re-exports `site/i18n/request.ts`. Required: next-intl validates against `process.cwd()` (often the monorepo root for `next build site`), while webpack’s app context is `site/` — do **not** pass `./site/i18n/...` or the prefix doubles under `site/` |

@@ -1,7 +1,5 @@
 /* /downloads — Resource Desk rows + process (hero lives in editorial-hero.css) */
 
-@import "../shared/editorial-hero.css";
-
 .downloads-resources {
   display: grid;
   gap: 0;

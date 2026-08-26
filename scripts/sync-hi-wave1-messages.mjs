@@ -1,7 +1,19 @@
 #!/usr/bin/env node
 /**
- * Synchronize Wave 1 marketing namespaces from en.json into hi.json (Phase 4b scaffold).
- * Preserves existing Hindi translations and applies explicit overrides.
+ * Synchronize Wave 1 marketing namespaces from en.json into hi.json.
+ *
+ * When to run: new keys were added in `en.json` and `hi.json` needs those
+ * keys scaffolded (English fallback) so parity stays green.
+ *
+ * When NOT to run with `--write`: after hand-edited Hindi campaign copy.
+ * `HI_OVERRIDES` re-applies on write and can clobber that copy.
+ *
+ * Direct CLI default is dry-run (`write: false`). Pass `--write` to persist
+ * `site/i18n/messages/hi.json`. Logs "dry run" vs "wrote hi.json".
+ *
+ * Merge order (do not change): en scaffold → preserve existing hi → apply
+ * `HI_OVERRIDES`. `manifest.wave1Namespaces` is this script's write scope,
+ * not the Hindi key-parity bar (parity is every top-level key in en.json).
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -25,6 +37,7 @@ const manifest = readJson(
   path.join(siteRoot, "i18n", "marketing-parity-manifest.json"),
 );
 
+/** Hindi campaign overrides. Every path must exist in current `en.json`. */
 export const HI_OVERRIDES = {
   home: {
     title: "ओआंडो प्लेटफॉर्म",
@@ -127,8 +140,10 @@ function isDirectRun() {
 }
 
 if (isDirectRun()) {
-  const { namespaces } = syncHiWave1Messages();
+  const write = process.argv.includes("--write");
+  const { namespaces } = syncHiWave1Messages({ write });
+  const scope = `wave1 namespaces: ${namespaces.join(", ")}`;
   process.stdout.write(
-    `Updated hi.json wave1 namespaces: ${namespaces.join(", ")}\n`,
+    write ? `Wrote hi.json ${scope}\n` : `Dry run (pass --write to update hi.json) ${scope}\n`,
   );
 }

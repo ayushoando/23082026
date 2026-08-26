@@ -8,35 +8,12 @@ import { render, screen } from "@testing-library/react";
 import Home, { metadata } from "@/app/(site)/page";
 import { HomeMarketingLayout } from "@/components/home/layout";
 
-vi.mock("@/features/crm/businessStats", () => ({
-  getBusinessStats: vi.fn().mockResolvedValue({
-    stats: {
-      activeUsers: 10,
-      generatedPlans: 20,
-      configuredProducts: 30,
-    },
-  }),
-}));
-
 vi.mock("@/components/home/HomepageHero", () => ({
   HomepageHero: () => <div data-testid="HomepageHero" />,
 }));
 
 vi.mock("@/components/home/Collections", () => ({
   Collections: () => <div data-testid="Collections" />,
-}));
-
-vi.mock("@/components/home/TrustStrip", () => ({
-  TrustStrip: ({
-    stats,
-  }: {
-    stats: { activeUsers: number; generatedPlans: number; configuredProducts: number };
-  }) => (
-    <div
-      data-testid="TrustStrip"
-      data-active-users={String(stats.activeUsers)}
-    />
-  ),
 }));
 
 vi.mock("@/components/home/HomeDeferredSections", () => ({
@@ -106,10 +83,7 @@ describe("app/(site)/page.tsx", () => {
     expect(screen.getByTestId("home-marketing-layout")).toBeInTheDocument();
     expect(screen.getByTestId("HomepageHero")).toBeInTheDocument();
     expect(screen.getByTestId("Collections")).toBeInTheDocument();
-    expect(screen.getByTestId("TrustStrip")).toHaveAttribute(
-      "data-active-users",
-      "10",
-    );
+    expect(screen.queryByTestId("TrustStrip")).not.toBeInTheDocument();
     expect(screen.getByTestId("InteractiveTools")).toBeInTheDocument();
     expect(screen.getByTestId("WhyChooseUs")).toBeInTheDocument();
     expect(screen.getByTestId("ShowcaseCarousel")).toBeInTheDocument();

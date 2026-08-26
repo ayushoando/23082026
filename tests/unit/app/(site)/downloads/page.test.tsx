@@ -1,3 +1,4 @@
+import "@/tests/helpers/nextIntlServerEnMock";
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import Page from "@/app/(site)/downloads/page";
@@ -130,8 +131,8 @@ describe("app/(site)/downloads/page.tsx", () => {
     expect(DOWNLOADS_PAGE_METADATA.description).toBe(DOWNLOADS_PAGE_COPY.metadataDescription);
   });
 
-  it("renders marketing layout with hero labelled region and editorial copy", () => {
-    const { container } = render(<Page />);
+  it("renders marketing layout with hero labelled region and editorial copy", async () => {
+    const { container } = render(await Page());
 
     expect(screen.getByTestId("home-marketing-layout")).toBeInTheDocument();
 
@@ -144,7 +145,7 @@ describe("app/(site)/downloads/page.tsx", () => {
     expect(h1).toHaveTextContent(DOWNLOADS_PAGE_COPY.heroTitleLead);
     expect(h1).toHaveTextContent(DOWNLOADS_PAGE_COPY.heroTitleAccent);
     expect(screen.getByText(DOWNLOADS_PAGE_COPY.heroKicker)).toBeInTheDocument();
-    expect(screen.getByText(DOWNLOADS_PAGE_COPY.heroSubtitle)).toBeInTheDocument();
+    expect(screen.queryByText(DOWNLOADS_PAGE_COPY.heroSubtitle)).not.toBeInTheDocument();
 
     expect(screen.getByTestId("mock-editorial-hero-media")).toBeInTheDocument();
     expect(screen.getByTestId("mock-editorial-hero-media")).toHaveAttribute(
@@ -168,8 +169,8 @@ describe("app/(site)/downloads/page.tsx", () => {
     expect(ldScripts.length).toBeGreaterThanOrEqual(2);
   });
 
-  it("iterates resource categories and process steps from source-of-truth", () => {
-    const { container } = render(<Page />);
+  it("iterates resource categories and process steps from source-of-truth", async () => {
+    const { container } = render(await Page());
 
     // Resources section (resourceTitle also appears in urgent card; scope to resources section)
     const resourcesSection = screen.getByTestId("downloads-resources");
@@ -202,8 +203,8 @@ describe("app/(site)/downloads/page.tsx", () => {
     expect(screen.getByText("03")).toBeInTheDocument();
   });
 
-  it("renders note, urgent action card with computed hrefs, CTA band, and contact teaser", () => {
-    render(<Page />);
+  it("renders note, urgent action card with computed hrefs, CTA band, and contact teaser", async () => {
+    render(await Page());
 
     // Note block
     expect(screen.getByTestId("downloads-note")).toBeInTheDocument();

@@ -10,16 +10,18 @@ import {
 } from "@/features/site/data/routeCopy";
 import { PLANNING_PAGE_METADATA } from "@/features/site/data/routeMetadata";
 import { buildBreadcrumbJsonLd, buildPageJsonLd } from "@/features/site/data/seo";
+import { withLocaleCopy } from "@/lib/i18n/withLocaleCopy";
 import { SITE_URL } from "@/lib/siteUrl";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
 export const metadata: Metadata = PLANNING_PAGE_METADATA;
 
-export default function PlanningPage() {
+export default async function PlanningPage() {
+  const copy = await withLocaleCopy({ ...PLANNING_PAGE_COPY }, "planning");
   const planningJsonLd = buildPageJsonLd(SITE_URL, {
     path: "/planning",
-    title: `${PLANNING_PAGE_COPY.heroTitle} | One&Only`,
-    description: PLANNING_PAGE_COPY.heroSubtitle,
+    title: `${copy.heroTitle} | One&Only`,
+    description: copy.heroSubtitle,
     pageType: "WebPage",
   });
   const breadcrumbJsonLd = buildBreadcrumbJsonLd(SITE_URL, [
@@ -38,26 +40,26 @@ export default function PlanningPage() {
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(breadcrumbJsonLd) }}
       />
       <PlanningPageView
-        heroKicker={PLANNING_PAGE_COPY.heroKicker}
-        heroTitleLead={PLANNING_PAGE_COPY.heroTitleLead}
-        heroTitleAccent={PLANNING_PAGE_COPY.heroTitleAccent}
-        heroSubtitle={PLANNING_PAGE_COPY.heroSubtitle}
-        craftQuote={PLANNING_PAGE_COPY.craftQuote}
-        craftAttribution={PLANNING_PAGE_COPY.craftAttribution}
-        primaryCta={PLANNING_PAGE_COPY.primaryCta}
-        plannerCta={PLANNING_PAGE_COPY.plannerCta}
-        tertiaryCta={PLANNING_PAGE_COPY.tertiaryCta}
-        workflowKicker={PLANNING_PAGE_COPY.workflowKicker}
-        workflowTitle={PLANNING_PAGE_COPY.workflowTitle}
+        heroKicker={copy.heroKicker}
+        heroTitleLead={copy.heroTitleLead}
+        heroTitleAccent={copy.heroTitleAccent}
+        heroSubtitle={copy.heroSubtitle}
+        craftQuote={copy.craftQuote}
+        craftAttribution={copy.craftAttribution}
+        primaryCta={copy.primaryCta}
+        plannerCta={copy.plannerCta}
+        tertiaryCta={copy.tertiaryCta}
+        workflowKicker={copy.workflowKicker}
+        workflowTitle={copy.workflowTitle}
         steps={PLANNING_PAGE_STEPS}
-        deliverablesKicker={PLANNING_PAGE_COPY.deliverablesKicker}
-        deliverablesTitle={PLANNING_PAGE_COPY.deliverablesTitle}
+        deliverablesKicker={copy.deliverablesKicker}
+        deliverablesTitle={copy.deliverablesTitle}
         deliverables={PLANNING_PAGE_DELIVERABLES}
-        bestForKicker={PLANNING_PAGE_COPY.bestForKicker}
-        bestForDescription={PLANNING_PAGE_COPY.bestForDescription}
-        deskKicker={PLANNING_PAGE_COPY.deskKicker}
-        deskTitle={PLANNING_PAGE_COPY.deskTitle}
-        deskDescription={PLANNING_PAGE_COPY.deskDescription}
+        bestForKicker={copy.bestForKicker}
+        bestForDescription={copy.bestForDescription}
+        deskKicker={copy.deskKicker}
+        deskTitle={copy.deskTitle}
+        deskDescription={copy.deskDescription}
       />
       <ContactTeaser />
     </HomeMarketingLayout>

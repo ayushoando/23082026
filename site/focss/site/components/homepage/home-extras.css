@@ -85,7 +85,7 @@
 }
 
 .home-tools-floor-demo:hover {
-  transform: translateY(-4px);
+  transform: translateY(-2px);
 }
 
 .home-tools-floor-demo:focus-visible {

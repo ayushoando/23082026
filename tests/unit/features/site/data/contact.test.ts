@@ -5,6 +5,8 @@ import {
   SALES_PHONE_DIGITS,
   toTelHref,
   formatSitePostalAddress,
+  googleMapsEmbedSrc,
+  googleMapsOpenHref,
   buildMailtoHref,
   buildWhatsAppHref,
 } from "@/features/site/data/contact";
@@ -32,6 +34,15 @@ describe("contact site-data helper", () => {
       expect(address).toContain("401, Jagat Trade Centre, Frazer Road");
       expect(address).toContain("Patna, Bihar 800001");
       expect(address).toContain("India");
+    });
+  });
+
+  describe("google maps URLs", () => {
+    it("embeds and opens the Patna office query", () => {
+      expect(googleMapsEmbedSrc()).toContain("https://www.google.com/maps");
+      expect(googleMapsEmbedSrc()).toContain("output=embed");
+      expect(googleMapsEmbedSrc()).toContain("Patna");
+      expect(googleMapsOpenHref()).toContain("https://www.google.com/maps/search");
     });
   });
 

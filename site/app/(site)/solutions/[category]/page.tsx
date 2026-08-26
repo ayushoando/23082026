@@ -11,7 +11,6 @@ import {
 } from "@/features/site/data/routeClassification";
 import { SOLUTION_CATEGORY_DETAILS } from "@/features/site/data/solutionsPage";
 import { buildPageMetadata } from "@/features/site/data/seo";
-import { getCategoryLastUpdated } from "@/lib/catalog/productStaticParams";
 import { SITE_URL } from "@/lib/siteUrl";
 
 /** Unknown slugs must hard-404 (no soft marketing shell). */
@@ -71,14 +70,11 @@ export default async function SolutionsCategoryPage({
   }
 
   const t = await getTranslations("solutions");
-  const lastUpdated = await getCategoryLastUpdated(category);
-  const lastUpdatedIso = lastUpdated?.toISOString();
 
   return (
     <HomeMarketingLayout>
       <SolutionsCategoryPageView
         categoryId={category}
-        lastUpdatedIso={lastUpdatedIso}
         heroKicker={t("categoryHeroKicker")}
         heroTitleLead={entry.titleLead}
         heroTitleAccent={entry.titleAccent}

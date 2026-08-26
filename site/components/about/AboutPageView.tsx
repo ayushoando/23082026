@@ -8,16 +8,19 @@ import gsap from "gsap";
 import { AboutHeroMedia } from "@/components/about/AboutHeroMedia";
 import { ABOUT_STORY_IMAGE } from "@/features/site/data/aboutPage";
 import { HomeSection, HomeSectionInner } from "@/components/home/layout";
+import { OfficeMap } from "@/components/shared/OfficeMap";
 import { MarketingCtaLink } from "@/components/ui/MarketingCtaLink";
 import {
   gsapReducedMotion,
   GSAP_EASE_OUT,
-  GSAP_REVEAL,
-  GSAP_SCROLL_REVEAL,
   registerGsapPlugins,
 } from "@/lib/helpers/gsapMotion";
 
 registerGsapPlugins();
+
+function mobileAppScroller(el: HTMLElement | null): HTMLElement | undefined {
+  return el?.closest<HTMLElement>(".mobile-app-main") ?? undefined;
+}
 
 type AboutPillar = { title: string; detail: string };
 type AboutProcessStep = { title: string; detail: string };
@@ -63,15 +66,15 @@ function useCraftReveal(sectionRef: RefObject<HTMLElement | null>) {
         }
 
         gsap.from(targets, {
-          y: GSAP_SCROLL_REVEAL.y,
-          opacity: GSAP_SCROLL_REVEAL.opacity,
-          duration: GSAP_SCROLL_REVEAL.duration,
-          stagger: GSAP_SCROLL_REVEAL.stagger,
+          y: 16,
+          duration: 0.7,
+          stagger: 0.07,
           ease: GSAP_EASE_OUT,
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: "top 82%",
+            start: "top 88%",
             once: true,
+            scroller: mobileAppScroller(sectionRef.current),
           },
         });
       }, sectionRef);
@@ -102,15 +105,15 @@ function useBodyReveal(scopeRef: RefObject<HTMLDivElement | null>) {
           }
 
           gsap.from(targets, {
-            y: GSAP_SCROLL_REVEAL.y,
-            opacity: GSAP_SCROLL_REVEAL.opacity,
-            duration: GSAP_SCROLL_REVEAL.duration,
-            stagger: GSAP_SCROLL_REVEAL.stagger,
+            y: 16,
+            duration: 0.7,
+            stagger: 0.07,
             ease: GSAP_EASE_OUT,
             scrollTrigger: {
               trigger: group,
-              start: "top 84%",
+              start: "top 88%",
               once: true,
+              scroller: mobileAppScroller(group),
             },
           });
         }
@@ -172,10 +175,9 @@ export function AboutPageView({
 
       const ctx = gsap.context(() => {
         gsap.from(revealTargets, {
-          y: GSAP_REVEAL.y,
-          opacity: GSAP_REVEAL.opacity,
-          duration: GSAP_REVEAL.duration,
-          stagger: GSAP_REVEAL.stagger,
+          y: 16,
+          duration: 0.7,
+          stagger: 0.07,
           ease: GSAP_EASE_OUT,
         });
       }, heroRef);
@@ -209,16 +211,13 @@ export function AboutPageView({
             </p>
             <h1
               id="about-hero-heading"
-              className="home-hero-title-route about-hero__title text-inverse text-start"
+              className="about-hero__title text-inverse text-start"
             >
               <span data-about-hero-reveal className="block">
                 {heroTitleLead}{" "}
                 <span className="text-accent-italic-on-dark">{heroTitleAccent}</span>
               </span>
             </h1>
-            <p data-about-hero-reveal className="about-hero__subtitle">
-              {heroSubtitle}
-            </p>
             <div data-about-hero-reveal className="about-hero__actions">
               <MarketingCtaLink
                 href="/clients"
@@ -279,7 +278,7 @@ export function AboutPageView({
               />
               <blockquote
                 data-about-craft-reveal
-                className="about-craft-quote__text home-heading text-balance"
+                className="about-craft-quote__text text-balance"
               >
                 {craftQuote}
               </blockquote>
@@ -329,6 +328,12 @@ export function AboutPageView({
                 ))}
               </ol>
             </section>
+          </HomeSectionInner>
+        </HomeSection>
+
+        <HomeSection variant="white" spacing="md" className="border-t-0">
+          <HomeSectionInner>
+            <OfficeMap heading="Patna office" />
           </HomeSectionInner>
         </HomeSection>
 

@@ -1,7 +1,4 @@
 /* /solutions — editorial hub, bronze punctuation, asymmetric category grid */
-@import "../shared/editorial-hero.css";
-@import "../about/about-page.css";
-
 .solutions-hero__img {
   object-position: 55% 42%;
 }

@@ -537,7 +537,7 @@ export function UnifiedAssistant() {
             aria-expanded={mobileLauncherOpen}
             className={`site-fab-launcher site-fab-launcher--assistant ${mobileFabAnchor} ${ASSISTANT_FLOATING_PRIMARY_CLASS}`}
           >
-            <Sparkles className="h-5 w-5" aria-hidden="true" />
+            <Sparkles className="h-6 w-6" aria-hidden="true" />
           </button>
         ) : null}
 
@@ -579,7 +579,7 @@ export function UnifiedAssistant() {
             aria-label="Open AI chatbot"
             className={`site-fab-launcher site-fab-launcher--assistant ${desktopFabAnchor} ${ASSISTANT_FLOATING_PRIMARY_CLASS}`}
           >
-            <Sparkles className="h-4 w-4" aria-hidden="true" />
+            <Sparkles className="h-6 w-6" aria-hidden="true" />
             <span className="site-fab-launcher__label hidden xl:inline">
               {AI_CHATBOT_COPY.title}
             </span>

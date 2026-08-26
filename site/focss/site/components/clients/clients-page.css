@@ -1,6 +1,4 @@
 /* /clients — executed-work photo portfolio + editorial proof strip + bronze pull-quote band */
-@import "../shared/editorial-hero.css";
-
 /* Editorial proof — horizontal metrics row (not centered 3-up KPI wall) */
 .clients-proof-strip {
   border-block: 1px solid color-mix(in srgb, var(--color-bronze-400) 28%, transparent);

@@ -1,3 +1,4 @@
+import "@/tests/helpers/nextIntlServerEnMock";
 import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -5,7 +6,7 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import { TRUSTED_BY_PAGE_COPY } from "@/features/site/data/routeCopy";
 import { TRUSTED_BY_PAGE_METADATA } from "@/features/site/data/routeMetadata";
-import { TRUSTED_BY_STATS, TRUSTED_BY_CLIENTS } from "@/features/site/data/proof";
+import { TRUSTED_BY_CLIENTS } from "@/features/site/data/proof";
 
 const trustedByPagePath = resolve(
   dirname(fileURLToPath(import.meta.url)),
@@ -108,7 +109,7 @@ describe("app/(site)/trusted-by/page.tsx", () => {
 
     const rosterKickerAttributes = trustedByPageViewInvocation?.match(/\brosterKicker\s*=/g) ?? [];
     const authoritativeRosterKickerAttributes =
-      trustedByPageViewInvocation?.match(/rosterKicker=\{TRUSTED_BY_PAGE_COPY\.rosterKicker\}/g) ?? [];
+      trustedByPageViewInvocation?.match(/rosterKicker=\{copy\.rosterKicker\}/g) ?? [];
 
     expect(rosterKickerAttributes).toHaveLength(1);
     expect(authoritativeRosterKickerAttributes).toHaveLength(1);
@@ -124,32 +125,32 @@ describe("app/(site)/trusted-by/page.tsx", () => {
     const nonRosterMappings = propMappings.filter((mapping) => !mapping.startsWith("rosterKicker="));
 
     expect(rosterMappings.length).toBeGreaterThan(0);
-    expect(new Set(rosterMappings)).toEqual(new Set(["rosterKicker={TRUSTED_BY_PAGE_COPY.rosterKicker}"]));
+    expect(new Set(rosterMappings)).toEqual(new Set(["rosterKicker={copy.rosterKicker}"]));
     // Preservation baseline: the full set of non-roster prop mappings must remain present,
     // in order, so removing the duplicate rosterKicker cannot drop any sibling prop.
     expect(nonRosterMappings).toHaveLength(21);
     expect(nonRosterMappings).toEqual([
-      "heroTitleLead={TRUSTED_BY_PAGE_COPY.heroTitleLead}",
-      "heroTitleAccent={TRUSTED_BY_PAGE_COPY.heroTitleAccent}",
-      "heroSubtitle={TRUSTED_BY_PAGE_COPY.heroSubtitle}",
-      "overviewKicker={TRUSTED_BY_PAGE_COPY.overviewKicker}",
-      "overviewTitle={TRUSTED_BY_PAGE_COPY.overviewTitle}",
-      "overviewDescription={TRUSTED_BY_PAGE_COPY.overviewDescription}",
-      "statsKicker={TRUSTED_BY_PAGE_COPY.statsKicker}",
+      "heroTitleLead={copy.heroTitleLead}",
+      "heroTitleAccent={copy.heroTitleAccent}",
+      "heroSubtitle={copy.heroSubtitle}",
+      "overviewKicker={copy.overviewKicker}",
+      "overviewTitle={copy.overviewTitle}",
+      "overviewDescription={copy.overviewDescription}",
+      "statsKicker={copy.statsKicker}",
       "clients={TRUSTED_BY_CLIENTS}",
-      "quotesKicker={TRUSTED_BY_PAGE_COPY.quotesKicker}",
-      "quotesTitle={TRUSTED_BY_PAGE_COPY.quotesTitle}",
-      "quotes={TRUSTED_BY_PAGE_COPY.quotes}",
+      "quotesKicker={copy.quotesKicker}",
+      "quotesTitle={copy.quotesTitle}",
+      "quotes={copy.quotes}",
       "sectors={sectors}",
-      "sectorsKicker={TRUSTED_BY_PAGE_COPY.sectorsKicker}",
-      "sectorsTitle={TRUSTED_BY_PAGE_COPY.sectorsTitle}",
-      "sectorsDescription={TRUSTED_BY_PAGE_COPY.sectorsDescription}",
-      "ctaKicker={TRUSTED_BY_PAGE_COPY.ctaKicker}",
-      "ctaTitleLead={TRUSTED_BY_PAGE_COPY.ctaTitleLead}",
-      "ctaTitleAccent={TRUSTED_BY_PAGE_COPY.ctaTitleAccent}",
-      "ctaDescription={TRUSTED_BY_PAGE_COPY.ctaDescription}",
-      "ctaPrimary={TRUSTED_BY_PAGE_COPY.ctaPrimary}",
-      "ctaSecondary={TRUSTED_BY_PAGE_COPY.ctaSecondary}",
+      "sectorsKicker={copy.sectorsKicker}",
+      "sectorsTitle={copy.sectorsTitle}",
+      "sectorsDescription={copy.sectorsDescription}",
+      "ctaKicker={copy.ctaKicker}",
+      "ctaTitleLead={copy.ctaTitleLead}",
+      "ctaTitleAccent={copy.ctaTitleAccent}",
+      "ctaDescription={copy.ctaDescription}",
+      "ctaPrimary={copy.ctaPrimary}",
+      "ctaSecondary={copy.ctaSecondary}",
     ]);
   });
 
@@ -165,8 +166,8 @@ describe("app/(site)/trusted-by/page.tsx", () => {
     expect(TRUSTED_BY_PAGE_METADATA.description).toBe(TRUSTED_BY_PAGE_COPY.heroSubtitle);
   });
 
-  it("renders marketing layout with hero labelled region and editorial copy", () => {
-    const { container } = render(<TrustedByPage />);
+  it("renders marketing layout with hero labelled region and editorial copy", async () => {
+    const { container } = render(await TrustedByPage());
 
     expect(screen.getByTestId("home-marketing-layout")).toBeInTheDocument();
 
@@ -179,7 +180,7 @@ describe("app/(site)/trusted-by/page.tsx", () => {
     expect(h1).toHaveTextContent(TRUSTED_BY_PAGE_COPY.heroTitleLead);
     expect(h1).toHaveTextContent(TRUSTED_BY_PAGE_COPY.heroTitleAccent);
     expect(screen.queryByText(TRUSTED_BY_PAGE_COPY.heroKicker)).not.toBeInTheDocument();
-    expect(screen.getByText(TRUSTED_BY_PAGE_COPY.heroSubtitle)).toBeInTheDocument();
+    expect(screen.queryByText(TRUSTED_BY_PAGE_COPY.heroSubtitle)).not.toBeInTheDocument();
 
     expect(screen.getByTestId("mock-editorial-hero-media")).toBeInTheDocument();
     expect(screen.getByTestId("mock-editorial-hero-media")).toHaveAttribute("data-alt", "Institutional workspace delivery by One and Only");
@@ -201,22 +202,10 @@ describe("app/(site)/trusted-by/page.tsx", () => {
     expect(ldScripts.length).toBeGreaterThanOrEqual(2);
   });
 
-  it("iterates stats, palette, quotes, and sectors from source-of-truth", () => {
-    const { container } = render(<TrustedByPage />);
+  it("iterates stats, palette, quotes, and sectors from source-of-truth", async () => {
+    const { container } = render(await TrustedByPage());
 
-    // Stats band - group label from statsKicker
-    const statsGroup = screen.getByRole("group", { name: TRUSTED_BY_PAGE_COPY.statsKicker });
-    expect(statsGroup).toBeInTheDocument();
-    const statItems = container.querySelectorAll(".proof-kpi-band__item");
-    expect(statItems).toHaveLength(TRUSTED_BY_STATS.length);
-    // 120+ appears twice (Projects + Selected orgs) — verify unique labels and scoped values
-    expect(screen.getByText("Years of experience")).toBeInTheDocument();
-    expect(screen.getByText("Projects completed")).toBeInTheDocument();
-    expect(screen.getByText("Selected organisations")).toBeInTheDocument();
-    expect(screen.getByText("Locations serviced")).toBeInTheDocument();
-    expect(screen.getAllByText("120+")).toHaveLength(2);
-    expect(screen.getByText("14+")).toBeInTheDocument();
-    expect(screen.getByText("20+")).toBeInTheDocument();
+    expect(screen.queryByRole("group", { name: TRUSTED_BY_PAGE_COPY.statsKicker })).not.toBeInTheDocument();
 
     // Client roster
     expect(screen.getByTestId("trusted-by-roster")).toBeInTheDocument();
@@ -254,8 +243,8 @@ describe("app/(site)/trusted-by/page.tsx", () => {
     expect(new Set(Array.from(sectorRows).map((el) => el.textContent?.trim())).size).toBe(expectedSectors.length);
   });
 
-  it("renders CTA band with computed hrefs, and contact teaser", () => {
-    render(<TrustedByPage />);
+  it("renders CTA band with computed hrefs, and contact teaser", async () => {
+    render(await TrustedByPage());
 
     expect(screen.queryByText(TRUSTED_BY_PAGE_COPY.craftQuote)).not.toBeInTheDocument();
     expect(screen.queryByText(TRUSTED_BY_PAGE_COPY.craftAttribution)).not.toBeInTheDocument();

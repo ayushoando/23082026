@@ -201,6 +201,10 @@ export async function GET(request: NextRequest) {
     );
   }
 
+  if (request.signal.aborted) {
+    return new NextResponse(null, { status: 499 });
+  }
+
   try {
     const catalog = buildRequestedCategoryCatalog(await getCatalog());
     const category = catalog.find((entry) => entry.id === filters.category);

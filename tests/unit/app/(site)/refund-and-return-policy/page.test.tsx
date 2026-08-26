@@ -89,8 +89,7 @@ describe("app/(site)/refund-and-return-policy/page.tsx — behavior", () => {
     const h1 = screen.getByRole("heading", { level: 1, name: refundMessages.heroTitle });
     expect(h1).toHaveAttribute("id", "legal-hero-heading");
     expect(h1).toHaveTextContent(refundMessages.heroTitle);
-    expect(screen.getByText(refundMessages.heroSubtitle)).toBeInTheDocument();
-    expect(screen.getByText(refundMessages.heroSubtitle)).toHaveClass("legal-hero__subtitle");
+    expect(screen.queryByText(refundMessages.heroSubtitle)).not.toBeInTheDocument();
 
     const bronzeRule = container.querySelector(".legal-bronze-rule");
     expect(bronzeRule).not.toBeNull();

@@ -200,9 +200,7 @@ export function SolutionsPageView({
                 <span className="text-accent-italic-on-dark">{heroTitleAccent}</span>
               </span>
             </h1>
-            <p data-solutions-hero-reveal className="solutions-hero__subtitle">
-              {heroSubtitle}
-            </p>
+
             <div data-solutions-hero-reveal className="solutions-hero__actions flex flex-wrap gap-3">
               <MarketingCtaLink
                 href="/contact"

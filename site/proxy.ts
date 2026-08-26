@@ -209,7 +209,7 @@ export function buildContentSecurityPolicy(
     "img-src 'self' data: blob: https:",
     "font-src 'self' data: https://fonts.gstatic.com",
     `connect-src 'self' blob: https://*.supabase.co https://*.supabase.in wss://*.supabase.co https://api.openai.com https://openrouter.ai ${CSP_ANALYTICS_ORIGINS} ${CSP_GA4_ORIGINS}`,
-    "frame-src 'self'",
+    "frame-src 'self' https://www.google.com https://maps.google.com",
     "object-src 'none'",
     "base-uri 'self'",
   ].join("; ");
@@ -497,7 +497,7 @@ export async function proxy(request: NextRequest) {
 
   // The actual session validation is handled by getOptionalUser() in session.ts
   // at the page/layout level. The edge proxy just does a fast cookie existence check.
-  // Locales are prefixless (`localePrefix: "never"`). request.ts is English-only today (COST-S02).
+  // Locales are prefixless (`localePrefix: "never"`). HTML locale is NEXT_LOCALE.
   const response = NextResponse.next({
     request: { headers: requestHeaders },
   });

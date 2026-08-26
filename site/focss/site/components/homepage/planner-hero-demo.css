@@ -13,7 +13,7 @@
   box-shadow:
     0 3.125rem 6.875rem -36px var(--hero-btn-secondary-shadow),
     0 1.125rem 2.75rem -24px var(--hero-btn-secondary-shadow);
-  animation: planner-demo-float 7s ease-in-out infinite;
+  animation: planner-demo-float 11s cubic-bezier(0.45, 0, 0.55, 1) infinite;
 }
 
 @keyframes planner-demo-float {
@@ -22,7 +22,7 @@
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-9px);
+    transform: translateY(-3px);
   }
 }
 

@@ -1,6 +1,4 @@
 /* /career — editorial hero, pillar rows, job list, dark CTA */
-@import "../shared/editorial-hero.css";
-
 .career-pillars {
   display: grid;
   gap: 0;

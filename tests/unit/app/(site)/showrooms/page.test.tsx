@@ -1,3 +1,4 @@
+import "@/tests/helpers/nextIntlServerEnMock";
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import ShowroomsPage, { metadata } from "@/app/(site)/showrooms/page";
@@ -24,18 +25,23 @@ vi.mock("gsap", () => ({
 }));
 
 describe("ShowroomsPage Route", () => {
-  it("renders standard marketing hero and visit details", () => {
+  it("renders standard marketing hero and visit details", async () => {
     expect(metadata).toEqual({ title: "Showrooms Title" });
 
-    render(<ShowroomsPage />);
+    render(await ShowroomsPage());
 
-    expect(screen.getByText(SHOWROOMS_PAGE_COPY.heroSubtitle)).toBeInTheDocument();
+    expect(screen.queryByText(SHOWROOMS_PAGE_COPY.heroSubtitle)).not.toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: SHOWROOMS_PAGE_COPY.visitTitle }),
     ).toBeInTheDocument();
     SHOWROOMS_HIGHLIGHTS.forEach((highlight) => {
       expect(screen.getByText(highlight.title)).toBeInTheDocument();
     });
+    expect(screen.getByTestId("office-map")).toBeInTheDocument();
+    expect(screen.getByTitle(/google maps/i)).toHaveAttribute(
+      "src",
+      expect.stringContaining("google.com/maps"),
+    );
     SHOWROOMS_PAGE_COPY.visitRows.forEach((row) => {
       expect(screen.getByText(row.title)).toBeInTheDocument();
     });

@@ -1,3 +1,4 @@
+import "@/tests/helpers/nextIntlServerEnMock";
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import { SUSTAINABILITY_PAGE_COPY } from "@/features/site/data/routeCopy";
@@ -103,8 +104,8 @@ describe("app/(site)/sustainability/page.tsx — behavior", () => {
     expect(SUSTAINABILITY_PAGE_METADATA.description).toBe(SUSTAINABILITY_PAGE_COPY.heroSubtitle);
   });
 
-  it("renders marketing shell, hero labelled region, editorial hero media, and craft quote", () => {
-    const { container } = render(<SustainabilityPage />);
+  it("renders marketing shell, hero labelled region, editorial hero media, and craft quote", async () => {
+    const { container } = render(await SustainabilityPage());
 
     expectHomeMarketingShell(container);
     expect(screen.getByTestId("home-marketing-layout")).toBeInTheDocument();
@@ -119,7 +120,7 @@ describe("app/(site)/sustainability/page.tsx — behavior", () => {
     expect(h1).toHaveTextContent(SUSTAINABILITY_PAGE_COPY.heroTitleAccent);
     expect(screen.getByText(SUSTAINABILITY_PAGE_COPY.heroKicker)).toBeInTheDocument();
     expect(screen.getByText(SUSTAINABILITY_PAGE_COPY.heroKicker)).toHaveClass("home-kicker");
-    expect(screen.getByText(SUSTAINABILITY_PAGE_COPY.heroSubtitle)).toBeInTheDocument();
+    expect(screen.queryByText(SUSTAINABILITY_PAGE_COPY.heroSubtitle)).not.toBeInTheDocument();
 
     expect(screen.getByTestId("mock-editorial-hero-media")).toBeInTheDocument();
     expect(screen.getByTestId("mock-editorial-hero-media")).toHaveAttribute("data-alt", SUSTAINABILITY_HERO_IMAGE.alt);
@@ -138,8 +139,8 @@ describe("app/(site)/sustainability/page.tsx — behavior", () => {
     expect(ldScripts.length).toBeGreaterThanOrEqual(2);
   });
 
-  it("iterates commitments, story introPoints, and Eco-Score items from source-of-truth with computed classes", () => {
-    const { container } = render(<SustainabilityPage />);
+  it("iterates commitments, story introPoints, and Eco-Score items from source-of-truth with computed classes", async () => {
+    const { container } = render(await SustainabilityPage());
 
     // commitments
     expect(screen.getByTestId("sustainability-commitments")).toBeInTheDocument();
@@ -205,8 +206,8 @@ describe("app/(site)/sustainability/page.tsx — behavior", () => {
     expect(screen.queryByText("Commitments unknown")).not.toBeInTheDocument();
   });
 
-  it("renders CTA band with computed hrefs and contact teaser with absence checks", () => {
-    render(<SustainabilityPage />);
+  it("renders CTA band with computed hrefs and contact teaser with absence checks", async () => {
+    render(await SustainabilityPage());
 
     const ctaBand = screen.getByTestId("mock-route-cta-band");
     expect(ctaBand).toBeInTheDocument();

@@ -1,3 +1,4 @@
+import "@/tests/helpers/nextIntlServerEnMock";
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import Page, { metadata } from "@/app/(site)/planning/page";
@@ -40,8 +41,8 @@ describe("app/(site)/planning/page.tsx", () => {
     expect(metadata).toBe(PLANNING_PAGE_METADATA);
   });
 
-  it("renders planner entry + contact paths without Admin", () => {
-    render(<Page />);
+  it("renders planner entry + contact paths without Admin", async () => {
+    render(await Page());
     expect(screen.getByTestId("ContactTeaser")).toBeInTheDocument();
 
     expect(screen.getByRole("link", { name: "Open Oando Planner" })).toHaveAttribute(

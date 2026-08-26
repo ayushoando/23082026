@@ -220,16 +220,13 @@ export function ProductsHero({
               {heroTitleLead}
               {heroTitleAccent ? (
                 <>
-                  {" "}
+                  {"\u00A0"}
                   <span className="text-accent-italic-on-dark">{heroTitleAccent}</span>
                 </>
               ) : null}
             </span>
           </h1>
-          <p data-products-hero-reveal className="products-hero__subtitle">
-            {heroSubtitle}
-          </p>
-          <div data-products-hero-reveal className="products-hero__actions flex flex-wrap gap-3">
+          <div data-products-hero-reveal className="products-hero__actions">
             <MarketingCtaLink
               href="#products-categories"
               label={heroPrimaryCta}
@@ -238,15 +235,6 @@ export function ProductsHero({
               context="hero"
             >
               {heroPrimaryCta}
-            </MarketingCtaLink>
-            <MarketingCtaLink
-              href="/contact"
-              label={heroSecondaryCta}
-              surface="products-hero"
-              variant="outline-light"
-              context="hero"
-            >
-              {heroSecondaryCta}
             </MarketingCtaLink>
           </div>
         </div>
@@ -262,9 +250,9 @@ export function ProductsPageView({
   heroSubtitle,
   heroPrimaryCta,
   heroSecondaryCta,
-  craftQuote,
-  craftAttribution,
-  introKicker,
+  craftQuote: _craftQuote,
+  craftAttribution: _craftAttribution,
+  introKicker: _introKicker,
   introTitleLead,
   introTitleAccent,
   introDescription,
@@ -321,22 +309,16 @@ export function ProductsPageView({
               data-products-strategy-reveal
               className="products-strategy__panel scheme-panel scheme-border border px-6 py-7 md:px-8 md:py-8"
             >
-              <p className="home-kicker">{introKicker}</p>
-              <h2 className="typ-h2 products-section-title mt-3 max-w-3xl">
+              <h2 className="typ-h2 products-section-title max-w-3xl">
                 {introTitleLead}
                 {introTitleAccent ? (
                   <>
-                    {" "}
+                    {"\u00A0"}
                     <span className="text-accent-italic">{introTitleAccent}</span>
                   </>
                 ) : null}
               </h2>
               <p className="page-copy text-body mt-4 max-w-2xl">{introDescription}</p>
-
-              <figure className="products-strategy__quote">
-                <blockquote className="products-strategy__quote-text">{craftQuote}</blockquote>
-                <figcaption className="products-strategy__quote-source">{craftAttribution}</figcaption>
-              </figure>
 
               <ul className="products-strategy__bullets">
                 {featureBullets.map((item) => (
@@ -364,32 +346,6 @@ export function ProductsPageView({
                 </div>
               </div>
 
-              <div
-                data-products-strategy-reveal
-                className="products-strategy__routes scheme-panel scheme-border border px-5 py-5 md:px-6"
-              >
-                <div className="products-strategy__routes-head">
-                  <div>
-                    <p className="home-kicker">{categoryRoutesKicker}</p>
-                    <p className="page-copy-sm text-body mt-2">{categoryRoutesDescription}</p>
-                  </div>
-                  <Link href="#products-categories" className="link-arrow shrink-0">
-                    {categoryRoutesCta}
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </div>
-                <div className="products-strategy__chips">
-                  {categories.map((category) => (
-                    <Link
-                      key={category.id}
-                      href={category.href}
-                      className="btn-outline btn-pill-compact"
-                    >
-                      {category.name}
-                    </Link>
-                  ))}
-                </div>
-              </div>
             </div>
           </section>
         </HomeSectionInner>
@@ -408,7 +364,7 @@ export function ProductsPageView({
                 {rangeTitleLead}
                 {rangeTitleAccent ? (
                   <>
-                    {" "}
+                    {"\u00A0"}
                     <span className="text-accent-italic">{rangeTitleAccent}</span>
                   </>
                 ) : null}
@@ -470,7 +426,7 @@ export function ProductsPageView({
                   {pillarsTitleLead}
                   {pillarsTitleAccent ? (
                     <>
-                      {" "}
+                      {"\u00A0"}
                       <span className="text-accent-italic">{pillarsTitleAccent}</span>
                     </>
                   ) : null}
