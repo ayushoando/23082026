@@ -25,10 +25,17 @@ Passive reference under `.kiro/skills/`:
 - Repo structure / where-does-X-live -> `repo-map` skill + `graph-impact`. No power.
 - Change impact / which tests -> `graph-impact` (`node scripts/graph-impact.mjs --file=<path>`). No power.
 - Studio/Planner edits -> `fork-boundaries` + `pnpm run scan:boundaries`. No power.
-- Done/ship check -> load `verify-and-gate` only when the user explicitly invokes that skill and asks for tests or gates. Otherwise never load it for automatic validation. Browser proof -> `nova-act` or `kane-cli` (localhost only).
+- Done/ship check -> load `verify-and-gate` only when the user explicitly invokes that skill and asks for tests or gates. Otherwise never load it for automatic validation. Browser proof -> `nova-act` for exploratory human-like checks or `kane-cli` for repeatable browser workflows and screenshots (localhost only).
 - CSS -> `focss-css` + `pnpm run verify:focss`. No power.
 - Schema/SQL -> `db-migrations`; live DB ops -> `supabase-hosted` (confirm Admin vs Products).
-- Current library docs -> `context7`. Web research -> `exa`. Prod observability -> `datadog`.
+- Complete design-system scaffolding -> `design-system-power-builder`.
+- Current official library/framework docs -> `context7`; broad web research -> `exa`.
+- API collections/resources -> `postman`; image/video assets -> `cloudinary`.
+- Project memory/recall -> `ltm-power`; design boards/design-to-code -> `visily`.
+- Structural modernization/graph analysis -> `cast-imaging-express`; Ona environments/automations -> `ona`.
+- SAST/secrets/IaC -> `aikido-security-scan`; code quality/security analysis -> `sonarqube`.
+- Feature flags/AI configs -> `launchdarkly`; runtime errors/performance -> `hud` or `datadog`.
+- Activate only the named power for the user’s concrete need; otherwise use repository tooling or no power.
 
 ## Rules
 - Skills are passive markdown; the AGENT activates powers/MCP, gated by
