@@ -37,6 +37,21 @@ licensing compliance.
 5. Note: a Kiro Power entry point is `POWER.md` (not `SKILL.md`) and bundles
    steering, not skills. The Claude Code equivalent uses `SKILL.md` + `.mcp.json`.
 
+## Specs and Quick Spec
+- Kiro's **Quick Spec** is a built-in session workflow, not a repository skill or
+  custom-agent preset. It generates `requirements.md`, `design.md`, and
+  `tasks.md` in one pass. Use the Quick Spec workflow from Kiro's workflow picker:
+  <https://kiro.dev/docs/specs/quick-spec/>.
+- Kiro's **Requirements-First** option is a Feature Spec workflow. It is the
+  gated requirements -> design -> tasks flow, not an agent named
+  `feature-requirements-first-workflow`:
+  <https://kiro.dev/docs/specs/feature-specs/requirements-first/>.
+- `feature-requirements-first-workflow` is not a documented Kiro built-in agent,
+  subagent, preset, or skill. Do not invoke it or add a seventh repository skill
+  to emulate it; this repository's guidance evaluator intentionally keeps the
+  local skill candidate set at six. Repository spec artifacts belong under
+  `.kiro/specs/<name>/`.
+
 ## In this workspace
 - Powers (postman, datadog, supabase-hosted, exa, context7, cubic, cloudinary,
   nova-act, kane-cli, design-system-power-builder, ltm-power) carry their own MCP

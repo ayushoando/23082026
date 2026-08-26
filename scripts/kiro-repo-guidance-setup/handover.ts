@@ -640,10 +640,10 @@ function surfaceLine(surface: SurfaceVersion, input: HandoverInput): string {
   );
   if (!record) return `${surface.surface} ${surface.version}: missing compatibility record; Unverified`;
 
-  const observed = record.observedBehavior.length > 0 ? record.observedBehavior.join(" | ") : "none recorded";
-  const unsupported = record.unsupportedClaims.length > 0 ? record.unsupportedClaims.join(" | ") : "none recorded";
-  const migration = record.migrationConstraints.length > 0 ? record.migrationConstraints.join(" | ") : "none recorded";
-  const validation = record.validationRunRefs.length > 0 ? record.validationRunRefs.join(", ") : "none recorded";
+  const observed = record.observedBehavior.length > 0 ? redactArray(record.observedBehavior).join(" | ") : "none recorded";
+  const unsupported = record.unsupportedClaims.length > 0 ? redactArray(record.unsupportedClaims).join(" | ") : "none recorded";
+  const migration = record.migrationConstraints.length > 0 ? redactArray(record.migrationConstraints).join(" | ") : "none recorded";
+  const validation = record.validationRunRefs.length > 0 ? redactArray(record.validationRunRefs).join(", ") : "none recorded";
   return `${record.surface} ${record.version}: status=${record.status}; observed=${observed}; unsupported=${unsupported}; migration=${migration}; validation=${validation}`;
 }
 
@@ -711,9 +711,38 @@ function handoverReferences(input: HandoverGenerationInput): Identifier[] {
     `exclusion-register:${slug(input.reviewDateUtc)}`,
     `configuration-precedence-map:${slug(input.precedenceMap.generatedAtUtc)}`,
     `capability-disposition-table:${slug(input.reviewDateUtc)}`,
+    ...input.coverageMatrix.entries.flatMap((entry) => [
+      entry.coverageId,
+      entry.sourceId,
+      entry.evidenceProvenanceRef,
+    ]),
+    ...input.coverageMatrix.unavailableCandidateRefs,
+    ...input.exclusionRegister.entries.flatMap((entry) => [
+      entry.exclusionId,
+      entry.candidateRef,
+      entry.evidenceRef,
+    ]),
+    ...input.compatibilityRecords.flatMap((record) => [
+      record.rollbackPathRef,
+      ...record.validationRunRefs,
+    ]),
+    ...input.precedenceMap.records.flatMap((record) => [
+      ...record.evidenceRefs,
+      record.rollbackPathRef,
+      ...(record.approvalBoundaryRef === undefined ? [] : [record.approvalBoundaryRef]),
+    ]),
+    ...input.dispositionTable.entries.flatMap((entry) => [
+      entry.capabilityId,
+      ...entry.evidenceRefs,
+      ...entry.knownGapRefs,
+    ]),
     ...input.ownerDecisions.map((decision) => decision.evidenceRef),
-    ...input.validationRuns.map((run) => run.validationId),
-    ...input.rollbackRecords.map((record) => record.rollbackId),
+    ...input.validationRuns.flatMap((run) => [run.validationId, ...run.evidenceRefs]),
+    ...input.rollbackRecords.flatMap((record) => [
+      record.rollbackId,
+      record.preChangeStateRef,
+      record.verificationRunRef,
+    ]),
     ...(input.integrationHandoff === undefined
       ? []
       : [
@@ -748,6 +777,7 @@ function buildHandover(
     unavailable,
     ...input.coverageMatrix.blockers,
     ...input.officialFamilyStatuses.filter((status) => /unverified|unavailable|incomplete/i.test(status)),
+    ...ownerDecisionErrors.map((error) => `Owner-decision gap: ${error}`),
     ...input.compatibilityRecords.flatMap((record) => record.unsupportedClaims),
     ...normalizedGaps.filter((gap) => gap.evidenceState === "Unverified").map((gap) => `Unverified: ${gap.title}`),
     ...(input.integrationHandoff?.limitations ?? []),
@@ -767,7 +797,7 @@ function buildHandover(
     configurationPrecedenceMapRef: `configuration-precedence-map:${slug(input.precedenceMap.generatedAtUtc)}`,
     capabilityDispositionTableRef: `capability-disposition-table:${slug(input.reviewDateUtc)}`,
     reviewerStageRefs: HANDOVER_REVIEWER_STAGE_REFS,
-    ownerDecisionRefs: input.ownerDecisions.map((decision) => decision.decisionId),
+    ownerDecisionRefs: [...OWNER_DECISION_IDS],
     evidenceStateLegend: [...EVIDENCE_STATES],
     artifactDispositions: input.dispositionTable.entries.map(handoverArtifactDisposition),
     validationRuns: [...input.validationRuns],
@@ -805,16 +835,32 @@ export class HandoverGeneratorService implements HandoverGeneratorContract {
 
   public generate(input: HandoverGenerationInput): StageResult<PersistedHandoverRecord> {
     const gapResult = buildKnownGapsRegister(input.knownGaps);
-    const blockers = [...gapResult.blockers];
+    const dispositionTableResult = buildCapabilityDispositionTable({
+      records: input.dispositionTable?.entries ?? [],
+    });
+    const blockers = [
+      ...gapResult.blockers,
+      ...dispositionTableResult.blockers,
+    ];
     if (!isoDate(input.reviewDateUtc)) blockers.push("handover reviewDateUtc must be an ISO date");
-    if (input.dispositionTable.entries.length === 0) blockers.push("handover requires a non-empty Capability_Disposition_Table");
+    if ((dispositionTableResult.output?.entries.length ?? 0) === 0) {
+      blockers.push("handover requires a non-empty Capability_Disposition_Table");
+    }
     if (input.exclusionRegister.entries.some((entry) => entry.status !== "excluded")) blockers.push("Exclusion_Register contains a non-excluded entry");
 
     const normalizedGaps = gapResult.output?.entries ?? [];
-    const handover = buildHandover(input, this.now, normalizedGaps);
+    const normalizedDispositionTable = dispositionTableResult.output ?? { entries: [] };
+    const normalizedInput: HandoverGenerationInput = {
+      ...input,
+      dispositionTable: normalizedDispositionTable,
+    };
+    const handover = buildHandover(normalizedInput, this.now, normalizedGaps);
     blockers.push(...handover.blockers);
     const output = handover.output;
-    const evidenceRefs = unique([...handoverReferences(input), ...normalizedGaps.flatMap((gap) => gap.evidenceRefs)]);
+    const evidenceRefs = unique([
+      ...handoverReferences(normalizedInput),
+      ...normalizedGaps.flatMap((gap) => gap.evidenceRefs),
+    ]);
 
     if (blockers.length > 0) {
       return {

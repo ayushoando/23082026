@@ -18,7 +18,7 @@ export const MOTION_TOKENS = {
 export function fadeUp(distance: number = MOTION_TOKENS.distanceMd, delay = 0): {
   initial: { opacity: number; y: number };
   whileInView: { opacity: number; y: number };
-  viewport: { once: true; amount: number };
+  viewport: { once: true; amount: number; margin: string };
   transition: Transition;
 } {
   return {

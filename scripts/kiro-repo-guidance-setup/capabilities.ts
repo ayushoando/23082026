@@ -127,6 +127,8 @@ export interface CapabilityEvaluatorInput extends Partial<CapabilityInput> {
   readonly customAgents?: readonly ExtensionCandidateInput[];
   readonly subagents?: readonly ExtensionCandidateInput[];
   readonly validationRuns?: readonly ValidationRun[];
+  /** Optional review-date anchor used to reject historical target validation. */
+  readonly reviewDateUtc?: string;
   readonly targetSurface?: {
     readonly surface: KiroSurface;
     readonly version: string;
@@ -249,6 +251,7 @@ interface EvaluationContext {
   readonly repositoryRoot: string;
   readonly ownerDecisions: readonly OwnerDecision[];
   readonly validationRuns: readonly ValidationRun[];
+  readonly reviewDateUtc?: string;
   readonly targetSurface?: CapabilityEvaluatorInput["targetSurface"];
   readonly knownGaps: KnownGap[];
   readonly policyViolations: string[];
@@ -592,15 +595,43 @@ function decisionEvidenceRef(decision: OwnerDecision | undefined): string {
   return decision ? `owner-decision:${decision.decisionId}` : "none";
 }
 
+function validationTargetText(run: ValidationRun): string {
+  return [
+    run.action,
+    run.scope,
+    run.commandOrInteraction,
+    ...run.evidenceRefs,
+  ].join(" ").toLowerCase();
+}
+
+function validationMentionsTarget(run: ValidationRun, targets: readonly string[]): boolean {
+  const searchable = validationTargetText(run);
+  const normalizedSearchable = searchable.replaceAll("\\", "/");
+  return targets
+    .filter((target) => nonEmpty(target))
+    .some((target) => {
+      const normalizedTarget = target.trim().toLowerCase().replaceAll("\\", "/");
+      return normalizedTarget.length > 0 && (
+        searchable.includes(target.trim().toLowerCase()) ||
+        normalizedSearchable.includes(normalizedTarget)
+      );
+    });
+}
+
 function validationRefs(
   refs: readonly Identifier[],
   validationRuns: readonly ValidationRun[],
   surfaces: readonly KiroSurface[],
   targetSurface: CapabilityEvaluatorInput["targetSurface"],
+  repositoryRoot: string,
+  targetNames: readonly string[],
+  reviewDateUtc?: string,
 ): Identifier[] {
   const requested = uniqueStrings(refs);
   if (requested.length === 0) return [];
 
+  const reviewTime = reviewDateUtc ? Date.parse(reviewDateUtc) : Number.NaN;
+  if (reviewDateUtc && !Number.isFinite(reviewTime)) return [];
   return requested.filter((ref) => {
     const run = validationRuns.find((candidate) => candidate.validationId === ref);
     if (!run || run.result !== "pass" || run.blocker !== "none" || run.unverifiedItems.length > 0) return false;
@@ -608,7 +639,18 @@ function validationRefs(
     if (targetSurface && (run.surface !== targetSurface.surface || run.version !== targetSurface.version)) return false;
     if (!surfaces.includes(run.surface)) return false;
     const expectedVersion = REQUIRED_SURFACE_VERSIONS.find((candidate) => candidate.surface === run.surface)?.version;
-    return expectedVersion === run.version;
+    if (expectedVersion !== run.version) return false;
+    if (run.surface === "Local_Repository_Surface") {
+      if (run.repositoryRootOrActiveSurface === "Local_Repository_Surface") return false;
+      if (normalizePath(resolve(String(run.repositoryRootOrActiveSurface))).toLowerCase() !== normalizePath(resolve(repositoryRoot)).toLowerCase()) {
+        return false;
+      }
+    }
+    if (Number.isFinite(reviewTime)) {
+      const validationTime = Date.parse(run.startedAtUtc);
+      if (!Number.isFinite(validationTime) || validationTime < reviewTime) return false;
+    }
+    return validationMentionsTarget(run, targetNames);
   });
 }
 
@@ -668,7 +710,7 @@ export function checkRepositoryAnswer(input: RepositoryAnswerRequest): Repositor
     },
     evaluatedBeforeExternalRouting: true,
     externalRoutingRequested,
-    externalRoutingAllowed: externalRoutingRequested && result === "Not_Answered",
+    externalRoutingAllowed: !local && externalRoutingRequested && result === "Not_Answered",
     ...(result === "Not_Testable"
       ? { limitation: "the repository answer could not be tested from the supplied local evidence" }
       : {}),
@@ -819,7 +861,13 @@ function powerDispositionRecord(
     activationCondition: "after repository-answer, provenance, owner approval, exact-surface loading validation, and rollback validation",
     owner: POWER_OWNER,
     approvalBoundaryRef: approvalBoundaryFor("Kiro_Power", external),
-    evidenceRefs: unique([...record.surfaceValidationRefs, ...record.evidence.repositoryAnswerEvidence, ...knownGapRefs]),
+    evidenceRefs: unique([
+      `evidence:${record.capabilityId}:provenance`,
+      ...record.observations.map((observation) => observation.observationId),
+      ...record.surfaceValidationRefs,
+      ...record.evidence.repositoryAnswerEvidence,
+      ...knownGapRefs,
+    ]),
     validationAction: "run a fresh exact Active_Surface power-loading Validation_Run without external side effects",
     expectedSideEffects: ["no external routing until the repository-answer check and named boundary pass"],
     rollbackPath: record.rollbackPath,
@@ -834,7 +882,7 @@ function extensionDispositionRecord(
   knownGapRefs: readonly string[],
   reason: string,
 ): CapabilityDispositionRecord {
-  const external = record.kind === "MCP_Service" || nonEmpty(record.evidence.serviceAndDataBoundary) && record.kind !== "Tool_Surface";
+  const external = record.external;
   return {
     capabilityId: record.capabilityId,
     kind: record.kind,
@@ -846,7 +894,12 @@ function extensionDispositionRecord(
     activationCondition: "after configuration, repository-answer, owner approval, target-surface validation, bounded execution, and rollback validation",
     owner: record.owner,
     approvalBoundaryRef: approvalBoundaryFor(record.kind, external),
-    evidenceRefs: unique([...record.evidence.targetValidationRefs, ...record.evidence.repositoryAnswerEvidence, ...knownGapRefs]),
+    evidenceRefs: unique([
+      `evidence:${record.capabilityId}:provenance`,
+      ...record.evidence.targetValidationRefs,
+      ...record.evidence.repositoryAnswerEvidence,
+      ...knownGapRefs,
+    ]),
     validationAction: "validate the exact selected surface/version, resource URIs, approval behavior, failure behavior, and rollback",
     expectedSideEffects: record.kind === "MCP_Service"
       ? ["external service access is prohibited until named service/data/secret/permission boundaries pass"]
@@ -1100,14 +1153,22 @@ function evaluatePower(
   const root = context.repositoryRoot;
   const rawLocator = normalizeLocator(candidate.pathOrInstallation);
   const normalizedLocator = normalizeRepositoryLocator(root, rawLocator);
-  const locator = redact(normalizedLocator.locator);
   const local = normalizedLocator.local;
-  const inspection = local ? inspectPower(root, normalizedLocator.locator, candidate.registryObservation) : undefined;
-  const powerManifestPresent = candidate.powerManifestPresent ?? (inspection !== undefined && inspection.manifestStatus !== "absent");
-  const pluginManifestPresent = candidate.pluginManifestPresent ?? (inspection !== undefined && inspection.pluginStatus !== "absent");
+  const powerLocator = local ? powerDirectoryPath(normalizedLocator.locator) : normalizedLocator.locator;
+  const inspection = local ? inspectPower(root, powerLocator, candidate.registryObservation) : undefined;
+  // Live repository observations outrank optional caller metadata for local powers.
+  // Installed/external powers have no local files to inspect, so their supplied
+  // manifest claims remain explicit and fail closed when incomplete.
+  const powerManifestPresent = inspection !== undefined
+    ? inspection.manifestStatus !== "absent"
+    : candidate.powerManifestPresent === true;
+  const pluginManifestPresent = inspection !== undefined
+    ? inspection.pluginStatus !== "absent"
+    : candidate.pluginManifestPresent === true;
+  const locator = redact(powerLocator);
   const format = classifyPowerFormat(powerManifestPresent, pluginManifestPresent);
-  const capabilityId = candidate.capabilityId ?? `capability:power:${slug(normalizedLocator.locator)}`;
-  const name = redact(candidate.name ?? (local ? normalizePath(normalizedLocator.locator).slice(`${POWER_ROOT}/`.length) : normalizedLocator.locator));
+  const capabilityId = candidate.capabilityId ?? `capability:power:${slug(powerLocator)}`;
+  const name = redact(candidate.name ?? (local ? normalizePath(powerLocator).slice(`${POWER_ROOT}/`.length) : powerLocator));
   const answer = checkRepositoryAnswer({
     capabilityId,
     name,
@@ -1116,12 +1177,20 @@ function evaluatePower(
     repositoryAnswer: candidate.repositoryAnswer,
     repositoryAnswerEvidence: candidate.repositoryAnswerEvidence,
     externalRoutingRequested: candidate.externalRoutingRequested ?? !local,
-    locator: normalizedLocator.locator,
+    locator: powerLocator,
   });
   const decision = decisionFor(context.ownerDecisions, OD05_DECISION_ID);
   const ownerApproved = decisionApproved(decision);
   const suppliedValidationRefs = candidate.surfaceValidationRefs ?? candidate.targetValidationRefs ?? [];
-  const targetValidationRefs = validationRefs(suppliedValidationRefs, context.validationRuns, DEFAULT_POWER_SURFACES, context.targetSurface);
+  const targetValidationRefs = validationRefs(
+    suppliedValidationRefs,
+    context.validationRuns,
+    DEFAULT_POWER_SURFACES,
+    context.targetSurface,
+    context.repositoryRoot,
+    [capabilityId, name, powerLocator],
+    context.reviewDateUtc,
+  );
   const trustDecision: TrustDecision = candidate.trustDecision ?? (local ? "trusted" : "unresolved");
   const integrityResult: IntegrityResult = candidate.integrityResult ?? (local && (powerManifestPresent || pluginManifestPresent) ? "pass" : "unverified");
   const secrets: SecretBoundary = candidate.secrets ?? boundaryState(candidate.secretBoundary);
@@ -1130,16 +1199,16 @@ function evaluatePower(
   const permissionsDeclared = candidate.permissions !== undefined || !isPlaceholderBoundary(candidate.permissionBoundary);
   const external = !local;
   const serviceBoundary = candidate.serviceAndDataBoundary ?? (local ? "repository-local power; no external service" : "");
-  const rollbackPath = candidate.rollbackPath ?? `${CAPABILITY_ROLLBACK_PREFIX}:${slug(name)}:remove activation or restore prior registration`;
-  const migration = candidate.migrationOrRetainPath ?? (
+  const rollbackPath = redact(candidate.rollbackPath ?? `${CAPABILITY_ROLLBACK_PREFIX}:${slug(name)}:remove activation or restore prior registration`);
+  const migration = redact(candidate.migrationOrRetainPath ?? (
     format === "Legacy_POWER"
       ? "retain legacy POWER.md until a validated Agent Plugin migration is approved"
       : "retain only after exact-surface loading and rollback validation"
-  );
+  ));
   const revision = candidate.revisionOrVersion ?? "unavailable";
   const license = candidate.licenseOrSource ?? "unavailable";
   const provenance = defaultProvenance(
-    normalizedLocator.locator,
+    powerLocator,
     root,
     inspection
       ? inspection.observations.map((observation) => `${observation.component}: ${observation.value}`).join("; ")
@@ -1148,7 +1217,7 @@ function evaluatePower(
   );
   const evidenceRefs = [`evidence:${capabilityId}:provenance`, answer.checkId];
   const ownerApprovalEvidenceRef = ownerApproved
-    ? candidate.ownerApprovalRef ?? decisionEvidenceRef(decision)
+    ? redact(candidate.ownerApprovalRef ?? decisionEvidenceRef(decision))
     : "none";
   const evidence = provenanceEvidence(
     capabilityId,
@@ -1249,7 +1318,7 @@ function evaluatePower(
     format,
     powerManifestPresent,
     pluginManifestPresent,
-    mcpConfigSummary: candidate.mcpConfigSummary ?? inspection?.mcpSummary ?? "unavailable",
+    mcpConfigSummary: redact(inspection?.mcpSummary ?? candidate.mcpConfigSummary ?? "unavailable"),
     ...(candidate.registryObservation || inspection?.observations.some((observation) => observation.component === "registryId: local")
       ? { registryObservation: redact(candidate.registryObservation ?? "registryId: local; loading remains Unverified") }
       : {}),
@@ -1259,7 +1328,7 @@ function evaluatePower(
     secrets,
     permissions,
     surfaceValidationRefs: targetValidationRefs,
-    ...(ownerApproved ? { ownerApprovalRef: candidate.ownerApprovalRef ?? decisionEvidenceRef(decision) } : {}),
+    ...(ownerApproved ? { ownerApprovalRef: ownerApprovalEvidenceRef } : {}),
     disposition,
     rollbackPath,
     capabilityId,
@@ -1268,7 +1337,7 @@ function evaluatePower(
     observations: inspection?.observations ?? [],
     evidence,
     blockers: unique(blockers),
-    externalRoutingAllowed: answer.externalRoutingAllowed && blockers.length === 0,
+    externalRoutingAllowed: external && answer.externalRoutingAllowed && blockers.length === 0,
   };
   const dispositionRecord = powerDispositionRecord(record, gapRefs, blockers.join("; ") || migration);
   return { record, disposition: dispositionRecord, answer, evidence };
@@ -1295,8 +1364,18 @@ function evaluateExtension(
   const decisionId = base.kind === "MCP_Service" ? OD06_DECISION_ID : OD07_DECISION_ID;
   const decision = decisionFor(context.ownerDecisions, decisionId);
   const ownerApproved = decisionApproved(decision);
-  const ownerApprovalEvidenceRef = ownerApproved ? metadata.ownerApprovalRef ?? decisionEvidenceRef(decision) : "none";
-  const targetValidationRefs = validationRefs(base.validationRunRefs, context.validationRuns, base.surfaceAvailability, context.targetSurface);
+  const ownerApprovalEvidenceRef = ownerApproved
+    ? redact(metadata.ownerApprovalRef ?? decisionEvidenceRef(decision))
+    : "none";
+  const targetValidationRefs = validationRefs(
+    base.validationRunRefs.length > 0 ? base.validationRunRefs : metadata.targetValidationRefs ?? [],
+    context.validationRuns,
+    base.surfaceAvailability,
+    context.targetSurface,
+    context.repositoryRoot,
+    [capabilityId, normalized.name, normalized.canonicalSource],
+    context.reviewDateUtc,
+  );
   const trustDecision: TrustDecision = metadata.trustDecision ?? "unresolved";
   const integrityResult: IntegrityResult = metadata.integrityResult ?? "unverified";
   const external = externalForExtension(base, metadata);
@@ -1430,6 +1509,7 @@ function evaluateExtension(
   const disposition: CapabilityDisposition = unsafe ? "disable" : incomplete ? "defer" : "retain";
   const record: EvaluatedExtensionRecord = {
     ...base,
+    validationRunRefs: targetValidationRefs,
     capabilityId,
     name: normalized.name,
     external,
@@ -1520,6 +1600,7 @@ function evaluateCapabilitiesInternal(input: CapabilityEvaluatorInput = {}): Sta
     repositoryRoot: root,
     ownerDecisions: input.ownerDecisions ?? [],
     validationRuns: input.validationRuns ?? [],
+    reviewDateUtc: input.reviewDateUtc,
     targetSurface: input.targetSurface,
     knownGaps: [],
     policyViolations: [],

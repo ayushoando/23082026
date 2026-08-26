@@ -644,9 +644,22 @@ function evaluateCapability(
   } else if (input.kind === "graph_impact_automation") {
     // Manual loop preserved; automation capped at three iterations.
     iterationCeiling = boundedIterationCeiling(input.proposedIterations ?? GRAPH_IMPACT_MAX_ITERATIONS);
-    if (input.proposedIterations !== undefined && input.proposedIterations > GRAPH_IMPACT_MAX_ITERATIONS) {
-      blockers.push(`graph-impact automation exceeds the ${GRAPH_IMPACT_MAX_ITERATIONS}-iteration ceiling`);
-      context.policyViolations.push(`${name}: proposed ${input.proposedIterations} iterations exceeds the ceiling of three`);
+    if (
+      input.proposedIterations !== undefined &&
+      (input.proposedIterations > GRAPH_IMPACT_MAX_ITERATIONS ||
+        input.proposedIterations < 0 ||
+        !Number.isInteger(input.proposedIterations))
+    ) {
+      const exceedsCeiling = input.proposedIterations > GRAPH_IMPACT_MAX_ITERATIONS;
+      const violation = exceedsCeiling
+        ? `proposed ${input.proposedIterations} iterations exceeds the ceiling of three`
+        : `proposed ${input.proposedIterations} iterations is not a whole number between zero and three`;
+      blockers.push(
+        exceedsCeiling
+          ? `graph-impact automation exceeds the ${GRAPH_IMPACT_MAX_ITERATIONS}-iteration ceiling`
+          : "graph-impact automation iteration count must be a whole number between zero and three",
+      );
+      context.policyViolations.push(`${name}: ${violation}`);
     }
     if (!ownerApproved) {
       disposition = "defer";

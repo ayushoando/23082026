@@ -16,6 +16,12 @@ window.GUIDE_DATA = {
     { icon: '✦', tone: 'pink', name: 'focss-css', meta: 'Skill · styling', text: 'Use semantic FOCSS tokens on top of Tailwind v4, with one zone per product surface.', command: 'pnpm run verify:focss', search: 'focss css tailwind tokens zones lint style' },
     { icon: '▣', tone: 'gold', name: 'db-migrations', meta: 'Skill · data', text: 'Choose Admin or Products, add rollback plus grants/policies, dry-run first, and regenerate types.', command: 'pnpm run db:apply -- --dry', search: 'db migrations supabase rollback grants policies dry run admin products' }
   ],
+  specs: [
+    { icon: '◎', tone: 'blue', name: 'Spec', meta: 'Built-in workflow · structured delivery', text: 'Use Kiro’s built-in Spec workflow to turn a feature request into requirements, technical design, and implementation tasks.', command: 'Workflow picker → Spec', search: 'spec built in workflow requirements design tasks' },
+    { icon: '→', tone: 'violet', name: 'Requirements-First', meta: 'Feature Spec · gated phases', text: 'Start with system behavior, review requirements, then generate the design and tasks in sequence.', command: 'requirements.md → design.md → tasks.md', search: 'requirements first feature spec review design tasks' },
+    { icon: '⚡', tone: 'gold', name: 'Quick Spec', meta: 'Built-in workflow · one pass', text: 'Use when the feature is well understood and you want requirements, design, and tasks generated without phase-by-phase approval.', command: 'Workflow picker → Quick Spec', search: 'quick spec one pass requirements design tasks' },
+    { icon: '▤', tone: 'green', name: 'Spec artifacts', meta: 'Repository · versioned Markdown', text: 'Generated specification documents live under `.kiro/specs/<name>/`; the repository currently contains two specification folders.', command: '.kiro/specs/<name>/', search: 'spec artifacts repository requirements design tasks kiro specs' }
+  ],
   powers: [
     { symbol: 'OW', tone: 'local', meta: 'Local workflow power · default router', name: 'oando-workflow', text: 'Routes repository questions to local skills and only reaches for external powers when the repo cannot answer.', tags: ['graph', 'boundaries', 'gates'], search: 'oando workflow repo map graph boundaries gate verify routing local power' },
     { symbol: 'NA', tone: 'browser', meta: 'Browser QA · natural-language missions', name: 'nova-act', text: 'Explore pages, execute missions, extract data, verify UI, and generate session evidence. Ask for headed/headless mode first; never kill browser processes.', tags: ['execute', 'extract', 'snapshot'], search: 'nova act browser automation qa playwright extraction headed headless localhost' },
@@ -91,6 +97,9 @@ window.GUIDE_DATA = {
     ['fork-boundaries skill', '../../.kiro/skills/fork-boundaries/SKILL.md', 'Studio/Planner boundary procedure.', 'skill'],
     ['focss-css skill', '../../.kiro/skills/focss-css/SKILL.md', 'FOCSS-on-Tailwind procedure.', 'skill'],
     ['db-migrations skill', '../../.kiro/skills/db-migrations/SKILL.md', 'Two-database migration procedure.', 'skill'],
+    ['Kiro Specs', 'https://kiro.dev/docs/specs/', 'Official overview of the built-in Spec workflow and repository specification artifacts.', 'external'],
+    ['Kiro Quick Spec', 'https://kiro.dev/docs/specs/quick-spec/', 'Official one-pass workflow for generating requirements, design, and tasks.', 'external'],
+    ['Kiro Requirements-First', 'https://kiro.dev/docs/specs/feature-specs/requirements-first/', 'Official gated Feature Spec workflow from requirements through design and tasks.', 'external'],
     ['Installed power catalog', '#powers', 'Current installed powers: design system, Nova Act, Postman, Context7, Exa, Datadog, LTM, Cubic, Kane, Cloudinary, Supabase, and OandO workflow.', 'power']
   ]
 };

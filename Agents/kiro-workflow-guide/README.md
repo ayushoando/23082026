@@ -226,6 +226,24 @@ pnpm run db:types:admin
 
 Never use raw disk helpers for runtime writes. The selector is mode-aware: disk only for non-production `DEV_AUTH_BYPASS=1`; otherwise Supabase. For live schema, RLS, or policy operations, activate `supabase-hosted` only after confirming the target project and receiving explicit confirmation for destructive SQL.
 
+### 5.7 Specs and Quick Spec
+
+Kiro’s **Spec** workflow is built into the IDE; it is not a repository skill or a custom agent that needs registration. Start it from the workflow picker or the Specs panel. The generated, versioned artifacts live under `.kiro/specs/<name>/`:
+
+```text
+requirements.md → design.md → tasks.md
+```
+
+Use **Requirements-First** when you want the gated feature-spec flow: capture behavior, review requirements, then produce design and tasks. Use **Quick Spec** when the feature is understood well enough to generate all three documents in one pass without phase-by-phase approval.
+
+The local `spec-task-runner` agent executes already-approved tasks; it does not replace the built-in Spec workflow. Likewise, `feature-requirements-first-workflow` is not a documented Kiro agent, preset, or skill name.
+
+Official references:
+
+- [Specs overview](https://kiro.dev/docs/specs/)
+- [Quick Spec](https://kiro.dev/docs/specs/quick-spec/)
+- [Requirements-First](https://kiro.dev/docs/specs/feature-specs/requirements-first/)
+
 ## 6. Installed powers
 
 Powers are active capability bundles. The normal sequence is:

@@ -16,7 +16,7 @@ import {
 } from "./contracts";
 
 const REPOSITORY_OWNER = "repository owner";
-const OFFICIAL_SOURCE_PREFIX = "source:official:";
+const OFFICIAL_DISCOVERY_SOURCE_PREFIX = "source:official:discovery:";
 
 /**
  * Scope reasons and reconsideration triggers required for the initial local
@@ -71,9 +71,14 @@ function isIsoDate(value: string): boolean {
   return /^\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z)?$/.test(value) && !Number.isNaN(Date.parse(value));
 }
 
+/**
+ * Coverage is intentionally limited to page candidates. The discovery-method
+ * records for the official sitemap/search are evidence about how candidates
+ * were found, not additional pages that need their own coverage row.
+ */
 function officialCandidates(candidates: readonly SourceRecord[]): readonly SourceRecord[] {
   return candidates.filter((candidate) =>
-    candidate.kind === "official_url" && candidate.sourceId.startsWith(OFFICIAL_SOURCE_PREFIX),
+    candidate.kind === "official_url" && !candidate.sourceId.startsWith(OFFICIAL_DISCOVERY_SOURCE_PREFIX),
   );
 }
 
@@ -98,6 +103,27 @@ function availabilityIsUnavailable(availability: Availability): boolean {
 
 function coverageIdFor(candidate: SourceRecord): Identifier {
   return `coverage:${candidate.sourceId.replace(/^source:/, "").replace(/[^A-Za-z0-9]+/g, "-")}`;
+}
+
+function unavailableLimitation(candidate: SourceRecord): string {
+  return candidate.limitation ??
+    `Candidate is ${candidate.availability}; an exact target retrieval and validation are required before it can be treated as available evidence.`;
+}
+
+function hasReviewEvidence(candidate: SourceRecord): boolean {
+  return candidate.evidenceState === "Documented" ||
+    candidate.evidenceState === "Observed" ||
+    candidate.evidenceState === "Validated";
+}
+
+function pendingLimitation(candidate: SourceRecord): string {
+  if (!hasReviewEvidence(candidate)) {
+    return `Candidate evidence state is ${candidate.evidenceState}; documented, observed, or validated page evidence is required before review can complete.`;
+  }
+  if (candidate.surfaceApplicability.length === 0) {
+    return "Candidate has no Active_Surface applicability; the target surface must be identified before review can complete.";
+  }
+  return "Candidate disposition requires an explicit Exclusion_Register entry before it can be excluded.";
 }
 
 function validateExclusion(entry: ExclusionEntry): string[] {
@@ -149,10 +175,24 @@ export function buildExclusionRegister(entries: readonly ExclusionEntry[]): Stag
   return { status: "pass", output, blockers: [], evidenceRefs: entries.map((entry) => entry.evidenceRef) };
 }
 
-function entryFor(candidate: SourceRecord, excludedCandidateRefs: ReadonlySet<Identifier>): CoverageEntry {
-  const excluded = excludedCandidateRefs.has(candidate.sourceId);
+function entryFor(
+  candidate: SourceRecord,
+  excludedCandidateRefs: ReadonlySet<Identifier>,
+  reviewDateUtc: string,
+): CoverageEntry {
   const unavailable = availabilityIsUnavailable(candidate.availability);
-  const status = excluded ? "excluded" : unavailable ? "unavailable" : "reviewed";
+  const explicitlyExcluded = excludedCandidateRefs.has(candidate.sourceId);
+  const pending = !unavailable &&
+    (!hasReviewEvidence(candidate) ||
+      candidate.surfaceApplicability.length === 0 ||
+      candidate.disposition === "exclude");
+  const status = unavailable
+    ? "unavailable"
+    : explicitlyExcluded
+      ? "excluded"
+      : pending
+        ? "pending"
+        : "reviewed";
 
   return {
     coverageId: coverageIdFor(candidate),
@@ -162,35 +202,94 @@ function entryFor(candidate: SourceRecord, excludedCandidateRefs: ReadonlySet<Id
     ...(candidate.title ? { currentTitle: candidate.title } : {}),
     family: candidate.officialDocumentationFamily ?? "Unclassified official documentation",
     discoveryMethod: discoveryMethodFor(candidate),
-    reviewDateUtc: candidate.reviewDateUtc,
+    reviewDateUtc,
     surface: surfaceFor(candidate),
     applicability: candidate.surfaceApplicability.length > 0 ? "applicable" : "unresolved",
     keyConvention: candidate.claims[0] ?? "No convention extracted; review remains pending.",
     versionSensitiveClaim: candidate.versionSensitiveClaim,
     evidenceProvenanceRef: candidate.sourceId,
     availability: candidate.availability,
-    disposition: excluded ? "exclude" : candidate.disposition,
+    disposition: unavailable ? "observe" : explicitlyExcluded ? "exclude" : pending ? "observe" : candidate.disposition,
     validationAction: unavailable
       ? "Record an Unverified_Finding and run the next exact-surface validation."
-      : "Validate any local compatibility claim on the exact target surface/version.",
+      : pending
+        ? "Obtain fresh exact-target evidence before marking this candidate reviewed."
+        : "Validate any local compatibility claim on the exact target surface/version.",
     status,
-    ...(candidate.limitation ? { limitation: candidate.limitation } : {}),
+    ...(unavailable
+      ? { limitation: unavailableLimitation(candidate) }
+      : pending
+        ? { limitation: pendingLimitation(candidate) }
+        : candidate.limitation
+          ? { limitation: candidate.limitation }
+          : {}),
   };
 }
 
 function validateCandidates(candidates: readonly SourceRecord[]): string[] {
   const blockers: string[] = [];
   const sourceIds = new Set<Identifier>();
+  const coverageIds = new Set<Identifier>();
 
   for (const candidate of candidates) {
     if (sourceIds.has(candidate.sourceId)) blockers.push(`duplicate discovered official candidate ${candidate.sourceId}`);
     sourceIds.add(candidate.sourceId);
+
     if (!hasValue(candidate.sourceId)) blockers.push("discovered official candidate requires sourceId");
     if (!hasValue(candidate.locator)) blockers.push(`candidate ${candidate.sourceId || "unknown"} requires URL`);
     if (!hasValue(candidate.officialDocumentationFamily)) blockers.push(`candidate ${candidate.sourceId || "unknown"} requires an official documentation family`);
     if (!isIsoDate(candidate.reviewDateUtc)) blockers.push(`candidate ${candidate.sourceId || "unknown"} requires an ISO review date`);
+
+    const coverageId = coverageIdFor(candidate);
+    if (coverageIds.has(coverageId)) blockers.push(`duplicate coverage ID ${coverageId} for discovered official candidates`);
+    coverageIds.add(coverageId);
+
+    if (availabilityIsUnavailable(candidate.availability) && candidate.evidenceState !== "Unverified") {
+      blockers.push(`candidate ${candidate.sourceId || "unknown"} is ${candidate.availability} but is not Unverified`);
+    }
   }
 
+  return blockers;
+}
+
+function validateExclusionsAgainstCandidates(
+  candidates: readonly SourceRecord[],
+  exclusions: readonly ExclusionEntry[],
+): string[] {
+  const blockers: string[] = [];
+  const candidateById = new Map(candidates.map((candidate) => [candidate.sourceId, candidate]));
+  const excludedCandidateRefs = new Set(exclusions.map((exclusion) => exclusion.candidateRef));
+
+  for (const candidate of candidates) {
+    if (candidate.disposition === "exclude" && !excludedCandidateRefs.has(candidate.sourceId)) {
+      blockers.push(`candidate ${candidate.sourceId} requests exclusion without an Exclusion_Register entry`);
+    }
+  }
+
+  for (const exclusion of exclusions) {
+    const candidate = candidateById.get(exclusion.candidateRef);
+    if (!candidate) {
+      blockers.push(`exclusion ${exclusion.exclusionId} references an undiscovered official candidate ${exclusion.candidateRef}`);
+      continue;
+    }
+
+    if (candidate.officialDocumentationFamily !== exclusion.family) {
+      blockers.push(`exclusion ${exclusion.exclusionId} family does not match candidate ${exclusion.candidateRef}`);
+    }
+    if (availabilityIsUnavailable(candidate.availability)) {
+      blockers.push(`candidate ${candidate.sourceId} is ${candidate.availability} and must remain unavailable Unverified, not excluded`);
+      if (candidate.disposition === "exclude") {
+        blockers.push(`candidate ${candidate.sourceId} has an exclusion disposition despite unavailable evidence`);
+      }
+    }
+  }
+
+  return blockers;
+}
+
+function validateInput(input: CoverageInput): string[] {
+  const blockers: string[] = [];
+  if (!isIsoDate(input.reviewDateUtc)) blockers.push("reviewDateUtc must be an ISO date or ISO UTC timestamp");
   return blockers;
 }
 
@@ -198,22 +297,31 @@ export class CoverageMatrixBuilder implements CoverageMatrixBuilderContract {
   build(input: CoverageInput): StageResult<CoverageResult> {
     const candidates = officialCandidates(input.candidates);
     const registerResult = buildExclusionRegister(input.exclusions);
-    const blockers = [...validateCandidates(candidates), ...registerResult.blockers];
+    const exclusionBlockers = validateExclusionsAgainstCandidates(candidates, input.exclusions);
+    const blockers = [
+      ...validateInput(input),
+      ...validateCandidates(candidates),
+      ...registerResult.blockers,
+      ...exclusionBlockers,
+    ];
+    const exclusionValidationPassed = registerResult.status === "pass" && exclusionBlockers.length === 0;
+    const excludedCandidateRefs = exclusionValidationPassed
+      ? new Set(input.exclusions.map((exclusion) => exclusion.candidateRef))
+      : new Set<Identifier>();
+    const entries = candidates.map((candidate) => entryFor(candidate, excludedCandidateRefs, input.reviewDateUtc));
     const candidateRefs = new Set(candidates.map((candidate) => candidate.sourceId));
-
-    for (const exclusion of input.exclusions) {
-      if (!candidateRefs.has(exclusion.candidateRef)) {
-        blockers.push(`exclusion ${exclusion.exclusionId} references an undiscovered official candidate ${exclusion.candidateRef}`);
-      }
-    }
-
-    const excludedCandidateRefs = new Set(input.exclusions.map((exclusion) => exclusion.candidateRef));
-    const entries = candidates.map((candidate) => entryFor(candidate, excludedCandidateRefs));
+    const entryRefs = new Set(entries.map((entry) => entry.sourceId));
+    const candidateCoverageIsOneToOne = entries.length === candidates.length &&
+      candidateRefs.size === candidates.length &&
+      entryRefs.size === candidates.length &&
+      candidates.every((candidate) => entryRefs.has(candidate.sourceId));
     const unavailableCandidateRefs = entries
       .filter((entry) => entry.status === "unavailable")
       .map((entry) => entry.sourceId);
-    const hasPendingEntry = entries.some((entry) => entry.status === "pending");
-    const complete = blockers.length === 0 && !hasPendingEntry && entries.length === candidates.length;
+    const completeStatuses = new Set(["reviewed", "excluded", "unavailable"]);
+    const complete = blockers.length === 0 &&
+      candidateCoverageIsOneToOne &&
+      entries.every((entry) => completeStatuses.has(entry.status));
     const matrix: CoverageMatrix = {
       entries,
       completeReviewStatement: complete ? COMPLETE_REVIEW_STATEMENT : "",
@@ -226,13 +334,17 @@ export class CoverageMatrixBuilder implements CoverageMatrixBuilderContract {
       exclusions: registerResult.output ?? { entries: input.exclusions },
       blockers,
     };
+    const evidenceRefs = [
+      ...entries.map((entry) => entry.sourceId),
+      ...input.exclusions.map((exclusion) => exclusion.evidenceRef),
+    ];
 
     if (!complete) {
       return {
         status: "partial",
         output,
         blockers,
-        evidenceRefs: entries.map((entry) => entry.sourceId),
+        evidenceRefs: [...new Set(evidenceRefs)],
       };
     }
 
@@ -240,7 +352,7 @@ export class CoverageMatrixBuilder implements CoverageMatrixBuilderContract {
       status: "pass",
       output,
       blockers: [],
-      evidenceRefs: entries.map((entry) => entry.sourceId),
+      evidenceRefs: [...new Set(evidenceRefs)],
     };
   }
 }
