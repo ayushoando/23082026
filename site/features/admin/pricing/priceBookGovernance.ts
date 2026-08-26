@@ -9,11 +9,12 @@
 
 import type {
   PriceBookContract,
+  PriceBookHighRiskAction,
+  PriceBookRole,
   PriceBookVersionStatus,
 } from "./priceBookContract";
-import type { PriceBookRole } from "./priceBookService";
 
-export type PriceBookHighRiskAction = "approve" | "activate" | "rollback";
+export type { PriceBookHighRiskAction } from "./priceBookContract";
 
 /** ADM-PRICE-02 — distinct operator-facing lifecycle labels. */
 export const PRICE_BOOK_STATUS_LABEL: Readonly<

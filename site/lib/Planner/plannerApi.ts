@@ -9,6 +9,77 @@
 import { apiPath, browserApiFetch } from "@/lib/api/browserApi";
 import type { FurnitureItem, PlannerProject } from "@planner/lib/plannerTypes";
 
+/* ------------------------------------------------------------------ */
+/* Typed API error                                                     */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Typed error thrown for non-OK Planner API responses.
+ * Carries the HTTP status and optional detail text so callers can classify
+ * 404 vs transient (429/5xx/network) without parsing the message string.
+ *
+ * The `message` property preserves backward-compatible text for existing callers
+ * that check `e.message.includes("404")` etc.
+ */
+export class PlannerApiError extends Error {
+  /** HTTP status code from the response (e.g. 404, 429, 503). */
+  readonly status: number;
+  /** Safe detail string extracted from the response body, if available. */
+  readonly detail: string | undefined;
+
+  constructor(status: number, message: string, detail?: string) {
+    super(message);
+    this.name = "PlannerApiError";
+    this.status = status;
+    this.detail = detail;
+  }
+
+  /** True when the response was an explicit not-found (status 404). */
+  get isNotFound(): boolean {
+    return this.status === 404;
+  }
+
+  /**
+   * True when the session is missing entirely (401). Distinct from
+   * `isForbidden` — the recovery action is sign-in, not retry. This is the
+   * one failure mode a persisted audit artifact actually recorded for
+   * `/ooplanner/projects/[id]` (see .kiro/specs/remediation-unified/audit.md D7).
+   */
+  get isUnauthorized(): boolean {
+    return this.status === 401;
+  }
+
+  /**
+   * True when the session exists but lacks permission for this project
+   * (403). Not retryable — the same request will not succeed later. The
+   * `[id]` route currently masks a foreign project as 404 rather than 403,
+   * so this is reachable only via other `withAuth` role checks.
+   */
+  get isForbidden(): boolean {
+    return this.status === 403;
+  }
+
+  /** True when the failure is likely transient and retryable (429, 5xx). */
+  get isTransient(): boolean {
+    return this.status === 429 || this.status >= 500;
+  }
+}
+
+/**
+ * Type guard: returns true when the error is a fetch AbortError (request
+ * was cancelled via AbortSignal). Callers should treat this as a silent
+ * cancellation, not a visible project failure.
+ */
+export function isAbortError(err: unknown): err is DOMException {
+  return (
+    err instanceof DOMException && err.name === "AbortError"
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Response helpers                                                     */
+/* ------------------------------------------------------------------ */
+
 async function readJson<T>(res: Response): Promise<T> {
   if (!res.ok) {
     let detail = `Request failed (${res.status})`;
@@ -35,7 +106,7 @@ async function readJson<T>(res: Response): Promise<T> {
     } catch {
       /* non-JSON error body */
     }
-    throw new Error(detail);
+    throw new PlannerApiError(res.status, detail, detail);
   }
   if (res.status === 204) {
     return undefined as T;
@@ -69,15 +140,33 @@ export const uploadFurniture = (formData: FormData): Promise<FurnitureItem> =>
     body: formData,
   }).then((r) => readJson<FurnitureItem>(r));
 
-export const listProjects = (): Promise<PlannerProject[]> =>
-  browserApiFetch("/api/Planner/projects").then((r) =>
-    readJson<PlannerProject[]>(r),
-  );
+/* ------------------------------------------------------------------ */
+/* Optional GET request options                                        */
+/* ------------------------------------------------------------------ */
 
-export const getProject = (id: string): Promise<PlannerProject> =>
-  browserApiFetch(`/api/Planner/projects/${encodeURIComponent(id)}`).then((r) =>
-    readJson<PlannerProject>(r),
-  );
+/**
+ * Options accepted by read-only Planner API helpers (`getProject`,
+ * `listProjects`). Passing no options preserves existing call-site behavior.
+ */
+export interface GetProjectOptions {
+  /** AbortSignal forwarded to the underlying fetch for cancellation support. */
+  signal?: AbortSignal;
+}
+
+export const listProjects = (
+  options?: GetProjectOptions,
+): Promise<PlannerProject[]> =>
+  browserApiFetch("/api/Planner/projects", {
+    signal: options?.signal,
+  }).then((r) => readJson<PlannerProject[]>(r));
+
+export const getProject = (
+  id: string,
+  options?: GetProjectOptions,
+): Promise<PlannerProject> =>
+  browserApiFetch(`/api/Planner/projects/${encodeURIComponent(id)}`, {
+    signal: options?.signal,
+  }).then((r) => readJson<PlannerProject>(r));
 
 export const createProject = (payload: unknown): Promise<PlannerProject> =>
   browserApiFetch("/api/Planner/projects", jsonInit("POST", payload)).then((r) =>

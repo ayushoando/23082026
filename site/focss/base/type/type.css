@@ -169,24 +169,24 @@
   font-family: var(--font-sans);
   font-size: var(--type-body-size);
   font-weight: var(--font-weight-copy-medium);
-  letter-spacing: 0.01em;
-  line-height: 1.4;
+  letter-spacing: var(--type-letter-nav);
+  line-height: var(--type-leading-nav);
 }
 
 @utility typ-nav-sm {
   font-family: var(--font-sans);
   font-size: var(--type-body-size);
   font-weight: var(--font-weight-copy-medium);
-  letter-spacing: 0.02em;
-  line-height: 1.4;
+  letter-spacing: var(--type-letter-nav-sm);
+  line-height: var(--type-leading-nav);
 }
 
 @utility typ-micro {
   font-family: var(--font-sans);
   font-size: var(--type-body-size);
   font-weight: var(--font-weight-copy-semibold);
-  letter-spacing: 0.08em;
-  line-height: 1.4;
+  letter-spacing: var(--type-letter-micro);
+  line-height: var(--type-leading-nav);
 }
 
 /* --- Label / eyebrow --- */
@@ -194,8 +194,8 @@
   font-family: var(--font-sans);
   font-size: var(--type-label-size);
   font-weight: var(--font-weight-copy-medium);
-  letter-spacing: 0.11em;
-  line-height: 1.3;
+  letter-spacing: var(--type-letter-label-wide);
+  line-height: var(--type-leading-label);
   text-transform: uppercase;
 }
 
@@ -203,8 +203,8 @@
   font-family: var(--font-sans);
   font-size: var(--type-label-size);
   font-weight: var(--font-weight-copy-medium);
-  letter-spacing: 0.11em;
-  line-height: 1.3;
+  letter-spacing: var(--type-letter-label-wide);
+  line-height: var(--type-leading-label);
   text-transform: uppercase;
 }
 
@@ -212,8 +212,8 @@
   font-family: var(--font-sans);
   font-size: var(--type-label-size);
   font-weight: var(--font-weight-copy-medium);
-  letter-spacing: 0.11em;
-  line-height: 1.3;
+  letter-spacing: var(--type-letter-label-wide);
+  line-height: var(--type-leading-label);
   text-transform: uppercase;
 }
 
@@ -221,8 +221,8 @@
   font-family: var(--font-sans);
   font-size: var(--type-label-size);
   font-weight: var(--font-weight-copy-medium);
-  letter-spacing: 0.11em;
-  line-height: 1.3;
+  letter-spacing: var(--type-letter-label-wide);
+  line-height: var(--type-leading-label);
   text-transform: uppercase;
 }
 
@@ -231,8 +231,8 @@
   font-family: var(--font-sans);
   font-size: var(--type-body-size);
   font-weight: var(--font-weight-copy-semibold);
-  letter-spacing: 0.04em;
-  line-height: 1.3;
+  letter-spacing: var(--type-letter-cta);
+  line-height: var(--type-leading-cta);
 }
 
 /* --- Stat --- */

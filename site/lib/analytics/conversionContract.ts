@@ -1,4 +1,4 @@
-import { emitSiteEvent, type SiteEventPayload } from "@/lib/analytics/siteEvents";
+import { emitSiteEvent, type SiteEventPayload } from "@/lib/analytics/emitSiteEvent";
 import { hasAnalyticsConsent, hasConsentChoice } from "@/lib/consent";
 
 export const CONVERSION_EVENTS = {

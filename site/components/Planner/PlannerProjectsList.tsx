@@ -1,7 +1,7 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { listProjects, deleteProject, fileUrl, createProject } from "@planner/lib/plannerApi";
+import { listProjects, deleteProject, fileUrl, createProject, isAbortError, PlannerApiError } from "@planner/lib/plannerApi";
 import { buildStarterProjectPayload } from "@planner/lib/starterProjectTemplate";
 import { trackPlannerProjectStart } from "@/lib/analytics/conversionContract";
 import { PhIcon } from "@planner/components/ui/PlannerPhIcon";
@@ -14,26 +14,48 @@ const ProjectsList = () => {
   const showToast = usePlannerUIStore((s) => s.showToast);
   const [projects, setProjects] = useState<PlannerProject[]>([]);
   const [loading, setLoading] = useState(true);
+  const [listError, setListError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
 
-  const load = useCallback(async () => {
-    try {
-      setLoading(true);
-      const items = (await listProjects()) as PlannerProject[];
-      setProjects(items);
-    } catch {
-      showToast("Failed to load projects", "error");
-    } finally {
-      setLoading(false);
-    }
-  }, [showToast]);
-  useEffect(() => { void load(); }, [load]);
+  useEffect(() => {
+    const controller = new AbortController();
+    let stale = false;
+
+    (async () => {
+      try {
+        setLoading(true);
+        setListError(null);
+        const items = await listProjects({ signal: controller.signal });
+        if (stale) return;
+        setProjects(items as PlannerProject[]);
+      } catch (e: unknown) {
+        if (isAbortError(e) || stale) return;
+        const msg =
+          e instanceof PlannerApiError
+            ? e.message
+            : "Failed to load projects";
+        setListError(msg);
+      } finally {
+        if (!stale) setLoading(false);
+      }
+    })();
+
+    return () => {
+      stale = true;
+      controller.abort();
+    };
+  }, [retryCount]);
+
+  const handleRetry = useCallback(() => {
+    setRetryCount((c) => c + 1);
+  }, []);
 
   const doDelete = async (id: string, name: string) => {
     if (!window.confirm(`Delete "${name}"?`)) return;
     try {
       await deleteProject(id);
       showToast("Deleted", "ok");
-      load();
+      handleRetry();
     } catch {
       showToast("Delete failed", "error");
     }
@@ -61,6 +83,16 @@ const ProjectsList = () => {
           <PhIcon name="plus" size={18} /> New plan
         </OoButton>
       </div>
+      {listError && !loading && (
+        <div className="planner-load-state" role="alert" data-testid="projects-list-error">
+          <p className="planner-load-state__message">{listError}</p>
+          <div className="planner-load-state__actions">
+            <button type="button" className="btn" onClick={handleRetry}>
+              Try again
+            </button>
+          </div>
+        </div>
+      )}
       {loading ? (
         <div className="empty-state">Loading…</div>
       ) : projects.length === 0 ? (

@@ -9,6 +9,11 @@
 
 export type PriceBookCurrency = "INR" | "USD";
 
+/** Operator role for price-book governance actions (approve/activate/rollback). */
+export type PriceBookRole = "author" | "approver" | "viewer";
+
+export type PriceBookHighRiskAction = "approve" | "activate" | "rollback";
+
 export type PriceBookVersionStatus =
   | "draft"
   | "approved"

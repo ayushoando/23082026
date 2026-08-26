@@ -3,12 +3,16 @@
  * Roles enforced server-side (ADM-ROLE-01). Audit fields returned for ADM-AUDIT-01.
  */
 
-import type { PriceBookContract, PriceBookVersion } from "./priceBookContract";
+import type {
+  PriceBookContract,
+  PriceBookHighRiskAction,
+  PriceBookRole,
+  PriceBookVersion,
+} from "./priceBookContract";
 import { emitPriceBookContract } from "./emitPriceBookContract";
 import type { PriceBookRow, PriceBookVersionRow } from "./emitPriceBookContract";
-import type { PriceBookHighRiskAction } from "./priceBookGovernance";
 
-export type PriceBookRole = "author" | "approver" | "viewer";
+export type { PriceBookRole } from "./priceBookContract";
 
 export type PriceBookStore = {
   readonly getBook: (bookId: string) => Promise<{

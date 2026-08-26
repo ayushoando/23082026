@@ -1,7 +1,7 @@
 /**
  * 2.5D plan-view surfaces — depth via extruded edges and shadows, not heavy gradients.
  */
-import type { Prim } from "./blocks2d";
+import type { Prim } from "./blockPrimitives";
 
 const SURFACE_STROKE = "var(--block-surface-stroke)";
 const CORNER_R = 8;

@@ -1,4 +1,4 @@
-import type { CompatCategory, CompatProduct, CompatSeries } from '@/lib/catalog/site/getProducts';
+import type { CompatCategory, CompatProduct, CompatSeries } from '@/lib/catalog/types';
 import { isPublishableCatalogProduct } from '@/lib/catalog/site/catalogProductFilters';
 
 export const Catalog_CATEGORY_ORDER = [

@@ -370,3 +370,100 @@
     -webkit-overflow-scrolling: touch;
   }
 }
+
+
+/* ------------------------------------------------------------------ */
+/* Project load-state gate and recovery surface                        */
+/* ------------------------------------------------------------------ */
+
+/*
+ * When the workspace is in a non-ready/non-draft state, suppress the normal
+ * interactive canvas, docks, and controls to prevent the appearance of a
+ * loaded plan. The canvas remains mounted (Fabric lifecycle) but is hidden
+ * from sight and keyboard.
+ */
+.ooplanner-root .workspace[data-load-state="loading"],
+.ooplanner-root .workspace[data-load-state="not-found"],
+.ooplanner-root .workspace[data-load-state="transient-error"] {
+  position: relative;
+}
+
+.ooplanner-root .workspace[data-load-state="loading"] > :not(.planner-load-state),
+.ooplanner-root .workspace[data-load-state="not-found"] > :not(.planner-load-state),
+.ooplanner-root .workspace[data-load-state="transient-error"] > :not(.planner-load-state) {
+  visibility: hidden;
+  pointer-events: none;
+  /* Keep layout stable — prevent canvas flash by not using display:none */
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* Recovery surface — fills the workspace content area */
+.ooplanner-root .planner-load-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 32px 24px;
+  text-align: center;
+  min-height: 200px;
+  flex: 1;
+  z-index: 10;
+}
+
+.ooplanner-root .planner-load-state__heading {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-strong);
+  letter-spacing: -0.02em;
+  outline: none;
+}
+
+.ooplanner-root .planner-load-state__heading:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.ooplanner-root .planner-load-state__message {
+  margin: 0;
+  max-width: 320px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.ooplanner-root .planner-load-state__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+/* Ensure recovery buttons meet the 40px minimum target at all widths */
+.ooplanner-root .planner-load-state__actions .btn {
+  min-height: 40px;
+  min-width: 40px;
+}
+
+/* Narrow viewport: stack recovery actions vertically */
+@media (max-width: 768px) {
+  .ooplanner-root .planner-load-state {
+    padding: 24px 16px;
+  }
+
+  .ooplanner-root .planner-load-state__actions {
+    flex-direction: column;
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .ooplanner-root .planner-load-state__actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

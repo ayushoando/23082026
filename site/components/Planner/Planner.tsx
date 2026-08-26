@@ -88,7 +88,16 @@ import {
 } from "@planner/lib/plannerSnapStatusLabel";
 import { exportPNG, exportPDF, downloadDataUrl, exportSVG } from "@planner/lib/plannerExporters";
 import { downloadDxf } from "@planner/lib/plannerDxfExport";
-import { createProject, updateProject, getProject, fileUrl } from "@planner/lib/plannerApi";
+import { createProject, updateProject, getProject, fileUrl, PlannerApiError, isAbortError } from "@planner/lib/plannerApi";
+import {
+  type PlannerLoadState,
+  DRAFT,
+  loadingState,
+  readyState,
+  notFoundState,
+  transientErrorState,
+} from "./plannerLoadState";
+import { PlannerProjectLoadState } from "./PlannerProjectLoadState";
 import { serializeFabricCanvas } from "@planner/lib/plannerFabricSerialize";
 import { useRuntimeFeatureFlags } from "@/lib/hooks/useRuntimeFeatureFlags";
 import { PlannerCommandPalette } from "@planner/components/PlannerCommandPalette";
@@ -124,6 +133,10 @@ const Planner = () => {
   const [projectId, setProjectId] = useState<string | null>(null);
   const projectIdRef = useRef<string | null>(null);
   projectIdRef.current = projectId;
+  const [loadState, setLoadState] = useState<PlannerLoadState>(DRAFT);
+  const requestKeyRef = useRef<string>("");
+  const [retryCount, setRetryCount] = useState(0);
+  const workspaceGated = loadState.kind === "loading" || loadState.kind === "not-found" || loadState.kind === "transient-error";
   const firstPlacementRef = useRef(false);
   const [saving, setSaving] = useState(false);
   const [sheet, setSheet] = useState<PlannerSheet>(DEFAULT_SHEET);
@@ -1186,18 +1199,43 @@ const Planner = () => {
   // stick before the reload — would otherwise silently show "Untitled Plan"
   // even though the project was genuinely saved and is recoverable from the
   // projects list. The fallback makes a plain refresh keep the binding too.
+  //
+  // Strict effective-id precedence:
+  //   1. routeId (authoritative for /ooplanner/projects/[id])
+  //   2. localStorage fallback (bare /ooplanner only)
+  //   3. Draft (no project to load)
+  // A failed routeId NEVER falls through to a localStorage project.
   useEffect(() => {
     if (!ready) return;
-    let effectiveId = routeId;
+
+    // --- Compute effective id with strict precedence ---
+    let effectiveId: string | undefined = routeId;
+    const isLocalStorageFallback = !effectiveId;
     if (!effectiveId) {
       try { effectiveId = localStorage.getItem(PLANNER_LAST_PROJECT_KEY) || undefined; } catch { /* noop */ }
     }
-    if (!effectiveId) return;
+    if (!effectiveId) {
+      setLoadState(DRAFT);
+      return;
+    }
+
     const c = fabricRef.current;
     if (!c) return;
+
+    // --- Generate a unique request key for this load ---
+    const key = `${effectiveId}:${Date.now()}`;
+    requestKeyRef.current = key;
+    setLoadState(loadingState(effectiveId, key));
+
+    const controller = new AbortController();
+
     (async () => {
       try {
-        const proj = await getProject(effectiveId!);
+        const proj = await getProject(effectiveId!, { signal: controller.signal });
+
+        // Stale check: if a newer request replaced this one, discard silently.
+        if (requestKeyRef.current !== key) return;
+
         setProjectId(proj.id);
         setProjectName(proj.name);
         try { localStorage.setItem(PLANNER_LAST_PROJECT_KEY, proj.id); } catch { /* noop */ }
@@ -1208,19 +1246,36 @@ const Planner = () => {
           refreshLayers();
           showToast(`Loaded "${proj.name}"`);
         });
+        setLoadState(readyState(effectiveId!, proj));
       } catch (e) {
-        const msg = e instanceof Error ? e.message : String(e);
-        console.error("[Planner] load project failed:", msg, { effectiveId, routeId });
-        // Only clear localStorage if the project is actually gone (404).
-        // Transient errors (network hiccups, disk races) should not wipe the
-        // fallback key — the user can reload again and it may succeed.
-        if (msg.includes("404") || msg.includes("not found") || msg.includes("Not Found")) {
-          try { localStorage.removeItem(PLANNER_LAST_PROJECT_KEY); } catch { /* noop */ }
+        // Aborted — silent cancellation, not a visible error.
+        if (isAbortError(e)) return;
+        // Stale — a newer request superseded this one.
+        if (requestKeyRef.current !== key) return;
+
+        if (e instanceof PlannerApiError && e.isNotFound) {
+          setLoadState(notFoundState(effectiveId!, e.detail || e.message));
+          // Clear stale localStorage fallback only — never clear when the
+          // id came from the route (to avoid wiping an unrelated saved project).
+          if (isLocalStorageFallback) {
+            try { localStorage.removeItem(PLANNER_LAST_PROJECT_KEY); } catch { /* noop */ }
+          }
+        } else if (e instanceof PlannerApiError && e.isTransient) {
+          console.error("[Planner] load project failed (transient):", e.message, { effectiveId, routeId });
+          setLoadState(transientErrorState(effectiveId!, e.status, e.detail || e.message));
+        } else {
+          // Network or unexpected failure
+          const msg = e instanceof Error ? e.message : String(e);
+          console.error("[Planner] load project failed:", msg, { effectiveId, routeId });
+          setLoadState(transientErrorState(effectiveId!, undefined, "Could not load the plan. Please try again."));
         }
-        showToast(`Failed to load project${msg ? `: ${msg}` : ""}`, "error");
       }
     })();
-  }, [ready, routeId, fabricRef, showToast, drawGridAndSheet, refreshLayers]);
+
+    return () => {
+      controller.abort();
+    };
+  }, [ready, routeId, fabricRef, showToast, drawGridAndSheet, refreshLayers, retryCount]);
 
   const newProject = () => {
     const c = fabricRef.current; if (!c) return;
@@ -1232,6 +1287,14 @@ const Planner = () => {
     router.replace("/ooplanner");
     drawGridAndSheet();
   };
+
+  const handleRetry = useCallback(() => {
+    setRetryCount((c) => c + 1);
+  }, []);
+
+  const handleBackToProjects = useCallback(() => {
+    router.push("/ooplanner/projects");
+  }, [router]);
 
   type PlannerShortcuts = {
     undo?: () => void;
@@ -1544,7 +1607,14 @@ const Planner = () => {
         onStepChange={applyPlannerStep}
         planMetrics={planMetrics}
       />
-    <div className="workspace" data-testid="planner-workspace">
+    <div className="workspace" data-testid="planner-workspace" data-load-state={loadState.kind}>
+      {workspaceGated && (
+        <PlannerProjectLoadState
+          state={loadState}
+          onRetry={handleRetry}
+          onBackToProjects={handleBackToProjects}
+        />
+      )}
       <div className="planner-mobile-shell" data-testid="planner-mobile-shell">
         <div className="planner-mobile-canvas" data-testid="planner-mobile-canvas" aria-hidden="true" />
         <div className="planner-mobile-bottom-chrome" data-testid="planner-mobile-bottom-chrome" data-mobile-chrome="bottom">

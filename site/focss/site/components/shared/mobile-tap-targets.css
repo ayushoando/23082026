@@ -1,6 +1,6 @@
 /* Mobile inline-link tap targets — typ-label text links used as CTAs (≥44px). */
 
-@media (width < theme(--breakpoint-md)) {
+@media (width <= theme(--breakpoint-md)) {
   .home-catalog-cta {
     min-height: var(--control-height-sm);
     padding-inline: 0.125rem;

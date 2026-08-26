@@ -21,21 +21,21 @@ The five viewport columns are always `1920`, `1440`, `1078`, `768`, and `390`. T
 ## Wave 0 — Freeze evidence and ownership
 
 - [x] 0.1 Freeze the 61 route patterns and sampled paths from `route-inventory.json`; do not replace a dynamic pattern with only its sample URL.
-- [-] 0.2 For every route row below, record the current DOM class/selector, measured box, computed type value, and direct owner before editing.
-- [~] 0.3 Classify every `F` using `site/features/site/data/routeChromeRules.ts`, `site/app/(site)/layout.tsx`, `site/app/admin/layout.tsx`, `site/features/Planner/layout.tsx`, `site/features/Studio/layout.tsx`, or the route's redirect behavior.
-- [~] 0.4 Confirm no proposed CSS file is outside its zone and no row names an unverified component as an implementation owner.
-- [~] 0.5 Treat `/login`, `/products/category/[slug]`, and `/portal/guest/view/[id]` as redirect/contract rows unless DOM reproduction proves a rendered page owner.
-- [~] 0.6 Treat both calculator rows as owner-gap investigations: the graph shows no live calculator component and no verified calculator page sheet.
+- [x] 0.2 For every route row below, record the current DOM class/selector, measured box, computed type value, and direct owner before editing.
+- [x] 0.3 Classify every `F` using `site/features/site/data/routeChromeRules.ts`, `site/app/(site)/layout.tsx`, `site/app/admin/layout.tsx`, `site/features/Planner/layout.tsx`, `site/features/Studio/layout.tsx`, or the route's redirect behavior.
+- [x] 0.4 Confirm no proposed CSS file is outside its zone and no row names an unverified component as an implementation owner.
+- [ ] 0.5 Treat `/login`, `/products/category/[slug]`, and `/portal/guest/view/[id]` as redirect/contract rows unless DOM reproduction proves a rendered page owner.
+- [ ] 0.6 Treat both calculator rows as owner-gap investigations: the graph shows no live calculator component and no verified calculator page sheet.
 
 ## Wave 1 — Shared primitives and shell owners
 
-- [~] 1.1 Review `site/focss/base/type/type.css` and `site/focss/base/type/typography.css`; establish the approved label, kicker, breadcrumb, and body scale without global inflation.
-- [~] 1.2 Review site `site/focss/site/components/shared/buttons.css` and `mobile-tap-targets.css`; correct repeated link/button/icon-button boxes at 768 and 390.
-- [~] 1.3 Review site shell owners `site/focss/site/components/chrome/shell-global-nav.css`, `shell-access.css`, `shell-workspace.css`, `shell-portal.css`, `shell-footer.css`, and `site-footer.css` against the route chrome contract.
-- [~] 1.4 Review Admin `site/focss/admin/base/buttons.css`, `primitives.css`, `shell.css`, and `shell-main.css` with `site/features/admin/ui/AdminLayoutShell.tsx` as the markup owner.
-- [~] 1.5 Review Planner `site/focss/planner/controls.css`, `chrome.css`, `workspace-shell.css`, `workspace.css`, and `dock.css` independently from Studio.
-- [~] 1.6 Review Studio `site/focss/studio/controls.css`, `chrome.css`, `workspace-shell.css`, `workspace.css`, and `dock.css` independently from Planner.
-- [~] 1.7 Do not create `core/`, `core/locked/`, `features/product/`, a root-level `focss/`, or duplicate token sheets.
+- [x] 1.1 Review `site/focss/base/type/type.css` and `site/focss/base/type/typography.css`; establish the approved label, kicker, breadcrumb, and body scale without global inflation.
+- [x] 1.2 Review site `site/focss/site/components/shared/buttons.css` and `mobile-tap-targets.css`; correct repeated link/button/icon-button boxes at 768 and 390.
+- [ ] 1.3 Review site shell owners `site/focss/site/components/chrome/shell-global-nav.css`, `shell-access.css`, `shell-workspace.css`, `shell-portal.css`, `shell-footer.css`, and `site-footer.css` against the route chrome contract.
+- [ ] 1.4 Review Admin `site/focss/admin/base/buttons.css`, `primitives.css`, `shell.css`, and `shell-main.css` with `site/features/admin/ui/AdminLayoutShell.tsx` as the markup owner.
+- [ ] 1.5 Review Planner `site/focss/planner/controls.css`, `chrome.css`, `workspace-shell.css`, `workspace.css`, and `dock.css` independently from Studio.
+- [ ] 1.6 Review Studio `site/focss/studio/controls.css`, `chrome.css`, `workspace-shell.css`, `workspace.css`, and `dock.css` independently from Planner.
+- [ ] 1.7 Do not create `core/`, `core/locked/`, `features/product/`, a root-level `focss/`, or duplicate token sheets.
 
 ## Wave 2 — Route-by-route implementation matrix
 
@@ -69,7 +69,7 @@ Every row is a required planning record. `Owner` names the direct page/view owne
 | 24 | `/choose-product` | `/choose-product` | `site/app/(site)/choose-product/page.tsx` | `ChooseProductPage`, `site/components/home/layout/index.ts` | `products/choose-product-page.css`, `chrome/marketing-layout.css`, `shared/buttons.css`, `mobile-tap-targets.css` | F | F | F | F,H | F,H | **CSS/AC:** this is full marketing chrome, not a workspace exception; fix chooser actions and preserve the public footer. |
 | 25 | `/clients` | `/clients` | `site/app/(site)/clients/page.tsx` | `ClientsPageView` | `clients/clients-page.css`, `shared/buttons.css`, `mobile-tap-targets.css`, `chrome/marketing-layout.css` | OK | OK | OK | H | H | **CSS:** correct client card/filter/link target sizing. |
 | 26 | `/compare` | `/compare` | `site/app/(site)/compare/page.tsx` | `ComparePageView` | `compare/compare-page.css`, `shared/buttons.css`, `mobile-tap-targets.css` | OK | OK | OK | H | H | **CSS:** fix compare controls and links without shrinking table content. |
-| 27 | `/contact` | `/contact` | `site/app/(site)/contact/page.tsx` | `ContactPageView`, `ContactTeaser`, `site/components/home/layout/index.ts` | `contact/contact-page-pass.css`, `contact/contact-page.css`, `contact/contact-band.css`, `shared/buttons.css`, `mobile-tap-targets.css` | OK | OK | OK | H | H | **CSS:** fix form and CTA target boxes while preserving field density and wrapping. |
+| 27 | `/contact` | `/contact` | `site/app/(site)/contact/page.tsx` | `ContactPageView`, `ContactTeaser`, `site/components/home/layout/index.ts` | `contact/contact-page-pass.css`, `shared/contact-page.css`, `contact/contact-band.css`, `shared/buttons.css`, `mobile-tap-targets.css` | OK | OK | OK | H | H | **CSS:** fix form and CTA target boxes while preserving field density and wrapping. |
 | 28 | `/dashboard` | `/dashboard` | `site/app/(site)/dashboard/page.tsx` | `DashboardClient` | `chrome/shell-workspace.css`, `chrome/shell-global-nav.css`, `products/workspace-hub.css`, `shared/buttons.css` | F | F | F | F,H | F,H | **AC:** hidden public footer is intentional. **CSS:** fix dashboard navigation/action targets in workspace shell. |
 | 29 | `/downloads` | `/downloads` | `site/app/(site)/downloads/page.tsx` | `DownloadsPageView`, `ContactTeaser`, `site/components/home/layout/index.ts` | `downloads/downloads-page.css`, `shared/buttons.css`, `mobile-tap-targets.css`, `chrome/marketing-layout.css` | OK | OK | OK | H | H | **CSS:** fix download card/button/link hit areas. |
 | 30 | `/login` | `/login` | `site/app/(site)/login/page.tsx` | redirect/auth page; `plannerRedirect`; no live view owner | `site/features/site/data/routeChromeRules.ts`, `chrome/shell-access.css`; no page-local CSS owner | F | F | F | F,H | F,H | **AC:** `footer=login-tools` and header varies with `next`; do not add a universal footer or page CSS until redirect behavior is reproduced. |
@@ -107,26 +107,26 @@ Every row is a required planning record. `Owner` names the direct page/view owne
 
 ## Wave 3 — Non-CSS and owner-gap work
 
-- [~] 3.1 **Footer contract:** inspect all `F` rows in the DOM. Add a footer only when the public shell is required and actually missing; otherwise update the deterministic audit rule with the intentional shell contract.
-- [~] 3.2 **Product controls:** add accessible names in `CategoryPageView`, `FilterGridInner`, `FilterGrid.components`, and `CategoryListingHero`; recheck both `/products/seating/` and `/products/category/seating/` after the redirect is understood.
-- [~] 3.3 **Redirects:** reproduce `/login`, `/products/category/seating/`, and `/portal/guest/view/demo-plan/`; record destination and classify their original-route findings as audit-contract or redirect behavior.
-- [~] 3.4 **Calculators:** inspect both tools pages and their rendered DOM for the missing placeholder/control owner. Do not add a stylesheet until an actual component owner exists.
-- [~] 3.5 **Runtime:** reproduce `/offline`, `/ooplanner/projects`, and `/ooplanner/projects/demo-plan/` console findings and assign each error to the runtime/component owner. CSS completion is independent of runtime closure.
-- [~] 3.6 **Typography:** confirm every remaining T finding against the rendered class before changing `home-type.css`, Planner controls, `pdp-detail.css`, or shared base type.
+- [ ] 3.1 **Footer contract:** inspect all `F` rows in the DOM. Add a footer only when the public shell is required and actually missing; otherwise update the deterministic audit rule with the intentional shell contract.
+- [ ] 3.2 **Product controls:** add accessible names in `CategoryPageView`, `FilterGridInner`, `FilterGrid.components`, and `CategoryListingHero`; recheck both `/products/seating/` and `/products/category/seating/` after the redirect is understood.
+- [ ] 3.3 **Redirects:** reproduce `/login`, `/products/category/seating/`, and `/portal/guest/view/demo-plan/`; record destination and classify their original-route findings as audit-contract or redirect behavior.
+- [ ] 3.4 **Calculators:** inspect both tools pages and their rendered DOM for the missing placeholder/control owner. Do not add a stylesheet until an actual component owner exists.
+- [ ] 3.5 **Runtime:** reproduce `/offline`, `/ooplanner/projects`, and `/ooplanner/projects/demo-plan/` console findings and assign each error to the runtime/component owner. CSS completion is independent of runtime closure.
+- [ ] 3.6 **Typography:** confirm every remaining T finding against the rendered class before changing `home-type.css`, Planner controls, `pdp-detail.css`, or shared base type.
 
 ## Wave 4 — Evidence closure
 
-- [~] 4.1 Re-run the complete deterministic 61 × 5 audit after implementation; retain all route patterns, audit paths, status, findings, and screenshots.
-- [~] 4.2 Compare each route row at 1920, 1440, 1078, 768, and 390. Do not close the plan from an aggregate count alone.
-- [~] 4.3 Record each changed DOM target, CSS file, component owner, before/after box, finding code, and screenshot path under `results/**`.
-- [~] 4.4 Record unresolved items as `CSS`, `M`, `R`, `AC`, or `OG`; never relabel runtime/markup issues as CSS.
+- [ ] 4.1 Re-run the complete deterministic 61 × 5 audit after implementation; retain all route patterns, audit paths, status, findings, and screenshots.
+- [ ] 4.2 Compare each route row at 1920, 1440, 1078, 768, and 390. Do not close the plan from an aggregate count alone.
+- [ ] 4.3 Record each changed DOM target, CSS file, component owner, before/after box, finding code, and screenshot path under `results/**`.
+- [ ] 4.4 Record unresolved items as `CSS`, `M`, `R`, `AC`, or `OG`; never relabel runtime/markup issues as CSS.
 
 ## Wave 5 — User-invoked repository checks
 
 These are deliberately user-run after implementation; the agent does not run tests, gates, browser suites, or Postman collections automatically.
 
-- [~] 5.1 User runs `pnpm run verify:focss`.
-- [~] 5.2 User runs `pnpm run lint:ui:strict`.
-- [~] 5.3 User runs `pnpm run check:style-tokens`.
-- [~] 5.4 User runs the relevant five-viewport browser audit and reviews route-level evidence.
-- [~] 5.5 User runs `pnpm run scan:boundaries` if Planner or Studio files were touched.
+- [ ] 5.1 User runs `pnpm run verify:focss`.
+- [ ] 5.2 User runs `pnpm run lint:ui:strict`.
+- [ ] 5.3 User runs `pnpm run check:style-tokens`.
+- [ ] 5.4 User runs the relevant five-viewport browser audit and reviews route-level evidence.
+- [ ] 5.5 User runs `pnpm run scan:boundaries` if Planner or Studio files were touched.

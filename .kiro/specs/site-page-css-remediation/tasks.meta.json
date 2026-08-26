@@ -28,6 +28,11 @@
         "executionId": "89c39423-93ef-47ac-a452-62e910ec2abc",
         "chatSessionId": "sess_c0647e36-1696-4c88-8b11-579405a8abc9",
         "timestamp": 1787758393720
+      },
+      {
+        "executionId": "89c39423-93ef-47ac-a452-62e910ec2abc",
+        "chatSessionId": "sess_c0647e36-1696-4c88-8b11-579405a8abc9",
+        "timestamp": 1787761636190
       }
     ],
     "0.3 Classify every `F` using `site/features/site/data/routeChromeRules.ts`, `site/app/(site)/layout.tsx`, `site/app/admin/layout.tsx`, `site/features/Planner/layout.tsx`, `site/features/Studio/layout.tsx`, or the route's redirect behavior.": [
@@ -35,6 +40,16 @@
         "executionId": "89c39423-93ef-47ac-a452-62e910ec2abc",
         "chatSessionId": "sess_c0647e36-1696-4c88-8b11-579405a8abc9",
         "timestamp": 1787758183672
+      },
+      {
+        "executionId": "89c39423-93ef-47ac-a452-62e910ec2abc",
+        "chatSessionId": "sess_c0647e36-1696-4c88-8b11-579405a8abc9",
+        "timestamp": 1787761656264
+      },
+      {
+        "executionId": "89c39423-93ef-47ac-a452-62e910ec2abc",
+        "chatSessionId": "sess_c0647e36-1696-4c88-8b11-579405a8abc9",
+        "timestamp": 1787762668213
       }
     ],
     "0.4 Confirm no proposed CSS file is outside its zone and no row names an unverified component as an implementation owner.": [
@@ -42,6 +57,21 @@
         "executionId": "89c39423-93ef-47ac-a452-62e910ec2abc",
         "chatSessionId": "sess_c0647e36-1696-4c88-8b11-579405a8abc9",
         "timestamp": 1787758183739
+      },
+      {
+        "executionId": "89c39423-93ef-47ac-a452-62e910ec2abc",
+        "chatSessionId": "sess_c0647e36-1696-4c88-8b11-579405a8abc9",
+        "timestamp": 1787762696345
+      },
+      {
+        "executionId": "beebb87a-50c0-4383-aba0-b11ae22fb8f3",
+        "chatSessionId": "sess_c0647e36-1696-4c88-8b11-579405a8abc9",
+        "timestamp": 1787763617269
+      },
+      {
+        "executionId": "beebb87a-50c0-4383-aba0-b11ae22fb8f3",
+        "chatSessionId": "sess_c0647e36-1696-4c88-8b11-579405a8abc9",
+        "timestamp": 1787764301230
       }
     ],
     "0.5 Treat `/login`, `/products/category/[slug]`, and `/portal/guest/view/[id]` as redirect/contract rows unless DOM reproduction proves a rendered page owner.": [
@@ -49,6 +79,16 @@
         "executionId": "89c39423-93ef-47ac-a452-62e910ec2abc",
         "chatSessionId": "sess_c0647e36-1696-4c88-8b11-579405a8abc9",
         "timestamp": 1787758183810
+      },
+      {
+        "executionId": "12cf1c4a-ee23-40d8-94b8-cf063bce2ff7",
+        "chatSessionId": "sess_2909eafc-2724-4c96-a70e-b0be819e9043",
+        "timestamp": 1787764329990
+      },
+      {
+        "executionId": "12cf1c4a-ee23-40d8-94b8-cf063bce2ff7",
+        "chatSessionId": "sess_2909eafc-2724-4c96-a70e-b0be819e9043",
+        "timestamp": 1787764345668
       }
     ],
     "0.6 Treat both calculator rows as owner-gap investigations: the graph shows no live calculator component and no verified calculator page sheet.": [
@@ -56,6 +96,11 @@
         "executionId": "89c39423-93ef-47ac-a452-62e910ec2abc",
         "chatSessionId": "sess_c0647e36-1696-4c88-8b11-579405a8abc9",
         "timestamp": 1787758183887
+      },
+      {
+        "executionId": "12cf1c4a-ee23-40d8-94b8-cf063bce2ff7",
+        "chatSessionId": "sess_2909eafc-2724-4c96-a70e-b0be819e9043",
+        "timestamp": 1787764330103
       }
     ],
     "1.1 Review `site/focss/base/type/type.css` and `site/focss/base/type/typography.css`; establish the approved label, kicker, breadcrumb, and body scale without global inflation.": [
@@ -77,6 +122,11 @@
         "executionId": "89c39423-93ef-47ac-a452-62e910ec2abc",
         "chatSessionId": "sess_c0647e36-1696-4c88-8b11-579405a8abc9",
         "timestamp": 1787758184124
+      },
+      {
+        "executionId": "12cf1c4a-ee23-40d8-94b8-cf063bce2ff7",
+        "chatSessionId": "sess_2909eafc-2724-4c96-a70e-b0be819e9043",
+        "timestamp": 1787764330178
       }
     ],
     "1.4 Review Admin `site/focss/admin/base/buttons.css`, `primitives.css`, `shell.css`, and `shell-main.css` with `site/features/admin/ui/AdminLayoutShell.tsx` as the markup owner.": [
@@ -84,6 +134,11 @@
         "executionId": "89c39423-93ef-47ac-a452-62e910ec2abc",
         "chatSessionId": "sess_c0647e36-1696-4c88-8b11-579405a8abc9",
         "timestamp": 1787758184196
+      },
+      {
+        "executionId": "12cf1c4a-ee23-40d8-94b8-cf063bce2ff7",
+        "chatSessionId": "sess_2909eafc-2724-4c96-a70e-b0be819e9043",
+        "timestamp": 1787764330259
       }
     ],
     "1.5 Review Planner `site/focss/planner/controls.css`, `chrome.css`, `workspace-shell.css`, `workspace.css`, and `dock.css` independently from Studio.": [
@@ -91,6 +146,11 @@
         "executionId": "89c39423-93ef-47ac-a452-62e910ec2abc",
         "chatSessionId": "sess_c0647e36-1696-4c88-8b11-579405a8abc9",
         "timestamp": 1787758184262
+      },
+      {
+        "executionId": "12cf1c4a-ee23-40d8-94b8-cf063bce2ff7",
+        "chatSessionId": "sess_2909eafc-2724-4c96-a70e-b0be819e9043",
+        "timestamp": 1787764330351
       }
     ],
     "1.6 Review Studio `site/focss/studio/controls.css`, `chrome.css`, `workspace-shell.css`, `workspace.css`, and `dock.css` independently from Planner.": [
@@ -98,6 +158,11 @@
         "executionId": "89c39423-93ef-47ac-a452-62e910ec2abc",
         "chatSessionId": "sess_c0647e36-1696-4c88-8b11-579405a8abc9",
         "timestamp": 1787758184379
+      },
+      {
+        "executionId": "12cf1c4a-ee23-40d8-94b8-cf063bce2ff7",
+        "chatSessionId": "sess_2909eafc-2724-4c96-a70e-b0be819e9043",
+        "timestamp": 1787764330416
       }
     ],
     "1.7 Do not create `core/`, `core/locked/`, `features/product/`, a root-level `focss/`, or duplicate token sheets.": [
@@ -105,6 +170,11 @@
         "executionId": "89c39423-93ef-47ac-a452-62e910ec2abc",
         "chatSessionId": "sess_c0647e36-1696-4c88-8b11-579405a8abc9",
         "timestamp": 1787758184531
+      },
+      {
+        "executionId": "12cf1c4a-ee23-40d8-94b8-cf063bce2ff7",
+        "chatSessionId": "sess_2909eafc-2724-4c96-a70e-b0be819e9043",
+        "timestamp": 1787764330526
       }
     ],
     "3.1 **Footer contract:** inspect all `F` rows in the DOM. Add a footer only when the public shell is required and actually missing; otherwise update the deterministic audit rule with the intentional shell contract.": [
@@ -112,6 +182,11 @@
         "executionId": "89c39423-93ef-47ac-a452-62e910ec2abc",
         "chatSessionId": "sess_c0647e36-1696-4c88-8b11-579405a8abc9",
         "timestamp": 1787758184658
+      },
+      {
+        "executionId": "12cf1c4a-ee23-40d8-94b8-cf063bce2ff7",
+        "chatSessionId": "sess_2909eafc-2724-4c96-a70e-b0be819e9043",
+        "timestamp": 1787764330590
       }
     ],
     "3.2 **Product controls:** add accessible names in `CategoryPageView`, `FilterGridInner`, `FilterGrid.components`, and `CategoryListingHero`; recheck both `/products/seating/` and `/products/category/seating/` after the redirect is understood.": [
@@ -119,6 +194,11 @@
         "executionId": "89c39423-93ef-47ac-a452-62e910ec2abc",
         "chatSessionId": "sess_c0647e36-1696-4c88-8b11-579405a8abc9",
         "timestamp": 1787758184763
+      },
+      {
+        "executionId": "12cf1c4a-ee23-40d8-94b8-cf063bce2ff7",
+        "chatSessionId": "sess_2909eafc-2724-4c96-a70e-b0be819e9043",
+        "timestamp": 1787764330659
       }
     ],
     "3.3 **Redirects:** reproduce `/login`, `/products/category/seating/`, and `/portal/guest/view/demo-plan/`; record destination and classify their original-route findings as audit-contract or redirect behavior.": [
@@ -126,6 +206,11 @@
         "executionId": "89c39423-93ef-47ac-a452-62e910ec2abc",
         "chatSessionId": "sess_c0647e36-1696-4c88-8b11-579405a8abc9",
         "timestamp": 1787758184824
+      },
+      {
+        "executionId": "12cf1c4a-ee23-40d8-94b8-cf063bce2ff7",
+        "chatSessionId": "sess_2909eafc-2724-4c96-a70e-b0be819e9043",
+        "timestamp": 1787764330765
       }
     ],
     "3.4 **Calculators:** inspect both tools pages and their rendered DOM for the missing placeholder/control owner. Do not add a stylesheet until an actual component owner exists.": [
@@ -133,6 +218,11 @@
         "executionId": "89c39423-93ef-47ac-a452-62e910ec2abc",
         "chatSessionId": "sess_c0647e36-1696-4c88-8b11-579405a8abc9",
         "timestamp": 1787758184917
+      },
+      {
+        "executionId": "12cf1c4a-ee23-40d8-94b8-cf063bce2ff7",
+        "chatSessionId": "sess_2909eafc-2724-4c96-a70e-b0be819e9043",
+        "timestamp": 1787764330842
       }
     ],
     "3.5 **Runtime:** reproduce `/offline`, `/ooplanner/projects`, and `/ooplanner/projects/demo-plan/` console findings and assign each error to the runtime/component owner. CSS completion is independent of runtime closure.": [
@@ -140,6 +230,11 @@
         "executionId": "89c39423-93ef-47ac-a452-62e910ec2abc",
         "chatSessionId": "sess_c0647e36-1696-4c88-8b11-579405a8abc9",
         "timestamp": 1787758185003
+      },
+      {
+        "executionId": "12cf1c4a-ee23-40d8-94b8-cf063bce2ff7",
+        "chatSessionId": "sess_2909eafc-2724-4c96-a70e-b0be819e9043",
+        "timestamp": 1787764330927
       }
     ],
     "3.6 **Typography:** confirm every remaining T finding against the rendered class before changing `home-type.css`, Planner controls, `pdp-detail.css`, or shared base type.": [
@@ -147,6 +242,11 @@
         "executionId": "89c39423-93ef-47ac-a452-62e910ec2abc",
         "chatSessionId": "sess_c0647e36-1696-4c88-8b11-579405a8abc9",
         "timestamp": 1787758185091
+      },
+      {
+        "executionId": "12cf1c4a-ee23-40d8-94b8-cf063bce2ff7",
+        "chatSessionId": "sess_2909eafc-2724-4c96-a70e-b0be819e9043",
+        "timestamp": 1787764330993
       }
     ],
     "4.1 Re-run the complete deterministic 61 × 5 audit after implementation; retain all route patterns, audit paths, status, findings, and screenshots.": [
@@ -154,6 +254,11 @@
         "executionId": "89c39423-93ef-47ac-a452-62e910ec2abc",
         "chatSessionId": "sess_c0647e36-1696-4c88-8b11-579405a8abc9",
         "timestamp": 1787758185212
+      },
+      {
+        "executionId": "12cf1c4a-ee23-40d8-94b8-cf063bce2ff7",
+        "chatSessionId": "sess_2909eafc-2724-4c96-a70e-b0be819e9043",
+        "timestamp": 1787764331057
       }
     ],
     "4.2 Compare each route row at 1920, 1440, 1078, 768, and 390. Do not close the plan from an aggregate count alone.": [
@@ -161,6 +266,11 @@
         "executionId": "89c39423-93ef-47ac-a452-62e910ec2abc",
         "chatSessionId": "sess_c0647e36-1696-4c88-8b11-579405a8abc9",
         "timestamp": 1787758185305
+      },
+      {
+        "executionId": "12cf1c4a-ee23-40d8-94b8-cf063bce2ff7",
+        "chatSessionId": "sess_2909eafc-2724-4c96-a70e-b0be819e9043",
+        "timestamp": 1787764331115
       }
     ],
     "4.3 Record each changed DOM target, CSS file, component owner, before/after box, finding code, and screenshot path under `results/**`.": [
@@ -168,6 +278,11 @@
         "executionId": "89c39423-93ef-47ac-a452-62e910ec2abc",
         "chatSessionId": "sess_c0647e36-1696-4c88-8b11-579405a8abc9",
         "timestamp": 1787758185423
+      },
+      {
+        "executionId": "12cf1c4a-ee23-40d8-94b8-cf063bce2ff7",
+        "chatSessionId": "sess_2909eafc-2724-4c96-a70e-b0be819e9043",
+        "timestamp": 1787764331182
       }
     ],
     "4.4 Record unresolved items as `CSS`, `M`, `R`, `AC`, or `OG`; never relabel runtime/markup issues as CSS.": [
@@ -175,6 +290,11 @@
         "executionId": "89c39423-93ef-47ac-a452-62e910ec2abc",
         "chatSessionId": "sess_c0647e36-1696-4c88-8b11-579405a8abc9",
         "timestamp": 1787758185514
+      },
+      {
+        "executionId": "12cf1c4a-ee23-40d8-94b8-cf063bce2ff7",
+        "chatSessionId": "sess_2909eafc-2724-4c96-a70e-b0be819e9043",
+        "timestamp": 1787764331259
       }
     ],
     "5.1 User runs `pnpm run verify:focss`.": [
@@ -182,6 +302,11 @@
         "executionId": "89c39423-93ef-47ac-a452-62e910ec2abc",
         "chatSessionId": "sess_c0647e36-1696-4c88-8b11-579405a8abc9",
         "timestamp": 1787758185598
+      },
+      {
+        "executionId": "12cf1c4a-ee23-40d8-94b8-cf063bce2ff7",
+        "chatSessionId": "sess_2909eafc-2724-4c96-a70e-b0be819e9043",
+        "timestamp": 1787764331363
       }
     ],
     "5.2 User runs `pnpm run lint:ui:strict`.": [
@@ -189,6 +314,11 @@
         "executionId": "89c39423-93ef-47ac-a452-62e910ec2abc",
         "chatSessionId": "sess_c0647e36-1696-4c88-8b11-579405a8abc9",
         "timestamp": 1787758185693
+      },
+      {
+        "executionId": "12cf1c4a-ee23-40d8-94b8-cf063bce2ff7",
+        "chatSessionId": "sess_2909eafc-2724-4c96-a70e-b0be819e9043",
+        "timestamp": 1787764331420
       }
     ],
     "5.3 User runs `pnpm run check:style-tokens`.": [
@@ -196,6 +326,11 @@
         "executionId": "89c39423-93ef-47ac-a452-62e910ec2abc",
         "chatSessionId": "sess_c0647e36-1696-4c88-8b11-579405a8abc9",
         "timestamp": 1787758185782
+      },
+      {
+        "executionId": "12cf1c4a-ee23-40d8-94b8-cf063bce2ff7",
+        "chatSessionId": "sess_2909eafc-2724-4c96-a70e-b0be819e9043",
+        "timestamp": 1787764331514
       }
     ],
     "5.4 User runs the relevant five-viewport browser audit and reviews route-level evidence.": [
@@ -203,6 +338,11 @@
         "executionId": "89c39423-93ef-47ac-a452-62e910ec2abc",
         "chatSessionId": "sess_c0647e36-1696-4c88-8b11-579405a8abc9",
         "timestamp": 1787758185923
+      },
+      {
+        "executionId": "12cf1c4a-ee23-40d8-94b8-cf063bce2ff7",
+        "chatSessionId": "sess_2909eafc-2724-4c96-a70e-b0be819e9043",
+        "timestamp": 1787764331569
       }
     ],
     "5.5 User runs `pnpm run scan:boundaries` if Planner or Studio files were touched.": [
@@ -210,6 +350,11 @@
         "executionId": "89c39423-93ef-47ac-a452-62e910ec2abc",
         "chatSessionId": "sess_c0647e36-1696-4c88-8b11-579405a8abc9",
         "timestamp": 1787758186038
+      },
+      {
+        "executionId": "12cf1c4a-ee23-40d8-94b8-cf063bce2ff7",
+        "chatSessionId": "sess_2909eafc-2724-4c96-a70e-b0be819e9043",
+        "timestamp": 1787764331634
       }
     ]
   }

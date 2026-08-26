@@ -28,8 +28,10 @@ import {
   deleteProject,
   fileUrl,
   getProject,
+  isAbortError,
   listFurniture,
   listProjects,
+  PlannerApiError,
   updateProject,
   uploadFurniture,
 } from "@planner/lib/plannerApi";
@@ -206,5 +208,132 @@ describe("@planner/lib/plannerApi path contract", () => {
     expect(fileUrl(null)).toBeNull();
     expect(fileUrl(undefined)).toBeNull();
     expect(fileUrl("")).toBeNull();
+  });
+});
+
+
+describe("@planner/lib/plannerApi typed error classification and signal forwarding", () => {
+  beforeEach(() => {
+    browserApiMocks.browserApiFetch.mockReset();
+    browserApiMocks.apiPath.mockClear();
+    browserApiMocks.browserApiFetch.mockResolvedValue(jsonResponse({}));
+  });
+
+  describe("typed 404 classification", () => {
+    it("throws PlannerApiError with status 404, isNotFound true, isTransient false", async () => {
+      browserApiMocks.browserApiFetch.mockResolvedValueOnce(
+        jsonResponse({ detail: "Project not found" }, 404),
+      );
+      try {
+        await getProject("p_missing");
+        expect.fail("should have thrown");
+      } catch (err) {
+        expect(err).toBeInstanceOf(PlannerApiError);
+        const apiErr = err as PlannerApiError;
+        expect(apiErr.status).toBe(404);
+        expect(apiErr.isNotFound).toBe(true);
+        expect(apiErr.isTransient).toBe(false);
+        expect(apiErr.message).toBe("Project not found");
+      }
+    });
+  });
+
+  describe("typed 429/503 classification", () => {
+    it("throws PlannerApiError with status 429, isTransient true, isNotFound false", async () => {
+      browserApiMocks.browserApiFetch.mockResolvedValueOnce(
+        jsonResponse({ detail: "Too many requests" }, 429),
+      );
+      try {
+        await getProject("p_1");
+        expect.fail("should have thrown");
+      } catch (err) {
+        expect(err).toBeInstanceOf(PlannerApiError);
+        const apiErr = err as PlannerApiError;
+        expect(apiErr.status).toBe(429);
+        expect(apiErr.isTransient).toBe(true);
+        expect(apiErr.isNotFound).toBe(false);
+      }
+    });
+
+    it("throws PlannerApiError with status 503, isTransient true, isNotFound false", async () => {
+      browserApiMocks.browserApiFetch.mockResolvedValueOnce(
+        jsonResponse({ detail: "Service unavailable" }, 503),
+      );
+      try {
+        await getProject("p_1");
+        expect.fail("should have thrown");
+      } catch (err) {
+        expect(err).toBeInstanceOf(PlannerApiError);
+        const apiErr = err as PlannerApiError;
+        expect(apiErr.status).toBe(503);
+        expect(apiErr.isTransient).toBe(true);
+        expect(apiErr.isNotFound).toBe(false);
+      }
+    });
+  });
+
+  describe("optional signal forwarding", () => {
+    it("forwards signal to browserApiFetch when provided to getProject", async () => {
+      const controller = new AbortController();
+      browserApiMocks.browserApiFetch.mockResolvedValueOnce(
+        jsonResponse({ id: "p_1", name: "Test" }),
+      );
+      await getProject("p_1", { signal: controller.signal });
+      expect(browserApiMocks.browserApiFetch).toHaveBeenCalledWith(
+        "/api/Planner/projects/p_1",
+        { signal: controller.signal },
+      );
+    });
+
+    it("forwards signal to browserApiFetch when provided to listProjects", async () => {
+      const controller = new AbortController();
+      browserApiMocks.browserApiFetch.mockResolvedValueOnce(
+        jsonResponse([{ id: "p_1" }]),
+      );
+      await listProjects({ signal: controller.signal });
+      expect(browserApiMocks.browserApiFetch).toHaveBeenCalledWith(
+        "/api/Planner/projects",
+        { signal: controller.signal },
+      );
+    });
+
+    it("passes signal as undefined when getProject is called without options", async () => {
+      browserApiMocks.browserApiFetch.mockResolvedValueOnce(
+        jsonResponse({ id: "p_1", name: "Test" }),
+      );
+      await getProject("p_1");
+      expect(browserApiMocks.browserApiFetch).toHaveBeenCalledWith(
+        "/api/Planner/projects/p_1",
+        { signal: undefined },
+      );
+    });
+  });
+
+  describe("AbortError identification", () => {
+    it("isAbortError returns true for DOMException with name AbortError", () => {
+      const err = new DOMException("The operation was aborted", "AbortError");
+      expect(isAbortError(err)).toBe(true);
+    });
+
+    it("isAbortError returns false for a regular Error", () => {
+      const err = new Error("something went wrong");
+      expect(isAbortError(err)).toBe(false);
+    });
+
+    it("isAbortError returns false for a PlannerApiError", () => {
+      const err = new PlannerApiError(404, "Not found");
+      expect(isAbortError(err)).toBe(false);
+    });
+  });
+
+  describe("unchanged successful project parsing", () => {
+    it("getProject returns the parsed project object on 200", async () => {
+      const project = { id: "p_1", name: "My Plan", canvas_json: { objects: [] } };
+      browserApiMocks.browserApiFetch.mockResolvedValueOnce(
+        jsonResponse(project),
+      );
+      const result = await getProject("p_1");
+      expect(result).toEqual(project);
+    });
   });
 });
