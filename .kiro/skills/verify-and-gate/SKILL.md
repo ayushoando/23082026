@@ -6,7 +6,11 @@ description: User-invoked test and gate sequence for this repo. The user runs th
 # Verify and Gate
 
 USER-INVOKED ONLY. The user runs tests and gates. Agents must not.
-The `block-agent-tests` hook blocks agent test runs.
+The `block-agent-tests` hook blocks agent test-like shell commands, including gates,
+coverage, and browser-test runners. Its PreToolUse payload does not expose a
+trusted user-invocation or skill-activation signal, so the exception cannot be
+represented safely; preserve the unconditional hard block and tell the user the
+exact command to run themselves.
 Authority: root `AGENTS.md` and `Testing-handbook.md` win over this skill.
 
 ## Sequence (dev loop)

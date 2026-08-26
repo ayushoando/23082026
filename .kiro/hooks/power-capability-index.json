@@ -5,10 +5,10 @@
       "name": "Installed Power Capability Index",
       "trigger": "SessionStart",
       "description": "Indexes installed powers and limits activation to the smallest task-relevant capability.",
-      "enabled": false,
+      "enabled": true,
       "action": {
         "type": "agent",
-        "prompt": "Installed powers: design-system-power-builder (design systems); nova-act and kane-cli (browser QA); postman (API resources); context7 (current docs); exa (web research); datadog (observability); ltm-power (project memory); cubic-code-review (code review); cloudinary (media); supabase-hosted (Supabase). For architecture impact and blast-radius analysis use scripts/graph-impact.mjs (the graph-impact skill), not an external power. Activate only the smallest relevant power, or none when no capability matches. Do not use external services without task-specific need. Use Postman MCP only for Postman operations and preserve repository rules."
+        "prompt": "Installed powers and documented routing: oando-workflow for this repository's orientation, graph/fork/database workflow, and power routing; design-system-power-builder for scaffolding a complete design-system project; nova-act for exploratory human-like browser automation; kane-cli for repeatable browser tests, screenshots, deployment smoke checks, and test-case authoring; postman for Postman collections and API resources; context7 for current official library/framework documentation; exa for broad live-web research; datadog for production observability; ltm-power for local project memory and resume/recall; cubic-code-review for AI code-review and security-review information; cloudinary for image/video asset management and transformations; supabase-hosted for Supabase/Postgres/auth/storage/RLS work. For repository orientation and architecture impact, prefer repo-map and scripts/graph-impact.mjs over external powers. Activate only the smallest relevant power, or none when no capability matches. Use MCP only for the named power's documented service and only after task-specific user need; never activate unrelated powers. Tests and gates are user-invoked only: do not load verify-and-gate or run test-like commands automatically. The block-agent-tests PreToolUse hook is unconditional because its payload cannot safely represent a trusted user-invocation exception."
       }
     }
   ]

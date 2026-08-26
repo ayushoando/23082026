@@ -53,10 +53,5 @@ licensing compliance.
   `.kiro/specs/<name>/`.
 
 ## In this workspace
-- Powers (postman, datadog, supabase-hosted, exa, context7, cubic, cloudinary,
-  nova-act, kane-cli, design-system-power-builder, ltm-power) carry their own MCP
-  config + activation keywords.
-- Workspace skills (`.kiro/skills/`: repo-map, graph-impact, verify-and-gate,
-  fork-boundaries, focss-css, db-migrations) are passive instruction. They tell
-  the agent to run repo tooling (`scripts/graph-impact.mjs`, `pnpm` gates) or, when
-  needed, to activate a power. Power activation is gated by `permissions.yaml`.
+- In this workspace, the installed powers are discoverable from the global installed-power registry and their MCP servers from the global Kiro MCP settings. The repository-local `oando-workflow` power intentionally ships an empty `mcp.json` and routes to those global servers; do not populate the local manifest.
+- Repository tests and gates are user-invoked only. Do not load `verify-and-gate` for automatic validation, do not enable automatic test hooks, and do not run test-like shell commands. The `block-agent-tests` hook remains an unconditional hard block because its PreToolUse payload cannot safely represent a trusted user-invocation exception.

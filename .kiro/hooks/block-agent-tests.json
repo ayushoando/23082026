@@ -3,8 +3,9 @@
   "hooks": [
     {
       "name": "Block Agent Test Runs",
+      "enabled": true,
       "trigger": "PreToolUse",
-      "description": "Blocks any agent-initiated test, gate, coverage, or vitest/jest/playwright command. Tests are user-driven only.",
+      "description": "Hard-blocks agent-initiated test-like shell commands, gates, coverage, and browser-test runners. The hook payload has no trusted user-invocation or verify-and-gate exception signal, so the block remains unconditional; tests are user-driven only.",
       "matcher": "execute_pwsh",
       "action": {
         "type": "command",

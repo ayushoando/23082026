@@ -4,12 +4,12 @@
     {
       "name": "Postman API Testing",
       "trigger": "PostFileSave",
-      "matcher": "(^|[\\\\/])(site[\\\\/]app[\\\\/]api|site[\\\\/]platform|site[\\\\/]lib|scripts)([\\\\/]).*\\.(ts|tsx|mjs|js|json|yaml|yml)$|(^|[\\\\/])(package\\.json|pnpm-lock\\.yaml|openapi\\.(json|yaml|yml))$",
       "action": {
         "type": "agent",
-        "prompt": "API/config saved. For Postman work, inspect root .postman.json; if missing or empty, explain and ask before creating resources; verify referenced IDs; never duplicate without confirmation; use Postman MCP only; validate Collection Format v2.1.0. Otherwise do not activate Postman."
+        "prompt": "API/config saved. Do not run Postman collections or tests automatically. For an explicit Postman request, inspect root .postman.json first; if missing or empty, explain and ask before creating resources; verify referenced IDs; never duplicate without confirmation; use Postman MCP only; validate Collection Format v2.1.0. Otherwise do not activate Postman."
       },
-      "description": "Prompts Postman collection validation when API source or configuration files are saved.",
+      "description": "Routes explicit Postman work without automatically running collections or tests.",
+      "matcher": "(^|[\\\\/])(site[\\\\/]app[\\\\/]api|site[\\\\/]platform|site[\\\\/]lib|scripts)([\\\\/]).*\\.(ts|tsx|mjs|js|json|yaml|yml)$|(^|[\\\\/])(package\\.json|pnpm-lock\\.yaml|openapi\\.(json|yaml|yml))$",
       "enabled": true
     }
   ]

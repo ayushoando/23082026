@@ -25,7 +25,7 @@ Passive reference under `.kiro/skills/`:
 - Repo structure / where-does-X-live -> `repo-map` skill + `graph-impact`. No power.
 - Change impact / which tests -> `graph-impact` (`node scripts/graph-impact.mjs --file=<path>`). No power.
 - Studio/Planner edits -> `fork-boundaries` + `pnpm run scan:boundaries`. No power.
-- Done/ship check -> `verify-and-gate`. Browser proof -> `nova-act` or `kane-cli` (localhost only).
+- Done/ship check -> load `verify-and-gate` only when the user explicitly invokes that skill and asks for tests or gates. Otherwise never load it for automatic validation. Browser proof -> `nova-act` or `kane-cli` (localhost only).
 - CSS -> `focss-css` + `pnpm run verify:focss`. No power.
 - Schema/SQL -> `db-migrations`; live DB ops -> `supabase-hosted` (confirm Admin vs Products).
 - Current library docs -> `context7`. Web research -> `exa`. Prod observability -> `datadog`.
@@ -34,6 +34,7 @@ Passive reference under `.kiro/skills/`:
 - Skills are passive markdown; the AGENT activates powers/MCP, gated by
   `~/.kiro/settings/permissions.yaml`.
 - Do not use an external power when repo docs, the graph, or `pnpm` scripts answer.
+- Tests and gates are user-invoked only. The `block-agent-tests` PreToolUse hook is an unconditional hard block because its payload cannot safely represent a trusted user-invocation or `verify-and-gate` exception. Never add or enable an automatic test hook.
 - UI only at `http://localhost:3000`. pnpm only. No worktrees. Prod FS is read-only.
 
 ## MCP

@@ -14,20 +14,15 @@ function readStdin() {
 }
 
 // Patterns that indicate a test/gate/coverage run. Matched case-insensitively
-// against the command string the agent is about to execute.
+// against the command string the agent is about to execute. The hook payload
+// does not expose a trusted user-vs-agent or skill-invocation signal, so this
+// guard remains unconditional even when the user has asked about verify-and-gate.
 const BLOCKED = [
-  /\bvitest\b/,
-  /\bjest\b/,
-  /\bplaywright\b/,
-  /pnpm\s+(run\s+)?test\b/,
-  /pnpm\s+(run\s+)?test:/,
-  /pnpm\s+(run\s+)?gate\b/,
-  /pnpm\s+(run\s+)?gate:fast\b/,
-  /pnpm\s+(run\s+)?release:gate/,
-  /\btest:coverage\b/,
-  /\btest:a11y\b/,
-  /\btest:audit\b/,
-  /\btest:planner-catalog\b/,
+  /\b(?:vitest|jest|playwright|mocha|cypress|pytest|phpunit)\b/,
+  /\b(?:node\s+--test|go\s+test|cargo\s+test|dotnet\s+test)\b/,
+  /\b(?:pnpm|npm|yarn|bun)\s+(?:exec\s+)?(?:run\s+)?(?:test|test:[\w-]+|coverage|coverage:[\w-]+|gate|gate:[\w-]+|release:gate|p0:unit|typecheck:tests|test:priority-[\w-]+|check:layout)\b/,
+  /\b(?:test:coverage|test:a11y|test:audit(?:[:\w-]*)?|test:planner-catalog)\b/,
+  /\b(?:node|python|python3)\s+.*(?:\b(?:vitest|jest|playwright|pytest|unittest)\b|(?:^|\W)(?:test|tests)\.(?:mjs|cjs|js|py)\b)/,
 ];
 
 function extractCommand(payload) {
@@ -36,8 +31,11 @@ function extractCommand(payload) {
   const candidates = [];
   if (payload && typeof payload === "object") {
     const ti = payload.tool_input ?? payload.toolInput ?? payload.input ?? {};
-    if (typeof ti.command === "string") candidates.push(ti.command);
-    if (typeof payload.command === "string") candidates.push(payload.command);
+    for (const key of ["command", "shellCommand", "cmd"]) {
+      if (typeof ti[key] === "string") candidates.push(ti[key]);
+      if (typeof payload[key] === "string") candidates.push(payload[key]);
+    }
+    if (Array.isArray(ti.args)) candidates.push(ti.args.join(" "));
   }
   return candidates;
 }
