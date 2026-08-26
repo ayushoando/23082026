@@ -61,6 +61,12 @@ export function collectLeaves(value, prefix = "", out = []) {
   return out;
 }
 
+const UNSAFE_OBJECT_KEYS = new Set(["__proto__", "constructor", "prototype"]);
+
+function isUnsafeObjectKey(key) {
+  return typeof key === "string" && UNSAFE_OBJECT_KEYS.has(key);
+}
+
 export function setByPath(root, pathExpr, value) {
   const tokens = [];
   const re = /([^.[\]]+)|\[(\d+)\]/g;
@@ -73,13 +79,7 @@ export function setByPath(root, pathExpr, value) {
   let cursor = root;
   for (let i = 0; i < tokens.length - 1; i += 1) {
     const token = tokens[i];
-    if (
-      token === "__proto__" ||
-      token === "constructor" ||
-      token === "prototype"
-    ) {
-      return;
-    }
+    if (isUnsafeObjectKey(token)) return;
     const next = tokens[i + 1];
     if (cursor[token] === undefined) {
       cursor[token] = typeof next === "number" ? [] : {};
@@ -87,7 +87,7 @@ export function setByPath(root, pathExpr, value) {
     cursor = cursor[token];
   }
   const last = tokens.at(-1);
-  if (last !== "__proto__" && last !== "constructor" && last !== "prototype") {
+  if (last !== undefined && !isUnsafeObjectKey(last)) {
     cursor[last] = value;
   }
 }
@@ -102,6 +102,7 @@ export function chunk(items, size) {
 export function deepMergeStructure(base, overrides) {
   const out = structuredClone(base);
   for (const [key, value] of Object.entries(overrides ?? {})) {
+    if (isUnsafeObjectKey(key)) continue;
     if (
       value &&
       typeof value === "object" &&

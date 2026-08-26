@@ -26,6 +26,8 @@ const manifest = readJson(
 );
 const en = readJson(path.join(messagesDir, "en.json"));
 
+const UNSAFE_OBJECT_KEYS = new Set(["__proto__", "constructor", "prototype"]);
+
 export function mergePreserveTranslations(existing, enSource) {
   if (enSource === null || typeof enSource !== "object") {
     return existing !== undefined ? existing : enSource;
@@ -41,6 +43,7 @@ export function mergePreserveTranslations(existing, enSource) {
 
   const out = {};
   for (const [key, enValue] of Object.entries(enSource)) {
+    if (UNSAFE_OBJECT_KEYS.has(key)) continue;
     const existingValue = existing?.[key];
     if (enValue !== null && typeof enValue === "object") {
       out[key] = mergePreserveTranslations(existingValue, enValue);

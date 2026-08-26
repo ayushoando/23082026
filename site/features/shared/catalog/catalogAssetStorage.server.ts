@@ -18,6 +18,47 @@ export type CatalogStorageUploadResult =
   | { ok: true; path: string; publicUrl: string }
   | { ok: false; reason: string };
 
+const ALLOWED_CATALOG_PREFIXES = new Set([
+  FURNITURE_LIBRARY_PREFIX,
+  PLANNER_SYMBOLS_PREFIX,
+  PLANNER_EXPORTS_PREFIX,
+  PLANNER_GENERATED_GLB_PREFIX,
+]);
+
+function normalizeCatalogStoragePath(storagePath: string): string | null {
+  const normalized = storagePath.trim();
+  if (
+    !normalized ||
+    normalized.length > 512 ||
+    normalized.startsWith("/") ||
+    normalized.includes("\\") ||
+    normalized.includes("\0") ||
+    Array.from(normalized).some((character) => {
+      const code = character.charCodeAt(0);
+      return code <= 0x1f || code === 0x7f;
+    })
+  ) {
+    return null;
+  }
+
+  const segments = normalized.split("/");
+  if (
+    segments.length < 2 ||
+    segments.some(
+      (segment) =>
+        !segment ||
+        segment === "." ||
+        segment === ".." ||
+        segment.includes(".."),
+    ) ||
+    !ALLOWED_CATALOG_PREFIXES.has(segments[0] ?? "")
+  ) {
+    return null;
+  }
+
+  return normalized;
+}
+
 function tryCreateServiceClient(): SupabaseClient | null {
   const url =
     process.env.SUPABASE_URL?.trim() ||
@@ -84,6 +125,11 @@ export async function uploadCatalogAssetBinary(args: {
   upsert?: boolean;
   client?: SupabaseClient | null;
 }): Promise<CatalogStorageUploadResult> {
+  const safePath = normalizeCatalogStoragePath(args.path);
+  if (!safePath) {
+    return { ok: false, reason: "invalid_catalog_asset_path" };
+  }
+
   const client = args.client ?? tryCreateServiceClient();
   if (!client) {
     return { ok: false, reason: "supabase_service_role_not_configured" };
@@ -97,7 +143,7 @@ export async function uploadCatalogAssetBinary(args: {
 
   const { error } = await client.storage
     .from(CATALOG_ASSETS_BUCKET)
-    .upload(args.path, bytes, {
+    .upload(safePath, bytes, {
       contentType: args.contentType,
       upsert: args.upsert ?? true,
       cacheControl: "public, max-age=3600",
@@ -108,22 +154,23 @@ export async function uploadCatalogAssetBinary(args: {
   }
 
   const publicUrl = args.client
-    ? client.storage.from(CATALOG_ASSETS_BUCKET).getPublicUrl(args.path).data
+    ? client.storage.from(CATALOG_ASSETS_BUCKET).getPublicUrl(safePath).data
         .publicUrl
-    : publicCatalogAssetUrl(args.path) ||
-      client.storage.from(CATALOG_ASSETS_BUCKET).getPublicUrl(args.path).data
+    : publicCatalogAssetUrl(safePath) ||
+      client.storage.from(CATALOG_ASSETS_BUCKET).getPublicUrl(safePath).data
         .publicUrl;
 
-  return { ok: true, path: args.path, publicUrl };
+  return { ok: true, path: safePath, publicUrl };
 }
 
 export function publicCatalogAssetUrl(storagePath: string): string | null {
+  const safePath = normalizeCatalogStoragePath(storagePath);
   const base =
     process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() ||
     process.env.SUPABASE_URL?.trim() ||
     "";
-  if (!base) {return null;}
-  return `${base.replace(/\/$/, "")}/storage/v1/object/public/${CATALOG_ASSETS_BUCKET}/${storagePath}`;
+  if (!base || !safePath) {return null;}
+  return `${base.replace(/\/$/, "")}/storage/v1/object/public/${CATALOG_ASSETS_BUCKET}/${safePath}`;
 }
 
 export async function uploadCatalogAssetText(args: {
@@ -132,6 +179,11 @@ export async function uploadCatalogAssetText(args: {
   contentType: string;
   upsert?: boolean;
 }): Promise<CatalogStorageUploadResult> {
+  const safePath = normalizeCatalogStoragePath(args.path);
+  if (!safePath) {
+    return { ok: false, reason: "invalid_catalog_asset_path" };
+  }
+
   const client = tryCreateServiceClient();
   if (!client) {
     return { ok: false, reason: "supabase_service_role_not_configured" };
@@ -140,7 +192,7 @@ export async function uploadCatalogAssetText(args: {
   const bytes = new TextEncoder().encode(args.body);
   const { error } = await client.storage
     .from(CATALOG_ASSETS_BUCKET)
-    .upload(args.path, bytes, {
+    .upload(safePath, bytes, {
       contentType: args.contentType,
       upsert: args.upsert ?? true,
       cacheControl: "public, max-age=3600",
@@ -151,11 +203,11 @@ export async function uploadCatalogAssetText(args: {
   }
 
   const publicUrl =
-    publicCatalogAssetUrl(args.path) ||
-    client.storage.from(CATALOG_ASSETS_BUCKET).getPublicUrl(args.path).data
+    publicCatalogAssetUrl(safePath) ||
+    client.storage.from(CATALOG_ASSETS_BUCKET).getPublicUrl(safePath).data
       .publicUrl;
 
-  return { ok: true, path: args.path, publicUrl };
+  return { ok: true, path: safePath, publicUrl };
 }
 
 export type CatalogStorageDownloadResult =
@@ -169,18 +221,23 @@ export type CatalogStorageDownloadResult =
 export async function downloadCatalogAssetText(args: {
   path: string;
 }): Promise<CatalogStorageDownloadResult> {
+  const safePath = normalizeCatalogStoragePath(args.path);
+  if (!safePath) {
+    return { ok: false, reason: "invalid_catalog_asset_path" };
+  }
+
   const client = tryCreateServiceClient();
   if (!client) {
     return { ok: false, reason: "supabase_service_role_not_configured" };
   }
   const { data, error } = await client.storage
     .from(CATALOG_ASSETS_BUCKET)
-    .download(args.path);
+    .download(safePath);
   if (error || !data) {
     return { ok: false, reason: error?.message ?? "download_failed" };
   }
   const body = await data.text();
-  return { ok: true, path: args.path, body };
+  return { ok: true, path: safePath, body };
 }
 
 /** Planner plan/BOQ export blob for cloud handoff. */

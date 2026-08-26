@@ -75,6 +75,7 @@ const PRIVACY_DENYLIST = new Set([
 ]);
 
 const PERSONAL_FIELDS = new Set(["email", "name"]);
+const UNSAFE_OBJECT_KEYS = new Set(["__proto__", "constructor", "prototype"]);
 
 function filterValue(value: unknown, allowPersonalData: boolean): unknown {
   if (Array.isArray(value)) {
@@ -84,9 +85,9 @@ function filterValue(value: unknown, allowPersonalData: boolean): unknown {
   }
 
   if (value !== null && typeof value === "object") {
-    const out: Record<string, unknown> = {};
+    const out = Object.create(null) as Record<string, unknown>;
     for (const [key, child] of Object.entries(value)) {
-      if (PRIVACY_DENYLIST.has(key)) {continue;}
+      if (UNSAFE_OBJECT_KEYS.has(key) || PRIVACY_DENYLIST.has(key)) {continue;}
       if (!allowPersonalData && PERSONAL_FIELDS.has(key)) {continue;}
       const filtered = filterValue(child, allowPersonalData);
       if (filtered === undefined) {continue;}

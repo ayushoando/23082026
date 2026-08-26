@@ -70,10 +70,13 @@ export const HI_OVERRIDES = {
   },
 };
 
+const UNSAFE_OBJECT_KEYS = new Set(["__proto__", "constructor", "prototype"]);
+
 export function deepMerge(base, overrides) {
   if (!overrides) return base;
   const out = { ...base };
   for (const [key, value] of Object.entries(overrides)) {
+    if (UNSAFE_OBJECT_KEYS.has(key)) continue;
     out[key] =
       value && typeof value === "object" && !Array.isArray(value)
         ? deepMerge(base?.[key] ?? {}, value)

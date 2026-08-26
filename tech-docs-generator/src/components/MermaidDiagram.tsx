@@ -5,6 +5,7 @@ import mermaid from 'mermaid'
 // Aligned to FOCSS light paper docs shell (ocean + bronze on ecru).
 mermaid.initialize({
   startOnLoad: false,
+  securityLevel: 'strict',
   theme: 'base',
   themeVariables: {
     primaryColor: '#D6E4F0',
@@ -21,7 +22,7 @@ mermaid.initialize({
     edgeLabelBackground: '#FFFFFF',
     fontFamily: 'Inter, system-ui, "Segoe UI", sans-serif',
   },
-  flowchart: { curve: 'basis', htmlLabels: true },
+  flowchart: { curve: 'basis', htmlLabels: false },
   sequence: { actorMargin: 50 },
 })
 
