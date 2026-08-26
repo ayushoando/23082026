@@ -58,7 +58,7 @@ def _now():
 
 def _load_config():
     try:
-        return json.loads(CONFIG_PATH.read_text())
+        return json.loads(CONFIG_PATH.read_text(encoding="utf-8-sig"))
     except Exception:
         return {}
 
@@ -574,7 +574,7 @@ def cmd_validate(args):
                     issues.append(f"{p}:{i+1} invalid JSON")
     if CONFIG_PATH.exists():
         try:
-            c = json.loads(CONFIG_PATH.read_text())
+            c = json.loads(CONFIG_PATH.read_text(encoding="utf-8-sig"))
             if c.get("created_by") != "ltm-power":
                 issues.append("config.json: created_by is not ltm-power")
         except json.JSONDecodeError:

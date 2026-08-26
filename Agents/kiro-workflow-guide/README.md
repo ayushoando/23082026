@@ -5,7 +5,7 @@ A practical guide to working in this repository with Kiro, workspace skills, ins
 - **Static walkthrough:** [`index.html`](./index.html) — open directly in a browser.
 - **Repository root:** [`AGENTS.md`](../../AGENTS.md)
 - **Canonical starting point:** [`START.md`](../../START.md)
-- **Last inventory:** 2026-08-25. Re-run `pnpm run ops:list` when the command registry may have changed.
+- **Last inventory:** 2026-08-26. Re-run `pnpm run ops:list` when the command registry may have changed. The LTM section reflects the project-local memory setup and its enabled capture hook.
 
 ## 1. The short version
 
@@ -103,7 +103,21 @@ Use the `repo-map` skill before scanning large parts of the tree. Use `scripts/g
 
 ## 5. Workspace skills
 
-Skills are passive Markdown instructions. They do not call MCP tools themselves. Activate the skill when the task matches, then follow its procedure. A power can draw on a skill, but a skill is not a power.
+This repository has four distinct guidance layers. **Skills** are passive Markdown instructions that shape a procedure. **Powers** are installed active capability bundles that may provide MCP tools. **Steering** is persistent or on-demand project knowledge under `.kiro/steering/`, selected by frontmatter such as `inclusion: auto` or `inclusion: fileMatch`. **Project memory** is durable, project-local state operated through the installed `ltm-power`; it is not a seventh workspace skill. A power may draw on skills and steering, but those layers do not become MCP tools by themselves.
+
+### Fast chooser
+
+| If you are trying to… | Start with… | Then… |
+|---|---|---|
+| Find a feature or understand an unfamiliar area | `repo-map` | Read the nearest live implementation. |
+| Change shared code or choose affected tests | `graph-impact` | Run the suggested focused tests. |
+| Edit Planner or Studio | `fork-boundaries` | Run `pnpm run scan:boundaries` before commit. |
+| Edit product UI or CSS | `focss-css` | Run the CSS checks and browser proof when needed. |
+| Change SQL, schema, RLS, or database ownership | `db-migrations` | Dry-run the correct Admin or Products migration. |
+| Decide whether the work is actually complete | `verify-and-gate` | Run the smallest useful proof, then the right gate. |
+
+**Rule of thumb:** use the smallest matching skill. Use more than one when the task crosses boundaries—for example, Planner UI work uses `fork-boundaries` and `focss-css`; shared Planner code also uses `graph-impact`.
+
 
 ### 5.1 `repo-map`
 
@@ -135,7 +149,7 @@ The file query returns transitive dependents, domains, covering tests, and a sug
 edit -> graph impact -> run suggested focused test -> fix (up to 3 iterations) -> gate:fast
 ```
 
-Current baseline observed during this guide’s inventory: **1,732 files and 3,376 import edges**. The graph is a snapshot, not a permanent fact; run it again after meaningful changes.
+Current baseline observed during this guide’s inventory: **1,736 files and 3,367 import edges**. The graph is a snapshot, not a permanent fact; run it again after meaningful changes.
 
 ### 5.3 `verify-and-gate`
 
@@ -263,6 +277,33 @@ kiro_powers(action="use", powerName="<power>", serverName="<server>", toolName="
 
 Do not call `use` before `activate`. Do not activate a power when repository docs, local scripts, or a passive skill answer the question. MCP is the live tool layer; the power is the routing/documentation layer.
 
+### Routing policy — plain English
+
+You do not need to memorize the hook. Start with the outcome you need:
+
+| Your goal | Start with | What happens next |
+|---|---|---|
+| Locate or understand code | `repo-map` | Read canonical docs, then the live implementation. |
+| Change shared code | `graph-impact` | See dependents and run the suggested focused tests. |
+| Change Planner or Studio | `fork-boundaries` | Keep the forks separate and scan before commit. |
+| Change UI or CSS | `focss-css` | Use the correct token zone and run UI checks. |
+| Change schema or RLS | `db-migrations` | Choose Admin or Products, dry-run, then regenerate types. |
+| Prove or ship a change | `verify-and-gate` | Run focused proof, then `gate:fast` or `gate`. |
+| Need an external capability | Choose the matching power below | Activate it only after local code and skills cannot answer. |
+
+For a normal code edit, **no power is the right choice**. The hook is automation for Kiro; it is not a checklist you need to recite.
+
+<details>
+<summary>Advanced: view the exact UserPromptSubmit instruction</summary>
+
+The live copy is [`power-request-router.json`](../../.kiro/hooks/power-request-router.json):
+
+```text
+Match each request to the smallest relevant tool layer. Use installed powers only when needed: design-system-power-builder for creating a complete design system; nova-act for exploratory human-like browser QA; postman for Postman collections and API testing; context7 for current official library or framework documentation; exa for broad web research; datadog for production observability; ltm-power for project memory and resume requests; cubic-code-review for code review; kane-cli for repeatable browser tests, screenshots, and deployment smoke checks; cloudinary for image or video asset operations; supabase-hosted for Supabase, Postgres, auth, storage, or RLS work; and oando-workflow for this repository's end-to-end orientation, fork boundaries, migrations, gates, and power routing when the local workflow itself is the task. Use workspace skills when applicable: repo-map when starting work, locating features, or mapping the repository; focss-css for site/focss CSS, product UI TSX, or PostCSS/Tailwind configuration; fork-boundaries for any Planner or Studio fork-tree edit and before committing either fork; db-migrations for SQL migrations, schema changes, database selection, or migration safety; graph-impact for shared-code blast-radius analysis, scoped test selection, or circular-dependency checks; and verify-and-gate for test sequencing, gates, shipping preparation, and before claiming any repository change is complete. For architecture impact analysis use the graph-impact skill (scripts/graph-impact.mjs), not an external power. Activate only what is needed; if no power or skill matches, proceed without activation. Relevant file-matched or always-included workspace steering should be followed without duplicating it here. For Postman, inspect .postman.json first, use Postman MCP only, avoid duplicate resources, and validate Collection Format v2.1.0.
+```
+
+</details>
+
 ### 6.1 `oando-workflow` — repository routing
 
 This repo-local power is the default workflow map. It routes structure questions to `repo-map`, impact questions to `graph-impact`, Studio/Planner changes to `fork-boundaries`, completion to `verify-and-gate`, CSS to `focss-css`, and SQL to `db-migrations`. It routes outward only when the repository cannot answer.
@@ -347,9 +388,13 @@ Before use:
 
 **Use for:** generating a design-system skill project with component specifications, accessibility and UI heuristics, governance, build validation, copy rules, technical references, and Kiro Power output. Activate it for a real design-system scaffolding request, not for a small product CSS edit.
 
-### 6.12 `ltm-power` — project-local memory
+### 6.12 `ltm-power` — installed power for project-local memory
 
 **Use for:** scaffolding or maintaining long-term project memory, recalling prior work, validating/repairing memory, or updating durable session context. Store only useful project state, not secrets. A memory summary is not a substitute for fresh code and command evidence.
+
+The installed `ltm-power` is the active capability; this repository’s implementation lives under `ltm/`. It is not a seventh workspace skill or a repo-local `.kiro/powers/` bundle. The enabled [Stop hook](../../.kiro/hooks/ltm-postturn-capture.json) runs `python ltm/bin/ltm.py capture-turn` after agent turns and records redacted file-change events.
+
+The portable project files are `ltm/bin/ltm.py`, `ltm/config.json`, `ltm/manifest.json`, and `ltm/README.md`. Do not commit `ltm/store/`, `ltm/runtime/`, `ltm/reports/`, or `ltm/snapshots/`; those ledgers and generated runtime artifacts are local-private and ignored. Read the LTM steering files before recall or file-format work: [`ltm-operations.md`](../../.kiro/steering/ltm-operations.md) and [`ltm-memory-format.md`](../../.kiro/steering/ltm-memory-format.md).
 
 ## 7. CLI toolbox
 
@@ -636,6 +681,24 @@ typecheck:scripts
 ```
 </details>
 
+### 7.3 LTM memory and resume
+
+Use the installed `ltm-power` only when the request concerns recall, durable project context, checkpoints, validation, repair, or LTM maintenance. Run the CLI from the repository root and read `python_cmd` from `ltm/config.json` if the interpreter differs:
+
+```powershell
+python ltm/bin/ltm.py files --limit 10
+python ltm/bin/ltm.py sessions --limit 5
+python ltm/bin/ltm.py search "term"
+python ltm/bin/ltm.py checkpoints --days 3
+python ltm/bin/ltm.py health
+python ltm/bin/ltm.py validate
+python ltm/bin/ltm.py repair
+python ltm/bin/ltm.py regenerate
+python ltm/bin/ltm.py checkpoint --summary "Milestone summary"
+```
+
+Use `purge-last`, `purge-all`, or `teardown` only with their explicit confirmation flags. LTM records must follow the JSONL formats in [`ltm-memory-format.md`](../../.kiro/steering/ltm-memory-format.md), and secret-like values or sensitive paths must be redacted or excluded.
+
 ## 8. A safe task walkthrough
 
 ### Step 1 — Convert the request into acceptance criteria
@@ -794,5 +857,12 @@ Before saying a task is done:
 - Testing: [`../Testing-handbook.md`](../../Testing-handbook.md)
 - Operations: [`../OPERATIONS_RUNBOOK.md`](../../OPERATIONS_RUNBOOK.md)
 - Skills: [`../.kiro/skills/`](../../.kiro/skills)
+- Powers, skills, and steering model: [`../.kiro/steering/powers-skills-model.md`](../../.kiro/steering/powers-skills-model.md)
 - Repo workflow power: [`../.kiro/powers/oando-workflow/POWER.md`](../../.kiro/powers/oando-workflow/POWER.md)
+- LTM contract: [`../ltm/README.md`](../../ltm/README.md)
+- LTM configuration: [`../ltm/config.json`](../../ltm/config.json)
+- LTM manifest: [`../ltm/manifest.json`](../../ltm/manifest.json)
+- LTM operations steering: [`../.kiro/steering/ltm-operations.md`](../../.kiro/steering/ltm-operations.md)
+- LTM memory format steering: [`../.kiro/steering/ltm-memory-format.md`](../../.kiro/steering/ltm-memory-format.md)
+- LTM capture hook: [`../.kiro/hooks/ltm-postturn-capture.json`](../../.kiro/hooks/ltm-postturn-capture.json)
 - Graph tool: [`../scripts/graph-impact.mjs`](../../scripts/graph-impact.mjs)

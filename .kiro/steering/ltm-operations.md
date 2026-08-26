@@ -1,5 +1,6 @@
 ---
-inclusion: auto
+inclusion: fileMatch
+fileMatchPattern: "ltm/**/*"
 name: ltm-operations
 description: "LTM memory operations. Activates when the user asks to resume work, continue previous tasks, recall past decisions, or reference project memory."
 ---

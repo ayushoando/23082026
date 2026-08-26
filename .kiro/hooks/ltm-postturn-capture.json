@@ -3,9 +3,9 @@
   "hooks": [
     {
       "name": "LTM Post-Turn Capture",
-      "description": "Records agent activity to LTM memory store after each turn. Disabled: ltm/bin/ltm.py capture-turn is a stub no-op; enable only after installing the full LTM script.",
+      "description": "Records agent activity to LTM memory store after each turn.",
       "trigger": "Stop",
-      "enabled": false,
+      "enabled": true,
       "timeout": 30,
       "action": {
         "type": "command",

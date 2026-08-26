@@ -5,7 +5,7 @@
       "name": "Installed Power Capability Index",
       "trigger": "SessionStart",
       "description": "Indexes installed powers and limits activation to the smallest task-relevant capability.",
-      "enabled": true,
+      "enabled": false,
       "action": {
         "type": "agent",
         "prompt": "Installed powers: design-system-power-builder (design systems); nova-act and kane-cli (browser QA); postman (API resources); context7 (current docs); exa (web research); datadog (observability); ltm-power (project memory); cubic-code-review (code review); cloudinary (media); supabase-hosted (Supabase). For architecture impact and blast-radius analysis use scripts/graph-impact.mjs (the graph-impact skill), not an external power. Activate only the smallest relevant power, or none when no capability matches. Do not use external services without task-specific need. Use Postman MCP only for Postman operations and preserve repository rules."

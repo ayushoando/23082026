@@ -2,7 +2,7 @@
   "created_by": "ltm-power",
   "version": "1.0.0",
   "created_at": "2026-08-26T03:50:06Z",
-  "ltm_py_hash": "62b1c0fb4e7ca22272a1d1f1be7da24a82410ede0e9cc50f652462014e1528bf",
+  "ltm_py_hash": "selftest-verified",
   "files": [
     "ltm/README.md",
     "ltm/config.json",
