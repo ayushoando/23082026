@@ -3,10 +3,8 @@
   "hooks": [
     {
       "name": "LTM Post-Turn Capture",
-      "description": "Records agent activity to LTM memory store after each turn.",
       "trigger": "Stop",
-      "enabled": true,
-      "timeout": 30,
+      "description": "Records agent activity to LTM memory store after each turn",
       "action": {
         "type": "command",
         "command": "python ltm/bin/ltm.py capture-turn"

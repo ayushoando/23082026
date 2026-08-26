@@ -1,10 +1,12 @@
 ﻿---
 name: verify-and-gate
-description: Correct test and gate sequence for this repo. Use before claiming any change is done, when running tests, or when preparing to ship. Enforces two-lane vitest awareness and persistence-mode mocking.
+description: User-invoked test and gate sequence for this repo. The user runs these commands. Agents must never run them on their own. Use only when the user explicitly asks to run tests or gates.
 ---
 
 # Verify and Gate
 
+USER-INVOKED ONLY. The user runs tests and gates. Agents must not.
+The `block-agent-tests` hook blocks agent test runs.
 Authority: root `AGENTS.md` and `Testing-handbook.md` win over this skill.
 
 ## Sequence (dev loop)

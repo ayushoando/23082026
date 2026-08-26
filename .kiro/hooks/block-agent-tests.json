@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Block Agent Test Runs",
+      "trigger": "PreToolUse",
+      "description": "Blocks any agent-initiated test, gate, coverage, or vitest/jest/playwright command. Tests are user-driven only.",
+      "matcher": "execute_pwsh",
+      "action": {
+        "type": "command",
+        "command": "node scripts/general/block-agent-tests.mjs"
+      }
+    }
+  ]
+}
