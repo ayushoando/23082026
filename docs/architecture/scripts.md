@@ -6,7 +6,7 @@ This is the durable catalog for the repository `scripts/` tree. It answers **wha
 
 **Command authority:** [`package.json`](../../package.json) owns root `pnpm run <key>` names. [`scripts/run-ops.mjs`](../../scripts/run-ops.mjs) owns the Ops command map (`pnpm run ops <key> [-- args]`). [`scripts/general/README.md`](../../scripts/general/README.md) owns the membership policy for `scripts/general/` only. This document is a catalog, not an alternate dispatcher or command registry.
 
-**Scope and truthfulness:** The current catalog contains **231** tracked `scripts/**` paths. **200 are present** in the working tree; **31 are already deleted/missing** and are marked `missing†` below. One additional visible ignored build artifact, `scripts/tsconfig.tsbuildinfo`, is also cataloged and marked `untracked‡`. This catalog does not restore, remove, move, or change those paths. The historical all-path audit is [`plans/ref/scripts-folder-audit.md`](../../plans/ref/scripts-folder-audit.md); it preserves the earlier 247-path baseline and its bounded caller evidence.
+**Scope and truthfulness:** The current catalog contains **231** tracked `scripts/**` paths. **199 are present** in the working tree; **32 are already deleted/missing** and are marked `missing†` below. One additional visible ignored build artifact, `scripts/tsconfig.tsbuildinfo`, is also cataloged and marked `untracked‡`. This catalog does not restore, remove, move, or change those paths. The historical all-path audit is [`plans/ref/scripts-folder-audit.md`](../../plans/ref/scripts-folder-audit.md); it preserves the earlier 247-path baseline and its bounded caller evidence.
 
 Purpose is derived from a known package/Ops route where cited; otherwise it is a conservative static filename/directory description. It does **not** prove runtime behavior, safety, ownership, complete callers, or lifecycle status. `maybe` artifacts remain active and untouched under the audit policy.
 
@@ -96,7 +96,7 @@ Purpose is derived from a known package/Ops route where cited; otherwise it is a
 | `scripts/finish-all.ps1` | Finish-all automation helper | missing† |
 | `scripts/five-majors-hash-dedup.mjs` | Hash/deduplicate five-major assets | present |
 | `scripts/fix-asset-paths.mjs` | Repair asset paths | present |
-| `scripts/fix-commit-author.ps1` | Correct Git commit author metadata | present |
+| `scripts/fix-commit-author.ps1` | Correct Git commit author metadata | missing† |
 | `scripts/gate-site-ui.mjs` | Run site UI gate; root/Ops `gate:site-ui` | present |
 | `scripts/generate-coverage-report.mjs` | Generate coverage report; coverage command route | present |
 | `scripts/generate-page-component-graph.mjs` | Generate page/component graph; root `graph:page-components` | present |
@@ -310,7 +310,7 @@ The catalog contains every tracked `scripts/**` path:
 
 | Family | Tracked | Present | Missing† |
 |---|---:|---:|---:|
-| Root scripts | 117 | 111 | 6 |
+| Root scripts | 117 | 110 | 7 |
 | Visible ignored support metadata | 0 | 1 | 0 |
 | `scripts/general/` | 54 | 54 | 0 |
 | `scripts/AsNeeded/` | 12 | 12 | 0 |
@@ -318,8 +318,8 @@ The catalog contains every tracked `scripts/**` path:
 | SVG pipeline | 9 | 9 | 0 |
 | `scripts/kiro-repo-guidance-setup/` | 25 | 0 | 25 |
 | `scripts/lib/` | 12 | 12 | 0 |
-| **Tracked total** | **231** | **200** | **31** |
-| **Catalog total (including ignored metadata)** | **232** | **201** | **31** |
+| **Tracked total** | **231** | **199** | **32** |
+| **Catalog total (including ignored metadata)** | **232** | **200** | **32** |
 
 The catalog reflects the current working tree, including user-approved script removals and both checker consolidations. The one `untracked‡` entry is ignored generated metadata. No scripts, tests, gates, or builds were run to create this catalog.
 
@@ -330,8 +330,8 @@ The audit distinguishes evidence from filename appearance. A stale-looking name 
 | Evidence-backed category | Count | What it means | Required next action | Archive/move now? |
 |---|---:|---|---|---|
 | Proven stale/archive candidate | 0 | The completed historical audit found no path with both obsolete evidence and a completed caller-free scope. | Keep every artifact under the preservation boundary. | No |
-| Missing tracked path | 31 | The path is already absent from the working tree. This is a Git/worktree state, not evidence that the script is obsolete. | Decide whether to restore the path or commit the existing deletion; preserve callers if restoring/replacing. | No |
+| Missing tracked path | 32 | The path is already absent from the working tree. This is a Git/worktree state, not evidence that the script is obsolete. | Decide whether to restore the path or commit the existing deletion; preserve callers if restoring/replacing. | No |
 | Active unresolved `maybe` | 141 | Caller, lifecycle, owner, import, or safety evidence remains incomplete. Many may be one-offs, but that has not been proved. | Complete evidence before any change. | No |
 | Protected `keep` | 106 | Positive caller, gate/path policy, or shared-helper evidence exists. | Preserve the current path and known compatibility surface. | No |
 
-The missing-path CSV lists all 31 exact paths and the required decision. It intentionally contains **no archive target**, because a missing working-tree file cannot be moved to an archive and its deletion may still need restoration or caller migration.
+The missing-path CSV lists all 32 exact paths and the required decision. It intentionally contains **no archive target**, because a missing working-tree file cannot be moved to an archive and its deletion may still need restoration or caller migration.

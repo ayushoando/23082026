@@ -131,6 +131,11 @@ html:has([data-cookie-consent-bar]) {
   }
 }
 
+/* Prevent cached older assistant markup from reintroducing a clipped label. */
+.site-fab-launcher--assistant .site-fab-launcher__label {
+  display: none !important;
+}
+
 @utility site-fab-launcher--whatsapp {
   border: 0.0625rem solid var(--color-whatsapp-hover);
   background-color: var(--color-whatsapp);

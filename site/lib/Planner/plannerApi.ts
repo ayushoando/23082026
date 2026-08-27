@@ -9,6 +9,37 @@
 import { apiPath, browserApiFetch } from "@/lib/api/browserApi";
 import type { FurnitureItem, PlannerProject } from "@planner/lib/plannerTypes";
 
+// Mirror the server-side error code taxonomy for consistent classification.
+// Reuses API_ERROR_CODES values without importing the server-only ApiError class.
+const PLANNER_API_ERROR_CODES = {
+  // 400 Bad Request
+  VALIDATION_ERROR: "VALIDATION_ERROR" as const,
+  INVALID_INPUT: "INVALID_INPUT" as const,
+  MISSING_REQUIRED_FIELD: "MISSING_REQUIRED_FIELD" as const,
+
+  // 401 Unauthorized
+  AUTH_REQUIRED: "AUTH_REQUIRED" as const,
+  INVALID_CREDENTIALS: "INVALID_CREDENTIALS" as const,
+
+  // 403 Forbidden
+  INSUFFICIENT_PERMISSIONS: "INSUFFICIENT_PERMISSIONS" as const,
+  CSRF_FAILED: "CSRF_FAILED" as const,
+
+  // 404 Not Found
+  RESOURCE_NOT_FOUND: "RESOURCE_NOT_FOUND" as const,
+
+  // 429 Too Many Requests
+  RATE_LIMIT_EXCEEDED: "RATE_LIMIT_EXCEEDED" as const,
+
+  // 500 Internal Server Error
+  INTERNAL_ERROR: "INTERNAL_ERROR" as const,
+  DATABASE_ERROR: "DATABASE_ERROR" as const,
+  SERVICE_UNAVAILABLE: "SERVICE_UNAVAILABLE" as const,
+};
+
+export type PlannerApiErrorCode =
+  (typeof PLANNER_API_ERROR_CODES)[keyof typeof PLANNER_API_ERROR_CODES];
+
 /* ------------------------------------------------------------------ */
 /* Typed API error                                                     */
 /* ------------------------------------------------------------------ */

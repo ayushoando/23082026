@@ -5,6 +5,7 @@ summary,historical audit baseline (247 paths),inventory,141 active unresolved ma
 missing_tracked_path,scripts/create-private-repo.bat,Windows batch entrypoint,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
 missing_tracked_path,scripts/create-private-repo.ps1,PowerShell entrypoint,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
 missing_tracked_path,scripts/finish-all.ps1,PowerShell entrypoint,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
+missing_tracked_path,scripts/fix-commit-author.ps1,PowerShell entrypoint,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
 missing_tracked_path,scripts/setup-ayushonmicrosoft-remote.ps1,PowerShell entrypoint,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
 missing_tracked_path,scripts/shallow-push-ayushonmicrosoft.ps1,PowerShell entrypoint,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
 missing_tracked_path,scripts/verify-remote.ps1,PowerShell check,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No

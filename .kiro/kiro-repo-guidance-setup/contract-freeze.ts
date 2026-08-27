@@ -39,11 +39,11 @@ import {
 } from "./reservations";
 
 export const SHARED_CONTRACT_PATHS = [
-  "scripts/kiro-repo-guidance-setup/contracts.ts",
+  ".kiro/kiro-repo-guidance-setup/contracts.ts",
 ] as const satisfies readonly RepositoryPath[];
 
 export const OWNERSHIP_MANIFEST_PATH =
-  "scripts/kiro-repo-guidance-setup/ownership.ts" as const;
+  ".kiro/kiro-repo-guidance-setup/ownership.ts" as const;
 
 export const CONTRACT_FREEZE_VALIDATION_RUN_PREFIX =
   "validation:shared-contract-freeze" as const;
