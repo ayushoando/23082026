@@ -1,0 +1,35 @@
+review_category,artifact_path,artifact_type,evidence_status,required_action,archive_or_move_authorized
+summary,historical audit baseline (247 paths),inventory,0 proven stale or archive candidates,Keep current preservation boundary,No
+summary,historical audit baseline (247 paths),inventory,106 protected keep artifacts,Preserve callers paths and imports,No
+summary,historical audit baseline (247 paths),inventory,141 active unresolved maybe artifacts,Complete caller lifecycle ownership and safety evidence,No
+missing_tracked_path,scripts/create-private-repo.bat,Windows batch entrypoint,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
+missing_tracked_path,scripts/create-private-repo.ps1,PowerShell entrypoint,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
+missing_tracked_path,scripts/finish-all.ps1,PowerShell entrypoint,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
+missing_tracked_path,scripts/setup-ayushonmicrosoft-remote.ps1,PowerShell entrypoint,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
+missing_tracked_path,scripts/shallow-push-ayushonmicrosoft.ps1,PowerShell entrypoint,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
+missing_tracked_path,scripts/verify-remote.ps1,PowerShell check,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
+missing_tracked_path,scripts/kiro-repo-guidance-setup/capabilities.ts,TypeScript module,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
+missing_tracked_path,scripts/kiro-repo-guidance-setup/compatibility.ts,TypeScript module,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
+missing_tracked_path,scripts/kiro-repo-guidance-setup/continuity.ts,TypeScript module,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
+missing_tracked_path,scripts/kiro-repo-guidance-setup/contract-freeze.ts,TypeScript module,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
+missing_tracked_path,scripts/kiro-repo-guidance-setup/contracts.ts,TypeScript module,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
+missing_tracked_path,scripts/kiro-repo-guidance-setup/coverage.ts,TypeScript module,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
+missing_tracked_path,scripts/kiro-repo-guidance-setup/discovery.ts,TypeScript module,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
+missing_tracked_path,scripts/kiro-repo-guidance-setup/enablement.ts,TypeScript module,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
+missing_tracked_path,scripts/kiro-repo-guidance-setup/handover.ts,TypeScript module,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
+missing_tracked_path,scripts/kiro-repo-guidance-setup/hooks.ts,TypeScript module,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
+missing_tracked_path,scripts/kiro-repo-guidance-setup/integration-gate.ts,TypeScript module,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
+missing_tracked_path,scripts/kiro-repo-guidance-setup/inventory.ts,TypeScript module,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
+missing_tracked_path,scripts/kiro-repo-guidance-setup/owner-decisions.ts,TypeScript module,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
+missing_tracked_path,scripts/kiro-repo-guidance-setup/ownership.ts,TypeScript module,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
+missing_tracked_path,scripts/kiro-repo-guidance-setup/pipeline.ts,TypeScript module,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
+missing_tracked_path,scripts/kiro-repo-guidance-setup/policy.ts,TypeScript module,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
+missing_tracked_path,scripts/kiro-repo-guidance-setup/provenance.ts,TypeScript module,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
+missing_tracked_path,scripts/kiro-repo-guidance-setup/reservations.ts,TypeScript module,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
+missing_tracked_path,scripts/kiro-repo-guidance-setup/reviewers.ts,TypeScript module,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
+missing_tracked_path,scripts/kiro-repo-guidance-setup/rollback.ts,TypeScript module,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
+missing_tracked_path,scripts/kiro-repo-guidance-setup/scope.ts,TypeScript module,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
+missing_tracked_path,scripts/kiro-repo-guidance-setup/skills.ts,TypeScript module,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
+missing_tracked_path,scripts/kiro-repo-guidance-setup/validation.ts,TypeScript module,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
+missing_tracked_path,scripts/kiro-repo-guidance-setup/wave-guard.ts,TypeScript module,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No
+missing_tracked_path,scripts/kiro-repo-guidance-setup/wave-manifest.ts,TypeScript module,Git tracked but missing from working tree,Decide whether to restore or commit the existing deletion,No

@@ -8,7 +8,7 @@ import {
   auditMarketingCopySource,
   loadManifest,
   runCheck,
-} from "../../../scripts/check-marketing-copy-source.mjs";
+} from "../../../scripts/check-site-ui-contract.mjs";
 
 const siteRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -16,16 +16,16 @@ const siteRoot = path.resolve(
 );
 const scriptPath = path.join(
   siteRoot,
-  "scripts/check-marketing-copy-source.mjs",
+  "scripts/check-site-ui-contract.mjs",
 );
 
 describe("check-marketing-copy-source (name-mirror)", () => {
   it("exits 0 when wave1 i18n consumer files avoid routeCopy.ts", () => {
-    const output = execFileSync(process.execPath, [scriptPath], {
+    const output = execFileSync(process.execPath, [scriptPath, "--scope=copy"], {
       cwd: siteRoot,
       encoding: "utf8",
     });
-    expect(output).toContain("check-marketing-copy-source: ok");
+    expect(output).toContain("check-site-ui-contract: copy ok");
   });
 
   it("runCheck returns ok: true on repository files", () => {
@@ -73,15 +73,15 @@ describe("check-marketing-copy-source (name-mirror)", () => {
     expect(failures).toEqual([
       {
         file: "app/(site)/bad-import.tsx",
-        issue: "imports routeCopy.ts",
+        issue: "imports routeCopy",
       },
       {
         file: "app/(site)/bad-import.tsx",
-        issue: "missing getTranslations/useTranslations",
+        issue: "missing next-intl consumer",
       },
       {
         file: "app/(site)/missing-intl.tsx",
-        issue: "missing getTranslations/useTranslations",
+        issue: "missing next-intl consumer",
       },
       {
         file: "app/(site)/non-existent.tsx",

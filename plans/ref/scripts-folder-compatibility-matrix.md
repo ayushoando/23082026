@@ -87,3 +87,8 @@ A later implementation may proceed only when every applicable item below is reco
 ## No-action conclusion
 
 Task 1 changes **no scripts** and authorizes **no relocation, consolidation, wrapper implementation, archival, deletion, or runtime action**. It establishes only the protected compatibility surface and the gates that a later, separately approved implementation must satisfy.
+## Matrix coverage review — assigned Task 2
+
+**Result: complete; no correction required.** A document-only review against audit Tasks 2.2, 2.3, 3.1–3.4, and 4.3 plus the cleanup plan confirms that this matrix preserves the exact **247 / 106 `keep` / 141 `maybe` / 0 archive candidates** baseline; all 26 documented `scripts/general/` members, 13 path-stable SVG artifacts, eight shared helpers, and the external `tech-docs-generator/scripts/fake-test-audit.mjs` exception; and the caller surface of 98 root commands, the `run-ops` derived `COMMANDS` registry, four workflows, documentation/import/direct-invocation callers, and recorded aliases/aggregates.
+
+The matrix correctly records no registry drift or false relocation claim; keeps every `maybe` active and untouched; authorizes no implementation; and defines `scripts/archive/` only as a proposed future target family, not a selected archive location, approved move, or current action. Its later-migration gate includes caller listing, owner decision, applicable safety contract, compatibility wrapper, command/documentation migration, rollback, and explicitly user-invoked validation. No scripts, packages, workflows, source, archives, or other planning files were changed; no commands or tests were run.

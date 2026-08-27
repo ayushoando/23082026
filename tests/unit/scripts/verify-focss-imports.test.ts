@@ -11,10 +11,7 @@ const monorepoRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   "../../..",
 );
-const scriptPath = path.join(
-  monorepoRoot,
-  "scripts/AsNeeded/verify-focss-imports.mjs",
-);
+const scriptPath = path.join(monorepoRoot, "scripts/AsNeeded/verify-focss.mjs");
 
 /** Fixture uses a local package CSS import (not a product dep). */
 function makeFixture(): { root: string; importedFile: string } {
@@ -44,11 +41,11 @@ function makeFixture(): { root: string; importedFile: string } {
 }
 
 function run(root: string): string {
-  return execFileSync(process.execPath, [scriptPath], {
+  return execFileSync(process.execPath, [scriptPath, "--scope=imports"], {
     cwd: monorepoRoot,
     encoding: "utf8",
     stdio: ["ignore", "pipe", "pipe"],
-    env: { ...process.env, FOCSS_IMPORT_ROOT: root },
+    env: { ...process.env, FOCSS_ROOT: root },
   });
 }
 
@@ -63,11 +60,11 @@ function runExpectFail(root: string): string {
   throw new Error("expected script to fail");
 }
 
-describe("verify-focss-imports", () => {
+describe("verify-focss imports scope", () => {
   it("verifies that package CSS imports resolve to an actual file", () => {
     const fixture = makeFixture();
     try {
-      expect(run(fixture.root)).toContain("verify-focss-imports: ok");
+      expect(run(fixture.root)).toContain('"ok": true');
 
       fs.rmSync(fixture.importedFile);
       expect(runExpectFail(fixture.root)).toMatch(

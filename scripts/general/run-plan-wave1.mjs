@@ -81,7 +81,7 @@ step("false-green-audit", () => {
 });
 
 step("focss-structure", () => {
-  const r = run("node scripts/AsNeeded/verify-focss-structure.mjs");
+  const r = run("node scripts/AsNeeded/verify-focss.mjs --scope=structure");
   writeText("frontend/focss-graph.txt", r.output);
   return { ok: r.ok, evidence: "results/frontend/focss-graph.txt" };
 });

@@ -31,10 +31,8 @@ function runNode(rel, args = []) {
 
 runNode("clean-test-artifacts.mjs");
 runNode("generate-site-ui-route-matrix.mjs");
-runNode("check-site-page-shell.mjs");
+runNode("check-site-ui-contract.mjs");
 runNode("check-i18n-key-parity.mjs");
-runNode("check-marketing-copy-source.mjs");
-runNode("check-marketing-inline-style.mjs");
 runNode("check-homepage-dialect.mjs");
 run("pnpm", ["exec", "playwright", "install", "chromium"]);
 run("pnpm", [

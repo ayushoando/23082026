@@ -6,14 +6,14 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 const siteRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../..");
-const scriptPath = path.join(siteRoot, "scripts/check-marketing-inline-style.mjs");
+const scriptPath = path.join(siteRoot, "scripts/check-site-ui-contract.mjs");
 
 describe("check-marketing-inline-style (name-mirror)", () => {
   it("emits a structured ok or failure report for marketing style attrs", () => {
     let code = 0;
     let out = "";
     try {
-      out = execFileSync(process.execPath, [scriptPath], {
+      out = execFileSync(process.execPath, [scriptPath, "--scope=inline-style"], {
         cwd: siteRoot,
         encoding: "utf8",
       });
@@ -24,10 +24,11 @@ describe("check-marketing-inline-style (name-mirror)", () => {
     }
 
     if (code === 0) {
-      expect(out).toContain("check-marketing-inline-style: ok");
+      expect(out).toContain("check-site-ui-contract: inline-style ok");
     } else {
       expect(code).toBe(1);
-      expect(out).toMatch(/check-marketing-inline-style: \d+ file/);
+      expect(out).toMatch(/check-site-ui-contract: \d+ issue/);
+      expect(out).toMatch(/\[inline-style\]/);
       expect(out).toMatch(/\.tsx/);
     }
   });

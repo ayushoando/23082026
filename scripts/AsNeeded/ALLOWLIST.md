@@ -1,7 +1,7 @@
 # scripts/AsNeeded — allowlist
 
-**Purpose:** One-shot / ad-hoc tools that are **not** on the product gate path.  
-**Rule:** Only basenames listed here may live under `scripts/AsNeeded/`.
+**Purpose:** One-shot tools and explicitly allowlisted specialized validators.
+**Rule:** Only basenames listed here may live under `scripts/AsNeeded/`; a listed validator may be a package-gate dependency.
 
 ```powershell
 node scripts/AsNeeded/<name>
@@ -15,12 +15,8 @@ node scripts/AsNeeded/<name>
 
 | `_scan-circular-imports.mjs` | audit | Static import cycle scan |
 | `audit-css-packages.mjs` | audit | Broken imports / unreferenced CSS |
-| `verify-focss-imports.mjs` | verify | FOCSS import graph (`verify:focss`) |
-| `verify-site-css.mjs` | verify | Site CSS package smoke (`verify:focss`) |
-| `verify-focss-fences.mjs` | verify | FOCSS fence rules (`verify:focss`) |
-| `verify-focss-module-imports.mjs` | verify | TSX → FOCSS module paths (`verify:focss`) |
+| `verify-focss.mjs` | verify | Canonical FOCSS structure, imports, fences, and module graph (`verify:focss`; `--scope=<name>`) |
 | `verify-db-svg-matrix.mjs` | verify | DB/SVG matrix (`verify:db-svg`) |
-| `verify-focss-structure.mjs` | verify | FOCSS folder structure (`verify:focss`) |
 
 ## Do **not** put here
 

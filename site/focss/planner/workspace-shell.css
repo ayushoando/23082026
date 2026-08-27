@@ -117,6 +117,24 @@
   overflow: hidden;
   isolation: isolate;
 }
+
+/* Ensure a highly visible cursor on the canvas for all draw tools.
+   Fabric v6 only sets cursor on mousemove — this CSS guarantees it's visible immediately.
+   Uses a custom SVG crosshair (larger, colored) so it's never lost on the white canvas. */
+.ooplanner-root .planner-stack[data-planner-step="draw"] .canvas-stage canvas {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cline x1='12' y1='0' x2='12' y2='24' stroke='%230B1324' stroke-width='1.5'/%3E%3Cline x1='0' y1='12' x2='24' y2='12' stroke='%230B1324' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='none' stroke='%23E86C3A' stroke-width='1.5'/%3E%3C/svg%3E") 12 12, crosshair;
+}
+
+/* Select tool: default pointer */
+.ooplanner-root .canvas-stage canvas {
+  cursor: default;
+}
+
+/* Rulers are rendering at wrong dimensions (11×22px) and may intercept
+   pointer events at canvas edges. Hide until properly implemented. */
+.ooplanner-root .canvas-stage .ruler {
+  display: none !important;
+}
 .ooplanner-root .canvas-stage { container-type: inline-size; container-name: canvas-stage; }
 .ooplanner-root .canvas-stage__inner { position: absolute; inset: 0; }
 
@@ -401,6 +419,34 @@
   position: absolute;
   inset: 0;
   overflow: hidden;
+}
+
+/* DockView sets .dv-view.visible { visibility: visible } which overrides
+   inherited hidden. Force hidden on all descendants when gated. */
+.ooplanner-root .workspace[data-load-state="loading"] > :not(.planner-load-state) *,
+.ooplanner-root .workspace[data-load-state="unauthorized"] > :not(.planner-load-state) *,
+.ooplanner-root .workspace[data-load-state="forbidden"] > :not(.planner-load-state) *,
+.ooplanner-root .workspace[data-load-state="not-found"] > :not(.planner-load-state) *,
+.ooplanner-root .workspace[data-load-state="transient-error"] > :not(.planner-load-state) * {
+  visibility: hidden !important;
+}
+
+/* Gate the toolbar and workflow bar (siblings of .workspace inside .planner-stack)
+   so they don't appear as usable project controls during error/loading states.
+   Since .oo-toolbar and .pw-step-bar precede .workspace in DOM order, use the
+   parent .planner-stack with a :has() selector targeting the gated workspace. */
+.ooplanner-root .planner-stack:has(.workspace[data-load-state="loading"]) > .oo-toolbar,
+.ooplanner-root .planner-stack:has(.workspace[data-load-state="unauthorized"]) > .oo-toolbar,
+.ooplanner-root .planner-stack:has(.workspace[data-load-state="forbidden"]) > .oo-toolbar,
+.ooplanner-root .planner-stack:has(.workspace[data-load-state="not-found"]) > .oo-toolbar,
+.ooplanner-root .planner-stack:has(.workspace[data-load-state="transient-error"]) > .oo-toolbar,
+.ooplanner-root .planner-stack:has(.workspace[data-load-state="loading"]) > .pw-step-bar,
+.ooplanner-root .planner-stack:has(.workspace[data-load-state="unauthorized"]) > .pw-step-bar,
+.ooplanner-root .planner-stack:has(.workspace[data-load-state="forbidden"]) > .pw-step-bar,
+.ooplanner-root .planner-stack:has(.workspace[data-load-state="not-found"]) > .pw-step-bar,
+.ooplanner-root .planner-stack:has(.workspace[data-load-state="transient-error"]) > .pw-step-bar {
+  visibility: hidden;
+  pointer-events: none;
 }
 
 /* Recovery surface — fills the workspace content area */

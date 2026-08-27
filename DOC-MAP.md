@@ -29,7 +29,7 @@ user  >  live code + fresh commands  >  AGENTS.md  >  Agents/  >  docs/**
 |-------|------|
 | Root | Front doors — `START.md`, `README.md`, `CONTENTS.md` |
 | `Agents/` | Session handbooks ([`INDEX`](./Agents/INDEX.md)) |
-| `docs/` | Durable reference (13 files) |
+| `docs/` | Durable reference (14 files) |
 | `.github/` | JIT instructions + skills |
 | `.archive/` | Retired — never authority |
 | Runtime constraints | [`AGENTS.md`](./AGENTS.md) §5 — read-only production contract |
@@ -50,11 +50,12 @@ user  >  live code + fresh commands  >  AGENTS.md  >  Agents/  >  docs/**
 
 ## Durable docs (`docs/`)
 
-See [`docs/README.md`](./docs/README.md) for the full 13-file table. Highlights:
+See [`docs/README.md`](./docs/README.md) for the full 14-file table. Highlights:
 
 | Topic | Home |
 |-------|------|
 | Repo layout / stack / routes / css | `docs/architecture/{layout,stack,routes,css}.md` |
+| Scripts catalog, commands, and documentation sources | `docs/architecture/scripts.md` |
 | Product placement + tech-docs | `docs/architecture/product-map.md` |
 | Database (schema, drizzle, ops) | `docs/database/*` |
 | Rules / benchmarks / charter / css-debt | `docs/governance/{rules,benchmarks,charter,focss-stop-drift}.md` |

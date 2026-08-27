@@ -295,16 +295,14 @@ const COMMANDS = {
 
   "site-ui:matrix": () => runNode("generate-site-ui-route-matrix.mjs"),
   "check:site-ui": () => {
-    runNode("check-site-page-shell.mjs");
+    runNode("check-site-ui-contract.mjs");
     runNode("check-i18n-key-parity.mjs");
-    runNode("check-marketing-copy-source.mjs");
-    runNode("check-marketing-inline-style.mjs");
     runNode("check-homepage-dialect.mjs");
   },
-  "check:site-ui:shell": () => runNode("check-site-page-shell.mjs"),
+  "check:site-ui:shell": () => runNode("check-site-ui-contract.mjs", ["--scope=shell"]),
   "check:i18n:parity": () => runNode("check-i18n-key-parity.mjs"),
-  "check:site-ui:copy": () => runNode("check-marketing-copy-source.mjs"),
-  "check:site-ui:inline-style": () => runNode("check-marketing-inline-style.mjs"),
+  "check:site-ui:copy": () => runNode("check-site-ui-contract.mjs", ["--scope=copy"]),
+  "check:site-ui:inline-style": () => runNode("check-site-ui-contract.mjs", ["--scope=inline-style"]),
   "check:site-ui:dialect": () => runNode("check-homepage-dialect.mjs"),
 
   "i18n:sync:marketing": () => runNode("sync-marketing-i18n-messages.mjs"),

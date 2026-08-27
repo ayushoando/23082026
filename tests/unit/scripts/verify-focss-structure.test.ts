@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 const monorepoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../..");
-const scriptPath = path.join(monorepoRoot, "scripts/AsNeeded/verify-focss-structure.mjs");
+const scriptPath = path.join(monorepoRoot, "scripts/AsNeeded/verify-focss.mjs");
 
 type Fixture = {
   readonly root: string;
@@ -171,11 +171,11 @@ function makeFixture(): Fixture {
 }
 
 function run(root: string): string {
-  return execFileSync(process.execPath, [scriptPath], {
+  return execFileSync(process.execPath, [scriptPath, "--scope=structure"], {
     cwd: monorepoRoot,
     encoding: "utf8",
     stdio: ["ignore", "pipe", "pipe"],
-    env: { ...process.env, FOCSS_STRUCTURE_ROOT: root },
+    env: { ...process.env, FOCSS_ROOT: root },
   });
 }
 
@@ -190,11 +190,11 @@ function runExpectFail(root: string): string {
   throw new Error("expected verifier to fail");
 }
 
-describe("verify-focss-structure", () => {
+describe("verify-focss structure scope", () => {
   it("accepts a canonical base-first FOCSS tree", () => {
     const fixture = makeFixture();
     try {
-      expect(run(fixture.root)).toMatch(/verify-focss-structure: ok/);
+      expect(run(fixture.root)).toMatch(/"ok": true/);
     } finally {
       fs.rmSync(fixture.root, { recursive: true, force: true });
     }

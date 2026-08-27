@@ -233,11 +233,21 @@
   font-size: 12px;
   line-height: 1;
   cursor: pointer;
+  vertical-align: middle;
+}
+.ooplanner-root .oo-toolbar__btn svg {
+  flex-shrink: 0;
 }
 .ooplanner-root .oo-toolbar__btn:hover {
   background: var(--color-white-150);
   border-color: var(--border-soft);
   color: var(--text-primary);
+}
+.ooplanner-root .oo-toolbar__btn[data-active="true"],
+.ooplanner-root .oo-toolbar__btn[aria-pressed="true"] {
+  background: var(--color-primary-soft);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 .ooplanner-root .oo-toolbar__btn:focus-visible {
   outline: 2px solid var(--color-obb-600);

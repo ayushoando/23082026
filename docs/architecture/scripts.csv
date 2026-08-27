@@ -1,0 +1,225 @@
+artifact_path,family,artifact_type,purpose,known_route,working_tree_state
+scripts/.gitkeep,root,support,Directory retention placeholder,,present
+scripts/apply-db-image-path-rewrite.mjs,root,entrypoint,Apply database image path rewrite,,present
+scripts/arrange_supabase_catalog_assets.ts,root,entrypoint,Arrange Supabase catalog assets,ops supabase:assets:arrange,present
+scripts/asset-path-map.mjs,root,entrypoint,Build or inspect asset path mappings,,present
+scripts/audit-broken-db-image-paths.mjs,root,entrypoint,Audit broken database image paths,,present
+scripts/audit-disk-image-twins.mjs,root,entrypoint,Audit duplicate disk images,,present
+scripts/audit-product-quality.ts,root,entrypoint,Audit product quality,ops audit:products:quality,present
+scripts/audit-svg-catalog.ts,root,entrypoint,Audit SVG catalog,ops audit:svg-catalog,present
+scripts/auditCdnAssetFailures.ts,root,entrypoint,Audit CDN asset failures,ops assets:cdn:audit or assets:cdn:fix,present
+scripts/auditUnresolvedCdnPaths.ts,root,entrypoint,Audit unresolved CDN paths,ops assets:cdn:replacements,present
+scripts/audit_external_asset_hosts.py,root,entrypoint,Detect third party asset hosts,ops assets:audit:thirdparty,present
+scripts/audit_slug_id_integrity.ts,root,entrypoint,Audit slug and ID integrity,ops audit:slug-id,present
+scripts/audit_supabase_admin.ts,root,entrypoint,Audit Admin Supabase data,ops audit:supabase:admin,present
+scripts/audit_supabase_catalog.ts,root,entrypoint,Audit Products catalog data,ops audit:supabase:catalog,present
+scripts/backfill_canonical_catalog_metadata.ts,root,entrypoint,Backfill canonical catalog metadata,ops supabase:backfill:canonical,present
+scripts/backfill_missing_product_images.ts,root,entrypoint,Backfill missing product images,ops supabase:backfill:images,present
+scripts/backup_supabase.ts,root,entrypoint,Create Supabase backup,ops supabase:backup,present
+scripts/blockRenderUtils.ts,root,helper,Block render utility module,,present
+scripts/catalog-seating.json,root,data,Seating catalog data,,present
+scripts/catalog_snapshot_upload_r2.ts,root,entrypoint,Upload catalog snapshot to R2,ops catalog:snapshot:r2,present
+scripts/check-homepage-dialect.mjs,root,check,Check homepage dialect,check:site-ui,present
+scripts/check-i18n-key-parity.mjs,root,check,Check i18n key parity,check:i18n:parity,present
+scripts/check-site-ui-contract.mjs,root,check,Verify marketing shell copy source and inline style contracts,check:site-ui,present
+scripts/check-supabase-missing-images.mjs,root,check,Check Supabase missing images,,present
+scripts/checkAuthEnv.ts,root,check,Check authentication environment,ops test:auth:env,present
+scripts/check_all_env_full.ts,root,check,Run full environment check,check:env:full,present
+scripts/clean-test-artifacts.mjs,root,maintenance,Clean generated test artifacts,test:clean,present
+scripts/configure-cf-security-txt.ps1,root,entrypoint,Configure Cloudflare security.txt,,present
+scripts/contact-sheet.mjs,root,generator,Generate image contact sheet,,present
+scripts/count-r2-objects.mjs,root,entrypoint,Count R2 objects,ops assets:r2:count,present
+scripts/coverage-metrics.mjs,root,helper,Calculate coverage metrics,,present
+scripts/coverage-policy.mjs,root,helper,Apply or report coverage policy,,present
+scripts/create-bucket.ts,root,entrypoint,Create R2 bucket,ops assets:r2:create-bucket,present
+scripts/create-private-repo.bat,root,entrypoint,Create private repository helper,,missing
+scripts/create-private-repo.ps1,root,entrypoint,Create private repository helper,,missing
+scripts/db_advisors.ts,root,entrypoint,Run Products database advisors,ops db:advisors,present
+scripts/db_advisors_admin.ts,root,entrypoint,Run Admin database advisors,ops db:advisors:admin,present
+scripts/db_apply_migrations.ts,root,entrypoint,Apply or plan database migrations,db:apply,present
+scripts/db_backup_dropped_tables.ts,root,entrypoint,Back up dropped database tables,ops db:backup-dropped,present
+scripts/db_backup_pg_dump.ts,root,entrypoint,Create pg_dump backup,ops db:backup:pgdump,present
+scripts/db_backup_upload_r2.ts,root,entrypoint,Back up database to R2,ops backup:supabase:r2,present
+scripts/db_ensure_plans_table.ts,root,entrypoint,Ensure plans table,ops db:ensure-plans,present
+scripts/db_gen_admin_types.ts,root,entrypoint,Generate Admin database types,db:types:admin,present
+scripts/db_sync_drizzle_schema.ts,root,entrypoint,Synchronize Drizzle schema,ops db:sync-drizzle,present
+scripts/db_test_connection.ts,root,entrypoint,Test database connection,db:test,present
+scripts/delete-twin-images.mjs,root,entrypoint,Delete duplicate image files,,present
+scripts/deleteR2Bucket.ts,root,entrypoint,Delete R2 bucket,ops assets:r2:delete-bucket,present
+scripts/detect-corrupt-images.mjs,root,entrypoint,Detect corrupt image files,,present
+scripts/downloadCdnAssets.ts,root,entrypoint,Download CDN assets,ops assets:cdn:catalog,present
+scripts/ensure-retire-restore-precondition.mjs,root,check,Verify retire and restore prerequisites,,present
+scripts/ensureAuthTestUsers.ts,root,entrypoint,Ensure authentication test users,ops test:auth:seed-users,present
+scripts/export-pending-failures.mjs,root,entrypoint,Export pending failures,failures:sync,present
+scripts/export-pending-translations.mjs,root,entrypoint,Export pending translations,,present
+scripts/finish-all.ps1,root,entrypoint,Finish all automation helper,,missing
+scripts/five-majors-hash-dedup.mjs,root,entrypoint,Hash and deduplicate five major assets,,present
+scripts/fix-asset-paths.mjs,root,entrypoint,Repair asset paths,,present
+scripts/fix-commit-author.ps1,root,entrypoint,Correct Git commit author metadata,,present
+scripts/gate-site-ui.mjs,root,gate,Run site UI gate,gate:site-ui,present
+scripts/generate-coverage-report.mjs,root,generator,Generate coverage report,test:coverage,present
+scripts/generate-page-component-graph.mjs,root,generator,Generate page component graph,graph:page-components,present
+scripts/generate-route-classification.mjs,root,generator,Generate route classification,,present
+scripts/generate-site-ui-route-matrix.mjs,root,generator,Generate site UI route matrix,ops site-ui:matrix,present
+scripts/generate-sitemap-csv.ts,root,generator,Generate sitemap CSV,ops docs:sync:sitemap-csv,present
+scripts/generate-svg.mjs,root,entrypoint,Generate SVG assets,path stable SVG entrypoint,present
+scripts/generate-visual-audit-report.mjs,root,generator,Generate visual audit report,audit:visual:report,present
+scripts/generate-vitest-report.mjs,root,generator,Generate Vitest report,test lifecycle,present
+scripts/generate_blocks.ts,root,generator,Generate catalog blocks,ops catalog:blocks:qa,present
+scripts/graph-impact.mjs,root,analysis,Analyze import graph impact and cycles,,present
+scripts/launch-smoke.mjs,root,entrypoint,Run launch smoke verification,ops launch:smoke,present
+scripts/marketing-ui-audit.mjs,root,audit,Audit marketing UI,,present
+scripts/merge-recovery-into-majors.mjs,root,entrypoint,Merge recovery data into major records,,present
+scripts/migrate-svg-catalog-to-png.mjs,root,entrypoint,Migrate SVG catalog assets to PNG,,present
+scripts/mirror-assets-to-r2.mjs,root,entrypoint,Mirror assets to R2,,present
+scripts/mobile-canvas-share.mjs,root,helper,Mobile canvas sharing helper,,present
+scripts/ops-command-registry.mjs,root,helper,Derive Ops commands from run-ops,derived registry,present
+scripts/organize-catalog-images.ts,root,entrypoint,Organize catalog images,ops catalog:organize routes,present
+scripts/planner-lift-project-trees.mjs,root,entrypoint,Lift or verify Planner project trees,ops planner:lift routes,present
+scripts/playwright-dev-lock.mjs,root,helper,Coordinate Playwright development lock,,present
+scripts/pushSvgCatalogToDb.ts,root,entrypoint,Push SVG catalog to database,,present
+scripts/render-catalog-qa-sheet.ts,root,generator,Render catalog QA sheet,ops catalog:qa:sheet,present
+scripts/repo_backup_upload_r2.ts,root,entrypoint,Back up repository to R2,ops repo:backup:r2,present
+scripts/responsive-audit.mjs,root,audit,Audit responsive UI,,present
+scripts/reverse-asset-paths.mjs,root,entrypoint,Reverse asset path changes,,present
+scripts/run-admin-production-auth-smoke.ps1,root,entrypoint,Run Admin production auth smoke check,,present
+scripts/run-admin-retire-restore-canvas.mjs,root,entrypoint,Run Admin retire and restore canvas flow,,present
+scripts/run-full-vitest.mjs,root,entrypoint,Run two lane Vitest suite,test,present
+scripts/run-ops.mjs,root,dispatcher,Dispatch operational commands,pnpm run ops,present
+scripts/scan-boundaries.mjs,root,check,Scan Studio Planner import boundaries,scan:boundaries,present
+scripts/scan-hardcoding.mjs,root,analysis,Scan hard coded values,ops scan:hardcoding,present
+scripts/seed-block-descriptors.ts,root,entrypoint,Seed block descriptors,ops seed:block-descriptors,present
+scripts/seed.ts,root,entrypoint,Seed catalog data,ops seed,present
+scripts/seed_configurator_catalog.ts,root,entrypoint,Seed configurator catalog,ops seed:configurator,present
+scripts/seed_data.sql,root,data,SQL seed data,,present
+scripts/seed_furniture_catalog.ts,root,entrypoint,Seed furniture catalog,seed:furniture,present
+scripts/seed_planner_managed_catalog.ts,root,entrypoint,Seed managed Planner catalog,ops seed:managed,present
+scripts/setup-ayushonmicrosoft-remote.ps1,root,entrypoint,Configure Ayushonmicrosoft remote,,missing
+scripts/shallow-push-ayushonmicrosoft.ps1,root,entrypoint,Shallow push to Ayushonmicrosoft remote,,missing
+scripts/site-page-audit.mjs,root,audit,Audit site pages,audit:site-pages,present
+scripts/smoke-svg-fixtures.mjs,root,check,Smoke SVG fixtures,ops p0:svg,present
+scripts/sync-deferred-locale-messages.mjs,root,entrypoint,Synchronize deferred locale messages,,present
+scripts/sync-descriptor-svgs.ts,root,entrypoint,Synchronize descriptor SVGs,ops sync:descriptor-svgs,present
+scripts/sync-github-backup-secrets.ps1,root,entrypoint,Synchronize GitHub backup secrets,Ops backup:github-secrets:sync,present
+scripts/sync-hi-wave1-messages.mjs,root,entrypoint,Synchronize Hindi wave one messages,,present
+scripts/sync-marketing-i18n-messages.mjs,root,entrypoint,Synchronize marketing i18n messages,,present
+scripts/sync-missing-alt-text.ts,root,entrypoint,Synchronize missing alt text,Ops alt:sync routes,present
+scripts/sync-token-pairs.mjs,root,entrypoint,Synchronize token pairs,Ops scan:tokens,present
+scripts/syncClientLogosFromR2.ts,root,entrypoint,Synchronize client logos from R2,,present
+scripts/syncVendorCdnAssets.mjs,root,entrypoint,Synchronize vendor CDN assets,Ops assets:cdn:sync,present
+scripts/translate-deferred-marketing-flat.mjs,root,entrypoint,Translate deferred marketing locales,,present
+scripts/trim-catalog.mjs,root,entrypoint,Trim catalog data,,present
+scripts/tsconfig.json,root,config,TypeScript configuration for scripts,typecheck:scripts,present
+scripts/tsconfig.tsbuildinfo,root,support,TypeScript build metadata,,untracked
+scripts/ui-polish-pass1-audit.mjs,root,audit,Audit first pass UI polish,,present
+scripts/uploadCdnAssets.ts,root,entrypoint,Upload CDN assets,Ops assets:cdn upload routes,present
+scripts/verify-asset-decode.mjs,root,check,Verify asset decoding,,present
+scripts/verify-png-release.mjs,root,check,Verify PNG release assets,,present
+scripts/verify-remote.ps1,root,check,Verify remote configuration,,missing
+scripts/general/.gitkeep,general,support,Directory retention placeholder,,present
+scripts/general/README.md,general,documentation,General script membership contract,,present
+scripts/general/audit-api-route-safety.mjs,general,audit,Audit API route safety,test:audit:api-routes,present
+scripts/general/audit-eslint-disable.mjs,general,audit,Audit ESLint disable directives,test:audit:eslint-disable,present
+scripts/general/audit-gate-skips.mjs,general,audit,Audit gate skips,test:audit:gate-skips,present
+scripts/general/audit-hollow-tests.mjs,general,audit,Audit hollow tests,test:audit:hollow,present
+scripts/general/audit-repo-state.py,general,audit,Repository state audit,,present
+scripts/general/block-agent-tests.mjs,general,policy,Kiro PreToolUse test blocking hook,,present
+scripts/general/check-active-docs.mjs,general,check,Check active documentation,check:active-docs,present
+scripts/general/check-agents-folder.mjs,general,check,Check Agents folder,check:agents-folder,present
+scripts/general/check-agents-md.mjs,general,check,Check AGENTS.md,check:agents-md,present
+scripts/general/check-composer-styles.mjs,general,check,Check Composer styles,check:composer-styles,present
+scripts/general/check-docs-purity.mjs,general,check,Check documentation purity,check:docs-purity,present
+scripts/general/check-failures.mjs,general,check,Check Failures.md purity,check:failures,present
+scripts/general/check-governance.mjs,general,check,Check governance,check:governance,present
+scripts/general/check-plans-purity.mjs,general,check,Check plans purity,check:plans-purity,present
+scripts/general/check-product-icons.mjs,general,check,Check product icons,check:product-icons,present
+scripts/general/check-repo-layout.mjs,general,check,Check repository layout,check:layout,present
+scripts/general/check-root-markdown-links.mjs,general,check,Check root Markdown links,docs:check:root-links,present
+scripts/general/check-sharp.js,general,check,Check Sharp installation,build:site,present
+scripts/general/check-style-tokens.mjs,general,check,Check style tokens,check:style-tokens,present
+scripts/general/check-test-layout.mjs,general,check,Check test layout,ops test:layout:check,present
+scripts/general/check-worker-origin.mjs,general,check,Verify Worker Vercel origin route,ops check:worker-origin,present
+scripts/general/ci-gate-env.mjs,general,helper,CI gate environment helper,,present
+scripts/general/cleanup-nested-installs.mjs,general,lifecycle,Remove nested installs and locks,postinstall,present
+scripts/general/console-audit.mjs,general,audit,Console audit,,present
+scripts/general/generate-persistence-sweep.mjs,general,generator,Generate persistence sweep,,present
+scripts/general/generate-pseo-sku-matrix.mjs,general,generator,Generate pSEO SKU matrix,plan:pseo-matrix,present
+scripts/general/generate-redirect-map.mjs,general,generator,Generate redirect map,,present
+scripts/general/generate-route-index.mjs,general,generator,Generate route index,docs:sync:routes,present
+scripts/general/generate-session-docs.py,general,generator,Generate session docs,,present
+scripts/general/generate-test-inventory.mjs,general,generator,Generate test inventory,,present
+scripts/general/guard-workspace-install.mjs,general,lifecycle,Block non pnpm nested workspace install,preinstall,present
+scripts/general/hollow-test-patterns.mjs,general,helper,Hollow test pattern support,,present
+scripts/general/lint-ui-contract.mjs,general,check,Lint UI contract,lint:ui,present
+scripts/general/loadEnvLocal.cjs,general,helper,Load .env.local for scripts,,present
+scripts/general/move-checklist.py,general,maintenance,Move plan checklist,,present
+scripts/general/prepare-standalone.cjs,general,build,Prepare Next standalone output,build:site,present
+scripts/general/prune-site-dumps.mjs,general,maintenance,Prune fixed site dump paths,release:gate:fast,present
+scripts/general/prune-stale-next-types.mjs,general,maintenance,Prune stale Next types,typecheck,present
+scripts/general/rename-plans.py,general,maintenance,Rename plans,,present
+scripts/general/root-surface-purity.mjs,general,helper,Root surface purity support,,present
+scripts/general/run-oxlint.mjs,general,lint,Run Oxc lint across workspace areas,lint,present
+scripts/general/run-plan-wave1.mjs,general,entrypoint,Run plan wave one,plan:wave1,present
+scripts/general/run-test-audits.mjs,general,audit,Run test audits,test:audit,present
+scripts/general/scan_secrets.mjs,general,check,Scan for secrets,scan:secrets,present
+scripts/general/startStandalone.cjs,general,server,Start standalone Next server,start,present
+scripts/general/sync-env-local-files.mjs,general,entrypoint,Synchronize missing .env.local keys,env:sync,present
+scripts/general/update-plans.py,general,maintenance,Update plans,,present
+scripts/general/validate-launch-env.mjs,general,check,Validate launch environment,launch:env,present
+scripts/general/verify-plans.py,general,check,Verify plans,,present
+scripts/general/workstation-env.mjs,general,helper,Workstation environment contract helper,,present
+scripts/AsNeeded/ALLOWLIST.md,AsNeeded,documentation,Allowlist support policy,,present
+scripts/AsNeeded/_audit-stale-scripts.mjs,AsNeeded,audit,Audit stale scripts,,present
+scripts/AsNeeded/_scan-circular-imports.mjs,AsNeeded,analysis,Scan circular imports,,present
+scripts/AsNeeded/audit-css-packages.mjs,AsNeeded,audit,Audit CSS packages,,present
+scripts/AsNeeded/audit-focss-static-defects.mjs,AsNeeded,audit,Audit static FOCSS defects,,present
+scripts/AsNeeded/compare-focss-trees.mjs,AsNeeded,analysis,Compare FOCSS trees,,present
+scripts/AsNeeded/count-focss-hardcodes.mjs,AsNeeded,analysis,Count hard coded FOCSS values,,present
+scripts/AsNeeded/finalize-surface-classify.mjs,AsNeeded,entrypoint,Finalize surface classification,,present
+scripts/AsNeeded/reapply-feature-flags-grants.mjs,AsNeeded,entrypoint,Reapply feature flag grants,,present
+scripts/AsNeeded/smoke-site-pages.mjs,AsNeeded,check,Smoke site pages,,present
+scripts/AsNeeded/verify-db-svg-matrix.mjs,AsNeeded,check,Verify database SVG matrix,ops verify:db-svg,present
+scripts/AsNeeded/verify-focss.mjs,AsNeeded,check,Verify FOCSS structure imports fences and module graph,verify:focss,present
+scripts/codemods/.gitkeep,codemods,support,Directory retention placeholder,,present
+scripts/codemods/homepage-dialect.mjs,codemods,codemod,Apply homepage dialect codemod,ops codemod:homepage-dialect,present
+scripts/generate-svg/.gitkeep,generate-svg,support,Directory retention placeholder,,present
+scripts/generate-svg/pipelineCore.ts,generate-svg,helper,SVG pipeline implementation,path stable import,present
+scripts/generate-svg/svgo.config.cjs,generate-svg,config,SVGO optimizer configuration,,present
+scripts/generate-svg/_fixtures/.gitkeep,generate-svg,support,Fixture directory placeholder,,present
+scripts/generate-svg/_fixtures/chaise.json,generate-svg,fixture,Live SVG smoke input,ops p0:svg,present
+scripts/generate-svg/_fixtures/linear-desk-param.json,generate-svg,fixture,Live SVG smoke input,ops p0:svg,present
+scripts/generate-svg/_fixtures/missing-geometry.json,generate-svg,fixture,Live SVG smoke input,ops p0:svg,present
+scripts/generate-svg/_fixtures/sectional.json,generate-svg,fixture,Live SVG smoke input,ops p0:svg,present
+scripts/generate-svg/_fixtures/side-table.json,generate-svg,fixture,Live SVG smoke input,ops p0:svg,present
+scripts/kiro-repo-guidance-setup/contracts.ts,kiro-repo-guidance-setup,module,Guidance contracts,,missing
+scripts/kiro-repo-guidance-setup/coverage.ts,kiro-repo-guidance-setup,module,Guidance coverage definitions,,missing
+scripts/kiro-repo-guidance-setup/compatibility.ts,kiro-repo-guidance-setup,module,Guidance compatibility rules,,missing
+scripts/kiro-repo-guidance-setup/contract-freeze.ts,kiro-repo-guidance-setup,module,Guidance contract freeze rules,,missing
+scripts/kiro-repo-guidance-setup/contracts.ts,kiro-repo-guidance-setup,module,Guidance contracts,,missinging
+scripts/kiro-repo-guidance-setup/integration-gate.ts,kiro-repo-guidance-setup,module,Guidance integration gate rules,,missing
+scripts/kiro-repo-guidance-setup/inventory.ts,kiro-repo-guidance-setup,module,Guidance inventory definitions,,missing
+scripts/kiro-repo-guidance-setup/owner-decisions.ts,kiro-repo-guidance-setup,module,Guidance owner decision rules,,missing
+scripts/kiro-repo-guidance-setup/ownership.ts,kiro-repo-guidance-setup,module,Guidance ownership definitions,,missing
+scripts/kiro-repo-guidance-setup/pipeline.ts,kiro-repo-guidance-setup,module,Guidance pipeline definitions,,missing
+scripts/kiro-repo-guidance-setup/policy.ts,kiro-repo-guidance-setup,module,Guidance policy definitions,,missing
+scripts/kiro-repo-guidance-setup/provenance.ts,kiro-repo-guidance-setup,module,Guidance provenance definitions,,missing
+scripts/kiro-repo-guidance-setup/reservations.ts,kiro-repo-guidance-setup,module,Guidance reservation rules,,missing
+scripts/kiro-repo-guidance-setup/reviewers.ts,kiro-repo-guidance-setup,module,Guidance reviewer definitions,,missing
+scripts/kiro-repo-guidance-setup/rollback.ts,kiro-repo-guidance-setup,module,Guidance rollback rules,,missing
+scripts/kiro-repo-guidance-setup/scope.ts,kiro-repo-guidance-setup,module,Guidance scope definitions,,missing
+scripts/kiro-repo-guidance-setup/skills.ts,kiro-repo-guidance-setup,module,Guidance skill definitions,,missing
+scripts/kiro-repo-guidance-setup/validation.ts,kiro-repo-guidance-setup,module,Guidance validation rules,,missing
+scripts/kiro-repo-guidance-setup/wave-guard.ts,kiro-repo-guidance-setup,module,Guidance wave guard rules,,missing
+scripts/kiro-repo-guidance-setup/wave-manifest.ts,kiro-repo-guidance-setup,module,Guidance wave manifest definitions,,missing
+scripts/lib/.gitkeep,lib,support,Directory retention placeholder,,present
+scripts/lib/assetPathMapTools.mjs,lib,helper,Shared asset path mapping helper,,present
+scripts/lib/cdnAssetResolver.ts,lib,helper,Shared CDN asset resolver,,present
+scripts/lib/exportMarketingCopy.ts,lib,helper,Marketing copy export helper,,present
+scripts/lib/r2Catalog.ts,lib,helper,Shared R2 catalog helper,,present
+scripts/lib/recoveryClassify.mjs,lib,helper,Recovery classification helper,,present
+scripts/lib/repoRoot.mjs,lib,helper,Shared repository root resolver,,present
+scripts/lib/repoRoot.ts,lib,helper,Shared TypeScript repository root resolver,,present
+scripts/lib/resolvePgDump.ts,lib,helper,Shared pg_dump executable resolver,,present
+scripts/lib/scriptEnv.mjs,lib,helper,Shared script environment helper,,present
+scripts/lib/siteUiRouteSources.mjs,lib,helper,Shared site UI route source helper,,present
+scripts/lib/vitest-excludes.mjs,lib,helper,Shared Vitest exclude pattern helper,,present

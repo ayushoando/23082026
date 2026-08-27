@@ -4,7 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const siteRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../..");
-const scriptPath = path.join(siteRoot, "scripts/check-site-page-shell.mjs");
+const scriptPath = path.join(siteRoot, "scripts/check-site-ui-contract.mjs");
 
 describe("check-site-page-shell", () => {
   it("exits 0 when marketing routes use HomeMarketingLayout or HomeCatalogLayout", () => {
@@ -12,10 +12,10 @@ describe("check-site-page-shell", () => {
       cwd: siteRoot,
       encoding: "utf8",
     });
-    const output = execFileSync(process.execPath, [scriptPath], {
+    const output = execFileSync(process.execPath, [scriptPath, "--scope=shell"], {
       cwd: siteRoot,
       encoding: "utf8",
     });
-    expect(output).toContain("check-site-page-shell: ok");
+    expect(output).toContain("check-site-ui-contract: shell ok");
   });
 });

@@ -21,5 +21,5 @@
     "**/*.ts",
     "**/*.js",
     "**/*.mjs"
-  ]
+, "../.kiro/kiro-repo-guidance-setup/validation.ts", "../.kiro/kiro-repo-guidance-setup/skills.ts", "../.kiro/kiro-repo-guidance-setup/scope.ts", "../.kiro/kiro-repo-guidance-setup/rollback.ts", "../.kiro/kiro-repo-guidance-setup/reviewers.ts", "../.kiro/kiro-repo-guidance-setup/provenance.ts", "../.kiro/kiro-repo-guidance-setup/policy.ts", "../.kiro/kiro-repo-guidance-setup/pipeline.ts"  ]
 }

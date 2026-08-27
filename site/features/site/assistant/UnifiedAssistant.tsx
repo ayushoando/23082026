@@ -580,9 +580,6 @@ export function UnifiedAssistant() {
             className={`site-fab-launcher site-fab-launcher--assistant ${desktopFabAnchor} ${ASSISTANT_FLOATING_PRIMARY_CLASS}`}
           >
             <Sparkles className="h-6 w-6" aria-hidden="true" />
-            <span className="site-fab-launcher__label hidden xl:inline">
-              {AI_CHATBOT_COPY.title}
-            </span>
           </button>
         ) : null}
       </div>

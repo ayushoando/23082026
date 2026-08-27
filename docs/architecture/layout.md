@@ -8,7 +8,7 @@ One monorepo, `pnpm` workspace, Next.js App Router in `site/`. Truth order: **us
 |------|------|
 | `site/` | Next.js app (the product). App Router under `app/` (`app/(site)` = marketing, `app/admin`, `app/oostudio`, `app/ooplanner`), `components/`, `features/`, `lib/`, `hooks/`, `store/`, `server/` (server-only), `platform/` (types, drizzle, supabase migrations), `focss/` (`@focss/*` CSS), `inventory/` (descriptors), `i18n/`, `public/`, `data/` (legacy storage — do not write) |
 | `tests/` | Vitest suite + configs (`vitest.config.ts`, `vitest.shared.ts`, `vitest.site.config.ts`, `vitest.admin.coverage.config.ts`, `vitest.coverage.inventory.config.ts`, `vitest.tech-docs.config.ts`). `unit/`·`integration/`·`e2e/` + the `tech-docs-generator/**` lane |
-| `scripts/` | Repo tooling. `scripts/general/*.mjs` (audits, checks), `scripts/AsNeeded/*` (FOCSS verify), `scripts/run-ops.mjs` (ops registry) |
+| `scripts/` | Repo tooling. `scripts/general/*.mjs` (audits, checks), `scripts/AsNeeded/*` (FOCSS verify), `scripts/run-ops.mjs` (ops registry). Full catalog: [`scripts.md`](./scripts.md). |
 | `tech-docs-generator/` | Source-driven docs generator + Vite inventory SPA (second vitest lane; `ops tech-docs:generate` → `generated-documents/`) |
 | `docs/` | Canonical docs — this tree (`architecture/`, `database/`, `governance/`). See [`docs/README.md`](../README.md) |
 | `Agents/` | Agent handbooks (`01-standard` … `07-css`, `INDEX.md`) |

@@ -612,8 +612,15 @@ const Planner = () => {
       dimStartRef.current = null;
     }
     c.isDrawingMode = false;
-    c.selection = tool === "select";
-    c.defaultCursor = tool === "pan" ? "grab" : (tool === "select" ? "default" : "crosshair");
+    c.selection = true;
+    c.skipTargetFind = tool !== "select";
+    const cursor = tool === "pan" ? "grab" : (tool === "select" ? "default" : "crosshair");
+    c.defaultCursor = cursor;
+    c.hoverCursor = tool === "select" ? "move" : cursor;
+    // Force cursor on the upper canvas element immediately — Fabric v6 only
+    // updates it on mousemove which leaves it invisible until first hover.
+    const upper = c.upperCanvasEl ?? (c as unknown as { wrapperEl?: HTMLElement }).wrapperEl?.querySelector(".upper-canvas");
+    if (upper) (upper as HTMLElement).style.cursor = cursor;
     c.getObjects().forEach((o) => {
       if (asOo(o).data?.isGridLine || asOo(o).data?.isSheet || asOo(o).data?.isGuide) return;
       o.selectable = tool === "select";
@@ -650,7 +657,7 @@ const Planner = () => {
     };
 
     const onDown = (opt: TPointerEventInfo<TPointerEvent>) => {
-      const raw = opt.scenePoint;
+      const raw = opt.scenePoint ?? (opt as unknown as { pointer?: { x: number; y: number } }).pointer ?? (c.getScenePoint(opt.e as MouseEvent));
       if (!raw) return;
       const mouse = opt.e as MouseEvent;
       if (mouse.button && mouse.button !== 0) return;
@@ -764,7 +771,7 @@ const Planner = () => {
     };
     const onMove = (opt: TPointerEventInfo<TPointerEvent>) => {
       if (!drawing || (!start && !dimStartRef.current)) return;
-      const raw = opt.scenePoint;
+      const raw = opt.scenePoint ?? (opt as unknown as { pointer?: { x: number; y: number } }).pointer ?? (c.getScenePoint(opt.e as MouseEvent));
       if (!raw) return;
       const p = snapPoint(raw);
       if (tool === "wall" && start && drawing instanceof fabric.Line) {
