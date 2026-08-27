@@ -233,7 +233,7 @@ export function DownloadsPageView({
           <div className="downloads-hero__copy">
             <p
               data-downloads-hero-reveal
-              className="home-kicker downloads-hero__kicker text-[color:var(--color-bronze-300)]"
+              className="home-kicker downloads-hero__kicker text-accent-soft"
             >
               {heroKicker}
             </p>
@@ -331,7 +331,7 @@ export function DownloadsPageView({
             data-testid="downloads-process"
           >
             <div>
-              <p className="home-kicker text-[color:var(--color-bronze-300)]">{processKicker}</p>
+              <p className="home-kicker text-accent-soft">{processKicker}</p>
               <h2 className="home-heading mt-3 mb-4 text-inverse">{processTitle}</h2>
             </div>
             <ol className="downloads-process__steps">

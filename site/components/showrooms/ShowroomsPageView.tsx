@@ -169,7 +169,7 @@ export function ShowroomsPageView({
           <div className="showrooms-hero__copy">
             <p
               data-showrooms-hero-reveal
-              className="home-kicker showrooms-hero__kicker text-[color:var(--color-bronze-300)]"
+              className="home-kicker showrooms-hero__kicker text-accent-soft"
             >
               {heroKicker}
             </p>

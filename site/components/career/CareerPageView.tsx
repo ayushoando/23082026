@@ -224,7 +224,7 @@ export function CareerPageView({
           <div className="career-hero__copy">
             <p
               data-career-hero-reveal
-              className="home-kicker career-hero__kicker text-[color:var(--color-bronze-300)]"
+              className="home-kicker career-hero__kicker text-accent-soft"
             >
               {heroKicker}
             </p>

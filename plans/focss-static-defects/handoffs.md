@@ -50,3 +50,22 @@ Sub-40px controls occur in both forks, including small icon buttons, swatches, r
 **Transfer status:** Deferred.
 
 The `span:has(> img)` wrapper override is repeated across approximately ten page-owned sheets. Consolidation offers no established behavior gain and would cross ownership boundaries. No source change is authorized here.
+
+## 2026-08-27 execution reconciliation
+
+### R2 selector ownership
+
+**Status:** Blocked — re-plan required.  
+`site/components/ui/Button.tsx` emits `admin-btn--md`. The former premise that the Site-zone selector had no Site-markup owner is false. Keep `:where(.admin-btn--md)` in place until the owning surface and responsive control-height policy are decided. No Admin or Site button CSS was changed in this plan.
+
+### Non-fork TSX hardcoding inventory
+
+**Scope:** Production non-fork TSX; Planner, Studio, `ooplanner`, and `oostudio` implementation paths excluded.  
+**Resolved:** 21 exact source occurrences with existing semantic utilities.  
+**Open:** 33 actionable source rows in `results/tsx-hardcoding-non-fork-remaining-actionable.csv`.
+
+Open values lack an exact semantic owner. They include fixed panel dimensions, compact typography, stacking, dark-surface aliases, and error-boundary art direction. They need a separately approved semantic-token/utility decision; do not replace them with visually similar arbitrary Tailwind values.
+
+### Admin ramp owner update
+
+The candidate recipient for the Admin ramp evidence is `plans/remediation-unified/` if that plan accepts the handoff. This record does not modify or assume ownership transfer to that plan.

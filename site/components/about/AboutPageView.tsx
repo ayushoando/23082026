@@ -205,7 +205,7 @@ export function AboutPageView({
           <div className="about-hero__copy">
             <p
               data-about-hero-reveal
-              className="home-kicker about-hero__kicker text-[color:var(--color-bronze-300)]"
+              className="home-kicker about-hero__kicker text-accent-soft"
             >
               {heroKicker}
             </p>

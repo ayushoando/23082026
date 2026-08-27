@@ -122,3 +122,16 @@ All properties are static. Viewport or rendered confirmation is outside this pla
 ## Verification design
 
 Test-like commands require current-session, explicit user authorization and a hook state that permits execution. Without both, the commands remain user-owned. Wave 5 ran under explicit authorization before the still-pending R1/R2 edit: layout, FOCSS structure, and strict UI lint passed; style-token validation failed on a pre-existing, out-of-scope homepage-component ratchet. The exact results and required rerun are in [tasks.md](./tasks.md). Passing static checks validates their respective repository contracts only; it does not establish rendered or viewport outcomes.
+
+## 2026-08-27 implementation reconciliation
+
+This reconciliation supersedes earlier pending descriptions where they conflict with the live scoped source.
+
+- **R1 is implemented:** the consent-link declaration now uses `var(--control-height-sm)` and preserves adjacent declarations.
+- **R2 is blocked, not removable:** `site/components/ui/Button.tsx` emits `admin-btn--md`. The prior assumption that the Site zone had no markup owner was false; no selector deletion is safe until ownership is re-planned.
+- **R3–R5 remain current-tree source facts:** their status is not converted into browser evidence.
+- **R6 remains read-only:** no runtime load path was established, so catalog CSS has no mutation authority.
+
+### TSX semantic-utility batch
+
+Twenty-one audited production occurrences had exact, existing semantic utilities: `text-accent-soft`, `accent-primary`, `hover:border-primary`, `focus:border-primary`, `bg-page`, `-translate-x-1/2`, `text-inverse-subtle`, and `text-primary`. Only those exact substitutions were made. The remaining 33 actionable rows have no exact owner; dimension, compact-type, stacking, dark-surface, and error-art-direction values remain unchanged rather than being rounded to nearby Tailwind utilities. Planner and Studio implementation paths were not edited.

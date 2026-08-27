@@ -225,7 +225,7 @@ export function PlanningPageView({
           <div className="planning-hero__copy">
             <p
               data-planning-hero-reveal
-              className="home-kicker planning-hero__kicker text-[color:var(--color-bronze-300)]"
+              className="home-kicker planning-hero__kicker text-accent-soft"
             >
               {heroKicker}
             </p>

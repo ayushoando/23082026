@@ -198,7 +198,7 @@ export function ServicePageView({
           <div className="service-hero__copy">
             <p
               data-service-hero-reveal
-              className="home-kicker service-hero__kicker text-[color:var(--color-bronze-300)]"
+              className="home-kicker service-hero__kicker text-accent-soft"
             >
               {heroKicker}
             </p>

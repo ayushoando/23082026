@@ -78,7 +78,7 @@ export function ClientsHero({ kicker, titleLead, titleAccent }: ClientsHeroProps
           {kicker ? (
             <p
               data-clients-hero-reveal
-              className="home-kicker clients-hero__kicker text-[color:var(--color-bronze-300)]"
+              className="home-kicker clients-hero__kicker text-accent-soft"
             >
               {kicker}
             </p>

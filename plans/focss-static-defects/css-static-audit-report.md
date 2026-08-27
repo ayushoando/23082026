@@ -84,3 +84,9 @@ The catalog CSS set contains duplicate primitive declarations and raw literals. 
 Under explicit user authorization on 2026-08-27, `pnpm run check:layout`, `pnpm run verify:focss`, and `pnpm run lint:ui:strict` passed. `pnpm run check:style-tokens` failed on two pre-existing homepage TSX ratchet increases that are unrelated to this plan; the baseline must not be raised to silence them. The full command output and disposition are recorded in [tasks](./tasks.md).
 
 No browser measurement, computed-style inspection, or viewport verification occurred. The pending R1/R2 edit requires a relevant static-check rerun after it lands.
+
+## 2026-08-27 implementation and TSX audit reconciliation
+
+R1 is now implemented: the consent link uses `var(--control-height-sm)` and retains its other declarations. R2 is blocked rather than deleted because `site/components/ui/Button.tsx` emits `admin-btn--md`; the former no-Site-markup premise was disproven. R3–R5 retain their current-tree source status, and R6 remains a no-mutation catalog decision gate.
+
+A separate production non-fork TSX audit excluded Planner, Studio, `ooplanner`, and `oostudio` implementation paths. The three incorrectly classified fractional-grid rows were excluded. The resulting 54 actionable rows were reviewed against available semantic utilities: 21 exact source occurrences were remediated, and 33 unresolved rows are retained in `results/tsx-hardcoding-non-fork-remaining-actionable.csv`. Unresolved rows were not converted to nearby Tailwind approximations.

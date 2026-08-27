@@ -191,7 +191,7 @@ export function ContactPageView({
           <div className="contact-hero__copy">
             <p
               data-contact-hero-reveal
-              className="home-kicker contact-hero__kicker text-[color:var(--color-bronze-300)]"
+              className="home-kicker contact-hero__kicker text-accent-soft"
             >
               {heroKicker}
             </p>

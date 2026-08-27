@@ -245,7 +245,7 @@ export function SustainabilityPageView({
           <div className="sustainability-hero__copy">
             <p
               data-sustainability-hero-reveal
-              className="home-kicker sustainability-hero__kicker text-[color:var(--color-bronze-300)]"
+              className="home-kicker sustainability-hero__kicker text-accent-soft"
             >
               {heroKicker}
             </p>

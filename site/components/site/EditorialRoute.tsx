@@ -9,7 +9,7 @@ type EditorialHeroProps = {
 
 export function EditorialHero({ lead, accent }: EditorialHeroProps) {
   return (
-    <section className="border-b border-theme-soft bg-[var(--surface-page)] pb-12 pt-[calc(4rem+3rem)] md:pb-16 md:pt-[calc(4rem+4rem)]">
+    <section className="border-b border-theme-soft bg-page pb-12 pt-[calc(4rem+3rem)] md:pb-16 md:pt-[calc(4rem+4rem)]">
       <div className="home-shell-xl">
         <h1 className="home-heading max-w-4xl !text-[clamp(2.25rem,4vw,3.25rem)]">
           {lead} <span className="text-accent-italic">{accent}</span>

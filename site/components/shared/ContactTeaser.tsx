@@ -489,7 +489,7 @@ export function ContactTeaser() {
                           onChange={(event) => field.onChange(event.target.checked)}
                           onBlur={field.onBlur}
                           ref={field.ref}
-                          className="mt-1 h-4 w-4 shrink-0 accent-[var(--color-primary)]"
+                          className="mt-1 h-4 w-4 shrink-0 accent-primary"
                           aria-required="true"
                           aria-invalid={showConsentInvalid || undefined}
                           aria-describedby={

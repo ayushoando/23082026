@@ -128,7 +128,7 @@ export function AiAdvisorPanel({
                 <button
                   key={prompt}
                   onClick={() => handleQuickPrompt(prompt)}
-                  className="w-full text-start text-xs px-3 py-2 rounded-lg border transition-colors hover:border-[var(--color-primary)]"
+                  className="w-full text-start text-xs px-3 py-2 rounded-lg border transition-colors hover:border-primary"
                   style={{
                     borderColor: "var(--border-soft, var(--color-bronze-100))",
                     color: "var(--text-body, var(--color-bronze-900))",
@@ -191,7 +191,7 @@ export function AiAdvisorPanel({
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask about layout, furniture, zones..."
           disabled={isLoading}
-          className="flex-1 text-xs px-3 py-2 rounded-lg border outline-none transition-colors focus:border-[var(--color-primary)]"
+          className="flex-1 text-xs px-3 py-2 rounded-lg border outline-none transition-colors focus:border-primary"
           style={{
             borderColor: "var(--border-soft, var(--color-bronze-100))",
             background: "var(--surface-page, var(--color-white-50))",

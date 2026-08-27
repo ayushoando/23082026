@@ -126,3 +126,18 @@ The scope is the eighteen sheets below `site/lib/catalog/styles/` and `site/lib/
 - The Admin ramp, fork control density, and image-wrapper duplication are handoffs, not implementation tasks here.
 - No raw color, inline color, duplicate token concept, foreign-zone import, `core/`, `core/locked/`, `features/product/`, or root-level `focss/` directory may be introduced.
 - Test-like commands require current-session, explicit user authorization and a hook state that permits execution. Without both, agents provide the commands for the user to run. The authorized Wave 5 results and rerun requirement are recorded in [tasks.md](./tasks.md).
+
+## Implementation reconciliation — 2026-08-27
+
+This section supersedes any earlier “pending” state that conflicts with the live scoped implementation.
+
+| Requirement | Reconciled source state | Acceptance state |
+|---|---|---|
+| R1 | `a.contact-form-consent__link` now uses `min-height: var(--control-height-sm)`; its display, alignment, and padding remain unchanged. | Implemented in source; post-edit user-owned validation remains pending. |
+| R2 | `:where(.admin-btn--md)` remains. Shared `site/components/ui/Button.tsx` emits this class, so the prior no-Site-markup premise is false. | Blocked; deletion requires a re-planned ownership decision. |
+| R3–R5 | Current-tree source states remain as previously reconciled. | Implemented in source; user validation remains pending. |
+| R6 | Catalog runtime ownership remains unproved. | Blocked awaiting explicit user decision; catalog stays read-only. |
+
+### Non-fork TSX audit reconciliation
+
+The plan audited production non-fork TSX only; Planner, Studio, `ooplanner`, and `oostudio` implementation paths remain excluded. Three fractional-grid rows were classification errors and are excluded. Of the resulting 54 actionable audit rows, 21 source occurrences had exact existing semantic utility owners and were replaced without changing their values or behavior. The remaining 33 audit rows are retained in `results/tsx-hardcoding-non-fork-remaining-actionable.csv`; they require a new semantic owner or an explicit follow-up decision and are not approximated.

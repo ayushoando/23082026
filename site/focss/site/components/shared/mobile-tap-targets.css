@@ -134,7 +134,7 @@
   a.contact-form-consent__link {
     display: inline-flex;
     align-items: center;
-    min-height: var(--touch-target-min);
+    min-height: var(--control-height-sm);
     padding-block: 0.625rem;
   }
 

@@ -182,7 +182,7 @@ export function SolutionsCategoryPageView({
           <div className="solutions-hero__copy">
             <p
               data-solutions-category-hero-reveal
-              className="home-kicker solutions-hero__kicker text-[color:var(--color-bronze-300)]"
+              className="home-kicker solutions-hero__kicker text-accent-soft"
             >
               {heroKicker}
             </p>
