@@ -76,7 +76,18 @@ Status: [ ] | [~] | [x] | [!]
 - [x] 0.2 For every route row below, record the current DOM class/selector, measured box, computed type value, and direct owner before editing.
 - [x] 0.3 Classify every `F` using `site/features/site/data/routeChromeRules.ts`, `site/app/(site)/layout.tsx`, `site/app/admin/layout.tsx`, `site/features/Planner/layout.tsx`, `site/features/Studio/layout.tsx`, or the route's redirect behavior.
 - [x] 0.4 Confirm no proposed CSS file is outside its zone and no row names an unverified component as an implementation owner.
-- [ ] 0.5 Treat `/login`, `/products/category/[slug]`, and `/portal/guest/view/[id]` as redirect/contract rows unless DOM reproduction proves a rendered page owner.
+- [x] 0.5 Treat `/login`, `/products/category/[slug]`, and `/portal/guest/view/[id]` as redirect/contract rows unless DOM reproduction proves a rendered page owner.
+
+**0.5 evidence record — redirect/contract classification**
+
+The production route inventory preserves each dynamic route pattern and sampled audit path. Source inspection, the component graph, and the production audit show no rendered page owner at any of these entry routes:
+
+- `/login` → audit path `/login`: **redirect-only / AC**. `site/app/(site)/login/page.tsx` sanitizes `next` and calls `redirect` with `/access?next=...`. With no query parameter, `site/lib/auth/plannerRedirect.ts` supplies `/dashboard`, so the concrete destination is `/access?next=%2Fdashboard`. The production audit records final path `/access/` for all five viewports in `results/site/page-audit-production-complete/footer-contract-evidence.json`. The original route uses the `login-tools` footer contract in `site/features/site/data/routeChromeRules.ts`; its destination owner is `site/app/(site)/access/page.tsx` → `AccessSignInView`. There is no `/login` view owner or page-local CSS owner.
+- `/products/category/[slug]` → audit path `/products/category/seating/`: **redirect-only / AC**. `site/app/(site)/products/category/[slug]/page.tsx` normalizes the slug and calls `permanentRedirect` with `/products/${categoryId}/`; an unknown slug calls `notFound()`. The sampled `seating` path therefore targets `/products/seating/`, which is the recorded final path in the five-viewport entry for this route in `results/site/page-audit-production-complete/audit-results.json`. The rendered destination owner is `site/app/(site)/products/[category]/page.tsx` → `CategoryPageView`; the legacy alias has no independent page-view or CSS owner.
+- `/portal/guest/view/[id]` → audit path `/portal/guest/view/demo-plan/`: **redirect-only / AC**. `site/app/(site)/portal/guest/view/[id]/page.tsx` always calls `redirect` with `buildAccessRedirect("/portal/${id}")`; the sampled destination is `/access?next=%2Fportal%2Fdemo-plan`. The production audit records final path `/access/` for all five viewports in `results/site/page-audit-production-complete/footer-contract-evidence.json`, and the graph has no live guest-viewer component. The post-auth return destination is owned by `site/app/(site)/portal/[id]/page.tsx` → `PortalPlanPageView`; the original `/portal` prefix remains an intentional hidden-header/hidden-footer workspace contract.
+
+These rows inherit the destination route's behavior and evidence; no component or stylesheet is invented for an alias/redirect entry.
+
 - [ ] 0.6 Treat both calculator rows as owner-gap investigations: the graph shows no live calculator component and no verified calculator page sheet.
 
 ## Wave 1 — Shared primitives and shell owners

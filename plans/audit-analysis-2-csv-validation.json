@@ -1,0 +1,332 @@
+{
+  "validation_report": {
+    "timestamp": "2026-08-26T12:00:00Z",
+    "report_title": "CSV Manifest Validation Report",
+    "report_version": "1.0",
+    "total_csv_entries": 97,
+    "validation_status": "FAILED",
+    "critical_issues": 3,
+    "high_priority_issues": 1,
+    "warnings": 1
+  },
+  "critical_issues": {
+    "path_mismatch_in_spec_entries": {
+      "severity": "CRITICAL",
+      "issue": "All spec file paths reference .kiro/specs/ but files are actually in plans/",
+      "affected_entries": 24,
+      "example": {
+        "csv_path": ".kiro/specs/focss-static-defects/requirements.md",
+        "actual_path": "plans/focss-static-defects/requirements.md",
+        "status": "File EXISTS but at wrong path"
+      },
+      "affected_specs": [
+        "focss-static-defects",
+        "kiro-repo-guidance-setup",
+        "planner-remediation",
+        "planner-dock-cascade",
+        "remediation-unified",
+        "trusted-by-duplicate-roster-kicker",
+        "site-page-css-remediation"
+      ],
+      "recommendation": "Update all .kiro/specs/ path references to plans/ in CSV for the 24 spec file entries"
+    },
+    "missing_spec_folder": {
+      "severity": "CRITICAL",
+      "issue": "Spec folder kiro-repo-guidance-setup does not exist",
+      "csv_entries_affected": 3,
+      "missing_files": [
+        ".kiro/specs/kiro-repo-guidance-setup/requirements.md",
+        ".kiro/specs/kiro-repo-guidance-setup/design.md",
+        ".kiro/specs/kiro-repo-guidance-setup/tasks.md"
+      ],
+      "status": "Folder and all three documents missing",
+      "recommendation": "Either remove the 3 CSV entries for kiro-repo-guidance-setup or locate/restore the missing spec folder"
+    },
+    "missing_spec_file": {
+      "severity": "CRITICAL",
+      "issue": "trusted-by-duplicate-roster-kicker is missing requirements.md",
+      "csv_entry": "Trusted By duplicate roster kicker — Requirements",
+      "expected_file": "plans/trusted-by-duplicate-roster-kicker/requirements.md",
+      "files_that_exist": [
+        "plans/trusted-by-duplicate-roster-kicker/design.md",
+        "plans/trusted-by-duplicate-roster-kicker/tasks.md",
+        "plans/trusted-by-duplicate-roster-kicker/bugfix.md"
+      ],
+      "status": "File not found",
+      "recommendation": "Either create requirements.md for this spec or remove the CSV entry"
+    }
+  },
+  "high_priority_issues": {
+    "unreferenced_directory": {
+      "severity": "HIGH",
+      "issue": "Directory plans/ref exists but not referenced in CSV",
+      "location": "plans/ref/",
+      "contents": [
+        "scripts-folder-audit/"
+      ],
+      "status": "Orphaned directory",
+      "recommendation": "Verify if plans/ref should be included in CSV manifest or if it is a temporary artifact to be deleted"
+    }
+  },
+  "path_and_source_area_consistency": {
+    "status": "CONSISTENT",
+    "analysis": "path column and source_area column are logically aligned",
+    "examples": [
+      {
+        "category": "Spec entries",
+        "path": ".kiro/specs/focss-static-defects/requirements.md",
+        "source_area": ".kiro/specs/focss-static-defects",
+        "consistency": "✓ Matches (source_area is parent of path)"
+      },
+      {
+        "category": "Reference entries",
+        "path": "plans/README.md",
+        "source_area": "plans",
+        "consistency": "✓ Matches"
+      },
+      {
+        "category": "Root references",
+        "path": "AGENTS.md",
+        "source_area": "root",
+        "consistency": "✓ Matches"
+      }
+    ]
+  },
+  "spec_folder_completeness": {
+    "analysis": "Actual files in each spec folder vs CSV expectations",
+    "spec_folders": {
+      "focss-static-defects": {
+        "location": "plans/focss-static-defects",
+        "expected_files": ["requirements.md", "design.md", "tasks.md"],
+        "actual_files": ["requirements.md", "design.md", "tasks.md"],
+        "status": "✓ COMPLETE"
+      },
+      "kiro-repo-guidance-setup": {
+        "location": "plans/kiro-repo-guidance-setup",
+        "expected_files": ["requirements.md", "design.md", "tasks.md"],
+        "actual_files": [],
+        "status": "✗ MISSING ENTIRELY"
+      },
+      "planner-remediation": {
+        "location": "plans/planner-remediation",
+        "expected_files": ["requirements.md", "design.md", "tasks.md"],
+        "actual_files": ["requirements.md", "design.md", "tasks.md", "tasks.meta.json"],
+        "status": "✓ COMPLETE"
+      },
+      "planner-dock-cascade": {
+        "location": "plans/planner-dock-cascade",
+        "expected_files": ["requirements.md", "design.md", "tasks.md"],
+        "actual_files": ["requirements.md", "design.md", "tasks.md"],
+        "status": "✓ COMPLETE"
+      },
+      "remediation-unified": {
+        "location": "plans/remediation-unified",
+        "expected_files": ["requirements.md", "design.md", "tasks.md"],
+        "actual_files": ["requirements.md", "design.md", "tasks.md", "audit.md", "progress-report.md"],
+        "status": "✓ COMPLETE (plus audit and progress-report)"
+      },
+      "trusted-by-duplicate-roster-kicker": {
+        "location": "plans/trusted-by-duplicate-roster-kicker",
+        "expected_files": ["requirements.md", "design.md", "tasks.md", "bugfix.md"],
+        "actual_files": ["design.md", "tasks.md", "bugfix.md", ".config.kiro", "tasks.meta.json"],
+        "missing_files": ["requirements.md"],
+        "status": "✗ INCOMPLETE (missing requirements.md)"
+      },
+      "site-page-css-remediation": {
+        "location": "plans/site-page-css-remediation",
+        "expected_files": ["requirements.md", "design.md", "tasks.md"],
+        "actual_files": ["requirements.md", "design.md", "tasks.md", "tasks.meta.json"],
+        "status": "✓ COMPLETE"
+      }
+    }
+  },
+  "reference_files_integrity": {
+    "status": "✓ ALL VALID",
+    "analysis": "All reference documents listed in CSV verified as present",
+    "root_references": {
+      "verified_count": 11,
+      "all_present": true,
+      "files": [
+        "AGENTS.md",
+        "CONTENTS.md",
+        "DOC-MAP.md",
+        "Failures.md",
+        "HANDOVER.md",
+        "OPERATIONS_RUNBOOK.md",
+        "owners.md",
+        "README.md",
+        "START.md",
+        "Testing-handbook.md"
+      ]
+    },
+    "plan_references": {
+      "verified_count": 1,
+      "all_present": true,
+      "files": ["plans/README.md"]
+    },
+    "docs_references": {
+      "verified_count": 12,
+      "all_present": true,
+      "status": "All architecture, database, and governance docs present"
+    },
+    "agent_handbooks": {
+      "verified_count": 9,
+      "all_present": true,
+      "status": "All agent handbooks and indexes present"
+    },
+    "instructions": {
+      "verified_count": 4,
+      "all_present": true,
+      "status": "All JIT instruction files present"
+    },
+    "steering_files": {
+      "verified_count": 13,
+      "all_present": true,
+      "status": "All steering guidance files present"
+    },
+    "other_references": {
+      "verified_count": 4,
+      "all_present": true,
+      "files": [
+        ".kiro/agents/spec-task-runner.md",
+        "agent-reports/README.md",
+        "tech-docs-generator/README.md",
+        "tests/INVENTORY.md"
+      ]
+    }
+  },
+  "csv_entries_status": {
+    "spec_documents": {
+      "total_entries": 24,
+      "by_status": {
+        "valid_path_incorrect": 21,
+        "file_missing": 1,
+        "folder_missing": 3
+      },
+      "details": {
+        "path_incorrect_but_file_exists": {
+          "count": 21,
+          "reason": "CSV lists .kiro/specs/ prefix but files are in plans/",
+          "entries": [
+            "focss-static-defects (3 entries: req, design, tasks)",
+            "planner-remediation (3 entries: req, design, tasks)",
+            "planner-dock-cascade (3 entries: req, design, tasks)",
+            "remediation-unified (5 entries: req, design, tasks, audit, progress-report)",
+            "trusted-by-duplicate-roster-kicker (3 entries: design, tasks, bugfix)",
+            "site-page-css-remediation (3 entries: req, design, tasks)"
+          ]
+        },
+        "file_missing": {
+          "count": 1,
+          "entry": "trusted-by-duplicate-roster-kicker/requirements.md",
+          "path": "plans/trusted-by-duplicate-roster-kicker/requirements.md",
+          "status": "File does not exist"
+        },
+        "folder_missing": {
+          "count": 3,
+          "entries": [
+            "kiro-repo-guidance-setup/requirements.md",
+            "kiro-repo-guidance-setup/design.md",
+            "kiro-repo-guidance-setup/tasks.md"
+          ],
+          "parent_folder": ".kiro/specs/kiro-repo-guidance-setup",
+          "status": "Entire folder missing"
+        }
+      }
+    },
+    "reference_documents": {
+      "total_entries": 73,
+      "status": "✓ ALL VALID",
+      "by_type": {
+        "root_references": 11,
+        "plan_references": 1,
+        "docs_architecture": 5,
+        "docs_database": 3,
+        "docs_governance": 4,
+        "agent_handbooks": 9,
+        "instructions_jit": 4,
+        "steering": 13,
+        "other": 4
+      }
+    }
+  },
+  "unlisted_actual_files": {
+    "analysis": "Files in plans/ not represented in CSV",
+    "findings": [
+      {
+        "location": "plans/ref/",
+        "status": "Directory exists but not in CSV",
+        "contents": "scripts-folder-audit/ (subdirectory)",
+        "recommendation": "Verify purpose and add to CSV if it should be tracked"
+      },
+      {
+        "location": "plans/",
+        "file_count": 6,
+        "files": [
+          "audit-analysis-1.json (self-reference, analysis artifact)",
+          "css-static-audit-report.md (CSV entry #28 - PRESENT)",
+          "graph-impact-fork-boundary-audit-2026-08-26.md (CSV entry #29 - PRESENT)",
+          "PLAN.md (CSV entry #1 - PRESENT)",
+          "planner-project-load-defect-baseline.md (CSV entry #30 - PRESENT)",
+          "planner-remediation-execution-report.md (CSV entry #31 - PRESENT)",
+          "powers-hooks-mcp-html-plan.md (CSV entry #2 - PRESENT)",
+          "README.md (CSV entry #59 - PRESENT)",
+          "site-visual-verification-report.md (CSV entry #32 - PRESENT)"
+        ],
+        "status": "All files accounted for in CSV or are analysis artifacts"
+      }
+    ]
+  },
+  "summary_of_required_updates": {
+    "update_1_path_correction": {
+      "priority": "CRITICAL",
+      "action": "Update CSV paths for all 24 spec entries",
+      "change": "Replace .kiro/specs/ prefix with plans/",
+      "affected_rows": "Rows 3-26 (all spec document entries)",
+      "example_before": ".kiro/specs/focss-static-defects/requirements.md",
+      "example_after": "plans/focss-static-defects/requirements.md"
+    },
+    "update_2_missing_spec_folder": {
+      "priority": "CRITICAL",
+      "action": "Remove or restore kiro-repo-guidance-setup",
+      "option_1": "Delete CSV entries for kiro-repo-guidance-setup (3 rows)",
+      "option_2": "Locate and restore the missing spec folder with all 3 documents",
+      "affected_rows": "Rows 6-8"
+    },
+    "update_3_missing_file": {
+      "priority": "CRITICAL",
+      "action": "Resolve missing trusted-by-duplicate-roster-kicker/requirements.md",
+      "option_1": "Delete CSV entry for requirements.md",
+      "option_2": "Create the missing requirements.md file",
+      "affected_rows": "Row 18"
+    },
+    "update_4_orphaned_directory": {
+      "priority": "HIGH",
+      "action": "Clarify status of plans/ref/ directory",
+      "research_needed": "Determine if plans/ref/ is intended or should be deleted",
+      "if_keep": "Add CSV entries for contents",
+      "if_delete": "Remove directory"
+    }
+  },
+  "gate_readiness": {
+    "csv_integrity_check": "FAILED",
+    "spec_paths_valid": false,
+    "all_referenced_files_exist": false,
+    "all_actual_files_referenced": true,
+    "reference_integrity": true,
+    "cross_reference_consistency": true,
+    "ready_for_agent_4": false,
+    "blockers_to_resolve": [
+      "Fix path mismatch in 24 spec file entries (.kiro/specs/ → plans/)",
+      "Resolve kiro-repo-guidance-setup (missing 3 files/folder)",
+      "Resolve trusted-by-duplicate-roster-kicker/requirements.md (missing file)",
+      "Clarify status of plans/ref/ directory"
+    ]
+  },
+  "notes": {
+    "validation_scope": "Checked file existence, path consistency, source_area alignment, and spec folder completeness",
+    "methodology": "Parsed CSV manifest, verified each path, checked directory structure, validated reference documents",
+    "no_files_modified": "Analysis only - per constraints, no files were created, deleted, or modified",
+    "recommendation": "Fix the 4 blocking issues before proceeding with Agent 4 document reorganization tasks"
+  }
+}

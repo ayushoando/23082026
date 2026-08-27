@@ -1,4 +1,24 @@
 {
+  "reconciliation": {
+    "status": "reconciled-already-complete",
+    "date": "2026-08-27",
+    "sourceTruth": {
+      "route": "site/app/(site)/trusted-by/page.tsx",
+      "rosterKickerAttributeCount": 1,
+      "rosterKickerExpression": "copy.rosterKicker",
+      "duplicatePresentInCurrentTree": false
+    },
+    "planTruth": {
+      "canonicalRequirements": "plans/trusted-by-duplicate-roster-kicker/requirements.md",
+      "canonicalDirectory": "plans/trusted-by-duplicate-roster-kicker",
+      "sourceChangeRequired": false
+    },
+    "referenceIndexes": [
+      "plans-reports-references.csv",
+      "plans/plans-reports-references.csv"
+    ],
+    "validationPolicy": "Historical execution records are preserved; no tests, builds, browser checks, or gates are claimed as fresh evidence by this reconciliation."
+  },
   "pbtResults": {
     "1. Write the bug-condition exploration test before implementing the fix": {
       "status": "unexpected_pass",

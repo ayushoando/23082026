@@ -1,24 +1,53 @@
-# Bugfix Requirements Document
+# Trusted By Duplicate Roster Kicker — Historical Bugfix Analysis
 
-## Introduction
+## Purpose
 
-Resolve the production type-check failure in the marketing Trusted By page caused by a repeated `rosterKicker` JSX attribute passed to `TrustedByPageView`. The scope is limited to removing the duplicate prop occurrence while preserving the page’s intended roster copy, all other page content, and unrelated application behavior. Acceptance is based on the requirements below and on the relevant repository validation commands completing successfully with no TS17001 diagnostic in `site/app/(site)/trusted-by/page.tsx`.
+This document preserves the original bug report and explains how it was reconciled with the current repository. It is historical analysis, not the canonical requirements artifact; current requirements live in `requirements.md`.
 
-## Bug Analysis
+## Historical report
 
-### Current Behavior (Defect)
+An earlier `/trusted-by` route snapshot contained the `rosterKicker` JSX attribute twice in the `TrustedByPageView` invocation. TypeScript reports TS17001 when a JSX element has duplicate attributes, so the safe historical correction was to remove the second occurrence and preserve the first.
 
-1.1 WHEN the `TrustedByPageView` JSX invocation in `site/app/(site)/trusted-by/page.tsx` is type checked THEN the system reports TS17001 because `rosterKicker={TRUSTED_BY_PAGE_COPY.rosterKicker}` is supplied more than once.
-1.2 WHEN the production site build reaches type checking for the Trusted By page THEN compilation may complete but the build validation fails, preventing the production build from being accepted.
+The historical report described both occurrences as:
 
-### Expected Behavior (Correct)
+```tsx
+rosterKicker={TRUSTED_BY_PAGE_COPY.rosterKicker}
+```
 
-2.1 WHEN the `TrustedByPageView` JSX invocation is type checked THEN the system SHALL provide `rosterKicker` exactly once, using `TRUSTED_BY_PAGE_COPY.rosterKicker`, and SHALL produce no TS17001 duplicate-attribute diagnostic for the page.
-2.2 WHEN the production site is type checked and built after the correction THEN the system SHALL pass `pnpm run typecheck` and `pnpm run build:site` without a type-check failure originating from `site/app/(site)/trusted-by/page.tsx`.
-2.3 WHEN the correction is applied THEN the system SHALL remain within the Trusted By page call site and SHALL not alter unrelated routes, components, data sources, or page copy.
+and placed the duplicate after the `sectors` mapping. That description is retained only as provenance for the original defect.
 
-### Unchanged Behavior (Regression Prevention)
+## Current repository evidence
 
-3.1 WHEN the Trusted By page renders after the correction THEN the system SHALL CONTINUE TO expose the same single roster kicker value from `TRUSTED_BY_PAGE_COPY.rosterKicker` to the roster section.
-3.2 WHEN the Trusted By page is rendered THEN the system SHALL CONTINUE TO pass all other existing `TrustedByPageView` props, including hero, overview, statistics, clients, quotes, sectors, and CTA content, without changing their values or ordering semantics.
-3.3 WHEN other marketing routes and unrelated application areas are type checked or built THEN the system SHALL CONTINUE TO behave as before, with no regressions caused by this narrowly scoped correction.
+The current route no longer contains that duplicate. Its locale-aware assembly is:
+
+```tsx
+const copy = await withLocaleCopy({ ...TRUSTED_BY_PAGE_COPY }, "trustedBy");
+```
+
+and its single runtime mapping is:
+
+```tsx
+rosterKicker={copy.rosterKicker}
+```
+
+The focused route test already asserts one roster mapping, the localized `copy.rosterKicker` expression, and preservation of all 21 non-roster mappings. The current source therefore satisfies the narrow bug invariant without another implementation edit.
+
+## Reconciled interpretation
+
+- The duplicate and the reported TS17001 are historical, not current source conditions.
+- `copy.rosterKicker` is the correct authoritative runtime expression; replacing it with the raw English constant would regress localization.
+- The route, view component, copy source, roster data, sectors, metadata, JSON-LD, layout, and contact teaser remain unchanged.
+- The appropriate next action is to reconcile the plan artifacts and references, then perform non-test closeout review.
+
+## Preservation checklist
+
+- [x] Exactly one current `rosterKicker` mapping.
+- [x] Localized `copy.rosterKicker` is preserved.
+- [x] Existing focused source assertions preserve the sibling mappings.
+- [x] No Planner/Studio or FOCSS implementation scope is implicated.
+- [x] Generated historical result evidence remains untouched.
+- [ ] User-run focused test/typecheck/build/gate evidence, if desired, is intentionally deferred and must not be represented by this document as fresh execution.
+
+## Disposition
+
+**Reconciled / no source change required.** Keep this file for historical traceability and use `requirements.md` for current acceptance criteria.
