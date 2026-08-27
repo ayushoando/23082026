@@ -1,150 +1,128 @@
-# Requirements Document
+# Requirements: FOCSS static-defects remediation
 
-## Introduction
+## Plan identity and proof boundary
 
-Close the defects found by a static audit of all 172 repository CSS files that the route/viewport audit cannot detect. A rendered-DOM audit measures what a page looks like at a viewport; it cannot see an undefined custom property, an unreachable stylesheet, a duplicated selector owner, or a stylesheet tree that no entry imports. This spec covers only that class of finding.
+This is the canonical, plan-owned record for the static FOCSS defects identified in the 2026-08-26 audit. Its evidence is colocated in this directory:
 
-Evidence source: static analysis of every `.css` file outside `node_modules`, `.next`, and `.tmp` — 148 under `site/focss`, 24 outside it. Evidence is the file content itself at the line references given in `design.md`. No browser measurement was performed and none is claimed.
+- [Static audit baseline](./css-static-audit-report.md)
+- [Design](./design.md)
+- [Execution tasks](./tasks.md)
+- [Decision and handoff record](./handoffs.md)
 
-Two findings from that audit were verified as false positives and are recorded here so they are not re-investigated:
+All acceptance in this document is source-level. It does not assert a computed style, rendered size, route result, or screenshot. User-run static checks and any rendered audit are separate evidence.
 
-- There is no duplicate `@import "tailwindcss"` in `site/focss/site/components/chrome/index.css`. The apparent match is text inside that file's leading comment block.
-- The Planner/Studio entry divergence is not drift. `scripts/AsNeeded/verify-focss-structure.mjs` lines 50-125 pins both shapes deliberately: Planner takes `tailwindcss` plus palette, Studio takes the full product base.
+### Reconciled implementation state — 2026-08-27
 
-## Glossary
+| Requirement | Current source state | Plan state |
+|---|---|---|
+| R1 / R2 | The undefined token consumer and Site-zone Admin selector remain in `mobile-tap-targets.css`. | Pending implementation. |
+| R3 | The portal stylesheet deletion and stale script-reference removal are present in the working tree. | Implemented in source; user verification pending. |
+| R4 | The homepage canvas fragment is absent and the shared sheet retains its canonical fragment. | Implemented in source; user verification pending. |
+| R5 | The universal reduced-motion reset is in Base and component copies are removed. | Implemented in source; user verification pending. |
+| R6 | Static evidence does not establish a runtime owner for catalog CSS. | Open decision gate; no catalog mutation is permitted. |
 
-| Term | Meaning |
-|---|---|
-| **Zone** | A FOCSS ownership boundary with its own entry sheet: `base`, `site`, `admin`, `planner`, `studio`. Zones must never cross-import. |
-| **Entry** | A root stylesheet that a layout imports. The four zone entries are `site/entry.css`, `admin/entry.css`, `planner/entry.css`, `studio/entry.css`; `base/root.css` is a pinned fifth entry. |
-| **Reachable** | A sheet is reachable if a transitive chain of relative `@import` statements connects it to a zone entry. Unreachable sheets are dead unless imported directly by a TSX module. |
-| **Orphan** | An unreachable sheet with no route-local TSX import. |
-| **Invalid at computed-value time** | A CSS declaration whose `var()` reference cannot resolve. The declaration is discarded and the property falls back to its initial value, silently. |
-| **Owner** | The single canonical sheet permitted to declare a given selector namespace. |
-| **`H` finding** | Audit code for an interactive target measuring below 40px. |
-| **`T` finding** | Audit code for a text sample below 11px. |
-| **`AC` disposition** | Audit-contract outcome: the finding is intended behaviour and the audit rule is updated instead of the CSS. |
+“Implemented in source” is not a claim that a user-run check, browser audit, or release check passed.
 
-## Requirements
+## Requirement 1: Restore the consent-link control-height floor
 
-### Requirement 1: Undefined tap-target token must not silently disable a floor
+**User story:** As a mobile user completing the contact form, I need the consent link to retain the established minimum control height.
 
-**User Story:** As a mobile user of the contact form, I want the consent link to be a reliable 44px tap target, so that I can accept consent without mis-taps.
+`site/focss/site/components/shared/mobile-tap-targets.css` contains `min-height: var(--touch-target-min)` without a fallback. The custom property has no declaration. The winning `a.contact-form-consent__link` selector outranks the preceding zero-specificity `:where(...)` rule, so its invalid declaration suppresses the otherwise applicable floor.
 
-`site/focss/site/components/shared/mobile-tap-targets.css` declares `min-height: var(--touch-target-min)` with no fallback. That custom property is declared nowhere in the repository, so the declaration is invalid at computed-value time and `min-height` resolves to `auto`. Because the owning selector `a.contact-form-consent__link` has specificity 0,1,1 it also outranks the working `:where(...)` rule immediately above, so the broken declaration removes a floor that would otherwise apply.
+### Acceptance criteria
 
-#### Acceptance Criteria
+1. The consent-link `min-height` shall use `var(--control-height-sm)`.
+2. No `--touch-target-min` declaration shall be introduced; `--control-height-sm` is the existing token for this concept.
+3. `display: inline-flex`, `align-items: center`, and `padding-block: 0.625rem` shall remain unchanged.
+4. Immediately before editing, source preflight shall confirm that `--touch-target-min` remains undeclared and `--control-height-sm` remains `2.75rem`.
+5. If either precondition changed, the task shall be re-planned instead of forced. Rollback restores only the original `min-height` declaration.
 
-- **1.1** WHEN the mobile consent link is styled THEN the sheet SHALL source its minimum height from the existing `--control-height-sm` token, matching every sibling rule in the same file.
-- **1.2** The implementation SHALL NOT introduce a new token to express the existing 44px floor concept.
-- **1.3** WHEN the repair is made THEN `display: inline-flex`, `align-items: center`, and `padding-block: 0.625rem` SHALL be preserved unchanged.
+## Requirement 2: Remove the inert Admin selector from the Site zone
 
-### Requirement 2: Site zone must not style Admin primitives
+**User story:** As a maintainer, I need a selector's FOCSS location to reflect its owning surface.
 
-**User Story:** As a maintainer, I want zone boundaries to hold, so that a rule's location tells me truthfully which surface it affects.
+The same Site-zone sheet contains `:where(.admin-btn--md)`. Admin routes load `@focss/admin/entry.css`, which does not load the Site components barrel. The rule is both a zone-boundary violation and unreachable from the Admin surface it names.
 
-The same file contains a `:where(.admin-btn--md)` rule. `.admin-btn--md` is an Admin-zone primitive owned by `site/focss/admin/base/buttons.css`. This breaks the FOCSS zone boundary, and it is also inert: Admin routes load `admin/entry.css`, which never imports the site components barrel, so the rule cannot ever apply.
+### Acceptance criteria
 
-#### Acceptance Criteria
+1. The `:where(.admin-btn--md)` rule shall be removed from the Site-zone sheet.
+2. The Admin button size ramp shall not change in this plan.
+3. Before removal, the Admin layout import path and absence of Site-components import shall be re-confirmed from source.
+4. The Site-zone foreign-selector inventory shall be recorded. Any additional finding is evidence for the owning plan, not a change in this one.
+5. If the import-path premise is disproven, rollback restores the exact rule and the task is re-planned.
 
-- **2.1** The `:where(.admin-btn--md)` rule SHALL be removed from the site zone.
-- **2.2** The implementation SHALL NOT change the underlying Admin button size; `admin/base/buttons.css` belongs to another spec. See Out of scope.
-- **2.3** WHEN the rule is removed THEN the reasoning SHALL first be re-confirmed by tracing the import path from `site/app/admin/layout.tsx`.
+## Requirement 3: Accept the portal stylesheet removal only from static equivalence
 
-### Requirement 3: Unreachable duplicate stylesheet must be removed
+**User story:** As a maintainer, I need a selector search to identify one live owner, not a duplicate orphan.
 
-**User Story:** As a maintainer, I want dead stylesheets gone, so that searching for a selector's owner returns one live answer.
+The baseline found `portal-svg-catalog.css` unreachable from FOCSS zone entries and duplicated in `shell-portal.css`. The working tree already removes that file and the obsolete classification-list entry. Acceptance remains conditional on documented static equivalence; it is not a rendered-output claim.
 
-`site/focss/site/components/chrome/portal-svg-catalog.css` (6,061 bytes) is unreachable from all four zone entries and is imported by no TypeScript or TSX module. Its entire rule set already exists in `site/focss/site/components/chrome/shell-portal.css`. The only reference anywhere is a stale path in `scripts/AsNeeded/finalize-surface-classify.mjs` that omits the `focss/site/` path segment.
+### Acceptance criteria
 
-#### Acceptance Criteria
+1. The portal selector/declaration block and its 640px, 768px, 1100px, and 390px media rules shall be compared against `shell-portal.css`.
+2. An orphan-only declaration, if found, shall be merged into `shell-portal.css` before deletion and recorded in `tasks.md`.
+3. `site/focss/site/components/chrome/portal-svg-catalog.css` shall remain absent after accepted implementation.
+4. The obsolete portal classification-list entry shall remain absent from `scripts/AsNeeded/finalize-surface-classify.mjs`.
+5. `admin/components/design-kit.css` and `base/root.css` shall remain untouched as documented reachability exceptions.
+6. Rollback restores the stylesheet and stale classification-list entry together if static equivalence is not established.
 
-- **3.1** WHEN the orphan file is removed THEN no rendered rule SHALL change.
-- **3.2** The stale script reference SHALL be removed in the same change.
-- **3.3** The two legitimate unreachable files SHALL be left untouched: `admin/components/design-kit.css`, a deliberate route-local import in `site/app/admin/design-kit/page.tsx`, and `base/root.css`, a pinned entry asserted by `verify-focss-structure.mjs`.
-- **3.4** IF any declaration exists only in the orphan THEN it SHALL be merged into `shell-portal.css` before deletion, and the merge SHALL be recorded.
+## Requirement 4: Give the duplicated hero-demo canvas fragment one canonical owner
 
-### Requirement 4: One canonical owner per selector namespace
+**User story:** As a developer maintaining the hero diagram, I need the canvas fragment to have one owner so edits are not silently overridden.
 
-**User Story:** As a developer editing the planner hero demo, I want my edit to take effect, so that I am not debugging a sheet that is silently overridden.
+This requirement is deliberately narrow. It covers `.planner-hero-demo__canvas`, its `svg`, and the duplicated `.pl-*` fragment only. It does not claim that every `.planner-hero-demo` selector, surrounding chrome rule, or keyframe has one owner. Any remaining collisions need separately scoped follow-up work.
 
-`site/focss/site/components/homepage/planner-hero-demo.css` and `site/focss/site/components/planner/planner-landing-shared.css` both define `.planner-hero-demo__canvas` and roughly sixteen identical `.pl-*` descendants with identical values. Both reach the same site entry through `components/index.css`, so they collide globally and the later import wins. This violates the one-canonical-path-per-concern rule and means edits to the losing sheet have no visible effect.
+### Acceptance criteria
 
-#### Acceptance Criteria
+1. `planner-landing-shared.css` shall be the sole owner of the scoped canvas fragment.
+2. The homepage sheet shall retain all rules outside the fragment, including parent/chrome rules and keyframes.
+3. Each scoped declaration shall be compared before acceptance; a differing homepage value shall be preserved in the shared owner and recorded.
+4. Acceptance is static cascade equivalence for the scoped fragment, not browser proof.
+5. Decorative SVG text values (`0.46875rem`, `0.5625rem`, and `9px`) shall remain unchanged.
+6. Rollback restores only the removed canvas fragment if a scoped value was not preserved.
 
-- **4.1** Exactly one sheet SHALL own the `.planner-hero-demo__canvas` namespace afterwards.
-- **4.2** Rendered output SHALL NOT change.
-- **4.3** IF a shared declaration differs in value between the two sheets THEN it SHALL be merged into the canonical owner before the duplicate is deleted.
-- **4.4** IF the homepage sheet contains rules outside the `.planner-hero-demo__canvas` namespace THEN those rules SHALL be preserved and the file SHALL NOT be deleted.
+## Requirement 5: Own the universal reduced-motion reset in Base
 
-### Requirement 5: Document-wide resets must not live in a component sheet
+**User story:** As a user with reduced motion enabled, I need the universal reset to be owned by the shared Base layer rather than a component sheet.
 
-**User Story:** As a user with reduced-motion enabled, I want animation suppression to be owned by the design system base, so that it applies consistently rather than depending on which component sheet happens to load.
+The original universal reduced-motion block was in `home-contact-teaser.css`; `.home-reveal` was also duplicated there and in `homepage/home-base.css`. The working tree moves the universal block to `base/animations.css`, keeps the homepage rule as the sole `.home-reveal` owner, and removes the empty component-level media wrapper.
 
-`site/focss/site/components/contact/home-contact-teaser.css` contains a `*, ::before, ::after` reduced-motion block with seven `!important` declarations, plus a `.home-reveal` override already present in `homepage/home-base.css`. Because `components/index.css` pulls the teaser sheet into the site entry, a single component's stylesheet currently governs animation behaviour for every element on every marketing page. `site/focss/base/animations.css` contains no reduced-motion block and is the correct owner.
+### Acceptance criteria
 
-#### Acceptance Criteria
+1. The seven-declaration universal reduced-motion block shall occur exactly once, in `site/focss/base/animations.css`.
+2. `.home-reveal` shall have one reduced-motion declaration site in `site/focss/site/components/homepage/home-base.css`.
+3. The universal block, duplicate `.home-reveal` rule, and empty media wrapper shall be absent from `home-contact-teaser.css`.
+4. The plan shall record the intentional reachability expansion: Site, Admin, and Studio receive the Base reset; Planner does not import the Base index and remains unchanged.
+5. No Planner import shall be added by this plan.
+6. Rollback is atomic: remove the Base block and restore the original teaser media wrapper with its two rules.
 
-- **5.1** The universal reset SHALL move to `base/animations.css` with reduced-motion behaviour preserved, including all seven `!important` declarations.
-- **5.2** The duplicate `.home-reveal` override SHALL collapse to one declaration site, owned by `homepage/home-base.css`.
-- **5.3** The widened coverage to Admin and Studio that results from moving into the base zone SHALL be recorded explicitly as intended, not left to be discovered.
-- **5.4** WHEN both rules are removed from the teaser sheet THEN the emptied `@media` wrapper SHALL also be removed.
-- **5.5** The implementation SHALL NOT add a base import to the Planner zone to extend the reset there; the Planner entry shape is pinned.
+## Requirement 6: Resolve catalog-CSS ownership through evidence and user decision
 
-### Requirement 6: Ungoverned catalog CSS must be resolved by decision, not by patching
+**User story:** As a maintainer, I need a defensible runtime-ownership conclusion before anyone modifies potentially dead catalog assets.
 
-**User Story:** As a maintainer, I want to know whether nineteen ungoverned stylesheets are live before anyone edits them, so that effort is not spent tokenising dead code.
+The scope is the eighteen sheets below `site/lib/catalog/styles/` and `site/lib/catalog/blocks.css`. They sit outside FOCSS zone verification. Duplicate primitive declarations and raw catalog-CSS literals are known, but runtime loading is not proven.
 
-Nineteen files under `site/lib/catalog/` sit outside `site/focss`, so no zone rule and no FOCSS verify script covers them. They are the only place in the application with raw hex colour literals (`#65a30d`, `#3b82f6`, `#78350f`, `#d4af37`, `#b45309`, `#4d7c0f`, `#3f6212`, `#aa8620`), sitting beside correctly tokenised `var(--color-bronze-800)` references. `--block-primitive-blue-500` and `--block-primitive-lime-600` are each declared twice with identical values in both `tokens.css` and `tokens-primitives.css`. No TypeScript, TSX, or CSS file imports the `styles/index.css` barrel, and seven `tokens-*.css` files plus `blocks.css` are not even in that barrel. Their semantic maps are reimplemented in TypeScript at `site/lib/theme/plannerThemePacks.ts`, which is the live path via the theme API.
+### Evidence constraints
 
-#### Acceptance Criteria
+- `styles/index.css` directly imports `theme.css`, `theme-premium-light.css`, and component sheets.
+- `theme-premium-light.css` transitively imports `tokens-wood.css`, `tokens-metal.css`, `tokens-fabric.css`, `tokens-lighting.css`, and `tokens-primitives.css`.
+- No static application-source import of the barrel or `blocks.css` was found. That is not proof a runtime loader does not exist.
+- Raw hex values also exist in `site/lib/theme/plannerThemePacks.ts`; catalog CSS is not the only application location containing them.
+- `ThemeProvider` and the active-theme API filter the catalog geometry keys enumerated in `catalogTokenKeys.ts`; that filter does not prove every material `--block-*` key is excluded.
+- The TypeScript material maps mirror CSS concepts, but current evidence does not prove they are the only runtime owner.
 
-- **6.1** The runtime owner of the `--block-*` custom properties SHALL be established and recorded with file and line evidence.
-- **6.2** The spec SHALL stop at a written delete-or-wire recommendation and an explicit user decision. Deleting nineteen files is destructive with a real blast radius and SHALL NOT proceed autonomously.
-- **6.3** No file under `site/lib/catalog/` SHALL be edited or deleted by this spec. Tokenising the hex values is forbidden until the decision is made, because tokenising a dead file is wasted work that also makes the duplication harder to spot later.
+### Acceptance criteria
 
-## Out of scope
+1. The decision record shall distinguish direct imports, transitive imports, static-import absence, and unproven runtime behavior.
+2. The record shall cite `styles/index.css`, the theme sheets, `plannerThemePacks.ts`, `catalogTokenKeys.ts`, `ThemeProvider`, and the active-theme API with source evidence.
+3. The plan shall end at a written recommendation and explicit user decision in [handoffs.md](./handoffs.md).
+4. No file below `site/lib/catalog/` shall be edited, deleted, moved, wired, or tokenised by this plan.
+5. A delete, barrel-wiring, or tokenisation change requires a separately approved follow-up plan after the decision.
 
-### Admin button size ramp
+## Scope and verification rules
 
-`site/focss/admin/base/buttons.css` defines `--sm` at 36px, `--xs` at 30px, `--icon-sm` at 36px, and `--icon-xs` at 30px, all below the 40px audit threshold, with `--md` and `--icon` borderline at exactly 40px. This single ramp is the systemic root cause of the `H` column for all nineteen Admin routes in `site-page-css-remediation`.
-
-Excluded here because that file is already owned by task 1.4 of `site-page-css-remediation`. This spec must not edit it. The finding is handed to that spec as evidence that its rows 4-22 are one shared-primitive change rather than nineteen per-route changes.
-
-### Planner and Studio control density
-
-Both fork trees are saturated with sub-40px interactive targets: `.layer-item__icon-btn` at 22px, `.stroke-swatch` at 20px, `.color-palette__picker` at 28px, `.btn--icon` at 32px, `.icon-btn` at 36px, range thumbs at 14px, chips at 26px, status bars at 28px. Neither zone raises these at narrow viewports.
-
-Excluded for two reasons. Ownership is already taken: `planner-remediation` owns `planner/workspace-shell.css` and `controls.css`, and `site-page-css-remediation` tasks 1.5 and 1.6 own both fork trees. More importantly this is a product decision, not a defect — whether a CAD-style workspace supports a 390px viewport at all determines whether the correct disposition is `CSS` or `AC`. It must not be settled by a mechanical edit.
-
-### Sub-11px type
-
-Confirmed at `planner/workspace.css` lines 297, 456, 658, 720, `planner/chrome.css` line 153, and `products/catalog-cards.css` lines 161 and 209. All are inside files owned by other specs. The 9px and 0.46875rem values in the hero-demo sheets are SVG `fill` text inside a decorative canvas and are recommended as exempt rather than remediated.
-
-### Everything requiring a browser
-
-No task in this spec may assert a computed box, a rendered font size, or a screenshot comparison. Those belong to the five-viewport audit in `site-page-css-remediation` Wave 4.
-
-## Ownership and conflict rules
-
-- Requirements 1 and 2 both edit `site/focss/site/components/shared/mobile-tap-targets.css`, which `site-page-css-remediation` task 1.2 also names. This spec claims only the two specific rules described and must leave every other rule in the file untouched. Requirement 1 in particular should land before task 1.2 begins, because reviewing tap targets in a file containing a silently dead floor produces a false reading.
-- No task may edit `site/focss/admin/**`, `site/focss/planner/**`, or `site/focss/studio/**`.
-- No task may create `core/`, `core/locked/`, `features/product/`, a root-level `focss/`, or a duplicate token sheet.
-- No task may add a raw palette value or an inline colour.
-- Every change must be independently revertible.
-
-## Verification rules
-
-- The agent must not run tests, gates, browser suites, or repository commands while planning or implementing this spec.
-- `pnpm run verify:focss`, `pnpm run lint:ui:strict`, and `pnpm run check:style-tokens` are user-invoked and listed as the final wave of `tasks.md`.
-- Because no task touches Planner or Studio files, `pnpm run scan:boundaries` is not required by this spec unless the Requirement 6 decision later moves files.
-
-## Acceptance criteria
-
-1. `--touch-target-min` has no remaining consumer, and the mobile consent link resolves to the same 44px floor as its sibling rules.
-2. No selector owned by the Admin zone is styled from within the site zone.
-3. `portal-svg-catalog.css` no longer exists, no rendered rule changed, and no stale path reference to it remains.
-4. `.planner-hero-demo__canvas` and its `.pl-*` descendants have exactly one owning sheet.
-5. The document-wide reduced-motion reset lives in `base/animations.css`, `.home-reveal` has one declaration site, and no empty `@media` wrapper remains.
-6. The runtime owner of block material tokens is recorded in writing, with a delete-or-wire recommendation and an explicit user decision captured. No hex value under `site/lib/catalog/` is edited before that decision.
-7. The Admin ramp evidence is recorded against `site-page-css-remediation` task 1.4 without this spec editing the file.
+- The plan may change only the named R1-R5 files and its own plan files. It shall not edit `site/focss/admin/**`, `site/focss/planner/**`, `site/focss/studio/**`, `site/lib/catalog/**`, or another plan directory.
+- Cross-plan facts are preserved in the local [handoffs.md](./handoffs.md); this plan does not edit another plan's tasks.
+- The Admin ramp, fork control density, and image-wrapper duplication are handoffs, not implementation tasks here.
+- No raw color, inline color, duplicate token concept, foreign-zone import, `core/`, `core/locked/`, `features/product/`, or root-level `focss/` directory may be introduced.
+- Agents do not run tests, gates, browser suites, builds, or test-like commands. User-run static checks are listed in [tasks.md](./tasks.md).

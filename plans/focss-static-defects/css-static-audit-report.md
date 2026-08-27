@@ -1,209 +1,84 @@
-# CSS static audit — all 172 stylesheets
+# CSS static audit baseline — FOCSS static defects
 
-Agent note, not a handbook. Static source analysis only; no browser measurement was performed and none is claimed below.
+**Evidence class:** source-level baseline; not a browser, build, or verification report.
 
-- **Date:** 2026-08-26
-- **Scope:** every `.css` file in the repo excluding `node_modules`, `.next`, `.tmp`
-- **Method:** file-content analysis plus a transitive `@import` reachability walk from the FOCSS zone entries
-- **Remediation spec:** [FOCSS static defects requirements](./requirements.md)
+- **Baseline date:** 2026-08-26
+- **Reconciled against working tree:** 2026-08-27
+- **Baseline scope:** 172 CSS files, excluding `node_modules`, `.next`, and `.tmp`
+- **Canonical plan:** [requirements](./requirements.md), [design](./design.md), [tasks](./tasks.md), [handoffs](./handoffs.md)
 
-## Why this audit exists
+## Evidence limits
 
-The 61-route audit behind [`site-page-css-remediation`](../site-page-css-remediation/tasks.md) measures rendered pages at five viewports. That method cannot see an undefined custom property, an unreachable stylesheet, a selector owned by two sheets, or a stylesheet tree that no entry imports. This audit covers only that class of defect. The two are complementary, not overlapping.
+The audit establishes declarations, source-level import reachability, selector ownership, and duplicate source. It does not establish computed style, rendered target size, viewport outcome, screenshot equivalence, or runtime CSS loading that is absent from the searched static import graph.
 
-## Inventory
+## Reconciled status
 
-| Location | Files | Governed by FOCSS zone rules |
+| Baseline finding | Current source state | Plan state |
+|---|---|---|
+| Undefined `--touch-target-min` consumer | Still present in `mobile-tap-targets.css`. | Pending. |
+| Site-zone `.admin-btn--md` rule | Still present in `mobile-tap-targets.css`. | Pending. |
+| Unreachable portal duplicate | Stylesheet and stale classifier entry are absent in the working tree. | Source implementation present; user validation pending. |
+| Duplicate hero canvas fragment | Homepage canvas fragment is absent; shared owner remains. | Source implementation present; user validation pending. |
+| Universal reset in component sheet | Universal reset is in Base; component copies are absent. | Source implementation present; user validation pending. |
+| Catalog CSS ownership | Runtime owner remains unproved. | Decision gate open; catalog is read-only. |
+
+## Baseline inventory
+
+| Location | Files | FOCSS-governed |
 |---|---:|---|
-| `site/focss/**` | 148 | yes |
-| `site/lib/catalog/**` | 19 | **no** |
-| `tech-docs-generator/src/**` | 2 | no — separate inventory SPA |
-| `site/app/(site)/globals.css` | 1 | entry re-export only |
-| `Agents/kiro-workflow-guide/styles.css` | 1 | no — doc tooling |
-| `generated-documents/**` | 1 | no — build artifact |
+| `site/focss/**` | 148 | Yes |
+| `site/lib/catalog/**` | 19 | No |
+| `tech-docs-generator/src/**` | 2 | No — separate inventory application |
+| `site/app/(site)/globals.css` | 1 | Entry re-export |
+| Other CSS/tooling artifacts | 2 | No |
 | **Total** | **172** | |
 
-FOCSS zone breakdown: `base` 12, `site` ~110, `admin` 13, `planner` 11, `studio` 12.
+## Findings retained by this plan
 
-## What is clean
+### 1. Undefined control-height reference
 
-Stated first because it narrows where the real problems are.
+`a.contact-form-consent__link` consumes `var(--touch-target-min)` with no fallback. A baseline repository search found no declaration. The declaration is invalid at computed-value time; because its `a.contact-form-consent__link` selector outranks the preceding `:where(...)` floor rule, it suppresses rather than supplements that floor. The existing `--control-height-sm` token is `2.75rem`.
 
-**Token discipline inside FOCSS is airtight.** Zero raw hex outside `base/tokens/`. All 148 sheets resolve colour through `var()` or `color-mix()`. A repo-wide grep for `:\s*#[0-9a-fA-F]{3,8}` excluding `base/tokens/**` returns nothing.
+**Disposition:** R1 replaces only the invalid reference after fresh preflight. It does not introduce a new token.
 
-**The import graph is fully conformant.** No missing `@import` targets, no cross-zone imports, no `core/` or `core/locked/` live homes. Reachability from the four zone entries resolves cleanly.
+### 2. Site-zone Admin selector
 
-**`site/app/(site)/globals.css` is a clean one-line re-export** of `@focss/site/entry.css`. No drift.
+The Site-zone mobile-target sheet contains `:where(.admin-btn--md)`. Admin routes load the Admin entry, not the Site components barrel, so this is an inert foreign-zone rule.
 
-## Findings
+**Disposition:** R2 deletes the rule after re-confirming imports. The Admin size ramp is explicitly out of scope and recorded in [handoffs](./handoffs.md).
 
-Ranked by leverage, not by discovery order.
+### 3. Portal duplicate baseline
 
-### 1. `--touch-target-min` is undefined — the rule consuming it silently does nothing
+The audit found `portal-svg-catalog.css` unreachable from zone entries and duplicated by the portal block in `shell-portal.css`, including responsive rules at 640px, 768px, 1100px, and 390px. The only reference was a stale classifier-list path.
 
-`site/focss/site/components/shared/mobile-tap-targets.css` lines 134-139:
+**Reconciliation:** The working tree removes both the orphan and stale list entry. The plan records source-level equivalence only; it does not claim rendered equivalence. `admin/components/design-kit.css` and `base/root.css` remain legitimate documented reachability exceptions.
 
-```css
-  a.contact-form-consent__link {
-    display: inline-flex;
-    align-items: center;
-    min-height: var(--touch-target-min);   /* undefined, no fallback */
-    padding-block: 0.625rem;
-  }
-```
+### 4. Hero canvas fragment duplication baseline
 
-A repo-wide search for `touch-target-min\s*:` returns no declaration. The `var()` reference cannot resolve and has no fallback, so the declaration is invalid at computed-value time and `min-height` falls back to `auto`.
+The homepage and shared planner-landing sheets duplicated `.planner-hero-demo__canvas`, its `svg`, and a `.pl-*` canvas fragment. The shared sheet was the intended canonical owner.
 
-The compounding detail: the rule immediately above is `:where(.contact-form-intro a, .contact-form-consent__link)`, which `:where()` reduces to specificity 0,0,0 and which correctly uses `--control-height-sm`. The broken rule is `a.contact-form-consent__link` at specificity 0,1,1, so it **wins and contributes nothing**. It actively defeats the floor that would otherwise apply.
+**Reconciliation:** The homepage fragment is removed in the working tree; remaining homepage hero/chrome/keyframe rules are intentionally outside this plan. The previous broad “one namespace” wording is not retained because it exceeded the changed scope.
 
-Every other rule in the file uses `--control-height-sm`, declared `2.75rem` (44px) at `site/focss/base/tokens/layout.css` line 23. One-token fix. Maps to the `H` finding on `/contact` at 390 in matrix row 27.
+### 5. Universal reduced-motion reset baseline
 
-### 2. Admin button ramp sits below the 40px threshold — root cause for 19 matrix rows
+A component sheet carried a universal `*, ::before, ::after` reduced-motion block and a duplicate `.home-reveal` override. The Base animations sheet is the correct universal-reset owner.
 
-`site/focss/admin/base/buttons.css` lines 113-165:
+**Reconciliation:** The reset is now in Base, Site/Admin/Studio reach it through the Base index, Planner remains intentionally excluded, and `home-base.css` is the `.home-reveal` owner. This is a source-reachability change, not a browser claim.
 
-| Variant | Declared | vs 40px |
-|---|---|---|
-| `--lg` | 2.75rem / 44px | pass |
-| `--md` | 2.5rem / 40px | borderline |
-| `--sm` | 2.25rem / 36px | **fail** |
-| `--xs` | 1.875rem / 30px | **fail** |
-| `--icon` | 40×40px | borderline |
-| `--icon-sm` | 36×36px | **fail** |
-| `--icon-xs` | 30×30px | **fail** |
+### 6. Catalog CSS requires a decision, not a patch
 
-This single ramp explains the `H` column for all 19 Admin routes at 768 and 390. `site-page-css-remediation` currently treats rows 4-22 as 19 separate per-route CSS jobs; they are one shared-primitive change. This is the highest-leverage finding in the audit and a meaningful re-scope of Wave 1 task 1.4.
+The catalog CSS set contains duplicate primitive declarations and raw literals. It is outside FOCSS verification. The baseline's prior statement that catalog CSS was the only application raw-hex location was incorrect: raw hex also exists in `plannerThemePacks.ts`.
 
-### 3. Cross-zone leak that is also dead code
+`styles/index.css` directly imports `theme.css`, `theme-premium-light.css`, and component sheets. `theme-premium-light.css` transitively imports five token sheets. A static search found no application import of the barrel or `blocks.css`, but that does not prove runtime non-use. The catalog key filter is limited to enumerated geometry keys and does not prove all material tokens are excluded.
 
-`mobile-tap-targets.css` lines 141-143:
+**Disposition:** Record evidence and explicit user decision in [handoffs](./handoffs.md). No catalog deletion, wiring, or tokenisation belongs in this plan.
 
-```css
-  :where(.admin-btn--md) {
-    min-height: var(--control-height-sm);
-  }
-```
+## Excluded evidence
 
-`.admin-btn--md` is an Admin-zone primitive owned by `admin/base/buttons.css` line 113. Two problems:
+- The Admin button ramp belongs to its owning remediation plan and is preserved locally as a handoff only.
+- Planner/Studio control density is a product-policy decision, not a mechanical change here.
+- Repeated Next image-wrapper overrides are deferred because consolidation crosses page ownership without established behavior gain.
 
-- It violates the site-zone boundary in the FOCSS zone table.
-- It can never fire. `site/app/admin/layout.tsx` imports `@focss/admin/entry.css`, which never imports `site/focss/site/components/index.css`, so the barrel holding this rule is absent from every Admin page.
+## Unverified items
 
-Delete it; fix the size in the Admin ramp instead (finding 2).
-
-### 4. `portal-svg-catalog.css` is an unreachable verbatim duplicate
-
-`site/focss/site/components/chrome/portal-svg-catalog.css`, 6,061 bytes. Unreachable from all four zone entries and imported by no TSX module. Its entire rule set already exists in `shell-portal.css` from roughly line 252 to 517 — same selectors, same declarations, same media queries at 640px, 768px, 1100px, and 390px.
-
-The only reference anywhere is a stale path in `scripts/AsNeeded/finalize-surface-classify.mjs` line 53 (`site/components/chrome/...`, missing the `focss/site/` segment, so it matches nothing). [`docs/guide/CODEBASE_REVIEW_REPORT.md`](../../docs/guide/CODEBASE_REVIEW_REPORT.md) line 172 already recommends deletion.
-
-The other two unreachable files are legitimate and must be left alone:
-
-- `admin/components/design-kit.css` — deliberate route-local import at `site/app/admin/design-kit/page.tsx` line 6.
-- `base/root.css` — documented fifth entry, asserted by `scripts/AsNeeded/verify-focss-structure.mjs` lines 62 and 261.
-
-### 5. Two sheets own the same selector namespace
-
-`site/focss/site/components/homepage/planner-hero-demo.css` is a near-complete subset of `site/focss/site/components/planner/planner-landing-shared.css`. Both define `.planner-hero-demo__canvas` plus these identical descendants: `svg`, `.pl-wall`, `.pl-door`, `.pl-desk`, `.pl-chair`, `.pl-storage`, `.pl-zone`, `.pl-zone--alt`, `.pl-zone-label`, `.pl-room-label`, `.pl-dim-line`, `.pl-dim-badge`, `.pl-dim-text`, `.pl-cursor`, `.pl-selection`.
-
-The shared sheet additionally owns `.pl-desk-divider`, `.pl-soft-shape`, `.pl-dim-badge--accent`, `.pl-dim-text--accent`, and `.pl-handle`.
-
-Both reach the same site entry through `components/index.css`, which imports `homepage/index.css` **before** `planner/index.css`. So the shared sheet already wins every colliding declaration and the homepage copy is inert — edits to it have no visible effect. Breaks one-canonical-path-per-concern.
-
-### 6. A component sheet carries a document-wide reset
-
-`site/focss/site/components/contact/home-contact-teaser.css` lines 389-400:
-
-```css
-@media (prefers-reduced-motion: reduce) {
-  .home-reveal { opacity: 1 !important; transform: none !important; animation: none !important; }
-  *, ::before, ::after {
-    animation-delay: -1ms !important;
-    animation-duration: 1ms !important;
-    animation-iteration-count: 1 !important;
-    background-attachment: initial !important;
-    scroll-behavior: auto !important;
-    transition-duration: 0s !important;
-    transition-delay: 0s !important;
-  }
-}
-```
-
-`components/index.css` pulls this sheet into the site entry, so a single component's stylesheet governs animation behaviour for every element on every marketing page. `site/focss/base/animations.css` holds only four `@keyframes` and no reduced-motion block at all — it is the correct owner.
-
-The `.home-reveal` override is also already present at `homepage/home-base.css` line 22, which is that selector's real owner.
-
-Broader `!important` usage across FOCSS is otherwise defensible: reduced-motion overrides, Next `<Image>` wrapper fixes, and dockview third-party overrides.
-
-### 7. Planner and Studio have no mobile control floor
-
-Both fork trees are saturated with desktop-density interactive targets:
-
-| Selector | Size | Zone |
-|---|---|---|
-| `.stroke-swatch` | 20×20 | both |
-| `.layer-item__icon-btn` | 22×22 | both |
-| range thumbs (`::-webkit-slider-thumb`) | 14×14 | both |
-| `.color-palette__picker`, `.color-palette__preview` | 28×28 | both |
-| `.btn--icon` | 32×32 | studio |
-| `.icon-btn` | 36×36 | studio |
-| step-bar chips | `min-height: 26px` | planner |
-| `.status-bar` | 28px | both |
-
-Values are near-identical across the two forks. Nothing in either zone raises these at narrow viewports, which is why matrix rows 32-35 show `H` at 768/390.
-
-This is a product decision, not a defect. Whether a CAD-style workspace supports a 390px viewport at all determines whether the correct disposition is `CSS` or `AC`. It should not be settled by a mechanical edit.
-
-### 8. Nineteen ungoverned catalog stylesheets, all unreferenced
-
-`site/lib/catalog/styles/` (18 files) plus `site/lib/catalog/blocks.css` sit outside `site/focss`, so no zone rule and no FOCSS verify script covers them.
-
-- **Only raw-hex site in the app:** `#65a30d`, `#3b82f6`, `#78350f`, `#d4af37`, `#b45309`, `#4d7c0f`, `#3f6212`, `#aa8620` — sitting directly beside correctly tokenised `var(--color-bronze-800)` references. Half-migrated.
-- **Duplicate token declarations:** `--block-primitive-blue-500` and `--block-primitive-lime-600` declared twice with identical values, in both `tokens.css` and `tokens-primitives.css`.
-- **Nothing imports them.** `styles/index.css` is a barrel over nine sheets, but no `.ts`, `.tsx`, or `.css` file imports the barrel. The seven `tokens-*.css` files and `blocks.css` are not even in it.
-- **Reimplemented in TypeScript.** `site/lib/theme/plannerThemePacks.ts` lines 102-139 define `PREMIUM_LIGHT_SEMANTIC` and `EXECUTIVE_DARK_SEMANTIC`, whose keys mirror `theme-premium-light.css` and `theme-executive-dark.css`. The file's own comment states the values mirror the CSS. `site/lib/theme/catalogTokenKeys.ts` exists so `/api/theme/active` never injects these keys.
-
-Reading: these are stale hand-maintained mirrors of a TypeScript source of truth, invisible to CSS tooling. Needs a delete-or-wire decision before anyone touches the hex — tokenising a dead file is wasted work that also hides the duplication.
-
-## Sub-11px type
-
-Confirmed against source, matching the `T` predictions in the route matrix:
-
-| File | Lines | Value | Note |
-|---|---|---|---|
-| `planner/workspace.css` | 297, 456, 658, 720 | 10px | the `Plan`/`Select` labels in matrix row 32 |
-| `planner/chrome.css` | 153 | 10px | export-menu heading |
-| `products/catalog-cards.css` | 161, 209 | 10px | card badge + fact label |
-| `planner-landing-shared.css`, `homepage/planner-hero-demo.css` | — | 9px, 0.46875rem, 0.5625rem | SVG `fill` text, decorative canvas |
-
-The SVG canvas values are recommended **exempt** rather than remediated. The rest sit in files owned by other specs.
-
-## Verified false positives
-
-Recorded so they are not re-investigated.
-
-- **No duplicate Tailwind import in `chrome/index.css`.** An `@import` regex matched the words `@import "tailwindcss"` inside that file's leading comment block, which documents the expected import order. There is no second Tailwind entry.
-- **The Planner/Studio entry divergence is not drift.** `verify-focss-structure.mjs` lines 50-125 pins both shapes deliberately: Planner takes `tailwindcss` plus `../base/tokens/palette.css` only, Studio takes `../base/scan.css` plus the full product base. Both entries match their pinned contract exactly.
-
-## Disposition
-
-| # | Finding | Owner | Action |
-|---|---|---|---|
-| 1 | undefined `--touch-target-min` | `focss-static-defects` R1 | fix |
-| 2 | Admin button ramp | `site-page-css-remediation` 1.4 | handed over as evidence |
-| 3 | `.admin-btn--md` cross-zone | `focss-static-defects` R2 | delete rule |
-| 4 | `portal-svg-catalog.css` orphan | `focss-static-defects` R3 | delete file + stale ref |
-| 5 | duplicate hero-demo namespace | `focss-static-defects` R4 | one owner |
-| 6 | global reset in component sheet | `focss-static-defects` R5 | move to `base/animations.css` |
-| 7 | fork control density | `site-page-css-remediation` 1.5/1.6, `planner-remediation` | product decision, `CSS` vs `AC` |
-| 8 | ungoverned catalog CSS | `focss-static-defects` R6 | investigate, then user decision |
-
-Findings 2 and 7 are excluded from the new spec on purpose: those files are already claimed by other specs, and editing them from a second spec would create a two-spec conflict on one file.
-
-Also deferred: the Next `<Image>` `> span:has(> img)` wrapper override is copy-pasted across roughly ten sheets. Consolidating it would touch ten files owned by page-level rows for no behavioural gain.
-
-## What was not verified
-
-- **No rendered-DOM or computed-style measurement.** Every target-size and type finding above is read from source declarations. Confirming which actually produce `H`/`T` findings per viewport requires the five-viewport run.
-- **`verify:focss`, `lint:ui:strict`, and `check:style-tokens` were not run.** Those are user-invoked in this repo.
-- **Finding 8's runtime path is unresolved.** Whether the catalog CSS or the TypeScript maps put `--block-*` into `:root` at runtime is an open question, not a conclusion.
+No browser measurement, computed-style inspection, build, test, gate, or static repository command was run by the agent. User-owned validation commands are listed in [tasks](./tasks.md).

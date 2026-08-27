@@ -1,9 +1,9 @@
 category,document_type,title,path,source_area,status_or_role
-plan,coordination-plan,Marketing i18n parity hardening,plans/PLAN.md,plans,Status: done (2026-08-25)
 plan,implementation-plan,"Powers, Hooks, MCP, and Tech-Docs Implementation Plan",plans/powers-hooks-mcp-html-plan.md,plans,Repository maintenance implementation plan
-plan,requirements,FOCSS static defects — Requirements,.kiro/specs/focss-static-defects/requirements.md,.kiro/specs/focss-static-defects,Formal spec requirements
-plan,design,FOCSS static defects — Design,.kiro/specs/focss-static-defects/design.md,.kiro/specs/focss-static-defects,Formal spec design
-plan,tasks,FOCSS static defects — Tasks,.kiro/specs/focss-static-defects/tasks.md,.kiro/specs/focss-static-defects,Formal spec task list
+plan,requirements,FOCSS static defects — Requirements,plans/focss-static-defects/requirements.md,plans/focss-static-defects,Canonical current requirements
+plan,design,FOCSS static defects — Design,plans/focss-static-defects/design.md,plans/focss-static-defects,Canonical current design
+plan,tasks,FOCSS static defects — Tasks,plans/focss-static-defects/tasks.md,plans/focss-static-defects,Canonical current task register
+report,decision-record,FOCSS static defects — Decision and handoff record,plans/focss-static-defects/handoffs.md,plans/focss-static-defects,Canonical decision and cross-plan evidence record
 plan,requirements,Kiro repository guidance setup — Requirements,.kiro/specs/kiro-repo-guidance-setup/requirements.md,.kiro/specs/kiro-repo-guidance-setup,Formal spec requirements
 plan,design,Kiro repository guidance setup — Design,.kiro/specs/kiro-repo-guidance-setup/design.md,.kiro/specs/kiro-repo-guidance-setup,Formal spec design
 plan,tasks,Kiro repository guidance setup — Tasks,.kiro/specs/kiro-repo-guidance-setup/tasks.md,.kiro/specs/kiro-repo-guidance-setup,Formal spec task list
