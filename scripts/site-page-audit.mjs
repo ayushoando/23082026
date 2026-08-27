@@ -37,7 +37,7 @@ const AUTH_MODE = STORAGE_STATE_PATH ? "storageState" : ASSUME_BYPASS ? "dev-byp
 // routeChromeRules.ts has no imports of its own, so it is safe to load
 // standalone with jiti rather than duplicating its prefix logic here (that
 // duplication is exactly how the previous footer heuristic drifted — see
-// E1.4 in .kiro/specs/remediation-unified/tasks.md).
+// E1.4 in plans/ref/remediation-unified/tasks.md).
 const jiti = createJiti(import.meta.url, { interopDefault: true });
 const { resolveRouteChromeMode } = jiti("../site/features/site/data/routeChromeRules.ts");
 

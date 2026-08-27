@@ -240,7 +240,7 @@ describe("@planner/lib/plannerApi typed error classification and signal forwardi
 
   describe("typed 401 classification", () => {
     // The one failure mode a persisted audit artifact actually recorded for
-    // /ooplanner/projects/[id] (.kiro/specs/remediation-unified/audit.md D7):
+    // /ooplanner/projects/[id] (plans/ref/remediation-unified/audit.md D7):
     // HTTP 401 with "Authentication required", not 404 or 429.
     it("throws PlannerApiError with status 401, isUnauthorized true, isTransient/isNotFound false", async () => {
       browserApiMocks.browserApiFetch.mockResolvedValueOnce(

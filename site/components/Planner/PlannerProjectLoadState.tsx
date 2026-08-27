@@ -14,7 +14,7 @@ export interface PlannerProjectLoadStateProps {
    * Sign-in action, offered only for `unauthorized`. Carries a return path
    * back to the requested project. Required because a signed-out user
    * cannot be shown "Try again" — the same request will fail again until
-   * they sign in. See .kiro/specs/remediation-unified/design.md §3.1.
+   * they sign in. See plans/ref/remediation-unified/design.md §3.1.
    */
   onSignIn: () => void;
 }

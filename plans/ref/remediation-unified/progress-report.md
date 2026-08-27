@@ -1,8 +1,8 @@
 # Progress report: CSS remediation and Planner baseline vs. the unified audit
 
 Date: 2026-08-26. Companion to `audit.md`, `requirements.md`, `design.md`, `tasks.md` in this folder.
-Trigger: `.kiro/specs/site-page-css-remediation/tasks.md` has moved since the audit (Wave 0/1 items now
-checked), and a new file, `plans/planner-project-load-defect-baseline.md`, has appeared and asserts a
+Trigger: `plans/ref/site-page-css-remediation/tasks.md` has moved since the audit (Wave 0/1 items now
+checked), and a new file, `plans/ref/planner-project-load-defect-baseline.md`, has appeared and asserts a
 defect baseline. This report reconciles both against the findings already recorded in `audit.md`.
 
 ## 1. Site CSS tasks.md — what changed and what it's worth
@@ -28,7 +28,7 @@ Recommendation: don't check off 0.3 as satisfied. Either re-open it pending an a
 annotate it "classified against unauthenticated evidence — Admin/`/dashboard`/`/portal`/`/choose-product`
 rows need reclassification." Same caution applies before advancing Wave 2 rows 4–22.
 
-## 2. `plans/planner-project-load-defect-baseline.md` — the 404/429 narrative persists, still uncited
+## 2. `plans/ref/planner-project-load-defect-baseline.md` — the 404/429 narrative persists, still uncited
 
 This file restates the same defect story `audit.md` (D7) already flagged: a 404 at
 `/ooplanner/projects/not-a-valid-id` and a repeated-load 429, presented as "Recorded: 2026-08-26" with
@@ -72,7 +72,7 @@ Concretely:
 
 - Don't advance CSS Wave 2 rows 4–22 (all `/admin/*`) or the `F`-classification parts of rows 3, 24,
   28, 41, 42, 44 until Lane E1.4 (route-chrome-driven footer check) has re-run.
-- Treat `plans/planner-project-load-defect-baseline.md`'s 404/429 section as an unconfirmed hypothesis,
+- Treat `plans/ref/planner-project-load-defect-baseline.md`'s 404/429 section as an unconfirmed hypothesis,
   not a baseline, until it's re-captured with a citable artifact. Its ownership confirmation and
   viewport matrix are fine to keep as-is.
 - The 401 finding is the one piece of Planner evidence that is actually on record. It should be the
@@ -81,7 +81,7 @@ Concretely:
 
 ## Not verified in this pass
 
-- Whether `plans/planner-project-load-defect-baseline.md`'s 404/429 were observed in a real, unsaved
+- Whether `plans/ref/planner-project-load-defect-baseline.md`'s 404/429 were observed in a real, unsaved
   session. Absence of an artifact makes this unconfirmed, not disproven.
 - DOM-level correctness of the CSS tasks.md's completed 1.1/1.2 changes — I read the task list, not a
   diff of the sheets themselves.

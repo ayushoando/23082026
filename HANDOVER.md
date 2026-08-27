@@ -24,7 +24,7 @@ _2026-08-25 11:34 · branch: main · not pushed past origin/main (4675e15)_
 2. Skills/power recognition unproven — reload Kiro and check.
 3. Full `pnpm run typecheck` never confirmed green (interrupted).
 4. 5 of 11 powers unrouted (postman, cloudinary, cubic, design-system, ltm).
-5. Real queued task = `.kiro/specs/trusted-by-duplicate-roster-kicker` spec; bug source already fixed (single rosterKicker) but tasks.md steps never formally executed/marked.
+5. Real queued task = `plans/ref/trusted-by-duplicate-roster-kicker` spec; bug source already fixed (single rosterKicker) but tasks.md steps never formally executed/marked.
 6. 5 files uncommitted — commit or discard.
 
 ## Verify (repo root, pnpm)

@@ -1,7 +1,7 @@
 # Planner project-load remediation — execution report
 
 - **Date:** 2026-08-26
-- **Spec:** `.kiro/specs/planner-remediation/`
+- **Spec:** `plans/ref/planner-remediation/`
 - **Status:** All 48 tasks complete (Waves 0–7 + acceptance checklist)
 
 ---
@@ -22,7 +22,7 @@ The fix introduces an explicit discriminated load-state model, a workspace gate 
 | `site/components/Planner/PlannerProjectLoadState.tsx` | Recovery surface component — loading, not-found, transient-error rendering with ARIA semantics and focus management |
 | `tests/unit/components/Planner/PlannerProjectLoadState.test.tsx` | 9 unit tests for the recovery surface |
 | `tests/unit/components/Planner/Planner.test.tsx` | 7 integration tests for editor load-state lifecycle |
-| `plans/planner-project-load-defect-baseline.md` | Defect evidence, ownership confirmation, acceptance matrix |
+| `plans/ref/planner-project-load-defect-baseline.md` | Defect evidence, ownership confirmation, acceptance matrix |
 
 ## Files modified
 

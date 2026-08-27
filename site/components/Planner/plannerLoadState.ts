@@ -8,7 +8,7 @@
  * intentionally excluded from the rendered union.
  *
  * unauthorized and forbidden are NOT retryable — see
- * .kiro/specs/remediation-unified/audit.md D8 for why a single retryable
+ * plans/ref/remediation-unified/audit.md D8 for why a single retryable
  * TransientError bucket is wrong for a signed-out user.
  */
 import type { PlannerProject } from "@planner/lib/plannerTypes";
@@ -22,7 +22,7 @@ export type PlannerLoadState =
   | { kind: "loading"; projectId: string; requestKey: string }
   | { kind: "ready"; projectId: string; project: PlannerProject }
   // Only failure state a persisted audit artifact actually recorded (401 on
-  // /api/Planner/projects/demo-plan/ — .kiro/specs/remediation-unified/audit.md
+  // /api/Planner/projects/demo-plan/ — plans/ref/remediation-unified/audit.md
   // D7). Not retryable: the session is missing entirely, so the recovery
   // action is sign-in with a return path, never "Try again".
   | { kind: "unauthorized"; projectId: string; status: 401; message: string }

@@ -43,7 +43,7 @@ export class PlannerApiError extends Error {
    * True when the session is missing entirely (401). Distinct from
    * `isForbidden` — the recovery action is sign-in, not retry. This is the
    * one failure mode a persisted audit artifact actually recorded for
-   * `/ooplanner/projects/[id]` (see .kiro/specs/remediation-unified/audit.md D7).
+   * `/ooplanner/projects/[id]` (see plans/ref/remediation-unified/audit.md D7).
    */
   get isUnauthorized(): boolean {
     return this.status === 401;

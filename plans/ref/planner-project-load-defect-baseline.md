@@ -2,7 +2,7 @@
 
 Recorded: 2026-08-26
 Source: Planner browser audit at 1920, 1440, 1078, 768, and 390 CSS pixels.
-Spec: `.kiro/specs/planner-remediation/`
+Spec: `plans/ref/planner-remediation/`
 
 ---
 

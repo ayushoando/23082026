@@ -1171,7 +1171,7 @@ The later implementation should use generated evidence only:
 - `results/kiro-repo-guidance-setup/*.json` for structured validation/source records;
 - `results/kiro-repo-guidance-setup/*.txt` for command output and bounded logs;
 - a durable handover under `Agents/` or the approved repository-local guidance location;
-- the spec documents under `.kiro/specs/kiro-repo-guidance-setup/`.
+- the spec documents under `plans/ref/kiro-repo-guidance-setup/`.
 
 `results/` must not contain hand-written Markdown reports or audit archives. Evidence records include UTC timestamp, repository root/surface, command/action, exit/outcome, artifact hash where safe, evidence references, limitations, and blocker (`none` when absent). Output is redacted and must never contain secrets, tokens, private URLs, or personal data.
 

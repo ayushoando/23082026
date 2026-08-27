@@ -242,7 +242,7 @@ Never use raw disk helpers for runtime writes. The selector is mode-aware: disk 
 
 ### 5.7 Specs and Quick Spec
 
-Kiro’s **Spec** workflow is built into the IDE; it is not a repository skill or a custom agent that needs registration. Start it from the workflow picker or the Specs panel. The generated, versioned artifacts live under `.kiro/specs/<name>/`:
+Kiro’s **Spec** workflow is built into the IDE; it is not a repository skill or a custom agent that needs registration. Start it from the workflow picker or the Specs panel. The generated, versioned artifacts normally live under `.kiro/specs/<name>/`; this repository's relocated planning artifacts live under `plans/ref/<name>/`:
 
 ```text
 requirements.md → design.md → tasks.md

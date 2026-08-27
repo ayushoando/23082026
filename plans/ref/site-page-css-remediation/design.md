@@ -189,4 +189,4 @@ Each completed item records:
 - screenshot path and audit artifact path;
 - classification: CSS, Markup, Runtime, Audit contract, or Owner gap.
 
-Durable planning stays in `.kiro/specs/site-page-css-remediation/`; generated evidence stays under `results/**`.
+Durable planning stays in `plans/ref/site-page-css-remediation/`; generated evidence stays under `results/**`.

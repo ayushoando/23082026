@@ -50,7 +50,7 @@ licensing compliance.
   subagent, preset, or skill. Do not invoke it or add a seventh repository skill
   to emulate it; this repository's guidance evaluator intentionally keeps the
   local skill candidate set at six. Repository spec artifacts belong under
-  `.kiro/specs/<name>/`.
+  `plans/ref/<name>/`.
 
 ## In this workspace
 - In this workspace, the installed powers are discoverable from the global installed-power registry and their MCP servers from the global Kiro MCP settings. The repository-local `oando-workflow` power intentionally ships an empty `mcp.json` and routes to those global servers; do not populate the local manifest.

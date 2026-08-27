@@ -33,7 +33,7 @@ Waves 0 through 3 are agent-implementable. Wave 4 is read-only investigation end
 | 3.1, 3.3 | `site/focss/site/components/contact/home-contact-teaser.css` | lines 389-400 only |
 | 3.3 | `site/focss/site/components/homepage/home-base.css` | read-only confirmation |
 | 4.1-4.3 | `site/lib/catalog/**`, `site/lib/theme/**` | read-only |
-| 6.1 | `.kiro/specs/site-page-css-remediation/tasks.md` | append evidence note |
+| 6.1 | `plans/ref/site-page-css-remediation/tasks.md` | append evidence note |
 
 ## Task Dependency Graph
 

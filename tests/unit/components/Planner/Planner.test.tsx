@@ -332,7 +332,7 @@ describe("Planner editor load-state integration", () => {
   });
 
   it("shows sign-in action (not retry) when getProject rejects with 401 — the state a persisted audit artifact actually recorded", async () => {
-    // .kiro/specs/remediation-unified/audit.md D7: the only Planner failure
+    // plans/ref/remediation-unified/audit.md D7: the only Planner failure
     // captured in results/site/page-audit-production-complete/audit-results.json
     // for /ooplanner/projects/demo-plan/ is HTTP 401, not 404/429.
     mockParams.current = { id: "demo-plan" };

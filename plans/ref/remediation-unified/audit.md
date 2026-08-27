@@ -6,12 +6,12 @@ Nothing here is inferred from the spec text itself.
 
 Sources audited:
 
-- `.kiro/specs/planner-remediation/{requirements,design,tasks}.md` — referred to below as **P**.
-- `.kiro/specs/site-page-css-remediation/{requirements,design,tasks}.md` — referred to below as **C**.
+- `plans/ref/planner-remediation/{requirements,design,tasks}.md` — referred to below as **P**.
+- `plans/ref/site-page-css-remediation/{requirements,design,tasks}.md` — referred to below as **C**.
 
-Only two spec folders exist. Both are untracked (`git status`: `?? .kiro/specs/planner-remediation/`,
-`?? .kiro/specs/site-page-css-remediation/`) and both were written on 2026-08-26. If a third plan was
-intended it is not present in `.kiro/specs/`, `plans/`, or anywhere else modified in the last three days.
+Only two spec folders exist. Both are untracked (`git status`: `?? plans/ref/planner-remediation/`,
+`?? plans/ref/site-page-css-remediation/`) and both were written on 2026-08-26. If a third plan was
+intended it is not present in `plans/ref/`, `plans/`, or anywhere else modified in the last three days.
 
 ## Verdict
 

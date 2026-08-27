@@ -305,5 +305,5 @@ the audit or a new DOM test can.
   state and lifecycle; re-run `node scripts/graph-impact.mjs --file=site/components/Planner/Planner.tsx --depth=3`
   after implementation. The graph tool prints to stdout and persists nothing, so cite the command, not
   a file.
-- Durable planning stays in `.kiro/specs/remediation-unified/`. Generated evidence stays under
+- Durable planning stays in `plans/ref/remediation-unified/`. Generated evidence stays under
   `results/**`. No hand-written Markdown reports under `results/`.

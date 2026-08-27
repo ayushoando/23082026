@@ -1263,7 +1263,7 @@ const Planner = () => {
 
         if (e instanceof PlannerApiError && e.isUnauthorized) {
           // 401 — the one failure mode a persisted audit artifact actually
-          // recorded (.kiro/specs/remediation-unified/audit.md D7). Never
+          // recorded (plans/ref/remediation-unified/audit.md D7). Never
           // retryable and never a reason to clear the fallback key: being
           // signed out says nothing about whether the project exists.
           setLoadState(unauthorizedState(effectiveId!, e.detail || e.message));
@@ -1315,7 +1315,7 @@ const Planner = () => {
 
   // Sign-in carries a return path to the requested project — a Try-again
   // button on a 401 can never succeed, so unauthorized state offers this
-  // instead of retry. See .kiro/specs/remediation-unified/design.md §3.1.
+  // instead of retry. See plans/ref/remediation-unified/design.md §3.1.
   const handleSignIn = useCallback(() => {
     const returnPath = routeId
       ? `/ooplanner/projects/${routeId}`

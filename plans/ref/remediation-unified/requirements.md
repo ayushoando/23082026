@@ -1,6 +1,6 @@
 # Requirements: unified remediation (evidence-gated)
 
-Supersedes `.kiro/specs/planner-remediation/` and `.kiro/specs/site-page-css-remediation/`.
+Supersedes `plans/ref/planner-remediation/` and `plans/ref/site-page-css-remediation/`.
 Read `audit.md` in this folder first — it records why those two plans could not be merged as written.
 
 Planning only. No implementation, no test runs, no gates, no browser runs are performed by creating

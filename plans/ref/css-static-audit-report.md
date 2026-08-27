@@ -5,7 +5,7 @@ Agent note, not a handbook. Static source analysis only; no browser measurement 
 - **Date:** 2026-08-26
 - **Scope:** every `.css` file in the repo excluding `node_modules`, `.next`, `.tmp`
 - **Method:** file-content analysis plus a transitive `@import` reachability walk from the FOCSS zone entries
-- **Remediation spec:** [`.kiro/specs/focss-static-defects/`](./focss-static-defects)
+- **Remediation spec:** [`plans/ref/focss-static-defects/`](./focss-static-defects)
 
 ## Why this audit exists
 
