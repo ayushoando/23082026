@@ -20,7 +20,8 @@ fileMatchPattern: "site/lib/seo/**,site/lib/analytics/**,site/app/**/robots*,sit
 - Use `next-intl` for hreflang alternate links on i18n pages.
 - No client-side-only rendering for SEO-critical content — use Server Components.
 
-## Fast checks (run on save)
+## Checks (user-invoked only)
+For an explicit SEO validation request, run the applicable checks; do not run tests or gates automatically.
 ```
 pnpm run test:priority-8
 pnpm run check:site-ui
@@ -33,7 +34,7 @@ pnpm run check:site-ui
 - [ ] Core Web Vitals: LCP < 2.5s, CLS < 0.1, INP < 200ms
 
 ## Browser-layer integration
-Use Nova Act to verify rendered meta tags and OG images at each viewport width.
+Use Nova Act to verify rendered meta tags and OG images at each viewport width only for an explicit browser-check request.
 
 ## Graph-layer integration
-When CAST Imaging is available, use `transactions` filtered by route entry points to verify no SEO-critical page has a broken data dependency.
+Use `node scripts/graph-impact.mjs --file=<changed-file>` to inspect affected route imports before optional validation. This repository graph replaces the retired CAST integration.

@@ -3,13 +3,10 @@
 Loaded on demand when the OandO Workflow power is active.
 
 ## The loop for any code change
-1. `node scripts/graph-impact.mjs --file=<changed-file>` — get blast radius + the
-   suggestedTestCommand.
-2. Run that scoped vitest command. Fix, re-run (max 3 iterations).
-3. If Studio/Planner tree: `pnpm run scan:boundaries`.
-4. If CSS/FOCSS: `pnpm run verify:focss` + `pnpm run lint:ui:strict`.
-5. Finish with `pnpm run gate:fast` (dev bar) or `pnpm run gate` (ship bar).
-6. Interactive/visual claim -> browser power (nova-act / kane-cli), localhost only.
+1. `node scripts/graph-impact.mjs --file=<changed-file>` — inspect blast radius and note the `suggestedTestCommand`; do not run it automatically.
+2. Tests, coverage, browser-test runners, and gates are user-invoked only. Report the exact suggested command to the user instead of executing it.
+3. For explicit non-test verification, use the smallest relevant repository check: `pnpm run scan:boundaries` for Studio/Planner, `pnpm run verify:focss` plus `pnpm run lint:ui:strict` for CSS/FOCSS, and the applicable type or migration check for other domains.
+4. Interactive/visual claims require an explicitly requested browser check through `nova-act` or `kane-cli`, using `http://localhost:3000` only.
 
 ## Power vs skill (why routing is one-directional)
 - A power is active (owns MCP + activation). A skill is passive markdown.

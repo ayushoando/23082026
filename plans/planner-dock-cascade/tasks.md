@@ -24,7 +24,7 @@ This is the deadline item. Waves 0 through 2 are agent-implementable and small. 
 | 1.1 | `site/focss/planner/entry.css` | remove final `@import "./dock.css";` and its intent comment |
 | 1.2 | `scripts/AsNeeded/verify-focss-structure.mjs` | remove `"./dock.css"` from the pinned `planner/entry.css` list |
 | 0.x, 2.x | `site/components/Planner/PlannerDockShell.tsx`, `site/focss/planner/dock.css` | read-only |
-| 4.1 | `plans/ref/planner-dock-cascade/` notes, or `agent-reports/` | append Studio duplicate record |
+| 4.1 | `plans/planner-dock-cascade/` notes, or `agent-reports/` | append Studio duplicate record |
 | 4.2 | same | append gate-gap record |
 
 ## Task Dependency Graph

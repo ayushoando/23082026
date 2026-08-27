@@ -1,7 +1,7 @@
 ﻿---
 name: oando-workflow
 displayName: OandO Workflow
-description: Repo-local workflow power for the oando1408 monorepo. Orient with the import graph and canonical docs, enforce Studio/Planner fork boundaries, verify with the two-lane gate, and route to the right installed power (supabase-hosted, context7, exa, nova-act, kane-cli, datadog) only when the repo cannot answer.
+description: Repo-local workflow power for the oando1408 monorepo. Orient with the import graph and canonical docs, enforce Studio/Planner fork boundaries, respect user-invoked verification, and route to the smallest installed power only when the repo cannot answer.
 keywords: ["oando", "map repo", "orient", "blast radius", "impact", "graph", "fork boundary", "studio", "planner", "gate", "verify", "vitest", "focss", "migration", "supabase", "two databases"]
 author: "workspace"
 ---
@@ -17,7 +17,7 @@ Passive reference under `.kiro/skills/`:
 - `repo-map` — orient via canonical docs + `scripts/graph-impact.mjs`.
 - `graph-impact` — blast radius + scoped test command before running the suite.
 - `fork-boundaries` — Studio/Planner never import each other; `pnpm run scan:boundaries`.
-- `verify-and-gate` — focused tests -> `gate:fast` -> `gate`; two vitest lanes.
+- `verify-and-gate` — user-invoked focused tests -> `gate:fast` -> `gate`; two vitest lanes.
 - `focss-css` — FOCSS-on-Tailwind-v4 tokens and zones.
 - `db-migrations` — two-DB routing; `-- rollback`; dry-run first.
 
@@ -31,10 +31,8 @@ Passive reference under `.kiro/skills/`:
 - Complete design-system scaffolding -> `design-system-power-builder`.
 - Current official library/framework docs -> `context7`; broad web research -> `exa`.
 - API collections/resources -> `postman`; image/video assets -> `cloudinary`.
-- Project memory/recall -> `ltm-power`; design boards/design-to-code -> `visily`.
-- Structural modernization/graph analysis -> `cast-imaging-express`; Ona environments/automations -> `ona`.
-- SAST/secrets/IaC -> `aikido-security-scan`; code quality/security analysis -> `sonarqube`.
-- Feature flags/AI configs -> `launchdarkly`; runtime errors/performance -> `hud` or `datadog`.
+- Project memory/recall -> `ltm-power`; AI code-review/security-review information -> `cubic-code-review`.
+- Production observability -> use Datadog only if it is present in the installed registry; otherwise proceed without an external power.
 - Activate only the named power for the user’s concrete need; otherwise use repository tooling or no power.
 
 ## Rules

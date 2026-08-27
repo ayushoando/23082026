@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * ts-morph based dependency graph — Layer 3 replacement for CAST Imaging.
+ * ts-morph based dependency graph — repository-local impact analysis.
  *
  * Capabilities:
  *   1. Build full import graph from TypeScript/CSS source.

@@ -1,1 +1,0 @@
-const API_KEY = process.env.SONAR_API_KEY?.trim();

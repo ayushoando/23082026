@@ -150,6 +150,8 @@ export const REQUIRED_SURFACE_VERSIONS = [
 ] as const satisfies readonly SurfaceVersion[];
 
 export type SkillCandidate =
+  // The six domain skills are evaluated as candidates; oando-master is the
+  // mandatory repository router and is tracked separately from this set.
   | "repo-map"
   | "graph-impact"
   | "verify-and-gate"
@@ -758,8 +760,8 @@ export const OWNER_DECISIONS = [
   {
     ...OWNER_DECISION_BASE,
     decisionId: "OD-08",
-    scope: "six repository-local skills",
-    requiredValidation: ["all six manifests, primary designation, overlap, prerequisites, activation, and rollback validation"],
+    scope: "six domain skills plus the mandatory oando-master router",
+    requiredValidation: ["all six candidate manifests, the separate router, primary designation, overlap, prerequisites, activation, and rollback validation"],
     rollbackBoundary: "restore skill/steering files and their prior activation state",
     limitations: ["repo-map is the only primary Repository_Guidance_Skill"],
   },

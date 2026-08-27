@@ -10,9 +10,9 @@
  *   - local compaction, checkpoints/rewind, CLI session persistence, Crew
  *     memory, Crew knowledge, and LTM capture stay in distinct records with
  *     distinct data boundaries (Requirements 9.4-9.6);
- *   - LTM capture stays disabled while its capture command is a stub, and Crew
- *     memory/knowledge documentation is never used as LTM execution evidence
- *     (Requirement 9.6);
+ *   - LTM capture stays isolated to local repository memory and is governed by
+ *     the configured Stop hook; Crew memory/knowledge documentation is never
+ *     used as local LTM execution evidence (Requirement 9.6);
  *   - the manual graph-impact loop is preserved and any automation is capped at
  *     three iterations (Requirement 10.5, OD-03);
  *   - default/native task graphs and parallel waves keep maximum concurrency
@@ -390,25 +390,25 @@ const CAPABILITY_PROFILES: Record<ContinuityCapabilityKind, CapabilityProfile> =
     dataBoundary: "local_repository_capture",
     configurationScope: "project",
     documentedBehavior: [`the LTM capture hook depends on ${LTM_CAPTURE_COMMAND}`],
-    observedBehavior: [`${LTM_CAPTURE_COMMAND} is a documented stub; the capture hook is disabled`],
-    retentionOrContinuityLimit: "no capture while the command is a stub; local repository capture boundary",
-    manualFallback: "no automatic capture; manual notes only",
-    validationAction: "keep disabled until implementation is verified and a fresh execution Validation_Run passes",
+    observedBehavior: [`${LTM_CAPTURE_COMMAND} is implemented and the Stop hook is enabled`],
+    retentionOrContinuityLimit: "local repository capture boundary with bounded event history",
+    manualFallback: "manual notes when automatic capture is unavailable",
+    validationAction: "validate the configured command and local event writes; keep capture separate from tests and gates",
     gatingDecision: "OD-02",
   },
   graph_impact_automation: {
-    name: "graph-impact automation",
+    name: "graph-impact workflow",
     surfaces: ["Local_Repository_Surface", "IDE", "CLI 2.x", "CLI 3.x"],
     dataBoundary: "repository_process",
     configurationScope: "manual",
     documentedBehavior: [
-      `manual loop: inspect ${GRAPH_IMPACT_SCRIPT} -> scope tests -> fix (max ${GRAPH_IMPACT_MAX_ITERATIONS}) -> gate:fast`,
+      `manual loop: inspect ${GRAPH_IMPACT_SCRIPT} -> report the suggested user-invoked validation command -> apply fixes only when requested`,
     ],
-    observedBehavior: [`${GRAPH_IMPACT_SCRIPT} exists with stats/impact/cycle modes; the loop is manual`],
-    retentionOrContinuityLimit: `automation is capped at ${GRAPH_IMPACT_MAX_ITERATIONS} fix/validation iterations`,
-    manualFallback: "the reviewed manual graph-impact loop remains the fallback",
+    observedBehavior: [`${GRAPH_IMPACT_SCRIPT} exists with stats/impact/cycle modes; validation remains manual and user-invoked`],
+    retentionOrContinuityLimit: "no automatic test or gate execution; user-requested fix/validation loops remain bounded",
+    manualFallback: "the reviewed manual graph-impact workflow remains the fallback",
     validationAction:
-      "validate reviewed root command, cost, failure behavior, bounded loop, matcher/trigger, side effects, and rollback",
+      "validate reviewed root command, cost, failure behavior, matcher/trigger, side effects, and rollback without automatic test or gate execution",
     gatingDecision: "OD-03",
   },
   specification_workflow: {

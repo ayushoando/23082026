@@ -19,7 +19,8 @@ fileMatchPattern: "tests/**,config/build/playwright*,**/vitest*"
 - Test file naming: `*.test.ts` / `*.test.tsx` / `*.spec.ts`.
 - No hollow tests (tests that pass without meaningful assertions) — audited by `test:audit:hollow`.
 
-## Fast checks (run on save)
+## Checks (user-invoked only)
+The user runs these checks explicitly; agents do not run tests, coverage, browser-test runners, or gates automatically.
 ```
 pnpm run p0:unit
 pnpm run typecheck:tests
@@ -31,10 +32,7 @@ pnpm run typecheck:tests
 - P8: SEO, security, env (`test:priority-8`)
 
 ## Loop pattern
-```
-edit → p0:unit → if fail: fix → p0:unit (max 3 iterations)
-final: gate:fast
-```
+When the user requests validation: run the requested command, fix failures, and report the exact result. Do not execute an automatic test loop or final gate.
 
 ## Graph-layer integration
-When CAST Imaging is available, use `transactions_using_object` on the changed function to determine which test files cover it, avoiding running the full suite.
+Use `node scripts/graph-impact.mjs --file=<changed-file>` to identify covering test files and report the scoped command to the user. This repository graph replaces the retired CAST integration.

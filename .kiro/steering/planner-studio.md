@@ -17,7 +17,8 @@ fileMatchPattern: "site/app/ooplanner/**,site/app/oostudio/**,site/lib/Planner/*
 - Canvas: Fabric.js (`fabric` package), polygon-clipping for shape ops.
 - Panels: `dockview-react` for dockable panel layout.
 
-## Fast checks (run on save)
+## Checks (user-invoked only)
+For an explicit fork validation request, run these checks; do not run tests or gates automatically.
 ```
 pnpm run scan:boundaries
 pnpm run typecheck
@@ -30,4 +31,4 @@ pnpm run p0:unit
 - Violation = build break.
 
 ## Graph-layer integration
-When CAST Imaging is available, use `architectural_graph_focus` on the Planner or Studio component to detect leaked cross-boundary dependencies before they fail the boundary scan.
+Use `node scripts/graph-impact.mjs --file=<changed-file>` to inspect affected imports before optional validation. This repository graph replaces the retired CAST integration.

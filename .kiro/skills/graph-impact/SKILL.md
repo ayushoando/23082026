@@ -5,7 +5,7 @@ description: Use the repo import graph to scope tests and analyze blast radius b
 
 # Graph Impact (ts-morph import graph)
 
-Script: `scripts/graph-impact.mjs`. Replaces CAST Imaging for impact analysis.
+Script: `scripts/graph-impact.mjs`. Replaces the retired external graph integration for impact analysis.
 
 ## Commands (repo root)
 - Impact of a change:

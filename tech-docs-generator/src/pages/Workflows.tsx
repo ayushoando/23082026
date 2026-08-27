@@ -82,23 +82,23 @@ const chosenSkills = [
 const installedPowers = [
   { name: 'design-system-power-builder', purpose: 'Design-system scaffolding and governance' },
   { name: 'nova-act', purpose: 'Browser and human-style QA' },
-  { name: 'postman', purpose: 'API collections, environments, and testing' },
-  { name: 'cast-imaging', purpose: 'Structural codebase impact and architecture analysis' },
   { name: 'context7', purpose: 'Current library and SDK documentation' },
   { name: 'exa', purpose: 'Web research and code search' },
-  { name: 'datadog', purpose: 'Logs, metrics, traces, RUM, incidents, and monitors' },
   { name: 'ltm-power', purpose: 'Project-local long-term memory and recall' },
   { name: 'cubic-code-review', purpose: 'AI code review, security scans, and team patterns' },
   { name: 'kane-cli', purpose: 'Browser, mobile, and QA workflow automation' },
   { name: 'cloudinary', purpose: 'Image and video asset management' },
   { name: 'supabase-hosted', purpose: 'Supabase database, auth, storage, and realtime' },
+  { name: 'oando-workflow', purpose: 'Repository orientation, graph, fork, and database workflow' },
+  { name: 'postman', purpose: 'API collections and resource management' },
 ]
 
 const workspaceHooks = [
+  { name: 'block-agent-tests', trigger: 'PreToolUse', behavior: 'Unconditionally blocks agent test, gate, coverage, and browser-test commands; validation remains user-invoked.' },
   { name: 'power-capability-index', trigger: 'SessionStart', behavior: 'Indexes installed powers and limits activation to the smallest relevant capability.' },
   { name: 'power-request-router', trigger: 'UserPromptSubmit', behavior: 'Routes requests without activating unrelated powers.' },
-  { name: 'domain-fast-check', trigger: 'PostFileSave', behavior: 'Runs the domain-specific fast check for the saved file.' },
-  { name: 'postman-api-testing', trigger: 'PostFileSave', behavior: 'Prompts guarded Postman validation for API/configuration changes.' },
+  { name: 'domain-fast-check', trigger: 'PostFileSave', behavior: 'Runs the configured domain-specific non-test static check for the saved file.' },
+  { name: 'postman-api-testing', trigger: 'PostFileSave', behavior: 'Prompts guarded Postman routing only for API/OpenAPI/Postman resource changes.' },
   { name: 'ltm-postturn-capture', trigger: 'Stop', behavior: 'Captures agent activity to the project memory store.' },
 ]
 
@@ -249,11 +249,11 @@ export function Workflows() {
             <h3 className="text-base font-semibold text-heading">Powers, Hooks &amp; MCP Inventory</h3>
           </div>
           <p className="text-xs text-muted mb-4">
-            Powers are optional capability packages; hooks are explicit workspace automation; MCP assets are repository-local tool schemas. This task keeps all five hooks enabled, routes only task-relevant powers, and stores repository MCP assets under root <code className="text-brand-400">mcp/</code>.
+            Powers are optional capability packages; hooks are explicit workspace automation; MCP assets are repository-local tool schemas. This inventory reflects the 11 currently installed powers and six enabled hooks, routes only task-relevant powers, and keeps tests and gates user-invoked.
           </p>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <div className="card">
-              <h4 className="text-sm font-semibold text-heading mb-2">Installed powers (12)</h4>
+              <h4 className="text-sm font-semibold text-heading mb-2">Installed powers (11)</h4>
               <ul className="space-y-1.5">
                 {installedPowers.map(power => (
                   <li key={power.name} className="text-xs text-subtle">

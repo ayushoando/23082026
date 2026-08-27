@@ -1,0 +1,379 @@
+{
+  "audit_metadata": {
+    "generated_date": "2026-08-26",
+    "audit_scope": "Plans folder structure, document classification, and loose report inventory",
+    "analysis_version": "1.0",
+    "constraint_notes": [
+      "No files moved or deleted — analysis only",
+      "CSV manifest analyzed for intended relationships",
+      "README.md examined for coordination philosophy",
+      "All loose reports read for scope and evidence classification"
+    ]
+  },
+  "active_coordination_documents": {
+    "status": "KEEP AT ROOT LEVEL",
+    "documents": [
+      {
+        "file": "PLAN.md",
+        "role": "Active execution plan",
+        "description": "Marketing i18n parity hardening — current active coordination document",
+        "status_at_audit": "Status: done (2026-08-25)",
+        "reason_keep": "Explicitly defined in README.md as active coordination; directs current repository work"
+      },
+      {
+        "file": "README.md",
+        "role": "Coordination philosophy and conventions",
+        "description": "Establishes truth order, plans role, issue tracker location, and evidence storage rules",
+        "status_at_audit": "Normative reference",
+        "reason_keep": "Defines the coordination model and conventions for the entire plans folder; must remain root-level for discoverability"
+      },
+      {
+        "file": "adr/",
+        "role": "Architecture decision records (optional)",
+        "description": "Empty directory per README; optional lazy domain glossary",
+        "status_at_audit": "Not yet used",
+        "reason_keep": "Defined as optional convention in README.md; directory structure in place for future use"
+      }
+    ],
+    "also_available_but_optional": {
+      "file": "CONTEXT.md",
+      "description": "Optional lazy domain glossary (not yet created in this repo)",
+      "reason_keep": "Placeholder convention for domain modeling; no conflict with reorganization"
+    }
+  },
+  "specification_folders": {
+    "status": "KEEP IN PLACE",
+    "description": "These folders contain formal spec requirements, design, and tasks under .kiro/specs/. They appear in plans/ as a convenience directory structure but are actually managed under .kiro/specs/. Keeping them here creates a clear index of active specifications.",
+    "folders": [
+      {
+        "folder_name": "focss-static-defects",
+        "files": [
+          "requirements.md",
+          "design.md",
+          "tasks.md"
+        ],
+        "csv_references": 3,
+        "csv_source_area": ".kiro/specs/focss-static-defects",
+        "reason_keep": "Active formal spec with requirements, design, and task list. Listed in CSV as source of truth; reports reference its requirements.",
+        "is_reference_in_reports": true,
+        "reports_that_reference": [
+          "css-static-audit-report.md (multiple findings mapped to R1-R6)"
+        ]
+      },
+      {
+        "folder_name": "planner-dock-cascade",
+        "files": [
+          "requirements.md",
+          "design.md",
+          "tasks.md"
+        ],
+        "csv_references": 3,
+        "csv_source_area": ".kiro/specs/planner-dock-cascade",
+        "reason_keep": "Active formal spec. Listed in CSV as source of truth.",
+        "is_reference_in_reports": false,
+        "reports_that_reference": []
+      },
+      {
+        "folder_name": "planner-remediation",
+        "files": [
+          "requirements.md",
+          "design.md",
+          "tasks.md"
+        ],
+        "csv_references": 3,
+        "csv_source_area": ".kiro/specs/planner-remediation",
+        "reason_keep": "Active formal spec. Directly referenced by planner-project-load-defect-baseline.md and planner-remediation-execution-report.md",
+        "is_reference_in_reports": true,
+        "reports_that_reference": [
+          "planner-project-load-defect-baseline.md (spec at plans/ref/planner-remediation/)",
+          "planner-remediation-execution-report.md (spec at plans/ref/planner-remediation/)"
+        ]
+      },
+      {
+        "folder_name": "remediation-unified",
+        "files": [
+          "requirements.md",
+          "design.md",
+          "tasks.md",
+          "audit.md (additional evidence file)",
+          "progress-report.md (additional evidence file)"
+        ],
+        "csv_references": 3,
+        "csv_source_area": ".kiro/specs/remediation-unified",
+        "reason_keep": "Active formal spec with additional audit and progress-report evidence files. Listed in CSV.",
+        "is_reference_in_reports": false,
+        "reports_that_reference": []
+      },
+      {
+        "folder_name": "site-page-css-remediation",
+        "files": [
+          "requirements.md",
+          "design.md",
+          "tasks.md"
+        ],
+        "csv_references": 3,
+        "csv_source_area": ".kiro/specs/site-page-css-remediation",
+        "reason_keep": "Active formal spec. Referenced by css-static-audit-report.md and planner-project-load-defect-baseline.md",
+        "is_reference_in_reports": true,
+        "reports_that_reference": [
+          "css-static-audit-report.md (Finding 2 handed over as evidence; rows 4-22 re-scoped)",
+          "planner-project-load-defect-baseline.md (1.4 and 1.5/1.6 references)"
+        ]
+      },
+      {
+        "folder_name": "trusted-by-duplicate-roster-kicker",
+        "files": [
+          "requirements.md",
+          "design.md",
+          "tasks.md",
+          "bugfix.md (additional evidence file)"
+        ],
+        "csv_references": 3,
+        "csv_source_area": ".kiro/specs/trusted-by-duplicate-roster-kicker",
+        "reason_keep": "Active formal spec with bugfix requirements. Listed in CSV.",
+        "is_reference_in_reports": false,
+        "reports_that_reference": []
+      }
+    ]
+  },
+  "loose_reports_to_move_to_plans_ref": {
+    "status": "CANDIDATE FOR MOVE",
+    "instruction": "Create plans/ref/ directory if it doesn't exist. Move these files there with subdirectories matching their spec relationships.",
+    "reports": [
+      {
+        "file": "css-static-audit-report.md",
+        "type": "Audit report",
+        "generated_date": "2026-08-26",
+        "scope": "Static source analysis of 172 stylesheets across all zones",
+        "evidence_classification": "Agent audit note — not a handbook",
+        "primary_spec_relationship": "focss-static-defects",
+        "disposition_in_report": "Findings 1-8 mapped to R1-R6 remediation tasks in focss-static-defects spec",
+        "cross_references": [
+          "Remediation spec: plans/ref/focss-static-defects/ (internal link in report)",
+          "site-page-css-remediation: Finding 2 handed over as evidence",
+          "site-page-css-remediation rows 4-22: re-scoped as single Admin button ramp change"
+        ],
+        "why_move": "Audit report is evidence for focss-static-defects spec. Belongs under plans/ref/focss-static-defects/",
+        "recommended_destination": "plans/ref/focss-static-defects/css-static-audit-report.md",
+        "impact_of_move": "Update internal reference from '../focss-static-defects' to '../' after move"
+      },
+      {
+        "file": "graph-impact-fork-boundary-audit-2026-08-26.md",
+        "type": "Audit report",
+        "generated_date": "2026-08-26",
+        "scope": "Fork boundary scan + circular dependency analysis + remediation verification",
+        "evidence_classification": "Agent audit evidence — routed through /oando-master /fork-boundaries /graph-impact checks",
+        "primary_spec_relationship": "Cross-cutting (fork-boundaries skill, not a single spec)",
+        "related_specs": [
+          "fork-boundaries (process, not a spec folder)"
+        ],
+        "cross_references": [
+          "Commands: pnpm run scan:boundaries, node scripts/graph-impact.mjs --circles",
+          "Related skills/processes documented in .kiro/steering/planner-studio.md and oando-workflow"
+        ],
+        "why_move": "This is evidence of fork-boundary compliance and circular-dependency remediation. It is not tied to a single spec but is a repository-wide audit.",
+        "recommended_destination": "plans/ref/graph-impact-fork-boundary-audit-2026-08-26.md (root of plans/ref, or consider plans/ref/audits/)",
+        "impact_of_move": "No internal references to update; report is self-contained",
+        "note": "This audit is cross-cutting and not spec-specific. It serves as evidence that the fork boundaries remain clean and circulars are resolved. Consider creating a plans/ref/audits/ subdirectory for repository-wide audits if more accumulate."
+      },
+      {
+        "file": "planner-project-load-defect-baseline.md",
+        "type": "Baseline report + ownership confirmation + acceptance matrix",
+        "generated_date": "2026-08-26",
+        "scope": "Defect evidence, ownership confirmation, acceptance criteria matrix for invalid project-id case",
+        "evidence_classification": "Baseline evidence + acceptance matrix frozen for regression checking",
+        "primary_spec_relationship": "planner-remediation",
+        "disposition_in_report": "Spec: plans/ref/planner-remediation/ (internal reference)",
+        "cross_references": [
+          "Spec: plans/ref/planner-remediation/",
+          "Wave 0.2 ownership confirmation section validates all owners",
+          "Acceptance matrix section documents primary defect vs regression scope",
+          "Workflow audit status section freezes regression baseline for 12 workflows"
+        ],
+        "why_move": "This is the baseline evidence document for planner-remediation. It documents the defect, ownership, and acceptance criteria that guide the remediation spec.",
+        "recommended_destination": "plans/ref/planner-remediation/planner-project-load-defect-baseline.md",
+        "impact_of_move": "Internal reference 'plans/ref/planner-remediation/' will become '../' after move",
+        "note": "The acceptance matrix in this document is the source of truth for what 'done' means for the remediation. It must remain close to the spec."
+      },
+      {
+        "file": "planner-remediation-execution-report.md",
+        "type": "Execution report",
+        "generated_date": "2026-08-26",
+        "scope": "Implementation summary, files created/modified, behavioral changes, what was NOT changed, user verification commands, rollback notes",
+        "evidence_classification": "Execution evidence — records completed implementation",
+        "primary_spec_relationship": "planner-remediation",
+        "disposition_in_report": "Spec: plans/ref/planner-remediation/",
+        "cross_references": [
+          "Spec: plans/ref/planner-remediation/"
+        ],
+        "why_move": "This is post-implementation evidence showing what was done in the planner-remediation spec. It records the complete change list and verification approach.",
+        "recommended_destination": "plans/ref/planner-remediation/planner-remediation-execution-report.md",
+        "impact_of_move": "No internal references to update"
+      },
+      {
+        "file": "site-visual-verification-report.md",
+        "type": "Visual verification report",
+        "generated_date": "2026-08-26",
+        "scope": "61 route patterns × 5 viewports = 305 visual checks; fold screenshots and findings classification",
+        "evidence_classification": "Visual audit report — generated from complete browser evidence set",
+        "primary_spec_relationship": "site-page-css-remediation",
+        "source_data": [
+          "CSV: results/site/page-audit-visual-20260826/visual-findings.csv",
+          "Screenshots: results/site/page-audit-production-complete",
+          "Source audit JSON: results/site/page-audit-production-complete/audit-results.json"
+        ],
+        "cross_references": [
+          "site-page-css-remediation: findings summary classified as audit-contract/shell heuristic, CSS/markup heuristic, typography heuristic, runtime, or accessibility",
+          "Confirmed visual observations point to mobile shell overlap, Planner authentication/runtime, offline asset issue"
+        ],
+        "why_move": "This is evidence for site-page-css-remediation spec. It documents the visual audit methodology, findings count, and disposition for review.",
+        "recommended_destination": "plans/ref/site-page-css-remediation/site-visual-verification-report.md",
+        "impact_of_move": "No internal references to update; external paths to results/ remain unchanged"
+      }
+    ]
+  },
+  "manifest_and_coordination_files": {
+    "status": "KEEP AT ROOT LEVEL",
+    "files": [
+      {
+        "file": "plans-reports-references.csv",
+        "role": "Master index mapping all specs, reports, and references",
+        "description": "CSV manifest with columns: category, document_type, title, path, source_area, status_or_role. Currently points to both plans/ root and .kiro/specs/ locations.",
+        "current_state": "Accurate and comprehensive",
+        "reason_keep": "This is the source of truth for all plans relationships. After moving reports to plans/ref/, the CSV paths should be updated but the file itself stays at root for discoverability.",
+        "update_needed_after_move": "Update paths in CSV from 'plans/[report]' to 'plans/ref/[spec]/[report]' for the five loose reports",
+        "example_updates": [
+          "plans/css-static-audit-report.md → plans/ref/focss-static-defects/css-static-audit-report.md",
+          "plans/graph-impact-fork-boundary-audit-2026-08-26.md → plans/ref/graph-impact-fork-boundary-audit-2026-08-26.md",
+          "plans/planner-project-load-defect-baseline.md → plans/ref/planner-remediation/planner-project-load-defect-baseline.md",
+          "plans/planner-remediation-execution-report.md → plans/ref/planner-remediation/planner-remediation-execution-report.md",
+          "plans/site-visual-verification-report.md → plans/ref/site-page-css-remediation/site-visual-verification-report.md"
+        ]
+      },
+      {
+        "file": "powers-hooks-mcp-html-plan.md",
+        "role": "Repository maintenance implementation plan",
+        "description": "Active plan for powers, hooks, MCP assets, and tech-docs HTML app integration. Contains work sequence, acceptance criteria, and validation approach.",
+        "current_state": "In-progress coordination document",
+        "reason_keep": "Active coordination document defining repository maintenance work. Should stay at root level while in progress; can be archived to plans/ref after completion.",
+        "update_needed": "Keep at root while active; move to plans/ref/completed/ after full validation"
+      }
+    ]
+  },
+  "summary_of_reorganization_impact": {
+    "reorganization_scope": "Move five loose report files from plans/ root to plans/ref/ with spec-aligned subdirectories",
+    "structure_after_move": {
+      "plans/": [
+        "README.md (unchanged)",
+        "PLAN.md (unchanged)",
+        "plans-reports-references.csv (paths updated)",
+        "powers-hooks-mcp-html-plan.md (unchanged or archived after done)",
+        "focss-static-defects/ (spec folder, unchanged location)",
+        "planner-dock-cascade/ (spec folder, unchanged location)",
+        "planner-remediation/ (spec folder, unchanged location)",
+        "remediation-unified/ (spec folder, unchanged location)",
+        "site-page-css-remediation/ (spec folder, unchanged location)",
+        "trusted-by-duplicate-roster-kicker/ (spec folder, unchanged location)",
+        "adr/ (optional architecture decision records, unchanged)"
+      ],
+      "plans/ref/": [
+        "focss-static-defects/css-static-audit-report.md (moved)",
+        "graph-impact-fork-boundary-audit-2026-08-26.md (moved, root of ref or audits/)",
+        "planner-remediation/planner-project-load-defect-baseline.md (moved)",
+        "planner-remediation/planner-remediation-execution-report.md (moved)",
+        "site-page-css-remediation/site-visual-verification-report.md (moved)"
+      ]
+    },
+    "affected_cross_references": [
+      {
+        "file": "css-static-audit-report.md",
+        "current_reference": "['plans/ref/focss-static-defects/']",
+        "will_become_after_move": "[../]"
+      },
+      {
+        "file": "planner-project-load-defect-baseline.md",
+        "current_reference": "['plans/ref/planner-remediation/']",
+        "will_become_after_move": "[../]"
+      },
+      {
+        "file": "plans-reports-references.csv",
+        "rows_affected": 5,
+        "updates_required": [
+          "Row: CSS static audit report — path column from 'plans/css-static-audit-report.md' to 'plans/ref/focss-static-defects/css-static-audit-report.md'",
+          "Row: Graph impact and fork boundary audit — path column from 'plans/graph-impact-fork-boundary-audit-2026-08-26.md' to 'plans/ref/graph-impact-fork-boundary-audit-2026-08-26.md'",
+          "Row: Planner project-load defect baseline — path column from 'plans/planner-project-load-defect-baseline.md' to 'plans/ref/planner-remediation/planner-project-load-defect-baseline.md'",
+          "Row: Planner remediation execution report — path column from 'plans/planner-remediation-execution-report.md' to 'plans/ref/planner-remediation/planner-remediation-execution-report.md'",
+          "Row: Site visual verification report — path column from 'plans/site-visual-verification-report.md' to 'plans/ref/site-page-css-remediation/site-visual-verification-report.md'"
+        ]
+      }
+    ],
+    "blast_radius_analysis": {
+      "high_risk_areas": [],
+      "medium_risk_areas": [
+        "plans-reports-references.csv — must be updated consistently to avoid broken references in documentation"
+      ],
+      "low_risk_areas": [
+        "plans/README.md — no path references to specific reports; only defines coordination role",
+        "PLAN.md — no references to moved files"
+      ],
+      "no_risk": [
+        "Spec folders remain in place",
+        "Active coordination documents unaffected",
+        "All spec contents (requirements.md, design.md, tasks.md) unaffected",
+        "Repository root documents (AGENTS.md, README.md, Failures.md, etc.) unaffected"
+      ]
+    },
+    "file_count_summary": {
+      "total_files_in_plans_root_before_move": 11,
+      "total_files_to_move": 5,
+      "total_files_to_remain_in_root": 6,
+      "new_directories_to_create": 1,
+      "new_subdirectories_under_plans_ref": 3
+    }
+  },
+  "validation_checklist": {
+    "before_move": [
+      "Verify plans/README.md defines coordination philosophy and confirms 'plans/' for active work only",
+      "Confirm all six spec folders are accounted for (focss-static-defects, planner-dock-cascade, planner-remediation, remediation-unified, site-page-css-remediation, trusted-by-duplicate-roster-kicker)",
+      "Verify plans-reports-references.csv contains all five loose reports with paths in 'plans/' section",
+      "Confirm each loose report contains explicit references to its primary spec",
+      "Ensure no loose reports are imported or required by active scripts or tests"
+    ],
+    "after_move": [
+      "Verify plans/ref/ directory exists with subdirectories matching spec folders",
+      "Confirm all five loose reports moved to correct subdirectories",
+      "Update plans-reports-references.csv with new paths for all five reports",
+      "Verify internal cross-references in moved reports are updated (e.g., '../focss-static-defects' becomes '../')",
+      "Run any repository documentation build/validation to ensure references resolve",
+      "Spot-check that no docs under docs/ or .github/ contain hard-coded references to old plans/ paths"
+    ]
+  },
+  "key_findings": {
+    "coordination_structure_health": "GOOD",
+    "finding_1": "Active coordination documents (PLAN.md, README.md) and spec folders are well-organized and unambiguous",
+    "finding_2": "Five loose reports clearly map to their primary specs and contain evidence/findings for remediation",
+    "finding_3": "plans-reports-references.csv is accurate and comprehensive; it is the single source of truth for all relationships",
+    "finding_4": "No redundant or conflicting file structure discovered; spec folders contain only requirements/design/tasks",
+    "finding_5": "All loose reports contain explicit spec references; move is straightforward and low-risk",
+    "finding_6": "No repository scripts or active workflows depend on the root-level location of loose reports; move will not break automation"
+  },
+  "recommendation": {
+    "action": "PROCEED WITH MOVE TO plans/ref",
+    "rationale": [
+      "Loose reports are evidence documents that belong alongside their specs in a 'ref' (reference/evidence) subdirectory",
+      "The current root-level location of reports creates visual clutter and mixes active coordination documents with reference evidence",
+      "Moving reports to plans/ref aligns with repository conventions stated in README.md and AGENTS.md about document placement",
+      "The move is low-risk: only five files, clear spec relationships, minimal cross-references, and no script dependencies",
+      "After move, plans/ root level remains focused on active coordination: PLAN.md, README.md, adr/, six spec folders, one manifest CSV",
+      "plans/ref becomes the authoritative location for all audit reports, baseline documents, execution evidence, and verification records"
+    ],
+    "next_steps": [
+      "Create plans/ref directory structure with subdirectories for each spec",
+      "Move the five loose reports to their spec-aligned subdirectories",
+      "Update internal references within moved reports",
+      "Update plans-reports-references.csv paths",
+      "Optionally add a plans/ref/README.md to document the reference evidence structure",
+      "Run any repo documentation validation to confirm no broken references"
+    ]
+  }
+}

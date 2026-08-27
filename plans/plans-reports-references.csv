@@ -10,9 +10,9 @@ plan,tasks,Kiro repository guidance setup — Tasks,.kiro/specs/kiro-repo-guidan
 plan,requirements,Planner remediation — Requirements,.kiro/specs/planner-remediation/requirements.md,.kiro/specs/planner-remediation,Formal spec requirements
 plan,design,Planner remediation — Design,.kiro/specs/planner-remediation/design.md,.kiro/specs/planner-remediation,Formal spec design
 plan,tasks,Planner remediation — Tasks,.kiro/specs/planner-remediation/tasks.md,.kiro/specs/planner-remediation,Formal spec task list
-plan,requirements,Planner dock cascade — Requirements,.kiro/specs/planner-dock-cascade/requirements.md,.kiro/specs/planner-dock-cascade,Formal spec requirements
-plan,design,Planner dock cascade — Design,.kiro/specs/planner-dock-cascade/design.md,.kiro/specs/planner-dock-cascade,Formal spec design
-plan,tasks,Planner dock cascade — Tasks,.kiro/specs/planner-dock-cascade/tasks.md,.kiro/specs/planner-dock-cascade,Formal spec task list
+plan,requirements,Planner dock cascade — Requirements,plans/planner-dock-cascade/requirements.md,plans/planner-dock-cascade,Formal spec requirements
+plan,design,Planner dock cascade — Design,plans/planner-dock-cascade/design.md,plans/planner-dock-cascade,Formal spec design
+plan,tasks,Planner dock cascade — Tasks,plans/planner-dock-cascade/tasks.md,plans/planner-dock-cascade,Formal spec task list
 plan,requirements,Unified remediation — Requirements,.kiro/specs/remediation-unified/requirements.md,.kiro/specs/remediation-unified,Formal spec requirements
 plan,design,Unified remediation — Design,.kiro/specs/remediation-unified/design.md,.kiro/specs/remediation-unified,Formal spec design
 plan,tasks,Unified remediation — Tasks,.kiro/specs/remediation-unified/tasks.md,.kiro/specs/remediation-unified,Formal spec task list

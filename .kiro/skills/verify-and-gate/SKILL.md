@@ -42,5 +42,6 @@ is not a successful build. Record blockers in `Failures.md`.
 - Unit/gate green is not browser proof. For interactive UI, canvas, or route
   visual verification, the agent may activate `nova-act` or `kane-cli` (browser
   QA) against `http://localhost:3000` only (never 127.0.0.1). For production
-  observability during debugging, `datadog`. This skill instructs; the agent
-  activates, gated by permissions.yaml.
+  observability during debugging, use an installed Datadog power only when it is
+  present in the current registry. This skill instructs; the agent activates,
+  gated by permissions.yaml.

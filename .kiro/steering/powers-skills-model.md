@@ -48,8 +48,7 @@ licensing compliance.
   <https://kiro.dev/docs/specs/feature-specs/requirements-first/>.
 - `feature-requirements-first-workflow` is not a documented Kiro built-in agent,
   subagent, preset, or skill. Do not invoke it or add a seventh repository skill
-  to emulate it; this repository's guidance evaluator intentionally keeps the
-  local skill candidate set at six. Repository spec artifacts belong under
+  to emulate it; the six-skill candidate set is distinct from the mandatory `oando-master` router. Repository spec artifacts belong under
   `plans/ref/<name>/`.
 
 ## In this workspace

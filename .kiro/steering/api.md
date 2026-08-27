@@ -20,7 +20,8 @@ fileMatchPattern: "site/app/api/**,site/lib/api/**,site/lib/auth/**,site/lib/sec
 - CSRF token required for state-mutating requests from browser.
 - Use `next-safe-action` for form submissions; raw route handlers for webhooks/external APIs.
 
-## Fast checks (run on save)
+## Checks (user-invoked only)
+For an explicit validation request, run the smallest applicable checks; do not run tests or gates automatically.
 ```
 pnpm run typecheck
 pnpm run test:audit:api-routes
@@ -35,7 +36,7 @@ pnpm run p0:unit
 - [ ] Error responses don't leak internal state
 
 ## Postman integration
-Use the Postman power to validate endpoint contracts. Check `.postman.json` for existing collections before creating new ones.
+Use the Postman power only for an explicit API-resource request. Inspect `.postman.json` first and never run collections or create duplicates without confirmation.
 
 ## Graph-layer integration
-When CAST Imaging is available, use `object_details(focus="inward")` on API route handlers to identify all callers and ensure auth guards cover every entry path.
+Use `node scripts/graph-impact.mjs --file=<changed-file>` to inspect affected import paths before optional validation. This repository graph replaces the retired CAST integration.

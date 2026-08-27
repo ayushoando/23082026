@@ -65,11 +65,10 @@ for width in viewports:
 ```
 
 ## Integration with static layer
-- Run `pnpm run verify:focss` and `pnpm run lint:ui:strict` BEFORE visual testing.
-- If static checks fail, fix those first — visual testing on broken CSS is wasteful.
+For an explicitly requested visual check, run `pnpm run verify:focss` and `pnpm run lint:ui:strict` before visual testing. Do not run tests or gates automatically.
 
 ## Integration with graph layer
-- Use CAST Imaging `transactions_using_object` on changed components to narrow which routes need visual testing (instead of testing all four routes every time).
+Use `node scripts/graph-impact.mjs --file=<changed-component>` to narrow which routes need visual testing; this repository graph replaces the retired CAST integration.
 
 ## Token efficiency
 - Only invoke this steering file when visual testing is actually needed.

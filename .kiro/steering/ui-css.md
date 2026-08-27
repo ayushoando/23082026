@@ -21,7 +21,8 @@ fileMatchPattern: "site/focss/**,site/components/**,site/app/**/layout.*,site/ap
 - Images must use `next/image` with explicit `sizes` prop for responsive srcset.
 - Touch targets: minimum 44×44px on interactive elements at ≤1024px.
 
-## Fast checks (run on save)
+## Checks (user-invoked only)
+For an explicit UI/CSS validation request, run the applicable checks; do not run tests or gates automatically.
 ```
 pnpm run verify:focss
 pnpm run lint:ui:strict
@@ -38,4 +39,4 @@ Test at: 1920w, 1440w, 1024w, 390w. Look for:
 - Container max-width respecting the viewport
 
 ## Graph-layer integration
-When CAST Imaging is available, use `objects(filters="type:contains:CSS")` and `transactions_using_object` to find which transactions depend on a changed component before visual testing.
+Use `node scripts/graph-impact.mjs --file=<changed-file>` to inspect affected imports before optional visual validation. This repository graph replaces the retired CAST integration.

@@ -1,9 +1,9 @@
 /**
  * Lane C SkillEvaluator.
  *
- * This evaluator is deliberately read-only. It inspects the six repository
- * skill manifests and the visible steering relationship model, then projects
- * typed records. It never activates a skill, changes inclusion scope, invokes
+ * This evaluator is deliberately read-only. It inspects the six domain-skill
+ * manifests and the mandatory oando-master routing skill separately from the
+ * candidate set, then projects typed records. It never activates a skill, changes inclusion scope, invokes
  * a command, or contacts an external service.
  */
 
@@ -178,12 +178,11 @@ const SKILL_METADATA: Readonly<Record<SkillCandidate, SkillMetadata>> = {
       "node scripts/graph-impact.mjs --file=<path>",
       "node scripts/graph-impact.mjs --stats",
       "node scripts/graph-impact.mjs --circles",
-      "pnpm run gate:fast",
     ],
     constraints: [
-      "use the repository import graph before selecting a broad test scope",
-      "run the scoped test command suggested by the graph tool",
-      "the fix loop is bounded to at most three iterations before gate:fast",
+      "use the repository import graph before selecting a user-invoked validation scope",
+      "report the scoped command suggested by the graph tool; never execute tests or gates automatically",
+      "keep any user-requested fix and validation loop bounded to at most three iterations before reporting",
       "retain the manual graph-impact workflow as the fallback",
     ],
     prerequisites: [
@@ -192,7 +191,7 @@ const SKILL_METADATA: Readonly<Record<SkillCandidate, SkillMetadata>> = {
       "scripts/graph-impact.mjs",
       "package.json",
     ],
-    activationScope: "on-demand graph and blast-radius analysis; activation only after validation",
+    activationScope: "on-demand graph and blast-radius analysis; never automatic test or gate execution",
     maintenanceRisk: "medium",
   },
   "verify-and-gate": {
@@ -211,7 +210,8 @@ const SKILL_METADATA: Readonly<Record<SkillCandidate, SkillMetadata>> = {
       "pnpm exec vitest run --config tests/vitest.tech-docs.config.ts",
     ],
     constraints: [
-      "run focused tests before the fast gate and use pnpm from the repository root",
+      "load this skill only when the user explicitly invokes it and asks for tests or gates",
+      "tests and gates are user-invoked only; never run them automatically",
       "the repository test command has separate default and tech-docs Vitest lanes",
       "do not claim browser, build, external-service, or ship success without fresh evidence",
       "production filesystem writes remain read-only and unrelated resources remain unchanged",
@@ -224,7 +224,7 @@ const SKILL_METADATA: Readonly<Record<SkillCandidate, SkillMetadata>> = {
       "tests/vitest.tech-docs.config.ts",
       "package.json",
     ],
-    activationScope: "on-demand before done or ship claims; activation only after validation",
+    activationScope: "on-demand only after an explicit user request for tests or gates; activation only after validation",
     maintenanceRisk: "medium",
   },
   "fork-boundaries": {

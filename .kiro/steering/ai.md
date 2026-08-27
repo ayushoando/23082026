@@ -20,7 +20,8 @@ fileMatchPattern: "site/lib/ai/**,site/lib/ai/mastra/**,**/*advisor*,**/*mastra*
 - Vector embeddings stored in LanceDB; text index in Orama.
 - Keep AI logic server-side (`server-only`) except the panel UI and hook.
 
-## Fast checks (run on save)
+## Checks (user-invoked only)
+Run these static checks only when explicitly requested; do not run tests or gates automatically.
 ```
 pnpm run typecheck
 pnpm run lint
@@ -32,4 +33,4 @@ pnpm run lint
 - Use streaming responses for long completions to reduce perceived latency.
 
 ## Graph-layer integration
-When CAST Imaging is available, use `transactions_using_object` on AI entry points to map which user flows trigger LLM calls and ensure changes don't affect unrelated transactions.
+Use `node scripts/graph-impact.mjs --file=<changed-file>` to inspect affected import paths and user-relevant flows before optional validation. This repository graph replaces the retired CAST integration.

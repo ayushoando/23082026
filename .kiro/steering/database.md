@@ -19,7 +19,8 @@ fileMatchPattern: "site/platform/supabase/**,site/platform/drizzle/**,**/migrati
 - Grants AND policies must be included in migrations.
 - Staff/customer + furniture + descriptors → Admin. Marketing catalog → Products.
 
-## Fast checks (run on save)
+## Checks (user-invoked only)
+For an explicit migration or validation request, run the smallest applicable checks; do not run database commands automatically on save.
 ```
 pnpm run db:apply -- --dry
 pnpm run db:apply:admin -- --dry
@@ -32,4 +33,4 @@ pnpm run typecheck
 - Never use raw disk helpers in production code paths.
 
 ## Graph-layer integration
-When CAST Imaging is available, use `application_database_explorer` to inspect table/column impact before migrations. Use `data_graphs` to trace data flows through the affected tables.
+Use `node scripts/graph-impact.mjs --file=<changed-file>` to inspect affected imports before an explicit migration review. This repository graph replaces the retired CAST integration.

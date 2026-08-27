@@ -5,7 +5,7 @@ inclusion: manual
 # Graph Layer — ts-morph Import Graph (Layer 3)
 
 ## Overview
-A lightweight dependency graph built from the repo's TypeScript/CSS imports. Replaces CAST Imaging for impact analysis, scoped testing, and circular dependency detection.
+A lightweight dependency graph built from the repo's TypeScript/CSS imports. Replaces the retired external graph integration for impact analysis, scoped testing, and circular dependency detection.
 
 **Script:** `scripts/graph-impact.mjs`
 

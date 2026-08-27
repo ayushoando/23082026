@@ -4,7 +4,7 @@
 
 `site/focss/planner/dock.css` is imported twice from two different entry paths. Its rules must win over `dockview-react`'s base stylesheet, but nothing in the codebase guarantees that ordering. This spec makes the override order declared and deterministic for the Planner fork only.
 
-Reported symptom on `/ooplanner`: dock panels do not move (cannot be dragged or floated) and tab-bar icons are not arranged. Reported on both desktop and mobile, with no console errors and no visible response to clicks. The absence of console errors and the failure at 1920 together rule out the target-size and tap-floor defects recorded in [`agent-reports/css-static-audit-report.md`](../../agent-reports/css-static-audit-report.md); those only affect narrow viewports and would still respond at desktop width.
+Reported symptom on `/ooplanner`: dock panels do not move (cannot be dragged or floated) and tab-bar icons are not arranged. Reported on both desktop and mobile, with no console errors and no visible response to clicks. The absence of console errors and the failure at 1920 together rule out the target-size and tap-floor defects recorded in [`agent-reports/css-static-audit-report.md`](../css-static-audit-report.md); those only affect narrow viewports and would still respond at desktop width.
 
 ### Evidence
 

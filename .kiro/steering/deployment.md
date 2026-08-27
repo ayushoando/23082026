@@ -18,17 +18,18 @@ fileMatchPattern: "vercel.json,.vercelignore,workers/**,wrangler*,scripts/*deplo
 - Never push directly to production without passing `pnpm run gate`.
 - `.vercelignore` must exclude test artifacts, scripts, and agent reports.
 
-## Fast checks (run on save)
+## Checks (user-invoked only)
+For an explicit deployment check, run the applicable non-test build or worker command; do not run deployment checks automatically on save.
 ```
 pnpm run build:site
 pnpm run worker:dev (manual — long running)
 ```
 
 ## Pre-deploy checklist
-- [ ] `pnpm run gate` passes
+- [ ] User has explicitly requested the required gate and run it themselves
 - [ ] Migrations applied: `db:apply` + `db:apply:admin`
 - [ ] Worker deployed if changed: `worker:deploy`
 - [ ] R2 backup taken: `r2:backup`
 
 ## Observability integration
-Use Datadog power for post-deploy verification: check RUM for error spikes, traces for latency regressions.
+If an observability power is installed, use it only for explicit post-deploy verification; Datadog is limited to production observability.

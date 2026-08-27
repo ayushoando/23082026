@@ -7,7 +7,7 @@ import path from "node:path";
 const cssRoot = path.resolve("site/focss");
 const repoRoot = path.resolve(".");
 
-const packages = ["base", "features", "site", "admin", "planner"];
+const packages = ["base", "site", "admin", "planner", "studio"];
 
 function walk(d, acc = [], pred = () => true) {
   if (!fs.existsSync(d)) return acc;
@@ -101,11 +101,9 @@ walkRepo(repoRoot);
 // Build set of files that are entry points or imported
 const referenced = new Set();
 
-// Global / layout entries
+// Global / layout entries. Keep this list unique: it seeds the reachability walk.
 const entries = [
   "site/focss/site/entry.css",
-  "site/focss/admin/entry.css",
-  "site/focss/planner/entry.css",
   "site/focss/admin/entry.css",
   "site/focss/planner/entry.css",
   "site/focss/studio/entry.css",
@@ -113,6 +111,13 @@ const entries = [
   "tech-docs-generator/src/styles/index.css",
   "tech-docs-generator/src/index.css",
 ];
+
+// These are intentional non-zone roots: base/root.css is a structural contract,
+// while design-kit.css is loaded only by the /admin/design-kit route.
+const legitimateUnreachable = new Set([
+  "site/focss/base/root.css",
+  "site/focss/admin/components/design-kit.css",
+]);
 for (const e of entries) {
   const abs = path.resolve(e);
   if (fs.existsSync(abs)) referenced.add(path.normalize(abs));
@@ -172,7 +177,11 @@ for (const f of importers) {
     let m;
     while ((m = re.exec(t))) {
       const resolved = resolveImport(f, m[1]);
-      if (resolved && resolved.includes(`${path.sep}css${path.sep}`) && fs.existsSync(resolved)) {
+      if (
+        resolved &&
+        (resolved === cssRoot || resolved.startsWith(`${cssRoot}${path.sep}`)) &&
+        fs.existsSync(resolved)
+      ) {
         referenced.add(path.normalize(resolved));
       }
     }
@@ -200,13 +209,17 @@ while (queue.length) {
   }
 }
 
-// CSS modules imported from TSX are in referenced via @/app/css/
-// Also mark README as not relevant
+// Classify documented exceptions separately so the orphan report only contains
+// files with no route-local, structural, or transitive justification.
+const legitimateUnreachableFiles = [];
 const unreferenced = [];
 for (const f of allCss) {
+  const relative = rel(f);
   const n = path.normalize(f);
-  if (!referenced.has(n) && !seen.has(n)) {
-    unreferenced.push(rel(f));
+  if (legitimateUnreachable.has(relative)) {
+    legitimateUnreachableFiles.push(relative);
+  } else if (!referenced.has(n) && !seen.has(n)) {
+    unreferenced.push(relative);
   }
 }
 
@@ -220,7 +233,13 @@ console.log("=== BROKEN @import ===");
 console.log(broken.length ? JSON.stringify(broken, null, 2) : "none");
 console.log("\n=== STALE PATH REFS (code/tests, excl .archive/AsNeeded) ===");
 console.log(staleHits.length ? staleHits.map((h) => `${h.file} (${h.pattern})`).join("\n") : "none");
-console.log("\n=== UNREFERENCED CSS FILES ===");
+console.log("\n=== LEGITIMATE UNREACHABLE CSS FILES (allowlisted) ===");
+console.log(
+  legitimateUnreachableFiles.length
+    ? legitimateUnreachableFiles.join("\n")
+    : "none",
+);
+console.log("\n=== GENUINE UNREFERENCED CSS FILES ===");
 console.log(
   unreferenced.length
     ? unreferenced.join("\n")
@@ -234,6 +253,7 @@ console.log({
   broken: broken.length,
   staleHits: staleHits.length,
   unreferenced: unreferenced.length,
+  legitimateUnreachable: legitimateUnreachableFiles.length,
   referenced: referenced.size,
 });
 
