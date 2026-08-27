@@ -11,7 +11,7 @@
  *
  * Usage: node scripts/general/check-worker-origin.mjs [--probe /ooplanner/]
  *
- * Added 2026-08-07 (ops-deploy-plan.md #5).
+ * Added 2026-08-07 for operations verification.
  */
 import fs from "node:fs";
 import path from "node:path";

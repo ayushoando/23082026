@@ -101,7 +101,7 @@ export const VITEST_COMMON_EXCLUDE = [
   "**/public/**",
   "**/results/**",
   "scripts/**",
-  "**/Plans/**",
+  "../plans/**",
   "**/docs/**",
   "**/Agents/**",
   "**/generated-documents/**",

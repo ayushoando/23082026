@@ -63,7 +63,7 @@ const FORBIDDEN_FILES = [
 
 /**
  * Forbidden file-name patterns under `scripts/`. Sprawl guard for `tmp-`,
- * `_tmp-`, and `repush-*` helpers. Added 2026-08-07 per `testing-plan.md` scripts appendix.
+ * `_tmp-`, and `repush-*` helpers. Added 2026-08-07 per repository script-layout guidance.
  */
 const FORBIDDEN_SCRIPT_PATTERNS = [/^tmp-/, /^_tmp-/, /^repush-/];
 
@@ -276,7 +276,6 @@ const STALE_NAME_EXCLUDES = [
   ".websites",
   "results",
   "generated-documents",
-  "plans/Site/TECH-DOCS-GENERATOR.md",
   "scripts/general/check-repo-layout.mjs",
   "tech-docs-generator/scripts/output-contract.mjs",
   "tech-docs-generator/scripts/output-contract.d.mts",

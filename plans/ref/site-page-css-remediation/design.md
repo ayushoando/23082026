@@ -112,6 +112,47 @@ The 130 F findings are therefore a classification exercise. A required public fo
 - Keep decorative overflow separate from content overflow; each fix must identify the measured offending element.
 - Use semantic surface, text, type, spacing, and control tokens already owned by the zone.
 
+## 6A. Screenshot-derived design system
+
+The visual system is implemented as layered ownership, not as page-specific exceptions. It is the design realization of requirements `DR-01`, `DR-02`, `DR-03`, `DR-04`, `DR-05`, `DR-06`, `DR-07`, and `DR-08`, including the evidence-traceability requirement `DR-08`. The attached/reference screenshots establish the following composition rules.
+
+### 6A.1 Shell layering model
+
+| Layer | Owner | Responsibility | Must not do |
+|---|---|---|---|
+| Site header | `site/components/site/Header.tsx`, site chrome sheets | Desktop navigation, mobile header, search/menu controls | Must not own page-specific card spacing |
+| Mobile navigation | `site/components/site/MobileAppShell.tsx`, `site/app/(site)/layout.tsx`, `home-mobile.css`, shell sheets | Fixed bottom navigation, safe-area clearance, 40px navigation targets | Must not cover the final content/control or be duplicated by a page |
+| Public page content | Route page/view plus existing family sheet | Hero, cards, forms, product detail, legal/service content | Must not compensate for shell overlap with arbitrary bottom margins |
+| Floating actions | Existing AI/WhatsApp/site action owners | Fixed utility actions with non-overlapping placement | Must not cover primary CTA, form submit, or mobile navigation |
+| App workspace chrome | Admin, Planner, or Studio layout and its own FOCSS zone | Toolbars, docks, canvas, recovery/error surfaces | Must not import another fork's CSS |
+| Utility/error state | `OfflinePageView`, `ReloadButton`, existing error sheet | Centered offline/error card and recovery actions | Must not fabricate public marketing chrome or hide runtime errors |
+
+### 6A.2 Responsive layout contract
+
+1. **Desktop:** preserve the current header-to-hero relationship, hero/card alignment, and floating-action placement. The first fold must remain readable at 1920, 1440, and 1078.
+2. **Tablet:** at 768, control groups wrap or stack before text is made smaller. The layout must not create a horizontal scroll band to preserve a single row.
+3. **Mobile:** at 390, the page content has a shell-owned bottom clearance token based on the actual fixed navigation height and safe-area inset. Route sheets do not independently guess the clearance.
+4. **Interaction:** the target box is sized at the button/link/control owner; icon glyph size is not used as a substitute for hit-area size.
+5. **Typography:** labels, breadcrumbs, metadata, and utility copy use existing semantic type tokens. A below-11px measurement is changed only when it is not an intentional metadata style with a documented rationale.
+
+### 6A.3 Screenshot-to-owner map
+
+| Evidence | Design conclusion | Implementation owner | Closure evidence |
+|---|---|---|---|
+| 1920 homepage | Desktop header, hero, category cards, and floating actions form one aligned composition | `Header.tsx`, `homepage/*`, site chrome/shared sheets | 1920 fold screenshot with no visible overflow |
+| 390 homepage | Fixed bottom navigation currently covers the lower category card | `MobileAppShell.tsx`, `site/app/(site)/layout.tsx`, `home-mobile.css`/shell owner | 390 full screenshot with last card content visible above nav |
+| 390 login | Auth form is a full-width, vertically stacked mobile pattern | `AccessSignInView`, `shell-access.css`, shared controls | 390 screenshot with named fields and reachable sign-in action |
+| 390 product detail | PDP hierarchy is correct, but lower detail content is under fixed navigation and metadata is compact | `ProductViewer`, `pdp-detail.css`, `pdp-cta.css`, mobile shell | 390 full screenshot with complete detail content and usable thumbnails |
+| 390 Offline | Utility card is centered and actions are visually distinct | `OfflinePageView`, `error-page.css`, `ReloadButton` | 390 screenshot with both recovery actions visible |
+| Planner workspace | Error toast is visible but must not obstruct essential workspace controls | Planner runtime owner plus Planner `chrome.css`/`workspace*.css` | screenshot and runtime record showing recoverable, non-obstructive error state |
+
+### 6A.4 Change isolation and rollback
+
+- A shared shell or primitive change must be made in the owning zone first, then checked against every route family that consumes it.
+- A route sheet may override only layout context; it may not redefine the shared target, type, or token contract.
+- Markup, runtime, and audit-contract changes are separate task types and may not be closed by a CSS diff.
+- Each task records the before screenshot, after screenshot, changed owner, viewport, and finding code. If a shared change regresses a family, revert the narrow owner change rather than adding a compensating selector in another zone.
+
 ## 7. Execution waves
 
 ### Wave 0 — Evidence and shell contract

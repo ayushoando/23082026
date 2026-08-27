@@ -18,6 +18,58 @@ This is the implementation task plan for the 61-route audit. It does not impleme
 
 The five viewport columns are always `1920`, `1440`, `1078`, `768`, and `390`. The source audit is `results/site/page-audit-production-complete/audit-results.json`; route/source/dynamic evidence is `results/site/page-audit-production-complete/route-inventory.json`.
 
+## Task-control system
+
+This section is the execution board for the spec. The route matrix below is the coverage ledger; this board controls dependencies and prevents CSS work from hiding markup, runtime, contract, or owner-gap work.
+
+### Task states and required record
+
+- `[ ]` planned; `[~]` in progress; `[x]` complete; `[!]` blocked with a recorded reason.
+- Every task must name: requirement IDs, priority, dependency, zone, component owner, canonical file, route/viewports, evidence output, and closure condition.
+- A task is complete only when its code change (if any), evidence row, screenshot, and classification are recorded. A green aggregate count is not sufficient.
+- Runtime and markup tasks cannot be closed by a CSS-only change. Redirect and owner-gap tasks cannot be closed by inventing a component or stylesheet.
+
+### Execution board
+
+| ID | Requirement | Priority | Owner / zone | Depends on | Deliverable and closure condition | Status |
+|---|---|---:|---|---|---|---|
+| `SYS-001` | DR-08 | P0 | Audit owner / all zones | — | Freeze the 61-route × 5-viewport matrix, sampled paths, and evidence source. | [x] |
+| `SYS-002` | DR-01, DR-02, DR-05, DR-06 | P0 | Shell contract / Site, Admin, Planner, Studio | SYS-001 | Classify public, auth, workspace, app, utility, and redirect chrome before touching footer or bottom-nav CSS. | [ ] |
+| `CSS-001` | DR-02, DR-03, DR-07 | P0 | `MobileAppShell.tsx` / Site shell | SYS-002 | Reserve shell-owned bottom clearance and verify homepage, login, and product-detail 390px full captures have no content behind fixed navigation. | [ ] |
+| `CSS-002` | DR-03, DR-07 | P0 | Site shared controls | SYS-002 | Correct repeated site link/button/icon-control boxes in `buttons.css` and `mobile-tap-targets.css`; record before/after boxes at 768 and 390. | [ ] |
+| `M-001` | DR-07, DR-08 | P0 | Product catalog markup | SYS-001 | Name category/filter/sort/icon controls in the verified catalog components; recheck canonical and legacy sample paths. | [ ] |
+| `CSS-003` | DR-04, DR-07 | P1 | Product detail / site products zone | CSS-001, M-001 | Correct PDP breadcrumb/metadata rationale, thumbnails, actions, and mobile content clearance without changing the product hierarchy. | [ ] |
+| `CSS-004` | DR-01, DR-03 | P1 | Homepage/site family | CSS-001, CSS-002 | Preserve desktop hero/card composition and mobile card/floating-action separation; no new breakpoint or horizontal overflow. | [ ] |
+| `M-002` | DR-05 | P1 | Auth/access view | SYS-002 | Confirm labels/names and form semantics for the mobile login pattern; classify footer/header behavior as auth contract. | [ ] |
+| `R-001` | DR-06 | P0 | Planner project runtime | SYS-002 | Reproduce the authentication failure, assign the API/state owner, and keep the recovery/error surface non-obstructive. | [ ] |
+| `R-002` | DR-05 | P1 | Offline/PWA runtime | SYS-002 | Resolve or document the missing poster request; preserve the coherent offline card and its two actions. | [ ] |
+| `CSS-005` | DR-06, DR-07 | P1 | Planner fork | R-001 | Correct Planner toolbar/dock/workspace target boxes and error-surface placement in Planner files only. | [ ] |
+| `CSS-006` | DR-06, DR-07 | P1 | Studio fork | SYS-002 | Review Studio controls independently; do not satisfy Studio work through Planner imports or shared fork CSS. | [ ] |
+| `AC-001` | DR-08 | P0 | Route contract | SYS-002 | Classify all footer findings and redirect rows; update the audit contract where the shell is intentionally footerless. | [ ] |
+| `OG-001` | DR-08 | P1 | Calculator route owner | SYS-001 | Investigate both calculator routes and identify a real rendered owner before any CSS file is added. | [ ] |
+| `EVID-001` | DR-01–DR-08 | P0 | Audit owner / all zones | CSS-001, CSS-002, M-001, R-001, AC-001 | Re-run the complete browser matrix after implementation and produce per-route/per-viewport before/after evidence. | [ ] |
+
+### Task handoff template
+
+Copy this record for each implementation item:
+
+```text
+ID: CSS-### / M-### / R-### / AC-### / OG-###
+Requirement(s): DR-##
+Priority: P0 | P1 | P2
+Dependency: task ID or none
+Route pattern + audit path: ...
+Viewport(s): 1920 | 1440 | 1078 | 768 | 390
+Zone: Site | Admin | Planner | Studio
+Component owner: verified path/symbol
+Canonical owner: existing CSS/runtime/markup file
+Before finding: T | H | F | N | E | OK
+Change: ...
+Evidence: before screenshot, after screenshot, audit row
+Closure: measurable acceptance condition
+Status: [ ] | [~] | [x] | [!]
+```
+
 ## Wave 0 — Freeze evidence and ownership
 
 - [x] 0.1 Freeze the 61 route patterns and sampled paths from `route-inventory.json`; do not replace a dynamic pattern with only its sample URL.

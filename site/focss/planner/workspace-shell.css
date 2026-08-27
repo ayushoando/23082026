@@ -383,12 +383,16 @@
  * from sight and keyboard.
  */
 .ooplanner-root .workspace[data-load-state="loading"],
+.ooplanner-root .workspace[data-load-state="unauthorized"],
+.ooplanner-root .workspace[data-load-state="forbidden"],
 .ooplanner-root .workspace[data-load-state="not-found"],
 .ooplanner-root .workspace[data-load-state="transient-error"] {
   position: relative;
 }
 
 .ooplanner-root .workspace[data-load-state="loading"] > :not(.planner-load-state),
+.ooplanner-root .workspace[data-load-state="unauthorized"] > :not(.planner-load-state),
+.ooplanner-root .workspace[data-load-state="forbidden"] > :not(.planner-load-state),
 .ooplanner-root .workspace[data-load-state="not-found"] > :not(.planner-load-state),
 .ooplanner-root .workspace[data-load-state="transient-error"] > :not(.planner-load-state) {
   visibility: hidden;

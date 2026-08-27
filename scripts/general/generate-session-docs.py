@@ -2,9 +2,9 @@
 """Generate session docs: checklists, handovers, and implementation sub-plans.
 
 Usage:
-    python generate-session-docs.py --checklist > 08-oo-start-checklist.md
-    python generate-session-docs.py --handover  > handover-YYYY-MM-DD.md
-    python generate-session-docs.py --subplan testing > implementation_plan_sub_testing.md
+    python generate-session-docs.py --checklist > plans/08-oo-start-checklist.md
+    python generate-session-docs.py --handover  > plans/handover-YYYY-MM-DD.md
+    python generate-session-docs.py --subplan testing > plans/implementation_plan_sub_testing.md
 """
 
 import argparse
@@ -51,7 +51,7 @@ pnpm run p0:unit
 ## 4. Blockers & Plans
 
 - [ ] Read `Failures.md` -- know the active blockers
-- [ ] Read `plans/01-handover.md` -- understand last session state
+- [ ] Read `plans/README.md` -- understand the current coordination docs
 - [ ] Pick the relevant programme plan from `plans/`
 
 ## 5. Dev Server (if UI work)
@@ -150,8 +150,8 @@ HANDOVER = """# Handover -- Session Close
 
 1. Read this handover
 2. Read `Failures.md`
-3. Run Fast Gate from `08-oo-start-checklist.md`
-4. Pick programme plan from `plans/README.md`
+3. Run the checks listed in `AGENTS.md`
+4. Pick the programme plan from `plans/README.md`
 
 ---
 
@@ -169,7 +169,7 @@ SUBPLAN_TEMPLATE = """# Sub-plan: {target} Revisions
 
 ---
 
-*Sub-plan. Refer to `implementation_plan.md` for programme context.*
+*Sub-plan. Refer to `plans/PLAN.md` for programme context.*
 """
 
 

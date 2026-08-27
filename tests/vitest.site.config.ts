@@ -80,7 +80,7 @@ export default defineConfig({
       // `coverage.all` was removed in Vitest 4 — every file matching
       // `include` is instrumented by default. The option was silently ignored
       // here and type-errored under `typecheck:tests`.
-      // Site-logic scope (see plans/SITE-COVERAGE.md).
+      // Site-logic scope is defined by the include list below.
       include: [
         'features/site/data/**/*.{ts,tsx}',
         'lib/catalog/**/*.{ts,tsx}',
@@ -112,7 +112,7 @@ export default defineConfig({
         '**/results/**',
         '**/scripts/**',
         '**/tests/**',
-        '**/Plans/**',
+        '../plans/**',
         '**/docs/**',
         '**/Agents/**',
         '**/generated-documents/**',

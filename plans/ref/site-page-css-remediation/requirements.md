@@ -98,6 +98,50 @@ The plan may reference only existing canonical files listed in `design.md` and `
 ### R10 — Re-audit by route and viewport
 After implementation, the user must re-run the deterministic 61 × 5 browser audit and retain route, audit path, viewport, status, finding category, DOM target, owner, and screenshot evidence. Aggregate counts alone do not close this plan.
 
+## Screenshot-derived design requirements
+
+These requirements convert the reviewed browser screenshots into implementation contracts. They are separate from heuristic counts: a heuristic can create a task, but only the requirements below define the visual outcome that closes it.
+
+### DR-01 — Preserve the desktop composition
+At 1920, 1440, and 1078 CSS pixels, public pages must retain the existing One&Only composition: one usable header row, a readable hero, aligned content columns/cards, and visible floating actions without horizontal content clipping. The homepage reference is `results/site/page-audit-production-complete/w1920/root-fold.png`.
+
+**Acceptance:** the route retains `overflowPx <= 2` with no visible content element outside the viewport; the header, primary CTA/action, and first content section are visible in the fold capture; no page introduces a new breakpoint or duplicated shell.
+
+### DR-02 — Keep fixed mobile navigation out of content
+At 768 and 390 CSS pixels, the fixed `MobileAppShell` navigation must not cover page content, card labels, product descriptions, CTAs, or the last interactive control. The reviewed 390px homepage and product-detail screenshots show the current failure mode: the bottom navigation overlays content.
+
+**Acceptance:** the scrollable content container reserves clearance equal to the rendered mobile navigation height plus `env(safe-area-inset-bottom)` and the approved spacing token; the final content/control remains fully readable and reachable in full-page captures; the shell remains fixed and does not become an in-flow page element.
+
+### DR-03 — Keep mobile site composition readable
+At 390 CSS pixels, the site header, hero, category cards, floating actions, and bottom navigation must remain distinct layers. Cards may stack, but labels and primary actions must not be clipped, hidden behind floating controls, or forced into horizontal scrolling.
+
+**Acceptance:** homepage, login, product detail, and one representative public route each have a 390px fold/full screenshot with no horizontal overflow; all primary actions retain a 40px minimum interactive box; floating actions do not cover a primary CTA.
+
+### DR-04 — Preserve product-detail hierarchy on narrow screens
+The product-detail route must keep breadcrumbs, gallery, thumbnail controls, category return action, product name, and description in a readable sequence. The current screenshot shows the correct hierarchy but the lower detail content is covered by the fixed navigation and metadata is too compact.
+
+**Acceptance:** `ProductViewer`/detail controls use the existing PDP owners; breadcrumb and metadata labels use an approved token-level rationale; the gallery and thumbnail controls remain usable at 390px; the product description is not hidden beneath fixed chrome.
+
+### DR-05 — Keep auth and utility states actionable
+The login/auth screenshot establishes a full-width mobile form pattern: labeled fields, readable placeholder text, and a prominent sign-in action. The offline screenshot establishes a centered utility card with two distinct actions.
+
+**Acceptance:** at 390px, auth fields and primary actions are readable, have accessible names, and meet the target contract; offline actions fit without clipping or overlap; no public footer is fabricated for auth or Offline shells.
+
+### DR-06 — Keep application error states visible but non-obstructive
+The Planner screenshot shows a visible authentication failure toast. Runtime errors must remain observable and correctly owned, but the toast/error surface must not cover essential toolbar, canvas, dock, or recovery actions.
+
+**Acceptance:** Planner runtime failures are recorded against the Planner runtime owner; the error surface has an accessible name/announcement strategy and remains above or beside essential controls; CSS does not suppress the error or convert it into a false success state. Planner and Studio fixes remain fork-isolated.
+
+### DR-07 — Make repeated controls consistent by zone
+Repeated navigation, icon buttons, filters, thumbnails, form controls, and CTAs must meet the 40px interactive-target contract at 768 and 390 unless a documented exception is approved for a non-interactive decorative element. Accessible names are markup requirements; target sizing is a CSS/component requirement.
+
+**Acceptance:** each changed target records its DOM owner, measured box before/after, zone, and screenshot; the fix is made once at the narrowest shared owner and is not duplicated in route-local sheets.
+
+### DR-08 — Maintain route-level evidence traceability
+Every implementation task must map to a route pattern, sampled audit path, viewport, source page, direct component owner, canonical CSS/runtime/markup owner, finding code, and screenshot. Aggregate issue counts cannot close a task.
+
+**Acceptance:** the task matrix retains all 61 route patterns and all five viewport columns; each completed row links to before/after evidence; unresolved work is explicitly labeled `CSS`, `Markup`, `Runtime`, `Audit contract`, or `Owner gap`.
+
 ## Acceptance criteria
 - [ ] `tasks.md` contains all 61 route patterns from `route-inventory.json`.
 - [ ] The route matrix explicitly represents 1920, 1440, 1078, 768, and 390 for every route.

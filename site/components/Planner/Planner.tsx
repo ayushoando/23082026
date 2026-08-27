@@ -94,9 +94,12 @@ import {
   DRAFT,
   loadingState,
   readyState,
+  unauthorizedState,
+  forbiddenState,
   notFoundState,
   transientErrorState,
 } from "./plannerLoadState";
+import { buildAccessRedirect } from "@/lib/auth/plannerRedirect";
 import { PlannerProjectLoadState } from "./PlannerProjectLoadState";
 import { serializeFabricCanvas } from "@planner/lib/plannerFabricSerialize";
 import { useRuntimeFeatureFlags } from "@/lib/hooks/useRuntimeFeatureFlags";
@@ -136,7 +139,12 @@ const Planner = () => {
   const [loadState, setLoadState] = useState<PlannerLoadState>(DRAFT);
   const requestKeyRef = useRef<string>("");
   const [retryCount, setRetryCount] = useState(0);
-  const workspaceGated = loadState.kind === "loading" || loadState.kind === "not-found" || loadState.kind === "transient-error";
+  const workspaceGated =
+    loadState.kind === "loading" ||
+    loadState.kind === "unauthorized" ||
+    loadState.kind === "forbidden" ||
+    loadState.kind === "not-found" ||
+    loadState.kind === "transient-error";
   const firstPlacementRef = useRef(false);
   const [saving, setSaving] = useState(false);
   const [sheet, setSheet] = useState<PlannerSheet>(DEFAULT_SHEET);
@@ -1253,7 +1261,16 @@ const Planner = () => {
         // Stale — a newer request superseded this one.
         if (requestKeyRef.current !== key) return;
 
-        if (e instanceof PlannerApiError && e.isNotFound) {
+        if (e instanceof PlannerApiError && e.isUnauthorized) {
+          // 401 — the one failure mode a persisted audit artifact actually
+          // recorded (.kiro/specs/remediation-unified/audit.md D7). Never
+          // retryable and never a reason to clear the fallback key: being
+          // signed out says nothing about whether the project exists.
+          setLoadState(unauthorizedState(effectiveId!, e.detail || e.message));
+        } else if (e instanceof PlannerApiError && e.isForbidden) {
+          // 403 — also not retryable. Retain the fallback key.
+          setLoadState(forbiddenState(effectiveId!, e.detail || e.message));
+        } else if (e instanceof PlannerApiError && e.isNotFound) {
           setLoadState(notFoundState(effectiveId!, e.detail || e.message));
           // Clear stale localStorage fallback only — never clear when the
           // id came from the route (to avoid wiping an unrelated saved project).
@@ -1295,6 +1312,16 @@ const Planner = () => {
   const handleBackToProjects = useCallback(() => {
     router.push("/ooplanner/projects");
   }, [router]);
+
+  // Sign-in carries a return path to the requested project — a Try-again
+  // button on a 401 can never succeed, so unauthorized state offers this
+  // instead of retry. See .kiro/specs/remediation-unified/design.md §3.1.
+  const handleSignIn = useCallback(() => {
+    const returnPath = routeId
+      ? `/ooplanner/projects/${routeId}`
+      : "/ooplanner";
+    router.push(buildAccessRedirect(returnPath));
+  }, [router, routeId]);
 
   type PlannerShortcuts = {
     undo?: () => void;
@@ -1607,11 +1634,17 @@ const Planner = () => {
         onStepChange={applyPlannerStep}
         planMetrics={planMetrics}
       />
-    <div className="workspace" data-testid="planner-workspace" data-load-state={loadState.kind}>
+    <div
+      className="workspace"
+      data-testid="planner-workspace"
+      data-load-state={loadState.kind}
+      aria-busy={loadState.kind === "loading" ? "true" : undefined}
+    >
       {workspaceGated && (
         <PlannerProjectLoadState
           state={loadState}
           onRetry={handleRetry}
+          onSignIn={handleSignIn}
           onBackToProjects={handleBackToProjects}
         />
       )}

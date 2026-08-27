@@ -56,6 +56,8 @@ vi.mock("@planner/lib/plannerApi", () => ({
       this.status = status;
       this.detail = detail;
     }
+    get isUnauthorized() { return this.status === 401; }
+    get isForbidden() { return this.status === 403; }
     get isNotFound() { return this.status === 404; }
     get isTransient() { return this.status === 429 || this.status >= 500; }
   },
@@ -327,6 +329,50 @@ describe("Planner editor load-state integration", () => {
     expect(screen.getByRole("heading", { name: /plan not found/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /try again/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /back to projects/i })).toBeInTheDocument();
+  });
+
+  it("shows sign-in action (not retry) when getProject rejects with 401 — the state a persisted audit artifact actually recorded", async () => {
+    // .kiro/specs/remediation-unified/audit.md D7: the only Planner failure
+    // captured in results/site/page-audit-production-complete/audit-results.json
+    // for /ooplanner/projects/demo-plan/ is HTTP 401, not 404/429.
+    mockParams.current = { id: "demo-plan" };
+    const { PlannerApiError } = await import("@planner/lib/plannerApi");
+    mockGetProject.mockRejectedValue(
+      new PlannerApiError(401, "Authentication required", "Authentication required"),
+    );
+
+    render(<Planner />);
+
+    await waitFor(() => {
+      const workspace = screen.getByTestId("planner-workspace");
+      expect(workspace).toHaveAttribute("data-load-state", "unauthorized");
+    });
+    expect(screen.getByRole("heading", { name: /sign in required/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /^sign in$/i })).toBeInTheDocument();
+    // No "Try again" — a 401 cannot be resolved by repeating the same request.
+    expect(screen.queryByRole("button", { name: /try again/i })).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /^sign in$/i }));
+    expect(mockPush).toHaveBeenCalledWith(
+      expect.stringMatching(/^\/access\?next=/),
+    );
+  });
+
+  it("shows access-denied surface with no retry when getProject rejects with 403", async () => {
+    mockParams.current = { id: "p_forbidden" };
+    const { PlannerApiError } = await import("@planner/lib/plannerApi");
+    mockGetProject.mockRejectedValue(
+      new PlannerApiError(403, "Insufficient permissions", "Insufficient permissions"),
+    );
+
+    render(<Planner />);
+
+    await waitFor(() => {
+      const workspace = screen.getByTestId("planner-workspace");
+      expect(workspace).toHaveAttribute("data-load-state", "forbidden");
+    });
+    expect(screen.getByRole("heading", { name: /access denied/i })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /try again/i })).not.toBeInTheDocument();
   });
 
   it("shows transient-error and allows retry when getProject rejects with 503", async () => {

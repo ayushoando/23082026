@@ -238,6 +238,48 @@ describe("@planner/lib/plannerApi typed error classification and signal forwardi
     });
   });
 
+  describe("typed 401 classification", () => {
+    // The one failure mode a persisted audit artifact actually recorded for
+    // /ooplanner/projects/[id] (.kiro/specs/remediation-unified/audit.md D7):
+    // HTTP 401 with "Authentication required", not 404 or 429.
+    it("throws PlannerApiError with status 401, isUnauthorized true, isTransient/isNotFound false", async () => {
+      browserApiMocks.browserApiFetch.mockResolvedValueOnce(
+        jsonResponse({ error: { message: "Authentication required" } }, 401),
+      );
+      try {
+        await getProject("demo-plan");
+        expect.fail("should have thrown");
+      } catch (err) {
+        expect(err).toBeInstanceOf(PlannerApiError);
+        const apiErr = err as PlannerApiError;
+        expect(apiErr.status).toBe(401);
+        expect(apiErr.isUnauthorized).toBe(true);
+        expect(apiErr.isForbidden).toBe(false);
+        expect(apiErr.isNotFound).toBe(false);
+        expect(apiErr.isTransient).toBe(false);
+      }
+    });
+  });
+
+  describe("typed 403 classification", () => {
+    it("throws PlannerApiError with status 403, isForbidden true, isUnauthorized/isTransient false", async () => {
+      browserApiMocks.browserApiFetch.mockResolvedValueOnce(
+        jsonResponse({ detail: "Insufficient permissions" }, 403),
+      );
+      try {
+        await getProject("p_1");
+        expect.fail("should have thrown");
+      } catch (err) {
+        expect(err).toBeInstanceOf(PlannerApiError);
+        const apiErr = err as PlannerApiError;
+        expect(apiErr.status).toBe(403);
+        expect(apiErr.isForbidden).toBe(true);
+        expect(apiErr.isUnauthorized).toBe(false);
+        expect(apiErr.isTransient).toBe(false);
+      }
+    });
+  });
+
   describe("typed 429/503 classification", () => {
     it("throws PlannerApiError with status 429, isTransient true, isNotFound false", async () => {
       browserApiMocks.browserApiFetch.mockResolvedValueOnce(
