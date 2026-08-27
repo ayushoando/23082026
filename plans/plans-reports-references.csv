@@ -23,7 +23,7 @@ plan,requirements,Trusted By duplicate roster kicker — Bugfix requirements,pla
 plan,requirements,Site page CSS remediation — Requirements,.kiro/specs/site-page-css-remediation/requirements.md,.kiro/specs/site-page-css-remediation,Formal spec requirements
 plan,design,Site page CSS remediation — Design,.kiro/specs/site-page-css-remediation/design.md,.kiro/specs/site-page-css-remediation,Formal spec design
 plan,tasks,Site page CSS remediation — Tasks,.kiro/specs/site-page-css-remediation/tasks.md,.kiro/specs/site-page-css-remediation,Formal spec task list
-report,audit,CSS static audit report,plans/css-static-audit-report.md,plans,Static CSS audit
+report,audit,CSS static audit report,plans/focss-static-defects/css-static-audit-report.md,plans/focss-static-defects,Static CSS audit
 report,audit,Graph impact and fork boundary audit (2026-08-26),plans/graph-impact-fork-boundary-audit-2026-08-26.md,plans,Graph and Studio/Planner boundary audit
 report,baseline,Planner project-load defect baseline,plans/planner-project-load-defect-baseline.md,plans,Defect baseline
 report,execution-report,Planner remediation execution report,plans/planner-remediation-execution-report.md,plans,Remediation execution record

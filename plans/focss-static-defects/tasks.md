@@ -189,3 +189,7 @@ No task asserts a rendered box, computed font size, or screenshot comparison. Ev
 ### Verified false positives
 
 Recorded in task 0.4 so they are not re-opened. `chrome/index.css` does not double-import Tailwind — the apparent match is comment text describing the import order. The Planner/Studio entry divergence is pinned in `verify-focss-structure.mjs` lines 50-125 and is intentional, not drift.
+
+### Wave 3 execution notes
+
+Widened blast radius recorded: `base/animations.css` is reached by `base/index.css`, which site, admin, and studio entries all import. The reduced-motion reset now applies to Admin and Studio pages in addition to site pages. Planner does not import `base/index.css` and will not receive the reset. No import was added to work around this — Planner entry shape is pinned.

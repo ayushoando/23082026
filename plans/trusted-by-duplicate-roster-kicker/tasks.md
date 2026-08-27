@@ -38,11 +38,12 @@ No task may edit `site/app/(site)/trusted-by/page.tsx` because the current route
   - Point requirements, design, tasks, and bugfix rows at existing files under `plans/trusted-by-duplicate-roster-kicker/`.
   - Do not hand-edit or move generated `results/**` evidence.
 
-- [ ] 4. Execute the reconciled closeout with `/spec-task-runner` and `/oando-master`
+- [x] 4. Execute the reconciled closeout with `/spec-task-runner` and `/oando-master`
   - Inspect the route and focused-test invariants without modifying them.
   - Confirm the target plan/index paths and that no target source/test diff exists.
   - Run only non-test path-scoped checks, including `git diff --check` where appropriate.
   - Preserve unrelated dirty-tree changes.
+  - **Result:** `git diff --check` completed successfully for the target plan/index paths; the target plan artifacts and source/test status were reviewed; no source or test files changed; no tests, builds, browser checks, or gates were run.
   - Report changed files, commands, results, and blockers.
 
 - [ ] 5. User-invoked validation follow-up

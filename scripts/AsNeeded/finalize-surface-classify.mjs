@@ -50,7 +50,6 @@ const HYBRID_P0 = new Set([
 
 const KEEP_GROWTH_ONLY_LIVE = new Set([
   "site/components/chrome/app-shell.css",
-  "site/components/chrome/portal-svg-catalog.css",
   "site/components/chrome/shell-global-nav.css",
   "site/components/homepage/home-layout.css",
   "site/components/homepage/home-type.css",
