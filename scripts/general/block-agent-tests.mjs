@@ -40,14 +40,6 @@ function extractCommand(payload) {
   return candidates;
 }
 
-// User-ordered allow-path. When the repo owner explicitly wants agent-run tests,
-// they set ALLOW_AGENT_TESTS=1 in the environment. NOTE: this signal is not a
-// trusted user-vs-agent discriminator — anything that can set the env var can
-// bypass the guard. Kept opt-in and off by default.
-if (process.env.ALLOW_AGENT_TESTS === "1") {
-  process.exit(0);
-}
-
 const raw = readStdin();
 let payload = null;
 try {

@@ -46,23 +46,22 @@ Shows:
 ## Integration with other layers
 
 ### Static layer (PostFileSave hook)
-The hook runs domain-specific lint/typecheck on save. The graph layer adds *scoped test selection*:
-1. File saved → hook runs fast check
-2. If you want to also run tests → `node scripts/graph-impact.mjs --file=<saved-file>`
-3. Use the `suggestedTestCommand` from the output
+The hook runs domain-specific non-test checks on save. The graph layer adds *scoped impact analysis* and identifies the relevant user-invoked test command:
+1. File saved → hook runs the configured static check
+2. Inspect impact with `node scripts/graph-impact.mjs --file=<saved-file>` when needed
+3. Report the `suggestedTestCommand` to the user; never run tests or gates automatically
 
 ### Browser layer (Nova Act)
 Instead of testing all routes visually:
 1. Run `--file=<changed-component>` to see which pages import it
-2. Only test those routes at 4 viewports
+2. Only test those routes at 4 viewports when the user explicitly requests browser verification
 
 ### Loop pattern with graph
 ```
 edit file
-  → graph-impact --file=<file> (get blast radius)
-  → run suggestedTestCommand (scoped tests only)
-  → if fail: fix → re-run scoped tests (max 3 iterations)
-  → final: gate:fast
+  → graph-impact --file=<file> (inspect blast radius)
+  → report suggestedTestCommand for user invocation
+  → apply fixes and repeat only when the user requests validation
 ```
 
 ## Key metrics from this repo

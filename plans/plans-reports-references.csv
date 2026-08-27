@@ -1,0 +1,88 @@
+category,document_type,title,path,source_area,status_or_role
+plan,coordination-plan,Marketing i18n parity hardening,plans/PLAN.md,plans,Status: done (2026-08-25)
+plan,implementation-plan,"Powers, Hooks, MCP, and Tech-Docs Implementation Plan",plans/powers-hooks-mcp-html-plan.md,plans,Repository maintenance implementation plan
+plan,requirements,FOCSS static defects — Requirements,.kiro/specs/focss-static-defects/requirements.md,.kiro/specs/focss-static-defects,Formal spec requirements
+plan,design,FOCSS static defects — Design,.kiro/specs/focss-static-defects/design.md,.kiro/specs/focss-static-defects,Formal spec design
+plan,tasks,FOCSS static defects — Tasks,.kiro/specs/focss-static-defects/tasks.md,.kiro/specs/focss-static-defects,Formal spec task list
+plan,requirements,Kiro repository guidance setup — Requirements,.kiro/specs/kiro-repo-guidance-setup/requirements.md,.kiro/specs/kiro-repo-guidance-setup,Formal spec requirements
+plan,design,Kiro repository guidance setup — Design,.kiro/specs/kiro-repo-guidance-setup/design.md,.kiro/specs/kiro-repo-guidance-setup,Formal spec design
+plan,tasks,Kiro repository guidance setup — Tasks,.kiro/specs/kiro-repo-guidance-setup/tasks.md,.kiro/specs/kiro-repo-guidance-setup,Formal spec task list
+plan,requirements,Planner remediation — Requirements,.kiro/specs/planner-remediation/requirements.md,.kiro/specs/planner-remediation,Formal spec requirements
+plan,design,Planner remediation — Design,.kiro/specs/planner-remediation/design.md,.kiro/specs/planner-remediation,Formal spec design
+plan,tasks,Planner remediation — Tasks,.kiro/specs/planner-remediation/tasks.md,.kiro/specs/planner-remediation,Formal spec task list
+plan,requirements,Planner dock cascade — Requirements,.kiro/specs/planner-dock-cascade/requirements.md,.kiro/specs/planner-dock-cascade,Formal spec requirements
+plan,design,Planner dock cascade — Design,.kiro/specs/planner-dock-cascade/design.md,.kiro/specs/planner-dock-cascade,Formal spec design
+plan,tasks,Planner dock cascade — Tasks,.kiro/specs/planner-dock-cascade/tasks.md,.kiro/specs/planner-dock-cascade,Formal spec task list
+plan,requirements,Unified remediation — Requirements,.kiro/specs/remediation-unified/requirements.md,.kiro/specs/remediation-unified,Formal spec requirements
+plan,design,Unified remediation — Design,.kiro/specs/remediation-unified/design.md,.kiro/specs/remediation-unified,Formal spec design
+plan,tasks,Unified remediation — Tasks,.kiro/specs/remediation-unified/tasks.md,.kiro/specs/remediation-unified,Formal spec task list
+plan,requirements,Trusted By duplicate roster kicker — Requirements,.kiro/specs/trusted-by-duplicate-roster-kicker/requirements.md,.kiro/specs/trusted-by-duplicate-roster-kicker,Formal spec requirements
+plan,design,Trusted By duplicate roster kicker — Design,.kiro/specs/trusted-by-duplicate-roster-kicker/design.md,.kiro/specs/trusted-by-duplicate-roster-kicker,Formal spec design
+plan,tasks,Trusted By duplicate roster kicker — Tasks,.kiro/specs/trusted-by-duplicate-roster-kicker/tasks.md,.kiro/specs/trusted-by-duplicate-roster-kicker,Formal spec task list
+plan,requirements,Trusted By duplicate roster kicker — Bugfix requirements,.kiro/specs/trusted-by-duplicate-roster-kicker/bugfix.md,.kiro/specs/trusted-by-duplicate-roster-kicker,Bugfix requirements and analysis
+plan,requirements,Site page CSS remediation — Requirements,.kiro/specs/site-page-css-remediation/requirements.md,.kiro/specs/site-page-css-remediation,Formal spec requirements
+plan,design,Site page CSS remediation — Design,.kiro/specs/site-page-css-remediation/design.md,.kiro/specs/site-page-css-remediation,Formal spec design
+plan,tasks,Site page CSS remediation — Tasks,.kiro/specs/site-page-css-remediation/tasks.md,.kiro/specs/site-page-css-remediation,Formal spec task list
+report,audit,CSS static audit report,plans/css-static-audit-report.md,plans,Static CSS audit
+report,audit,Graph impact and fork boundary audit (2026-08-26),plans/graph-impact-fork-boundary-audit-2026-08-26.md,plans,Graph and Studio/Planner boundary audit
+report,baseline,Planner project-load defect baseline,plans/planner-project-load-defect-baseline.md,plans,Defect baseline
+report,execution-report,Planner remediation execution report,plans/planner-remediation-execution-report.md,plans,Remediation execution record
+report,visual-verification-report,Site visual verification report,plans/site-visual-verification-report.md,plans,Visual verification record
+report,audit,Unified remediation audit,.kiro/specs/remediation-unified/audit.md,.kiro/specs/remediation-unified,Spec evidence audit
+report,progress-report,Unified remediation progress report,.kiro/specs/remediation-unified/progress-report.md,.kiro/specs/remediation-unified,Audit follow-up and progress reconciliation
+reference,process-rules,Repository agent rules,AGENTS.md,root,Process floor and repository constraints
+reference,index,Repository contents index,CONTENTS.md,root,Document navigation index
+reference,documentation-map,Documentation map,DOC-MAP.md,root,Authority and document placement map
+reference,blockers,Blockers register,Failures.md,root,Open blockers only
+reference,handover,Handover,HANDOVER.md,root,Session and branch handover record
+reference,runbook,Operations runbook,OPERATIONS_RUNBOOK.md,root,Deploy migrate seed and rollback procedures
+reference,ownership,Code and document ownership map,owners.md,root,Ownership and playbook
+reference,readme,Project README,README.md,root,Product platform routes and checks
+reference,onboarding,Repository start guide,START.md,root,First-read onboarding guide
+reference,testing-handbook,Testing handbook,Testing-handbook.md,root,Testing workflow and conventions
+reference,plans-index,Plans index,plans/README.md,plans,Coordination and plan-document conventions
+reference,index,Documentation index,docs/README.md,docs,Durable documentation index
+reference,architecture,FOCSS architecture guide,docs/architecture/css.md,docs/architecture,Durable CSS architecture reference
+reference,architecture,Repository layout guide,docs/architecture/layout.md,docs/architecture,Directory and repository layout reference
+reference,architecture,Product map,docs/architecture/product-map.md,docs/architecture,Product placement and tech-docs reference
+reference,architecture,Routes reference,docs/architecture/routes.md,docs/architecture,Pages and API route reference
+reference,architecture,Stack reference,docs/architecture/stack.md,docs/architecture,Toolchain and framework reference
+reference,database,Drizzle wiring reference,docs/database/drizzle.md,docs/database,Database integration reference
+reference,database,Database operations reference,docs/database/ops.md,docs/database,Database modes seed and restore reference
+reference,database,Database schema reference,docs/database/schema.md,docs/database,Tables and RLS reference
+reference,governance,Governance benchmarks,docs/governance/benchmarks.md,docs/governance,Repository governance benchmarks
+reference,governance,Governance charter,docs/governance/charter.md,docs/governance,Repository governance charter
+reference,governance,FOCSS stop-drift guidance,docs/governance/focss-stop-drift.md,docs/governance,FOCSS debt and drift guidance
+reference,governance,Governance rules,docs/governance/rules.md,docs/governance,Repository governance and security rules
+reference,handbook,Standard agent handbook,Agents/01-standard.md,Agents,Standard session rules
+reference,handbook,Testing agent handbook,Agents/02-testing.md,Agents,Testing session rules
+reference,handbook,Browser agent handbook,Agents/03-browser.md,Agents,Browser workflow rules
+reference,handbook,Failures agent handbook,Agents/04-failures.md,Agents,Failure and blocker handling rules
+reference,handbook,Documentation agent handbook,Agents/05-documentation.md,Agents,Documentation workflow rules
+reference,handbook,Architecture agent handbook,Agents/06-architecture.md,Agents,Architecture workflow rules
+reference,handbook,CSS agent handbook,Agents/07-css.md,Agents,CSS workflow rules
+reference,index,Agent handbooks index,Agents/INDEX.md,Agents,Agent handbook navigation
+reference,research,Research gap areas,Agents/research-gap-areas.md,Agents,Research gaps and open context
+reference,research,Research practices,Agents/research-practices.md,Agents,Research methods and practices
+reference,handbook,Kiro workflow guide,Agents/kiro-workflow-guide/README.md,Agents/kiro-workflow-guide,Workflow guide reference
+reference,instruction,Studio and Planner boundary instructions,.github/instructions/boundaries.instructions.md,.github/instructions,JIT fork-boundary instructions
+reference,instruction,FOCSS CSS instructions,.github/instructions/focss.instructions.md,.github/instructions,JIT CSS instructions
+reference,instruction,Database migration instructions,.github/instructions/migrations.instructions.md,.github/instructions,JIT migration instructions
+reference,instruction,Testing instructions,.github/instructions/testing.instructions.md,.github/instructions,JIT testing instructions
+reference,steering,AI steering,.kiro/steering/ai.md,.kiro/steering,AI guidance
+reference,steering,API steering,.kiro/steering/api.md,.kiro/steering,API guidance
+reference,steering,Database steering,.kiro/steering/database.md,.kiro/steering,Database guidance
+reference,steering,Deployment steering,.kiro/steering/deployment.md,.kiro/steering,Deployment guidance
+reference,steering,Graph layer steering,.kiro/steering/graph-layer.md,.kiro/steering,Graph guidance
+reference,steering,LTM memory format steering,.kiro/steering/ltm-memory-format.md,.kiro/steering,Memory-format guidance
+reference,steering,LTM operations steering,.kiro/steering/ltm-operations.md,.kiro/steering,Memory-operations guidance
+reference,steering,Nova Act viewport steering,.kiro/steering/nova-act-viewport.md,.kiro/steering,Browser viewport guidance
+reference,steering,Planner and Studio steering,.kiro/steering/planner-studio.md,.kiro/steering,Fork-boundary guidance
+reference,steering,Powers skills model steering,.kiro/steering/powers-skills-model.md,.kiro/steering,Power and skill guidance
+reference,steering,SEO steering,.kiro/steering/seo.md,.kiro/steering,SEO guidance
+reference,steering,Testing steering,.kiro/steering/testing.md,.kiro/steering,Testing guidance
+reference,steering,UI CSS steering,.kiro/steering/ui-css.md,.kiro/steering,UI and CSS guidance
+reference,agent-config,Spec task runner,.kiro/agents/spec-task-runner.md,.kiro/agents,Spec task execution agent configuration
+reference,index,Agent reports pointer,agent-reports/README.md,agent-reports,Pointer and reporting conventions
+reference,readme,Tech-docs generator README,tech-docs-generator/README.md,tech-docs-generator,Inventory SPA documentation
+reference,index,Test inventory,tests/INVENTORY.md,tests,Test and evidence inventory

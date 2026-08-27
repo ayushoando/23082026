@@ -38,6 +38,7 @@ One graph query replaces reading dozens of files to find dependents.
 - Edge entry is `site/proxy.ts`, NOT `middleware.ts`.
 - Two databases: Admin (`rxzpznmxbaoxpikowmfc`) and Products (`erpweaiypimorcunaimz`).
 - `mcp/` = MCP tool schemas; `ltm/` = long-term memory working dir; both belong at root.
+- `plans/PLAN.md` and `plans/README.md` remain the active coordination entry points; relocated specifications and supporting plan/report references live under `plans/ref/`.
 - `site/data/storage/` is legacy — do not write there.
 
 ## Do not

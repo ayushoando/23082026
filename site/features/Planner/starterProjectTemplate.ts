@@ -6,9 +6,8 @@
  * plannerPersistenceMode (disk when DEV_AUTH_BYPASS=1, Supabase oando_plans otherwise).
  * Never use raw fs / disk helpers directly.
  *
- * Task path site/features/planner/starterProjectTemplate.ts (lowercase) is
- * satisfied on this case-insensitive filesystem as site/features/Planner/...
- * On case-sensitive CI the lowercase path resolves via tsconfig paths alias
- * or can be added as a redirect re-export if needed.
+ * Planner feature code is intentionally kept under the case-sensitive
+ * `features/Planner/` tree and exposed through the `@planner/*` aliases. Do not
+ * add a lowercase duplicate path.
  */
 export { buildStarterProjectPayload } from "@planner/lib/starterProjectTemplate";

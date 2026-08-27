@@ -8,6 +8,7 @@ import {
   writeCatalogEntry,
 } from "@planner/server/plannerStore";
 import { withAuth } from "@/features/shared/api/withAuth";
+import { getFurnitureCatalogMode } from "@/lib/catalog/furnitureCatalogMode";
 import { isOversizedUpload } from "@/lib/security/uploadLimits";
 
 /**
@@ -18,7 +19,9 @@ import { isOversizedUpload } from "@/lib/security/uploadLimits";
  */
 export const POST = withAuth(
   async (request) => {
-    await ensureStorageDirs();
+    if (getFurnitureCatalogMode() === "disk") {
+      await ensureStorageDirs();
+    }
     let form: FormData;
     try {
       form = await request.formData();

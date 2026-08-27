@@ -5,11 +5,11 @@ Agent note, not a handbook. Static source analysis only; no browser measurement 
 - **Date:** 2026-08-26
 - **Scope:** every `.css` file in the repo excluding `node_modules`, `.next`, `.tmp`
 - **Method:** file-content analysis plus a transitive `@import` reachability walk from the FOCSS zone entries
-- **Remediation spec:** [`plans/ref/focss-static-defects/`](../focss-static-defects)
+- **Remediation spec:** [`plans/ref/focss-static-defects/`](./focss-static-defects)
 
 ## Why this audit exists
 
-The 61-route audit behind [`site-page-css-remediation`](../site-page-css-remediation/tasks.md) measures rendered pages at five viewports. That method cannot see an undefined custom property, an unreachable stylesheet, a selector owned by two sheets, or a stylesheet tree that no entry imports. This audit covers only that class of defect. The two are complementary, not overlapping.
+The 61-route audit behind [`site-page-css-remediation`](./site-page-css-remediation/tasks.md) measures rendered pages at five viewports. That method cannot see an undefined custom property, an unreachable stylesheet, a selector owned by two sheets, or a stylesheet tree that no entry imports. This audit covers only that class of defect. The two are complementary, not overlapping.
 
 ## Inventory
 
@@ -95,7 +95,7 @@ Delete it; fix the size in the Admin ramp instead (finding 2).
 
 `site/focss/site/components/chrome/portal-svg-catalog.css`, 6,061 bytes. Unreachable from all four zone entries and imported by no TSX module. Its entire rule set already exists in `shell-portal.css` from roughly line 252 to 517 — same selectors, same declarations, same media queries at 640px, 768px, 1100px, and 390px.
 
-The only reference anywhere is a stale path in `scripts/AsNeeded/finalize-surface-classify.mjs` line 53 (`site/components/chrome/...`, missing the `focss/site/` segment, so it matches nothing). [`docs/guide/CODEBASE_REVIEW_REPORT.md`](../../docs/guide/CODEBASE_REVIEW_REPORT.md) line 172 already recommends deletion.
+The only reference anywhere is a stale path in `scripts/AsNeeded/finalize-surface-classify.mjs` line 53 (`site/components/chrome/...`, missing the `focss/site/` segment, so it matches nothing). [`docs/guide/CODEBASE_REVIEW_REPORT.md`](../docs/guide/CODEBASE_REVIEW_REPORT.md) line 172 already recommends deletion.
 
 The other two unreachable files are legitimate and must be left alone:
 
