@@ -82,16 +82,16 @@ No file under `site/lib/catalog/` is editable in this wave. There is no delete, 
 
 The decision record must contain decision maker, date, selected outcome, and follow-up plan identifier. Static-import absence alone never proves files are dead.
 
-## Wave 5 — User-owned static validation
+## Wave 5 — Explicitly authorized static validation
 
-The user may run these from the repository root after Wave 1 and the Wave 2/3 reconciliation tasks are accepted. Agents do not run them.
+These commands ran from the repository root on 2026-08-27 under explicit user authorization after `block-agent-tests` was disabled. They validate the current working tree before the still-pending Wave 1 edit; rerun the applicable checks after Wave 1 lands.
 
-- [ ] **5.1** `pnpm run verify:focss`
-- [ ] **5.2** `pnpm run check:style-tokens`
-- [ ] **5.3** `pnpm run lint:ui:strict`
-- [ ] **5.4** `pnpm run check:layout`
+- [x] **5.1** `pnpm run verify:focss` — passed. Import, site CSS, fence, module-import, and structure checks passed; structure reported 142 stylesheets.
+- [ ] **5.2** `pnpm run check:style-tokens` — failed, unrelated to this plan. The ratchet increased from `1 -> 3` in `site/components/home/Collections.tsx` and `5 -> 7` in `site/components/home/ShowcaseCarousel.tsx`, for a total `227 -> 231`. The two added animation arbitrary values in each component predate this plan and have no plan-owned source overlap. Do not run `--update`, change the baseline, or roll back R3-R5. Route a separate homepage-component remediation, then rerun this check.
+- [x] **5.3** `pnpm run lint:ui:strict` — passed: `lint-ui-contract: ok (scheme freeze)`.
+- [x] **5.4** `pnpm run check:layout` — passed: required workspace present, no nested installs, and no incorrect lock files.
 
-A failure blocks acceptance of the implicated change; preserve its output and apply the relevant atomic rollback before re-planning. A pass proves only the associated static contract, not rendered or viewport behavior. `pnpm run scan:boundaries` is excluded because this plan does not edit a fork.
+A failure blocks acceptance only of the implicated source change. The Wave 5 token failure does not implicate an R1-R5 plan hunk, so no plan rollback is authorized. Passing checks prove their associated static contracts, not rendered or viewport behavior. `pnpm run scan:boundaries` remains excluded because this plan does not edit a fork.
 
 ## Wave 6 — Local handoffs; no cross-plan mutation
 
@@ -105,5 +105,5 @@ A failure blocks acceptance of the implicated change; preserve its output and ap
 1. Wave 0 and Wave 1 are recorded against current source.
 2. Wave 2 and Wave 3 reconciliation tasks show no unsupported source hunk.
 3. Wave 4 has a dated explicit user decision, or an explicit unresolved state with no catalog mutation.
-4. The user has recorded Wave 5 results, or has explicitly left the plan unverified.
+4. Wave 5 results are recorded. After Wave 1 lands, rerun the applicable checks; final acceptance remains blocked until the separate homepage-component remediation resolves the `check:style-tokens` ratchet without raising its baseline.
 5. No task claims browser or rendered verification that did not occur.

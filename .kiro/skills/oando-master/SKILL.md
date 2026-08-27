@@ -5,48 +5,39 @@ description: Master router and completion contract for the oando1408 repo. Activ
 
 # oando Master Skill
 
-One entry point for work in this repo. Read this first; it routes you to the
-right detailed skill and defines when a task is finished. Authority order stays:
-user instruction > live code + fresh commands > `AGENTS.md` > `Agents/` > `docs/`.
+One entry point for work in this repo. Read this first; it routes work to the right detailed skill and defines completion. Authority order remains: current user instruction → live code + fresh commands → `AGENTS.md` → `Agents/` → `docs/`.
 
 ## Prime directive: finish the work
 
-Do the smallest sound change that meets the user's goal, prove it with the
-non-test checks below, then STOP and say it's done. Do not spin looking for extra
-certainty. A scoped, verified change is a real finish.
+Make the smallest sound change that meets the user's goal. Use the narrowest valid proof, retain exact evidence, and stop when the user’s acceptance criteria are met.
 
-## Hard rule: agents never run tests
+## Test and gate authorization
 
-Tests are user-driven. Agents MUST NOT run tests, gates, coverage, or any test
-suite — not `pnpm run test`, `pnpm run gate`, `pnpm run gate:fast`,
-`pnpm run release:gate`, `pnpm exec vitest`, `jest`, `playwright`,
-`test:coverage`, `test:a11y`, `test:audit`, nor any aggregate command that chains
-a test step. A PreToolUse hook (`block-agent-tests`) enforces this and will block
-such commands. If a change would normally be proven by tests, name the exact
-command and hand it to the user to run — do not run it yourself, and do not treat
-"tests not run" as an incomplete task.
+Tests, gates, coverage, browser-test runners, and test-like static checks are user-owned by default. An agent may execute one only when both conditions hold:
+
+1. The user explicitly authorizes that command in the current session.
+2. The active `block-agent-tests` PreToolUse hook permits execution.
+
+If the hook denies a command, do not retry, bypass, weaken, or remove the hook. Provide the exact command for the user to run. If authorization and hook permission exist, run the smallest applicable command, retain the complete result, and fix only failures within the requested scope.
 
 ## Step 1 — Route the task
 
-| The task is about... | Use this skill | Then the key command |
-|----------------------|----------------|----------------------|
-| Where does X live / orienting | `repo-map` | `node scripts/graph-impact.mjs --stats` |
-| Blast radius before editing shared code | `graph-impact` | `node scripts/graph-impact.mjs --file=<path>` |
-| CSS, tokens, Tailwind, `site/focss/**` | `focss-css` | `pnpm run verify:focss` |
-| Studio/Planner code, imports across forks | `fork-boundaries` | `pnpm run scan:boundaries` |
-| SQL, schema, migrations, choosing a DB | `db-migrations` | `pnpm run db:apply -- --dry` (or `:admin`) |
+| The task is about... | Use this skill | Typical validation |
+|----------------------|----------------|--------------------|
+| Where does X live / orienting | `repo-map` | graph inspection when needed |
+| Blast radius before editing shared code | `graph-impact` | graph-impact analysis |
+| CSS, tokens, Tailwind, `site/focss/**` | `focss-css` | `verify:focss`, token checks when authorized |
+| Studio/Planner code, imports across forks | `fork-boundaries` | `scan:boundaries` when authorized |
+| SQL, schema, migrations, choosing a DB | `db-migrations` | migration dry-run when authorized |
 
-If two rows apply, activate both skills. If none apply, this skill's completion
-contract still governs.
+If two rows apply, activate both skills. If none apply, this completion contract still governs.
 
-## Step 2 — Route to a power (only when the repo cannot answer)
+## Step 2 — Route to a power only when the repo cannot answer
 
-Prefer repo docs + `scripts/graph-impact.mjs` first. Reach for a power only when
-the repo genuinely cannot answer. The registry is the source of truth and may
-change; verify the installed name before using a power.
+Prefer repository documentation and local source first. The installed-power registry is the source of truth.
 
 | Need | Power |
-|------|-------|
+|---|---|
 | Repo-local workflow, fork boundaries, database routing | `oando-workflow` |
 | Complete design-system scaffolding | `design-system-power-builder` |
 | Exploratory human-like browser automation | `nova-act` |
@@ -59,44 +50,31 @@ change; verify the installed name before using a power.
 | Local project memory and recall | `ltm-power` |
 | AI code-review/security-review information | `cubic-code-review` |
 
-Only powers present in the current global installed-power registry may be
-activated. If a capability is not listed there, proceed without a power or ask
-the user to install one; never route to a removed or unavailable power.
+Activate only capabilities present in the current registry and only when necessary.
 
-Powers are gated by permissions; the "activate immediately" text in a power's
-own description is advertising, not an order. Activate only when the task needs it.
+## Step 3 — Validate in the permitted lane
 
-## Step 3 — Verify with non-test checks only
+Run the smallest check that proves the specific change. Non-test static inspection may proceed normally; test-like checks require the authorization conditions above.
 
-Run the SMALLEST checks that prove your specific change, in order. Stop at the
-first tier that covers the change. NONE of these are tests:
+1. Layout floor: `pnpm run check:layout`
+2. Area-specific checks:
+   - CSS: `pnpm run verify:focss`, `pnpm run check:style-tokens`
+   - Studio/Planner forks: `pnpm run scan:boundaries`
+   - Migrations: `pnpm run db:apply -- --dry` or `:admin`
+   - Types: `pnpm run typecheck`
+   - Lint: `pnpm run lint`
+3. Read the changed path and confirm it remains coherent.
 
-1. Layout floor (always, cheap): `pnpm run check:layout`
-2. Area-specific static checks for what you touched:
-   - CSS -> `pnpm run verify:focss`, `pnpm run check:style-tokens`
-   - Studio/Planner forks -> `pnpm run scan:boundaries`
-   - migration -> `pnpm run db:apply -- --dry` (or `:admin`) — no data change
-   - types -> `pnpm run typecheck`
-   - lint -> `pnpm run lint`
-3. Read the code path you changed and confirm it is coherent.
-
-Never add a test run to this loop. If proof genuinely requires tests, note the
-command for the user and move on.
+If a required test-like check is not currently authorized or permitted, state it precisely as pending user validation rather than inventing a pass.
 
 ## Step 4 — Declare done
 
-The task is complete when ALL of these hold:
-- The user's stated goal is met (re-read it).
-- The scope-appropriate non-test checks from Step 3 exit 0, and you saw output.
-- Studio/Planner boundary intact if you touched either fork.
-- No new blocker introduced; if one is, record it in root `Failures.md` with a
-  repro command, then the task is "blocked", not "in progress forever".
+The task is complete when all applicable conditions hold:
 
-When these hold: state what you did, which non-test checks proved it, name any
-test command the user may want to run, and STOP. Not running tests is correct —
-it is the user's call, not a gap in your work.
+- The user's stated goal is met.
+- Every required permitted validation command has an observed result.
+- Any validation failure is fixed within scope or explicitly identified as an unrelated blocker with evidence.
+- Studio/Planner boundaries remain intact if either fork changed.
+- No blocker was introduced; record a true blocker in root `Failures.md` with a repro command.
 
-## Honesty floor
-Don't claim tests passed — you don't run them. Don't claim a change is verified
-beyond the non-test checks you actually ran. Repo root, `pnpm` only, UI on
-`http://localhost:3000`.
+Report what changed, the exact validation outcomes, and any user-owned command still pending. Never claim a test passed when it did not run, and never claim rendered behavior from static evidence alone. Repo root and `pnpm` only; UI uses `http://localhost:3000`.

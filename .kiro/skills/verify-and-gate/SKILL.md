@@ -1,17 +1,13 @@
 ﻿---
 name: verify-and-gate
-description: User-invoked test and gate sequence for this repo. The user runs these commands. Agents must never run them on their own. Use only when the user explicitly asks to run tests or gates.
+description: Explicit-user-authorized test and gate workflow for this repo. Use only when the user explicitly asks to run tests or gates and the active hook permits execution.
 ---
 
 # Verify and Gate
 
-USER-INVOKED ONLY. The user runs tests and gates. Agents must not.
-The `block-agent-tests` hook blocks agent test-like shell commands, including gates,
-coverage, and browser-test runners. Its PreToolUse payload does not expose a
-trusted user-invocation or skill-activation signal, so the exception cannot be
-represented safely; preserve the unconditional hard block and tell the user the
-exact command to run themselves.
-Authority: root `AGENTS.md` and `Testing-handbook.md` win over this skill.
+USER-EXPLICIT AUTHORIZATION REQUIRED. By default, users run tests and gates themselves. An agent may execute a test-like command only when the user explicitly authorizes that command in the current session **and** the active `block-agent-tests` hook permits it. If the hook denies a command, do not retry or bypass it; provide the exact command for the user instead.
+
+Authority: the current user instruction, active hook state, root `AGENTS.md`, and `Testing-handbook.md` govern execution.
 
 ## Sequence (dev loop)
 1. Focused tests first:

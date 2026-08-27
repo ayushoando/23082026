@@ -125,4 +125,4 @@ The scope is the eighteen sheets below `site/lib/catalog/styles/` and `site/lib/
 - Cross-plan facts are preserved in the local [handoffs.md](./handoffs.md); this plan does not edit another plan's tasks.
 - The Admin ramp, fork control density, and image-wrapper duplication are handoffs, not implementation tasks here.
 - No raw color, inline color, duplicate token concept, foreign-zone import, `core/`, `core/locked/`, `features/product/`, or root-level `focss/` directory may be introduced.
-- Agents do not run tests, gates, browser suites, builds, or test-like commands. User-run static checks are listed in [tasks.md](./tasks.md).
+- Test-like commands require current-session, explicit user authorization and a hook state that permits execution. Without both, agents provide the commands for the user to run. The authorized Wave 5 results and rerun requirement are recorded in [tasks.md](./tasks.md).

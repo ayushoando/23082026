@@ -121,4 +121,4 @@ All properties are static. Viewport or rendered confirmation is outside this pla
 
 ## Verification design
 
-Agents do not run tests, gates, browsers, builds, or test-like commands. After R1/R2 and source reconciliation, the user may run the exact static commands in [tasks.md](./tasks.md). Passing them validates their respective repository contracts only; it does not establish rendered or viewport outcomes.
+Test-like commands require current-session, explicit user authorization and a hook state that permits execution. Without both, the commands remain user-owned. Wave 5 ran under explicit authorization before the still-pending R1/R2 edit: layout, FOCSS structure, and strict UI lint passed; style-token validation failed on a pre-existing, out-of-scope homepage-component ratchet. The exact results and required rerun are in [tasks.md](./tasks.md). Passing static checks validates their respective repository contracts only; it does not establish rendered or viewport outcomes.

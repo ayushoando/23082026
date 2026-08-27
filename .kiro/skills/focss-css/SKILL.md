@@ -21,6 +21,8 @@ FOCSS is a semantic-token layer ON TOP OF Tailwind v4, not a replacement.
 - Icons: each app's `PhIcon` + `phIconMap` (Phosphor). No inline SVG, no Lucide.
 
 ## Verify (repo root)
+
+Run only with current-session, explicit user authorization and when the active hook permits execution:
 `pnpm run verify:focss` · `pnpm run lint:ui:strict` · `pnpm run check:style-tokens`
 
-Detail: `docs/architecture/css.md`, `.github/instructions/focss.instructions.md`.
+Without both conditions, provide these commands to the user instead. Detail: `docs/architecture/css.md`, `.github/instructions/focss.instructions.md`.

@@ -79,6 +79,8 @@ The catalog CSS set contains duplicate primitive declarations and raw literals. 
 - Planner/Studio control density is a product-policy decision, not a mechanical change here.
 - Repeated Next image-wrapper overrides are deferred because consolidation crosses page ownership without established behavior gain.
 
-## Unverified items
+## Verification results and remaining limits
 
-No browser measurement, computed-style inspection, build, test, gate, or static repository command was run by the agent. User-owned validation commands are listed in [tasks](./tasks.md).
+Under explicit user authorization on 2026-08-27, `pnpm run check:layout`, `pnpm run verify:focss`, and `pnpm run lint:ui:strict` passed. `pnpm run check:style-tokens` failed on two pre-existing homepage TSX ratchet increases that are unrelated to this plan; the baseline must not be raised to silence them. The full command output and disposition are recorded in [tasks](./tasks.md).
+
+No browser measurement, computed-style inspection, or viewport verification occurred. The pending R1/R2 edit requires a relevant static-check rerun after it lands.
