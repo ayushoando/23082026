@@ -62,15 +62,16 @@ licensing compliance.
 - Check the installed-power registry directly before naming or activating an
   external power. A schema directory or prose reference is not installation
   evidence.
-- Repository tests and gates are user-owned. The current `block-agent-tests`
-  hook is disabled and uses `PostTaskExec`, so it provides no pre-execution
-  enforcement. Do not describe it as an enabled `PreToolUse` blocker unless the
-  live hook is repaired and re-inspected.
+- Repository tests and gates are user-owned. The enabled `block-agent-tests`
+  hook uses `PreToolUse` for agent shell tools and invokes
+  `.kiro/hooks/block-agent-tests.mjs`, so prohibited commands are blocked before
+  execution. Do not retry, bypass, weaken, or remove a denial.
 
 ## Kiro configuration boundary
 
-- Repository Kiro configuration normally belongs under `.kiro/`.
-- Use another path only when current repository authority or an approved spec
-  explicitly assigns a supporting implementation or harness file there, such as
-  `scripts/general/block-agent-tests.mjs`.
-- Do not create competing Kiro guidance outside the authorized path set.
+- Repository Kiro configuration and supporting Kiro implementation belong under
+  the repository-root `.kiro/` directory.
+- Referenced application, test, authority, plan, documentation, and infrastructure
+  files remain at their established repository paths; referencing them does not
+  make them Kiro-owned.
+- Do not create competing Kiro guidance or implementation outside `.kiro/`.

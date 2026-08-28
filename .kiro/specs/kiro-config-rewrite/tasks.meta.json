@@ -1072,6 +1072,11 @@
         "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
         "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
         "timestamp": 1787924752633
+      },
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787925427415
       }
     ],
     "4.8 Delete `scripts/kiro-repo-guidance-setup/**` only after 4.2–4.7 succeed.": [
@@ -1079,6 +1084,16 @@
         "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
         "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
         "timestamp": 1787923522089
+      },
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787925438332
+      },
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787925645352
       }
     ],
     "4.9 Enumerate tracked root MCP schema relative paths for chrome-devtools, cloudflare-docs, github, and tasks; preflight `.kiro/mcp` collisions.": [
@@ -1086,6 +1101,11 @@
         "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
         "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
         "timestamp": 1787923522208
+      },
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787925660238
       }
     ],
     "4.10 Copy tracked schemas to `.kiro/mcp/<name>/**`, preserving path sets and bytes/hashes; do not copy Datadog cache, secrets, or generated local state.": [

@@ -18,11 +18,10 @@ Tests, gates, coverage, browser-test runners, and test-like static checks are us
 1. The user explicitly authorizes that command in the current session.
 2. An enabled pre-execution `block-agent-tests` hook permits the tool call.
 
-The current live hook is disabled and uses `PostTaskExec`, so it provides no
-pre-execution enforcement and does not satisfy the second condition. Do not claim
-that it blocked or permitted a command. If a future repaired hook denies a
-command, do not retry, bypass, weaken, or remove it; provide the exact command for
-the user to run.
+The current live hook is enabled and uses `PreToolUse` for `execute_pwsh` and
+`control_pwsh_process`, so it enforces the second condition before agent shell
+execution. If the hook denies a command, do not retry, bypass, weaken, or remove
+it; provide the exact command for the user to run directly instead.
 
 ## Step 1 — Route the task
 

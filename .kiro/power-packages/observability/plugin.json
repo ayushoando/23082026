@@ -1,0 +1,17 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "observability",
+  "version": "1.0.0",
+  "description": "Routes OandO observability work through OpenTelemetry, Prometheus, Grafana, client-error reporting, and blocker evidence.",
+  "author": {
+    "name": "OandO workspace"
+  },
+  "keywords": [
+    "observability",
+    "opentelemetry",
+    "prometheus",
+    "grafana",
+    "metrics",
+    "client errors"
+  ]
+}

@@ -1,19 +1,26 @@
 ﻿# OandO Workflow — routing detail
 
-Loaded on demand when the OandO Workflow power is active.
+Loaded on demand with the OandO Workflow power.
 
-## The loop for any code change
-1. `node scripts/graph-impact.mjs --file=<changed-file>` — inspect blast radius and note the `suggestedTestCommand`; do not run it automatically.
-2. Tests, coverage, browser-test runners, and gates are user-invoked only. Report the exact suggested command to the user instead of executing it.
-3. For explicit non-test verification, use the smallest relevant repository check: `pnpm run scan:boundaries` for Studio/Planner, `pnpm run verify:focss` plus `pnpm run lint:ui:strict` for CSS/FOCSS, and the applicable type or migration check for other domains.
-4. Interactive/visual claims require an explicitly requested browser check through `nova-act` or `kane-cli`, using `http://localhost:3000` only.
+## Routing loop
 
-## Power vs skill (why routing is one-directional)
-- A power is active (owns MCP + activation). A skill is passive markdown.
-- The power/agent DRAWS ON skills for procedure; skills never call MCP themselves.
-- Activation is gated by `~/.kiro/settings/permissions.yaml` (`power:` allowlist).
+1. Read `AGENTS.md`, the relevant live source, and repository guidance before changing files.
+2. Use `repo-map` for location and `graph-impact` when shared-code blast radius matters.
+3. Route Studio/Planner, FOCSS, migration, and planning work to their focused skills.
+4. Route observability, analytics, and security work to the corresponding local power.
+5. Keep tests, typechecks, gates, coverage, builds, browser checks/runners, and local services owner-authorized. The enabled `.kiro/hooks/block-agent-tests.json` hook blocks prohibited agent shell calls before execution.
+6. Use static inspection only for claims it can prove; never turn it into a behavioral pass.
 
-## Two databases (for db work)
-Admin `rxzpznmxbaoxpikowmfc` (plans/staff/furniture/descriptors/audit) vs Products
-`erpweaiypimorcunaimz` (marketing catalog/configurator/flags/themes). Confirm which
-before any supabase-hosted power operation.
+## Capability status
+
+- **wired:** live source/configuration is invoked or mounted.
+- **present but unmounted:** package/component exists without live invocation.
+- **schema present:** a snapshot exists under `.kiro/mcp/**`.
+- **workspace configured:** `.kiro/settings/mcp.json` contains a server entry.
+- **runtime installed:** direct registry evidence confirms availability.
+
+An empty workspace `mcpServers` object proves only that no server is configured in this workspace. Without a direct registry check, runtime availability is not verified.
+
+## Database boundary
+
+Admin `rxzpznmxbaoxpikowmfc` owns plans, profiles, handoffs, teams, price books, queries, audit, furniture, and descriptors. Products `erpweaiypimorcunaimz` owns marketing catalog, configurator, flags, and themes. Confirm the owner database before migration work.

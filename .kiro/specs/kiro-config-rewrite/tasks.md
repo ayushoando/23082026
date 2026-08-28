@@ -50,9 +50,9 @@ Agents B–D may run concurrently. Agent A inspects but does not edit active wor
   - [x] 4.4 Restore/retain canonical imports, manifests, contracts, freeze data, and command/path fixtures that identify `.kiro/kiro-repo-guidance-setup/**`.
   - [x] 4.5 Confirm `tests/vitest.shared.ts` and `tests/tsconfig.json` already target `.kiro`; leave both unchanged.
   - [x] 4.6 Create `.kiro/kiro-repo-guidance-setup/README.md` describing canonical status and reversed relocation.
-  - [-] 4.7 Record the governance reconciliation ledger and verify canonical counts/references.
-  - [~] 4.8 Delete `scripts/kiro-repo-guidance-setup/**` only after 4.2–4.7 succeed.
-  - [~] 4.9 Enumerate tracked root MCP schema relative paths for chrome-devtools, cloudflare-docs, github, and tasks; preflight `.kiro/mcp` collisions.
+  - [x] 4.7 Record the governance reconciliation ledger and verify canonical counts/references.
+  - [x] 4.8 Delete `scripts/kiro-repo-guidance-setup/**` only after 4.2–4.7 succeed.
+  - [x] 4.9 Enumerate tracked root MCP schema relative paths for chrome-devtools, cloudflare-docs, github, and tasks; preflight `.kiro/mcp` collisions.
   - [~] 4.10 Copy tracked schemas to `.kiro/mcp/<name>/**`, preserving path sets and bytes/hashes; do not copy Datadog cache, secrets, or generated local state.
   - [~] 4.11 Delete the tracked root MCP schema copies only after parity, then verify active Kiro references use `.kiro/mcp/**`.
   - _Requirements: 1.1–1.6, 4.1–4.9, 6.2–6.5_

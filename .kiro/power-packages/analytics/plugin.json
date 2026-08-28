@@ -1,0 +1,17 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "analytics",
+  "version": "1.0.0",
+  "description": "Routes OandO analytics work through consent gating, the event queue, conversion contracts, and KPI telemetry.",
+  "author": {
+    "name": "OandO workspace"
+  },
+  "keywords": [
+    "analytics",
+    "consent",
+    "events",
+    "conversion",
+    "kpi",
+    "speed insights"
+  ]
+}

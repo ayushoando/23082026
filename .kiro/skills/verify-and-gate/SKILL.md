@@ -5,7 +5,7 @@ description: Explicit-user-authorized test and gate workflow for this repo. Use 
 
 # Verify and Gate
 
-USER-EXPLICIT AUTHORIZATION REQUIRED. By default, users run tests and gates themselves. An agent may execute a test-like command only when the user explicitly authorizes that command in the current session **and** an enabled pre-execution `block-agent-tests` hook permits it. The current live hook is disabled and uses `PostTaskExec`, so it does not provide that permission or pre-execution enforcement. If a future repaired hook denies a command, do not retry or bypass it; provide the exact command for the user instead.
+USER-EXPLICIT AUTHORIZATION REQUIRED. By default, users run tests and gates themselves. An agent may execute a test-like command only when the user explicitly authorizes that command in the current session **and** the enabled pre-execution `block-agent-tests` hook permits it. The live hook uses `PreToolUse` for agent shell tools and invokes `.kiro/hooks/block-agent-tests.mjs`. If it denies a command, do not retry, bypass, weaken, or remove it; provide the exact command for the user instead.
 
 Authority: the current user instruction, live hook state, root `AGENTS.md`, and `Testing-handbook.md` govern execution.
 

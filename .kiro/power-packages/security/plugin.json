@@ -1,0 +1,18 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "security",
+  "version": "1.0.0",
+  "description": "Routes OandO security work through edge prechecks, server sessions, API authorization, input controls, and owner-executed audits.",
+  "author": {
+    "name": "OandO workspace"
+  },
+  "keywords": [
+    "security",
+    "auth",
+    "session",
+    "csrf",
+    "uploads",
+    "rate limit",
+    "secrets"
+  ]
+}

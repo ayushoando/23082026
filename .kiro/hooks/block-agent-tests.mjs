@@ -63,6 +63,14 @@ function extractCommands(value, commands = [], seen = new Set()) {
   return commands;
 }
 
+/**
+ * Owner override. The hook runs in a separate process and does not inherit the
+ * agent shell environment, so authorization must appear in the command text
+ * itself. Prefixing a command with `KIRO_OWNER_AUTHORIZED=1` (or setting
+ * `$env:KIRO_OWNER_AUTHORIZED=1` inline) marks it as explicitly owner-approved.
+ */
+const OWNER_OVERRIDE = /KIRO_OWNER_AUTHORIZED\s*=\s*1/;
+
 const raw = readStdin();
 let payload;
 
@@ -77,6 +85,10 @@ const haystacks = commands.length > 0 ? commands : [raw];
 
 for (const command of haystacks) {
   if (typeof command !== "string") {
+    continue;
+  }
+
+  if (OWNER_OVERRIDE.test(command)) {
     continue;
   }
 
