@@ -44,6 +44,7 @@ allowBuilds:
   core-js: true
   # postinstall places the platform binary; esbuild cannot run without it
   esbuild: true
+  onnxruntime-node: true
   protobufjs: true
   sharp: true
   workerd: true
