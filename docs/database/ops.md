@@ -1,6 +1,10 @@
-# Database ops
+# Database operations
 
-Code + migrations under `site/platform/` win when this lags. Schema: [`schema.md`](./schema.md). Wiring: [`drizzle.md`](./drizzle.md). Deploy: [`../../OPERATIONS_RUNBOOK.md`](../../OPERATIONS_RUNBOOK.md).
+Use this guide to seed, inspect, back up, restore, and troubleshoot the two database projects. Prerequisites are repository-root execution, access to the intended environment, server-only variables in `.env.local`, a verified target project, and explicit current-session authorization for every test-like or production-affecting command.
+
+**Warning — data impact:** migration apply, seed, restore, and maintenance operations can change or replace hosted data. Run the owning migration dry-run first, verify a recoverable backup, confirm Products versus Admin ownership, and identify the rollback or provider recovery path before executing a live step.
+
+Canonical references: [database schema](./schema.md), [Drizzle and database access](./drizzle.md), and the [operations runbook](../../OPERATIONS_RUNBOOK.md).
 
 ## Two projects
 
@@ -77,7 +81,7 @@ Idempotent rows into `planner_managed_products` (requires table from migrations)
 - Seed art is inline SVG, stored as a `data:` URL so the row needs no bucket
   round-trip. Studio/Planner uploads go to `catalog-assets` instead.
 
-**Run this once per environment after `ops db:apply`.** The disk seeder
+**Run this once per environment after `pnpm run db:apply:admin -- --dry` and the reviewed Admin apply.** The disk seeder
 (`ensureFurnitureSeeded`) is disk-mode only — a GET handler must not write, and
 production's filesystem is read-only, so nothing seeds itself there.
 
@@ -174,7 +178,7 @@ A restored dump predating 2026-08-01 will still have the retired tables in
 
 ## 4. Quarterly restore drill
 
-Staging Supabase → restore R2 dumps → preview Vercel → `db:test` + smoke catalog/planner guest → verify PNG pointers and Storage objects → log in `Failures.md`.
+Restore R2 dumps to staging Supabase, deploy a preview, run only authorized database and browser checks, verify PNG pointers and Storage objects, and store plan-owned evidence with the active plan. Record only a genuine unresolved hard blocker in [`Failures.md`](../../Failures.md).
 
 ## 5. Maintenance mode
 

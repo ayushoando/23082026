@@ -1,12 +1,8 @@
-# Programme Charter — Locked Decisions and Baseline
+# Programme charter and historical decisions
 
-> **Control document: [`rules.md`](./rules.md).** It owns the goals, the execution
-> order, the status ledger and the exit gates. This file owns the **locked decisions**,
-> the configuration envelope, the storage shape and the baseline task. Where the two
-> appear to disagree on order or status, `rules.md` wins.
+This document preserves programme decisions and their original configuration envelope. It is not the active execution plan or proof that every decision still matches the live product; current user instructions, live source, the [process floor](../../AGENTS.md), and the [active planning index](../../plans/README.md) take precedence.
 
-> **For agentic workers:** work task-by-task; steps use checkbox (`- [ ]`) syntax
-> for tracking. Root `AGENTS.md` and `Agents/*.md` bind regardless.
+> **Status:** historical governance with selected still-applicable constraints. Verify every package, path, route, and implementation claim before using it for new work. The [programme rules](./rules.md) own enforceable governance that remains current.
 
 **Goal:** Product Studio and Planner reach the eight measured targets in
 [`rules.md` §10](./rules.md#10-programme-goals) — publish integrity, no dead capability,
@@ -16,7 +12,7 @@ decisions locked below.
 
 **Architecture (live fork):** Furniture Studio (`/oostudio`) and Floor Planner (`/ooplanner`) are forked trees with **dockview-react** shells and Fabric 2D (no in-app Three.js as of 2026-08-03). Residual Oando marketing + admin remain under `app/(site)` and `app/admin`. FOCSS owns visual tokens; shadcn/Radix is admin product chrome. Plan-symbol contract code lives at `site/lib/catalog/planSymbolPngContract.ts` when used.
 
-**Tech Stack (declared / used):** Next.js 16.3.1, React 19.2, TypeScript 7, Zod, Fabric, dockview-react, Zustand, React Hook Form, shadcn/Radix (admin), React Aria Components (forked app UI), FOCSS, Phosphor, Supabase/Postgres + Drizzle, Sharp, Mastra core/LanceDB/Orama (AI residual), Vitest, Playwright (`config/build/playwright.config.ts` present). Install/scripts: **pnpm 11** from repo root only.
+**Configured stack snapshot:** Current root manifest values include Next.js 16.3.3, React 19.2.8, pnpm 11.24.0, Fabric 7.4.0, Dockview 8.2.0, Zustand 5.0.15, Supabase/Postgres, Drizzle, Mastra, LanceDB, Orama, Vitest, and Playwright. Verify imports before treating a declared dependency as wired.
 
 **Storage envelope (live):** exclusive-mode persistence — disk under
 `DEV_AUTH_BYPASS=1` on non-production builds, Supabase otherwise. Production's

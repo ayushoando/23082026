@@ -104,11 +104,11 @@ Agents B–D may run concurrently. Agents A and A2 inspect but do not edit activ
   - [x] 9.8 Requirement coverage and `git diff --check`; do not run behavioral validation.
   - _Requirements: 8.3–8.5_
 
-- [ ] 10. Report completion honestly
+- [x] 10. Report completion honestly
   - [x] 10.1 Do not offer `pnpm run typecheck:scripts`; its config is absent.
-  - [ ] 10.2 Keep required `check:layout` and gate validation pending unless owner-authorized and observed.
-  - [ ] 10.3 Report “Configuration changes complete; mandatory repository validation pending owner execution/authorization” while gates remain pending.
-  - [ ] 10.4 Never infer a pass from static inspection or historical evidence.
+  - [x] 10.2 Keep required `check:layout` and gate validation pending unless owner-authorized and observed.
+  - [x] 10.3 Report "Configuration changes complete; mandatory repository validation pending owner execution/authorization" while gates remain pending.
+  - [x] 10.4 Never infer a pass from static inspection or historical evidence.
   - _Requirements: 5.9, 8.6–8.7_
 
 ## Dependency order

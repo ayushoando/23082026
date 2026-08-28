@@ -66,7 +66,7 @@ export const HANDOVER_MAINTENANCE_TRIGGERS = [
 const REPOSITORY_OWNER = "repository owner" as const;
 const NO_ROLLBACK_APPLIES = "no rollback applies" as const;
 const NO_CHANGE_CAPABILITY_DISPOSITIONS = new Set<CapabilityDisposition>([
-  "retain",
+  "retained",
   "observe",
   "defer",
   "exclude",
@@ -604,7 +604,7 @@ export const knownGapsRegisterProjection = new KnownGapsRegisterProjection();
 function handoverDispositionFor(disposition: CapabilityDisposition): HandoverDisposition {
   const mapping: Readonly<Record<CapabilityDisposition, HandoverDisposition>> = {
     apply: "installed",
-    retain: "retained",
+    retained: "retained",
     update: "updated",
     merge: "merged",
     add: "added",
@@ -883,3 +883,4 @@ export const CAPABILITY_DISPOSITION_NO_ROLLBACK = NO_ROLLBACK_APPLIES;
 export const HANDOVER_NO_CHANGE_DISPOSITIONS = [...NO_CHANGE_HANDOVER_DISPOSITIONS] as const;
 export const HANDOVER_EVIDENCE_STATES = EVIDENCE_STATES;
 export const HANDOVER_SKILL_CANDIDATES = INITIAL_SKILL_CANDIDATES;
+

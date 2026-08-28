@@ -159,7 +159,7 @@ function dispositionFor(path: RepositoryPath, kind: ArtifactKind, status: Invent
   if (kind === "Hook_Manifest" && path.includes("domain-fast-check")) return "update";
   if (kind === "Hook_Manifest" && path.includes("ltm-postturn-capture")) return "disable";
   if (kind === "Kiro_Power" && path.includes("oando-workflow")) return "observe";
-  if (kind === "Kiro_Skill" || kind === "Steering_File" || kind === "Specification" || kind === "Ignore_Configuration") return "retain";
+  if (kind === "Kiro_Skill" || kind === "Steering_File" || kind === "Specification" || kind === "Ignore_Configuration") return "retained";
   return "observe";
 }
 

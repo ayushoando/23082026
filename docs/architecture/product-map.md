@@ -1,6 +1,6 @@
-# Product vision and architecture
+# Product architecture and placement
 
-When docs and code differ, **code wins**. User instruction wins over both. Plan direction is right; details here can be wrong — verify against live code.
+This explanation maps the product surfaces, data flow, and canonical code locations. Verify implementation details against live source; current user instructions and live evidence take precedence.
 
 **Live architecture (4 files):**
 
@@ -33,7 +33,7 @@ Canvas fidelity, catalog honesty, and clear handoff matter equally.
 | `site/hooks`, `site/store`, `site/server` | Forked app hooks/stores/disk servers under `Planner/` / `Studio/` |
 | `site/platform/` | DB, Supabase, types, route contracts |
 | `site/focss/` | Shared CSS tree (`@focss/*`) — not a package |
-| `site/i18n/` | next-intl home — messages on disk for en/hi/fr/de/es; **runtime English-only** today (`request.ts` / COST-S02) |
+| `site/i18n/` | next-intl home; message files for `en` and `hi`; runtime currently loads English (`request.ts`) |
 | `site/platform/{shared,Studio,Planner}/data/` | Furniture library, uploads, projects, exports — **dev disk mode only** |
 | `tests/` | Unit (name-mirror), integration, browser |
 | `site/inventory/descriptors/` | Descriptor JSON / local release records — **dev disk mode only** |
@@ -79,7 +79,7 @@ The Studio writes the furniture library; the Planner rail reads it. No module is
 shared — each fork declares its own store and they meet at the same backing
 location.
 
-```
+```text
 Studio save  →  POST /api/Studio/furniture  →  server/Studio/studioStore.ts
                                                      ↓ writeFurnitureItem
                         furniture_catalog (prod)  /  platform/shared/data/furniture/ (dev)
@@ -111,7 +111,7 @@ Shared rules: semantic tokens; distinct loading/empty/error states; no silent fa
 ## Current vs target
 
 > **Persistence decision tree:**
-> ```
+> ```text
 > DEV_AUTH_BYPASS=1 && NODE_ENV !== "production"
 >   ├─ YES → disk (site/platform/*/data/)
 >   └─ NO  → Supabase (never disk)

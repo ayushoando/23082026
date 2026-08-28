@@ -1,6 +1,6 @@
-# Layout — repository map
+# Repository layout
 
-One monorepo, `pnpm` workspace, Next.js App Router in `site/`. Truth order: **user > live code + fresh commands > `AGENTS.md` > `Agents/` > `docs/`**.
+This reference maps top-level repository paths and their roles. Verify a path against the live filesystem before relying on it; user instructions and live source take precedence over this document.
 
 ## Top-level directories
 
@@ -12,7 +12,7 @@ One monorepo, `pnpm` workspace, Next.js App Router in `site/`. Truth order: **us
 | `tech-docs-generator/` | Source-driven docs generator + Vite inventory SPA (second vitest lane; `ops tech-docs:generate` → `generated-documents/`) |
 | `docs/` | Canonical docs — this tree (`architecture/`, `database/`, `governance/`). See [`docs/README.md`](../README.md) |
 | `Agents/` | Agent handbooks (`01-standard` … `07-css`, `INDEX.md`) |
-| `plans/` | Active execution plan [`PLAN.md`](../../plans/PLAN.md), index [`README.md`](../../plans/README.md); optional `CONTEXT.md`, `adr/` |
+| `plans/` | Active planning coordination; [`README.md`](../../plans/README.md) indexes canonical `plans/<name>/` folders and optional shared context |
 | `config/` | Cross-task config: `config/build/` (next/playwright), `config/quality/` (baselines) |
 | `workers/` | Cloudflare Workers (e.g. `oando-worker-proxy/` — apex asset edge) |
 | `supabase/` | Supabase CLI / project config |

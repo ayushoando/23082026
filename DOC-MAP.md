@@ -1,6 +1,6 @@
-# Doc map
+# Documentation map
 
-What lives where, and what wins. Keep this up to date when you add or move a doc.
+This map defines where repository documentation belongs and which source controls when claims conflict. Use it before adding or moving documentation.
 
 ## Authority
 
@@ -18,8 +18,8 @@ user  >  live code + fresh commands  >  AGENTS.md  >  Agents/  >  docs/**
 |------|--------|
 | Durable facts (stack, routes, schema, rules, benchmarks) | `docs/**` — see tree below |
 | Execution/how-to procedures | root docs (`OPERATIONS_RUNBOOK.md`, `Testing-handbook.md`) |
-| Coordination (active plan) | [`plans/PLAN.md`](./plans/PLAN.md), [`plans/README.md`](./plans/README.md) |
-| Evidence | `results/**` (txt/json only) |
+| Coordination and active plans | [`plans/README.md`](./plans/README.md) and its indexed `plans/<name>/` folders |
+| Generated evidence | `results/**` (machine-generated output; not authority) |
 | Blockers | `Failures.md` |
 | Session agent rules | `Agents/**` |
 
@@ -67,7 +67,9 @@ See [`docs/README.md`](./docs/README.md) for the full 14-file table. Highlights:
 |--|---------|-----------|----------|
 | Folder | `Agents/` | `plans/` (coordination) | `results/` |
 
-## Checks
+## Validation commands
+
+**Authorization required:** run these test-like documentation checks only when the current user authorizes the exact command and the enabled pre-execution hook permits it. If unrun, report them as pending rather than passed.
 
 ```bash
 pnpm run check:docs-all

@@ -45,7 +45,7 @@ export const INVENTORY_STATUSES = [
 
 export type CapabilityDisposition =
   | "apply"
-  | "retain"
+  | "retained"
   | "update"
   | "merge"
   | "add"
@@ -57,7 +57,7 @@ export type CapabilityDisposition =
 
 export const CAPABILITY_DISPOSITIONS = [
   "apply",
-  "retain",
+  "retained",
   "update",
   "merge",
   "add",
@@ -560,7 +560,7 @@ export interface SkillRecord {
   readonly manifestName: string;
   readonly description: string;
   readonly inventoryStatus: InventoryStatus;
-  readonly disposition: Extract<CapabilityDisposition, "retain" | "update" | "merge" | "add" | "retire" | "observe" | "defer">;
+  readonly disposition: Extract<CapabilityDisposition, "retained" | "update" | "merge" | "add" | "retire" | "observe" | "defer">;
   readonly isPrimaryRepositoryGuidanceSkill: boolean;
   readonly activationScope: string;
   readonly canonicalSources: readonly UrlOrPath[];
@@ -1233,3 +1233,4 @@ export const FEATURE_IMPLEMENTATION_PATHS = [
   ".kiro/kiro-repo-guidance-setup/provenance.ts",
   ".kiro/kiro-repo-guidance-setup/coverage.ts",
 ] as const satisfies readonly RepositoryPath[];
+

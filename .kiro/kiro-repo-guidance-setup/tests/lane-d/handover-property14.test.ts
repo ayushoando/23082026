@@ -56,7 +56,7 @@ const REVIEW_DATE = "2026-08-25";
 // Dispositions the projection treats as "no change" — their rollback value must
 // collapse to the literal "no rollback applies".
 const NO_CHANGE_DISPOSITIONS = new Set<CapabilityDisposition>([
-  "retain",
+  "retained",
   "observe",
   "defer",
   "exclude",

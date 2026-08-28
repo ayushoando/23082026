@@ -1,7 +1,8 @@
-# Database + Drizzle wiring
+# Drizzle and database access
 
-**Authority:** live code under `site/platform/drizzle/` and `site/platform/supabase/`.  
-Tables / RLS: [`schema.md`](./schema.md). Modes / seed / restore: [`ops.md`](./ops.md).
+This explanation describes the two Supabase projects, their Drizzle and Supabase JavaScript access paths, and the exclusive persistence selectors. Live code under `site/platform/drizzle/`, `site/platform/supabase/`, and `site/lib/**PersistenceMode.ts` controls when details differ.
+
+Tables and row-level security (RLS): [database schema](./schema.md). Safe operating procedures: [database operations](./ops.md).
 
 Two separate Supabase Postgres projects. Two ways to talk to them. Disk only when `DEV_AUTH_BYPASS=1` (non-prod). Never dual-write. Production filesystem is read-only.
 
@@ -180,11 +181,11 @@ Generated types (PostgREST shape, not Drizzle):
 
 | Goal | Command |
 |------|---------|
-| Apply Products SQL | `pnpm run ops db:apply` (`-- --dry` first) |
-| Apply Admin SQL | `pnpm run ops db:apply:admin` |
-| Check Drizzle tables exist | `pnpm run ops db:sync-drizzle` |
-| Regen Products types | `pnpm run ops db:types` |
-| Regen Admin types | `pnpm run ops db:types:admin` |
+| Apply Products SQL | `pnpm run db:apply -- --dry`, then `pnpm run db:apply` after review and authorization |
+| Apply Admin SQL | `pnpm run db:apply:admin -- --dry`, then `pnpm run db:apply:admin` after review and authorization |
+| Check configured Drizzle tables | `pnpm run ops db:sync-drizzle` |
+| Regenerate Products types | `pnpm run db:types` |
+| Regenerate Admin types | `pnpm run db:types:admin` |
 | Seed furniture (Admin) | `pnpm run seed:furniture` |
 
 drizzle-kit ledger under `site/platform/drizzle/migrations/` is **not** what `db:apply` runs.

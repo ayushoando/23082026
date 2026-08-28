@@ -1,15 +1,6 @@
-# Agents
+# Agent handbook index
 
-## What this folder is for
-
-`AGENTS.md` at the repo root is loaded into **every** session automatically. That
-makes it expensive — everything in it costs context on every task, whether or not
-the task touches CSS, or tests, or the database. So the root file holds only the
-floor: authority, layout, persistence, verification, migrations.
-
-This folder holds the detail, split by topic, so you read the CSS rules when you
-are changing CSS and not otherwise. It also holds agent-readable Markdown
-research and audit notes that must not live under `results/`.
+Use this index to load only the session handbook relevant to the current task. The root [process floor](../AGENTS.md) controls; these handbooks add task-specific procedure without changing authority or current repository truth.
 
 | File | Read it when |
 |------|--------------|
@@ -50,9 +41,8 @@ user instruction  >  live code + fresh commands  >  AGENTS.md  >  Agents/  >  do
 
 ## Working loop
 
-Source of truth: [`../plans/README.md`](../plans/README.md) · active work: [`../plans/PLAN.md`](../plans/PLAN.md).
-Builder: slice → build → prove (evidence file). Reviewer: serial, required for
-full `gate`. Smallest command that proves the claim; broad gate only at plan close.
+Source of truth: [`../plans/README.md`](../plans/README.md), which indexes active plan folders.
+Builder: slice → build → prove with appropriately classified evidence. Integrate serially and use only an exact validation command authorized by the current user and permitted by the enabled hook.
 
 ## Execution floor
 
@@ -60,7 +50,7 @@ full `gate`. Smallest command that proves the claim; broad gate only at plan clo
 - Smallest sound change; preserve unrelated work; no handwritten `any`.
 - Secrets only in `.env.local` (and `site/.env.local` when Next loads from `site/`).
 - UI claims: `http://localhost:3000` only, never `127.0.0.1`.
-- Before completion: `pnpm run check:layout`.
+- Before completion, statically inspect changed files. Run `pnpm run check:layout` only with exact current-session authorization and enabled-hook permission.
 
 ## The product, briefly
 
@@ -106,4 +96,4 @@ Just-in-time instructions loaded when editing specific file types:
 | [`.github/instructions/boundaries.instructions.md`](../.github/instructions/boundaries.instructions.md) | Studio/Planner forked code | Fork isolation rules |
 | [`.github/instructions/migrations.instructions.md`](../.github/instructions/migrations.instructions.md) | `site/platform/supabase/migrations/**/*.sql` | Rollback requirements, Supabase grants |
 
-No `/gate` or `/new-test` commands — use `pnpm run gate` ([`OPERATIONS_RUNBOOK.md`](../OPERATIONS_RUNBOOK.md) §7).
+No `/gate` or `/new-test` commands exist. When the current user authorizes the exact command and the enabled hook permits it, use the configured root gate route described in the [operations runbook](../OPERATIONS_RUNBOOK.md).

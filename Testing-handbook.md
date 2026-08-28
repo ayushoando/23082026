@@ -1,6 +1,8 @@
 # Testing handbook
 
-`AGENTS.md` · `package.json` · blockers → [`Failures.md`](./Failures.md) · bars → [`docs/governance/benchmarks.md`](./docs/governance/benchmarks.md) · agent rules → [`Agents/02-testing.md`](./Agents/02-testing.md).
+Use this handbook to choose and report validation evidence without overstating what a result proves. Before running anything, work from the repository root, obtain current-session authorization for the exact command, and confirm that the enabled pre-execution hook permits it.
+
+Canonical sources: the [process floor](./AGENTS.md), root `package.json`, [active blockers](./Failures.md), [benchmark definitions](./docs/governance/benchmarks.md), and the [agent testing workflow](./Agents/02-testing.md).
 
 ## Rules
 
@@ -17,7 +19,7 @@
 | | `pnpm run …` |
 |--|-------------|
 | Layout / docs | `check:layout` · `check:docs-all` · `docs:check:root-links` |
-| Types | `typecheck` · `typecheck:tests` |
+| Types | `typecheck` · `typecheck:tests` · `typecheck:scripts` (currently configured; no result inferred) |
 | Tests / gates | `test` (**2 lanes**) · `p0:unit` · `test:priority-7` · `test:priority-8` · `gate` · `release:gate` |
 | Coverage | `test:coverage` · `test:coverage:site` · `test:coverage:admin` · `ops test:coverage:inventory` |
 | E2E / a11y | `test:planner-catalog` · `test:a11y` |

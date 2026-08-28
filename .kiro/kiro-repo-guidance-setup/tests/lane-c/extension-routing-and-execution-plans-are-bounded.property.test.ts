@@ -264,7 +264,7 @@ describe("Property 10: Extension routing and execution plans are bounded", () =>
 
         // An external MCP service that is active must carry a named service/data
         // boundary; otherwise it must be inactive.
-        if (record.kind === "MCP_Service" && record.disposition === "retain") {
+        if (record.kind === "MCP_Service" && record.disposition === "retained") {
           expect(record.evidence.serviceAndDataBoundary).not.toBe("unavailable");
           expect(record.evidence.serviceAndDataBoundary.trim().length).toBeGreaterThan(0);
         }
@@ -340,7 +340,7 @@ describe("Property 10: Extension routing and execution plans are bounded", () =>
 
         // A single core violation must never reach the active `retain`
         // disposition; the value stays bounded regardless.
-        expect(record.disposition).not.toBe("retain");
+        expect(record.disposition).not.toBe("retained");
         expect(INACTIVE_EXTENSION_DISPOSITIONS).toContain(record.disposition);
         expect(record.blockers.length).toBeGreaterThan(0);
         expect(record.externalRoutingAllowed).toBe(false);
@@ -391,7 +391,7 @@ describe("Property 10: Extension routing and execution plans are bounded", () =>
           }
           // Default/native execution capabilities are never `retain`ed as
           // active by this evaluator; they stay deferred pending validation.
-          expect(record.disposition).not.toBe("retain");
+          expect(record.disposition).not.toBe("retained");
         },
       ),
       { numRuns: 200 },
@@ -447,7 +447,7 @@ describe("Property 10: Extension routing and execution plans are bounded", () =>
         // Without a fresh validation run the automation stays deferred; the
         // manual loop remains the fallback (never active-`retain`/`observe`
         // wave). It is never enabled outright.
-        expect(record.disposition).not.toBe("retain");
+        expect(record.disposition).not.toBe("retained");
       }),
       { numRuns: 150 },
     );
@@ -480,7 +480,7 @@ describe("Property 10: Extension routing and execution plans are bounded", () =>
 
           // A Crew capability is never active: it is deferred or excluded.
           expect(["defer", "disable", "exclude"]).toContain(record.disposition);
-          expect(record.disposition).not.toBe("retain");
+          expect(record.disposition).not.toBe("retained");
           expect(record.disposition).not.toBe("observe");
 
           // Any incompatible behavior recorded on the flags is surfaced as an

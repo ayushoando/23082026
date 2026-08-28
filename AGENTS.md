@@ -10,21 +10,24 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 <!-- markdownlint-disable MD025 -->
 
-# Process floor
+## Process floor
+
+This document defines the repository-wide execution and safety floor. Current user instructions and live repository evidence take precedence; lower-level handbooks and durable docs add detail without weakening these rules.
 
 ## 1. Truth
 
-- **User Wins.** Then: live code + fresh commands > `AGENTS.md` > `Agents/` > `docs/`.
-- Never invent browser/build state — run a command.
-- **Blockers:** `Failures.md` only.
+- **Authority order:** user instruction > live code and fresh command output > `AGENTS.md` > `Agents/` > `docs/`.
+- Never invent browser, build, test, or gate state. An unobserved command is unrun.
+- Tests, gates, builds, browser checks, coverage, and test-like commands require exact current-session user authorization and enabled-hook permission.
+- **Blockers:** record hard blockers only in [`Failures.md`](./Failures.md).
 
 ## 2. Work
 
-- Repo root only. **Never create worktrees.** **`pnpm`** only.
-- **Agents:** Max 4 agent only
-- Smallest sound change. No handwritten `any`.
-- Secrets: `.env.local` (and `site/.env.local`).
-- UI: `http://localhost:3000` only — never `127.0.0.1`.
+- Repository root only. **Never create worktrees.** Use **`pnpm`** only.
+- **Agents:** use at most four agents, with disjoint ownership and serial integration.
+- Make the smallest sound change and preserve unrelated work. Do not write `any` by hand.
+- Store local secrets only in `.env.local` or `site/.env.local`.
+- Use `http://localhost:3000` for UI work; never use `127.0.0.1`.
 
 ## 3. Layout
 
@@ -67,9 +70,11 @@ Disk when `DEV_AUTH_BYPASS=1` (non-prod). Else Supabase. Prod FS is read-only. U
 
 Seed: `pnpm run seed:furniture` (off the read path).
 
-## 6. Gates
+## 6. Validation routes
 
-- Before done: `pnpm run check:layout`, then `pnpm run gate:fast` (per-module) or `pnpm run gate` (ship bar).
+Run only an exact command authorized by the current user and permitted by the enabled hook. The routes below describe intended scope; they do not assert a current result.
+
+- Before completion, an authorized owner may run `pnpm run check:layout`, then `pnpm run gate:fast` for a development loop or `pnpm run gate` for the ship bar.
 - Ship: `pnpm run gate` (= `release:gate` — full suite, build, coverage). Dev loop: `pnpm run gate:fast`.
 - CSS: `verify:focss`, `lint:ui:strict`, `check:style-tokens`.
 - `pnpm run test` = **two** vitest lanes (default + tech-docs). Check both. DOM: **happy-dom**.
@@ -104,4 +109,4 @@ Seed: `pnpm run seed:furniture` (off the read path).
 | CSS | `Agents/07-css.md`, `docs/architecture/css.md` |
 | Tech-docs SPA | `tech-docs-generator/README.md` (detail also in product-map § Tech-docs) |
 | Onboarding / ops | `START.md`, `OPERATIONS_RUNBOOK.md`, `README.md`, `Testing-handbook.md` |
-| Plans | [`plans/README.md`](plans/README.md), active [`plans/PLAN.md`](plans/PLAN.md) |
+| Plans | [`plans/README.md`](plans/README.md) and its indexed `plans/<name>/` folders |

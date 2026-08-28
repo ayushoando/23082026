@@ -1,11 +1,8 @@
-# Database schema
+# Database ownership and schema
 
-**Authority:** migrations + Drizzle under `site/platform/`. Code wins if this doc lags.  
-Two projects stay separate throughout — Admin and Products never share a writer or a row set.  
-**Verified live:** 2026-08-01, by introspecting both projects. The table lists below
-are the actual `public` contents on that date, not an aspiration.
+This reference assigns tables and migrations to the Products and Admin Supabase projects and records the required row-level security (RLS), grant, and persistence boundaries. Migration source, generated types, and live client code take precedence; environment-specific state remains present-but-unverified until an authorized observation is recorded.
 
-> **Production filesystem is read-only.** Runtime writes in production go to Supabase only. Route handlers must use mode-aware wrappers, never raw disk helpers.
+> **Production filesystem is read-only.** Runtime writes in production go to Supabase through mode-aware wrappers, never raw disk helpers.
 
 ## Two databases
 
@@ -23,7 +20,9 @@ project — asset bytes and their metadata rows live together.
 Clients: `@/platform/supabase/supabaseAdmin.ts` (products, service role),
 `auth-admin.ts` (admin, service role), `server.ts` (request-scoped anon).
 
-## Products DB — 19 tables
+## Products database tables
+
+The following tables are represented by current migrations and schema source. This static list does not prove their state in a particular hosted environment.
 
 | Table | Role |
 |-------|------|
@@ -36,7 +35,9 @@ Clients: `@/platform/supabase/supabaseAdmin.ts` (products, service role),
 | `svg_revisions` · `svg_revision_artifacts` | Legacy SVG revision schema — residual |
 | `_local_migration_history` | Local apply bookkeeping |
 
-## Admin / Planner DB — 23 tables
+## Admin database tables
+
+The following tables are represented by current Admin migrations and generated types. Hosted state remains present-but-unverified without an authorized environment observation.
 
 | Table | Role |
 |-------|------|

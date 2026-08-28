@@ -1,10 +1,8 @@
-# FOCSS drift and custom CSS — stop and correct
+# FOCSS drift prevention and correction
 
-**Binding.** Stops FOCSS structural drift and ad-hoc colours/CSS across Site, Admin, and Planner. Live CSS contract remains [`../architecture/css.md`](../architecture/css.md). Programme rules C1–C10 live in [`rules.md`](./rules.md) §3; this file owns **allowed vs forbidden**, **verification**, and the **correction plan** for preexisting debt.
+Use this governance guide to prevent new FOCSS structural and token debt and to correct existing debt without raising baselines. Live CSS source and the [FOCSS architecture reference](../architecture/css.md) control path details; the [FOCSS editing workflow](../../Agents/07-css.md) controls session procedure.
 
-Process: [`Agents/07-css.md`](../../Agents/07-css.md). Charter: R3 / R4 / R29 / R30 in [`charter.md`](./charter.md).
-
-When this file and live code disagree on a path detail, **code + fresh gate output win**. Direction here still binds.
+Commands in this document are configured checks, not observed pass results. Run one only with exact current-session authorization and enabled-hook permission.
 
 ---
 
@@ -78,7 +76,7 @@ Authoritative debt measure: **`pnpm run check:style-tokens`** vs `config/quality
 
 ## 5. Correction plan (preexisting drift)
 
-**Lives here (governance), not in [`plans/PLAN.md`](../../plans/PLAN.md) checklists.** When a programme batch owns remediation, add a row in the active plan pointing at this section — do not fork a second CSS ledger under `plans/`.
+**Lives here as durable governance, not as duplicated active-plan status.** When an active programme batch owns remediation, its indexed plan folder should link to this section rather than fork a second CSS ledger.
 
 Goal: migrate debt into tokens / FOCSS; ratchet baselines **down only**. Structural FOCSS (`verify:focss`) is already clean at adoption — debt is **token bypass** and **composer style coverage**, not a second CSS architecture.
 

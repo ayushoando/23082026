@@ -1,6 +1,6 @@
-# Contents
+# Documentation index
 
-[`START.md`](./START.md) · [`DOC-MAP.md`](./DOC-MAP.md)  · Evidence `results/**`
+Use this index to find the canonical document for a task. Start with [onboarding](./START.md), use the [documentation map](./DOC-MAP.md) for authority and placement, and treat `results/` as generated evidence rather than authority.
 
 ## Root
 
@@ -15,8 +15,8 @@
 | 07 | [`Testing-handbook.md`](./Testing-handbook.md) | How to test |
 | 08 | [`Failures.md`](./Failures.md) | Open blockers only |
 | 09 | [`owners.md`](./owners.md) | Code and document ownership map · playbook |
-| 11 | [`plans/README.md`](./plans/README.md) | Plans index |
-| 12 | [`plans/PLAN.md`](./plans/PLAN.md) | Active execution plan |
+| 10 | [`HANDOVER.md`](./HANDOVER.md) | Historical handoff context; verify against live state |
+| 11 | [`plans/README.md`](./plans/README.md) | Active planning coordination and plan-folder index |
 
 ## Agents / docs / tooling
 

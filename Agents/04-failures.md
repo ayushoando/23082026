@@ -1,4 +1,6 @@
-# Failures
+# Blocker workflow
+
+Use this workflow to add or remove a hard blocker in the repository's sole blocker record, [`Failures.md`](../Failures.md). A blocker requires an observed reproduction; removal requires an authorized rerun that observes the fix.
 
 - Open blockers: root **`Failures.md` only**.
 - Add with repro. Remove only after verified fix.

@@ -148,7 +148,7 @@ describe("Property 11: Incompatible Crew behavior is blocked", () => {
         expect(record.crewBehaviorFlags?.[fixture.incompatibleBehavior]).toBe(true);
         expect(record.incompatibleBehaviors).toContain(fixture.incompatibleBehavior);
         expect(["defer", "exclude"]).toContain(record.disposition);
-        expect(record.disposition).not.toBe("retain");
+        expect(record.disposition).not.toBe("retained");
         expect(record.disposition).not.toBe("apply");
         expect(["deferred", "excluded"]).toContain(record.status);
         expect(record.blockers.length).toBeGreaterThan(0);

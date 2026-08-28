@@ -1,14 +1,12 @@
-# Routes
+# Page and API routes
 
-Package map: [`product-map.md`](./product-map.md) · security (CSP/mutators): [`docs/governance/rules.md`](../governance/rules.md) · CRM (demo vs inbox): root `README.md`. API discovery: `site/lib/apiCatalog.ts` (inventory below).
-
-*Hand-synced inventories. Prefer regenerate via `pnpm run docs:sync` when convenient.*
+This reference maps known `site/app/**/page.tsx` and `site/app/api/**/route.ts` paths. It records static source presence only; it does not prove that a route builds, loads, authorizes correctly, or works in a browser.
 
 ## Pages
 
 **Scope (pages):** live `site/app/**/page.tsx`.
 
-*Hand-synced 2026-08-01 against filesystem. Base Next config: `config/build/next.config.js` (merged by `site/next.config.js`).*
+**Inventory status:** hand-maintained from static source presence. Prefer the generated inventory only after `pnpm run docs:sync` is explicitly authorized, permitted, completed, and observed.
 
 ## Interactive apps (live)
 
@@ -102,7 +100,7 @@ Live Next config (`site/next.config.ts`) is a minimal stub — **no redirect tab
 
 **Not listed:** tech-docs SPA (no Next API) — admin external link only. See product-map § Tech-docs.
 
-Hand-synced 2026-08-01 from on-disk `route.ts` files (top-up 2026-08-06: added `/api/categories`, `/api/features`). Prefer regenerate: `pnpm run docs:sync` (repo root) when the generator is convenient.
+**API inventory status:** hand-maintained from static `route.ts` source presence. Regenerate only through an explicitly authorized and observed `pnpm run docs:sync`; until then, differences are pending review.
 
 | Methods | Path |
 |---------|------|

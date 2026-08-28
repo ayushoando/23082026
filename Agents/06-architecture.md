@@ -1,4 +1,6 @@
-# Architecture
+# Architecture workflow
+
+Use this workflow to place code and preserve product boundaries before implementation. Read the owning durable reference and, for Next.js changes, the relevant versioned guide under `node_modules/next/dist/docs/` before writing code.
 
 ## Bar
 - Live architecture docs: `product-map.md` · `stack.md` · `routes.md` · `css.md` under `docs/architecture/`.

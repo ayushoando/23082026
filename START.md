@@ -1,8 +1,8 @@
 # Start here
 
-Onboarding for the **oando1408** monorepo. Everything is terse and linked from here.
+Use this onboarding guide to install, run, and orient in the Oando monorepo. The expected outcome is a local application at `http://localhost:3000` and a clear path to the relevant operating or reference document.
 
-**Truth order:** user > live code + fresh commands > `AGENTS.md` > `Agents/` > `docs/`.
+**Prerequisites:** work from the repository root, use `pnpm`, and read the [process floor](./AGENTS.md). Authority order: user instruction > live code and fresh command output > `AGENTS.md` > `Agents/` > `docs/`.
 
 ## 1. Read (in order)
 
@@ -14,7 +14,9 @@ Onboarding for the **oando1408** monorepo. Everything is terse and linked from h
 | 4 | [`DOC-MAP.md`](./DOC-MAP.md) | Where each kind of doc lives + authority |
 | 5 | [`Testing-handbook.md`](./Testing-handbook.md) | How to run tests (two lanes) |
 
-## 2. Install + run
+## 2. Install and run
+
+**Warning:** install and local development commands change local dependencies or start a server. Deploy, database, worker, R2, test-like, and validation commands require exact current-session authorization and the applicable safety prerequisites in the [operations runbook](./OPERATIONS_RUNBOOK.md).
 
 ```bash
 pnpm install      # root only — never inside site/ or tech-docs-generator/

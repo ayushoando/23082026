@@ -1,14 +1,8 @@
-# Stack
+# Application stack
 
-What runs this application, how the interactive surfaces are actually built, and
-which declared packages are genuinely wired.
+This reference describes the toolchain and integrations wired by current manifests and source imports. It records configured architecture, not a test, build, browser, or deployment result.
 
-**Authority:** root `package.json` / `pnpm-lock.yaml` + live imports. When this
-file and the code differ, the code wins. Verified 2026-08-01 by reading the
-manifests and counting real imports across `site/**`.
-
-This file states architectural limits. It is not PASS proof — that comes from
-fresh commands.
+**Authority:** root `package.json`, `pnpm-lock.yaml`, and live imports. Current manifest values include Next.js 16.3.3, React 19.2.8, and pnpm 11.24.0.
 
 ---
 
@@ -17,13 +11,13 @@ fresh commands.
 | Item | Value | Note |
 |------|-------|------|
 | Node | **24** | Pinned in every CI workflow. The root package declares **no `engines`** field — CI is the only statement of the version |
-| Package manager | **pnpm 11.21.0** | Exact, via `packageManager`. Install from repo root only |
-| Framework | **Next 16.3.1** | Pinned in root `package.json` (`dev` / `build:site` use `--webpack`) |
-| React | **19.2.8** | Pinned exact, not caret |
-| TypeScript | **^7.0.2** | |
-| Bundler | **webpack, explicitly** | `dev` and `build:site` both pass `--webpack`. Next 16 defaults to Turbopack; this is a deliberate opt-out — do not remove the flag casually |
-| CSS engine | **Tailwind v4** | Via `@tailwindcss/postcss` in `config/build/postcss.config.mjs`. See §3 |
-| Test | Vitest **^4.1.10**, Playwright **^1.62.1** | Two vitest lanes — see `Testing-handbook.md` |
+| Package manager | **pnpm 11.24.0** | Exact, via `packageManager`. Install from repository root only |
+| Framework | **Next.js 16.3.3** | Pinned in root `package.json`; `dev` and `build:site` use `--webpack` |
+| React | **19.2.8** | Pinned exact |
+| TypeScript | **7.0.2 range** | Declared as `^7.0.2` |
+| Bundler | **webpack, explicitly** | `dev` and `build:site` pass `--webpack`; do not remove the flag without version-specific evidence |
+| CSS engine | **Tailwind CSS 4.3.3** | Through `@tailwindcss/postcss`; see [FOCSS architecture](./css.md) |
+| Test | **Vitest 4.1.11**, **Playwright 1.62.1** | Two Vitest lanes; see the [testing handbook](../../Testing-handbook.md) |
 
 Next config resolution: `site/next.config.js` is what Next loads
 (`site/next.config.ts` re-exports it), merging `config/build/next.config.js` plus
@@ -31,7 +25,7 @@ the `next-intl` plugin.
 
 **Build is two packages, not one.**
 
-```
+```text
 build → build:site       → check-sharp → next build site --webpack → prepare-standalone.cjs
       → build:tech-docs  → the Vite inventory SPA
 ```
@@ -94,7 +88,7 @@ assembled from five layers that each own one concern.
 
 ### The layers
 
-```
+```text
    dockview-react        panel layout — draggable, resizable, persisted
         │
         ├── Fabric 7      2D canvas: the drawing/placement surface
@@ -107,7 +101,7 @@ assembled from five layers that each own one concern.
 
 | Layer | Package | Live use | What it owns |
 |-------|---------|----------|--------------|
-| Docking | `dockview-react` 7.0.4 | 4 files | Each app has its **own** `DockShell`. No shared dock state between them, and not FlexLayout |
+| Docking | `dockview-react` 8.2.0 | Present in both forked workspaces | Each app has its **own** `DockShell`; there is no shared dock state between them |
 | 2D canvas | `fabric` 7.4.0 | 18 files | The interactive surface in both apps. Scale differs by app: Studio **0.2 px/mm**, Planner **0.05 px/mm** |
 | 3D | — | **removed** | `three`, `@react-three/fiber`, `@react-three/drei` dropped 2026-08-03. The former `public/vendor/open3d-floorplan/` embed directory is also absent on disk (verified 2026-08-06) |
 | Controls | `react-aria-components` | 9 files | Accessible primitives wrapped per app under `components/{Studio,Planner}/ui/` |
@@ -213,7 +207,7 @@ Do not claim DB release authority without a live publish path and proof.
 
 | Item | Value |
 |------|-------|
-| Framework | `next-intl` **^4.13.6** — marketing site only |
+| Framework | `next-intl` **^4.13.7** — marketing site only |
 | Config | `site/i18n/{config,routing,request}.ts`; locales `en`, `hi` only (default `en`). Hindi is machine-generated. |
 | Messages | `site/i18n/messages/{en,hi}.json` |
 | Parity | `hi` must match **every** top-level namespace in `en.json`. `wave1Namespaces` in `site/i18n/marketing-parity-manifest.json` is the **sync-hi-wave1** write scope, not a weaker parity bar. |

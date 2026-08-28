@@ -1,4 +1,6 @@
-# Testing
+# Testing workflow
+
+Use this workflow when writing tests or collecting validation evidence. Run nothing until the current user authorizes the exact command and the enabled pre-execution hook permits it; an unrun command remains pending.
 
 ## Bar
 - Root `AGENTS.md` + `Testing-handbook.md` win.

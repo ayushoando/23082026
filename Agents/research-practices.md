@@ -1,44 +1,36 @@
-# Research — Supplementary Best Practices (P3)
+# Research practice
 
-**Task:** `research_practices` · **Scope:** AI/LanceDB vector search in Next.js, canvas-based configurator patterns, CRM telemetry event design. **Format:** concise, grounded (URL per claim), supplementary to [`plans/PLAN.md`](../plans/PLAN.md).
+Use this workflow to investigate repository questions without turning external recommendations or historical notes into unsupported current facts. The outcome is a traceable claim with a source, location, observed value, status, and stated evidence gap.
 
----
+## Source order
 
-## 1. AI / LanceDB vector search in Next.js
+1. Apply the current user instruction.
+2. Inspect the owning live source or configuration.
+3. Apply the process floor in [`AGENTS.md`](../AGENTS.md).
+4. Use the relevant handbook under [`Agents/`](./INDEX.md).
+5. Use durable references under [`docs/`](../docs/README.md).
+6. Consult a current official external source only for the subject it governs.
 
-- **LanceDB** is an open-source multimodal AI lakehouse built on the Lance columnar format; supports vector similarity search, full-text search, and SQL; ships native **TypeScript SDK** (`@lancedb/lancedb`), plus Python/Rust/REST. Cloud offers serverless production vector search.
-  - `https://github.com/lancedb/lancedb` (README: Key Features, Ecosystem, Products); TS SDK ref `https://lancedb.github.io/lancedb/js/globals/`
-- **Server-side only + lazy init** is the correct Next.js pattern: the project wraps LanceDB in `lanceVectorStore.ts`, imports `"server-only"`, opens a single cached `Connection` (`getLanceCatalogVectorStore()`), resolves URI from `LANCE_DB_URI` or defaults to local `.data/lancedb/catalog`, and guards local `mkdirSync` with `assertDevDiskWritable` (EROFS in prod). This keeps the vector store out of client bundles and off the read-only prod FS.
-  - local `site/lib/ai/mastra/lanceVectorStore.ts`
-- Embeddings are produced with Mastra's `embedV2` using **Gemini `gemini-embedding-001`, 768-dim**, with an OpenRouter fallback; a `catalogRag.ts` module builds typed `CatalogVectorDocument`s (product/category/page) and uses Mastra's `createVectorQueryTool` for semantic recall. `catalog_nav` index, cosine similarity.
-  - local `site/lib/ai/mastra/embedder.ts`, `site/lib/ai/mastra/catalogRag.ts`, `docs/architecture/stack.md` (AI / LanceDB)
-- Pattern takeaway: keep a dedicated vector-store adapter (`extends MastraVector`) so DB swap (remote `LANCE_DB_URI`) is config-only; gate recall behind an "embeddings available" flag (`isVectorRecallEnabled()`).
+## Research procedure
 
-## 2. Canvas-based configurator patterns
+1. Define one question and the claim type: command, path, version, route, schema, persistence, deployment, observability, analytics, security, date, or other.
+2. Identify the expected owning source before searching broadly.
+3. Record the exact source path, location, and observed value.
+4. Compare competing statements by authority. If live evidence does not resolve a same-level conflict, mark `pending-owner-validation`.
+5. For external guidance, record publisher, title, canonical HTTPS URL, UTC access time, displayed update date when available, applicability, and supersession status.
+6. Paraphrase source guidance in original wording and retain descriptive attribution.
+7. Classify the result as observed, configured, present-but-unverified, planned, historical, deprecated, blocked, or pending-owner-validation.
+8. Recheck every dependent claim when its source changes.
 
-- **Scene-graph / object-oriented canvas** is the dominant pattern: Konva advertises "high-performance 2D graphics with an object-oriented API" and its React binding (`react-konva`) exposes shapes (`Rect`, `Circle`, `Text`, …) as JSX components with **drag-and-drop**, events, select/transform, **groups+layers**, and undo/redo — matching a spatial configurator (drag furniture, transform, nest groups, animate).
-  - `https://konvajs.org/docs/react/index.html` (Konva project metadata, react-konva overview)
-- **Declarative data flow:** with `react-konva` you hold geometry in React state/data and render canvas the same way as React DOM; use `onDragEnd`/`onTransformEnd` to persist state (not live drag ticks). The package must match the React major version (react-konva 18 ↔ React 18, current ↔ React 19).
-  - `https://konvajs.org/docs/react/index.html`
-- Perf note: this repo scales canvas rendering at **Studio 0.2 px/mm vs Planner 0.05 px/mm** — transform/snap helpers must stay in sync with that scale factor and use layers/groups to bound redraws.
-  - local `docs/architecture/stack.md`
+## Evidence boundaries
 
-## 3. CRM telemetry event design
+- Static inspection proves only what was observed in files.
+- A declared command proves that the command exists, not that it passes.
+- Generated evidence and prior logs do not prove current behavior without the originating command and current observation.
+- Browser behavior requires fresh browser evidence from `http://localhost:3000`.
+- Tests, typechecks, gates, builds, coverage, browser checks, and test-like commands require exact current-session authorization and enabled-hook permission.
+- Do not send repository code, secrets, credentials, customer data, or personally identifiable information to external services.
 
-- **Typed, first-party event taxonomies** are the established approach: define a fixed set of named events with a schema, buffer client-side, and flush in batches (project buffers in memory and flushes **batches of 10 or every 5 s** via Beacon API keepalive). Recursively scrub PII before dispatch.
-  - project: local `site/lib/analytics/siteEvents.ts`, `site/lib/analytics/beaconTransport.ts`
-- **Insert-only + RLS** telemetry tables: PostgreSQL `analytics_events` must reject `UPDATE`/`DELETE` via strict insert-only RLS; zero PII rule; `-- rollback` migration tag. This is a first-party alternative to third-party tag managers (PostHog-style capture-at-edge).
-  - local `supabase/admin-migrations/`, `docs/database/schema.md`
-- Back-office triage lifecycle modeled as status machine: `New → In Progress → Contacted → Closed`, with optimistic UI updates and staff notes (timestamped, author id). Honeypot + IP rate limiting + CSRF protect the public intake origin.
-  - local `site/app/api/customer-queries/route.ts`, `docs/architecture/routes.md`
-- Naming/property guidance aligns with industry analytics tools (PostHog/Segment-style `event` + typed `properties`); keep property names snake_case and ids namespaced (e.g. `product:${id}`) to avoid collisions and enable funnel joins.
-  - `https://posthog.com/docs/product-analytics/capture-events` (event + property model)
+## Citation and accessibility rules
 
----
-
-## Key citations (URLs)
-
-- LanceDB — https://github.com/lancedb/lancedb · TS SDK https://lancedb.github.io/lancedb/js/globals/
-- react-konva / Konva — https://konvajs.org/docs/react/index.html
-- PostHog events model — https://posthog.com/docs/product-analytics/capture-events
-- Local: `AGENTS.md`, `plans/README.md`, `plans/PLAN.md`, `site/lib/ai/mastra/{lanceVectorStore,embedder,catalogRag}.ts`, `site/lib/analytics/*`
+Use descriptive link text, expand acronyms at first use, label status in text, and use language-tagged fences when the language is known. Official guidance includes [W3C writing guidance](https://www.w3.org/WAI/tips/writing/), [Google guidance for accessible documentation](https://developers.google.com/style/accessibility), [Microsoft guidance for scannable content](https://learn.microsoft.com/en-us/style-guide/scannable-content/), and [CommonMark 0.31.2](https://spec.commonmark.org/0.31.2/).

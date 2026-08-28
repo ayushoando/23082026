@@ -192,7 +192,7 @@ describe("ContinuityEvaluator", () => {
     const spec = recordFor("specification_workflow", {
       capabilities: [{ kind: "specification_workflow" }],
     });
-    expect(spec?.disposition).toBe("retain");
+    expect(spec?.disposition).toBe("retained");
     expect(spec?.status).toBe("observed");
   });
 

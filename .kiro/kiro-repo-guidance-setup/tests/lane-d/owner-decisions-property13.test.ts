@@ -52,9 +52,11 @@ import {
   type OwnerDecision,
   type OwnerDecisionId,
   type RollbackRecord,
+  type ReviewResult,
   type SourceInventory,
   type SurfaceVersion,
   type UnresolvedStatus,
+  type ValidationRun,
 } from "../../contracts.ts";
 
 const ROOT = "D:\\23082026";
@@ -224,7 +226,12 @@ function surfaceVersionOf(surface: KiroSurface): SurfaceVersion {
   return found;
 }
 
-function compatibilityRecord(surface: KiroSurface): CompatibilityRecord {
+type CompatibilityOverrides = Omit<Partial<CompatibilityRecord>, "surface" | "version">;
+
+function compatibilityRecord(
+  surface: KiroSurface,
+  overrides: CompatibilityOverrides = {},
+): CompatibilityRecord {
   const sv = surfaceVersionOf(surface);
   return {
     ...sv,
@@ -239,10 +246,11 @@ function compatibilityRecord(surface: KiroSurface): CompatibilityRecord {
     unsupportedClaims: [],
     migrationConstraints: [],
     rollbackPathRef: `rollback-${surface}`,
+    ...overrides,
   };
 }
 
-function passingRun(surface: KiroSurface) {
+function passingRun(surface: KiroSurface): ValidationRun {
   const sv = REQUIRED_SURFACE_VERSIONS.find((s) => s.surface === surface);
   if (!sv) throw new Error(`no sv for ${surface}`);
   return {
@@ -275,7 +283,7 @@ function completeCompatibilityRecords(): CompatibilityRecord[] {
   });
 }
 
-function completeValidationRuns() {
+function completeValidationRuns(): ValidationRun[] {
   return REQUIRED_SURFACE_VERSIONS.map((sv) => passingRun(sv.surface));
 }
 
@@ -304,7 +312,7 @@ function sourceInventory(): SourceInventory {
         trustDecision: "trusted",
         claims: [],
         validationRunRefs: [],
-        disposition: "retain",
+        disposition: "retained",
       },
     ],
     unavailableFindings: [],
@@ -330,7 +338,7 @@ function cleanEvidenceRequest(decisions: readonly OwnerDecision[]): EvidenceRevi
           versionSensitiveClaim: false,
           evidenceProvenanceRef: "prov-1",
           availability: "available",
-          disposition: "retain",
+          disposition: "retained",
           validationAction: "none",
           status: "reviewed",
         },
@@ -352,7 +360,7 @@ function cleanEvidenceRequest(decisions: readonly OwnerDecision[]): EvidenceRevi
         activationCondition: "after exact-surface validation",
         canonicalSource: "AGENTS.md",
         evidenceState: "Observed",
-        disposition: "retain",
+        disposition: "retained",
         maintenanceRisk: "low",
         evidenceRefs: ["src-1"],
         validationRunRefs: [],
@@ -366,7 +374,11 @@ function cleanEvidenceRequest(decisions: readonly OwnerDecision[]): EvidenceRevi
 }
 
 function buildHandover(): HandoverRecord {
-  const ev = (createEvidenceCompatibilityReviewer()).review(cleanEvidenceRequest(baseDecisions()));
+  const evidenceResult = createEvidenceCompatibilityReviewer().review(
+    cleanEvidenceRequest(baseDecisions()),
+  );
+  const evidenceReview = evidenceResult.output;
+  const evidenceHandoffId = evidenceReview?.handoff.handoffId ?? "handoff-EvidenceCompatibilityReviewer";
   return {
     generatedAtUtc: "2026-08-25T00:00:00.000Z",
     reviewDateUtc: "2026-08-25",
@@ -378,14 +390,14 @@ function buildHandover(): HandoverRecord {
     surfaceCompatibilityStatement: "all required surface/version targets reviewed",
     configurationPrecedenceMapRef: "precedence-1",
     capabilityDispositionTableRef: "disposition-1",
-    reviewerStageRefs: [ev.output?.handoff.handoffId ?? "handoff-EvidenceCompatibilityReviewer", "handoff-SafetyRollbackReviewer"],
+    reviewerStageRefs: [evidenceHandoffId, "handoff-SafetyRollbackReviewer"],
     ownerDecisionRefs: [...OWNER_DECISION_IDS],
     evidenceStateLegend: [],
     artifactDispositions: [
       {
         artifactId: "artifact:reviewer-fixture",
         canonicalPath: ".kiro/skills/repo-map/SKILL.md",
-        disposition: "retain",
+        disposition: "retained",
         evidenceRefs: ["src-1"],
         reason: "reviewer fixture",
         activationCondition: "after exact-surface validation",
@@ -522,6 +534,7 @@ describe("Property 13: sequential review never passes while an owner decision is
               snapshots: ["snapshot-1"],
               knownGaps: { entries: [] },
               rollbackRecords: [rollbackRecord()],
+              proposedHandover: buildHandover(),
             },
           };
           const before = JSON.stringify(input);
@@ -600,3 +613,4 @@ describe("Property 13: generator status partitions are disjoint", () => {
     }
   });
 });
+

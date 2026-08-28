@@ -38,7 +38,7 @@ export const SKILL_VALIDATION_PREFIX = "validation:skill" as const;
 export const SKILL_ROLLBACK_PREFIX = "rollback:skill" as const;
 
 const VALID_DISPOSITIONS = [
-  "retain",
+  "retained",
   "update",
   "merge",
   "add",
@@ -815,7 +815,7 @@ function steeringRecord(
       ownedRules: [...STEERING_RULES],
       referencedCanonicalSources: [...STEERING_CANONICAL_SOURCES],
       overlapResolution: overlapDescription,
-      disposition: blockers.length === 0 ? "retain" : "defer",
+      disposition: blockers.length === 0 ? "retained" : "defer",
       evidenceRefs: [evidenceRef, ...STEERING_CANONICAL_SOURCES.map((source) => `observed:source:${source}`)],
       rollbackPath: `restore ${path} and prior steering inclusion state`,
       evidenceState: blockers.length === 0 ? "Observed" : "Unverified",
@@ -873,7 +873,7 @@ function recordForSkill(
     manifestName: inspection.manifestName,
     description: inspection.description,
     inventoryStatus: inspection.inventoryStatus,
-    disposition: structuralBlockers.length === 0 ? "retain" : "defer",
+    disposition: structuralBlockers.length === 0 ? "retained" : "defer",
     isPrimaryRepositoryGuidanceSkill: inspection.folder === PRIMARY_REPOSITORY_GUIDANCE_SKILL,
     activationScope: validForActivation
       ? metadata.activationScope

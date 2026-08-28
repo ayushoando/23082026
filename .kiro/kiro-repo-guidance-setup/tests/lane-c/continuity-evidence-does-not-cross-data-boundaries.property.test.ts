@@ -196,7 +196,7 @@ describe("Property 12: Continuity evidence does not cross data boundaries", () =
           // enabled/active disposition from another surface's evidence.
           expect(new Set(record.surfaces).size).toBe(record.surfaces.length);
           expect(["observe", "defer", "disable", "exclude"]).toContain(record.disposition);
-          expect(record.disposition).not.toBe("retain");
+          expect(record.disposition).not.toBe("retained");
           expect(record.disposition).not.toBe("apply");
 
           const disposition = output.dispositions.find((entry) => entry.capabilityId === record.capabilityId);
@@ -240,8 +240,8 @@ describe("Property 12: Continuity evidence does not cross data boundaries", () =
 
         // No cross-boundary activation claim is emitted through either the
         // record projection or the disposition projection.
-        expect(output.continuityRecords.every((record) => record.disposition !== "retain")).toBe(true);
-        expect(output.dispositions.every((entry) => entry.disposition !== "retain")).toBe(true);
+        expect(output.continuityRecords.every((record) => record.disposition !== "retained")).toBe(true);
+        expect(output.dispositions.every((entry) => entry.disposition !== "retained")).toBe(true);
       }),
       { numRuns: 200 },
     );

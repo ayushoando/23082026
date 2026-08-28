@@ -13,10 +13,14 @@ import {
   type EvidenceReviewRequest,
   type HandoverInput,
   type HandoverRecord,
+  type KiroSurface,
   type KnownGap,
   type RollbackRecord,
+  type ReviewResult,
   type SafetyReviewRequest,
   type SourceInventory,
+  type SurfaceVersion,
+  type ValidationRun,
 } from "../../contracts.ts";
 import {
   buildCapabilityDispositionTable,
@@ -67,6 +71,86 @@ function knownGap(overrides: Partial<KnownGap> = {}): KnownGap {
     status: "open",
     limitation: "the selected surface has not been freshly validated",
     ...overrides,
+  };
+}
+
+function surfaceVersionOf(surface: KiroSurface): SurfaceVersion {
+  const found = REQUIRED_SURFACE_VERSIONS.find((candidate) => candidate.surface === surface);
+  if (found === undefined) throw new Error(`no surface version for ${surface}`);
+  return found;
+}
+
+function passingValidationRun(surface: KiroSurface): ValidationRun {
+  const surfaceVersion = surfaceVersionOf(surface);
+  return {
+    validationId: `v-${surface}-${surfaceVersion.version}`,
+    action: "surface",
+    repositoryRootOrActiveSurface: surface,
+    surface,
+    version: surfaceVersion.version,
+    scope: "projections-fixture",
+    executionLayer: "surface_validation",
+    startedAtUtc: `${REVIEW_DATE}T00:00:00.000Z`,
+    result: "pass",
+    commandOrInteraction: "fresh exact-target validation",
+    exitCodeOrOutcome: "exit 0",
+    evidenceRefs: [`evidence-${surface}`],
+    unverifiedItems: [],
+    blocker: "none",
+  };
+}
+
+function freshCompatibilityRecords(): CompatibilityRecord[] {
+  return REQUIRED_SURFACE_VERSIONS.map((surfaceVersion) => {
+    const run = passingValidationRun(surfaceVersion.surface);
+    return {
+      ...surfaceVersion,
+      status: "applicable",
+      documentedBehavior: [`documented behavior for ${surfaceVersion.surface}`],
+      observedBehavior: [],
+      evidenceFreshness: "fresh",
+      versionSensitiveClaim: false,
+      validationAction: `fresh ${surfaceVersion.surface} validation`,
+      validationRunRefs: [run.validationId],
+      enablementStatus: "enabled-valid",
+      unsupportedClaims: [],
+      migrationConstraints: [],
+      rollbackPathRef: `rollback:${surfaceVersion.surface}`,
+    };
+  });
+}
+
+function freshValidationRuns(): ValidationRun[] {
+  return REQUIRED_SURFACE_VERSIONS.map((surfaceVersion) => passingValidationRun(surfaceVersion.surface));
+}
+
+function freshEvidenceRequest(): EvidenceReviewRequest {
+  return {
+    inputStageRef: "integration-gate:lane-d-review",
+    sourceInventory: sourceInventory(),
+    coverageMatrix: coverage(),
+    exclusions: { entries: [] },
+    artifactInventory: [
+      {
+        artifactId: "artifact:lane-d-review",
+        kind: "Kiro_Skill" as const,
+        path: ".kiro/skills/repo-map/SKILL.md",
+        inventoryStatus: "present and readable" as const,
+        owner: "repository owner",
+        configurationScope: "project",
+        activationCondition: "after exact-surface validation",
+        canonicalSource: "AGENTS.md",
+        evidenceState: "Observed" as const,
+        disposition: "retained" as const,
+        maintenanceRisk: "low" as const,
+        evidenceRefs: ["source:lane-d-review"],
+        validationRunRefs: [],
+        rollbackPath: "no rollback applies",
+      },
+    ],
+    compatibilityRecords: freshCompatibilityRecords(),
+    ownerDecisions: [...OWNER_DECISIONS],
+    validationRuns: freshValidationRuns(),
   };
 }
 
@@ -186,7 +270,7 @@ function sourceInventory(): SourceInventory {
         trustDecision: "trusted",
         claims: [],
         validationRunRefs: [],
-        disposition: "retain",
+        disposition: "retained",
       },
     ],
     unavailableFindings: [],
@@ -210,7 +294,7 @@ function evidenceRequest(overrides: Partial<EvidenceReviewRequest> = {}): Eviden
         activationCondition: "after exact-surface validation",
         canonicalSource: "AGENTS.md",
         evidenceState: "Observed",
-        disposition: "retain",
+        disposition: "retained",
         maintenanceRisk: "low",
         evidenceRefs: ["source:lane-d-review"],
         validationRunRefs: [],
@@ -256,7 +340,7 @@ function rollbackRecord(overrides: Partial<RollbackRecord> = {}): RollbackRecord
   };
 }
 
-function handoverRecord(evOutput: ReturnType<typeof createEvidenceCompatibilityReviewer>["review"] extends (...a: unknown[]) => { output?: infer O } ? NonNullable<O> : never): HandoverRecord {
+function handoverRecord(evidenceReview: ReviewResult): HandoverRecord {
   return {
     generatedAtUtc: `${REVIEW_DATE}T00:00:00.000Z`,
     reviewDateUtc: REVIEW_DATE,
@@ -268,14 +352,14 @@ function handoverRecord(evOutput: ReturnType<typeof createEvidenceCompatibilityR
     surfaceCompatibilityStatement: "all required surface/version targets reviewed",
     configurationPrecedenceMapRef: "precedence:lane-d-review",
     capabilityDispositionTableRef: "disposition:lane-d-review",
-    reviewerStageRefs: [evOutput.handoff.handoffId, "handoff-SafetyRollbackReviewer"],
+    reviewerStageRefs: [evidenceReview.handoff.handoffId, "handoff-SafetyRollbackReviewer"],
     ownerDecisionRefs: [...OWNER_DECISION_IDS],
     evidenceStateLegend: [],
     artifactDispositions: [
       {
         artifactId: "artifact:lane-d-review",
         canonicalPath: ".kiro/skills/repo-map/SKILL.md",
-        disposition: "retain",
+        disposition: "retained",
         evidenceRefs: ["source:lane-d-review"],
         reason: "reviewer fixture",
         activationCondition: "after exact-surface validation",
@@ -283,7 +367,7 @@ function handoverRecord(evOutput: ReturnType<typeof createEvidenceCompatibilityR
         rollbackPath: "no rollback applies",
       },
     ],
-    validationRuns: [],
+    validationRuns: freshValidationRuns(),
     knownGaps: [],
     rollbackRecords: [rollbackRecord()],
     maintenanceTriggers: [],
@@ -292,10 +376,11 @@ function handoverRecord(evOutput: ReturnType<typeof createEvidenceCompatibilityR
 }
 
 function cleanSafetyRequest(overrides: Partial<SafetyReviewRequest> = {}): SafetyReviewRequest {
-  const evidenceResult = createEvidenceCompatibilityReviewer().review(evidenceRequest());
-  if (evidenceResult.output === undefined) throw new Error("expected evidence review output");
+  const evidenceResult = createEvidenceCompatibilityReviewer().review(freshEvidenceRequest());
+  const evidenceReview = evidenceResult.output;
+  if (evidenceReview === undefined) throw new Error("expected evidence review output");
   return {
-    evidenceReview: evidenceResult.output,
+    evidenceReview,
     approvalBoundaries: [approvalBoundary()],
     policyFindings: [],
     snapshots: ["snapshot:lane-d-review"],
@@ -405,7 +490,7 @@ describe("HandoverGenerator controlled review projections", () => {
 describe("sequential review-only handoffs", () => {
   it("runs the two roles in order, preserves input, and records bounded read-only handoffs", () => {
     const input = {
-      evidence: evidenceRequest(),
+      evidence: freshEvidenceRequest(),
       safety: {
         approvalBoundaries: [approvalBoundary()],
         policyFindings: [],

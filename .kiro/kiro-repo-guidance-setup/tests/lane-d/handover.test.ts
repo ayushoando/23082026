@@ -30,7 +30,7 @@ function artifact(overrides: Partial<ArtifactInventoryRecord> = {}): ArtifactInv
     activationCondition: "after OD-08 manifest, prerequisite, and activation validation",
     canonicalSource: ".kiro/skills/repo-map/SKILL.md",
     evidenceState: "Observed",
-    disposition: "retain",
+    disposition: "retained",
     maintenanceRisk: "medium",
     evidenceRefs: ["observed:skill:repo-map"],
     validationRunRefs: [],

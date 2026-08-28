@@ -71,10 +71,12 @@ import {
   type KnownGap,
   type RollbackRecord,
   type RollbackRequest,
+  type ReviewResult,
   type SafetyReviewRequest,
   type SourceInventory,
   type SurfaceVersion,
   type ValidationRequest,
+  type ValidationRun,
 } from "../../contracts.ts";
 
 const ROOT = "D:\\23082026";
@@ -201,7 +203,12 @@ function surfaceVersionOf(surface: KiroSurface): SurfaceVersion {
   return found;
 }
 
-function compatibilityRecord(surface: KiroSurface): CompatibilityRecord {
+type CompatibilityOverrides = Omit<Partial<CompatibilityRecord>, "surface" | "version">;
+
+function compatibilityRecord(
+  surface: KiroSurface,
+  overrides: CompatibilityOverrides = {},
+): CompatibilityRecord {
   const sv = surfaceVersionOf(surface);
   return {
     ...sv,
@@ -216,10 +223,11 @@ function compatibilityRecord(surface: KiroSurface): CompatibilityRecord {
     unsupportedClaims: [],
     migrationConstraints: [],
     rollbackPathRef: `rollback-${surface}`,
+    ...overrides,
   };
 }
 
-function passingValidationRun(surface: KiroSurface): ValidationRequest {
+function passingValidationRun(surface: KiroSurface): ValidationRun {
   const sv = REQUIRED_SURFACE_VERSIONS.find((s) => s.surface === surface);
   if (!sv) throw new Error(`no surface version for ${surface}`);
   return {
@@ -237,7 +245,7 @@ function passingValidationRun(surface: KiroSurface): ValidationRequest {
     evidenceRefs: [`evidence-${surface}`],
     unverifiedItems: [],
     blocker: "none",
-  } as unknown as ValidationRequest;
+  };
 }
 
 function completeCompatibilityRecords(): CompatibilityRecord[] {
@@ -247,12 +255,12 @@ function completeCompatibilityRecords(): CompatibilityRecord[] {
       status: "applicable",
       enablementStatus: "enabled-valid",
       evidenceFreshness: "fresh",
-      validationRunRefs: [(run as unknown as { validationId: string }).validationId],
+      validationRunRefs: [run.validationId],
     });
   });
 }
 
-function completeValidationRuns(): ValidationRequest[] {
+function completeValidationRuns(): ValidationRun[] {
   return REQUIRED_SURFACE_VERSIONS.map((sv) => passingValidationRun(sv.surface));
 }
 
@@ -281,7 +289,7 @@ function sourceInventory(overrides: Partial<SourceInventory> = {}): SourceInvent
         trustDecision: "trusted",
         claims: [],
         validationRunRefs: [],
-        disposition: "retain",
+        disposition: "retained",
       },
     ],
     unavailableFindings: [],
@@ -310,7 +318,7 @@ function cleanEvidenceRequest(
           versionSensitiveClaim: false,
           evidenceProvenanceRef: "prov-1",
           availability: "available",
-          disposition: "retain",
+          disposition: "retained",
           validationAction: "none",
           status: "reviewed",
         },
@@ -332,7 +340,7 @@ function cleanEvidenceRequest(
         activationCondition: "after exact-surface validation",
         canonicalSource: "AGENTS.md",
         evidenceState: "Observed",
-        disposition: "retain",
+        disposition: "retained",
         maintenanceRisk: "low",
         evidenceRefs: ["src-1"],
         validationRunRefs: [],
@@ -395,7 +403,7 @@ function knownGap(overrides: Partial<KnownGap> = {}): KnownGap {
   };
 }
 
-function buildProposedHandover(evOutput: NonNullable<ReturnType<typeof createEvidenceCompatibilityReviewer>["review"]>["output"]): HandoverRecord {
+function buildProposedHandover(evidenceReview?: ReviewResult): HandoverRecord {
   return {
     generatedAtUtc: "2026-08-25T00:00:00.000Z",
     reviewDateUtc: "2026-08-25",
@@ -407,14 +415,17 @@ function buildProposedHandover(evOutput: NonNullable<ReturnType<typeof createEvi
     surfaceCompatibilityStatement: "all required surface/version targets reviewed",
     configurationPrecedenceMapRef: "precedence-1",
     capabilityDispositionTableRef: "disposition-1",
-    reviewerStageRefs: [evOutput?.handoff.handoffId ?? "handoff-EvidenceCompatibilityReviewer", "handoff-SafetyRollbackReviewer"],
+    reviewerStageRefs: [
+      evidenceReview?.handoff.handoffId ?? "handoff-EvidenceCompatibilityReviewer",
+      "handoff-SafetyRollbackReviewer",
+    ],
     ownerDecisionRefs: [...OWNER_DECISION_IDS],
     evidenceStateLegend: [],
     artifactDispositions: [
       {
         artifactId: "artifact:enablement-review",
         canonicalPath: ".kiro/skills/repo-map/SKILL.md",
-        disposition: "retain",
+        disposition: "retained",
         evidenceRefs: ["src-1"],
         reason: "reviewer fixture",
         activationCondition: "after exact-surface validation",
@@ -432,6 +443,7 @@ function buildProposedHandover(evOutput: NonNullable<ReturnType<typeof createEvi
 
 function cleanSequentialInput(): SequentialReviewInput {
   const evResult = createEvidenceCompatibilityReviewer().review(cleanEvidenceRequest());
+  if (evResult.output === undefined) throw new Error("clean evidence request must produce output; check fixture completeness");
   return {
     evidence: cleanEvidenceRequest(),
     safety: {
@@ -519,6 +531,7 @@ describe("Property 6: sequential reviewers fail closed on any incomplete input",
             rollbackRecords: flags.missingRollback
               ? [rollbackRecord({ result: "fail" })]
               : [rollbackRecord()],
+            proposedHandover: base.safety.proposedHandover,
           },
         };
 
@@ -587,6 +600,7 @@ describe("Property 6: sequential reviewers fail closed on any incomplete input",
             snapshots: ["snapshot-1"],
             knownGaps: { entries: [] },
             rollbackRecords: [rollbackRecord({ result: rollbackResult })],
+            proposedHandover: buildProposedHandover(evidenceOut),
           } satisfies SafetyReviewRequest);
 
           const shouldPass = approvalStatus === "approved" && rollbackResult === "pass";
@@ -744,3 +758,6 @@ describe("Property 6: RollbackManager blocks later enablement when rollback is n
     expect(readiness.laterEnablementBlocked).toBe(false);
   });
 });
+
+
+

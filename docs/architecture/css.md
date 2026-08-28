@@ -1,10 +1,8 @@
-# CSS ownership
+# FOCSS architecture
 
-Shared system: **`site/focss/`** (plain CSS tree; `@focss/*` alias). Not an npm package. Governance: [`focss-stop-drift.md`](../governance/focss-stop-drift.md).
+This reference describes CSS ownership, zone boundaries, token rules, and the distinction between static and rendered evidence. Use the [FOCSS editing workflow](../../Agents/07-css.md) for procedures; commands listed here are configured validation routes, not observed pass results.
 
-Verify with `pnpm run verify:focss` (five checks: import graph, site CSS, fences,
-module imports, structure), then `lint:ui:strict`, `pnpm run ops check:composer-styles`,
-`pnpm run check:style-tokens`.
+Configured checks are `pnpm run verify:focss`, `pnpm run lint:ui:strict`, `pnpm run check:composer-styles`, and `pnpm run check:style-tokens`. Run only an exact authorized command; no result is asserted here.
 
 ## Design systems (live)
 

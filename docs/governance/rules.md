@@ -1,16 +1,8 @@
-# Governance
+# Programme governance rules
 
-**Live product shape:** forked Studio (`/oostudio`) + Planner (`/ooplanner`) with
-dockview shells, plus residual marketing/admin under `site/app`. See
-`docs/architecture/product-map.md` and `Failures.md`. Programme goal tables below may still
-name prior Admin Product Studio journeys — treat **measured “Current” columns as
-capture-time**, not proof for this checkout.
+This reference defines enforceable programme constraints and identifies whether enforcement is automated, manual, historical, or pending. Authority order remains user instruction > live repository evidence > [`AGENTS.md`](../../AGENTS.md) > [`Agents/`](../../Agents/INDEX.md) > `docs/`; no status or command result here overrides that order.
 
-**Admin → Architecture docs:** external link to tech-docs SPA (dev **:3001**, prod subdomain). How-to: [`product-map.md`](../architecture/product-map.md).
-
-**Binding on every phase.** A task not covered by a rule here is out of scope until a rule
-is added. This document is the only place *programme* rules live; a programme rule stated
-anywhere else and not here is not binding.
+**Status:** rules and configured enforcement routes are reference facts; dated measurements and “current” values below are historical until an exact authorized command is observed. Active hard blockers live only in [`Failures.md`](../../Failures.md).
 
 **This document does not stand alone.** `../../Agents/*.md` (indexed at
 `Agents/INDEX.md`) binds every session in this repository, programme or not — CSS lock
@@ -37,7 +29,7 @@ gaps — they are conditions of doing the work at all.
 
 | ID | Rule |
 |---|---|
-| **E1 — Prefer evidence** | If a task is not covered by a rule here, or two rules conflict: **User Wins**, then `AGENTS.md`, then live code. Proceed with the smallest sound change. Ask only for irreversible/destructive ops (prod deploy, live schema apply, secret rotation). |
+| **E1 — Prefer evidence** | If a task is not covered by a rule here, or two rules conflict, apply the repository authority order: current user instruction, live code and fresh command output, `AGENTS.md`, `Agents/`, then `docs/`. Proceed with the smallest sound owned change; request confirmation for destructive or production-affecting operations. |
 | **E2 — Prefer current phase** | Prefer the current phase. Related fixes needed for evidence or a green gate are allowed. Do not expand into unrelated rewrites. |
 | **E3 — Evidence, not assertion** | A checklist item is complete only with attached evidence: command output, a CI run reference, or a before/after figure. Self-assertion is not evidence. "I verified this" is not evidence. |
 | **E4 — Retire deliberately** | Removal is allowed, but it must be recoverable and listed on the current task. **Git history is the archive** for anything git tracks — files, scripts, dependencies, tests — so deleting them is fine once the task names them; do not copy them into `.archive/` as well. `.archive/` is only for material that must stay browsable without git archaeology (superseded essays, retired index pages). **Database objects are the exception**: rows are not in git, so retire a table by moving it to the `archive` schema or by a migration with a working `-- rollback`, never a bare `drop table`. List what goes on the task first. |
@@ -172,8 +164,7 @@ Recorded rather than quietly fixed. Prefer evidence over inference. **Re-measure
 Item 8 was the most important line in this document. It is the one thing that made every
 other rule optional.
 
-`gate` is a thin alias for `release:gate:fast`. The full gate is `release:gate` (CI and local
-operators use those two names; do not invent a third).
+`gate:fast` is an alias for `release:gate:fast`. `gate` is an alias for the full `release:gate`; command presence is configured state, not an observed result.
 
 ## 10. Programme goals
 

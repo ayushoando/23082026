@@ -733,7 +733,7 @@ function evaluateCapability(
     status = "deferred";
     evidenceState = "Documented";
   } else if (input.kind === "specification_workflow") {
-    disposition = "retain";
+    disposition = "retained";
     status = "observed";
     evidenceState = "Observed";
   } else {
@@ -806,7 +806,7 @@ function dispositionRecordFor(
   profile: CapabilityProfile,
   knownGapRefs: readonly string[],
 ): CapabilityDispositionRecord {
-  const noChange = record.disposition === "retain" || record.disposition === "observe";
+  const noChange = record.disposition === "retained" || record.disposition === "observe";
   return {
     capabilityId: record.capabilityId,
     kind: record.kind === "subagent_dag" ? "Subagent" : "Tool_Surface",
@@ -821,7 +821,7 @@ function dispositionRecordFor(
     evidenceRefs: unique([`evidence:${record.capabilityId}:provenance`, ...record.validationRunRefs, ...knownGapRefs]),
     validationAction: record.validationAction,
     expectedSideEffects: expectedSideEffectsFor(record),
-    rollbackPath: noChange && record.validationRunRefs.length === 0 && record.disposition === "retain"
+    rollbackPath: noChange && record.validationRunRefs.length === 0 && record.disposition === "retained"
       ? "no rollback applies"
       : record.rollbackPath,
     reason: record.blockers.length > 0 ? record.blockers.join("; ") : `${record.name} recorded as ${record.disposition}`,

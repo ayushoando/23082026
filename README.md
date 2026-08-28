@@ -1,8 +1,6 @@
-# OOplanner / OOStudio
+# Oando furniture platform
 
-`site/` is a **Next.js 16** App Router monorepo (root `package.json`). Product = two forked interactive apps — **Furniture Studio** (`/oostudio`) and **Floor Planner** (`/ooplanner`) — plus a marketing site and an admin surface.
-
-New here? Start at [`START.md`](./START.md) → [`CONTENTS.md`](./CONTENTS.md).
+This repository contains a Next.js 16 App Router application for the Oando marketing catalog, administration, Furniture Studio (`/oostudio`), and Floor Planner (`/ooplanner`). Use this page for product orientation; new contributors should follow [Start here](./START.md) and then use the [documentation index](./CONTENTS.md).
 
 ## Surfaces
 
@@ -82,6 +80,8 @@ CRM demo is **localStorage** under `/admin/crm`; the real contact inbox is Admin
 Repo map: [`docs/architecture/layout.md`](./docs/architecture/layout.md) · stack: [`docs/architecture/stack.md`](./docs/architecture/stack.md) · routes: [`docs/architecture/routes.md`](./docs/architecture/routes.md) · schema: [`docs/database/schema.md`](./docs/database/schema.md) · governance: [`docs/governance/rules.md`](./docs/governance/rules.md).
 
 ## Checks
+
+**Authorization required:** the commands below are configured validation routes. Run an exact command only with current-session user authorization and enabled-hook permission; otherwise report it as unrun.
 
 ```bash
 pnpm run typecheck && pnpm run scan:boundaries && pnpm run gate

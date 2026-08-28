@@ -1312,7 +1312,7 @@ function evaluatePower(
   }
 
   const unsafe = integrityResult === "fail" || trustDecision === "untrusted" || format === "Neither";
-  const disposition: CapabilityDisposition = unsafe ? "disable" : external ? "defer" : blockers.length > 0 ? "observe" : "retain";
+  const disposition: CapabilityDisposition = unsafe ? "disable" : external ? "defer" : blockers.length > 0 ? "observe" : "retained";
   const record: EvaluatedPowerRecord = {
     pathOrInstallation: locator,
     format,
@@ -1506,7 +1506,7 @@ function evaluateExtension(
 
   const unsafe = integrityResult === "fail" || trustDecision === "untrusted" || base.repositoryCompatibility === "incompatible";
   const incomplete = blockers.length > 0 || gapRefs.length > 0;
-  const disposition: CapabilityDisposition = unsafe ? "disable" : incomplete ? "defer" : "retain";
+  const disposition: CapabilityDisposition = unsafe ? "disable" : incomplete ? "defer" : "retained";
   const record: EvaluatedExtensionRecord = {
     ...base,
     validationRunRefs: targetValidationRefs,

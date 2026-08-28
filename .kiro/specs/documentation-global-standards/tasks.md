@@ -15,8 +15,8 @@ Rewrite and re-verify exactly the 34 Markdown files named by the approved requir
 
 ## Tasks
 
-- [ ] 1. Establish the immutable corpus baseline and containment controls
-  - [ ] 1.1 Create the baseline and allowlist sections in `.kiro/specs/documentation-global-standards/implementation-record.md`
+- [x] 1. Establish the immutable corpus baseline and containment controls
+  - [x] 1.1 Create the baseline and allowlist sections in `.kiro/specs/documentation-global-standards/implementation-record.md`
     - Record exactly the 34 approved paths, their cohort, presence, tracked state, baseline content identity, and pre-existing-change status before any documentation edit.
     - Record protected paths and excluded asset classes, including `.kiro/specs/kiro-config-rewrite/**`, and define the only allowed outcomes: the 34 paths remain present and are unmodified or modified; permitted spec artifacts are created or modified.
     - Capture each pre-existing user change without overwriting it and create the conflict-before-modification record required when a higher-authority source or criterion controls.
@@ -24,8 +24,8 @@ Rewrite and re-verify exactly the 34 Markdown files named by the approved requir
     - Apply static acceptance checks from Design Properties 1, 3, and 20.
     - _Requirements: 1.1–1.3, 1.8–1.12, 3.1, 8.9, 11.19–11.20_
 
-- [ ] 2. Research current official documentation guidance
-  - [ ] 2.1 Build the Source Register in `.kiro/specs/documentation-global-standards/implementation-record.md`
+- [x] 2. Research current official documentation guidance
+  - [x] 2.1 Build the Source Register in `.kiro/specs/documentation-global-standards/implementation-record.md`
     - Retrieve only official, canonical HTTPS sources from W3C, Diátaxis, Microsoft, Google, the RFC Editor or IETF, and official CommonMark guidance for the concerns each publisher governs.
     - For every applied source, record publisher, title, canonical URL, successful UTC access time, displayed publication or update date when available, governing scope, current/superseded/unverified decision, latest applicable edition evidence, retrieval evidence, licensing-safe paraphrase, and every affected in-scope path.
     - Record failed access and supersession uncertainty as `unverified`; do not silently replace an unavailable official source with a secondary source.
@@ -33,8 +33,8 @@ Rewrite and re-verify exactly the 34 Markdown files named by the approved requir
     - Apply static acceptance checks from Design Properties 4 and 5.
     - _Requirements: 2.1–2.12, 6.14, 7.9–7.10, 9.6, 11.8_
 
-- [ ] 3. Build the evidence and editorial control ledgers
-  - [ ] 3.1 Populate the pre-rewrite ledgers in `.kiro/specs/documentation-global-standards/implementation-record.md`
+- [x] 3. Build the evidence and editorial control ledgers
+  - [x] 3.1 Populate the pre-rewrite ledgers in `.kiro/specs/documentation-global-standards/implementation-record.md`
     - Create claim records for commands, paths, dates, versions, routes, schemas, persistence, deployment, observability, analytics, security, and other repository facts; include owning source, exact source location, observed value, status, and needed evidence when unresolved.
     - Create the canonical terminology and canonical-owner registries, including the six shared navigation documents, blocker ownership, validation evidence, browser evidence, operations, product map, script reference, fork boundary, two databases, persistence, FOCSS, plans, generated evidence, and status vocabulary.
     - Create conflict records with allowed classifications, authority levels, canonical owner, controlling evidence, unique local detail, affected paths, resolution, and state.
@@ -44,59 +44,59 @@ Rewrite and re-verify exactly the 34 Markdown files named by the approved requir
     - Apply static acceptance checks from Design Properties 2, 6, 7, 10, 13, 15–17.
     - _Requirements: 1.4–1.7, 3.1–3.9, 4.1–4.4, 4.8–4.9, 5.3–5.7, 7.1–7.6, 7.8, 7.12–7.13, 8.1–8.5, 9.1–9.9, 10.1–10.9, 10.12–10.14_
 
-- [ ] 4. Rewrite each authority-ordered cohort and complete its first static review
-  - [ ] 4.1 Rewrite and first-review `AGENTS.md`
+- [x] 4. Rewrite each authority-ordered cohort and complete its first static review
+  - [x] 4.1 Rewrite and first-review `AGENTS.md`
     - Preserve the generated Next.js block and reconcile the process floor against user instructions and live source before lower-authority prose.
     - Give the document a unique title and concise purpose, improve global plain language and structure, preserve every operational rule, and correct only evidence-supported claims.
     - Review and correct title/purpose, reader need, CommonMark and accessibility, local and external links, claim accuracy, duplicates/conflicts, security, and operational-contract preservation; record disposition, findings, corrections, and focused rereviews in `implementation-record.md`.
     - _Requirements: 1.4–1.9, 3.4–3.8, 4.1–4.7, 5.1–5.12, 6.1–6.14, 7.1–7.13, 8.1–8.8, 9.1–9.9, 10.1–10.14, 11.4–11.7_
 
-  - [ ] 4.2 Rewrite and first-review root navigation: `README.md`, `START.md`, `CONTENTS.md`, and `DOC-MAP.md`
+  - [x] 4.2 Rewrite and first-review root navigation: `README.md`, `START.md`, `CONTENTS.md`, and `DOC-MAP.md`
     - Treat the four files as one navigation transaction while assigning each one a distinct audience, reader need, purpose, and title.
     - Make shared-topic destinations agree with `AGENTS.md`, `Agents/INDEX.md`, and `docs/README.md`; put prerequisites before dependent instructions and use descriptive repository-relative links.
     - Review and correct global plain language, CommonMark/accessibility, links and anchors, live source accuracy, duplicate/conflict handling, security, and operational-rule preservation; record one disposition and first-review result per file.
     - _Requirements: 3.2–3.8, 4.1–4.10, 5.1–5.12, 6.1–6.14, 7.1–7.13, 8.1–8.8, 9.1–9.9, 10.1–10.14, 11.3–11.7_
 
-  - [ ] 4.3 Rewrite and first-review root operations and ownership: `Failures.md`, `HANDOVER.md`, `OPERATIONS_RUNBOOK.md`, `owners.md`, and `Testing-handbook.md`
+  - [x] 4.3 Rewrite and first-review root operations and ownership: `Failures.md`, `HANDOVER.md`, `OPERATIONS_RUNBOOK.md`, `owners.md`, and `Testing-handbook.md`
     - Keep `Failures.md` the sole blocker record; classify handoff statements honestly as observed, historical, planned, deprecated, blocked, or pending; verify ownership and escalation paths.
     - Put goal, prerequisites, warnings, scope, expected outcome, and recovery before risky operational steps; retain exact database, migration, persistence, deployment, and validation boundaries supported by live evidence.
     - Distinguish static, unit, browser, build, coverage, and full-gate evidence and preserve both Vitest lanes without claiming an unobserved command passed.
     - Review and correct title/purpose, global plain language, CommonMark/accessibility, links, live source accuracy, duplicate/conflict handling, security, and operational-rule preservation; record one disposition and first-review result per file.
     - _Requirements: 3.2–3.8, 4.1–4.10, 5.1–5.12, 6.1–6.14, 7.1–7.13, 8.1–8.8, 9.1–9.9, 10.1–10.14, 11.3–11.7_
 
-  - [ ] 4.4 Rewrite and first-review agent handbooks and navigation: `Agents/INDEX.md`, `Agents/01-standard.md`, `Agents/02-testing.md`, `Agents/03-browser.md`, `Agents/04-failures.md`, `Agents/05-documentation.md`, `Agents/06-architecture.md`, and `Agents/07-css.md`
+  - [x] 4.4 Rewrite and first-review agent handbooks and navigation: `Agents/INDEX.md`, `Agents/01-standard.md`, `Agents/02-testing.md`, `Agents/03-browser.md`, `Agents/04-failures.md`, `Agents/05-documentation.md`, `Agents/06-architecture.md`, and `Agents/07-css.md`
     - Keep session guidance subordinate to `AGENTS.md`, preserve unique task prerequisites and safeguards, and replace only exact lower-authority duplication with minimum local context plus descriptive canonical links.
     - Reconcile `Agents/INDEX.md` with the root navigation transaction and durable-document destinations; preserve browser-proof boundaries, blocker rules, architecture routing, and FOCSS workflow.
     - Review and correct title/purpose, global plain language, CommonMark/accessibility, links, live source accuracy, duplicate/conflict handling, security, and operational-rule preservation; record one disposition and first-review result per file.
     - _Requirements: 1.4–1.7, 3.2–3.8, 4.1–4.10, 5.1–5.12, 6.1–6.14, 7.1–7.13, 8.1–8.8, 9.1–9.9, 10.1–10.14, 11.3–11.7_
 
-  - [ ] 4.5 Rewrite and first-review agent research documents: `Agents/research-gap-areas.md` and `Agents/research-practices.md`
+  - [x] 4.5 Rewrite and first-review agent research documents: `Agents/research-gap-areas.md` and `Agents/research-practices.md`
     - Separate research method from findings, verify citations and status, and prevent historical observations or research gaps from becoming unsupported current repository facts.
     - Apply the Source Register method, licensing-safe paraphrases, explicit evidence classes, and pending status for unresolved claims.
     - Review and correct title/purpose, global plain language, CommonMark/accessibility, links, live source accuracy, duplicate/conflict handling, security, and operational-rule preservation; record one disposition and first-review result per file.
     - _Requirements: 2.1–2.12, 3.2–3.8, 4.1–4.10, 5.1–5.12, 6.1–6.14, 7.1–7.13, 8.1–8.8, 9.1–9.9, 11.3–11.8_
 
-  - [ ] 4.6 Rewrite and first-review durable navigation and architecture: `docs/README.md`, `docs/architecture/css.md`, `docs/architecture/layout.md`, `docs/architecture/product-map.md`, `docs/architecture/routes.md`, `docs/architecture/scripts.md`, and `docs/architecture/stack.md`
+  - [x] 4.6 Rewrite and first-review durable navigation and architecture: `docs/README.md`, `docs/architecture/css.md`, `docs/architecture/layout.md`, `docs/architecture/product-map.md`, `docs/architecture/routes.md`, `docs/architecture/scripts.md`, and `docs/architecture/stack.md`
     - Rebuild durable claims from owning source and configuration; verify product surfaces, current paths, routes, scripts, versions, integration states, and FOCSS architecture without inferring runtime success.
     - Make `docs/README.md` agree with the other five navigation documents and keep procedures linked to their canonical operational owners.
     - Exclude `pnpm run typecheck:scripts` while `scripts/tsconfig.json` is absent and classify unsupported or unavailable behavior as pending, planned, historical, deprecated, or absent.
     - Review and correct title/purpose, global plain language, CommonMark/accessibility, links, live source accuracy, duplicate/conflict handling, security, and operational-rule preservation; record one disposition and first-review result per file.
     - _Requirements: 3.2–3.8, 4.1–4.10, 5.1–5.12, 6.1–6.14, 7.1–7.13, 8.1–8.8, 9.1–9.9, 10.1–10.14, 11.3–11.7_
 
-  - [ ] 4.7 Rewrite and first-review database documentation: `docs/database/drizzle.md`, `docs/database/ops.md`, and `docs/database/schema.md`
+  - [x] 4.7 Rewrite and first-review database documentation: `docs/database/drizzle.md`, `docs/database/ops.md`, and `docs/database/schema.md`
     - Verify Admin and Products ownership, project references, migration directories, Drizzle roles, row-level security, grants, policies, rollback requirements, dry-run-before-apply commands, type generation, seed/restore procedures, and exclusive persistence modes against live source.
     - Put security and data-loss warnings before risky commands, name prerequisites, scope, impact, and recovery, and keep server credentials out of client-visible examples.
     - Review and correct title/purpose, global plain language, CommonMark/accessibility, links, live source accuracy, duplicate/conflict handling, security, and operational-rule preservation; record one disposition and first-review result per file.
     - _Requirements: 3.2–3.8, 4.1–4.10, 5.1–5.12, 6.1–6.14, 7.1–7.13, 8.1–8.8, 9.1–9.9, 10.4–10.7, 10.10–10.14, 11.3–11.7_
 
-  - [ ] 4.8 Rewrite and first-review governance documentation: `docs/governance/benchmarks.md`, `docs/governance/charter.md`, `docs/governance/focss-stop-drift.md`, and `docs/governance/rules.md`
+  - [x] 4.8 Rewrite and first-review governance documentation: `docs/governance/benchmarks.md`, `docs/governance/charter.md`, `docs/governance/focss-stop-drift.md`, and `docs/governance/rules.md`
     - Retain only evidence-backed governance decisions and measurable bars; distinguish configured, observed, present-but-unverified, planned, historical, deprecated, blocked, and pending-owner-validation states.
     - Preserve security and operational safeguards without presenting plans, generated evidence, or prior command logs as proof of current behavior.
     - Review and correct title/purpose, global plain language, CommonMark/accessibility, links, live source accuracy, duplicate/conflict handling, security, and operational-rule preservation; record one disposition and first-review result per file.
     - _Requirements: 3.2–3.8, 4.1–4.10, 5.1–5.12, 6.1–6.14, 7.1–7.13, 8.1–8.8, 9.1–9.9, 10.8–10.14, 11.3–11.7_
 
-- [ ] 5. Checkpoint — close the complete first pass before second-pass review
-  - [ ] 5.1 Reconcile all first-pass findings and dependency closures in `.kiro/specs/documentation-global-standards/implementation-record.md`
+- [x] 5. Checkpoint — close the complete first pass before second-pass review
+  - [x] 5.1 Reconcile all first-pass findings and dependency closures in `.kiro/specs/documentation-global-standards/implementation-record.md`
     - Confirm all 34 sole-owner cohort entries have completed first reviews, one provisional disposition, all required review dimensions, security records, claim/conflict evidence, and no omitted or duplicate path.
     - Process corrections in authority order by routing each change back to its sole owning cohort; append focused rereviews for every affected file, link, index, canonical reference, claim, conflict, source dependency, and operational-contract tag.
     - For a same-level unresolved conflict, preserve both baseline meanings, set `pending-owner-validation`, stop dependent work, and request owner resolution rather than inventing policy.

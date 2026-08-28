@@ -1,12 +1,8 @@
-# Benchmarks and Standards
+# Benchmarks and evidence status
 
-**The world-class bar, made measurable.** Every number the programme must hit, where it
-comes from, and the command that produces it.
+This reference defines adopted and repository-derived quality bars and identifies the evidence needed to evaluate them. Targets are not pass certificates: every current result requires a fresh, authorized observation, and historical measurements remain explicitly historical.
 
-Parent: [`rules.md`](./rules.md) · Revised: 2026-07-28 · truth note 2026-08-01: instruments
-that assume Admin Product Studio / FlexLayout must be re-mapped to live
-`/oostudio` + `/ooplanner` + residual admin before they can gate this checkout.
-`site/proxy.ts` **is** present (Next 16 edge entry) — do not re-map that one away.
+Parent governance: [programme rules](./rules.md). Product paths or instruments that no longer exist must be corrected before use.
 
 > **Staleness banner:** status cells below are historical snapshots and must not
 > be read as current. Open ship blockers live only in root `Failures.md`. Treat
@@ -39,7 +35,7 @@ can actually defend.
 
 ## 1. Adopted external standards
 
-| Standard | Authority | Governs | Our bar | Position |
+| Standard | Authority | Governs | Programme target | Intended alignment |
 |---|---|---|---|---|
 | **WCAG 2.2 Level AA** | W3C Recommendation, 2023-10-05 | Accessibility | Full AA conformance, 0 unreviewed axe violations | **Meets** |
 | WCAG 2.2 SC 2.5.5 *Target Size (Enhanced)* | W3C, Level **AAA** | Touch target size | 44 × 44 CSS px | **Exceeds AA** — AA (SC 2.5.8) requires only 24 × 24 |

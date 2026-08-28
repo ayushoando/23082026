@@ -1,9 +1,11 @@
 # Operations runbook
 
-Deploy · migrate · seed · roll back. **Repo root only.**
+Use this runbook to deploy, migrate, seed, back up, and recover the platform from the repository root. Prerequisites are operator access to the owning services, correctly configured server-only variables in `.env.local`, a reviewed rollback path, and explicit current-session authorization for every test-like or production-affecting command.
 
-- Daily + deploy/DB/R2: root `pnpm run <name>` (see `package.json`). Long tail: `pnpm run ops:list`.
-- Blockers: [`Failures.md`](./Failures.md) · Schema: [`docs/database/schema.md`](./docs/database/schema.md) · restore: [`docs/database/ops.md`](./docs/database/ops.md) · MCP workers: `mcp/`.
+**Warning — production impact:** migration apply, seed, deploy, restore, and backup commands can alter hosted data or infrastructure. Confirm the target project, take or verify a recoverable backup, run migration dry-runs first, and use the documented rollback or provider recovery procedure before executing a live step.
+
+- Routine deploy, database, and R2 commands use root `pnpm run <name>` routes from `package.json`. Use `pnpm run ops:list` to inspect long-tail operations.
+- Blockers: [`Failures.md`](./Failures.md) · Schema: [`docs/database/schema.md`](./docs/database/schema.md) · Restore: [`docs/database/ops.md`](./docs/database/ops.md). The `mcp/` tree contains tool definitions, not runtime-worker evidence.
 
 ---
 
@@ -55,12 +57,7 @@ pnpm run worker:tail
 
 Verify: dead asset path → `200 image/png` with `x-oando-proxy: r2-fallback`; valid asset → `x-oando-proxy: r2`.
 
-Verify no route handler does a raw disk write:
-
-```bash
-grep -r 'writeFileSync\|mkdirSync' site/app/api/ --include='*.ts' | grep -v 'mode'
-# Expected: zero results
-```
+Verify route handlers by static source inspection or an authorized repository check; do not substitute an untracked shell grep for the owning validation route.
 
 ---
 
@@ -144,9 +141,10 @@ Prove with a restore drill (P5). Pre-2026-08-01 dumps still contain public legac
 | `test` | Both vitest lanes |
 | `check:docs-all` | Docs + plan-set integrity |
 | `check:governance` | Ratchets (rollback, CSP, npx) |
-| `gate` / `release:gate` | Fast / full |
+| `gate:fast` / `release:gate:fast` | Fast development gate |
+| `gate` / `release:gate` | Full release gate |
 | `tech-docs:gate` | Inventory package |
 
-Ops: `db:apply` · `db:test` · `backup:supabase:r2` · `gate:site-ui` · `gate:open3d` · `list`.
+Ops routes include `db:apply`, `db:test`, `backup:supabase:r2`, `gate:site-ui`, and `list`. Confirm current names with `pnpm run ops:list` when that exact command is authorized.
 
 Blockers: [`Failures.md`](./Failures.md) only.

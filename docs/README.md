@@ -1,7 +1,6 @@
-# Docs
+# Durable documentation index
 
-**Authority:** user > live code + fresh proof > `Agents/` > this tree.  
-Code wins when docs lag.
+Use this index to find architecture, database, and governance references that should remain stable across individual tasks. Authority order: user instruction > live code and fresh command output > [`AGENTS.md`](../AGENTS.md) > [`Agents/`](../Agents/INDEX.md) > this tree.
 
 > **Production filesystem is read-only.** Runtime writes use mode-aware wrappers.
 > See [`AGENTS.md`](../AGENTS.md) §5.

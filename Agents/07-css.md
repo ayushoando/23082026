@@ -1,4 +1,6 @@
-# CSS
+# FOCSS editing workflow
+
+Use this workflow when editing product styles or `site/focss/**`. Preserve zone boundaries and semantic tokens, then run only the exact CSS validation command authorized by the current user and permitted by the enabled hook.
 
 ## Bar
 - CSS home: **`site/focss/`** as `@focss/*` — plain tree, not an npm package.

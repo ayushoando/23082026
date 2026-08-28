@@ -1,17 +1,19 @@
-# Standard
+# Standard execution procedure
+
+Use this procedure for every repository task. The expected outcome is the smallest sound, owned change with evidence classified honestly and unrelated work preserved.
 
 ## Bar
 
 - Root `AGENTS.md` wins.
 - Smallest sound change. Preserve unrelated work.
 - No handwritten `any`.
-- Before acting: `START.md` · the relevant how-to · MEMORY ethics (session summary ≠ substitute).
+- Before acting, read [`START.md`](../START.md), the relevant task guide, and live coordination sources; a session summary never substitutes for source evidence.
 
 ## Execution
 
-- Repo root only. **No worktrees.**
-- **Agents:** Max 1 agent only — strictly single-agent execution; no parallel agents or fan-outs.
-- **pnpm** from root only — never inside `site/` or `tech-docs-generator/`.
+- Repository root only. **No worktrees.**
+- Do not start an additional agent unless the current user authorizes it and disjoint path ownership is explicit.
+- Use **pnpm** from the root only; never install from `site/` or `tech-docs-generator/`.
 - Secrets only in `.env.local` / `site/.env.local` when required.
 - Do not invent product behavior. Every how-to has **Goal · Files · Run · Expect · Evidence · Acceptance**.
 
