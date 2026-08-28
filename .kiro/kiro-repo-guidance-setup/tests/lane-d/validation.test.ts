@@ -8,8 +8,8 @@ import {
   type ValidationExecutionRequest,
   type ValidationExecutionResult,
   type ValidationGateKind,
-} from "../../../scripts/kiro-repo-guidance-setup/validation.ts";
-import type { ValidationRequest, VitestLaneResults } from "../../../scripts/kiro-repo-guidance-setup/contracts.ts";
+} from "../../validation.ts";
+import type { ValidationRequest, VitestLaneResults } from "../../contracts.ts";
 
 const ROOT = "D:\\23082026";
 const STARTED_AT = "2026-08-25T12:34:56.000Z";
@@ -23,9 +23,9 @@ function createRequest(
     repositoryRootOrActiveSurface: ROOT,
     surface: "Local_Repository_Surface",
     version: "repository",
-    scope: "scripts/kiro-repo-guidance-setup/validation.ts",
+    scope: ".kiro/kiro-repo-guidance-setup/validation.ts",
     executionLayer: "default_native_task",
-    commandOrInteraction: "pnpm exec vitest run --config tests/vitest.config.ts tests/kiro-repo-guidance-setup/lane-d/validation.test.ts",
+    commandOrInteraction: "pnpm exec vitest run --config tests/vitest.config.ts .kiro/kiro-repo-guidance-setup/tests/lane-d/validation.test.ts",
     ...overrides,
   });
 }
@@ -97,7 +97,7 @@ describe("ValidationRunnerService", () => {
       action: "artifact",
       repositoryRootOrActiveSurface: ROOT,
       surface: "Local_Repository_Surface",
-      scope: "scripts/kiro-repo-guidance-setup/validation.ts",
+      scope: ".kiro/kiro-repo-guidance-setup/validation.ts",
       startedAtUtc: STARTED_AT,
       result: "pass",
       exitCodeOrOutcome: "exit 0",

@@ -4,9 +4,9 @@
 // plans are bounded.
 //
 // Lane C, test-authoring only. This property test drives the read-only
-// capability evaluator (scripts/kiro-repo-guidance-setup/capabilities.ts) and
+// capability evaluator (.kiro/kiro-repo-guidance-setup/capabilities.ts) and
 // the read-only continuity/execution evaluator
-// (scripts/kiro-repo-guidance-setup/continuity.ts). Both evaluators only inspect
+// (.kiro/kiro-repo-guidance-setup/continuity.ts). Both evaluators only inspect
 // supplied metadata — they never load a power, route to an MCP service, spawn an
 // agent, run a command, or contact Crew. This test therefore never touches a
 // source module, package.json, or results/ (except vitest's own JSON output),

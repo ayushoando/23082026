@@ -47,14 +47,14 @@ import {
   createSafetyRollbackReviewer,
   runSequentialReview,
   type SequentialReviewInput,
-} from "../../../scripts/kiro-repo-guidance-setup/reviewers.ts";
+} from "../../reviewers.ts";
 import {
   createRollbackManager,
-} from "../../../scripts/kiro-repo-guidance-setup/rollback.ts";
+} from "../../rollback.ts";
 import {
   ValidationRunnerService,
   type ValidationExecutionResult,
-} from "../../../scripts/kiro-repo-guidance-setup/validation.ts";
+} from "../../validation.ts";
 import {
   COMPLETE_REVIEW_STATEMENT,
   REQUIRED_SURFACE_VERSIONS,
@@ -72,7 +72,7 @@ import {
   type SourceInventory,
   type SurfaceVersion,
   type ValidationRequest,
-} from "../../../scripts/kiro-repo-guidance-setup/contracts.ts";
+} from "../../contracts.ts";
 
 const ROOT = "D:\\23082026";
 

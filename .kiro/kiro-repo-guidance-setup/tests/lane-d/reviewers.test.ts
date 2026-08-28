@@ -11,7 +11,7 @@ import {
   REVIEWER_STAGE_DEFAULTS,
   SafetyRollbackReviewerService,
   type SequentialReviewInput,
-} from "../../../scripts/kiro-repo-guidance-setup/reviewers.ts";
+} from "../../reviewers.ts";
 import {
   COMPLETE_REVIEW_STATEMENT,
   REQUIRED_SURFACE_VERSIONS,
@@ -26,7 +26,7 @@ import {
   type SourceInventory,
   type SurfaceVersion,
   type ValidationRun,
-} from "../../../scripts/kiro-repo-guidance-setup/contracts.ts";
+} from "../../contracts.ts";
 
 type CompatibilityOverrides = Omit<Partial<CompatibilityRecord>, "surface" | "version">;
 
@@ -226,7 +226,7 @@ function approvalBoundary(overrides: Partial<ApprovalBoundary> = {}): ApprovalBo
 function rollbackRecord(overrides: Partial<RollbackRecord> = {}): RollbackRecord {
   return {
     rollbackId: "rb-1",
-    targetArtifactOrScope: "scripts/kiro-repo-guidance-setup/reviewers.ts",
+    targetArtifactOrScope: ".kiro/kiro-repo-guidance-setup/reviewers.ts",
     preChangeStateRef: "snapshot-1",
     rollbackAction: "restore bytes",
     expectedSuccessSignal: "hash matches",

@@ -21,22 +21,22 @@ import {
   type SharedContractFreeze,
   type SourceInventory,
   type ValidationRun,
-} from "../../../scripts/kiro-repo-guidance-setup/contracts.ts";
-import { createSharedContractFreeze } from "../../../scripts/kiro-repo-guidance-setup/contract-freeze.ts";
-import { LANE_OWNERSHIP_DECLARATIONS } from "../../../scripts/kiro-repo-guidance-setup/ownership.ts";
+} from "../../contracts.ts";
+import { createSharedContractFreeze } from "../../contract-freeze.ts";
+import { LANE_OWNERSHIP_DECLARATIONS } from "../../ownership.ts";
 import {
   createSafetyRollbackReviewer,
   type SequentialReviewInput,
-} from "../../../scripts/kiro-repo-guidance-setup/reviewers.ts";
+} from "../../reviewers.ts";
 import {
   acquireFileOwnershipReservation,
   OD04_APPROVAL_BOUNDARY_REF,
-} from "../../../scripts/kiro-repo-guidance-setup/reservations.ts";
+} from "../../reservations.ts";
 import {
   INTEGRATION_PIPELINE_POLICY,
   runIntegrationPipeline,
   type IntegrationPipelineInput,
-} from "../../../scripts/kiro-repo-guidance-setup/pipeline.ts";
+} from "../../pipeline.ts";
 
 const WAVE_ID = "wave-reviewer-contract-test";
 const FREEZE_ID = "freeze-reviewer-contract-test";

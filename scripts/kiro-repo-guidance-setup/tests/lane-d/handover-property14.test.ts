@@ -44,12 +44,12 @@ import {
   type ConfigurationScope,
   type CoverageMatrix,
   type HandoverInput,
-} from "../../../scripts/kiro-repo-guidance-setup/contracts.ts";
+} from "../../contracts.ts";
 import {
   buildCapabilityDispositionTable,
   CAPABILITY_DISPOSITION_NO_ROLLBACK,
   HandoverGeneratorService,
-} from "../../../scripts/kiro-repo-guidance-setup/handover.ts";
+} from "../../handover.ts";
 
 const REVIEW_DATE = "2026-08-25";
 

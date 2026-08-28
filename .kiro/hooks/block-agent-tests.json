@@ -3,12 +3,13 @@
   "hooks": [
     {
       "name": "Block Agent Test Runs",
-      "trigger": "PostTaskExec",
+      "trigger": "PreToolUse",
+      "matcher": "execute_pwsh|control_pwsh_process",
       "action": {
         "type": "command",
-        "command": "node scripts/general/block-agent-tests.mjs"
+        "command": "node .kiro/hooks/block-agent-tests.mjs"
       },
-      "description": "YOu must follow user instructions for agent-initiated test-like shell commands, gates, coverage, and browser-test runners.",
+      "description": "Blocks agent shell-tool attempts to run user-owned validation and local-service commands before execution.",
       "enabled": false
     }
   ]

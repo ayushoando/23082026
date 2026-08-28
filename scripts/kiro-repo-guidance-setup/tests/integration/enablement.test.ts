@@ -6,7 +6,7 @@ import {
   ENABLEMENT_PREDICATE_KEYS,
   IntegrationOwnedEnablementGateService,
   type FinalEnablementGateInput,
-} from "../../../scripts/kiro-repo-guidance-setup/enablement.ts";
+} from "../../enablement.ts";
 import {
   REVIEWER_ITERATION_CEILING,
   REVIEWER_MAXIMUM_CONCURRENCY,
@@ -15,8 +15,8 @@ import {
   type IntegrationValidationGateRecord,
   type ReviewResult,
   type StageResult,
-} from "../../../scripts/kiro-repo-guidance-setup/contracts.ts";
-import type { SequentialReviewOutput } from "../../../scripts/kiro-repo-guidance-setup/reviewers.ts";
+} from "../../contracts.ts";
+import type { SequentialReviewOutput } from "../../reviewers.ts";
 
 type ReviewerName = (typeof REVIEWER_ORDER)[number];
 

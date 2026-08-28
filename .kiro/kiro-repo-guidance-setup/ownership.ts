@@ -61,7 +61,7 @@ const COMMON_READ_PATHS = [
 ] as const satisfies readonly RepositoryPath[];
 
 const FEATURE_IMPLEMENTATION_READ_PATH = `${waveManifest.roots.implementation}**` as RepositoryPath;
-const FEATURE_TEST_READ_PATH = "tests/kiro-repo-guidance-setup/**" as RepositoryPath;
+const FEATURE_TEST_READ_PATH = ".kiro/kiro-repo-guidance-setup/tests/**" as RepositoryPath;
 
 const LANE_WRITE_PATHS = {
   "Lane A": [

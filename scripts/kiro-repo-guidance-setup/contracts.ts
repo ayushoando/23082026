@@ -1227,9 +1227,9 @@ export const REVIEWER_ORDER = [
 ] as const satisfies readonly ReviewerName[];
 
 export const FEATURE_IMPLEMENTATION_PATHS = [
-  ".kiro/kiro-repo-guidance-setup/contracts.ts",
-  ".kiro/kiro-repo-guidance-setup/discovery.ts",
-  ".kiro/kiro-repo-guidance-setup/inventory.ts",
-  ".kiro/kiro-repo-guidance-setup/provenance.ts",
-  ".kiro/kiro-repo-guidance-setup/coverage.ts",
+  "scripts/kiro-repo-guidance-setup/contracts.ts",
+  "scripts/kiro-repo-guidance-setup/discovery.ts",
+  "scripts/kiro-repo-guidance-setup/inventory.ts",
+  "scripts/kiro-repo-guidance-setup/provenance.ts",
+  "scripts/kiro-repo-guidance-setup/coverage.ts",
 ] as const satisfies readonly RepositoryPath[];

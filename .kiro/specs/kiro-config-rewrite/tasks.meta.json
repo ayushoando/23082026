@@ -634,6 +634,11 @@
         "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
         "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
         "timestamp": 1787922442751
+      },
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922871919
       }
     ],
     "4.4 Recalculate every moved test import from its destination. Replace old repo-root-style imports only with paths that resolve from the moved file; do not apply an unverified blanket depth.": [
@@ -641,6 +646,16 @@
         "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
         "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
         "timestamp": 1787922146056
+      },
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922880329
+      },
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923136567
       }
     ],
     "4.5 Fix relocation-caused module references, including `pipeline.ts` importing `./reviewers`.": [
@@ -648,6 +663,16 @@
         "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
         "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
         "timestamp": 1787922146194
+      },
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923147084
+      },
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923279797
       }
     ],
     "4.6 Search every moved module/test for embedded `.kiro/kiro-repo-guidance-setup` roots. Update current-location values in manifests, contracts, freeze/ownership data, and command/path fixtures only where relocation changes their meaning.": [
@@ -655,6 +680,16 @@
         "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
         "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
         "timestamp": 1787922146352
+      },
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923289809
+      },
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923404134
       }
     ],
     "4.7 Update only the governance include globs in `tests/vitest.shared.ts` and `tests/tsconfig.json` to the destination; do not modify test logic.": [
@@ -662,6 +697,11 @@
         "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
         "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
         "timestamp": 1787922146486
+      },
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923411130
       }
     ],
     "4.8 Create the destination README with purpose, non-runtime status, entry points, tests, relocation history, and validation limitations.": [
@@ -935,6 +975,250 @@
         "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
         "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
         "timestamp": 1787922181282
+      }
+    ],
+    "4.2 Compare exact governance relative-path sets and hashes/bytes; enumerate every differing pair.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923521415
+      },
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923663108
+      },
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923960773
+      }
+    ],
+    "4.3 Review each difference and merge only valid relocation-independent fixes into `.kiro/kiro-repo-guidance-setup/**`.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923521559
+      },
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923969554
+      },
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787924183998
+      }
+    ],
+    "4.4 Restore/retain canonical imports, manifests, contracts, freeze data, and command/path fixtures that identify `.kiro/kiro-repo-guidance-setup/**`.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923521662
+      },
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787924195105
+      },
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787924387396
+      }
+    ],
+    "4.5 Confirm `tests/vitest.shared.ts` and `tests/tsconfig.json` already target `.kiro`; leave both unchanged.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923521767
+      },
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787924403803
+      },
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787924513749
+      }
+    ],
+    "4.6 Create `.kiro/kiro-repo-guidance-setup/README.md` describing canonical status and reversed relocation.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923521852
+      },
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787924558071
+      },
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787924734577
+      }
+    ],
+    "4.7 Record the governance reconciliation ledger and verify canonical counts/references.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923521955
+      },
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787924752633
+      }
+    ],
+    "4.8 Delete `scripts/kiro-repo-guidance-setup/**` only after 4.2–4.7 succeed.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923522089
+      }
+    ],
+    "4.9 Enumerate tracked root MCP schema relative paths for chrome-devtools, cloudflare-docs, github, and tasks; preflight `.kiro/mcp` collisions.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923522208
+      }
+    ],
+    "4.10 Copy tracked schemas to `.kiro/mcp/<name>/**`, preserving path sets and bytes/hashes; do not copy Datadog cache, secrets, or generated local state.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923522274
+      }
+    ],
+    "4.11 Delete the tracked root MCP schema copies only after parity, then verify active Kiro references use `.kiro/mcp/**`.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923522357
+      }
+    ],
+    "5.2 Replace the currently enabled `PostTaskExec` blocker with enabled `PreToolUse`, matcher `execute_pwsh|control_pwsh_process`, and command `node .kiro/hooks/block-agent-tests.mjs`.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923522440
+      }
+    ],
+    "5.3 Create/repair `.kiro/hooks/block-agent-tests.mjs`; define all matchers, parse payload defensively, return exit 2 for prohibited agent commands, and return 0 otherwise.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923522556
+      }
+    ],
+    "5.4 Compare the obsolete external helper, preserve any valid behavior, then delete `scripts/general/block-agent-tests.mjs`.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923522621
+      }
+    ],
+    "5.7 Inspect hook JSON/helper statically without attempting a prohibited command.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923522718
+      }
+    ],
+    "6.5 Update schema references from root `mcp/**` to `.kiro/mcp/**` and preserve workspace/runtime uncertainty.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923522780
+      }
+    ],
+    "7.3 Route hook references to `.kiro/hooks/block-agent-tests.mjs` and schema references to `.kiro/mcp/**`.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923522845
+      }
+    ],
+    "7.5 Confirm no operational route targets an outside Kiro duplicate.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923522900
+      }
+    ],
+    "8.3 Record the reversed governance relocation, localized hook helper, and MCP-schema consolidation in a historical ledger.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923522962
+      }
+    ],
+    "8.5 Reconcile the index against the final filesystem.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923523021
+      }
+    ],
+    "9.1 Manifest audit: verify final Kiro-owned assets are under `.kiro` with expected counts.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923523086
+      }
+    ],
+    "9.2 Governance audit: verify reconciliation ledger, canonical references, source counts, and outside duplicate deletion.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923523153
+      }
+    ],
+    "9.3 MCP audit: verify `.kiro/mcp` path/byte parity and tracked root-copy deletion.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923523220
+      }
+    ],
+    "9.4 Hook audit: parse JSON, inspect local helper, and verify no external-helper reference.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923523340
+      }
+    ],
+    "9.5 Front-matter/capability audit: verify powers/steering and truthful status wording.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923523390
+      }
+    ],
+    "9.6 Active-reference audit: reject operational `scripts/kiro-repo-guidance-setup`, `scripts/general/block-agent-tests.mjs`, and root `mcp/` routes; classify spec/INDEX history separately.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923523446
+      }
+    ],
+    "9.7 Diff/scope audit: all canonical Kiro writes must be under `.kiro`; outside changes must be approved duplicate deletions only.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923523500
+      }
+    ],
+    "9.8 Requirement coverage and `git diff --check`; do not run behavioral validation.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787923523552
       }
     ]
   }

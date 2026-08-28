@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 import {
   runEnablementGate,
   type FinalEnablementGateInput,
-} from "../../../scripts/kiro-repo-guidance-setup/enablement.ts";
+} from "../../enablement.ts";
 import {
   COMPLETE_REVIEW_STATEMENT,
   FEATURE_NAME,
@@ -28,18 +28,18 @@ import {
   type SourceInventory,
   type ValidationRun,
   type WaveConflict,
-} from "../../../scripts/kiro-repo-guidance-setup/contracts.ts";
-import { createSharedContractFreeze } from "../../../scripts/kiro-repo-guidance-setup/contract-freeze.ts";
+} from "../../contracts.ts";
+import { createSharedContractFreeze } from "../../contract-freeze.ts";
 import {
   OD04_APPROVAL_BOUNDARY_REF,
   acquireFileOwnershipReservation,
-} from "../../../scripts/kiro-repo-guidance-setup/reservations.ts";
+} from "../../reservations.ts";
 import {
   runIntegrationPipeline,
   type IntegrationPipelineInput,
-} from "../../../scripts/kiro-repo-guidance-setup/pipeline.ts";
-import type { SequentialReviewInput } from "../../../scripts/kiro-repo-guidance-setup/reviewers.ts";
-import { LANE_OWNERSHIP_DECLARATIONS } from "../../../scripts/kiro-repo-guidance-setup/ownership.ts";
+} from "../../pipeline.ts";
+import type { SequentialReviewInput } from "../../reviewers.ts";
+import { LANE_OWNERSHIP_DECLARATIONS } from "../../ownership.ts";
 
 // **Validates: Requirements 1.6, 2.7, 4.5, 5.5, 7.3, 7.6, 8.5, 9.7, 10.2–10.13,
 // 11.4–11.8, 12.6–12.8, 13.5–13.8, 14.8–14.12; Design: Error handling,

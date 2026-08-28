@@ -12,23 +12,23 @@ import {
   type IntegrationValidationRequest,
   type SharedContractFreeze,
   type ValidationRun,
-} from "../../../scripts/kiro-repo-guidance-setup/contracts.ts";
-import { createSharedContractFreeze } from "../../../scripts/kiro-repo-guidance-setup/contract-freeze.ts";
+} from "../../contracts.ts";
+import { createSharedContractFreeze } from "../../contract-freeze.ts";
 import {
   buildChangedFileManifest,
   collectIntegrationGateEvidence,
   IntegrationValidationGateService,
-} from "../../../scripts/kiro-repo-guidance-setup/integration-gate.ts";
-import { LANE_OWNERSHIP_DECLARATIONS } from "../../../scripts/kiro-repo-guidance-setup/ownership.ts";
+} from "../../integration-gate.ts";
+import { LANE_OWNERSHIP_DECLARATIONS } from "../../ownership.ts";
 import {
   acquireFileOwnershipReservation,
   OD04_APPROVAL_BOUNDARY_REF,
-} from "../../../scripts/kiro-repo-guidance-setup/reservations.ts";
+} from "../../reservations.ts";
 import {
   runIntegrationPipeline,
   toIntegrationValidationRequest,
   type IntegrationPipelineInput,
-} from "../../../scripts/kiro-repo-guidance-setup/pipeline.ts";
+} from "../../pipeline.ts";
 
 const WAVE_ID = "wave-integration-gate-test";
 const FREEZE_ID = "freeze-integration-gate-test";

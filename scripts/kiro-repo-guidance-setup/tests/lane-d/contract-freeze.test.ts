@@ -3,14 +3,14 @@ import { describe, expect, it } from "vitest";
 import {
   FEATURE_NAME,
   type ConcurrentImplementationWaveRecord,
-} from "../../../scripts/kiro-repo-guidance-setup/contracts.ts";
+} from "../../contracts.ts";
 import {
   createSharedContractFreeze,
   validateSharedContractFreeze,
   type ValidatedSharedContractFreeze,
-} from "../../../scripts/kiro-repo-guidance-setup/contract-freeze.ts";
-import { LANE_OWNERSHIP_DECLARATIONS } from "../../../scripts/kiro-repo-guidance-setup/ownership.ts";
-import { OD04_APPROVAL_BOUNDARY_REF } from "../../../scripts/kiro-repo-guidance-setup/reservations.ts";
+} from "../../contract-freeze.ts";
+import { LANE_OWNERSHIP_DECLARATIONS } from "../../ownership.ts";
+import { OD04_APPROVAL_BOUNDARY_REF } from "../../reservations.ts";
 
 const waveId = "wave-contract-freeze-test";
 const freezeId = "freeze-contract-freeze-test";

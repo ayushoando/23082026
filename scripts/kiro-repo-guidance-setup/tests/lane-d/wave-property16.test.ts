@@ -43,17 +43,17 @@ import {
   type ReviewerName,
   type SharedContractFreeze,
   type WaveConflict,
-} from "../../../scripts/kiro-repo-guidance-setup/contracts.ts";
-import { createSharedContractFreeze } from "../../../scripts/kiro-repo-guidance-setup/contract-freeze.ts";
-import { LANE_OWNERSHIP_DECLARATIONS } from "../../../scripts/kiro-repo-guidance-setup/ownership.ts";
+} from "../../contracts.ts";
+import { createSharedContractFreeze } from "../../contract-freeze.ts";
+import { LANE_OWNERSHIP_DECLARATIONS } from "../../ownership.ts";
 import {
   acquireFileOwnershipReservation,
   OD04_APPROVAL_BOUNDARY_REF,
-} from "../../../scripts/kiro-repo-guidance-setup/reservations.ts";
+} from "../../reservations.ts";
 import {
   preflightWave,
   type WaveExecutionPolicyInput,
-} from "../../../scripts/kiro-repo-guidance-setup/wave-guard.ts";
+} from "../../wave-guard.ts";
 
 const WAVE_ID = "wave-property-16";
 const FREEZE_ID = "freeze-property-16";

@@ -34,10 +34,10 @@ import {
   createEvidenceCompatibilityReviewer,
   runSequentialReview,
   type SequentialReviewInput,
-} from "../../../scripts/kiro-repo-guidance-setup/reviewers.ts";
+} from "../../reviewers.ts";
 import {
   validateOwnerDecisions,
-} from "../../../scripts/kiro-repo-guidance-setup/owner-decisions.ts";
+} from "../../owner-decisions.ts";
 import {
   COMPLETE_REVIEW_STATEMENT,
   OWNER_DECISION_IDS,
@@ -54,7 +54,7 @@ import {
   type SourceInventory,
   type SurfaceVersion,
   type UnresolvedStatus,
-} from "../../../scripts/kiro-repo-guidance-setup/contracts.ts";
+} from "../../contracts.ts";
 
 const ROOT = "D:\\23082026";
 

@@ -4,19 +4,19 @@ import {
   FEATURE_NAME,
   type ConcurrentImplementationWaveRecord,
   type SharedContractFreeze,
-} from "../../../scripts/kiro-repo-guidance-setup/contracts.ts";
-import { LANE_OWNERSHIP_DECLARATIONS } from "../../../scripts/kiro-repo-guidance-setup/ownership.ts";
-import { createSharedContractFreeze } from "../../../scripts/kiro-repo-guidance-setup/contract-freeze.ts";
+} from "../../contracts.ts";
+import { LANE_OWNERSHIP_DECLARATIONS } from "../../ownership.ts";
+import { createSharedContractFreeze } from "../../contract-freeze.ts";
 import {
   acquireFileOwnershipReservation,
   OD04_APPROVAL_BOUNDARY_REF,
   requireActiveReservation,
-} from "../../../scripts/kiro-repo-guidance-setup/reservations.ts";
-import { preflightWave } from "../../../scripts/kiro-repo-guidance-setup/wave-guard.ts";
+} from "../../reservations.ts";
+import { preflightWave } from "../../wave-guard.ts";
 
 const waveId = "wave-lane-d-test";
 const laneA = LANE_OWNERSHIP_DECLARATIONS[0];
-const targetPath = "scripts/kiro-repo-guidance-setup/contracts.ts";
+const targetPath = ".kiro/kiro-repo-guidance-setup/contracts.ts";
 
 function createWave(
   overrides: Partial<ConcurrentImplementationWaveRecord> = {},

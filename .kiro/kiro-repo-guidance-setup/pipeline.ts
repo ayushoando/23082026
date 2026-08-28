@@ -41,7 +41,7 @@ import {
   runSequentialReview,
   type SequentialReviewInput,
   type SequentialReviewOutput,
-} from "../../scripts/kiro-repo-guidance-setup/reviewers";
+} from "./reviewers";
 
 export const BLOCKED_EVIDENCE_REVIEW_HANDOFF =
   "handoff-EvidenceCompatibilityReviewer-blocked" as const;

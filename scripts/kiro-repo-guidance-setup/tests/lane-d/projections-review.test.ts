@@ -15,17 +15,17 @@ import {
   type RollbackRecord,
   type SafetyReviewRequest,
   type SourceInventory,
-} from "../../../scripts/kiro-repo-guidance-setup/contracts.ts";
+} from "../../contracts.ts";
 import {
   buildCapabilityDispositionTable,
   buildKnownGapsRegister,
   HandoverGeneratorService,
-} from "../../../scripts/kiro-repo-guidance-setup/handover.ts";
+} from "../../handover.ts";
 import {
   createEvidenceCompatibilityReviewer,
   createSafetyRollbackReviewer,
   runSequentialReview,
-} from "../../../scripts/kiro-repo-guidance-setup/reviewers.ts";
+} from "../../reviewers.ts";
 
 const REVIEW_DATE = "2026-08-25";
 

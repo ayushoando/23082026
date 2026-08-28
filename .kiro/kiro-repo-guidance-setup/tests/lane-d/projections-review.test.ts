@@ -15,17 +15,17 @@ import {
   type RollbackRecord,
   type SafetyReviewRequest,
   type SourceInventory,
-} from "../../../scripts/kiro-repo-guidance-setup/contracts.ts";
+} from "../../contracts.ts";
 import {
   buildCapabilityDispositionTable,
   buildKnownGapsRegister,
   HandoverGeneratorService,
-} from "../../../scripts/kiro-repo-guidance-setup/handover.ts";
+} from "../../handover.ts";
 import {
   createEvidenceCompatibilityReviewer,
   createSafetyRollbackReviewer,
   runSequentialReview,
-} from "../../../scripts/kiro-repo-guidance-setup/reviewers.ts";
+} from "../../reviewers.ts";
 
 const REVIEW_DATE = "2026-08-25";
 
@@ -36,7 +36,7 @@ function capability(overrides: Partial<CapabilityDispositionRecord> = {}): Capab
     name: "lane-d-example",
     disposition: "observe",
     configurationScope: "manual",
-    canonicalSource: "scripts/kiro-repo-guidance-setup/example.ts",
+    canonicalSource: ".kiro/kiro-repo-guidance-setup/example.ts",
     surfaceVersionApplicability: [...REQUIRED_SURFACE_VERSIONS],
     activationCondition: "after exact-surface validation and owner approval",
     owner: "repository owner",
@@ -276,7 +276,7 @@ describe("CapabilityDispositionTable and KnownGapsRegister controlled projection
     expect(valid.status).toBe("pass");
     expect(valid.output?.entries[0]).toMatchObject({
       capabilityId: "capability:lane-d-example",
-      canonicalSource: "scripts/kiro-repo-guidance-setup/example.ts",
+      canonicalSource: ".kiro/kiro-repo-guidance-setup/example.ts",
       rollbackPath: "no rollback applies",
       validationAction: expect.any(String),
       reason: expect.any(String),

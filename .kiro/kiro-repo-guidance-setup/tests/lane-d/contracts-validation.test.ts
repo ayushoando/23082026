@@ -15,17 +15,17 @@ import {
   type ImplementationAgentDeclaration,
   type ValidationRequest,
   type ValidationResult,
-} from "../../../scripts/kiro-repo-guidance-setup/contracts.ts";
-import { LANE_OWNERSHIP_DECLARATIONS, validateOwnership } from "../../../scripts/kiro-repo-guidance-setup/ownership.ts";
-import { waveManifest } from "../../../scripts/kiro-repo-guidance-setup/wave-manifest.ts";
+} from "../../contracts.ts";
+import { LANE_OWNERSHIP_DECLARATIONS, validateOwnership } from "../../ownership.ts";
+import { waveManifest } from "../../wave-manifest.ts";
 import {
   adaptValidationGate,
   createDefaultGateRequest,
   ValidationRunnerService,
   VALIDATION_GATE_KINDS,
   type ValidationExecutionResult,
-} from "../../../scripts/kiro-repo-guidance-setup/validation.ts";
-import { preflightWave } from "../../../scripts/kiro-repo-guidance-setup/wave-guard.ts";
+} from "../../validation.ts";
+import { preflightWave } from "../../wave-guard.ts";
 
 const ROOT = REPOSITORY_ROOT;
 const STARTED_AT = "2026-08-25T12:34:56.000Z";
@@ -67,7 +67,7 @@ function createValidationRequest(overrides: Partial<ValidationRequest> = {}): Va
     repositoryRootOrActiveSurface: ROOT,
     surface: "Local_Repository_Surface",
     version: "repository",
-    scope: "tests/kiro-repo-guidance-setup/lane-d/contracts-validation.test.ts",
+    scope: ".kiro/kiro-repo-guidance-setup/tests/lane-d/contracts-validation.test.ts",
     executionLayer: "default_native_task",
     commandOrInteraction: "pnpm exec vitest run --config tests/vitest.config.ts",
     ...overrides,

@@ -2,177 +2,143 @@
 
 ## Introduction
 
-The `.kiro` directory contains conflicting steering, an unrelated generic product-workflow bundle, misplaced executable TypeScript, and capability descriptions that do not match the live repository. A six-slice audit covering all 4,079 tracked files established the current state. Live source and current Git state take precedence over historical reports.
+The repository's Kiro-managed assets are split between root `.kiro/`, a partially copied governance tree under `scripts/`, an external hook helper, and root MCP schema snapshots. The owner requires one containment rule: **all tracked files owned by this Kiro configuration rewrite must live under the repository-root `.kiro/` directory**.
 
-This rewrite changes Kiro configuration, relocates the existing governance module, repairs only the references and harness configuration broken by that relocation, and repairs the test-command blocker that enforces user-owned verification. It does not change application behavior, database schema, production infrastructure, or test assertions.
+A six-slice audit covering all 4,079 tracked files established the baseline. A later live check found both governance trees present with 25 top-level TypeScript modules and 43 tests each. The existing test harness already targets `.kiro/kiro-repo-guidance-setup/**`; therefore `.kiro` is canonical and the incomplete `scripts/` relocation is reversed.
+
+This spec changes Kiro-managed files and removes obsolete outside-`.kiro` duplicates only. Application code, general repository authority documents, test harness configuration, database schema, and production infrastructure remain unchanged.
 
 ## Outcomes
 
 After the rewrite:
 
-- each steering domain has one authoritative file with explicit inclusion metadata;
-- `.kiro/skills/` contains exactly 9 repo-specific skills;
-- `.kiro/agents/` contains only `spec-task-runner.md`;
-- observability, analytics, and security powers describe only verified capability states;
-- MCP schema presence is distinguished from workspace configuration and runtime-registry availability;
-- the governance module lives under `scripts/` with imports, embedded paths, and test discovery repaired;
-- an enabled `PreToolUse` hook blocks agent-initiated test-like shell commands before execution;
-- `steering/INDEX.md` describes the real post-state while preserving an explicit removal ledger.
+- all tracked Kiro-managed configuration, capability metadata, hook code, governance modules, and MCP schema snapshots are under root `.kiro/`;
+- `.kiro/kiro-repo-guidance-setup/` remains canonical with 25 modules and 43 tests;
+- `scripts/kiro-repo-guidance-setup/` and `scripts/general/block-agent-tests.mjs` are absent after safe reconciliation;
+- root tracked MCP schema snapshots are consolidated under `.kiro/mcp/`;
+- `.kiro/skills/` contains exactly 9 repo-specific skills and `.kiro/agents/` contains exactly 4 focused agents: `spec-task-runner`, `containment-reconciler`, `hook-localizer`, and `capability-powers-author`;
+- observability, analytics, and security powers use evidence-based capability states;
+- an enabled `PreToolUse` hook invokes its helper inside `.kiro/hooks/`;
+- `steering/INDEX.md` describes the real post-state and containment boundary.
 
-## Glossary
+## Boundary definitions
 
-- **Active runtime configuration:** `.kiro` steering, skills, powers, agents, hooks, and settings loaded or discoverable by Kiro. It excludes `.kiro/specs/**` and historical/removal-ledger text.
-- **Wired capability:** Live source is mounted or invoked in the current application/runtime, with prerequisites documented.
-- **Present but unmounted:** Packages or components exist, but no live importer/render/invocation was found.
-- **Schema present:** Root `mcp/<name>/tools/*.json` exists. This proves neither workspace configuration nor an active external registry connection.
-- **Workspace configured:** A server entry exists in `.kiro/settings/mcp.json`.
-- **Runtime installed:** A direct runtime-registry check confirms availability.
-- **Workflow bundle:** The coupled research → PRFAQ → PRD → prototype skills, agent guides, steering orchestrator, and HTML templates.
+- **Kiro-managed asset:** A file whose primary purpose is Kiro configuration, steering, skills, powers, agents, hooks, specs, Kiro-specific governance execution, or Kiro MCP capability metadata.
+- **Referenced repository asset:** Application source, tests, commands, `AGENTS.md`, `Agents/`, plans, docs, or infrastructure that Kiro reads or routes to but does not own. These remain at their established paths.
+- **Canonical Kiro root:** Repository-root `.kiro/`.
+- **Schema present:** Tool schemas exist under `.kiro/mcp/<name>/`; this does not prove workspace configuration or runtime installation.
+- **Present but unmounted:** Packages/components exist, but no live importer, render, or invocation was found.
 
 ## Requirements
 
-### Requirement 1: Audit authority and bounded scope
+### Requirement 1: Enforce the root `.kiro` containment boundary
 
-**User Story:** As the repo owner, I want the rewrite based on current repository evidence and limited to necessary files.
-
-#### Acceptance Criteria
-
-1. The Config Rewriter SHALL treat live source, current Git state, `AGENTS.md`, and current package/config files as authoritative over historical reports.
-2. `docs/architecture/scripts-stale-review.csv` and `results/ops/coverage-admin.txt` SHALL be treated as historical evidence, not current verification or move manifests.
-3. Normal implementation scope SHALL be `.kiro/**` plus relocation into `scripts/kiro-repo-guidance-setup/**`.
-4. The only authorized files outside that normal scope are `scripts/general/block-agent-tests.mjs`, `tests/vitest.shared.ts`, and `tests/tsconfig.json`, because enforcement and test discovery cannot be repaired solely inside `.kiro`.
-5. The Config Rewriter SHALL NOT change application source, test assertions/fixtures, Supabase migrations, CI workflows, public assets, or production infrastructure.
-6. The Config Rewriter SHALL preserve unrelated work and SHALL perform a final changed-path audit against this allowlist.
-
-### Requirement 2: Remove the generic product-workflow bundle
-
-**User Story:** As an agent, I want discoverable capabilities to be relevant to this repository.
+**User Story:** As the repo owner, I want all Kiro-managed files in one root directory so Kiro configuration is discoverable and cannot drift across the repository.
 
 #### Acceptance Criteria
 
-1. Delete these skill directories: `ai-framing`, `ai-framing-template`, `claude-code-workflow`, `deep-research`, `prd`, and `prfaq`.
+1. The final tracked location of every asset created, retained, or modified as Kiro-owned by this rewrite SHALL be under root `.kiro/`.
+2. The implementation SHALL NOT create or modify a Kiro-managed file under `scripts/`, `tests/`, `plans/`, root `mcp/`, or another repository directory.
+3. Outside-`.kiro` mutations are limited to deleting obsolete Kiro-owned duplicates after their unique content has been reviewed and reconciled into canonical `.kiro` files.
+4. Referenced repository assets such as `site/**`, `tests/**`, `AGENTS.md`, `Agents/**`, `plans/**`, and operational scripts that are not Kiro-owned SHALL remain at their established paths.
+5. Live source, current Git state, `AGENTS.md`, and current package/config files SHALL override historical reports.
+6. The implementation SHALL preserve unrelated work and perform a final changed-path audit distinguishing canonical `.kiro` writes from approved duplicate deletions.
+
+### Requirement 2: Remove the generic workflow bundle
+
+**User Story:** As an agent, I want discoverable Kiro capabilities to be relevant to this repository.
+
+#### Acceptance Criteria
+
+1. Delete the six generic skill directories `ai-framing`, `ai-framing-template`, `claude-code-workflow`, `deep-research`, `prd`, and `prfaq`.
 2. Retain exactly these 9 skills: `db-migrations`, `focss-css`, `fork-boundaries`, `graph-impact`, `oando-master`, `planner-studio`, `powers-skills-model`, `repo-map`, and `verify-and-gate`.
-3. Delete these workflow guides from `.kiro/agents/`: `AI_Framing_Agent.md`, `AI_Framing_Template.md`, `Claude_Code_Workflow.md`, `Deep_Research_Agent.md`, `PRD_Creation_Guide.md`, and `PRFAQ_Guide.md`.
-4. Retain `.kiro/agents/spec-task-runner.md` as the sole agent definition.
-5. Delete `.kiro/steering/product-workflow.md` and both `.kiro/templates/*.html` workflow templates; remove the template directory if empty.
-6. Do not create `plans/prompts/` or relocate the deleted bundle elsewhere.
-7. No active runtime configuration SHALL route to a deleted bundle asset.
-8. References inside this spec, Kiro-managed metadata, and `steering/INDEX.md` removal history are permitted when explicitly classified as historical/removed and must not be treated as runtime routes.
+3. Delete the six matching workflow guides from `.kiro/agents/`; retain `spec-task-runner.md` and create `containment-reconciler.md`, `hook-localizer.md`, and `capability-powers-author.md` as the three additional execution agents.
+4. The final `.kiro/agents/` inventory SHALL contain exactly these 4 definitions, with non-overlapping ownership, no worktrees, preservation of unrelated work, explicit owner authorization for behavioral validation, and stop/escalate behavior for out-of-scope writes.
+5. Delete `.kiro/steering/product-workflow.md` and the two workflow HTML templates; remove the template directory if empty.
+6. Do not relocate the deleted bundle elsewhere.
+7. Active Kiro runtime configuration SHALL NOT route to deleted assets. Historical references inside this spec and the INDEX removal ledger are permitted when classified.
 
-### Requirement 3: Consolidate and correct steering
+### Requirement 3: Consolidate and correct steering and retained skills
 
-**User Story:** As the Kiro runtime, I want one accurate source per steering concern.
+**User Story:** As the Kiro runtime, I want one accurate source per concern.
 
 #### Acceptance Criteria
 
 1. Retain `product.md` as the sole product-context file; delete `product-context.md`, `spec.md`, and the empty `spec-guide.md`.
-2. Rewrite `tech-stack.md` as the sole stack definition with `inclusion: always` and the audited Next.js 16, React 19, TypeScript, pnpm, Tailwind v4/FOCSS, oxlint, Supabase/Drizzle, AI/search, testing, deployment, and observability stack.
-3. Use current paths: app under `site/`; Products migrations under `site/platform/supabase/migrations/`; Admin migrations under `site/platform/supabase/migrations.admin/`; primary TypeScript config at `site/tsconfig.json`.
-4. Do not claim that `scripts/tsconfig.json` exists. The currently broken `typecheck:scripts` package command SHALL be documented as unavailable rather than offered as validation.
-5. Do not claim Next.js 14, npm, ESLint/`eslint.config.mjs`, root `/supabase/`, Datadog RUM, or Sentry.
-6. Update `agent-behavior.md` to use current paths and authority documents. It may reference `plans/README.md`, but SHALL NOT reference absent `plans/PLAN.md`.
-7. Keep `coding-standards.md` explicit `inclusion: always` and current `site/` paths without overwriting its completed corrections.
-8. Preserve retained domain steering inclusion behavior unless a live path is stale; every remaining steering file SHALL have valid explicit front matter.
-9. Audit and repair retained skill assumptions, especially `powers-skills-model/SKILL.md`: remove stale candidate counts, `plans/ref/<name>/` ownership claims, claims that `oando-workflow` ships an empty local `mcp.json`, and inaccurate hook lifecycle/status text.
+2. Keep `tech-stack.md`, `coding-standards.md`, and `agent-behavior.md` explicit, current, and grounded in the actual `site/` architecture and authority documents.
+3. Do not claim that absent `scripts/tsconfig.json` or `plans/PLAN.md` exists.
+4. Do not claim Next.js 14, npm, ESLint configuration, root `/supabase/`, Datadog RUM, or Sentry.
+5. Preserve retained domain steering inclusion behavior unless a live path is stale; every remaining steering file SHALL have valid front matter.
+6. Audit all retained skills, including `powers-skills-model`, for stale counts, paths, MCP assumptions, and hook lifecycle text.
 
-### Requirement 4: Relocate the governance module safely
+### Requirement 4: Keep the governance module canonical inside `.kiro`
 
-**User Story:** As a maintainer, I want executable governance code under `scripts/` without silent loss or broken imports.
+**User Story:** As a maintainer, I want the complete governance implementation retained under `.kiro` without losing useful fixes from the incomplete outside copy.
 
 #### Acceptance Criteria
 
-1. Before mutation, enumerate the exact source relative-path set, reject any destination collision, and record hashes or byte counts for every source file.
-2. Move all 25 top-level TypeScript modules and all 43 tests, preserving the tests subtree structure.
-3. Recalculate every moved test import against its new location. Existing `../../../scripts/kiro-repo-guidance-setup/*` imports SHALL NOT remain when they would resolve to `scripts/scripts/*`.
-4. Fix relocation-sensitive module imports, including `pipeline.ts` using destination-local `./reviewers`.
-5. Search all moved modules/tests for embedded old-root strings and update semantic paths that must now identify `scripts/kiro-repo-guidance-setup/**`, including manifests/contracts/freeze data where present.
-6. Update `tests/vitest.shared.ts` include globs and `tests/tsconfig.json` includes from the old `.kiro` tree to the destination tree. No test logic may change.
-7. Create `scripts/kiro-repo-guidance-setup/README.md` describing purpose, non-runtime status, entry points, test location, relocation, and validation limitations.
-8. Compare destination and source relative-path sets. For files not on the documented relocation-edit exception list, hashes/bytes SHALL match. Every edited file SHALL be listed with its relocation reason.
-9. Delete the source directory only after destination parity succeeds.
-10. Active runtime configuration and active harness configuration SHALL contain no operational reference to the old module root. Historical/removal-ledger references remain allowed when classified.
+1. `.kiro/kiro-repo-guidance-setup/` SHALL be the only final governance root and contain exactly 25 top-level TypeScript modules and 43 tests in the existing subtree structure.
+2. Before deleting the duplicate, compare exact relative-path sets and content between `.kiro/kiro-repo-guidance-setup/` and `scripts/kiro-repo-guidance-setup/`.
+3. Review every differing duplicate file. Copy only valid relocation-independent fixes into the canonical `.kiro` counterpart; do not import path changes whose sole purpose was the abandoned `scripts/` destination.
+4. Canonical test imports and embedded roots SHALL resolve from and identify `.kiro/kiro-repo-guidance-setup/**`.
+5. `tests/vitest.shared.ts` and `tests/tsconfig.json` SHALL remain unchanged because they already target the canonical `.kiro` tree.
+6. Create `.kiro/kiro-repo-guidance-setup/README.md` documenting purpose, canonical status, entry points, tests, and the reversed relocation.
+7. Maintain a reconciliation ledger listing each differing file, the chosen canonical content, and the reason.
+8. Delete `scripts/kiro-repo-guidance-setup/` only after canonical counts, references, and reconciliation evidence pass static inspection.
+9. No active Kiro configuration SHALL route to the deleted outside duplicate; historical ledger references are allowed when classified.
 
-### Requirement 5: Enforce user-owned verification before execution
+### Requirement 5: Keep hook enforcement entirely inside `.kiro`
 
-**User Story:** As the repo owner, I want agent test execution blocked before it starts, while ordinary lightweight hooks remain truthful.
-
-#### Acceptance Criteria
-
-1. Rewrite `domain-fast-check.json` so test files remain skipped, Studio/Planner saves retain `pnpm run scan:boundaries`, FOCSS/UI saves retain their current UI checks, and all other matching saves pass without typecheck/test/build/browser/Docker commands.
-2. Replace the disabled `PostTaskExec` test hook with an enabled `PreToolUse` hook whose matcher is `execute_pwsh|control_pwsh_process`, invoking `node scripts/general/block-agent-tests.mjs` before either shell tool runs; remove the existing `"enabled": false` state.
-3. Repair `block-agent-tests.mjs` so every referenced matcher is defined and test-like commands, gates, coverage, browser-test runners, builds, typechecks, and local-service commands produce exit code 2 before execution.
-4. The blocker SHALL affect agent tool calls, not commands the user runs directly in their own terminal.
-5. Retained skills, powers, the index, and hook descriptions SHALL describe the actual enabled `PreToolUse` behavior; no file may claim a disabled `PostTaskExec` hook enforces policy.
-6. Add `session-start-orient.json` with `SessionStart` agent action directing the agent to current authority docs. Leave `ltm-postturn-capture.json` unchanged.
-7. Implementation of this spec SHALL NOT run tests, typechecks, gates, coverage, browser checks, builds, or Docker services.
-
-### Requirement 6: Establish honest MCP and master routing
-
-**User Story:** As an agent, I want MCP status stated only to the level current evidence supports.
+**User Story:** As the repo owner, I want agent test execution blocked before it starts without a Kiro helper under general scripts.
 
 #### Acceptance Criteria
 
-1. Create `.kiro/settings/mcp.json` with the Kiro MCP schema and an empty `mcpServers` object.
-2. Root `mcp/chrome-devtools`, `cloudflare-docs`, `github`, and `tasks` SHALL be labeled schema-present and not configured in workspace settings.
-3. The gitignored `mcp/Datadog/` convention SHALL be labeled a regenerable local cache, not runtime source or proof of an installed integration.
-4. Repo inspection alone SHALL NOT claim that an external/global runtime registry is empty. Runtime installation SHALL be stated only after a direct registry check; otherwise status is “runtime availability not verified.”
-5. Update `oando-workflow` routing to remove deleted workflow routes, add the three new powers, preserve repo-specific routing, and describe the actual hook.
-6. No power created or modified by this spec may bundle or install an MCP server.
+1. Keep `domain-fast-check.json` lightweight: test files skipped, Studio/Planner boundary checks retained, FOCSS/UI checks retained, and other matching saves passing without broad validation.
+2. Replace the currently enabled but ineffective `PostTaskExec` test hook with an enabled `PreToolUse` hook matched to `execute_pwsh|control_pwsh_process`.
+3. The hook SHALL invoke `node .kiro/hooks/block-agent-tests.mjs`.
+4. Create or repair `.kiro/hooks/block-agent-tests.mjs` so all matchers are defined, payload parsing is defensive, prohibited agent commands return exit code 2, and unrelated commands return 0.
+5. After static comparison, delete obsolete `scripts/general/block-agent-tests.mjs`; no Kiro hook may reference it.
+6. The blocker SHALL affect agent shell-tool calls, not commands the user runs directly in a terminal.
+7. Retained skills, powers, hooks, and INDEX SHALL describe the actual enabled `PreToolUse` behavior.
+8. Add `session-start-orient.json` under `.kiro/hooks/`; leave `ltm-postturn-capture.json` unchanged.
+9. The implementation SHALL NOT run tests, typechecks, gates, coverage, browser checks, builds, or Docker services.
 
-### Requirement 7: Add the observability power
+### Requirement 6: Consolidate Kiro MCP metadata under `.kiro`
 
-**User Story:** As an agent investigating traces, metrics, or errors, I want routing to observability tooling actually wired in this repo.
-
-#### Acceptance Criteria
-
-1. Create `.kiro/powers/observability/POWER.md` with valid repo-specific front matter.
-2. Route tracing to `site/instrumentation.ts`, `@vercel/otel`, `OTEL_SERVICE_NAME`, and configured OTLP environment.
-3. Route metrics to `site/lib/observability/metrics.ts`, `/api/metrics`, `config/observability/`, and existing observability commands; state that production metrics return 404 unless `OBSERVABILITY_METRICS_ENABLED=1`.
-4. Route client errors to `/api/log-error` and `site/lib/observability/reportClientError.ts`; identify structured `console.error` as the current sink and `Failures.md` as the blocker ledger.
-5. State that Sentry and Datadog RUM are not wired.
-6. Describe Chrome DevTools schemas only as schema-present/workspace-unconfigured unless a runtime check proves more.
-7. State that Docker observability services are user-invoked.
-
-### Requirement 8: Add the analytics power
-
-**User Story:** As an agent changing events or KPIs, I want consent-safe routing and truthful transport status.
+**User Story:** As an agent, I want Kiro capability metadata stored with the rest of Kiro configuration and described honestly.
 
 #### Acceptance Criteria
 
-1. Create `.kiro/powers/analytics/POWER.md` with valid repo-specific front matter.
-2. Route to the existing analytics event, queue, conversion, KPI, transport, and consent modules.
-3. Preserve the consent contract: accepted emits, undecided queues, rejected drops; new events reuse conversion taxonomy/privacy filtering.
-4. Describe `@vercel/analytics`, `@vercel/speed-insights`, and `SiteAnalytics.tsx` as present but unmounted because no live importer/render was found.
-5. Do not describe Vercel Analytics or Speed Insights as operationally wired unless application scope is separately widened to mount the component.
-6. Treat GA4/Zaraz as wired only when a live component/configuration proves invocation; CSP allowance alone is insufficient.
-7. State analytics MCP workspace/runtime status using Requirement 6 vocabulary.
+1. Create `.kiro/settings/mcp.json` with an empty workspace `mcpServers` object.
+2. Move tracked schema snapshots from root `mcp/chrome-devtools`, `mcp/cloudflare-docs`, `mcp/github`, and `mcp/tasks` to corresponding `.kiro/mcp/<name>/` paths, preserving relative paths and bytes unless a containment reference requires correction.
+3. Delete the tracked root schema copies only after destination path-set and byte/hash parity succeeds.
+4. Gitignored/local cache data such as the Datadog cache is not source configuration; do not copy secrets or generated cache content into `.kiro`.
+5. Describe schemas as present and workspace-unconfigured. Claim runtime installation only after a direct registry check; otherwise state runtime availability is not verified.
+6. No power may bundle or install an MCP server.
 
-### Requirement 9: Add the security power
+### Requirement 7: Add truthful capability powers
 
-**User Story:** As an agent touching a security boundary, I want routing to the actual layered controls.
-
-#### Acceptance Criteria
-
-1. Create `.kiro/powers/security/POWER.md` with valid repo-specific front matter.
-2. Distinguish `site/proxy.ts` cookie/precheck plus CSP/header ownership from actual server session validation in `site/lib/auth/session.ts#getOptionalUser`/`requireAuthUser` and API authorization in `site/features/shared/api/withAuth.ts`.
-3. Route CSRF to `site/lib/security/csrf.ts`, strict untrusted SVG validation to `site/lib/security/svgSanitizer.ts`, origin/upload checks to `site/lib/security/`, and rate limiting to `site/lib/rateLimit.ts`.
-4. Distinguish the strict SVG validator from the weaker regex sanitizer and never recommend the weaker boundary for untrusted input.
-5. Preserve fail-closed behavior for protected/member routes and AI-scoped production rate limiting.
-6. Use exact commands: `pnpm run scan:secrets`, `pnpm run ops -- lint:secrets`, `pnpm run test:audit:api-routes`, and `pnpm run test:audit:eslint-disable`; label test-like commands user-owned and blocked for agent execution.
-7. Describe GitHub security schemas as schema-present/workspace-unconfigured unless runtime availability is checked.
-8. Note the worker RFC 9116 response without treating it as MCP capability.
-
-### Requirement 10: Index, static audit, and completion status
-
-**User Story:** As the repo owner, I want a truthful post-state inventory and no false completion claim.
+**User Story:** As an agent, I want observability, analytics, and security routing grounded in live repository evidence.
 
 #### Acceptance Criteria
 
-1. Create `.kiro/steering/INDEX.md` with `inclusion: manual`, listing remaining steering and modes, four hooks with actual status/triggers, one agent, nine skills, four powers, and settings.
-2. Include a clearly labeled removal/relocation ledger. Old names in that ledger are allowed and excluded from active-route stale-reference failures.
-3. Run non-test static audits for manifests, JSON, front matter, capability wording, allowed changed paths, relocation path-set/parity, and active references.
-4. Scope deleted-name and old-root searches to active runtime/harness references; classify `.kiro/specs/**`, Kiro metadata, and INDEX history separately rather than demanding impossible zero textual matches.
-5. Perform a final `git diff --name-only`/scope review and a cross-document requirement-to-task coverage review.
-6. Do not offer `pnpm run typecheck:scripts`; its referenced config is absent. If the owner later authorizes validation, `pnpm run typecheck:tests` is the candidate moved-module typecheck only after its include path is repaired, followed by the repository-required `pnpm run check:layout` and `pnpm run gate:fast` or `pnpm run gate` as separately authorized.
-7. Until required gates have observed owner-authorized results, report “configuration changes complete; mandatory repository validation pending” rather than “done” or “passed.”
-8. Never infer validation success from historical reports or command existence.
+1. Create `.kiro/powers/observability/POWER.md` routing OTel, Prometheus/Grafana, metrics availability, client errors, structured console sink, and `Failures.md`; state Sentry and Datadog RUM are not wired.
+2. Create `.kiro/powers/analytics/POWER.md` routing consent/event/queue/conversion/KPI modules and classify Vercel Analytics/Speed Insights as present but unmounted.
+3. Create `.kiro/powers/security/POWER.md` distinguishing proxy prechecks/headers, server session validation, and API authorization, and route strict SVG, CSRF, origin/upload, and rate-limit controls.
+4. Security command text SHALL use `pnpm run scan:secrets`, `pnpm run ops -- lint:secrets`, `pnpm run test:audit:api-routes`, and `pnpm run test:audit:eslint-disable` while preserving user-owned execution.
+5. Power references to MCP schemas SHALL use `.kiro/mcp/**` and the status vocabulary in Requirement 6.
+6. Update `oando-workflow` routing to remove deleted workflow routes, add the three powers, preserve repo-specific routing, and describe the actual hook.
+
+### Requirement 8: Create the canonical index and verify containment
+
+**User Story:** As the repo owner, I want one truthful inventory proving Kiro-owned files are contained under `.kiro`.
+
+#### Acceptance Criteria
+
+1. Create `.kiro/steering/INDEX.md` with `inclusion: manual`, listing steering modes, four hooks, exactly four agents, nine skills, four powers, settings, governance tooling, and `.kiro/mcp` schemas.
+2. Include a labeled removal/reversal ledger for deleted workflow assets and outside Kiro duplicates.
+3. Perform non-test static audits for manifests, JSON, front matter, capability wording, governance reconciliation, MCP parity, hook paths, and containment.
+4. Search active Kiro configuration for operational references to `scripts/kiro-repo-guidance-setup`, `scripts/general/block-agent-tests.mjs`, and root `mcp/`; classify specs and INDEX history separately.
+5. Perform a final diff/scope audit. Final Kiro-owned files must be under `.kiro`; approved outside changes must be deletions of superseded Kiro duplicates only.
+6. Do not offer `pnpm run typecheck:scripts`; its config is absent. Do not claim validation passed unless the owner authorizes and an observed result exists.
+7. Until required `check:layout` and gate validation has owner-authorized observed results, report: “Configuration changes complete; mandatory repository validation pending owner execution/authorization.”

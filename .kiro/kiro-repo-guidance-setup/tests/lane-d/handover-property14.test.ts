@@ -14,7 +14,7 @@
 // Design: Correctness Property 14.
 //
 // SCOPE NOTE (Lane D ownership, test-authoring only): this file writes only
-// under tests/kiro-repo-guidance-setup/lane-d/**. It reads the frozen Lane D
+// under .kiro/kiro-repo-guidance-setup/tests/lane-d/**. It reads the frozen Lane D
 // source (handover.ts) and shared contracts.ts. It mutates no source module,
 // package.json, or results/. It performs no filesystem, network, command, or
 // configuration side effects: the projections under test are pure functions
@@ -44,12 +44,12 @@ import {
   type ConfigurationScope,
   type CoverageMatrix,
   type HandoverInput,
-} from "../../../scripts/kiro-repo-guidance-setup/contracts.ts";
+} from "../../contracts.ts";
 import {
   buildCapabilityDispositionTable,
   CAPABILITY_DISPOSITION_NO_ROLLBACK,
   HandoverGeneratorService,
-} from "../../../scripts/kiro-repo-guidance-setup/handover.ts";
+} from "../../handover.ts";
 
 const REVIEW_DATE = "2026-08-25";
 

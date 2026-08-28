@@ -8,8 +8,8 @@ import {
   type ValidationExecutionRequest,
   type ValidationExecutionResult,
   type ValidationGateKind,
-} from "../../../scripts/kiro-repo-guidance-setup/validation.ts";
-import type { ValidationRequest, VitestLaneResults } from "../../../scripts/kiro-repo-guidance-setup/contracts.ts";
+} from "../../validation.ts";
+import type { ValidationRequest, VitestLaneResults } from "../../contracts.ts";
 
 const ROOT = "D:\\23082026";
 const STARTED_AT = "2026-08-25T12:34:56.000Z";

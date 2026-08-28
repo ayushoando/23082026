@@ -7,7 +7,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import {
   createRollbackManager,
   type ExecutableRollbackRequest,
-} from "../../../scripts/kiro-repo-guidance-setup/rollback.ts";
+} from "../../rollback.ts";
 
 const temporaryDirectories: string[] = [];
 

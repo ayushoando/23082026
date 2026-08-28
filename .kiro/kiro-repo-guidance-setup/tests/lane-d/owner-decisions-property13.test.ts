@@ -16,7 +16,7 @@
 // Design: Correctness Property 13.
 //
 // SCOPE NOTE (Lane D ownership, test-authoring only): this test writes only
-// under tests/kiro-repo-guidance-setup/lane-d/ and mutates no source module. It
+// under .kiro/kiro-repo-guidance-setup/tests/lane-d/ and mutates no source module. It
 // drives fast-check generators over owner-decision states (pending / rejected /
 // expired / unresolved) exactly as those states are consumed by the two
 // Lane-D-owned reviewer surfaces (`reviewers.ts`:
@@ -34,10 +34,10 @@ import {
   createEvidenceCompatibilityReviewer,
   runSequentialReview,
   type SequentialReviewInput,
-} from "../../../scripts/kiro-repo-guidance-setup/reviewers.ts";
+} from "../../reviewers.ts";
 import {
   validateOwnerDecisions,
-} from "../../../scripts/kiro-repo-guidance-setup/owner-decisions.ts";
+} from "../../owner-decisions.ts";
 import {
   COMPLETE_REVIEW_STATEMENT,
   OWNER_DECISION_IDS,
@@ -54,7 +54,7 @@ import {
   type SourceInventory,
   type SurfaceVersion,
   type UnresolvedStatus,
-} from "../../../scripts/kiro-repo-guidance-setup/contracts.ts";
+} from "../../contracts.ts";
 
 const ROOT = "D:\\23082026";
 
@@ -350,7 +350,7 @@ function approvalBoundary(): ApprovalBoundary {
 function rollbackRecord(): RollbackRecord {
   return {
     rollbackId: "rb-1",
-    targetArtifactOrScope: "scripts/kiro-repo-guidance-setup/reviewers.ts",
+    targetArtifactOrScope: ".kiro/kiro-repo-guidance-setup/reviewers.ts",
     preChangeStateRef: "snapshot-1",
     rollbackAction: "restore bytes",
     expectedSuccessSignal: "hash matches",

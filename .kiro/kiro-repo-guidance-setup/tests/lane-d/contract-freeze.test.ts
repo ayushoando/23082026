@@ -3,14 +3,14 @@ import { describe, expect, it } from "vitest";
 import {
   FEATURE_NAME,
   type ConcurrentImplementationWaveRecord,
-} from "../../../scripts/kiro-repo-guidance-setup/contracts.ts";
+} from "../../contracts.ts";
 import {
   createSharedContractFreeze,
   validateSharedContractFreeze,
   type ValidatedSharedContractFreeze,
-} from "../../../scripts/kiro-repo-guidance-setup/contract-freeze.ts";
-import { LANE_OWNERSHIP_DECLARATIONS } from "../../../scripts/kiro-repo-guidance-setup/ownership.ts";
-import { OD04_APPROVAL_BOUNDARY_REF } from "../../../scripts/kiro-repo-guidance-setup/reservations.ts";
+} from "../../contract-freeze.ts";
+import { LANE_OWNERSHIP_DECLARATIONS } from "../../ownership.ts";
+import { OD04_APPROVAL_BOUNDARY_REF } from "../../reservations.ts";
 
 const waveId = "wave-contract-freeze-test";
 const freezeId = "freeze-contract-freeze-test";
@@ -66,7 +66,7 @@ describe("Shared_Contract_Freeze", () => {
   it("records current contract and ownership hashes only after preparation passes", () => {
     const freeze = createFreeze();
 
-    expect(freeze.contracts).toEqual(["scripts/kiro-repo-guidance-setup/contracts.ts"]);
+    expect(freeze.contracts).toEqual([".kiro/kiro-repo-guidance-setup/contracts.ts"]);
     expect(freeze.contractVersionOrHash).toMatch(/^sha256:[0-9a-f]{64}$/);
     expect(freeze.contractHashes).toHaveLength(1);
     expect(freeze.ownershipManifestHash).toMatch(/^sha256:[0-9a-f]{64}$/);

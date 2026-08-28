@@ -12,23 +12,23 @@ import {
   type IntegrationValidationRequest,
   type SharedContractFreeze,
   type ValidationRun,
-} from "../../../scripts/kiro-repo-guidance-setup/contracts.ts";
-import { createSharedContractFreeze } from "../../../scripts/kiro-repo-guidance-setup/contract-freeze.ts";
+} from "../../contracts.ts";
+import { createSharedContractFreeze } from "../../contract-freeze.ts";
 import {
   buildChangedFileManifest,
   collectIntegrationGateEvidence,
   IntegrationValidationGateService,
-} from "../../../scripts/kiro-repo-guidance-setup/integration-gate.ts";
-import { LANE_OWNERSHIP_DECLARATIONS } from "../../../scripts/kiro-repo-guidance-setup/ownership.ts";
+} from "../../integration-gate.ts";
+import { LANE_OWNERSHIP_DECLARATIONS } from "../../ownership.ts";
 import {
   acquireFileOwnershipReservation,
   OD04_APPROVAL_BOUNDARY_REF,
-} from "../../../scripts/kiro-repo-guidance-setup/reservations.ts";
+} from "../../reservations.ts";
 import {
   runIntegrationPipeline,
   toIntegrationValidationRequest,
   type IntegrationPipelineInput,
-} from "../../../scripts/kiro-repo-guidance-setup/pipeline.ts";
+} from "../../pipeline.ts";
 
 const WAVE_ID = "wave-integration-gate-test";
 const FREEZE_ID = "freeze-integration-gate-test";
@@ -287,7 +287,7 @@ describe("integration-owned ownership and conflict handling", () => {
   });
 
   it.each([
-    ["integration-owned path", "tests/kiro-repo-guidance-setup/integration/generated.ts", "integration-owned path"],
+    ["integration-owned path", ".kiro/kiro-repo-guidance-setup/tests/integration/generated.ts", "integration-owned path"],
     ["shared generated output", "results/kiro-repo-guidance-setup/generated.json", "shared generated output"],
   ])("rejects %s writes by a lane", (_label, changedPath, expectedReason) => {
     const outputs = createAgentOutputs();

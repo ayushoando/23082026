@@ -2,7 +2,7 @@
 
 // Feature: kiro-repo-guidance-setup, Property 9: Approved hooks satisfy schema and safety bounds.
 // Lane C, test-authoring only. This test drives the read-only HookEvaluator
-// (scripts/kiro-repo-guidance-setup/hooks.ts) against throwaway fixture roots in
+// (.kiro/kiro-repo-guidance-setup/hooks.ts) against throwaway fixture roots in
 // the OS temp directory (the sibling hooks.test.ts convention). It never writes
 // to a source module, package.json, the repository .kiro/hooks tree, or results/,
 // and it never executes a hook or contacts an external service.

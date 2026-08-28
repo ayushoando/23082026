@@ -44,14 +44,14 @@ import {
   PACKAGE_MANAGER,
   REPOSITORY_ROOT,
   type OwnerDecision,
-} from "../../../scripts/kiro-repo-guidance-setup/contracts.ts";
+} from "../../contracts.ts";
 import {
   assessRepositoryPolicy,
   REQUIRED_REPOSITORY_GATES,
   type DatabaseRoute,
   type PersistenceMode,
   type RepositoryPolicyRequest,
-} from "../../../scripts/kiro-repo-guidance-setup/policy.ts";
+} from "../../policy.ts";
 
 // The frozen OD-04 decision is owner-approved-conditional and resolved, so the
 // ledger clears owner-decision validation and only the plan fields under test
@@ -432,22 +432,22 @@ import {
   type ImplementationAgentDeclaration,
   type ReviewerName,
   type SharedContractFreeze,
-} from "../../../scripts/kiro-repo-guidance-setup/contracts.ts";
-import { createSharedContractFreeze } from "../../../scripts/kiro-repo-guidance-setup/contract-freeze.ts";
+} from "../../contracts.ts";
+import { createSharedContractFreeze } from "../../contract-freeze.ts";
 import {
   INTEGRATION_OWNER_OWNERSHIP,
   LANE_OWNERSHIP_DECLARATIONS,
   validateOwnership,
-} from "../../../scripts/kiro-repo-guidance-setup/ownership.ts";
+} from "../../ownership.ts";
 import {
   acquireFileOwnershipReservation,
   OD04_APPROVAL_BOUNDARY_REF,
-} from "../../../scripts/kiro-repo-guidance-setup/reservations.ts";
+} from "../../reservations.ts";
 import {
   preflightWave,
   type WaveExecutionPolicyInput,
-} from "../../../scripts/kiro-repo-guidance-setup/wave-guard.ts";
-import { waveManifest } from "../../../scripts/kiro-repo-guidance-setup/wave-manifest.ts";
+} from "../../wave-guard.ts";
+import { waveManifest } from "../../wave-manifest.ts";
 
 const PROPERTY_15_WAVE_ID = "wave-property-15";
 const PROPERTY_15_FREEZE_ID = "freeze-property-15";

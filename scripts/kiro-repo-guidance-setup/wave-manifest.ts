@@ -11,14 +11,14 @@ export type WaveManifest = {
   readonly featureName: "kiro-repo-guidance-setup";
   readonly repositoryRoot: "D:\\23082026";
   readonly roots: {
-    readonly implementation: ".kiro/kiro-repo-guidance-setup/";
+    readonly implementation: "scripts/kiro-repo-guidance-setup/";
     readonly laneTests: {
-      readonly laneA: ".kiro/kiro-repo-guidance-setup/tests/lane-a/";
-      readonly laneB: ".kiro/kiro-repo-guidance-setup/tests/lane-b/";
-      readonly laneC: ".kiro/kiro-repo-guidance-setup/tests/lane-c/";
-      readonly laneD: ".kiro/kiro-repo-guidance-setup/tests/lane-d/";
+      readonly laneA: "scripts/kiro-repo-guidance-setup/tests/lane-a/";
+      readonly laneB: "scripts/kiro-repo-guidance-setup/tests/lane-b/";
+      readonly laneC: "scripts/kiro-repo-guidance-setup/tests/lane-c/";
+      readonly laneD: "scripts/kiro-repo-guidance-setup/tests/lane-d/";
     };
-    readonly integrationTests: ".kiro/kiro-repo-guidance-setup/tests/integration/";
+    readonly integrationTests: "scripts/kiro-repo-guidance-setup/tests/integration/";
     readonly generatedEvidence: "results/kiro-repo-guidance-setup/";
   };
   readonly rootExecution: {
@@ -42,10 +42,10 @@ export type WaveManifest = {
     readonly laneSharedGeneratedOutputOwnership: "none";
     readonly integrationOwner: "post-wave-integration-validation-gate";
     readonly integrationOwnedPaths: readonly [
-      ".kiro/kiro-repo-guidance-setup/integration-gate.ts",
-      ".kiro/kiro-repo-guidance-setup/pipeline.ts",
-      ".kiro/kiro-repo-guidance-setup/enablement.ts",
-      ".kiro/kiro-repo-guidance-setup/tests/integration/",
+      "scripts/kiro-repo-guidance-setup/integration-gate.ts",
+      "scripts/kiro-repo-guidance-setup/pipeline.ts",
+      "scripts/kiro-repo-guidance-setup/enablement.ts",
+      "scripts/kiro-repo-guidance-setup/tests/integration/",
       "results/kiro-repo-guidance-setup/"
     ];
     readonly laneRestriction: "lanes-must-not-write-shared-generated-output";
@@ -94,14 +94,14 @@ export const waveManifest = {
   featureName: "kiro-repo-guidance-setup",
   repositoryRoot: "D:\\23082026",
   roots: {
-    implementation: ".kiro/kiro-repo-guidance-setup/",
+    implementation: "scripts/kiro-repo-guidance-setup/",
     laneTests: {
-      laneA: ".kiro/kiro-repo-guidance-setup/tests/lane-a/",
-      laneB: ".kiro/kiro-repo-guidance-setup/tests/lane-b/",
-      laneC: ".kiro/kiro-repo-guidance-setup/tests/lane-c/",
-      laneD: ".kiro/kiro-repo-guidance-setup/tests/lane-d/"
+      laneA: "scripts/kiro-repo-guidance-setup/tests/lane-a/",
+      laneB: "scripts/kiro-repo-guidance-setup/tests/lane-b/",
+      laneC: "scripts/kiro-repo-guidance-setup/tests/lane-c/",
+      laneD: "scripts/kiro-repo-guidance-setup/tests/lane-d/"
     },
-    integrationTests: ".kiro/kiro-repo-guidance-setup/tests/integration/",
+    integrationTests: "scripts/kiro-repo-guidance-setup/tests/integration/",
     generatedEvidence: "results/kiro-repo-guidance-setup/"
   },
   rootExecution: {
@@ -125,10 +125,10 @@ export const waveManifest = {
     laneSharedGeneratedOutputOwnership: "none",
     integrationOwner: "post-wave-integration-validation-gate",
     integrationOwnedPaths: [
-      ".kiro/kiro-repo-guidance-setup/integration-gate.ts",
-      ".kiro/kiro-repo-guidance-setup/pipeline.ts",
-      ".kiro/kiro-repo-guidance-setup/enablement.ts",
-      ".kiro/kiro-repo-guidance-setup/tests/integration/",
+      "scripts/kiro-repo-guidance-setup/integration-gate.ts",
+      "scripts/kiro-repo-guidance-setup/pipeline.ts",
+      "scripts/kiro-repo-guidance-setup/enablement.ts",
+      "scripts/kiro-repo-guidance-setup/tests/integration/",
       "results/kiro-repo-guidance-setup/"
     ],
     laneRestriction: "lanes-must-not-write-shared-generated-output"

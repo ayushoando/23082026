@@ -13,7 +13,7 @@
 // 14.8, 14.9.
 //
 // SCOPE NOTE (Lane D ownership): the integration-owned `EnablementGate`
-// implementation (`scripts/kiro-repo-guidance-setup/enablement.ts`) is NOT yet
+// implementation (`.kiro/kiro-repo-guidance-setup/enablement.ts`) is NOT yet
 // built and is out of Lane D's write scope. This test therefore proves Property
 // 6 in two complementary, Lane-D-owned ways:
 //
@@ -47,14 +47,14 @@ import {
   createSafetyRollbackReviewer,
   runSequentialReview,
   type SequentialReviewInput,
-} from "../../../scripts/kiro-repo-guidance-setup/reviewers.ts";
+} from "../../reviewers.ts";
 import {
   createRollbackManager,
-} from "../../../scripts/kiro-repo-guidance-setup/rollback.ts";
+} from "../../rollback.ts";
 import {
   ValidationRunnerService,
   type ValidationExecutionResult,
-} from "../../../scripts/kiro-repo-guidance-setup/validation.ts";
+} from "../../validation.ts";
 import {
   COMPLETE_REVIEW_STATEMENT,
   REQUIRED_SURFACE_VERSIONS,
@@ -72,7 +72,7 @@ import {
   type SourceInventory,
   type SurfaceVersion,
   type ValidationRequest,
-} from "../../../scripts/kiro-repo-guidance-setup/contracts.ts";
+} from "../../contracts.ts";
 
 const ROOT = "D:\\23082026";
 
@@ -345,7 +345,7 @@ function approvalBoundary(overrides: Partial<ApprovalBoundary> = {}): ApprovalBo
 function rollbackRecord(overrides: Partial<RollbackRecord> = {}): RollbackRecord {
   return {
     rollbackId: "rb-1",
-    targetArtifactOrScope: "scripts/kiro-repo-guidance-setup/reviewers.ts",
+    targetArtifactOrScope: ".kiro/kiro-repo-guidance-setup/reviewers.ts",
     preChangeStateRef: "snapshot-1",
     rollbackAction: "restore bytes",
     expectedSuccessSignal: "hash matches",
@@ -567,7 +567,7 @@ describe("Property 6: ValidationRunner never reports PASS on incomplete/interrup
       repositoryRootOrActiveSurface: "IDE",
       surface: "IDE",
       version: "current",
-      scope: "scripts/kiro-repo-guidance-setup",
+      scope: ".kiro/kiro-repo-guidance-setup",
       executionLayer: "surface_validation",
       commandOrInteraction: "fresh exact-target IDE validation",
     };
@@ -671,7 +671,7 @@ describe("Property 6: RollbackManager blocks later enablement when rollback is n
     const manager = createRollbackManager();
     const result = manager.restore({
       rollbackId: "rb-nochange",
-      targetArtifactOrScope: "scripts/kiro-repo-guidance-setup/handover.ts",
+      targetArtifactOrScope: ".kiro/kiro-repo-guidance-setup/handover.ts",
       preChangeStateRef: "no-change",
       rollbackAction: "no rollback applies",
       expectedSuccessSignal: "no mutation required",
