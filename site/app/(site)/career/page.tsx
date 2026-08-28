@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { CareerPageView } from "@/components/career/CareerPageView";
 import { HomeMarketingLayout } from "@/components/home/layout";
 import { ContactTeaser } from "@/components/shared/ContactTeaser";
-import { CAREER_PAGE_JOBS } from "@/features/site/data/routeCopy";
+import { CAREER_PAGE_JOBS } from "@/features/site/data/careerJobs";
 import { CAREER_PAGE_METADATA } from "@/features/site/data/routeMetadata";
 import {
   buildBreadcrumbJsonLd,

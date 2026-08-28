@@ -636,22 +636,7 @@ export const CAREER_PAGE_COPY = {
   applyCta: "Apply",
 } as const;
 
-export const CAREER_PAGE_JOBS = [
-  {
-    title: "Project Sales Manager",
-    department: "Enterprise Sales",
-    location: "India (multi-city)",
-    // Real posting dates supplied by the owner 2026-08-16 — required for
-    // JobPosting datePosted (Google rich-result mandatory property).
-    postedDate: "2026-08-12",
-  },
-  {
-    title: "Sales Executive",
-    department: "Sales",
-    location: "India",
-    postedDate: "2026-08-14",
-  },
-] as const;
+export { CAREER_PAGE_JOBS } from "./careerJobs";
 
 export const PLANNING_PAGE_COPY = {
   heroTitle: "Planning Service",

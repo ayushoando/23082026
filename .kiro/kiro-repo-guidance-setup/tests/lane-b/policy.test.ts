@@ -17,6 +17,16 @@ function compliantRequest() {
     requiredGates: ["check:layout", "gate:fast"],
     completedGates: ["check:layout", "gate:fast"],
     vitestLanes: { default: true, techDocs: true },
+    od04WaveControls: {
+      disjointFileOwnership: true,
+      explicitReadWriteScopes: true,
+      fileOwnershipReservations: true,
+      sharedContractFreeze: true,
+      namedApprovalBoundaries: true,
+      singleIntegrationValidationGate: true,
+      sequentialReadOnlyReviewers: true,
+      sharedGeneratedOutputWrites: false,
+    },
   };
 }
 
@@ -90,8 +100,8 @@ describe("RepositoryPolicyGuard and owner decisions", () => {
     expect(result.blockers).toContain("production filesystem writes are prohibited");
     expect(result.blockers).toContain("runtime persistence must not dual-write");
     expect(result.blockers).toContain("Studio and Planner must remain isolated");
-    expect(result.blockers).toContain("Crew execution cannot use the feature-only OD-04 exception");
+    expect(result.blockers).toContain("Crew execution is not authorized by OD-04");
     expect(result.blockers).toContain("the OD-04 exception is limited to kiro-repo-guidance-setup");
-    expect(result.blockers).toContain("both default and tech-docs Vitest lanes must pass when Vitest is recorded");
+    expect(result.blockers).toContain("both default and tech-docs Vitest lanes must pass when policy approval is requested");
   });
 });

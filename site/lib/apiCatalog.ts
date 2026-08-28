@@ -30,6 +30,7 @@ export const DISK_API_ROUTES: readonly ApiCatalogEntry[] = [
   { path: "/api/filter", summary: "Authenticated catalog filter", methods: ["post"] },
   { path: "/api/tracking", summary: "Client analytics events", methods: ["post"] },
   { path: "/api/log-error", summary: "Client error ingest", methods: ["post"] },
+  { path: "/api/metrics", summary: "Prometheus metrics (env-gated in production)", methods: ["get"] },
   { path: "/api/audit", summary: "Audit event ingest", methods: ["post"] },
   { path: "/api/customer-queries", summary: "Contact form submit", methods: ["post"] },
   { path: "/api/customer-queries/manage", summary: "Contact query queue", methods: ["get", "patch"] },

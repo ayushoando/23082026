@@ -139,6 +139,16 @@ function compliantPolicyRequest() {
     requiredGates: ["check:layout", "gate:fast"],
     completedGates: ["check:layout", "gate:fast"],
     vitestLanes: { default: true, techDocs: true },
+    od04WaveControls: {
+      disjointFileOwnership: true,
+      explicitReadWriteScopes: true,
+      fileOwnershipReservations: true,
+      sharedContractFreeze: true,
+      namedApprovalBoundaries: true,
+      singleIntegrationValidationGate: true,
+      sequentialReadOnlyReviewers: true,
+      sharedGeneratedOutputWrites: false,
+    },
   };
 }
 
@@ -493,7 +503,7 @@ describe("RepositoryPolicyGuard — agent-count boundaries and preserved default
     );
 
     expect(result.status).toBe("blocked");
-    expect(result.blockers).toContain("the general repository rule permits no more than one active agent");
+    expect(result.blockers).toContain("active agent count must be a non-negative integer");
   });
 
   it("allows a zero-agent plan under the general default without applying the OD-04 exception", () => {
@@ -524,7 +534,7 @@ describe("RepositoryPolicyGuard — agent-count boundaries and preserved default
 
     expect(result.status).toBe("blocked");
     expect(result.output?.generalRepositoryRulePreserved).toBe(true);
-    expect(result.blockers).toContain("Crew execution cannot use the feature-only OD-04 exception");
+    expect(result.blockers).toContain("Crew execution is not authorized by OD-04");
   });
 
   it("blocks the OD-04 wave when OD-04 is unresolved, keeping the default rule intact", () => {
@@ -547,7 +557,7 @@ describe("RepositoryPolicyGuard — agent-count boundaries and preserved default
     expect(result.status).toBe("blocked");
     expect(result.output?.generalRepositoryRulePreserved).toBe(true);
     expect(result.blockers).toContain(
-      "OD-04 must be approved and resolved before the feature wave can use more than one agent",
+      "OD-04 must be approved and resolved before the feature wave can use its exception",
     );
   });
 });
@@ -676,7 +686,7 @@ describe("Lane B malformed-input and duplicate-record edges", () => {
     expect(result.blockers).toContain("explicit approval is required before the proposed action");
     expect(result.blockers).toContain("required repository gate check:layout was not completed");
     expect(result.blockers).toContain("required repository gate gate:fast was not completed");
-    expect(result.blockers).toContain("both default and tech-docs Vitest lanes must pass when Vitest is recorded");
+    expect(result.blockers).toContain("both default and tech-docs Vitest lanes must pass when policy approval is requested");
     expect(result.blockers).toContain("the general repository rule permits no more than one active agent");
   });
 });

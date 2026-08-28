@@ -1237,6 +1237,16 @@
         "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
         "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
         "timestamp": 1787923522845
+      },
+      {
+        "executionId": "952c5c16-5140-4e99-89da-ace2452a5ca4",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787931173737
+      },
+      {
+        "executionId": "952c5c16-5140-4e99-89da-ace2452a5ca4",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787931213484
       }
     ],
     "7.5 Confirm no operational route targets an outside Kiro duplicate.": [
@@ -1443,6 +1453,35 @@
         "executionId": "a36315f2-93a1-4edd-bc6d-7d7f7569481c",
         "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
         "timestamp": 1787930299256
+      },
+      {
+        "executionId": "952c5c16-5140-4e99-89da-ace2452a5ca4",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787930983535
+      },
+      {
+        "executionId": "952c5c16-5140-4e99-89da-ace2452a5ca4",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787931045872
+      }
+    ],
+    "7.2 Route to observability, analytics, security, and retained repo skills.": [
+      {
+        "executionId": "952c5c16-5140-4e99-89da-ace2452a5ca4",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787931053513
+      },
+      {
+        "executionId": "952c5c16-5140-4e99-89da-ace2452a5ca4",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787931166023
+      }
+    ],
+    "7.4 Correct hook lifecycle, MCP status, and capability wording.": [
+      {
+        "executionId": "952c5c16-5140-4e99-89da-ace2452a5ca4",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787931223701
       }
     ]
   }

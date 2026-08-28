@@ -78,9 +78,9 @@ Agents B–D may run concurrently. Agents A and A2 inspect but do not edit activ
   - _Requirements: 6.1, 6.5–6.6, 7.1–7.5_
 
 - [ ] 7. Rewrite master routing
-  - [ ] 7.1 Remove deleted workflow and stale capability routes.
-  - [ ] 7.2 Route to observability, analytics, security, and retained repo skills.
-  - [ ] 7.3 Route hook references to `.kiro/hooks/block-agent-tests.mjs` and schema references to `.kiro/mcp/**`.
+  - [x] 7.1 Remove deleted workflow and stale capability routes.
+  - [x] 7.2 Route to observability, analytics, security, and retained repo skills.
+  - [x] 7.3 Route hook references to `.kiro/hooks/block-agent-tests.mjs` and schema references to `.kiro/mcp/**`.
   - [ ] 7.4 Correct hook lifecycle, MCP status, and capability wording.
   - [ ] 7.5 Confirm no operational route targets an outside Kiro duplicate.
   - _Requirements: 2.6, 5.7, 6.5, 7.5–7.6_

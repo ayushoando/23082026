@@ -57,6 +57,7 @@ describe("@planner/lib/plannerApi path contract", () => {
     const data = await listProjects();
     expect(browserApiMocks.browserApiFetch).toHaveBeenCalledWith(
       "/api/Planner/projects",
+      { signal: undefined },
     );
     expect(data).toEqual([{ id: "p_1" }]);
   });
@@ -74,9 +75,10 @@ describe("@planner/lib/plannerApi path contract", () => {
     expect(browserApiMocks.browserApiFetch).toHaveBeenCalledTimes(1);
     expect(browserApiMocks.browserApiFetch).toHaveBeenCalledWith(
       "/api/Planner/projects",
+      { signal: undefined },
     );
-    // No second arg on GET — browserApiFetch defaults credentials: "include".
-    expect(browserApiMocks.browserApiFetch.mock.calls[0]?.[1]).toBeUndefined();
+    // browserApiFetch defaults credentials: "include"; only signal is forwarded here.
+    expect(browserApiMocks.browserApiFetch.mock.calls[0]?.[1]).toEqual({ signal: undefined });
   });
 
   it("gets a project at GET /api/Planner/projects/:id", async () => {
@@ -86,6 +88,7 @@ describe("@planner/lib/plannerApi path contract", () => {
     await getProject("p_1");
     expect(browserApiMocks.browserApiFetch).toHaveBeenCalledWith(
       "/api/Planner/projects/p_1",
+      { signal: undefined },
     );
   });
 
