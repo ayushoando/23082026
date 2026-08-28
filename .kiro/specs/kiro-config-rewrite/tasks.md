@@ -77,35 +77,35 @@ Agents B–D may run concurrently. Agents A and A2 inspect but do not edit activ
   - [x] 6.6 Verify power front matter and confirm no bundled server.
   - _Requirements: 6.1, 6.5–6.6, 7.1–7.5_
 
-- [ ] 7. Rewrite master routing
+- [x] 7. Rewrite master routing
   - [x] 7.1 Remove deleted workflow and stale capability routes.
   - [x] 7.2 Route to observability, analytics, security, and retained repo skills.
   - [x] 7.3 Route hook references to `.kiro/hooks/block-agent-tests.mjs` and schema references to `.kiro/mcp/**`.
-  - [ ] 7.4 Correct hook lifecycle, MCP status, and capability wording.
-  - [ ] 7.5 Confirm no operational route targets an outside Kiro duplicate.
+  - [x] 7.4 Correct hook lifecycle, MCP status, and capability wording.
+  - [x] 7.5 Confirm no operational route targets an outside Kiro duplicate.
   - _Requirements: 2.6, 5.7, 6.5, 7.5–7.6_
 
-- [ ] 8. Reconcile the canonical INDEX
-  - [ ] 8.1 Keep `steering/INDEX.md` manual.
-  - [ ] 8.2 List steering, hooks, exactly four agents, nine skills, four powers, settings, governance tooling, and `.kiro/mcp` schemas.
-  - [ ] 8.3 Record the reversed governance relocation, localized hook helper, and MCP-schema consolidation in a historical ledger.
-  - [ ] 8.4 Preserve capability vocabulary and runtime uncertainty.
-  - [ ] 8.5 Reconcile the index against the final filesystem.
+- [x] 8. Reconcile the canonical INDEX
+  - [x] 8.1 Keep `steering/INDEX.md` manual.
+  - [x] 8.2 List steering, hooks, exactly four agents, nine skills, four powers, settings, governance tooling, and `.kiro/mcp` schemas.
+  - [x] 8.3 Record the reversed governance relocation, localized hook helper, and MCP-schema consolidation in a historical ledger.
+  - [x] 8.4 Preserve capability vocabulary and runtime uncertainty.
+  - [x] 8.5 Reconcile the index against the final filesystem.
   - _Requirements: 8.1–8.2_
 
-- [ ] 9. Perform the permitted static containment audit
-  - [ ] 9.1 Manifest audit: verify final Kiro-owned assets are under `.kiro` with expected counts.
-  - [ ] 9.2 Governance audit: verify reconciliation ledger, canonical references, source counts, and outside duplicate deletion.
-  - [ ] 9.3 MCP audit: verify `.kiro/mcp` path/byte parity and tracked root-copy deletion.
-  - [ ] 9.4 Hook audit: parse JSON, inspect local helper, and verify no external-helper reference.
-  - [ ] 9.5 Front-matter/capability audit: verify powers/steering and truthful status wording.
-  - [ ] 9.6 Active-reference audit: reject operational `scripts/kiro-repo-guidance-setup`, `scripts/general/block-agent-tests.mjs`, and root `mcp/` routes; classify spec/INDEX history separately.
-  - [ ] 9.7 Diff/scope audit: all canonical Kiro writes must be under `.kiro`; outside changes must be approved duplicate deletions only.
-  - [ ] 9.8 Requirement coverage and `git diff --check`; do not run behavioral validation.
+- [x] 9. Perform the permitted static containment audit
+  - [x] 9.1 Manifest audit: verify final Kiro-owned assets are under `.kiro` with expected counts.
+  - [x] 9.2 Governance audit: verify reconciliation ledger, canonical references, source counts, and outside duplicate deletion.
+  - [x] 9.3 MCP audit: verify `.kiro/mcp` path/byte parity and tracked root-copy deletion.
+  - [x] 9.4 Hook audit: parse JSON, inspect local helper, and verify no external-helper reference.
+  - [x] 9.5 Front-matter/capability audit: verify powers/steering and truthful status wording.
+  - [x] 9.6 Active-reference audit: reject operational `scripts/kiro-repo-guidance-setup`, `scripts/general/block-agent-tests.mjs`, and root `mcp/` routes; classify spec/INDEX history separately.
+  - [x] 9.7 Diff/scope audit: all canonical Kiro writes must be under `.kiro`; outside changes must be approved duplicate deletions only.
+  - [x] 9.8 Requirement coverage and `git diff --check`; do not run behavioral validation.
   - _Requirements: 8.3–8.5_
 
 - [ ] 10. Report completion honestly
-  - [ ] 10.1 Do not offer `pnpm run typecheck:scripts`; its config is absent.
+  - [x] 10.1 Do not offer `pnpm run typecheck:scripts`; its config is absent.
   - [ ] 10.2 Keep required `check:layout` and gate validation pending unless owner-authorized and observed.
   - [ ] 10.3 Report “Configuration changes complete; mandatory repository validation pending owner execution/authorization” while gates remain pending.
   - [ ] 10.4 Never infer a pass from static inspection or historical evidence.

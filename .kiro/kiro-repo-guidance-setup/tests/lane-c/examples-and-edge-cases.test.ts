@@ -356,7 +356,7 @@ describe("Lane C deterministic examples and edge cases", () => {
     expect(ltm?.disposition).toBe("disable");
     expect(ltm?.status).toBe("disabled");
     expect(ltm?.blockers.join(" ")).toContain(LTM_CAPTURE_COMMAND);
-    expect(graph?.manualFallback).toContain("manual graph-impact loop");
+    expect(graph?.manualFallback).toContain("manual graph-impact workflow");
     expect(graph?.iterationCeiling).toBe(GRAPH_IMPACT_MAX_ITERATIONS);
     expect(graph?.disposition).toBe("defer");
     expect(native?.maximumConcurrency).toBe(0);

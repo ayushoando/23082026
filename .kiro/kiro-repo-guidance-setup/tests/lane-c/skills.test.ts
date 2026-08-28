@@ -144,7 +144,8 @@ afterEach(() => {
 
 describe("SkillEvaluator", () => {
   it("validates the six live manifests, designates repo-map, and resolves all overlaps without claiming activation", () => {
-    const result = evaluateSkills({ repositoryRoot });
+    const root = createFixture();
+    const result = evaluateSkills({ repositoryRoot: root });
 
     expect(result.status).toBe("partial");
     expect(result.output?.skills).toHaveLength(6);

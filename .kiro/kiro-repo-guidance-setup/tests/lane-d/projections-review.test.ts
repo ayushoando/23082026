@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   COMPLETE_REVIEW_STATEMENT,
   OWNER_DECISIONS,
+  OWNER_DECISION_IDS,
   REQUIRED_SURFACE_VERSIONS,
   type ApprovalBoundary,
   type CapabilityDispositionRecord,
@@ -11,6 +12,7 @@ import {
   type CoverageMatrix,
   type EvidenceReviewRequest,
   type HandoverInput,
+  type HandoverRecord,
   type KnownGap,
   type RollbackRecord,
   type SafetyReviewRequest,
@@ -216,7 +218,7 @@ function evidenceRequest(overrides: Partial<EvidenceReviewRequest> = {}): Eviden
       },
     ],
     compatibilityRecords: compatibilityRecords(),
-    ownerDecisions: [OWNER_DECISIONS[0]],
+    ownerDecisions: [...OWNER_DECISIONS],
     validationRuns: [],
     ...overrides,
   };
@@ -233,7 +235,7 @@ function approvalBoundary(overrides: Partial<ApprovalBoundary> = {}): ApprovalBo
     approvalDate: REVIEW_DATE,
     preChangeStateRef: "snapshot:lane-d-review",
     securityBoundary: "repository-local, no secrets or external data",
-    expectedSideEffects: [],
+    expectedSideEffects: ["read-only inspection of repository guidance"],
     rollbackPathRef: "rollback:lane-d-review",
     ...overrides,
   };
@@ -254,16 +256,52 @@ function rollbackRecord(overrides: Partial<RollbackRecord> = {}): RollbackRecord
   };
 }
 
-function cleanSafetyRequest(overrides: Partial<SafetyReviewRequest> = {}): SafetyReviewRequest {
-  const evidence = createEvidenceCompatibilityReviewer().review(evidenceRequest());
-  if (evidence.output === undefined) throw new Error("expected evidence review output");
+function handoverRecord(evOutput: ReturnType<typeof createEvidenceCompatibilityReviewer>["review"] extends (...a: unknown[]) => { output?: infer O } ? NonNullable<O> : never): HandoverRecord {
   return {
-    evidenceReview: evidence.output,
+    generatedAtUtc: `${REVIEW_DATE}T00:00:00.000Z`,
+    reviewDateUtc: REVIEW_DATE,
+    completeReviewStatement: COMPLETE_REVIEW_STATEMENT,
+    firstReadPath: ["AGENTS.md"],
+    coverageMatrixRef: "coverage:lane-d-review",
+    exclusionRegisterRef: "exclusions:lane-d-review",
+    officialFamilyStatuses: [],
+    surfaceCompatibilityStatement: "all required surface/version targets reviewed",
+    configurationPrecedenceMapRef: "precedence:lane-d-review",
+    capabilityDispositionTableRef: "disposition:lane-d-review",
+    reviewerStageRefs: [evOutput.handoff.handoffId, "handoff-SafetyRollbackReviewer"],
+    ownerDecisionRefs: [...OWNER_DECISION_IDS],
+    evidenceStateLegend: [],
+    artifactDispositions: [
+      {
+        artifactId: "artifact:lane-d-review",
+        canonicalPath: ".kiro/skills/repo-map/SKILL.md",
+        disposition: "retain",
+        evidenceRefs: ["source:lane-d-review"],
+        reason: "reviewer fixture",
+        activationCondition: "after exact-surface validation",
+        owner: "repository owner",
+        rollbackPath: "no rollback applies",
+      },
+    ],
+    validationRuns: [],
+    knownGaps: [],
+    rollbackRecords: [rollbackRecord()],
+    maintenanceTriggers: [],
+    limitations: [],
+  };
+}
+
+function cleanSafetyRequest(overrides: Partial<SafetyReviewRequest> = {}): SafetyReviewRequest {
+  const evidenceResult = createEvidenceCompatibilityReviewer().review(evidenceRequest());
+  if (evidenceResult.output === undefined) throw new Error("expected evidence review output");
+  return {
+    evidenceReview: evidenceResult.output,
     approvalBoundaries: [approvalBoundary()],
     policyFindings: [],
     snapshots: ["snapshot:lane-d-review"],
     knownGaps: { entries: [] },
     rollbackRecords: [rollbackRecord()],
+    proposedHandover: handoverRecord(evidenceResult.output),
     ...overrides,
   };
 }
@@ -374,6 +412,7 @@ describe("sequential review-only handoffs", () => {
         snapshots: ["snapshot:lane-d-review"],
         knownGaps: { entries: [] },
         rollbackRecords: [rollbackRecord()],
+        proposedHandover: cleanSafetyRequest().proposedHandover,
       },
     };
     const before = JSON.stringify(input);

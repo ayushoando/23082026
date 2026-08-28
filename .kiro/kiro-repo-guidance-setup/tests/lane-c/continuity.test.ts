@@ -108,7 +108,7 @@ describe("ContinuityEvaluator", () => {
     const graph = recordFor("graph_impact_automation", {
       capabilities: [{ kind: "graph_impact_automation" }],
     });
-    expect(graph?.manualFallback).toContain("manual graph-impact loop");
+    expect(graph?.manualFallback).toContain("manual graph-impact workflow");
     expect(graph?.iterationCeiling).toBeLessThanOrEqual(GRAPH_IMPACT_MAX_ITERATIONS);
 
     const overreach = evaluateContinuity({

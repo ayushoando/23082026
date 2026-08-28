@@ -1254,6 +1254,11 @@
         "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
         "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
         "timestamp": 1787923522900
+      },
+      {
+        "executionId": "669aebce-d717-4f59-80a6-bc899113f8cf",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787933501958
       }
     ],
     "8.3 Record the reversed governance relocation, localized hook helper, and MCP-schema consolidation in a historical ledger.": [
@@ -1261,6 +1266,11 @@
         "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
         "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
         "timestamp": 1787923522962
+      },
+      {
+        "executionId": "669aebce-d717-4f59-80a6-bc899113f8cf",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787933585160
       }
     ],
     "8.5 Reconcile the index against the final filesystem.": [
@@ -1268,6 +1278,11 @@
         "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
         "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
         "timestamp": 1787923523021
+      },
+      {
+        "executionId": "669aebce-d717-4f59-80a6-bc899113f8cf",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787933620859
       }
     ],
     "9.1 Manifest audit: verify final Kiro-owned assets are under `.kiro` with expected counts.": [
@@ -1275,6 +1290,11 @@
         "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
         "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
         "timestamp": 1787923523086
+      },
+      {
+        "executionId": "669aebce-d717-4f59-80a6-bc899113f8cf",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787933655352
       }
     ],
     "9.2 Governance audit: verify reconciliation ledger, canonical references, source counts, and outside duplicate deletion.": [
@@ -1282,6 +1302,11 @@
         "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
         "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
         "timestamp": 1787923523153
+      },
+      {
+        "executionId": "669aebce-d717-4f59-80a6-bc899113f8cf",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787933675233
       }
     ],
     "9.3 MCP audit: verify `.kiro/mcp` path/byte parity and tracked root-copy deletion.": [
@@ -1289,6 +1314,11 @@
         "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
         "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
         "timestamp": 1787923523220
+      },
+      {
+        "executionId": "669aebce-d717-4f59-80a6-bc899113f8cf",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787933694479
       }
     ],
     "9.4 Hook audit: parse JSON, inspect local helper, and verify no external-helper reference.": [
@@ -1296,6 +1326,11 @@
         "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
         "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
         "timestamp": 1787923523340
+      },
+      {
+        "executionId": "669aebce-d717-4f59-80a6-bc899113f8cf",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787933714659
       }
     ],
     "9.5 Front-matter/capability audit: verify powers/steering and truthful status wording.": [
@@ -1303,6 +1338,11 @@
         "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
         "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
         "timestamp": 1787923523390
+      },
+      {
+        "executionId": "669aebce-d717-4f59-80a6-bc899113f8cf",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787933733641
       }
     ],
     "9.6 Active-reference audit: reject operational `scripts/kiro-repo-guidance-setup`, `scripts/general/block-agent-tests.mjs`, and root `mcp/` routes; classify spec/INDEX history separately.": [
@@ -1310,6 +1350,11 @@
         "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
         "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
         "timestamp": 1787923523446
+      },
+      {
+        "executionId": "669aebce-d717-4f59-80a6-bc899113f8cf",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787933765180
       }
     ],
     "9.7 Diff/scope audit: all canonical Kiro writes must be under `.kiro`; outside changes must be approved duplicate deletions only.": [
@@ -1317,6 +1362,11 @@
         "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
         "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
         "timestamp": 1787923523500
+      },
+      {
+        "executionId": "669aebce-d717-4f59-80a6-bc899113f8cf",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787933790524
       }
     ],
     "9.8 Requirement coverage and `git diff --check`; do not run behavioral validation.": [
@@ -1324,6 +1374,11 @@
         "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
         "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
         "timestamp": 1787923523552
+      },
+      {
+        "executionId": "669aebce-d717-4f59-80a6-bc899113f8cf",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787933826137
       }
     ],
     "4. Consolidate all Kiro governance and MCP metadata under `.kiro`": [
@@ -1482,6 +1537,60 @@
         "executionId": "952c5c16-5140-4e99-89da-ace2452a5ca4",
         "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
         "timestamp": 1787931223701
+      },
+      {
+        "executionId": "669aebce-d717-4f59-80a6-bc899113f8cf",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787933476454
+      }
+    ],
+    "7. Rewrite master routing": [
+      {
+        "executionId": "669aebce-d717-4f59-80a6-bc899113f8cf",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787933502012
+      }
+    ],
+    "8.1 Keep `steering/INDEX.md` manual.": [
+      {
+        "executionId": "669aebce-d717-4f59-80a6-bc899113f8cf",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787933535784
+      }
+    ],
+    "8.2 List steering, hooks, exactly four agents, nine skills, four powers, settings, governance tooling, and `.kiro/mcp` schemas.": [
+      {
+        "executionId": "669aebce-d717-4f59-80a6-bc899113f8cf",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787933566211
+      }
+    ],
+    "8.4 Preserve capability vocabulary and runtime uncertainty.": [
+      {
+        "executionId": "669aebce-d717-4f59-80a6-bc899113f8cf",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787933595376
+      }
+    ],
+    "8. Reconcile the canonical INDEX": [
+      {
+        "executionId": "669aebce-d717-4f59-80a6-bc899113f8cf",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787933620922
+      }
+    ],
+    "9. Perform the permitted static containment audit": [
+      {
+        "executionId": "669aebce-d717-4f59-80a6-bc899113f8cf",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787933826201
+      }
+    ],
+    "10.1 Do not offer `pnpm run typecheck:scripts`; its config is absent.": [
+      {
+        "executionId": "669aebce-d717-4f59-80a6-bc899113f8cf",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787933833998
       }
     ]
   }

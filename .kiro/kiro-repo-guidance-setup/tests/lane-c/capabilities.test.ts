@@ -12,7 +12,7 @@ import {
   type ExtensionCandidateInput,
 } from "../../capabilities.ts";
 
-const repositoryRoot = resolve(import.meta.dirname, "../../..");
+const repositoryRoot = resolve(import.meta.dirname, "../../../..");
 
 function completeExtension(
   kind: ExtensionCandidateInput["kind"],

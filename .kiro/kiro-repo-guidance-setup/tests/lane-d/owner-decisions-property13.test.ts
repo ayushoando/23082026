@@ -47,6 +47,7 @@ import {
   type ApprovalStatus,
   type CompatibilityRecord,
   type EvidenceReviewRequest,
+  type HandoverRecord,
   type KiroSurface,
   type OwnerDecision,
   type OwnerDecisionId,
@@ -241,8 +242,41 @@ function compatibilityRecord(surface: KiroSurface): CompatibilityRecord {
   };
 }
 
+function passingRun(surface: KiroSurface) {
+  const sv = REQUIRED_SURFACE_VERSIONS.find((s) => s.surface === surface);
+  if (!sv) throw new Error(`no sv for ${surface}`);
+  return {
+    validationId: `validation-${surface}-${sv.version}`,
+    action: "surface",
+    repositoryRootOrActiveSurface: surface,
+    surface,
+    version: sv.version,
+    scope: "property-13-fixture",
+    executionLayer: "surface_validation",
+    startedAtUtc: "2026-08-25T00:00:00.000Z",
+    result: "pass",
+    commandOrInteraction: "fresh exact-target validation",
+    exitCodeOrOutcome: "exit 0",
+    evidenceRefs: [`evidence-${surface}`],
+    unverifiedItems: [],
+    blocker: "none",
+  };
+}
+
 function completeCompatibilityRecords(): CompatibilityRecord[] {
-  return REQUIRED_SURFACE_VERSIONS.map((sv) => compatibilityRecord(sv.surface));
+  return REQUIRED_SURFACE_VERSIONS.map((sv) => {
+    const run = passingRun(sv.surface);
+    return compatibilityRecord(sv.surface, {
+      status: "applicable",
+      enablementStatus: "enabled-valid",
+      evidenceFreshness: "fresh",
+      validationRunRefs: [run.validationId],
+    });
+  });
+}
+
+function completeValidationRuns() {
+  return REQUIRED_SURFACE_VERSIONS.map((sv) => passingRun(sv.surface));
 }
 
 function sourceInventory(): SourceInventory {
@@ -327,7 +361,43 @@ function cleanEvidenceRequest(decisions: readonly OwnerDecision[]): EvidenceRevi
     ],
     compatibilityRecords: completeCompatibilityRecords(),
     ownerDecisions: decisions,
-    validationRuns: [],
+    validationRuns: completeValidationRuns(),
+  };
+}
+
+function buildHandover(): HandoverRecord {
+  const ev = (createEvidenceCompatibilityReviewer()).review(cleanEvidenceRequest(baseDecisions()));
+  return {
+    generatedAtUtc: "2026-08-25T00:00:00.000Z",
+    reviewDateUtc: "2026-08-25",
+    completeReviewStatement: COMPLETE_REVIEW_STATEMENT,
+    firstReadPath: ["AGENTS.md"],
+    coverageMatrixRef: "cov-1",
+    exclusionRegisterRef: "exclusions-1",
+    officialFamilyStatuses: [],
+    surfaceCompatibilityStatement: "all required surface/version targets reviewed",
+    configurationPrecedenceMapRef: "precedence-1",
+    capabilityDispositionTableRef: "disposition-1",
+    reviewerStageRefs: [ev.output?.handoff.handoffId ?? "handoff-EvidenceCompatibilityReviewer", "handoff-SafetyRollbackReviewer"],
+    ownerDecisionRefs: [...OWNER_DECISION_IDS],
+    evidenceStateLegend: [],
+    artifactDispositions: [
+      {
+        artifactId: "artifact:reviewer-fixture",
+        canonicalPath: ".kiro/skills/repo-map/SKILL.md",
+        disposition: "retain",
+        evidenceRefs: ["src-1"],
+        reason: "reviewer fixture",
+        activationCondition: "after exact-surface validation",
+        owner: "repository owner",
+        rollbackPath: "no rollback applies",
+      },
+    ],
+    validationRuns: completeValidationRuns(),
+    knownGaps: [],
+    rollbackRecords: [rollbackRecord()],
+    maintenanceTriggers: [],
+    limitations: [],
   };
 }
 
@@ -342,7 +412,7 @@ function approvalBoundary(): ApprovalBoundary {
     approvalDate: "2026-08-25",
     preChangeStateRef: "snapshot-1",
     securityBoundary: "repository-local, no secrets",
-    expectedSideEffects: [],
+    expectedSideEffects: ["read-only inspection"],
     rollbackPathRef: "rollback-1",
   };
 }
@@ -507,6 +577,7 @@ describe("Property 13: sequential review never passes while an owner decision is
               snapshots: ["snapshot-1"],
               knownGaps: { entries: [] },
               rollbackRecords: [rollbackRecord()],
+              proposedHandover: buildHandover(),
             },
           };
           const output = runSequentialReview(input);
