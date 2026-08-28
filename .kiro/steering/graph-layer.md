@@ -2,78 +2,42 @@
 inclusion: manual
 ---
 
-# Graph Layer — ts-morph Import Graph (Layer 3)
+# Graph Layer — Repository Import Graph
 
 ## Overview
-A lightweight dependency graph built from the repo's TypeScript/CSS imports. Replaces the retired external graph integration for impact analysis, scoped testing, and circular dependency detection.
 
-**Script:** `scripts/graph-impact.mjs`
+The generated-document pipeline builds a repository graph from live source through `tech-docs-generator/scripts/extract-repo-graph.mjs`. That module is an exported generator component, not a standalone impact, cycle, statistics, or test-selection CLI.
 
-## Commands
-
-### Impact analysis (most common)
-```bash
-node scripts/graph-impact.mjs --file=site/lib/ai/providerChain.ts
-```
-Returns:
-- All files transitively affected by a change to that file
-- Domain classification for each impacted file
-- Covering test files
-- A ready-to-run `vitest` command scoped to only the affected tests
-
-### Limit depth
-```bash
-node scripts/graph-impact.mjs --file=site/components/ui/Button.tsx --depth=2
-```
-Useful when a highly-connected file has huge blast radius — limit to direct + 1-hop dependents.
-
-### Circular dependency detection
-```bash
-node scripts/graph-impact.mjs --circles
-```
-Finds import cycles across all domains. Fix these to reduce coupling.
-
-### Graph statistics
-```bash
-node scripts/graph-impact.mjs --stats
-```
-Shows:
-- Total files and edges
-- File count per domain (ui-css, database, ai, seo, testing, deployment, planner, studio, api)
-- High fan-in files (most imported — fragile, change carefully)
-- High fan-out files (most dependencies — complex, test thoroughly)
+The previously documented dedicated impact script is not present in the live worktree. Do not invoke unsupported impact flags or claim a generated test recommendation. For change-impact work, inspect imports and dependents directly from the live source tree and keep the review scoped to the changed domain.
 
 ## Integration with other layers
 
 ### Static layer (PostFileSave hook)
-The hook runs domain-specific non-test checks on save. The graph layer adds *scoped impact analysis* and identifies the relevant user-invoked test command:
-1. File saved → hook runs the configured static check
-2. Inspect impact with `node scripts/graph-impact.mjs --file=<saved-file>` when needed
-3. Report the `suggestedTestCommand` to the user; never run tests or gates automatically
 
-### Browser layer (Nova Act)
+The hook runs configured domain-specific non-test checks on save. For additional impact analysis:
+
+1. Identify direct imports and dependents from live source.
+2. Follow only the paths relevant to the changed domain.
+3. Report any applicable user-invoked validation command; never run tests or gates automatically.
+
+### Browser layer
+
 Instead of testing all routes visually:
-1. Run `--file=<changed-component>` to see which pages import it
-2. Only test those routes at 4 viewports when the user explicitly requests browser verification
 
-### Loop pattern with graph
-```
+1. Inspect which pages import the changed component.
+2. Test only those routes at the required viewports when the user explicitly requests browser verification.
+
+### Review loop
+
+```text
 edit file
-  → graph-impact --file=<file> (inspect blast radius)
-  → report suggestedTestCommand for user invocation
+  → inspect live imports and dependents
+  → report applicable user-invoked validation
   → apply fixes and repeat only when the user requests validation
 ```
 
-## Key metrics from this repo
-
-| Metric | Value |
-|--------|-------|
-| Total files in graph | ~1,689 |
-| Total import edges | ~3,247 |
-| Highest fan-in | `guestProjectSetup.ts` (49), `home/layout/index.ts` (48), `siteUrl.ts` (43) |
-| Highest fan-out | `Planner.tsx` (48), `Studio.tsx` (39), `focss/site/components/index.css` (24) |
-
 ## Token efficiency
-- One graph query replaces reading dozens of files to find dependents.
-- The `suggestedTestCommand` avoids running the full test suite (625 test files → just the affected ones).
-- Use `--depth=1` for quick local impact; `--depth=10` (default) for full transitive blast radius.
+
+- Keep dependency inspection scoped to the changed file and its direct consumers first.
+- Expand transitively only when direct consumers show shared or cross-domain impact.
+- Do not rely on historical generated graph metrics as proof of the current worktree.

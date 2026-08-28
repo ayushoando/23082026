@@ -33,4 +33,4 @@ pnpm run lint
 - Use streaming responses for long completions to reduce perceived latency.
 
 ## Graph-layer integration
-Use `node scripts/graph-impact.mjs --file=<changed-file>` to inspect affected import paths and user-relevant flows before optional validation. This repository graph replaces the retired CAST integration.
+Inspect imports and dependents directly from the live source tree before optional validation.

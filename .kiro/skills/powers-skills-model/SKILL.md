@@ -11,52 +11,66 @@ licensing compliance.
 
 ## The four layers
 
-- **MCP server** — the actual tools (live connections). Registered in
-  `~/.kiro/settings/mcp.json`; Power servers live under `powers.mcpServers`.
-- **Power** — an ACTIVE agent bundle. Kiro-native structure:
-  `POWER.md` (entry point: frontmatter with `name`/`keywords`, tool docs, best
-  practices) + `mcp.json` (MCP connection) + `steering/` (on-demand guidance).
-  Detects relevant work by keyword, runs onboarding, routes context, calls the
-  MCP tools.
+- **MCP server** — an actual tool process or connection. Repository schema files,
+  workspace configuration, and runtime availability are separate facts. Workspace
+  configuration belongs in `.kiro/settings/mcp.json`; root `mcp/*/tools/*.json`
+  schemas alone do not prove that a server is configured or installed.
+- **Power** — a capability package with `POWER.md` as its entry point and optional
+  steering or tool documentation. A power may route to MCP tools, but it does not
+  have to bundle an MCP manifest or server. Its files do not prove runtime
+  installation or activation.
 - **Steering** — persistent/on-demand project knowledge in `.kiro/steering/`
-  (markdown + `inclusion:` frontmatter: `fileMatch` | `manual` | always).
-- **Skill** — a PASSIVE, portable markdown package (`SKILL.md`, frontmatter
-  `name`+`description`) following the Agent Skills standard. Instructions,
-  scripts, templates. Loads by description match or `/` slash command.
+  (markdown + explicit `inclusion:` front matter such as `fileMatch`, `manual`,
+  or `always`).
+- **Skill** — a passive, portable markdown package (`SKILL.md`, front matter
+  `name` + `description`) following the Agent Skills standard. It provides
+  instructions and may include scripts or templates; the agent decides when to
+  load it.
 
 ## How they interact
 
-1. Power is the active layer; a skill is passive reference. A power DRAWS ON
-   skills for deeper detail (language/CLI/schema examples) — not the reverse.
-2. A skill cannot call an MCP tool or activate a power by itself. It is markdown.
-   The AGENT reads the skill, then activates the relevant power / calls MCP as the
-   skill's procedure directs.
-3. Chain: prompt -> agent loads matching skills (instructions) + powers (tools) ->
-   agent executes, using power/MCP tools as the skill instructs.
-4. Installed separately: Import a Power (GitHub/marketplace) vs Import a skill
-   (GitHub). Both load on-demand to keep context lean.
-5. Note: a Kiro Power entry point is `POWER.md` (not `SKILL.md`) and bundles
-   steering, not skills. The Claude Code equivalent uses `SKILL.md` + `.mcp.json`.
+1. When activated, a power can route the agent to tools and on-demand guidance;
+   a skill supplies passive procedure and domain detail.
+2. A skill cannot call an MCP tool or activate a power by itself. The agent reads
+   the skill, checks current capability availability, and then performs any
+   permitted activation or tool call.
+3. Power and skill discovery are independent and on demand. Neither a repository
+   directory nor an MCP schema establishes runtime installation.
+4. A Kiro Power entry point is `POWER.md`, not `SKILL.md`. Steering may accompany
+   it; an MCP connection is optional rather than mandatory.
 
 ## Specs and Quick Spec
+
 - Kiro's **Quick Spec** is a built-in session workflow, not a repository skill or
   custom-agent preset. It generates `requirements.md`, `design.md`, and
   `tasks.md` in one pass. Use the Quick Spec workflow from Kiro's workflow picker:
   <https://kiro.dev/docs/specs/quick-spec/>.
 - Kiro's **Requirements-First** option is a Feature Spec workflow. It is the
-  gated requirements -> design -> tasks flow, not an agent named
-  `feature-requirements-first-workflow`:
+  gated requirements -> design -> tasks flow:
   <https://kiro.dev/docs/specs/feature-specs/requirements-first/>.
-- `feature-requirements-first-workflow` is not a documented Kiro built-in agent,
-  subagent, preset, or skill. Do not invoke it or add a seventh repository skill
-  to emulate it; the six-skill candidate set is distinct from the mandatory `oando-master` router. Repository spec artifacts belong under
-  `plans/ref/<name>/`.
+- This repository retains exactly nine repo-specific skills: `db-migrations`,
+  `focss-css`, `fork-boundaries`, `graph-impact`, `oando-master`,
+  `planner-studio`, `powers-skills-model`, `repo-map`, and `verify-and-gate`.
+  Kiro spec artifacts live under `.kiro/specs/<name>/`; active plan coordination
+  and plan-owned evidence use `plans/<name>/` as defined by `plans/README.md`.
 
 ## In this workspace
-- In this workspace, the installed powers are discoverable from the global installed-power registry and their MCP servers from the global Kiro MCP settings. The repository-local `oando-workflow` power intentionally ships an empty `mcp.json` and routes to those global servers; do not populate the local manifest.
-- Repository tests and gates are user-invoked only. Do not load `verify-and-gate` for automatic validation, do not enable automatic test hooks, and do not run test-like shell commands. The `block-agent-tests` hook remains an unconditional hard block because its PreToolUse payload cannot safely represent a trusted user-invocation exception.
 
-## Kiro configuration boundary — hard rule
-- Any repository change that configures, extends, repairs, or documents Kiro must be made under `.kiro/` only.
-- Do not create or modify Kiro configuration, steering, hooks, agents, skills, powers, or related repository guidance outside `.kiro/`.
-- This boundary governs repository file changes; it does not prohibit reading official Kiro documentation or using the Kiro CLI.
+- The repository-local `oando-workflow` power currently contains `POWER.md` and
+  steering only; it does not contain `mcp.json`. Do not invent a local manifest
+  or infer global/runtime MCP availability from repository files.
+- Check the installed-power registry directly before naming or activating an
+  external power. A schema directory or prose reference is not installation
+  evidence.
+- Repository tests and gates are user-owned. The current `block-agent-tests`
+  hook is disabled and uses `PostTaskExec`, so it provides no pre-execution
+  enforcement. Do not describe it as an enabled `PreToolUse` blocker unless the
+  live hook is repaired and re-inspected.
+
+## Kiro configuration boundary
+
+- Repository Kiro configuration normally belongs under `.kiro/`.
+- Use another path only when current repository authority or an approved spec
+  explicitly assigns a supporting implementation or harness file there, such as
+  `scripts/general/block-agent-tests.mjs`.
+- Do not create competing Kiro guidance outside the authorized path set.

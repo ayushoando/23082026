@@ -8,7 +8,8 @@ inclusion: always
 
 - The product is a Next.js 16 App Router application under `site/`, written in TypeScript and React 19.
 - Install and run the monorepo from the repository root with pnpm. Product dependencies are declared in the root `package.json`; there is no separate `site/package.json`.
-- The primary application TypeScript configuration is `site/tsconfig.json`; the root `typecheck:scripts` command targets `scripts/tsconfig.json` for script tooling.
+- The primary application TypeScript configuration is `site/tsconfig.json`.
+- The root `typecheck:scripts` command is unavailable because its referenced `scripts/tsconfig.json` file is absent; do not offer it as validation.
 - Styling uses Tailwind CSS v4 through `@tailwindcss/postcss`, with the repo's FOCSS token and zone layer under `site/focss/`.
 - Linting uses oxlint through the root pnpm scripts and `.oxlintrc.json`.
 

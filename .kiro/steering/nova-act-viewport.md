@@ -68,7 +68,7 @@ for width in viewports:
 For an explicitly requested visual check, run `pnpm run verify:focss` and `pnpm run lint:ui:strict` before visual testing. Do not run tests or gates automatically.
 
 ## Integration with graph layer
-Use `node scripts/graph-impact.mjs --file=<changed-component>` to narrow which routes need visual testing; this repository graph replaces the retired CAST integration.
+Inspect imports and dependents directly from the live source tree to narrow which routes need visual testing.
 
 ## Token efficiency
 - Only invoke this steering file when visual testing is actually needed.

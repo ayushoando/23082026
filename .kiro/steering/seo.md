@@ -7,8 +7,8 @@ fileMatchPattern: "site/lib/seo/**,site/lib/analytics/**,site/app/**/robots*,sit
 
 ## Stack
 - `site/lib/seo/indexnow.ts` — IndexNow push on content changes
-- `site/app/(site)/robots.ts` — dynamic robots.txt
-- `site/app/(site)/sitemap.ts` — dynamic XML sitemap
+- `site/app/robots.ts` — dynamic robots.txt
+- `site/app/sitemap.ts` — dynamic XML sitemap
 - `site/lib/analytics/` — tracking and analytics integration
 - Route metadata: `site/features/site/data/routeMetadata*`
 - Vercel Analytics + Speed Insights for Core Web Vitals
@@ -37,4 +37,4 @@ pnpm run check:site-ui
 Use Nova Act to verify rendered meta tags and OG images at each viewport width only for an explicit browser-check request.
 
 ## Graph-layer integration
-Use `node scripts/graph-impact.mjs --file=<changed-file>` to inspect affected route imports before optional validation. This repository graph replaces the retired CAST integration.
+Inspect imports and dependents directly from the live source tree before optional validation.

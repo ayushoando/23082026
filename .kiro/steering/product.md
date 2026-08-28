@@ -12,7 +12,7 @@ An office furniture catalog, configurator, and floor-planning tool for a furnitu
 - Office seating and workstation configurators
 - 2D floor planning and layout tool
 - Client-facing product presentation
-- Inventory and category management (see `migrate_categories.ts`)
+- Inventory and category management
 
 ## Business Context
 - B2B commercial furniture sales (offices, corporates, tenders)

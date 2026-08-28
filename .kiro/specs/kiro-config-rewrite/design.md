@@ -1,333 +1,181 @@
 # Design Document: Kiro Configuration Rewrite
 
-## Purpose
+## Purpose and reviewed status
 
-Rebuild `.kiro/` around the repository that actually exists, not around generic product-development prompts or stale configuration assumptions. The rewrite removes irrelevant workflow machinery, establishes one authoritative steering file per domain, keeps only repo-specific skills and agents, adds three routing powers backed by live code, and moves the TypeScript governance module out of configuration space.
+Rebuild `.kiro/` around the repository that actually exists: remove the unrelated product-workflow bundle, consolidate steering, retain only repo-specific skills/agents, add truthful observability/analytics/security routing, and relocate executable governance TypeScript into `scripts/` without breaking its imports or test discovery.
 
-This design is based on:
-
-- a six-slice audit covering all 4,079 tracked files;
-- direct inspection of every `.kiro` file;
-- the complete browser/API and test inventories;
-- live source checks for observability, analytics, and security;
-- repository evidence under `agent-reports/`, `results/`, and `docs/architecture/`.
-
-Where an audit report conflicted with live code or Git, live state won. Two corrections matter:
-
-1. Datadog is **not wired** in current source or `package.json`; it appears only in a local-cache convention, documentation, and the lockfile. The observability power must not present it as installed.
-2. `docs/architecture/scripts-stale-review.csv` is historical: Git currently tracks no files under `scripts/kiro-repo-guidance-setup/`. The move from `.kiro/kiro-repo-guidance-setup/` therefore creates the destination rather than restoring an existing tracked tree.
+Two independent post-rewrite reviews rated the previous version **NO-GO**. This revision resolves their critical/high findings: nonexistent script tsconfig, impossible textual bans, incomplete relocation mechanics, ineffective hook enforcement, unmounted analytics, incomplete auth routing, command errors, unsupported MCP conclusions, stale retained-skill assumptions, and the conflict between mandatory repo gates and user-owned execution.
 
 ## Design principles
 
-1. **Repo-specific context only.** Always-loaded or discoverable Kiro configuration must help with this office-furniture application, its forks, data boundaries, styling, tests, or operations.
-2. **One source per concern.** Duplicate steering, mirrored workflow guides, and stale stack descriptions are deleted rather than preserved through aliases.
-3. **Routing, not duplication.** Powers point to live source, commands, and evidence. They do not copy implementation rules or ship MCP servers.
-4. **Honest capability status.** Wired repo tooling, local MCP schemas, and uninstalled external capabilities are described separately.
-5. **Configuration stays configuration.** Executable TypeScript governance code belongs under `scripts/`, not `.kiro/`.
-6. **No implied verification.** Static audits may be run by the executor. Tests, gates, coverage, browser runners, and local service startup remain user-invoked.
-7. **Smallest coherent post-state.** If an entire workflow bundle is irrelevant, remove the bundle instead of relocating its pieces.
+1. **Live state wins.** Current source, Git state, `AGENTS.md`, and current package/config files override historical reports.
+2. **Small allowed surface.** Changes stay in `.kiro/**`, the relocated module, the blocker script, and two test-discovery configs. Application and test behavior remain untouched.
+3. **One source per concern.** Duplicate or irrelevant configuration is deleted rather than aliased.
+4. **Routing, not duplication.** Powers point to live implementation and commands; they do not copy code or bundle MCP.
+5. **Capability status is evidentiary.** Wired, present-but-unmounted, schema-present, workspace-configured, and runtime-installed are different states.
+6. **Move with parity.** Relocation uses collision checks, relative-path-set comparison, hashes/bytes, and an explicit edit exception ledger.
+7. **Pre-execution enforcement.** A disabled post-task hook is not a blocker. Test ownership is enforced before shell execution.
+8. **No implied verification.** Static inspection may run. Test-like commands and mandatory gates remain pending until the owner runs or explicitly authorizes them and the active hook permits them.
+
+## Allowed change surface
+
+```text
+.kiro/**
+scripts/kiro-repo-guidance-setup/**             # relocation destination
+scripts/general/block-agent-tests.mjs            # enforcement repair
+tests/vitest.shared.ts                            # destination discovery only
+tests/tsconfig.json                               # destination include only
+```
+
+No application source, test assertion/fixture, migration, CI workflow, public asset, or production configuration belongs in this implementation.
 
 ## Target state
 
 ```text
 .kiro/
-├── agents/
-│   └── spec-task-runner.md
+├── agents/spec-task-runner.md
 ├── hooks/
-│   ├── block-agent-tests.json
+│   ├── block-agent-tests.json          # enabled PreToolUse
 │   ├── domain-fast-check.json
 │   ├── ltm-postturn-capture.json
 │   └── session-start-orient.json
 ├── powers/
 │   ├── analytics/POWER.md
 │   ├── observability/POWER.md
-│   ├── oando-workflow/
-│   │   ├── POWER.md
-│   │   └── steering/routing.md
+│   ├── oando-workflow/{POWER.md,steering/routing.md}
 │   └── security/POWER.md
-├── settings/
-│   ├── lsp.json
-│   └── mcp.json
-├── skills/
-│   ├── db-migrations/SKILL.md
-│   ├── focss-css/SKILL.md
-│   ├── fork-boundaries/SKILL.md
-│   ├── graph-impact/SKILL.md
-│   ├── oando-master/SKILL.md
-│   ├── planner-studio/SKILL.md
-│   ├── powers-skills-model/SKILL.md
-│   ├── repo-map/SKILL.md
-│   └── verify-and-gate/SKILL.md
-├── specs/                       # untouched except this spec
-└── steering/
-    ├── INDEX.md
-    ├── agent-behavior.md
-    ├── ai.md
-    ├── api.md
-    ├── coding-standards.md
-    ├── database.md
-    ├── deployment.md
-    ├── graph-layer.md
-    ├── ltm-memory-format.md
-    ├── ltm-operations.md
-    ├── nova-act-viewport.md
-    ├── product.md
-    ├── seo.md
-    ├── tech-stack.md
-    ├── testing.md
-    └── ui-css.md
+├── settings/{lsp.json,mcp.json}
+├── skills/                             # exactly 9 retained skills
+├── specs/                              # Kiro work products, not active-route audit scope
+└── steering/                           # canonical files plus manual INDEX.md
 
-scripts/
-└── kiro-repo-guidance-setup/
-    ├── README.md
-    ├── 25 TypeScript modules
-    └── tests/                   # 43 existing tests, preserved
+scripts/kiro-repo-guidance-setup/
+├── README.md
+├── 25 top-level TypeScript modules
+└── tests/                              # 43 relocated tests
 ```
 
-The following no longer exist:
-
-- `.kiro/kiro-repo-guidance-setup/`;
-- `.kiro/templates/` (both files belong only to the removed workflow bundle);
-- six generic product/ML workflow skills;
-- six mirrored workflow-guide files under `.kiro/agents/`;
-- `steering/product-workflow.md`, `product-context.md`, `spec.md`, and `spec-guide.md`;
-- `plans/prompts/` as a proposed destination (it is not created).
+Deleted assets are the six workflow skills, six mirrored agent guides, `product-workflow.md`, both workflow templates, duplicate/empty steering files, and the old governance source root. `plans/prompts/` is not created.
 
 ## Change model
 
-### 1. Remove the generic product-workflow bundle
+### 1. Remove the workflow bundle atomically
 
-The audit found one coupled bundle rather than independent reusable assets:
+The research → PRFAQ → PRD → prototype skills, mirrored agent prose, orchestrator steering, and HTML templates are one generic bundle unrelated to the office-furniture product. Delete it as a unit. Retain `spec-task-runner.md` and the nine repository-specific skills.
 
-- skills: `ai-framing`, `ai-framing-template`, `claude-code-workflow`, `deep-research`, `prd`, `prfaq`;
-- matching prose files in `.kiro/agents/`;
-- always-loaded `steering/product-workflow.md`;
-- `ProjectDashboard_Template.html` and `ScreenIndex_Template.html`.
+Runtime-reference checks examine active steering/skills/powers/agents/hooks/settings. This spec and the INDEX removal ledger necessarily name deleted assets; those historical references are classified, not treated as routing defects.
 
-These files all implement the same research → PRFAQ → PRD → prototype workflow. Keeping any subset leaves dead references or exposes irrelevant skills. The design therefore deletes the bundle atomically.
+### 2. Consolidate steering and repair retained guidance
 
-`spec-task-runner.md` remains the sole agent because it is a valid Kiro agent definition. The nine retained skills are tied to current repo architecture, CSS, database routing, fork boundaries, graph analysis, or verification policy.
+- `product.md` is the only product-context file.
+- `tech-stack.md` is the only stack definition and uses current `site/` paths.
+- `coding-standards.md` retains the already-completed front matter/path corrections.
+- `agent-behavior.md` points to `AGENTS.md`, `Agents/01-standard.md`, `Failures.md`, and existing `plans/README.md`; it does not invent `plans/PLAN.md`.
+- Scoped steering keeps its current inclusion behavior unless a path is stale.
 
-### 2. Consolidate steering
+The retained `powers-skills-model` skill is part of the audit surface, not presumed correct. Remove its obsolete six-skill count, `plans/ref/<name>/` requirement, empty local power-MCP claim, and inaccurate hook description. Apply the same stale-assumption review to all retained skills.
 
-#### Canonical global files
+`tech-stack.md` must not list `scripts/tsconfig.json`: it does not exist. The package script `typecheck:scripts` is therefore known-broken and unavailable for this work; the spec does not silently create a config merely to validate itself.
 
-- `product.md` remains the only product-context file.
-- `tech-stack.md` becomes the only stack definition and starts with `inclusion: always`.
-- `coding-standards.md` gains explicit `inclusion: always`.
-- `agent-behavior.md` retains `inclusion: always` but replaces stale root paths, npm/ESLint assumptions, and missing-document references with current repo paths and authority sources.
+### 3. Relocate governance code transactionally
 
-#### Deleted steering
+#### Preflight
 
-- `product-context.md`: duplicate product context.
-- `spec.md`: competing stack description.
-- `spec-guide.md`: empty always-loaded stub.
-- `product-workflow.md`: controller for the deleted workflow bundle.
+1. Enumerate every source relative path and classify 25 top-level modules plus 43 tests.
+2. Refuse to continue if any destination path already exists or would overwrite unrelated work.
+3. Record source hashes or byte counts.
 
-#### Preserved scoped steering
+#### Copy/move and required edits
 
-Existing file-matched/manual domain files remain unless their references need correction: `ai.md`, `api.md`, `database.md`, `deployment.md`, `graph-layer.md`, both LTM files, `nova-act-viewport.md`, `seo.md`, `testing.md`, and `ui-css.md`.
+Relocate the entire tree preserving relative paths. Then repair only relocation-caused references:
 
-Every remaining steering file must begin with explicit valid front matter. `INDEX.md` is manual and records the post-state, not the pre-rewrite plan.
+- recalculate each moved test import. For example, a lane test at `scripts/kiro-repo-guidance-setup/tests/lane-d/*.test.ts` reaches a root module via `../../<module>.ts`; retaining `../../../scripts/kiro-repo-guidance-setup/<module>.ts` would resolve incorrectly to `scripts/scripts/...`;
+- change `pipeline.ts` to destination-local `./reviewers`;
+- scan all moved modules/tests for embedded `.kiro/kiro-repo-guidance-setup` roots and update semantic manifests/contracts/freeze/path ownership data where the location is meant to be current;
+- change only the old governance globs in `tests/vitest.shared.ts` and includes in `tests/tsconfig.json` to `../scripts/kiro-repo-guidance-setup/**`.
 
-### 3. Move executable governance code
+Maintain an exception ledger naming every content-edited file and why. Files outside that ledger must retain their source hash/bytes. Compare exact source and destination relative-path sets before deleting the source. Delete the source only after parity succeeds.
 
-Move the complete live directory `.kiro/kiro-repo-guidance-setup/` to `scripts/kiro-repo-guidance-setup/`:
+Add a destination README explaining that the module is governance tooling, not Next.js runtime code, and that current validation routes through the repaired test tsconfig rather than nonexistent `scripts/tsconfig.json`.
 
-- 25 top-level TypeScript modules;
-- 43 existing test files under `tests/`;
-- no file omissions or content rewrites during the move.
+### 4. Make hook policy enforceable
 
-After relocation, fix the one confirmed broken import in `pipeline.ts`:
+#### Domain save hook
 
-```ts
-// before
-from "../../scripts/kiro-repo-guidance-setup/reviewers"
+Keep the existing test-file skip, Studio/Planner boundary check, and FOCSS/UI checks. All other matching saves return success without broad typecheck, test, coverage, build, browser, or Docker work.
 
-// after
-from "./reviewers"
-```
+#### Test-command blocker
 
-Add a short README describing the module as agent/governance tooling, its primary entry points, and that it is not part of the Next.js runtime. The historical CSV is not a move manifest and must not be used to infer destination files; live source enumeration is authoritative.
+Replace the disabled `PostTaskExec` configuration with an enabled `PreToolUse` hook using matcher `execute_pwsh|control_pwsh_process`; remove the existing `"enabled": false` state. It calls `node scripts/general/block-agent-tests.mjs`; exit code 2 prevents either shell tool call.
 
-### 4. Make hooks consistent with repo policy
+Repair the script by defining the complete blocked matcher set and parsing command fields from hook input. It blocks agent attempts to run tests, gates, coverage, browser-test runners, builds, typechecks, and local-service commands. It does not intercept a human typing directly in a terminal. No retained document may claim that disabled post-execution behavior provides enforcement.
 
-#### `domain-fast-check.json`
+Add the non-command `SessionStart` orientation hook; preserve the LTM hook unchanged.
 
-Keep only the lightweight domain checks already justified on save:
+### 5. Model capability states honestly
 
-- skip test files;
-- Studio/Planner paths → `pnpm run scan:boundaries`;
-- FOCSS/component/CSS paths → `pnpm run verify:focss` and `pnpm run lint:ui:strict`;
-- all other matching saves → `exit 0`.
+Use these terms consistently:
 
-Remove both the domain-specific and catch-all typecheck branches. Do not add tests, typechecks, coverage, builds, or browser runners.
+- **Wired:** live importer/render/invocation exists.
+- **Present but unmounted:** package/component exists but no live invocation was found.
+- **Schema present:** root MCP tool schemas exist.
+- **Workspace configured:** `.kiro/settings/mcp.json` has a server entry.
+- **Runtime installed:** a direct active-registry check confirms it.
+- **Runtime availability not verified:** no direct registry check was performed.
 
-#### `block-agent-tests.json`
+Create workspace MCP settings with an empty `mcpServers` object. This proves “not configured in this workspace,” not “not installed anywhere.” Root schema folders and the Datadog cache convention do not prove a connection. Powers ship no MCP manifests or servers.
 
-Live JSON declares `PostTaskExec`; other Kiro docs incorrectly call it `PreToolUse`. This rewrite does **not** change lifecycle semantics without a separate user decision. It corrects the garbled description and updates references in retained skills/powers so they describe the committed `PostTaskExec` hook accurately.
+### 6. Add repo-local powers
 
-#### `session-start-orient.json`
+#### Observability
 
-Add an agent-action `SessionStart` hook that tells the agent to read `AGENTS.md` sections 1–3 and `Agents/01-standard.md` before work. It executes no shell command.
+Route OpenTelemetry to `site/instrumentation.ts` and `@vercel/otel`; metrics to `site/lib/observability/metrics.ts`, `/api/metrics`, and `config/observability/`; client errors to `/api/log-error` and `reportClientError.ts`. Document the production metrics flag, structured-console sink, user-owned Docker commands, and that Sentry/Datadog RUM are not wired.
 
-`ltm-postturn-capture.json` remains unchanged.
+#### Analytics
 
-### 5. Add three repo-local powers
+Route event work through consent, event queue, conversion taxonomy, KPI integrity, and transport modules. Preserve accepted/undecided/rejected semantics.
 
-All three powers are routing documents with no bundled MCP server. Each has valid power front matter, a concise capability map, explicit non-capabilities, and repo-first rules.
+`SiteAnalytics.tsx` contains Vercel Analytics and Speed Insights components, but repository search found no live importer/render. Therefore packages and component are **present but unmounted**, and the power must not call either transport operationally wired. Mounting the component would be an application change outside this spec. CSP allowance alone also does not prove GA4/Zaraz invocation.
 
-#### Observability power
+#### Security
 
-**Wired:**
+Describe the layered boundary accurately:
 
-- OpenTelemetry registration: `site/instrumentation.ts` using `@vercel/otel` and `OTEL_SERVICE_NAME`;
-- Prometheus metrics: `site/lib/observability/metrics.ts`;
-- metrics endpoint: `/api/metrics`, disabled in production unless `OBSERVABILITY_METRICS_ENABLED=1`;
-- local Prometheus/Grafana stack and `pnpm run observability:up|down|logs`;
-- client-error ingestion: `/api/log-error` → `reportClientError`, which sanitizes and writes structured `console.error` records;
-- hard blockers: root `Failures.md`.
+1. `site/proxy.ts`: cookie existence/precheck, CSP, nonce, route/header policy;
+2. `site/lib/auth/session.ts`: actual server user/session resolution and page/server authorization helpers;
+3. `site/features/shared/api/withAuth.ts`: API rate limit, Supabase user resolution, role enforcement, optional CSRF, and standardized errors.
 
-**Not wired:** Sentry and Datadog RUM. Datadog references are documentation/local-cache remnants, not a runtime integration.
+Route remaining controls to strict SVG validation, CSRF, origin/upload helpers, and `site/lib/rateLimit.ts`. Use exact commands: `pnpm run scan:secrets`, `pnpm run ops -- lint:secrets`, `pnpm run test:audit:api-routes`, and `pnpm run test:audit:eslint-disable`. The latter test-like checks are documented for the owner, not run by the agent.
 
-**Partially available:** `mcp/chrome-devtools/` schemas provide browser performance tools but are not connected in `settings/mcp.json`.
+### 7. Update master routing and canonical index
 
-#### Analytics power
+Shorten `oando-workflow` to repo-specific routing and the three new powers. Correct hook and MCP vocabulary everywhere.
 
-Route to the existing consent-gated flow:
-
-```text
-siteEvents / conversionContract / kpiEvents
-  → emitSiteEvent
-  → consent check
-  → emitTransport or eventQueue
-  → @vercel/analytics
-```
-
-The power treats `site/lib/consent.ts` as a hard boundary: accepted emits, undecided queues, rejected drops. New events reuse `conversionContract.ts` taxonomy/privacy filtering. Vercel Analytics and Speed Insights are wired; GA4/Zaraz is treated only as present where live site components/config confirm it, not merely because CSP permits its endpoints.
-
-#### Security power
-
-Route to:
-
-- CSP, nonce, protected-route and security-header policy: `site/proxy.ts`;
-- CSRF: `site/lib/security/csrf.ts`;
-- strict untrusted-SVG validation: `site/lib/security/svgSanitizer.ts`;
-- origin checks and upload limits: `site/lib/security/`;
-- rate limiting and AI fail-closed behavior: `site/lib/rateLimit.ts`;
-- secret checks and API-route audits exposed by root `pnpm`/ops commands;
-- RFC 9116 edge response in the Cloudflare worker.
-
-The power distinguishes the strict SVG validator from the weaker regex-based sanitizer and never recommends the latter as an untrusted-input boundary. GitHub security tool schemas under `mcp/github/` are “schema present, not connected.”
-
-### 6. Update the existing workflow power and MCP status
-
-`oando-workflow/POWER.md` remains the master router but is shortened and corrected:
-
-- remove references to deleted skills and generic PM workflow;
-- route traces/metrics/errors to `observability`;
-- route event/KPI/consent work to `analytics`;
-- route CSP/CSRF/secrets/sanitization work to `security`;
-- keep repo-map, graph, fork, FOCSS, migration, and verification routing;
-- state the real hook trigger rather than claiming a PreToolUse block.
-
-Create `.kiro/settings/mcp.json` with the Kiro schema and an empty `mcpServers` object. Its comment/status documentation distinguishes:
-
-- local tool-schema snapshots: `chrome-devtools`, `cloudflare-docs`, `github`, `tasks`;
-- gitignored local Datadog data cache: not source, not an installed server;
-- external capabilities named in routing: uninstalled until present in `mcpServers` or the active power registry.
-
-No power may claim an MCP is installed solely because schemas exist under root `mcp/`.
-
-### 7. Create the canonical index
-
-`steering/INDEX.md` is the inventory for the final state. It includes:
-
-- every remaining steering file and inclusion mode;
-- all four hooks and their actual triggers;
-- the single agent;
-- all nine retained skills;
-- all four powers;
-- settings files;
-- MCP schema/connectivity status;
-- removed references and their replacements.
-
-The index does not enumerate every file in `specs/`, because specs are Kiro-managed work products rather than runtime configuration domains.
-
-## Reference and data contracts
-
-### Steering front matter
-
-```yaml
----
-inclusion: always | fileMatch | auto | manual
----
-```
-
-For `fileMatch`, the existing pattern metadata remains required. The rewrite validates front matter structurally rather than relying on implicit default behavior.
-
-### Power front matter
-
-```yaml
----
-name: <directory-name>
-displayName: <human-readable name>
-description: <repo-specific capability statement>
-keywords: [<routing terms>]
-author: workspace
----
-```
-
-The power directory name and `name` value must match.
-
-### Capability status vocabulary
-
-- **Wired:** live source/config/command exists and is usable with documented prerequisites.
-- **Schema present:** root `mcp/<name>/tools/*.json` exists, but no Kiro runtime connection exists.
-- **Not installed:** no active registry or `settings/mcp.json` entry.
+`steering/INDEX.md` is a manual post-state inventory containing steering modes, four hooks with enabled/trigger/action status, one agent, nine skills, four powers, and settings. Its removal ledger intentionally contains old names and paths. Static scans must classify that section rather than demand zero textual matches across all `.kiro` work products.
 
 ## Verification design
 
-Verification is a deterministic post-state audit, not a property-based test suite.
+### Permitted non-test static evidence
 
-### Static checks the executor may perform
+1. **Changed-path audit:** `git diff --name-only` contains only the allowlisted scope.
+2. **Manifest audit:** exact retained/deleted assets and destination counts.
+3. **Relocation audit:** collision record, exact relative-path-set equality, hash/byte parity outside the exception ledger, and source deletion only after parity.
+4. **Reference audit:** active runtime/harness references resolve; specs, Kiro metadata, INDEX history, URLs, globs, commands, env vars, and explicitly unavailable capabilities are classified separately.
+5. **Configuration audit:** JSON parses; front matter is valid; power directory names match; no power bundles MCP.
+6. **Truth audit:** no stale stack, analytics, auth, hook, command, MCP, or `plans/PLAN.md` claims.
+7. **Coverage audit:** every requirement maps to an implementation task and final evidence item.
+8. **Diff quality:** inspect the final diff and run `git diff --check` on the three spec documents and later on implementation paths. This is formatting inspection, not behavioral validation.
 
-1. **Manifest check:** exact expected files exist; deleted bundle paths do not.
-2. **Steering check:** every remaining steering file has valid explicit front matter; no duplicate canonical domains remain.
-3. **Skill/agent check:** exactly nine retained skills and one agent; no removed workflow names remain under `.kiro/`.
-4. **Power check:** four power directories; front-matter names match directories; all referenced repo paths resolve.
-5. **Hook check:** all hook JSON parses; actual triggers/actions match the index; `domain-fast-check` contains no typecheck/test/build command.
-6. **MCP check:** `settings/mcp.json` parses and contains an empty `mcpServers` object; schema presence is not labeled installed.
-7. **Module check:** 25 top-level modules and 43 test files exist at the destination; `pipeline.ts` imports `./reviewers`; no source files remain in `.kiro/kiro-repo-guidance-setup/`.
-8. **Reference check:** repo-relative paths in `.kiro/**/*.{md,json}` resolve. External URLs, glob patterns, command names, environment variables, and explicitly labeled uninstalled capabilities are classified rather than falsely treated as missing files.
-9. **Forbidden-stale check:** no remaining steering references Next.js 14, npm as package manager, ESLint config, root `/supabase/`, or deleted workflow assets.
+### User-owned mandatory validation
 
-### User-invoked validation
+`pnpm run typecheck:scripts` is not valid because `scripts/tsconfig.json` is absent. After relocation and only with owner authorization plus hook permission, `pnpm run typecheck:tests` is the candidate typecheck because its repaired include covers the module and tests.
 
-After implementation, the user may authorize the narrowest applicable commands:
+`AGENTS.md` still requires `pnpm run check:layout` and then `pnpm run gate:fast` or `pnpm run gate` before the repository can be declared done. This spec does not waive that floor. If the owner has not authorized and observed those commands, the final status is:
 
-- `pnpm run typecheck:scripts` for the moved TypeScript module;
-- any additional test/gate only if explicitly requested and permitted by the active hook.
+> Configuration changes complete; mandatory repository validation pending owner execution/authorization.
 
-The spec does not claim historical `results/ops/coverage-admin.txt` as current validation. That file is stale evidence from another worktree and is outside this configuration rewrite.
+No historical report or successful static audit may be presented as a gate pass.
 
-## Out of scope audit findings
+## Out of scope findings
 
-The full-repo audit found issues that should not be silently folded into this config rewrite:
-
-- `/tools` has no index page although tool breadcrumbs target it;
-- `/api/hello` is a likely scaffold route;
-- CRM admin pages are localStorage demos;
-- the theme editor has read-only/stubbed persistence behavior;
-- several orphaned test helpers/fixtures and a personal-path Playwright script exist;
-- `results/ops/coverage-admin.txt` is stale UTF-16 evidence;
-- public assets are approximately 201 MB, dominated by seating photography;
-- a Supabase edge function appears to belong to an older AI/domain path;
-- two SVG sanitizers have materially different security strength;
-- committed legacy data and historical report inventories need separate ownership decisions.
-
-These findings should become separate plans only with explicit user approval. They do not alter `.kiro` in this spec.
-
-## Completion state
-
-The rewrite is complete when the target manifest, static checks, and reference audit pass; the index matches the real filesystem; no irrelevant workflow bundle remains; the three new powers route only to verified capabilities; and any user-authorized script validation has an observed result. Task ordering and mutation details belong in `tasks.md`, not in this design.
+Application route gaps, demo/localStorage behavior, stubbed persistence, orphaned tests, large assets, legacy data, old edge functions, and sanitizer consolidation remain separate work. This rewrite does not modify them.

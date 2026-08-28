@@ -32,4 +32,4 @@ pnpm run worker:dev (manual — long running)
 - [ ] R2 backup taken: `r2:backup`
 
 ## Observability integration
-If an observability power is installed, use it only for explicit post-deploy verification; Datadog is limited to production observability.
+For explicit post-deploy verification, use the currently wired OpenTelemetry and Prometheus implementation and configuration.

@@ -17,8 +17,10 @@ description: Use Planner Studio guidance to plan product work, tasks, and implem
 - Canvas: Fabric.js (`fabric` package), polygon-clipping for shape ops.
 - Panels: `dockview-react` for dockable panel layout.
 
-## Checks (user-invoked only)
-For an explicit fork validation request, run these checks; do not run tests or gates automatically.
+## Checks (user-owned)
+These commands are for an explicit fork-validation request. An agent may execute
+them only with current-session user authorization and permission from an enabled
+pre-execution `block-agent-tests` hook; otherwise provide them to the user.
 ```
 pnpm run scan:boundaries
 pnpm run typecheck

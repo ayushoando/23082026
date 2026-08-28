@@ -31,8 +31,8 @@ Disk only when `DEV_AUTH_BYPASS=1` non-prod; else Supabase. One mode per run.
 Detail: `.github/instructions/migrations.instructions.md`, `docs/database/`.
 
 ## Powers to activate (agent decides)
-- For live schema inspection, RLS/policies, or running SQL against a project, the
-  agent may activate the `supabase-hosted` power (Supabase MCP). Confirm which of
-  the two projects first (Admin vs Products). Never run destructive SQL without
-  explicit user confirmation. This skill is passive: it instructs; the agent
-  performs the activation, gated by permissions.yaml.
+- For live schema inspection, RLS/policies, or SQL against a project, first check
+  the installed-power registry directly. Activate `supabase-hosted` only if that
+  check confirms it is available, and confirm Admin versus Products first.
+  Repository MCP schemas or prose references do not prove installation. Never
+  run destructive SQL without explicit user confirmation.

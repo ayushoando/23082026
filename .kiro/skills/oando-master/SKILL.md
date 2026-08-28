@@ -16,9 +16,13 @@ Make the smallest sound change that meets the user's goal. Use the narrowest val
 Tests, gates, coverage, browser-test runners, and test-like static checks are user-owned by default. An agent may execute one only when both conditions hold:
 
 1. The user explicitly authorizes that command in the current session.
-2. The active `block-agent-tests` PreToolUse hook permits execution.
+2. An enabled pre-execution `block-agent-tests` hook permits the tool call.
 
-If the hook denies a command, do not retry, bypass, weaken, or remove the hook. Provide the exact command for the user to run. If authorization and hook permission exist, run the smallest applicable command, retain the complete result, and fix only failures within the requested scope.
+The current live hook is disabled and uses `PostTaskExec`, so it provides no
+pre-execution enforcement and does not satisfy the second condition. Do not claim
+that it blocked or permitted a command. If a future repaired hook denies a
+command, do not retry, bypass, weaken, or remove it; provide the exact command for
+the user to run.
 
 ## Step 1 — Route the task
 
@@ -34,7 +38,7 @@ If two rows apply, activate both skills. If none apply, this completion contract
 
 ## Step 2 — Route to a power only when the repo cannot answer
 
-Prefer repository documentation and local source first. The installed-power registry is the source of truth.
+Prefer repository documentation and local source first. The installed-power registry is the source of truth. The names below are candidate routes, not installation claims.
 
 | Need | Power |
 |---|---|
@@ -50,7 +54,7 @@ Prefer repository documentation and local source first. The installed-power regi
 | Local project memory and recall | `ltm-power` |
 | AI code-review/security-review information | `cubic-code-review` |
 
-Activate only capabilities present in the current registry and only when necessary.
+Activate only capabilities confirmed present in the current registry and only when necessary.
 
 ## Step 3 — Validate in the permitted lane
 

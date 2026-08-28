@@ -242,6 +242,11 @@
         "executionId": "a9e94038-97d4-4f91-bc52-65907fa6bbcc",
         "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
         "timestamp": 1787916603281
+      },
+      {
+        "executionId": "a9e94038-97d4-4f91-bc52-65907fa6bbcc",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787916683586
       }
     ],
     "3.5 Inspect all retained domain steering front matter and path references; preserve intentional fileMatch/manual inclusion behavior.": [
@@ -249,6 +254,11 @@
         "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
         "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
         "timestamp": 1787914884611
+      },
+      {
+        "executionId": "a9e94038-97d4-4f91-bc52-65907fa6bbcc",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787916699377
       }
     ],
     "3.6 Remove stale Datadog-RUM/Sentry claims and references to deleted workflow assets from retained steering.": [
@@ -550,6 +560,381 @@
         "executionId": "a9e94038-97d4-4f91-bc52-65907fa6bbcc",
         "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
         "timestamp": 1787916126883
+      }
+    ],
+    "3.5 Inspect all retained domain steering front matter and live path references; preserve intentional scoped inclusion.": [
+      {
+        "executionId": "a9e94038-97d4-4f91-bc52-65907fa6bbcc",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787917044198
+      }
+    ],
+    "3.6 Remove stale Datadog-RUM/Sentry, deleted-workflow, absent `scripts/tsconfig.json`, and absent `plans/PLAN.md` claims from active steering.": [
+      {
+        "executionId": "a9e94038-97d4-4f91-bc52-65907fa6bbcc",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787917062487
+      },
+      {
+        "executionId": "a9e94038-97d4-4f91-bc52-65907fa6bbcc",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787917184109
+      }
+    ],
+    "3.7 Audit all nine retained skills; repair `powers-skills-model/SKILL.md` stale candidate-count, `plans/ref`, local power-MCP, and hook claims, plus any equivalent stale assumptions elsewhere.": [
+      {
+        "executionId": "a9e94038-97d4-4f91-bc52-65907fa6bbcc",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787917193299
+      },
+      {
+        "executionId": "a9e94038-97d4-4f91-bc52-65907fa6bbcc",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787917442107
+      }
+    ],
+    "3. Consolidate steering and repair retained guidance": [
+      {
+        "executionId": "a9e94038-97d4-4f91-bc52-65907fa6bbcc",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787917442260
+      }
+    ],
+    "4.1 Enumerate the source relative-path set and capture a hash or byte count for every file.": [
+      {
+        "executionId": "a9e94038-97d4-4f91-bc52-65907fa6bbcc",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787917456877
+      }
+    ],
+    "4.2 Fail before mutation if `scripts/kiro-repo-guidance-setup/` contains any colliding path or unrelated content.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922145775
+      },
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922196204
+      },
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922434822
+      }
+    ],
+    "4.3 Create the destination and relocate all 25 top-level modules plus the complete 43-test subtree, preserving relative paths.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922145937
+      },
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922442751
+      }
+    ],
+    "4.4 Recalculate every moved test import from its destination. Replace old repo-root-style imports only with paths that resolve from the moved file; do not apply an unverified blanket depth.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922146056
+      }
+    ],
+    "4.5 Fix relocation-caused module references, including `pipeline.ts` importing `./reviewers`.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922146194
+      }
+    ],
+    "4.6 Search every moved module/test for embedded `.kiro/kiro-repo-guidance-setup` roots. Update current-location values in manifests, contracts, freeze/ownership data, and command/path fixtures only where relocation changes their meaning.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922146352
+      }
+    ],
+    "4.7 Update only the governance include globs in `tests/vitest.shared.ts` and `tests/tsconfig.json` to the destination; do not modify test logic.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922146486
+      }
+    ],
+    "4.8 Create the destination README with purpose, non-runtime status, entry points, tests, relocation history, and validation limitations.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922146656
+      }
+    ],
+    "4.9 Produce an exception ledger of every content-edited relocated file and its reason. Verify hash/byte parity for every file outside the ledger.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922146804
+      }
+    ],
+    "4.10 Compare exact source/destination relative-path sets and counts. Delete the source only after equality and parity succeed.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922146950
+      }
+    ],
+    "4.11 Verify active runtime/harness configuration has no operational old-root reference; classify spec and removal-ledger history separately.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922147069
+      }
+    ],
+    "5.1 Rewrite `domain-fast-check.json`: retain the test skip, Studio/Planner boundary check, and FOCSS/UI check; make every other branch pass without broad validation.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922147208
+      }
+    ],
+    "5.2 Replace `block-agent-tests.json` with an enabled `PreToolUse` hook using matcher `execute_pwsh|control_pwsh_process`, remove the existing `\"enabled\": false` state, and invoke `node scripts/general/block-agent-tests.mjs`.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922147350
+      }
+    ],
+    "5.3 Repair `block-agent-tests.mjs`: define all blocked matchers, parse command payload fields defensively, return exit 2 for agent test/gate/coverage/browser/build/typecheck/local-service commands, and return 0 otherwise.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922147501
+      }
+    ],
+    "5.4 Ensure hook name/description, retained skills, powers, and INDEX all describe enabled pre-execution blocking—not disabled `PostTaskExec` behavior.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922147741
+      }
+    ],
+    "5.6 Inspect hook JSON and blocker source statically; do not test the blocker by attempting a prohibited command.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922147914
+      }
+    ],
+    "6.1 Create `.kiro/settings/mcp.json` with an empty workspace `mcpServers` object.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922149080
+      }
+    ],
+    "6.2 Create `observability/POWER.md` routing OTel, metrics, `/api/metrics`, local Prometheus/Grafana, client errors, console sink, and `Failures.md`; state Sentry/Datadog RUM are not wired.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922150164
+      }
+    ],
+    "6.3 Create `analytics/POWER.md` routing consent/event/queue/conversion/KPI modules; classify Vercel Analytics and Speed Insights as present-but-unmounted and do not claim operational transport.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922151292
+      }
+    ],
+    "6.4 Create `security/POWER.md` distinguishing proxy prechecks/headers, server session validation, and API authorization; route remaining controls and use exact security commands.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922152426
+      }
+    ],
+    "6.5 Use “schema present, workspace unconfigured, runtime availability not verified” unless a direct registry check supplies stronger evidence.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922153539
+      }
+    ],
+    "6.6 Verify power directory/front-matter names match and none bundles MCP.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922154661
+      }
+    ],
+    "7.1 Remove deleted workflow and stale Datadog routes from `oando-workflow/POWER.md`.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922155869
+      }
+    ],
+    "7.2 Add observability, analytics, and security routing while preserving repo-map, graph, fork, FOCSS, migration, and user-owned verification routing.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922156956
+      }
+    ],
+    "7.3 Correct hook wording to the enabled `PreToolUse` implementation.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922158072
+      }
+    ],
+    "7.4 Update routing steering only where the post-state inventory requires it.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922159160
+      }
+    ],
+    "7.5 Audit all active skills/powers/steering for false external-registry conclusions and stale deleted-asset routes.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922160237
+      }
+    ],
+    "8.1 Create `steering/INDEX.md` with `inclusion: manual`.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922161346
+      }
+    ],
+    "8.2 List all retained steering files/modes, the four hooks with enabled status and actual triggers/actions, one agent, nine skills, four powers, and settings.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922162495
+      }
+    ],
+    "8.3 Document capability vocabulary and workspace-versus-runtime MCP uncertainty.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922163614
+      }
+    ],
+    "8.4 Add a clearly labeled removal/relocation ledger. State that ledger names are historical and excluded from active-route failures.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922164737
+      }
+    ],
+    "8.5 Reconcile the index against the live filesystem after all mutations.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922165855
+      }
+    ],
+    "9.1 Changed-path audit: compare `git diff --name-only` with the explicit allowlist and investigate every extra path.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922166923
+      }
+    ],
+    "9.2 Manifest audit: verify exact retained/deleted configuration and relocation counts.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922168019
+      }
+    ],
+    "9.3 Front-matter/JSON audit: inspect every retained steering/power header and parse every hook/settings JSON.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922169129
+      }
+    ],
+    "9.4 Relocation audit: verify collision record, path-set equality, parity outside the edit ledger, all relocation edits justified, and source removal.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922170222
+      }
+    ],
+    "9.5 Active-reference audit: scan runtime configuration and harness files for deleted routes/old roots. Separately classify `.kiro/specs/**`, Kiro metadata, INDEX history, URLs, globs, commands, env vars, and unavailable capabilities.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922171389
+      }
+    ],
+    "9.6 Truth audit: verify no stale stack, `plans/PLAN.md`, analytics-mounted, auth-layer, command, hook, or MCP-installation claim remains.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922172416
+      }
+    ],
+    "9.7 Security-command audit: verify `pnpm run ops -- lint:secrets` and the other exact package commands are written correctly.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922173543
+      }
+    ],
+    "9.8 Requirement coverage audit: map every acceptance criterion to a task/evidence item and resolve omissions.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922174643
+      }
+    ],
+    "9.9 Run formatting-only `git diff --check` on changed spec/config/source text and inspect the final diff. Do not run behavioral checks.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922175750
+      }
+    ],
+    "10.1 Do not offer or run `pnpm run typecheck:scripts`; record that its `scripts/tsconfig.json` target is absent.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922176835
+      }
+    ],
+    "10.2 Identify `pnpm run typecheck:tests` as the candidate relocated-module typecheck only after the owner authorizes it and the repaired include is present.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922177941
+      }
+    ],
+    "10.3 Record `pnpm run check:layout` plus `pnpm run gate:fast` or `pnpm run gate` as mandatory pending AGENTS validation unless separately owner-authorized and observed.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922179038
+      }
+    ],
+    "10.4 If those commands have not produced observed results, report exactly: “Configuration changes complete; mandatory repository validation pending owner execution/authorization.”": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922180154
+      }
+    ],
+    "10.5 Never infer a pass from historical files, package scripts, or static inspection.": [
+      {
+        "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
+        "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
+        "timestamp": 1787922181282
       }
     ]
   }

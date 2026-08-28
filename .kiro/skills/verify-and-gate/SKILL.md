@@ -1,13 +1,13 @@
 ﻿---
 name: verify-and-gate
-description: Explicit-user-authorized test and gate workflow for this repo. Use only when the user explicitly asks to run tests or gates and the active hook permits execution.
+description: Explicit-user-authorized test and gate workflow for this repo. Use only when the user explicitly asks to run tests or gates and an enabled pre-execution hook permits execution.
 ---
 
 # Verify and Gate
 
-USER-EXPLICIT AUTHORIZATION REQUIRED. By default, users run tests and gates themselves. An agent may execute a test-like command only when the user explicitly authorizes that command in the current session **and** the active `block-agent-tests` hook permits it. If the hook denies a command, do not retry or bypass it; provide the exact command for the user instead.
+USER-EXPLICIT AUTHORIZATION REQUIRED. By default, users run tests and gates themselves. An agent may execute a test-like command only when the user explicitly authorizes that command in the current session **and** an enabled pre-execution `block-agent-tests` hook permits it. The current live hook is disabled and uses `PostTaskExec`, so it does not provide that permission or pre-execution enforcement. If a future repaired hook denies a command, do not retry or bypass it; provide the exact command for the user instead.
 
-Authority: the current user instruction, active hook state, root `AGENTS.md`, and `Testing-handbook.md` govern execution.
+Authority: the current user instruction, live hook state, root `AGENTS.md`, and `Testing-handbook.md` govern execution.
 
 ## Sequence (dev loop)
 1. Focused tests first:
@@ -35,9 +35,10 @@ No hollow tests. A partial green is not done. Build interrupted by the environme
 is not a successful build. Record blockers in `Failures.md`.
 
 ## Powers to activate (agent decides)
-- Unit/gate green is not browser proof. For interactive UI, canvas, or route
-  visual verification, the agent may activate `nova-act` or `kane-cli` (browser
-  QA) against `http://localhost:3000` only (never 127.0.0.1). For production
-  observability during debugging, use an installed Datadog power only when it is
-  present in the current registry. This skill instructs; the agent activates,
-  gated by permissions.yaml.
+- Unit/gate green is not browser proof. For explicitly authorized interactive UI,
+  canvas, or route visual verification, check the installed-power registry first
+  and use a suitable browser capability only if it is present, against
+  `http://localhost:3000` (never `127.0.0.1`).
+- Route production observability to the repository's live observability modules.
+  Do not infer Sentry or Datadog RUM wiring, and use an external observability
+  capability only after a direct registry check confirms availability.

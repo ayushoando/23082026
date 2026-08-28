@@ -8,7 +8,7 @@ inclusion: always
 
 - Follow the current user instruction first, then live code and fresh command output, then root `AGENTS.md`.
 - Use `Agents/01-standard.md` for the standard execution procedure.
-- Use `plans/README.md` for planning conventions and `plans/PLAN.md` for active work coordination.
+- Use `plans/README.md` for planning conventions, active coordination, plan ownership, and evidence placement.
 - If an authority or coordination file is missing, report the mismatch instead of inventing its contents or state.
 
 ## Before Making Changes
@@ -40,5 +40,5 @@ inclusion: always
 ## When Stuck
 
 - Re-read `AGENTS.md` and `Agents/01-standard.md` before choosing a fallback.
-- Check `plans/PLAN.md` for active coordination and `plans/README.md` for plan ownership and evidence placement.
+- Check `plans/README.md` for active coordination, plan ownership, and evidence placement.
 - If work is blocked, add evidence to `Failures.md`; do not create a competing blocker list.

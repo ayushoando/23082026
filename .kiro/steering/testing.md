@@ -35,4 +35,4 @@ pnpm run typecheck:tests
 When the user requests validation: run the requested command, fix failures, and report the exact result. Do not execute an automatic test loop or final gate.
 
 ## Graph-layer integration
-Use `node scripts/graph-impact.mjs --file=<changed-file>` to identify covering test files and report the scoped command to the user. This repository graph replaces the retired CAST integration.
+Inspect imports and dependents directly from the live source tree to identify covering test files, then report the scoped command to the user.

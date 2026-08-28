@@ -37,8 +37,11 @@ One graph query replaces reading dozens of files to find dependents.
 - Studio and Planner are FORKED — never import each other (see fork-boundaries skill).
 - Edge entry is `site/proxy.ts`, NOT `middleware.ts`.
 - Two databases: Admin (`rxzpznmxbaoxpikowmfc`) and Products (`erpweaiypimorcunaimz`).
-- `mcp/` = MCP tool schemas; `ltm/` = long-term memory working dir; both belong at root.
-- `plans/PLAN.md` and `plans/README.md` remain the active coordination entry points; relocated specifications and supporting plan/report references live under `plans/ref/`.
+- `mcp/` contains MCP tool schemas, not proof of workspace configuration or
+  runtime installation; `ltm/` is the long-term-memory working directory.
+- `plans/README.md` is the active planning coordination authority. Active plans
+  and plan-owned evidence use `plans/<name>/`; `plans/PLAN.md` and `plans/ref/`
+  are not current repository paths.
 - `site/data/storage/` is legacy — do not write there.
 
 ## Do not
@@ -47,5 +50,6 @@ One graph query replaces reading dozens of files to find dependents.
 
 ## Powers to activate (agent decides)
 - For current, version-correct docs on a library/framework used here, the agent
-  may activate `context7`. For live web research beyond the repo, `exa`. Prefer
-  repo docs + graph first; reach for a power only when the repo cannot answer.
+  may activate `context7`; for live web research beyond the repo, `exa`.
+  First confirm the named capability is present in the current installed-power
+  registry. Prefer repo docs + graph; do not infer installation from prose.

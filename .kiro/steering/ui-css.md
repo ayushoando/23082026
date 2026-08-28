@@ -39,4 +39,4 @@ Test at: 1920w, 1440w, 1024w, 390w. Look for:
 - Container max-width respecting the viewport
 
 ## Graph-layer integration
-Use `node scripts/graph-impact.mjs --file=<changed-file>` to inspect affected imports before optional visual validation. This repository graph replaces the retired CAST integration.
+Inspect imports and dependents directly from the live source tree before optional visual validation.

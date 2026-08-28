@@ -33,4 +33,4 @@ pnpm run typecheck
 - Never use raw disk helpers in production code paths.
 
 ## Graph-layer integration
-Use `node scripts/graph-impact.mjs --file=<changed-file>` to inspect affected imports before an explicit migration review. This repository graph replaces the retired CAST integration.
+Inspect imports and dependents directly from the live source tree before an explicit migration review.

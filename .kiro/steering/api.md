@@ -39,4 +39,4 @@ pnpm run p0:unit
 Use the Postman power only for an explicit API-resource request. Inspect `.postman.json` first and never run collections or create duplicates without confirmation.
 
 ## Graph-layer integration
-Use `node scripts/graph-impact.mjs --file=<changed-file>` to inspect affected import paths before optional validation. This repository graph replaces the retired CAST integration.
+Inspect imports and dependents directly from the live source tree before optional validation.
