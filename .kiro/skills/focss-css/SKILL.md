@@ -1,9 +1,11 @@
-﻿---
+---
 name: focss-css
 description: Write CSS the FOCSS-on-Tailwind-v4 way for this repo. Use when editing files under site/focss, adding styles to product TSX, or touching postcss/tailwind config.
 ---
 
 # FOCSS on Tailwind v4
+
+Read root `AGENTS.md` first.
 
 FOCSS is a semantic-token layer ON TOP OF Tailwind v4, not a replacement.
 
@@ -26,3 +28,4 @@ Run only with current-session, explicit user authorization and when the active h
 `pnpm run verify:focss` · `pnpm run lint:ui:strict` · `pnpm run check:style-tokens`
 
 Without both conditions, provide these commands to the user instead. Detail: `docs/architecture/css.md`, `.github/instructions/focss.instructions.md`.
+

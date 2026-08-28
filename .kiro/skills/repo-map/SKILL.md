@@ -37,7 +37,7 @@ One graph query replaces reading dozens of files to find dependents.
 - Studio and Planner are FORKED — never import each other (see fork-boundaries skill).
 - Edge entry is `site/proxy.ts`, NOT `middleware.ts`.
 - Two databases: Admin (`rxzpznmxbaoxpikowmfc`) and Products (`erpweaiypimorcunaimz`).
-- `mcp/` contains MCP tool schemas, not proof of workspace configuration or
+- `.kiro/mcp/` contains MCP tool schemas, not proof of workspace configuration or
   runtime installation; `ltm/` is the long-term-memory working directory.
 - `plans/README.md` is the active planning coordination authority. Active plans
   and plan-owned evidence use `plans/<name>/`; `plans/PLAN.md` and `plans/ref/`

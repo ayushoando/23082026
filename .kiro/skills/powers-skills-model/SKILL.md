@@ -5,6 +5,8 @@ description: Use the powers and skills model to structure reusable agent capabil
 
 # Powers, Skills, Steering, MCP — how they relate
 
+Read root `AGENTS.md` first.
+
 Reference model for this workspace. Sourced from Kiro implementer docs
 (pact.io/ai_tools/kiro-power, dev.to AWS Serverless Kiro Power). Rephrased for
 licensing compliance.
@@ -75,3 +77,4 @@ licensing compliance.
   files remain at their established repository paths; referencing them does not
   make them Kiro-owned.
 - Do not create competing Kiro guidance or implementation outside `.kiro/`.
+

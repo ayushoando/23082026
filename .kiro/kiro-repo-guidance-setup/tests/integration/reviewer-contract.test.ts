@@ -9,12 +9,14 @@ import {
   PACKAGE_MANAGER,
   REQUIRED_SURFACE_VERSIONS,
   REPOSITORY_ROOT,
+  OWNER_DECISION_IDS,
   type ApprovalBoundary,
   type AgentOutput,
   type CompatibilityRecord,
   type ConcurrentImplementationWaveRecord,
   type EvidenceReviewRequest,
   type FileOwnershipReservation,
+  type HandoverRecord,
   type KnownGapsRegister,
   type RollbackRecord,
   type SafetyReviewRequest,
@@ -184,17 +186,37 @@ function createSourceInventory(): SourceInventory {
   };
 }
 
-function createCompatibilityRecords(): CompatibilityRecord[] {
+function createValidationRuns(): ValidationRun[] {
   return REQUIRED_SURFACE_VERSIONS.map((surfaceVersion) => ({
+    validationId: `validation-${surfaceVersion.surface}-${surfaceVersion.version}`,
+    action: "surface",
+    repositoryRootOrActiveSurface: surfaceVersion.surface,
+    surface: surfaceVersion.surface,
+    version: surfaceVersion.version,
+    scope: "reviewer-contract-fixture",
+    executionLayer: "surface_validation",
+    startedAtUtc: "2026-08-25T00:00:00.000Z",
+    result: "pass",
+    commandOrInteraction: "fresh exact-target validation",
+    exitCodeOrOutcome: "exit 0",
+    evidenceRefs: [`evidence-${surfaceVersion.surface}`],
+    unverifiedItems: [],
+    blocker: "none",
+  }));
+}
+
+function createCompatibilityRecords(): CompatibilityRecord[] {
+  const runs = createValidationRuns();
+  return REQUIRED_SURFACE_VERSIONS.map((surfaceVersion, index) => ({
     ...surfaceVersion,
-    status: "Unverified",
+    status: "applicable",
     documentedBehavior: [],
     observedBehavior: [],
-    evidenceFreshness: "none",
+    evidenceFreshness: "fresh",
     versionSensitiveClaim: false,
     validationAction: "run fresh exact-target validation",
-    validationRunRefs: [],
-    enablementStatus: "blocked",
+    validationRunRefs: [runs[index].validationId],
+    enablementStatus: "enabled-valid",
     unsupportedClaims: [],
     migrationConstraints: [],
     rollbackPathRef: `rollback-${surfaceVersion.surface}`,
@@ -253,7 +275,7 @@ function createEvidenceRequest(
     ],
     compatibilityRecords: createCompatibilityRecords(),
     ownerDecisions: [...OWNER_DECISIONS],
-    validationRuns: [],
+    validationRuns: createValidationRuns(),
     ...overrides,
   };
 }
@@ -271,9 +293,44 @@ function createApprovalBoundary(
     approvalDate: "2026-08-25",
     preChangeStateRef: "snapshot-reviewer-contract",
     securityBoundary: "repository-local, no secrets or external services",
-    expectedSideEffects: [],
+    expectedSideEffects: ["repository-local guidance becomes validated"],
     rollbackPathRef: "rollback-reviewer-contract",
     ...overrides,
+  };
+}
+
+function createProposedHandover(): HandoverRecord {
+  return {
+    generatedAtUtc: "2026-08-25T00:00:00.000Z",
+    reviewDateUtc: "2026-08-25",
+    completeReviewStatement: COMPLETE_REVIEW_STATEMENT,
+    firstReadPath: ["AGENTS.md"],
+    coverageMatrixRef: "coverage-reviewer-contract",
+    exclusionRegisterRef: "exclusions-reviewer-contract",
+    officialFamilyStatuses: [],
+    surfaceCompatibilityStatement: "all required surface/version targets reviewed",
+    configurationPrecedenceMapRef: "precedence-reviewer-contract",
+    capabilityDispositionTableRef: "disposition-reviewer-contract",
+    reviewerStageRefs: ["handoff-EvidenceCompatibilityReviewer", "handoff-SafetyRollbackReviewer"],
+    ownerDecisionRefs: [...OWNER_DECISION_IDS],
+    evidenceStateLegend: [],
+    artifactDispositions: [
+      {
+        artifactId: "artifact:reviewer-contract",
+        canonicalPath: ".kiro/skills/repo-map/SKILL.md",
+        disposition: "retain",
+        evidenceRefs: ["source-reviewer-contract"],
+        reason: "reviewer-contract fixture",
+        activationCondition: "after exact-surface validation",
+        owner: "repository owner",
+        rollbackPath: "no rollback applies",
+      },
+    ],
+    validationRuns: createValidationRuns(),
+    knownGaps: [],
+    rollbackRecords: [createRollbackRecord()],
+    maintenanceTriggers: [],
+    limitations: [],
   };
 }
 
@@ -301,6 +358,7 @@ function createSafetyInput(
     snapshots: ["snapshot-reviewer-contract"],
     knownGaps,
     rollbackRecords: [createRollbackRecord()],
+    proposedHandover: createProposedHandover(),
     ...overrides,
   };
 }

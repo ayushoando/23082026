@@ -29,16 +29,17 @@ Canonical inventory for repository-root `.kiro/`. Kiro-owned configuration and s
 
 ## Agents
 
-Exactly four focused definitions are retained:
+Five focused definitions are retained:
 
 | Agent | Role |
 |---|---|
 | `spec-task-runner` | Coordinator/general approved spec execution and integration |
+| `spec-task-runner2` | Second coordinator/general executor, sharing Tasks 7-10 with spec-task-runner; never writes the same path concurrently |
 | `containment-reconciler` | Governance and MCP containment reconciliation |
 | `hook-localizer` | Hook configuration and enforcement localization |
 | `capability-powers-author` | MCP settings and observability/analytics/security powers |
 
-Maximum active agents: four. Their write scopes do not overlap during a parallel wave.
+Maximum active agents: five. Their write scopes do not overlap during a parallel wave, except spec-task-runner and spec-task-runner2 which share a scope but never write concurrently.
 
 ## Skills
 

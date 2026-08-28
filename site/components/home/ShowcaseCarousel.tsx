@@ -228,7 +228,7 @@ export function ShowcaseCarousel({
                       fill
                       quality={85}
                       sizes="(max-width: 768px) 88vw, (max-width: 1280px) 42vw, 28rem"
-                      className="home-showcase-card__media object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.03]"
+                      className="home-showcase-card__media object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
                     />
                     <div className="home-showcase-overlay" aria-hidden="true" />
                     <div className="home-showcase-card__caption">

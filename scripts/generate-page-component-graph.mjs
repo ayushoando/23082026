@@ -98,7 +98,7 @@ function importsFor(relativePath, source) {
 
 function nodeKind(relativePath, routeSources) {
   if (routeSources.has(relativePath)) return "page";
-  if (/\.css$/.test(relativePath)) return "style";
+  if (relativePath.endsWith(".css")) return "style";
   if (/\/components\//.test(relativePath) || /\/features\//.test(relativePath)) return "component";
   return "module";
 }

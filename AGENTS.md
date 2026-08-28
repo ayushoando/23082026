@@ -105,24 +105,3 @@ Seed: `pnpm run seed:furniture` (off the read path).
 | Tech-docs SPA | `tech-docs-generator/README.md` (detail also in product-map § Tech-docs) |
 | Onboarding / ops | `START.md`, `OPERATIONS_RUNBOOK.md`, `README.md`, `Testing-handbook.md` |
 | Plans | [`plans/README.md`](plans/README.md), active [`plans/PLAN.md`](plans/PLAN.md) |
-
-| JIT | Applies to |
-| ----- | ------------ |
-| `.github/instructions/focss.instructions.md` | `site/focss/**/*.css` |
-| `.github/instructions/testing.instructions.md` | `tests/**/*.{ts,tsx}` |
-| `.github/instructions/boundaries.instructions.md` | Studio/Planner forks |
-| `.github/instructions/migrations.instructions.md` | `**/supabase/migrations/**/*.sql` |
-
-## Agent skills
-
-### Issue tracker
-
-Issues are **local Markdown** under `plans/` (no GitHub/remote tracker, no `gh`); hard blockers stay in `Failures.md`.
-
-### Triage labels
-
-The five canonical triage roles use their default label strings (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`).
-
-### Domain docs
-
-Single-context, created lazily, **`plans/` only** — `plans/CONTEXT.md` + `plans/adr/` when `/domain-modeling` resolves real terms; never root or `docs/`.

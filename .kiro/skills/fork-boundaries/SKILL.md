@@ -1,9 +1,11 @@
-﻿---
+---
 name: fork-boundaries
 description: Enforce the Studio/Planner fork boundary. Use when editing anything under site components, lib, hooks, store, or server for Studio or Planner, or before committing either fork tree.
 ---
 
 # Fork Boundaries (Studio <-> Planner)
+
+Read root `AGENTS.md` first.
 
 Studio (`/oostudio`, `@studio/*`) and Planner (`/ooplanner`, `@planner/*`) are
 FULLY FORKED. They must never import each other. There is no shared module — each
@@ -20,3 +22,4 @@ fork declares its own store and they meet only at the same backing data location
 
 ## Before committing either tree
 Run: `pnpm run scan:boundaries`
+

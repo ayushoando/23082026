@@ -14,10 +14,13 @@ import {
 } from "../../reviewers.ts";
 import {
   COMPLETE_REVIEW_STATEMENT,
+  OWNER_DECISION_IDS,
+  OWNER_DECISIONS,
   REQUIRED_SURFACE_VERSIONS,
   type ApprovalBoundary,
   type CompatibilityRecord,
   type EvidenceReviewRequest,
+  type HandoverRecord,
   type KnownGap,
   type KiroSurface,
   type ReviewResult,
@@ -79,7 +82,19 @@ function compatibilityRecord(
 }
 
 function completeCompatibilityRecords(): CompatibilityRecord[] {
-  return REQUIRED_SURFACE_VERSIONS.map((sv) => compatibilityRecord(sv.surface));
+  return REQUIRED_SURFACE_VERSIONS.map((sv) => {
+    const run = passingValidationRun(sv.surface);
+    return compatibilityRecord(sv.surface, {
+      status: "applicable",
+      enablementStatus: "enabled-valid",
+      evidenceFreshness: "fresh",
+      validationRunRefs: [run.validationId],
+    });
+  });
+}
+
+function completeValidationRuns(): ValidationRun[] {
+  return REQUIRED_SURFACE_VERSIONS.map((sv) => passingValidationRun(sv.surface));
 }
 
 function sourceInventory(overrides: Partial<SourceInventory> = {}): SourceInventory {
@@ -166,23 +181,8 @@ function evidenceRequest(
       },
     ],
     compatibilityRecords: completeCompatibilityRecords(),
-    ownerDecisions: [
-      {
-        decisionId: "OD-01",
-        owner: "repository owner",
-        decisionDate: "2026-08-25",
-        selectedPolicy: "enable after validation",
-        scope: "surfaces",
-        rejectedOptions: [],
-        approvalStatus: "owner-approved-conditional",
-        unresolvedStatus: "resolved",
-        requiredValidation: ["fresh exact-surface validation"],
-        rollbackBoundary: "restore prior state",
-        evidenceRef: "req:od-01",
-        limitations: [],
-      },
-    ],
-    validationRuns: [],
+    ownerDecisions: [...OWNER_DECISIONS],
+    validationRuns: completeValidationRuns(),
     ...overrides,
   };
 }
@@ -217,8 +217,44 @@ function approvalBoundary(overrides: Partial<ApprovalBoundary> = {}): ApprovalBo
     approvalDate: "2026-08-25",
     preChangeStateRef: "snapshot-1",
     securityBoundary: "repository-local, no secrets",
-    expectedSideEffects: [],
+    expectedSideEffects: ["repository-local skill becomes discoverable"],
     rollbackPathRef: "rollback-1",
+    ...overrides,
+  };
+}
+
+function proposedHandover(overrides: Partial<HandoverRecord> = {}): HandoverRecord {
+  return {
+    generatedAtUtc: "2026-08-25T00:00:00.000Z",
+    reviewDateUtc: "2026-08-25",
+    completeReviewStatement: COMPLETE_REVIEW_STATEMENT,
+    firstReadPath: ["AGENTS.md"],
+    coverageMatrixRef: "cov-1",
+    exclusionRegisterRef: "exclusions-1",
+    officialFamilyStatuses: [],
+    surfaceCompatibilityStatement: "all required surface/version targets reviewed",
+    configurationPrecedenceMapRef: "precedence-1",
+    capabilityDispositionTableRef: "disposition-1",
+    reviewerStageRefs: ["handoff-EvidenceCompatibilityReviewer", "handoff-SafetyRollbackReviewer"],
+    ownerDecisionRefs: [...OWNER_DECISION_IDS],
+    evidenceStateLegend: [],
+    artifactDispositions: [
+      {
+        artifactId: "artifact:reviewer-fixture",
+        canonicalPath: ".kiro/skills/repo-map/SKILL.md",
+        disposition: "retain",
+        evidenceRefs: ["src-1"],
+        reason: "reviewer fixture",
+        activationCondition: "after exact-surface validation",
+        owner: "repository owner",
+        rollbackPath: "no rollback applies",
+      },
+    ],
+    validationRuns: completeValidationRuns(),
+    knownGaps: [],
+    rollbackRecords: [rollbackRecord()],
+    maintenanceTriggers: [],
+    limitations: [],
     ...overrides,
   };
 }
@@ -263,6 +299,7 @@ function safetyRequest(overrides: Partial<SafetyReviewRequest> = {}): SafetyRevi
     snapshots: ["snapshot-1"],
     knownGaps: { entries: [] },
     rollbackRecords: [rollbackRecord()],
+    proposedHandover: proposedHandover(),
     ...overrides,
   };
 }
@@ -390,7 +427,7 @@ describe("EvidenceCompatibilityReviewer", () => {
         : r,
     );
     const result = reviewer.review(
-      evidenceRequest({ compatibilityRecords: records, validationRuns: [run] }),
+      evidenceRequest({ compatibilityRecords: records, validationRuns: completeValidationRuns() }),
     );
     expect(result.status).toBe("pass");
   });
@@ -549,6 +586,7 @@ describe("runSequentialReview", () => {
         snapshots: ["snapshot-1"],
         knownGaps: { entries: [] },
         rollbackRecords: [rollbackRecord()],
+        proposedHandover: proposedHandover(),
       },
     };
   }

@@ -138,11 +138,16 @@ describe("UnifiedAssistant — behavior", () => {
     expect(launcher).toHaveClass("assistant-floating-primary");
     expect(launcher).toHaveAttribute("type", "button");
     expect(screen.getAllByTestId("icon-sparkle").length).toBeGreaterThanOrEqual(1);
-    expect(screen.getByText(AI_CHATBOT_COPY.title)).toBeInTheDocument();
+    expect(screen.queryByText(AI_CHATBOT_COPY.title)).not.toBeInTheDocument();
 
     expect(container.querySelector(".sm\\:hidden")).not.toBeNull();
     expect(screen.queryByRole("dialog", { name: "Guided planner" })).not.toBeInTheDocument();
     expect(screen.queryByRole("dialog", { name: "AI chatbot" })).not.toBeInTheDocument();
+
+    await act(async () => {
+      launcher.click();
+    });
+    expect(screen.getByText(AI_CHATBOT_COPY.title)).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: MOBILE_ASSISTANT_COPY.planner })).not.toBeInTheDocument();
     expect(launcher).toHaveClass("site-fab-anchor--bottom");
   });

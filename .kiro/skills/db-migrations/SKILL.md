@@ -1,9 +1,11 @@
-﻿---
+---
 name: db-migrations
 description: Apply the repo two-database rules and safe migration workflow. Use when writing SQL migrations, changing schema, or choosing which Supabase project a table belongs to.
 ---
 
 # Databases and Migrations
+
+Read root `AGENTS.md` first.
 
 ## Two databases — pick the right one
 - Admin (`rxzpznmxbaoxpikowmfc`): plans, staff/customer, furniture, descriptors,
@@ -36,3 +38,4 @@ Detail: `.github/instructions/migrations.instructions.md`, `docs/database/`.
   check confirms it is available, and confirm Admin versus Products first.
   Repository MCP schemas or prose references do not prove installation. Never
   run destructive SQL without explicit user confirmation.
+

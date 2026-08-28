@@ -1,9 +1,11 @@
-﻿---
+---
 name: graph-impact
 description: Use the repo import graph to scope tests and analyze blast radius before running the full suite. Use when a change touches shared code, before choosing which tests to run, or when checking for circular dependencies.
 ---
 
 # Graph Impact (ts-morph import graph)
+
+Read root `AGENTS.md` first.
 
 Script: `scripts/graph-impact.mjs`. Replaces the retired external graph integration for impact analysis.
 
@@ -25,3 +27,4 @@ user-driven.
 - One graph query replaces reading dozens of files to find dependents.
 - High fan-in files are fragile (change carefully); high fan-out files are complex
   (review dependents thoroughly).
+

@@ -1118,6 +1118,11 @@
         "executionId": "167000ab-ef83-43a3-ad1e-4ba39bea7e6d",
         "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
         "timestamp": 1787926706109
+      },
+      {
+        "executionId": "8957c139-7a4b-4c28-96b7-5657279680a5",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787927235355
       }
     ],
     "4.11 Delete the tracked root MCP schema copies only after parity, then verify active Kiro references use `.kiro/mcp/**`.": [
@@ -1125,6 +1130,16 @@
         "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
         "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
         "timestamp": 1787923522357
+      },
+      {
+        "executionId": "8957c139-7a4b-4c28-96b7-5657279680a5",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787927245065
+      },
+      {
+        "executionId": "8957c139-7a4b-4c28-96b7-5657279680a5",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787927338540
       }
     ],
     "5.2 Replace the currently enabled `PostTaskExec` blocker with enabled `PreToolUse`, matcher `execute_pwsh|control_pwsh_process`, and command `node .kiro/hooks/block-agent-tests.mjs`.": [
@@ -1132,6 +1147,21 @@
         "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
         "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
         "timestamp": 1787923522440
+      },
+      {
+        "executionId": "0d4717a1-8e19-4da7-a4a0-fe87f938f81b",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787927514610
+      },
+      {
+        "executionId": "d251e8ef-6401-4cfa-8f60-9fe29986d167",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787927673442
+      },
+      {
+        "executionId": "0c7a4eae-3a1a-490c-83f6-eba3acbab8a2",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787928093715
       }
     ],
     "5.3 Create/repair `.kiro/hooks/block-agent-tests.mjs`; define all matchers, parse payload defensively, return exit 2 for prohibited agent commands, and return 0 otherwise.": [
@@ -1139,6 +1169,16 @@
         "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
         "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
         "timestamp": 1787923522556
+      },
+      {
+        "executionId": "0c7a4eae-3a1a-490c-83f6-eba3acbab8a2",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787928099048
+      },
+      {
+        "executionId": "0c7a4eae-3a1a-490c-83f6-eba3acbab8a2",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787928215515
       }
     ],
     "5.4 Compare the obsolete external helper, preserve any valid behavior, then delete `scripts/general/block-agent-tests.mjs`.": [
@@ -1146,6 +1186,16 @@
         "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
         "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
         "timestamp": 1787923522621
+      },
+      {
+        "executionId": "0c7a4eae-3a1a-490c-83f6-eba3acbab8a2",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787928220875
+      },
+      {
+        "executionId": "0c7a4eae-3a1a-490c-83f6-eba3acbab8a2",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787928254477
       }
     ],
     "5.7 Inspect hook JSON/helper statically without attempting a prohibited command.": [
@@ -1153,6 +1203,16 @@
         "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
         "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
         "timestamp": 1787923522718
+      },
+      {
+        "executionId": "e4964c11-d792-4a10-873f-25c2c99a0864",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787928533411
+      },
+      {
+        "executionId": "e4964c11-d792-4a10-873f-25c2c99a0864",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787928609480
       }
     ],
     "6.5 Update schema references from root `mcp/**` to `.kiro/mcp/**` and preserve workspace/runtime uncertainty.": [
@@ -1160,6 +1220,16 @@
         "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
         "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
         "timestamp": 1787923522780
+      },
+      {
+        "executionId": "a36315f2-93a1-4edd-bc6d-7d7f7569481c",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787930152029
+      },
+      {
+        "executionId": "a36315f2-93a1-4edd-bc6d-7d7f7569481c",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787930204193
       }
     ],
     "7.3 Route hook references to `.kiro/hooks/block-agent-tests.mjs` and schema references to `.kiro/mcp/**`.": [
@@ -1244,6 +1314,135 @@
         "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
         "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
         "timestamp": 1787923523552
+      }
+    ],
+    "4. Consolidate all Kiro governance and MCP metadata under `.kiro`": [
+      {
+        "executionId": "8957c139-7a4b-4c28-96b7-5657279680a5",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787927338767
+      }
+    ],
+    "5.1 Keep `domain-fast-check.json` limited to the test skip, boundary check, FOCSS/UI checks, and pass-through.": [
+      {
+        "executionId": "8957c139-7a4b-4c28-96b7-5657279680a5",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787927346508
+      },
+      {
+        "executionId": "d251e8ef-6401-4cfa-8f60-9fe29986d167",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787927615693
+      },
+      {
+        "executionId": "d251e8ef-6401-4cfa-8f60-9fe29986d167",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787927667149
+      }
+    ],
+    "5.5 Reconcile hook/skill/power/INDEX wording with the actual enabled pre-execution behavior.": [
+      {
+        "executionId": "0c7a4eae-3a1a-490c-83f6-eba3acbab8a2",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787928259806
+      },
+      {
+        "executionId": "e4964c11-d792-4a10-873f-25c2c99a0864",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787928468577
+      }
+    ],
+    "5.6 Create `session-start-orient.json`; leave `ltm-postturn-capture.json` unchanged.": [
+      {
+        "executionId": "e4964c11-d792-4a10-873f-25c2c99a0864",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787928474072
+      },
+      {
+        "executionId": "e4964c11-d792-4a10-873f-25c2c99a0864",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787928528010
+      }
+    ],
+    "5. Localize hook enforcement under `.kiro/hooks`": [
+      {
+        "executionId": "e4964c11-d792-4a10-873f-25c2c99a0864",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787928609795
+      }
+    ],
+    "6.1 Create `.kiro/settings/mcp.json` with empty workspace `mcpServers`.": [
+      {
+        "executionId": "e4964c11-d792-4a10-873f-25c2c99a0864",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787928615549
+      },
+      {
+        "executionId": "e4964c11-d792-4a10-873f-25c2c99a0864",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787928658334
+      }
+    ],
+    "6.2 Complete observability power with live OTel/metrics/error routing and honest not-wired states.": [
+      {
+        "executionId": "e4964c11-d792-4a10-873f-25c2c99a0864",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787928664153
+      },
+      {
+        "executionId": "e4964c11-d792-4a10-873f-25c2c99a0864",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787928786006
+      }
+    ],
+    "6.3 Complete analytics power with consent routing and present-but-unmounted transport status.": [
+      {
+        "executionId": "e4964c11-d792-4a10-873f-25c2c99a0864",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787928792357
+      },
+      {
+        "executionId": "a36315f2-93a1-4edd-bc6d-7d7f7569481c",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787929904968
+      },
+      {
+        "executionId": "a36315f2-93a1-4edd-bc6d-7d7f7569481c",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787930012854
+      }
+    ],
+    "6.4 Complete security power with layered auth/security routing and exact commands.": [
+      {
+        "executionId": "a36315f2-93a1-4edd-bc6d-7d7f7569481c",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787930024654
+      }
+    ],
+    "6.6 Verify power front matter and confirm no bundled server.": [
+      {
+        "executionId": "a36315f2-93a1-4edd-bc6d-7d7f7569481c",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787930212152
+      },
+      {
+        "executionId": "a36315f2-93a1-4edd-bc6d-7d7f7569481c",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787930288702
+      }
+    ],
+    "6. Complete MCP settings and capability powers under `.kiro`": [
+      {
+        "executionId": "a36315f2-93a1-4edd-bc6d-7d7f7569481c",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787930288949
+      }
+    ],
+    "7.1 Remove deleted workflow and stale capability routes.": [
+      {
+        "executionId": "a36315f2-93a1-4edd-bc6d-7d7f7569481c",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787930299256
       }
     ]
   }

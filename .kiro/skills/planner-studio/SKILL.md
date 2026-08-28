@@ -5,6 +5,8 @@ description: Use Planner Studio guidance to plan product work, tasks, and implem
 
 # Planner & Studio Domain
 
+Read root `AGENTS.md` first.
+
 ## Architecture
 - **Forked apps** — Planner (`/ooplanner`) and Studio (`/oostudio`) must NEVER import each other.
 - Each has its own: components, lib, hooks, store, server, platform trees.
@@ -34,3 +36,4 @@ pnpm run p0:unit
 
 ## Graph-layer integration
 Use `node scripts/graph-impact.mjs --file=<changed-file>` to inspect affected imports before optional validation. This repository graph replaces the retired CAST integration.
+

@@ -148,7 +148,7 @@ function concretePath(routePattern, samples) {
  */
 function auditPage(chromeMode) {
   const viewportWidth = window.innerWidth;
-  const viewportHeight = window.innerHeight;
+  const _viewportHeight = window.innerHeight;
   const documentWidth = document.documentElement.scrollWidth;
   const bodyWidth = document.body?.scrollWidth ?? documentWidth;
   const overflowPx = Math.max(documentWidth, bodyWidth) - viewportWidth;

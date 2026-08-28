@@ -51,7 +51,7 @@ export function Collections() {
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   unoptimized
-                  className="home-collection-card__media object-contain bg-soft p-2 transition-transform duration-[1400ms] ease-out group-hover:scale-[1.03] sm:p-2.5"
+                  className="home-collection-card__media object-contain bg-soft p-2 transition-transform duration-1000 ease-out group-hover:scale-105 sm:p-2.5"
                 />
                 <div className="home-collection-card__overlay" aria-hidden="true" />
                 <div className="home-collection-card__footer flex items-center justify-between gap-4 p-4 md:p-5">

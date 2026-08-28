@@ -1,8 +1,8 @@
 import { expect, test } from "@playwright/test";
 import { prepareSiteUiCapture } from "./site-ui-helpers";
 
-const HI_ABOUT_SUBTITLE = "हम व्यावहारिक, टिकाऊ और स्केलेबल वर्कस्पेस सिस्टम डिज़ाइन और डिलीवर करते हैं।";
-const EN_ABOUT_SUBTITLE = "We plan, supply, and install workplaces teams use every day.";
+const _HI_ABOUT_SUBTITLE = "हम व्यावहारिक, टिकाऊ और स्केलेबल वर्कस्पेस सिस्टम डिज़ाइन और डिलीवर करते हैं।";
+const _EN_ABOUT_SUBTITLE = "We plan, supply, and install workplaces teams use every day.";
 
 test.describe("site locale switch — wave 1", () => {
   test.use({ viewport: { width: 1280, height: 800 } });

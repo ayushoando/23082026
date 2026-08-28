@@ -8,16 +8,17 @@ Do not run tests, typechecks, gates, coverage, browser checks, builds, or Docker
 
 ## Multi-agent execution model
 
-Use exactly **4 agent definitions** and at most **4 active agents total**: `spec-task-runner` plus three focused execution agents. No worktrees, overlapping writes, scope broadening, or prohibited validation.
+Use exactly **5 agent definitions** and at most **5 active agents total**: `spec-task-runner`, `spec-task-runner2`, and three focused execution agents. No worktrees, overlapping writes, scope broadening, or prohibited validation.
 
 | Agent | Role | Owned tasks | Canonical write scope | Approved outside deletion |
 |---|---|---|---|---|
-| **Agent A — `spec-task-runner`** | Coordinator/general executor: sequence lanes, reconcile handoffs, complete routing/index/audits/report | Tasks 7–10 | `.kiro/powers/oando-workflow/**`, `.kiro/steering/INDEX.md`, spec task-status updates, post-handoff integration fixes | None unless explicitly reassigned after all workers stop |
+| **Agent A — `spec-task-runner`** | Coordinator/general executor: sequence lanes, reconcile handoffs, complete routing/index/audits/report | Tasks 7–10 (shared with Agent A2) | `.kiro/powers/oando-workflow/**`, `.kiro/steering/INDEX.md`, spec task-status updates, post-handoff integration fixes | None unless explicitly reassigned after all workers stop |
+| **Agent A2 — `spec-task-runner2`** | Second coordinator/general executor sharing Tasks 7–10 with Agent A; must not write the same path concurrently | Tasks 7–10 (shared with Agent A) | Same canonical write scope as Agent A | None unless explicitly reassigned after all workers stop |
 | **Agent B — `containment-reconciler`** | Governance canonicalization and MCP schema consolidation | Task 4 | `.kiro/kiro-repo-guidance-setup/**`, `.kiro/mcp/**` | `scripts/kiro-repo-guidance-setup/**`, tracked `mcp/{chrome-devtools,cloudflare-docs,github,tasks}/**` after evidence |
 | **Agent C — `hook-localizer`** | Save hook, pre-execution blocker, session orientation | Task 5 | `.kiro/hooks/**` | `scripts/general/block-agent-tests.mjs` after behavior is preserved |
 | **Agent D — `capability-powers-author`** | MCP settings and observability/analytics/security powers | Task 6 | `.kiro/settings/mcp.json`, `.kiro/powers/{observability,analytics,security}/**` | None |
 
-Agents B–D may run concurrently. Agent A inspects but does not edit active worker paths. Any required out-of-scope write is refused and escalated. Each worker returns exact changed/deleted paths, static evidence, unresolved issues, and confirmation that no unapproved outside file was modified.
+Agents B–D may run concurrently. Agents A and A2 inspect but do not edit active worker paths, and must not write the same path as each other at the same time. Any required out-of-scope write is refused and escalated. Each worker returns exact changed/deleted paths, static evidence, unresolved issues, and confirmation that no unapproved outside file was modified.
 
 ## Tasks
 
@@ -43,7 +44,7 @@ Agents B–D may run concurrently. Agent A inspects but does not edit active wor
   - [x] 3.4 Audit all nine retained skills and repair stale assumptions.
   - _Requirements: 3.1–3.6_
 
-- [ ] 4. Consolidate all Kiro governance and MCP metadata under `.kiro`
+- [x] 4. Consolidate all Kiro governance and MCP metadata under `.kiro`
   - [x] 4.1 Confirm both governance roots currently contain 25 top-level modules and 43 tests.
   - [x] 4.2 Compare exact governance relative-path sets and hashes/bytes; enumerate every differing pair.
   - [x] 4.3 Review each difference and merge only valid relocation-independent fixes into `.kiro/kiro-repo-guidance-setup/**`.
@@ -53,27 +54,27 @@ Agents B–D may run concurrently. Agent A inspects but does not edit active wor
   - [x] 4.7 Record the governance reconciliation ledger and verify canonical counts/references.
   - [x] 4.8 Delete `scripts/kiro-repo-guidance-setup/**` only after 4.2–4.7 succeed.
   - [x] 4.9 Enumerate tracked root MCP schema relative paths for chrome-devtools, cloudflare-docs, github, and tasks; preflight `.kiro/mcp` collisions.
-  - [ ] 4.10 Copy tracked schemas to `.kiro/mcp/<name>/**`, preserving path sets and bytes/hashes; do not copy Datadog cache, secrets, or generated local state.
-  - [ ] 4.11 Delete the tracked root MCP schema copies only after parity, then verify active Kiro references use `.kiro/mcp/**`.
+  - [x] 4.10 Copy tracked schemas to `.kiro/mcp/<name>/**`, preserving path sets and bytes/hashes; do not copy Datadog cache, secrets, or generated local state.
+  - [x] 4.11 Delete the tracked root MCP schema copies only after parity, then verify active Kiro references use `.kiro/mcp/**`.
   - _Requirements: 1.1–1.6, 4.1–4.9, 6.2–6.5_
 
-- [ ] 5. Localize hook enforcement under `.kiro/hooks`
-  - [ ] 5.1 Keep `domain-fast-check.json` limited to the test skip, boundary check, FOCSS/UI checks, and pass-through.
-  - [ ] 5.2 Replace the currently enabled `PostTaskExec` blocker with enabled `PreToolUse`, matcher `execute_pwsh|control_pwsh_process`, and command `node .kiro/hooks/block-agent-tests.mjs`.
-  - [ ] 5.3 Create/repair `.kiro/hooks/block-agent-tests.mjs`; define all matchers, parse payload defensively, return exit 2 for prohibited agent commands, and return 0 otherwise.
-  - [ ] 5.4 Compare the obsolete external helper, preserve any valid behavior, then delete `scripts/general/block-agent-tests.mjs`.
-  - [ ] 5.5 Reconcile hook/skill/power/INDEX wording with the actual enabled pre-execution behavior.
-  - [ ] 5.6 Create `session-start-orient.json`; leave `ltm-postturn-capture.json` unchanged.
-  - [ ] 5.7 Inspect hook JSON/helper statically without attempting a prohibited command.
+- [x] 5. Localize hook enforcement under `.kiro/hooks`
+  - [x] 5.1 Keep `domain-fast-check.json` limited to the test skip, boundary check, FOCSS/UI checks, and pass-through.
+  - [x] 5.2 Replace the currently enabled `PostTaskExec` blocker with enabled `PreToolUse`, matcher `execute_pwsh|control_pwsh_process`, and command `node .kiro/hooks/block-agent-tests.mjs`.
+  - [x] 5.3 Create/repair `.kiro/hooks/block-agent-tests.mjs`; define all matchers, parse payload defensively, return exit 2 for prohibited agent commands, and return 0 otherwise.
+  - [x] 5.4 Compare the obsolete external helper, preserve any valid behavior, then delete `scripts/general/block-agent-tests.mjs`.
+  - [x] 5.5 Reconcile hook/skill/power/INDEX wording with the actual enabled pre-execution behavior.
+  - [x] 5.6 Create `session-start-orient.json`; leave `ltm-postturn-capture.json` unchanged.
+  - [x] 5.7 Inspect hook JSON/helper statically without attempting a prohibited command.
   - _Requirements: 5.1–5.9_
 
-- [ ] 6. Complete MCP settings and capability powers under `.kiro`
-  - [ ] 6.1 Create `.kiro/settings/mcp.json` with empty workspace `mcpServers`.
-  - [ ] 6.2 Complete observability power with live OTel/metrics/error routing and honest not-wired states.
-  - [ ] 6.3 Complete analytics power with consent routing and present-but-unmounted transport status.
-  - [ ] 6.4 Complete security power with layered auth/security routing and exact commands.
-  - [ ] 6.5 Update schema references from root `mcp/**` to `.kiro/mcp/**` and preserve workspace/runtime uncertainty.
-  - [ ] 6.6 Verify power front matter and confirm no bundled server.
+- [x] 6. Complete MCP settings and capability powers under `.kiro`
+  - [x] 6.1 Create `.kiro/settings/mcp.json` with empty workspace `mcpServers`.
+  - [x] 6.2 Complete observability power with live OTel/metrics/error routing and honest not-wired states.
+  - [x] 6.3 Complete analytics power with consent routing and present-but-unmounted transport status.
+  - [x] 6.4 Complete security power with layered auth/security routing and exact commands.
+  - [x] 6.5 Update schema references from root `mcp/**` to `.kiro/mcp/**` and preserve workspace/runtime uncertainty.
+  - [x] 6.6 Verify power front matter and confirm no bundled server.
   - _Requirements: 6.1, 6.5–6.6, 7.1–7.5_
 
 - [ ] 7. Rewrite master routing
