@@ -1,29 +1,32 @@
+---
+inclusion: always
+---
+
 # Tech Stack
 
-## Core Framework
-- Next.js 14+ (App Router) with TypeScript
-- React with hooks-based architecture
-- Tailwind CSS for all styling — no inline styles, no CSS modules
-- ESLint configured via `eslint.config.mjs`
+## Application and Toolchain
 
-## Database & Auth
-- Supabase (Postgres) — migrations live in `/supabase/`
-- Use Supabase client from `/lib/` — never initialize directly in components
-- All DB schema changes go through Supabase migration files
+- The product is a Next.js 16 App Router application under `site/`, written in TypeScript and React 19.
+- Install and run the monorepo from the repository root with pnpm. Product dependencies are declared in the root `package.json`; there is no separate `site/package.json`.
+- The primary application TypeScript configuration is `site/tsconfig.json`; the root `typecheck:scripts` command targets `scripts/tsconfig.json` for script tooling.
+- Styling uses Tailwind CSS v4 through `@tailwindcss/postcss`, with the repo's FOCSS token and zone layer under `site/focss/`.
+- Linting uses oxlint through the root pnpm scripts and `.oxlintrc.json`.
 
-## Deployment
-- Vercel — config in `vercel.json`
-- Environment variables managed via Vercel dashboard + `.env.local` locally
+## Data and AI
 
-## Testing
-- Playwright for E2E tests — located in `/tests/`, reports in `/playwright-report/`
-- Run tests before any major deployment
+- Supabase provides two separate Postgres databases. Products (`erpweaiypimorcunaimz`) owns the marketing catalog and configurator; Admin (`rxzpznmxbaoxpikowmfc`) owns staff/customer data, plans, furniture, and descriptors.
+- Products migrations live in `site/platform/supabase/migrations/`; Admin migrations live in `site/platform/supabase/migrations.admin/`.
+- Drizzle ORM definitions live under `site/platform/drizzle/schema/`; deployable database changes still go through the appropriate Supabase migration directory.
+- AI and retrieval use Mastra with Amazon Bedrock, LanceDB vector search, Orama full-text search, and Fuse.js fuzzy catalog search. The server-side AI modules live under `site/lib/ai/mastra/`.
 
-## Key Directories
-- `/app` — Next.js App Router pages and layouts
-- `/components` — reusable React components
-- `/lib` — shared utilities, Supabase client, helpers
-- `/hooks` — custom React hooks
-- `/data` — static data, seed files
-- `/scripts` — one-off migration/utility scripts
-- `/public` — static assets
+## Testing and Deployment
+
+- Vitest covers unit and integration tests; Playwright covers end-to-end and browser workflows. Test sources and shared configuration live under `tests/` and `config/build/`.
+- Vercel deploys the Next.js application using `vercel.json`.
+- The Cloudflare Worker under `workers/oando-worker-proxy/` fronts the Vercel origin and binds Cloudflare R2 for asset delivery; R2 backup and catalog operations are exposed through root pnpm commands.
+
+## Observability and Analytics
+
+- OpenTelemetry is registered in `site/instrumentation.ts` through `@vercel/otel`.
+- Prometheus metrics are implemented in `site/lib/observability/metrics.ts`; local Prometheus and Grafana configuration lives under `config/observability/`.
+- Vercel Analytics and Speed Insights are mounted by `site/components/site/SiteAnalytics.tsx` and remain consent-gated.

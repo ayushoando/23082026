@@ -1,172 +1,177 @@
-# Requirements Document
+# Requirements Document: Kiro Configuration Rewrite
 
 ## Introduction
 
-The `.kiro` configuration directory has accumulated structural problems that degrade agent context quality and violate the repo's own authoritativeness principle (user > live code > `AGENTS.md` > `Agents/` > docs). Problems include duplicate steering files with contradictory content, an empty stub loaded on every turn, workflow guides misplaced in `.kiro/agents/`, a TypeScript governance module (`kiro-repo-guidance-setup/`) that belongs under `scripts/`, a broken import in `pipeline.ts`, a catch-all typecheck hook that contradicts the user-invoked-only verification principle, and no `mcp.json` scaffold for forthcoming MCP installations.
+The `.kiro` directory contains conflicting steering, generic product-management workflow assets unrelated to this office-furniture application, misplaced executable TypeScript, an over-broad save hook, and power routing that does not distinguish live integrations from local MCP schemas or uninstalled services.
 
-This feature reorganises the entire `.kiro` folder along a one-file-per-domain rule: every concern has exactly one authoritative file, no file is loaded unless its content is genuinely needed at that moment, and every file reference inside `.kiro` resolves to a real path.
+A six-slice audit covering all 4,079 tracked files established the real repository structure before these requirements were rewritten. Live code and Git state take precedence over historical reports. The rewrite is limited to Kiro configuration and relocation of the existing governance module; it does not change application behavior, database schema, or production infrastructure.
 
-The deliverable is a full implementation plan with a task list — not deployed code. Execution tasks must be self-contained and ordered so they can be approved and run sequentially by the `spec-task-runner` agent.
+## Outcomes
 
----
+After the rewrite:
+
+- each steering domain has one authoritative file with explicit inclusion metadata;
+- `.kiro/skills/` contains 9 repo-specific skills, not generic PM/ML workflow prompts;
+- `.kiro/agents/` contains only `spec-task-runner.md`;
+- three repo-local powers route observability, analytics, and security work to verified source and commands;
+- MCP schema presence is never misrepresented as an installed connection;
+- the governance TypeScript module lives under `scripts/`;
+- every remaining repo-relative reference under `.kiro` resolves;
+- `steering/INDEX.md` describes the real post-rewrite state.
 
 ## Glossary
 
-- **Config_Rewriter**: The agent or human executing the tasks in this spec.
-- **Steering_File**: A Markdown file under `.kiro/steering/` that Kiro loads into agent context according to its `inclusion` front-matter mode (`always`, `fileMatch`, `auto`, or `manual`).
-- **Hook_File**: A JSON file under `.kiro/hooks/` defining a trigger → action pair executed by Kiro at specific lifecycle events.
-- **Agent_File**: A Markdown file under `.kiro/agents/` defining a Kiro-native callable agent. Workflow guides and prompt templates are NOT agent files.
-- **Power_File**: A Markdown file under `.kiro/powers/{name}/POWER.md` describing an installed power and its MCP routing.
-- **Guidance_Module**: The TypeScript module currently at `.kiro/kiro-repo-guidance-setup/` — a governance framework for concurrent implementation waves.
-- **Settings_Dir**: `.kiro/settings/` — holds `lsp.json` and will hold `mcp.json`.
-- **Domain**: A single named concern (e.g., product context, tech stack, testing policy, agent behaviour). One steering file per domain.
-- **MCP_Scaffold**: A `mcp.json` stub in `.kiro/settings/` that documents the full list of planned MCPs with empty server entries, ready for credentials to be filled in at install time.
-- **Broken_Import**: The `import … from "../../scripts/kiro-repo-guidance-setup/reviewers"` in `pipeline.ts`, which resolves to a path that does not exist because the module is in `.kiro/`, not `scripts/`.
-- **Repo_MCP_Dir**: The `mcp/` directory at the repo root, containing tool-definition JSON schemas for MCPs that have already been partially set up (subdirs: `chrome-devtools/`, `cloudflare-docs/`, `github/`, `tasks/`). These are distinct from `settings/mcp.json` and indicate those four MCPs are further along than the five remaining planned ones.
-
----
+- **Config Rewriter:** The executor of this spec.
+- **Wired capability:** A live source/config/command exists in the current repo and any prerequisites are documented.
+- **Schema-present MCP:** Tool JSON schemas exist under root `mcp/`, but no Kiro server connection exists.
+- **Installed MCP:** A server is active in the Kiro registry or configured in `.kiro/settings/mcp.json`.
+- **Workflow bundle:** The coupled generic research → PRFAQ → PRD → prototype skills, agent guides, steering orchestrator, and HTML templates.
 
 ## Requirements
 
-### Requirement 1: Steering Consolidation — Eliminate Duplicates and Contradictions
+### Requirement 1: Audit authority and scope
 
-**User Story:** As the agent consuming context, I want each domain to have exactly one steering file with correct, non-contradictory content, so that I do not load conflicting instructions or waste context on empty stubs.
-
-#### Acceptance Criteria
-
-1. THE Config_Rewriter SHALL delete `steering/product-context.md` because `steering/product.md` is the canonical copy and the two files have identical content.
-2. THE Config_Rewriter SHALL delete `steering/spec-guide.md` because it contains only a generator comment and no actionable rules, yet carries `inclusion: always`.
-3. THE Config_Rewriter SHALL rewrite `steering/tech-stack.md` to contain the single authoritative tech-stack definition and add an `inclusion: always` front-matter block; the conflicting `steering/spec.md` SHALL be deleted after its content is merged into `tech-stack.md`. The rewritten `tech-stack.md` MUST reflect the following verified facts about the repo:
-   a. **Framework**: Next.js 16 (App Router), TypeScript, **pnpm** as the only permitted package manager, **Turborepo** (`turbo.json` at repo root) as the build orchestrator — `pnpm run build` delegates to `turbo build`.
-   b. **Frontend**: React 19, Tailwind CSS v4, GSAP, Framer Motion, Zustand, TanStack Query, React Hook Form + Zod, React Aria Components.
-   c. **Backend/DB**: Supabase (two databases — Admin `rxzpznmxbaoxpikowmfc` and Products `erpweaiypimorcunaimz`), Drizzle ORM; migration files live at `site/platform/supabase/migrations/` (Products DB, 43 files) and `site/platform/supabase/migrations.admin/` (Admin DB, 18 files) — the path `/supabase/` at repo root does NOT exist and MUST NOT be referenced.
-   d. **AI/Vectors**: Mastra (`@mastra/core`, `@mastra/memory`, `@mastra/rag`), AWS Bedrock (`@ai-sdk/amazon-bedrock`), LanceDB, Orama, Fuse.js.
-   e. **Linter**: **oxlint** configured via `.oxlintrc.json` at repo root — there is no `eslint.config.mjs` and ESLint is NOT used; any reference to ESLint MUST be removed.
-   f. **TypeScript config**: `site/tsconfig.json` is the primary TS config; `scripts/tsconfig.json` covers the scripts directory; there is NO root-level `tsconfig.json`.
-   g. **Testing**: Playwright (E2E, `tests/`), Vitest (unit/component, two lanes — default + tech-docs, DOM: happy-dom), Testing Library.
-   h. **Fork tree directories**: `site/{components,lib,hooks,store,server}/{Studio,Planner}/` — `site/server/` is part of the fork tree alongside `site/components/`, `site/lib/`, `site/hooks/`, and `site/store/`; Studio and Planner MUST NOT import each other.
-   i. **Deployment**: Vercel (`vercel.json`), Cloudflare Workers (`workers/`, `wrangler*`), environment variables via Vercel dashboard + `.env.local` locally.
-4. THE Config_Rewriter SHALL rewrite `steering/agent-behavior.md` to remove all references to `errors.md`, `implementation_plan.md`, and `CHANGELOG.md` (none of which exist) and replace them with the correct authoritative sources (`Failures.md` for hard blockers; `plans/` subdirectory — check `plans/README.md` for the active plan since there is no single `plans/PLAN.md` file, active plans live in subdirs such as `plans/planner-remediation/`, `plans/remediation-unified/`, `plans/site-page-css-remediation/`; `AGENTS.md` §1 for the truth hierarchy); the `inclusion: always` front-matter SHALL be retained.
-5. THE Config_Rewriter SHALL add `inclusion: always` front-matter to `steering/coding-standards.md`, which currently lacks any front-matter and therefore relies on implicit default inclusion.
-6. WHEN the consolidation tasks are complete, THE Config_Rewriter SHALL verify that no two steering files share more than 30% overlapping heading structure, measured by comparing the H2 heading sets of each file.
-7. THE Config_Rewriter SHALL produce a `steering/INDEX.md` (inclusion: manual) that lists every remaining steering file, its inclusion mode, and a one-line description of its domain — this file is the single reference for understanding the steering layout.
-
----
-
-### Requirement 2: Steering — product-workflow.md Demotion
-
-**User Story:** As the agent consuming context, I want the 600-line orchestrator workflow prompt loaded only when I am explicitly orchestrating a product workflow, not on every single turn, so that routine coding tasks do not carry ~2 000 tokens of irrelevant orchestration instructions.
+**User Story:** As the repo owner, I want the rewrite based on the current repository rather than stale summaries, so that configuration does not encode false capabilities or paths.
 
 #### Acceptance Criteria
 
-1. THE Config_Rewriter SHALL change `steering/product-workflow.md`'s `inclusion` front-matter from `always` to `manual`, so Kiro loads it only when the user or an agent explicitly requests it.
-2. THE Config_Rewriter SHALL add a one-line `# Activation` note near the top of `steering/product-workflow.md` stating: "Load this file only when running the full product workflow (deep research → PRFAQ → PRD → prototype)."
-3. IF `steering/product-workflow.md` is set to `manual` inclusion, THEN THE Config_Rewriter SHALL confirm that the file content is otherwise unchanged — demotion to `manual` is the only edit, not a content rewrite.
+1. The Config Rewriter SHALL treat live source, current Git state, `AGENTS.md`, and current package/config files as authoritative over historical CSV/TXT reports.
+2. The Config Rewriter SHALL NOT treat `docs/architecture/scripts-stale-review.csv` as a current move manifest; Git currently tracks no files under `scripts/kiro-repo-guidance-setup/`.
+3. The Config Rewriter SHALL NOT treat `results/ops/coverage-admin.txt` as current verification; it is historical UTF-16 evidence from another worktree.
+4. The Config Rewriter SHALL limit implementation to `.kiro/**` and relocation of `.kiro/kiro-repo-guidance-setup/**` into `scripts/kiro-repo-guidance-setup/**`.
+5. The Config Rewriter SHALL NOT change application source, tests, Supabase migrations, CI workflows, public assets, or production infrastructure in this spec.
 
----
+### Requirement 2: Remove the generic product-workflow bundle
 
-### Requirement 3: Hooks Rewrite — Enforce User-Invoked-Only Verification
-
-**User Story:** As the repo owner, I want the `domain-fast-check` hook to run only lightweight static checks on save (boundary scan, FOCSS lint), never a full typecheck, so that the user-invoked-only gate principle stated in `AGENTS.md` is not violated on every file save.
-
-#### Acceptance Criteria
-
-1. THE Config_Rewriter SHALL rewrite `hooks/domain-fast-check.json` so that the catch-all `pnpm run typecheck` branch — the final `else` path triggered for any `.ts` save that does not match a more specific pattern — is removed and replaced with a `exit 0` pass-through.
-2. WHERE a saved file matches the Studio or Planner path pattern, THE Config_Rewriter SHALL retain the `pnpm run scan:boundaries` call in `domain-fast-check.json` unchanged.
-3. WHERE a saved file matches the FOCSS/CSS/component pattern, THE Config_Rewriter SHALL retain the `pnpm run verify:focss` + `pnpm run lint:ui:strict` sequence in `domain-fast-check.json` unchanged.
-4. THE Config_Rewriter SHALL NOT add any new typecheck or test-runner call to `domain-fast-check.json` — type checking remains user-invoked only.
-5. THE Config_Rewriter SHALL verify that `hooks/block-agent-tests.json` and `hooks/ltm-postturn-capture.json` are correct and unchanged; no edits to these two files are required by this requirement.
-6. THE Config_Rewriter SHALL add a `hooks/session-start-orient.json` file with trigger `SessionStart` and action type `agent` whose prompt instructs the agent to read `AGENTS.md` §1–§3 and `Agents/01-standard.md` at session start before taking any action.
-
----
-
-### Requirement 4: Agents Directory Cleanup — Remove Misplaced Workflow Guides
-
-**User Story:** As the agent runtime, I want `.kiro/agents/` to contain only real Kiro-native agent definition files, so that workflow guides and prompt templates do not pollute the agent registry.
+**User Story:** As an agent working in this codebase, I want discoverable skills and agents to be relevant to the repo, so that unrelated product-management workflows do not consume context or get activated accidentally.
 
 #### Acceptance Criteria
 
-1. THE Config_Rewriter SHALL create the directory `plans/prompts/` if it does not already exist.
-2. THE Config_Rewriter SHALL move the following six files from `.kiro/agents/` to `plans/prompts/`, preserving their filenames: `AI_Framing_Agent.md`, `AI_Framing_Template.md`, `Claude_Code_Workflow.md`, `Deep_Research_Agent.md`, `PRD_Creation_Guide.md`, `PRFAQ_Guide.md`.
-3. THE Config_Rewriter SHALL retain `agents/spec-task-runner.md` in `.kiro/agents/` because it is a valid Kiro agent definition.
-4. WHEN the six files have been moved, THE Config_Rewriter SHALL update any reference to those files inside `steering/product-workflow.md` (e.g., `prompts/PRFAQ_Guide.md`, `prompts/PRD_Creation_Guide.md`, `prompts/Prototype_Creation_Guide.md`) to use the new path `plans/prompts/{filename}`.
-5. THE Config_Rewriter SHALL add a `README.md` to `plans/prompts/` documenting the purpose of each file and its relationship to the product workflow orchestrator.
+1. The Config Rewriter SHALL delete these skill directories: `.kiro/skills/ai-framing/`, `ai-framing-template/`, `claude-code-workflow/`, `deep-research/`, `prd/`, and `prfaq/`.
+2. The Config Rewriter SHALL retain exactly these 9 skills: `db-migrations`, `focss-css`, `fork-boundaries`, `graph-impact`, `oando-master`, `planner-studio`, `powers-skills-model`, `repo-map`, and `verify-and-gate`.
+3. The Config Rewriter SHALL delete these mirrored workflow guides from `.kiro/agents/`: `AI_Framing_Agent.md`, `AI_Framing_Template.md`, `Claude_Code_Workflow.md`, `Deep_Research_Agent.md`, `PRD_Creation_Guide.md`, and `PRFAQ_Guide.md`.
+4. The Config Rewriter SHALL retain `.kiro/agents/spec-task-runner.md` as the sole agent definition.
+5. The Config Rewriter SHALL delete `.kiro/steering/product-workflow.md`.
+6. The Config Rewriter SHALL delete `.kiro/templates/ProjectDashboard_Template.html` and `ScreenIndex_Template.html`, then remove `.kiro/templates/` if empty.
+7. The Config Rewriter SHALL NOT create `plans/prompts/` or relocate the deleted workflow files elsewhere.
+8. No remaining `.kiro` file SHALL reference a deleted workflow skill, agent guide, steering file, or template.
 
----
+### Requirement 3: Consolidate steering into one authoritative file per domain
 
-### Requirement 5: Guidance Module Relocation — Fix Broken Import and Move to scripts/
-
-**User Story:** As a TypeScript compiler, I want `pipeline.ts` to import from a path that exists, so that the governance module can be type-checked without a resolution error.
-
-#### Acceptance Criteria
-
-1. THE Config_Rewriter SHALL move the entire `.kiro/kiro-repo-guidance-setup/` directory to `scripts/kiro-repo-guidance-setup/`, preserving all 24 TypeScript files and the `tests/` subdirectory.
-2. THE Config_Rewriter SHALL fix the broken import in `pipeline.ts` — the import path `../../scripts/kiro-repo-guidance-setup/reviewers` SHALL become `./reviewers` (sibling module within the same directory) after the move.
-3. THE Config_Rewriter SHALL add a `scripts/kiro-repo-guidance-setup/README.md` that explains the module's purpose (governance framework for concurrent implementation waves), its entry points (`pipeline.ts`, `contracts.ts`), and a note that it is not executed at runtime but used as a type contract by agents.
-4. WHEN the move is complete, THE Config_Rewriter SHALL verify that no file under `.kiro/` contains an import or reference to `.kiro/kiro-repo-guidance-setup/`.
-
----
-
-### Requirement 6: Powers Rewrite — Honest Routing for Pending MCPs
-
-**User Story:** As the agent reading the powers manifest, I want `oando-workflow/POWER.md` to accurately reflect which MCPs are installed versus planned, so that I do not attempt to route to uninstalled servers.
+**User Story:** As the agent runtime, I want steering to be correct, non-duplicative, and explicitly scoped, so that instructions do not conflict.
 
 #### Acceptance Criteria
 
-1. BEFORE rewriting `powers/oando-workflow/POWER.md`, THE Config_Rewriter SHALL inspect the `mcp/` directory at the repo root to determine which MCP servers have tool-definition JSON schemas already present. The four subdirectories found (`chrome-devtools/`, `cloudflare-docs/`, `github/`, `tasks/`) each contain a `tools/` directory with JSON schema files, indicating these MCPs have been partially set up at the tool-definition level and are closer to installation-ready than the remaining five.
-2. THE Config_Rewriter SHALL rewrite `powers/oando-workflow/POWER.md` to split the routing table into three sections:
-   - **Partially Set Up** (tool schemas exist under `mcp/` but not yet wired into `settings/mcp.json`): `chrome-devtools`, `cloudflare-docs`, `github`, `tasks` — each listed with its `mcp/` subdirectory path and a note that tool schemas are present.
-   - **Planned** (no local files; not yet set up in any form): `context7` (official library/framework docs), `exa` (broad web research), `postman` (API collections), `cloudinary` (image/video assets), `ltm-power` (project memory/recall), `cubic-code-review` (AI code-review/security-review), `nova-act` (exploratory browser checks), `kane-cli` (repeatable browser workflows and screenshots), `supabase-hosted` (live DB ops against Admin and Products databases) — marked `[NOT YET INSTALLED]`.
-   - **Installed** (active entry in `settings/mcp.json`): empty until MCPs are wired up.
-3. THE Config_Rewriter SHALL add the rule: "WHEN a planned or partially-set-up MCP is referenced in routing, THE Config_Rewriter SHALL fall back to repo tooling (`pnpm` scripts, `Agents/` docs) and note the fallback to the user" to the Rules section of POWER.md.
-4. THE Config_Rewriter SHALL create `settings/mcp.json` as an empty-but-structured scaffold:
-   ```json
-   {
-     "$schema": "https://kiro.dev/schemas/mcp.json",
-     "_comment": "Add each server entry here when the MCP is installed. Partially-set-up MCPs (tool schemas in mcp/): chrome-devtools, cloudflare-docs, github, tasks. Planned MCPs (no local files yet): context7, exa, postman, cloudinary, ltm-power, cubic-code-review, nova-act, kane-cli, supabase-hosted.",
-     "mcpServers": {}
-   }
-   ```
-5. THE Config_Rewriter SHALL NOT treat the `mcp/` directory at repo root as part of `.kiro/settings/` — the two are separate concerns; `mcp/` holds tool schemas for MCP server packages, while `settings/mcp.json` holds the runtime connection configuration that Kiro reads to connect to those servers.
+1. The Config Rewriter SHALL retain `.kiro/steering/product.md` as the sole product-context file and delete `product-context.md`.
+2. The Config Rewriter SHALL delete `spec-guide.md` because it is an empty always-loaded stub.
+3. The Config Rewriter SHALL delete `spec.md` and rewrite `tech-stack.md` as the sole stack definition.
+4. Rewritten `tech-stack.md` SHALL begin with `inclusion: always` and describe the audited stack: Next.js 16 App Router; TypeScript; pnpm; React 19; Tailwind CSS v4/FOCSS; oxlint; Supabase with Admin and Products databases; Drizzle; Mastra/Bedrock/LanceDB/Orama/Fuse; Playwright and Vitest; Vercel and Cloudflare Worker/R2; OpenTelemetry, Prometheus/Grafana, Vercel Analytics, and Speed Insights.
+5. `tech-stack.md` SHALL use current paths: Next app under `site/`; Products migrations under `site/platform/supabase/migrations/`; Admin migrations under `site/platform/supabase/migrations.admin/`; primary TypeScript config at `site/tsconfig.json`; script config at `scripts/tsconfig.json`.
+6. `tech-stack.md` SHALL NOT claim Next.js 14, npm as package manager, ESLint/`eslint.config.mjs`, a root `/supabase/` directory, Datadog RUM, or Sentry.
+7. The Config Rewriter SHALL update `agent-behavior.md` to use `pnpm`, current `site/` paths, `Failures.md` for blockers, `plans/PLAN.md` and `plans/README.md` for coordination, `AGENTS.md` for authority, and `Agents/01-standard.md` for standard procedure.
+8. The Config Rewriter SHALL add explicit `inclusion: always` front matter to `coding-standards.md` and correct stale root-level directory references within it.
+9. Existing domain steering SHALL retain its current fileMatch/manual behavior unless a referenced path is stale.
+10. Every remaining `.kiro/steering/*.md` file SHALL begin with valid explicit front matter using `always`, `fileMatch`, `auto`, or `manual`.
 
----
+### Requirement 4: Relocate the governance TypeScript module
 
-### Requirement 7: Steering Index and Canonical Reference
-
-**User Story:** As any agent starting a new session, I want a single file that maps every `.kiro` configuration file to its domain and inclusion mode, so that I can orient in the config without reading every file.
+**User Story:** As a maintainer, I want executable governance code under `scripts/`, so that `.kiro` remains configuration-only and imports resolve correctly.
 
 #### Acceptance Criteria
 
-1. THE Config_Rewriter SHALL create `steering/INDEX.md` with front-matter `inclusion: manual`.
-2. THE steering/INDEX.md SHALL contain a table with columns: File path (relative to `.kiro/`), Inclusion mode, Domain/purpose, Notes (e.g., "replaces spec.md + tech-stack.md").
-3. THE steering/INDEX.md SHALL list every file in `.kiro/steering/`, `.kiro/hooks/`, `.kiro/agents/`, and `.kiro/powers/` that is present after all other requirements in this spec are satisfied.
-4. THE steering/INDEX.md SHALL include a "Post-MCP install checklist" section that lists all MCPs (four partially-set-up + nine planned) and the steps required to activate each one (add to `settings/mcp.json`, update POWER.md routing table, move from Partially Set Up / Planned to Installed).
+1. The Config Rewriter SHALL move all 25 top-level TypeScript modules from `.kiro/kiro-repo-guidance-setup/` to `scripts/kiro-repo-guidance-setup/`, preserving filenames.
+2. The Config Rewriter SHALL move all 43 existing test files and their directory structure to `scripts/kiro-repo-guidance-setup/tests/`.
+3. The Config Rewriter SHALL change the broken `pipeline.ts` import from `../../scripts/kiro-repo-guidance-setup/reviewers` to `./reviewers` after relocation.
+4. No other module content SHALL change as part of the move unless required to correct a path broken by relocation.
+5. The Config Rewriter SHALL create `scripts/kiro-repo-guidance-setup/README.md` describing purpose, non-runtime status, primary entry points, tests, and relocation history.
+6. The source `.kiro/kiro-repo-guidance-setup/` directory SHALL be absent after the move.
+7. No remaining `.kiro` file SHALL reference the old module path.
 
----
+### Requirement 5: Align hooks with user-owned verification
 
-### Requirement 8: No Orphaned References After Rewrite
-
-**User Story:** As the repo maintainer, I want every file path referenced inside any `.kiro` file to resolve to an actual file after the rewrite is complete, so that no agent is directed to a non-existent resource.
-
-#### Acceptance Criteria
-
-1. WHEN all requirements 1–7 are satisfied, THE Config_Rewriter SHALL run a reference audit: for every file path string inside `.kiro/**/*.{md,json,ts}`, verify the path resolves relative to the repo root.
-2. IF a reference does not resolve, THEN THE Config_Rewriter SHALL either update the reference to the correct path or remove the dead reference and document the removal in `steering/INDEX.md` under a "Removed references" subsection.
-3. THE Config_Rewriter SHALL NOT create any new file that contains a reference to a path that does not yet exist at the time of writing (i.e., forward references to planned MCPs in POWER.md are documented in prose, not as resolvable paths).
-
----
-
-### Requirement 9: Explicit Front-Matter on Every Steering File
-
-**User Story:** As the agent runtime, I want every steering file to declare its inclusion mode explicitly, so that no file is loaded by implicit default when it should be `fileMatch` or `manual`, and no future addition silently becomes always-loaded.
+**User Story:** As the repo owner, I want save/session hooks to remain lightweight and truthful, so that agents do not trigger expensive verification without permission.
 
 #### Acceptance Criteria
 
-1. WHEN the rewrite is complete, THE Config_Rewriter SHALL verify that every file under `.kiro/steering/` (including any newly created files) has a YAML front-matter block as its first content, containing an `inclusion` key set to one of the four valid values: `always`, `fileMatch`, `auto`, or `manual`.
-2. THE Config_Rewriter SHALL add `inclusion: always` front-matter to `steering/coding-standards.md` (currently has no front-matter; intended to be always-loaded based on its domain scope).
-3. THE Config_Rewriter SHALL add `inclusion: always` front-matter to `steering/tech-stack.md` (currently has no front-matter; the rewrite in Requirement 1 AC3 must include this front-matter block).
-4. IF `steering/product-context.md` is deleted per Requirement 1 AC1, THEN no front-matter addition is required for it — deletion satisfies this requirement for that file.
-5. IF `steering/spec.md` is deleted per Requirement 1 AC3, THEN no front-matter addition is required for it — deletion satisfies this requirement for that file.
-6. IF `steering/spec-guide.md` is deleted per Requirement 1 AC2, THEN no front-matter addition is required for it — deletion satisfies this requirement for that file.
-7. THE Config_Rewriter SHALL audit all remaining steering files that already have front-matter (`agent-behavior.md`, `ai.md`, `api.md`, `database.md`, `deployment.md`, `graph-layer.md`, `ltm-memory-format.md`, `ltm-operations.md`, `nova-act-viewport.md`, `product-workflow.md`, `product.md`, `seo.md`, `testing.md`, `ui-css.md`) to confirm their existing `inclusion` values are correct and intentional — no changes are required unless a value is clearly wrong.
-8. THE Config_Rewriter SHALL document the inclusion mode of every steering file in `steering/INDEX.md` per Requirement 7 AC2, making the front-matter audit permanently visible without opening each file.
+1. The Config Rewriter SHALL rewrite `hooks/domain-fast-check.json` so test files remain skipped, Studio/Planner saves retain `pnpm run scan:boundaries`, and FOCSS/component/CSS saves retain `pnpm run verify:focss` plus `pnpm run lint:ui:strict`.
+2. All other matching saves SHALL exit successfully without running typecheck, tests, coverage, build, or browser commands.
+3. The Config Rewriter SHALL remove the existing Supabase/Drizzle catch-all typecheck branch and the final catch-all typecheck branch.
+4. The Config Rewriter SHALL retain `block-agent-tests.json` trigger `PostTaskExec`; this spec SHALL NOT change its lifecycle semantics.
+5. The Config Rewriter SHALL replace the garbled `block-agent-tests.json` description with a concise description matching its actual trigger/action.
+6. Retained powers/skills SHALL describe `block-agent-tests` as `PostTaskExec`, not `PreToolUse`.
+7. The Config Rewriter SHALL add `hooks/session-start-orient.json` with trigger `SessionStart` and agent action instructing the agent to read `AGENTS.md` sections 1–3 and `Agents/01-standard.md` before acting.
+8. `ltm-postturn-capture.json` SHALL remain unchanged.
+
+### Requirement 6: Establish honest MCP and master-power routing
+
+**User Story:** As the agent using powers, I want capability status to distinguish live tools from schemas and plans, so that routing never calls an unavailable service.
+
+#### Acceptance Criteria
+
+1. The Config Rewriter SHALL create `.kiro/settings/mcp.json` with the Kiro MCP schema and an empty `mcpServers` object.
+2. Root `mcp/chrome-devtools/`, `mcp/cloudflare-docs/`, `mcp/github/`, and `mcp/tasks/` SHALL be described as schema-present, not installed.
+3. The gitignored `mcp/Datadog/` convention SHALL be described as a regenerable local data cache, not runtime source and not an installed Datadog integration.
+4. External capabilities SHALL be labeled installed only when present in the active registry or `settings/mcp.json`.
+5. The Config Rewriter SHALL update `powers/oando-workflow/POWER.md` to remove deleted workflow routing, route to the three new powers, preserve repo-map/graph/fork/FOCSS/database/verification routing, and correct the hook-trigger description.
+6. `powers/oando-workflow/steering/routing.md` SHALL be updated only where required to match the final skill, power, MCP, or hook inventory.
+7. No power created or modified by this spec SHALL bundle or install an MCP server.
+
+### Requirement 7: Add the observability power
+
+**User Story:** As an agent investigating traces, metrics, or errors, I want routing to the observability tooling actually wired in this repo.
+
+#### Acceptance Criteria
+
+1. The Config Rewriter SHALL create `.kiro/powers/observability/POWER.md` with valid power front matter and repo-specific keywords.
+2. The power SHALL route tracing to `site/instrumentation.ts` and `@vercel/otel`, using `OTEL_SERVICE_NAME` and any configured OTLP environment.
+3. The power SHALL route metrics to `site/lib/observability/metrics.ts`, `/api/metrics`, `config/observability/`, and `pnpm run observability:up|down|logs`.
+4. The power SHALL state that `/api/metrics` returns 404 in production unless `OBSERVABILITY_METRICS_ENABLED=1`.
+5. The power SHALL route client-error investigation to `/api/log-error` and `site/lib/observability/reportClientError.ts`, whose current sink is structured `console.error`; hard blockers belong in root `Failures.md`.
+6. The power SHALL state that Sentry and Datadog RUM are not wired in current source.
+7. The power SHALL identify Chrome DevTools performance schemas as schema-present but not connected.
+8. The power SHALL state that starting/stopping local Docker observability services is user-invoked.
+
+### Requirement 8: Add the analytics power
+
+**User Story:** As an agent changing events or KPIs, I want routing through the existing consent and event contracts, so that analytics remains privacy-safe and consistent.
+
+#### Acceptance Criteria
+
+1. The Config Rewriter SHALL create `.kiro/powers/analytics/POWER.md` with valid power front matter and repo-specific keywords.
+2. The power SHALL route to `site/lib/analytics/emitTransport.ts`, `emitSiteEvent.ts`, `eventQueue.ts`, `conversionContract.ts`, `siteEvents.ts`, `kpiEvents.ts`, `kpiIntegrity.ts`, and `site/lib/consent.ts`.
+3. The power SHALL define the consent contract: accepted emits; undecided queues; rejected drops.
+4. The power SHALL require new events to reuse the taxonomy/privacy filtering in `conversionContract.ts` rather than bypassing it.
+5. The power SHALL identify Vercel Analytics and Speed Insights as wired.
+6. GA4/Zaraz SHALL be described as wired only where current live components/configuration confirm it; CSP allowance alone is insufficient evidence.
+7. The power SHALL state that no analytics MCP is installed unless a runtime connection is added later.
+
+### Requirement 9: Add the security power
+
+**User Story:** As an agent touching a security boundary, I want routing to the repo's actual fail-closed controls and checks.
+
+#### Acceptance Criteria
+
+1. The Config Rewriter SHALL create `.kiro/powers/security/POWER.md` with valid power front matter and repo-specific keywords.
+2. The power SHALL route CSP, nonce, protected routes, and security headers to `site/proxy.ts`.
+3. The power SHALL route CSRF to `site/lib/security/csrf.ts`, untrusted SVG validation to `site/lib/security/svgSanitizer.ts`, origin/upload checks to `site/lib/security/`, and rate limiting to `site/lib/rateLimit.ts`.
+4. The power SHALL distinguish the strict SVG validator from the weaker regex sanitizer and SHALL NOT recommend the weaker sanitizer as an untrusted-input boundary.
+5. The power SHALL preserve fail-closed invariants for AI-scoped production rate limits and protected/member-only routes.
+6. The power SHALL route secret/API/security checks to the existing root/ops commands, including `scan:secrets`, `ops lint:secrets`, `test:audit:api-routes`, and `test:audit:eslint-disable`, while stating that test-like commands require explicit user authorization.
+7. The power SHALL identify GitHub security schemas as schema-present but not connected.
+8. The power SHALL note the Cloudflare worker's RFC 9116 security response without treating it as an MCP capability.
+
+### Requirement 10: Create the canonical post-state index and verify the rewrite
+
+**User Story:** As an agent entering the repo, I want one accurate inventory of Kiro configuration and capability status.
+
+#### Acceptance Criteria
+
+1. The Config Rewriter SHALL create `.kiro/steering/INDEX.md` with `inclusion: manual`.
+2. The index SHALL list all remaining steering files and inclusion modes, all 4 hooks with actual triggers, the sole agent, all 9 retained skills, all 4 powers, and both settings files.
+3. The index SHALL document MCP status using the terms wired, schema present, and not installed.
+4. The index SHALL include removed references and their replacements where applicable.
+5. A static post-state audit SHALL verify the exact manifest, valid JSON, valid steering/power front matter, absence of the deleted workflow bundle, and absence of stale stack claims.
+6. A repo-relative reference audit SHALL verify paths in `.kiro/**/*.{md,json}` while classifying external URLs, globs, commands, environment variables, and explicitly uninstalled capabilities separately.
+7. The module audit SHALL verify 25 top-level TypeScript files and 43 test files at the destination and the `./reviewers` import.
+8. No implementation task SHALL claim a test, typecheck, gate, coverage run, browser check, or local-service startup passed unless the user explicitly authorized it and an observed result exists.
+9. If authorized, the narrowest applicable moved-module validation is `pnpm run typecheck:scripts`; broader gates remain outside this spec unless explicitly requested.

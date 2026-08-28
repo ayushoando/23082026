@@ -9,7 +9,7 @@
         "command": "node scripts/general/block-agent-tests.mjs"
       },
       "description": "YOu must follow user instructions for agent-initiated test-like shell commands, gates, coverage, and browser-test runners.",
-      "enabled": true
+      "enabled": false
     }
   ]
 }

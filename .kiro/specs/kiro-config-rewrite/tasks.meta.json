@@ -1,0 +1,556 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Enumerate `.kiro/steering`, `.kiro/skills`, `.kiro/agents`, `.kiro/hooks`, `.kiro/powers`, `.kiro/settings`, `.kiro/templates`, and `.kiro/kiro-repo-guidance-setup` from the live worktree.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914883769
+      },
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914897554
+      },
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787915054397
+      }
+    ],
+    "1.2 Confirm the governance source contains 25 top-level `.ts` modules and 43 `.ts` test files before moving anything.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914883838
+      },
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787915063094
+      },
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787915112460
+      }
+    ],
+    "1.3 Confirm Git tracks no destination files under `scripts/kiro-repo-guidance-setup/`; do not infer destination state from `docs/architecture/scripts-stale-review.csv`.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914883902
+      },
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787915120248
+      },
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787915191178
+      }
+    ],
+    "1.4 Record any deviation from the design manifest before continuing; do not silently delete an unexpected file.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914883974
+      },
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787915200906
+      },
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787915347608
+      }
+    ],
+    "2.1 Delete the six skill directories: `ai-framing`, `ai-framing-template`, `claude-code-workflow`, `deep-research`, `prd`, and `prfaq`.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914884061
+      },
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787915359369
+      },
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787915454937
+      }
+    ],
+    "2.2 Delete the six mirrored workflow guides from `.kiro/agents/`: `AI_Framing_Agent.md`, `AI_Framing_Template.md`, `Claude_Code_Workflow.md`, `Deep_Research_Agent.md`, `PRD_Creation_Guide.md`, and `PRFAQ_Guide.md`.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914884118
+      },
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787915462778
+      },
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787915692206
+      }
+    ],
+    "2.3 Delete `.kiro/steering/product-workflow.md`.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914884181
+      },
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787915699710
+      },
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787915788319
+      },
+      {
+        "executionId": "a9e94038-97d4-4f91-bc52-65907fa6bbcc",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787915826570
+      },
+      {
+        "executionId": "a9e94038-97d4-4f91-bc52-65907fa6bbcc",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787915864273
+      }
+    ],
+    "2.4 Delete `.kiro/templates/ProjectDashboard_Template.html` and `.kiro/templates/ScreenIndex_Template.html`; remove `.kiro/templates/` if empty.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914884227
+      },
+      {
+        "executionId": "a9e94038-97d4-4f91-bc52-65907fa6bbcc",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787915874013
+      },
+      {
+        "executionId": "a9e94038-97d4-4f91-bc52-65907fa6bbcc",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787915965020
+      }
+    ],
+    "2.5 Confirm `.kiro/agents/spec-task-runner.md` remains and the nine retained skill directories are untouched.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914884277
+      },
+      {
+        "executionId": "a9e94038-97d4-4f91-bc52-65907fa6bbcc",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787915974299
+      },
+      {
+        "executionId": "a9e94038-97d4-4f91-bc52-65907fa6bbcc",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787916045092
+      }
+    ],
+    "2.6 Confirm no `plans/prompts/` directory was created by this work.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914884334
+      },
+      {
+        "executionId": "a9e94038-97d4-4f91-bc52-65907fa6bbcc",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787916054614
+      },
+      {
+        "executionId": "a9e94038-97d4-4f91-bc52-65907fa6bbcc",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787916125719
+      }
+    ],
+    "3.1 Delete `.kiro/steering/product-context.md`, `spec.md`, and `spec-guide.md`.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914884396
+      },
+      {
+        "executionId": "a9e94038-97d4-4f91-bc52-65907fa6bbcc",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787916136544
+      },
+      {
+        "executionId": "a9e94038-97d4-4f91-bc52-65907fa6bbcc",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787916325680
+      }
+    ],
+    "3.2 Rewrite `.kiro/steering/tech-stack.md` with `inclusion: always` and the audited stack/paths from Requirements 3.4–3.6 and design \"Consolidate steering\".": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914884450
+      },
+      {
+        "executionId": "a9e94038-97d4-4f91-bc52-65907fa6bbcc",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787916338891
+      },
+      {
+        "executionId": "a9e94038-97d4-4f91-bc52-65907fa6bbcc",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787916479696
+      }
+    ],
+    "3.3 Rewrite `.kiro/steering/agent-behavior.md` to use pnpm, `site/` paths, both migration directories, `Failures.md`, `plans/PLAN.md`, `plans/README.md`, `AGENTS.md`, and `Agents/01-standard.md`.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914884503
+      },
+      {
+        "executionId": "a9e94038-97d4-4f91-bc52-65907fa6bbcc",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787916486770
+      },
+      {
+        "executionId": "a9e94038-97d4-4f91-bc52-65907fa6bbcc",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787916595071
+      }
+    ],
+    "3.4 Add `inclusion: always` to `.kiro/steering/coding-standards.md` and replace stale root-level app/lib/component paths with the actual `site/` layout without weakening its rules.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914884555
+      },
+      {
+        "executionId": "a9e94038-97d4-4f91-bc52-65907fa6bbcc",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787916603281
+      }
+    ],
+    "3.5 Inspect all retained domain steering front matter and path references; preserve intentional fileMatch/manual inclusion behavior.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914884611
+      }
+    ],
+    "3.6 Remove stale Datadog-RUM/Sentry claims and references to deleted workflow assets from retained steering.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914884662
+      }
+    ],
+    "4.1 Create `scripts/kiro-repo-guidance-setup/`.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914884714
+      }
+    ],
+    "4.2 Move all 25 top-level TypeScript modules from `.kiro/kiro-repo-guidance-setup/` to the new directory, preserving filenames and content.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914884808
+      }
+    ],
+    "4.3 Move the complete tests subtree (43 TypeScript files) to `scripts/kiro-repo-guidance-setup/tests/`, preserving its directory structure.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914884864
+      }
+    ],
+    "4.4 In moved `pipeline.ts`, change only the confirmed broken reviewers import to `from \"./reviewers\"`.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914884920
+      }
+    ],
+    "4.5 Inspect moved modules for paths made invalid by relocation; update only relocation-caused paths, documenting each change.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914884972
+      }
+    ],
+    "4.6 Create `scripts/kiro-repo-guidance-setup/README.md` with purpose, non-runtime status, primary entry points, test location, and relocation history.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914885027
+      }
+    ],
+    "4.7 Remove the empty source directory and verify no `.kiro` file references the old path.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914885080
+      }
+    ],
+    "5.1 Rewrite `.kiro/hooks/domain-fast-check.json`: preserve the test skip, Studio/Planner boundary branch, and FOCSS/UI branch; replace every other branch with successful pass-through.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914885132
+      }
+    ],
+    "5.2 Confirm `domain-fast-check.json` contains no typecheck, test, coverage, build, browser-runner, or Docker-service command.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914885185
+      }
+    ],
+    "5.3 Keep `block-agent-tests.json` trigger `PostTaskExec`; replace only its garbled description with an accurate concise description.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914885237
+      }
+    ],
+    "5.4 Create `.kiro/hooks/session-start-orient.json` as an agent-action `SessionStart` hook instructing the agent to read `AGENTS.md` sections 1–3 and `Agents/01-standard.md`.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914885290
+      }
+    ],
+    "5.5 Leave `ltm-postturn-capture.json` unchanged.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914885343
+      }
+    ],
+    "6.1 Create `.kiro/settings/mcp.json` using the Kiro MCP schema and an empty `mcpServers` object; document local schemas as unconnected without inventing server commands or credentials.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914885396
+      }
+    ],
+    "6.2 Create `.kiro/powers/observability/POWER.md` using the wired/not-wired boundaries in Requirement 7 and design \"Observability power\".": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914885442
+      }
+    ],
+    "6.3 Create `.kiro/powers/analytics/POWER.md` using Requirement 8 and design \"Analytics power\".": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914885494
+      }
+    ],
+    "6.4 Create `.kiro/powers/security/POWER.md` using Requirement 9 and design \"Security power\".": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914885547
+      }
+    ],
+    "6.5 Verify each power directory name matches its front-matter `name`; none ships an MCP server.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914885602
+      }
+    ],
+    "7.1 Rewrite `.kiro/powers/oando-workflow/POWER.md` to remove deleted workflow-skill routing and stale Datadog assumptions.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914885653
+      }
+    ],
+    "7.2 Add routing to `observability`, `analytics`, and `security`, while preserving repo-map, graph-impact, fork-boundary, FOCSS, migration, and user-authorized verification routing.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914885703
+      }
+    ],
+    "7.3 Correct all references to `block-agent-tests` so they describe its actual `PostTaskExec` trigger.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914885755
+      }
+    ],
+    "7.4 Update `.kiro/powers/oando-workflow/steering/routing.md` only where its skill/power/MCP/hook inventory no longer matches the post-state.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914885799
+      }
+    ],
+    "7.5 Update retained skills that call the hook `PreToolUse`; do not change hook lifecycle semantics.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914885854
+      }
+    ],
+    "8.1 Create `.kiro/steering/INDEX.md` with `inclusion: manual`.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914885905
+      }
+    ],
+    "8.2 List all 16 remaining steering files with inclusion mode and purpose.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914885968
+      }
+    ],
+    "8.3 List all four hooks and their actual triggers/actions.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914886022
+      }
+    ],
+    "8.4 List the sole agent, all nine retained skills, all four powers, and both settings files.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914886075
+      }
+    ],
+    "8.5 Document capability status: wired, schema present, and not installed; include the four root MCP schema directories and the gitignored Datadog cache distinction.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914886120
+      }
+    ],
+    "8.6 Add a removed-references table covering deleted steering, skills, agent guides, templates, and the old guidance-module path.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914886171
+      }
+    ],
+    "9.1 Manifest audit: compare the live `.kiro` tree to the design target state; confirm deleted bundle paths are absent and retained paths exist.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914886226
+      }
+    ],
+    "9.2 Steering audit: parse front matter for every remaining steering file and confirm valid explicit inclusion values.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914886279
+      }
+    ],
+    "9.3 Agent/skill audit: confirm exactly one agent and nine skills; search `.kiro` for all deleted workflow names and fix remaining references.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914886335
+      }
+    ],
+    "9.4 Power audit: confirm four powers, matching front-matter names, no bundled MCP servers, and no false installed-capability claims.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914886387
+      }
+    ],
+    "9.5 Hook/MCP JSON audit: parse every hook and `settings/mcp.json`; verify `mcpServers` is empty and `domain-fast-check` has no prohibited commands.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914886444
+      }
+    ],
+    "9.6 Guidance-module audit: confirm 25 top-level modules, 43 test files, sibling `reviewers.ts`, `pipeline.ts` importing `./reviewers`, and no old source directory.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914886493
+      }
+    ],
+    "9.7 Reference audit: validate repo-relative paths in `.kiro/**/*.{md,json}` while excluding classified external URLs, globs, commands, environment variables, and explicitly uninstalled capabilities.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914886602
+      }
+    ],
+    "9.8 Stale-claim audit: confirm no retained steering claims Next.js 14, npm as package manager, ESLint config, root `/supabase/`, Datadog RUM, Sentry, or deleted workflow assets.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914886656
+      }
+    ],
+    "9.9 Re-read `steering/INDEX.md` and reconcile it with the final filesystem after all fixes.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914886716
+      }
+    ],
+    "10.1 If the user explicitly authorizes it and the active hook permits it, run `pnpm run typecheck:scripts` as the narrowest validation for the relocated TypeScript module.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914886762
+      }
+    ],
+    "10.2 Record the exact observed result; do not infer success from historical report files.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914886818
+      }
+    ],
+    "10.3 Do not run broader tests/gates/browser checks unless separately and explicitly requested.": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787914886868
+      }
+    ],
+    "1. Capture the live pre-state manifest": [
+      {
+        "executionId": "a3343fa5-159e-41bf-a7b0-3f8d93807204",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787915347649
+      }
+    ],
+    "2. Remove the generic product-workflow bundle": [
+      {
+        "executionId": "a9e94038-97d4-4f91-bc52-65907fa6bbcc",
+        "chatSessionId": "sess_15feda86-f3cd-4033-bdf7-d8002673fc5c",
+        "timestamp": 1787916126883
+      }
+    ]
+  }
+}
