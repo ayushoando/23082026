@@ -15,11 +15,18 @@ const optionalEnvUrl = z.string().url().optional();
 
 const serverSchema = {
   OPENAI_API_KEY: optionalEnvString,
+  OPENAI_MODEL: optionalEnvString,
   OPENROUTER_API_KEY_PRIMARY: optionalEnvString,
   OPENROUTER_API_KEY_BACKUP: optionalEnvString,
   OPENROUTER_MODEL: optionalEnvString,
   GEMINI_API_KEY: optionalEnvString,
   GEMINI_MODEL: optionalEnvString,
+  BEDROCK_MODEL: optionalEnvString,
+  AWS_REGION: optionalEnvString,
+  AWS_ACCESS_KEY_ID: optionalEnvString,
+  AWS_SECRET_ACCESS_KEY: optionalEnvString,
+  AWS_SESSION_TOKEN: optionalEnvString,
+  AWS_BEARER_TOKEN_BEDROCK: optionalEnvString,
   LANCE_DB_URI: optionalEnvString,
   PRODUCTS_DATABASE_URL: optionalEnvUrl,
   SUPABASE_AUTH_DATABASE_URL: optionalEnvUrl,
@@ -32,11 +39,18 @@ const serverSchema = {
 
 type ServerEnv = {
   OPENAI_API_KEY?: string;
+  OPENAI_MODEL?: string;
   OPENROUTER_API_KEY_PRIMARY?: string;
   OPENROUTER_API_KEY_BACKUP?: string;
   OPENROUTER_MODEL?: string;
   GEMINI_API_KEY?: string;
   GEMINI_MODEL?: string;
+  BEDROCK_MODEL?: string;
+  AWS_REGION?: string;
+  AWS_ACCESS_KEY_ID?: string;
+  AWS_SECRET_ACCESS_KEY?: string;
+  AWS_SESSION_TOKEN?: string;
+  AWS_BEARER_TOKEN_BEDROCK?: string;
   LANCE_DB_URI?: string;
   PRODUCTS_DATABASE_URL?: string;
   SUPABASE_AUTH_DATABASE_URL?: string;
@@ -99,11 +113,18 @@ function buildRuntimeEnv(source: NodeJS.ProcessEnv) {
   const cf = resolveCloudflarePair(source);
   return {
     OPENAI_API_KEY: source.OPENAI_API_KEY,
+    OPENAI_MODEL: source.OPENAI_MODEL,
     OPENROUTER_API_KEY_PRIMARY: source.OPENROUTER_API_KEY_PRIMARY,
     OPENROUTER_API_KEY_BACKUP: source.OPENROUTER_API_KEY_BACKUP,
     OPENROUTER_MODEL: source.OPENROUTER_MODEL,
     GEMINI_API_KEY: source.GEMINI_API_KEY,
     GEMINI_MODEL: source.GEMINI_MODEL,
+    BEDROCK_MODEL: source.BEDROCK_MODEL,
+    AWS_REGION: source.AWS_REGION,
+    AWS_ACCESS_KEY_ID: source.AWS_ACCESS_KEY_ID,
+    AWS_SECRET_ACCESS_KEY: source.AWS_SECRET_ACCESS_KEY,
+    AWS_SESSION_TOKEN: source.AWS_SESSION_TOKEN,
+    AWS_BEARER_TOKEN_BEDROCK: source.AWS_BEARER_TOKEN_BEDROCK,
     LANCE_DB_URI: source.LANCE_DB_URI,
     PRODUCTS_DATABASE_URL: source.PRODUCTS_DATABASE_URL,
     SUPABASE_AUTH_DATABASE_URL: source.SUPABASE_AUTH_DATABASE_URL,

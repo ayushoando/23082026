@@ -231,6 +231,7 @@ describe("@planner/lib/plannerApi typed error classification and signal forwardi
         expect(err).toBeInstanceOf(PlannerApiError);
         const apiErr = err as PlannerApiError;
         expect(apiErr.status).toBe(404);
+        expect(apiErr.code).toBe("RESOURCE_NOT_FOUND");
         expect(apiErr.isNotFound).toBe(true);
         expect(apiErr.isTransient).toBe(false);
         expect(apiErr.message).toBe("Project not found");
@@ -244,7 +245,7 @@ describe("@planner/lib/plannerApi typed error classification and signal forwardi
     // HTTP 401 with "Authentication required", not 404 or 429.
     it("throws PlannerApiError with status 401, isUnauthorized true, isTransient/isNotFound false", async () => {
       browserApiMocks.browserApiFetch.mockResolvedValueOnce(
-        jsonResponse({ error: { message: "Authentication required" } }, 401),
+        jsonResponse({ error: { message: "Authentication required", code: "AUTH_REQUIRED" } }, 401),
       );
       try {
         await getProject("demo-plan");
@@ -253,6 +254,7 @@ describe("@planner/lib/plannerApi typed error classification and signal forwardi
         expect(err).toBeInstanceOf(PlannerApiError);
         const apiErr = err as PlannerApiError;
         expect(apiErr.status).toBe(401);
+        expect(apiErr.code).toBe("AUTH_REQUIRED");
         expect(apiErr.isUnauthorized).toBe(true);
         expect(apiErr.isForbidden).toBe(false);
         expect(apiErr.isNotFound).toBe(false);
@@ -273,6 +275,7 @@ describe("@planner/lib/plannerApi typed error classification and signal forwardi
         expect(err).toBeInstanceOf(PlannerApiError);
         const apiErr = err as PlannerApiError;
         expect(apiErr.status).toBe(403);
+        expect(apiErr.code).toBe("INSUFFICIENT_PERMISSIONS");
         expect(apiErr.isForbidden).toBe(true);
         expect(apiErr.isUnauthorized).toBe(false);
         expect(apiErr.isTransient).toBe(false);
@@ -292,6 +295,7 @@ describe("@planner/lib/plannerApi typed error classification and signal forwardi
         expect(err).toBeInstanceOf(PlannerApiError);
         const apiErr = err as PlannerApiError;
         expect(apiErr.status).toBe(429);
+        expect(apiErr.code).toBe("RATE_LIMIT_EXCEEDED");
         expect(apiErr.isTransient).toBe(true);
         expect(apiErr.isNotFound).toBe(false);
       }
@@ -308,6 +312,7 @@ describe("@planner/lib/plannerApi typed error classification and signal forwardi
         expect(err).toBeInstanceOf(PlannerApiError);
         const apiErr = err as PlannerApiError;
         expect(apiErr.status).toBe(503);
+        expect(apiErr.code).toBe("SERVICE_UNAVAILABLE");
         expect(apiErr.isTransient).toBe(true);
         expect(apiErr.isNotFound).toBe(false);
       }
@@ -363,7 +368,7 @@ describe("@planner/lib/plannerApi typed error classification and signal forwardi
     });
 
     it("isAbortError returns false for a PlannerApiError", () => {
-      const err = new PlannerApiError(404, "Not found");
+      const err = new PlannerApiError(404, "RESOURCE_NOT_FOUND", "Not found");
       expect(isAbortError(err)).toBe(false);
     });
   });

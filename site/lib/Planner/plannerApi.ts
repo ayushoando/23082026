@@ -46,8 +46,8 @@ export type PlannerApiErrorCode =
 
 /**
  * Typed error thrown for non-OK Planner API responses.
- * Carries the HTTP status and optional detail text so callers can classify
- * 404 vs transient (429/5xx/network) without parsing the message string.
+ * Carries the HTTP status, error code, and optional detail text so callers can
+ * classify 401 vs 404 vs transient (429/5xx/network) without parsing the message string.
  *
  * The `message` property preserves backward-compatible text for existing callers
  * that check `e.message.includes("404")` etc.
@@ -55,13 +55,16 @@ export type PlannerApiErrorCode =
 export class PlannerApiError extends Error {
   /** HTTP status code from the response (e.g. 404, 429, 503). */
   readonly status: number;
+  /** Stable machine-readable error code (mirrors server-side API_ERROR_CODES). */
+  readonly code: PlannerApiErrorCode;
   /** Safe detail string extracted from the response body, if available. */
   readonly detail: string | undefined;
 
-  constructor(status: number, message: string, detail?: string) {
+  constructor(status: number, code: PlannerApiErrorCode, message: string, detail?: string) {
     super(message);
     this.name = "PlannerApiError";
     this.status = status;
+    this.code = code;
     this.detail = detail;
   }
 
@@ -114,12 +117,16 @@ export function isAbortError(err: unknown): err is DOMException {
 async function readJson<T>(res: Response): Promise<T> {
   if (!res.ok) {
     let detail = `Request failed (${res.status})`;
+    let code: PlannerApiErrorCode = PLANNER_API_ERROR_CODES.INTERNAL_ERROR;
+    
     try {
       const body = (await res.json()) as {
         detail?: string;
-        error?: { message?: string } | string;
+        error?: { code?: string; message?: string } | string;
         message?: string;
       };
+      
+      // Extract detail/message from response body
       if (typeof body.detail === "string" && body.detail) {
         detail = body.detail;
       } else if (typeof body.message === "string" && body.message) {
@@ -134,10 +141,65 @@ async function readJson<T>(res: Response): Promise<T> {
       ) {
         detail = body.error.message;
       }
+      
+      // Extract error code if present in the response
+      if (
+        body.error &&
+        typeof body.error === "object" &&
+        typeof body.error.code === "string" &&
+        body.error.code
+      ) {
+        // Map the server code to our mirrored codes
+        const serverCode = body.error.code as PlannerApiErrorCode;
+        if (Object.values(PLANNER_API_ERROR_CODES).includes(serverCode)) {
+          code = serverCode;
+        }
+      }
+      
+      // Fallback code mapping based on HTTP status
+      if (!body.error || typeof body.error !== "object" || !body.error.code) {
+        switch (res.status) {
+          case 400:
+            code = PLANNER_API_ERROR_CODES.INVALID_INPUT;
+            break;
+          case 401:
+            code = PLANNER_API_ERROR_CODES.AUTH_REQUIRED;
+            break;
+          case 403:
+            code = PLANNER_API_ERROR_CODES.INSUFFICIENT_PERMISSIONS;
+            break;
+          case 404:
+            code = PLANNER_API_ERROR_CODES.RESOURCE_NOT_FOUND;
+            break;
+          case 429:
+            code = PLANNER_API_ERROR_CODES.RATE_LIMIT_EXCEEDED;
+            break;
+          case 503:
+            code = PLANNER_API_ERROR_CODES.SERVICE_UNAVAILABLE;
+            break;
+          default:
+            code = PLANNER_API_ERROR_CODES.INTERNAL_ERROR;
+        }
+      }
     } catch {
       /* non-JSON error body */
+      // Set code based on status for non-JSON responses
+      switch (res.status) {
+        case 401:
+          code = PLANNER_API_ERROR_CODES.AUTH_REQUIRED;
+          break;
+        case 404:
+          code = PLANNER_API_ERROR_CODES.RESOURCE_NOT_FOUND;
+          break;
+        case 429:
+          code = PLANNER_API_ERROR_CODES.RATE_LIMIT_EXCEEDED;
+          break;
+        case 503:
+          code = PLANNER_API_ERROR_CODES.SERVICE_UNAVAILABLE;
+          break;
+      }
     }
-    throw new PlannerApiError(res.status, detail, detail);
+    throw new PlannerApiError(res.status, code, detail, detail);
   }
   if (res.status === 204) {
     return undefined as T;

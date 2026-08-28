@@ -80,8 +80,8 @@ vi.mock("fabric", () => ({
 const mockFabricRef = { current: null };
 vi.mock("@planner/hooks/usePlannerFabric", () => ({
   useFabric: () => ({
-    wrapperRef: { current: null },
-    canvasElRef: { current: null },
+    wrapperRef: { current: document.createElement("div") },
+    canvasElRef: { current: document.createElement("canvas") },
     fabricRef: mockFabricRef,
     ready: true,
   }),
@@ -192,7 +192,12 @@ vi.mock("@planner/components/ui/PlannerDockPanelButtons", () => ({
 }));
 vi.mock("@planner/components/dock/PlannerDockPanels", () => ({
   PlannerBoqPanel: () => null,
+  PlannerCatalogPanel: () => null,
   PlannerColorPanel: () => null,
+  PlannerLayersPanel: () => null,
+  PlannerPropsPanel: () => null,
+  PlannerSheetPanel: () => null,
+  PlannerToolsPanel: () => null,
   PlannerValidationPanel: () => null,
 }));
 vi.mock("@planner/lib/plannerExporters", () => ({

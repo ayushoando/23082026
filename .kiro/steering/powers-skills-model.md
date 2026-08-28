@@ -54,3 +54,8 @@ licensing compliance.
 ## In this workspace
 - In this workspace, the installed powers are discoverable from the global installed-power registry and their MCP servers from the global Kiro MCP settings. The repository-local `oando-workflow` power intentionally ships an empty `mcp.json` and routes to those global servers; do not populate the local manifest.
 - Repository tests and gates are user-invoked only. Do not load `verify-and-gate` for automatic validation, do not enable automatic test hooks, and do not run test-like shell commands. The `block-agent-tests` hook remains an unconditional hard block because its PreToolUse payload cannot safely represent a trusted user-invocation exception.
+
+## Kiro configuration boundary — hard rule
+- Any repository change that configures, extends, repairs, or documents Kiro must be made under `.kiro/` only.
+- Do not create or modify Kiro configuration, steering, hooks, agents, skills, powers, or related repository guidance outside `.kiro/`.
+- This boundary governs repository file changes; it does not prohibit reading official Kiro documentation or using the Kiro CLI.

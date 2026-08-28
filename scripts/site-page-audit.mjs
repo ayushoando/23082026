@@ -5,7 +5,11 @@ import { createJiti } from "jiti";
 import { extractRouteRecords } from "../tech-docs-generator/scripts/extract-routes.mjs";
 
 const BASE = process.env.AUDIT_BASE_URL?.trim() || "http://localhost:3000";
-const OUT = path.resolve(readArg("--out", "results/site/page-audit"));
+// E1.8 — default output directory includes the base URL label so a localhost run
+// can never again be stored as `production` (the 2026-08-26 run's actual baseUrl
+// was localhost but its directory was named `page-audit-production-complete`).
+const DEFAULT_OUT_DIR = `results/site/page-audit-${new URL(BASE).hostname.replace(/[.:]/g, "-")}`;
+const OUT = path.resolve(readArg("--out", DEFAULT_OUT_DIR));
 const ROUTE_RECORDS = extractRouteRecords({ repoRoot: process.cwd() });
 const VIEWPORTS = [
   { key: "w1920", width: 1920, height: 1080, isMobile: false },

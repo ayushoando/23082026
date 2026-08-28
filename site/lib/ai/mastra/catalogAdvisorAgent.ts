@@ -2,7 +2,7 @@ import "server-only";
 
 import type { Agent } from "@mastra/core/agent";
 
-import { resolveAdvisorModelChain } from "./providers";
+import { resolveAdvisorModelChain, toMastraModel } from "./providers";
 import { getAdvisorMemory } from "./advisorMemory";
 import { createCatalogVectorQueryTool, ensureCatalogVectorIndex } from "./catalogRag";
 
@@ -16,7 +16,7 @@ export async function getCatalogAdvisorAgent() {
   await ensureCatalogVectorIndex();
 
   const { Agent } = await import("@mastra/core/agent");
-  const [primaryModel] = resolveAdvisorModelChain();
+  const [primaryTarget] = resolveAdvisorModelChain();
   const catalogSearchTool = createCatalogVectorQueryTool();
 
   catalogAdvisorAgent = new Agent({
@@ -24,7 +24,7 @@ export async function getCatalogAdvisorAgent() {
     name: "Catalog Advisor",
     instructions:
       "You are an enterprise workspace engineering consultant for One & Only Furniture. Use catalog_vector_search when product or page context would improve the answer.",
-    model: primaryModel ?? "google/gemini-2.5-flash",
+    model: toMastraModel(primaryTarget) ?? "google/gemini-2.5-flash",
     memory: getAdvisorMemory(),
     ...(catalogSearchTool
       ? {

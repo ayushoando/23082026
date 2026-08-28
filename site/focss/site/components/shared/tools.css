@@ -1,0 +1,126 @@
+/* ==========================================================================
+   Calculator tools — office-space-calculator, meeting-room-capacity-calculator
+   
+   Shared styling for calculator placeholder pages that render unstyled content.
+   These pages are live marketing pages with `indexable: false` that currently
+   render `div.tools-engine-placeholder` and `div.tools-faq` without any CSS rules.
+   
+   Owner: site/app/(site)/tools/*/page.tsx
+   Scope: Calculator placeholder pages only
+   Status: Temporary styling until interactive calculators are built
+   -------------------------------------------------------------------------- */
+
+/* Calculator engine placeholder
+   ---------------------------------------- */
+.tools-engine-placeholder {
+  position: relative;
+  margin: var(--space-8) 0;
+  padding: var(--space-8);
+  background: var(--color-white-50);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-2xl);
+  text-align: center;
+}
+
+.tools-engine-placeholder::before {
+  content: "⏳";
+  display: block;
+  font-size: 3rem;
+  line-height: 1;
+  margin-bottom: var(--space-4);
+  opacity: 0.6;
+}
+
+.tools-engine-placeholder p {
+  margin: 0;
+  font-size: var(--type-body-lg-size);
+  line-height: var(--type-body-lg-line-height);
+  color: var(--text-secondary);
+  max-width: 36rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (width >= theme(--breakpoint-md)) {
+  .tools-engine-placeholder {
+    padding: var(--space-12);
+  }
+  
+  .tools-engine-placeholder::before {
+    font-size: 4rem;
+    margin-bottom: var(--space-6);
+  }
+}
+
+/* Calculator FAQ section
+   ---------------------------------------- */
+.tools-faq {
+  margin-top: var(--space-12);
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--border-soft);
+}
+
+.tools-faq h2 {
+  margin-bottom: var(--space-6);
+  font-size: var(--type-title-sm-size);
+  font-weight: var(--type-title-sm-weight);
+  line-height: var(--type-title-sm-line-height);
+  color: var(--text-primary);
+}
+
+.tools-faq dl {
+  display: grid;
+  gap: var(--space-6);
+  margin: 0;
+}
+
+.tools-faq div {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.tools-faq dt {
+  font-weight: 600;
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line-height);
+  color: var(--text-primary);
+}
+
+.tools-faq dd {
+  margin: 0;
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line-height);
+  color: var(--text-secondary);
+  padding-left: var(--space-4);
+  border-left: 2px solid var(--border-soft);
+}
+
+@media (width >= theme(--breakpoint-md)) {
+  .tools-faq {
+    margin-top: var(--space-16);
+    padding-top: var(--space-12);
+  }
+  
+  .tools-faq h2 {
+    margin-bottom: var(--space-8);
+  }
+  
+  .tools-faq dl {
+    gap: var(--space-8);
+  }
+  
+  .tools-faq dd {
+    padding-left: var(--space-6);
+  }
+}
+
+/* Calculator page specific overrides for home-section context
+   ---------------------------------------- */
+.home-section .tools-engine-placeholder {
+  margin-top: var(--space-10);
+  margin-bottom: var(--space-10);
+}
+
+.home-section .tools-faq {
+  margin-top: var(--space-10);
+}

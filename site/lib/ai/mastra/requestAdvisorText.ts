@@ -4,7 +4,7 @@ import type { Agent } from "@mastra/core/agent";
 
 import { getAdvisorAgent } from "./advisorAgent";
 import { getCatalogAdvisorAgent } from "./catalogAdvisorAgent";
-import type { AdvisorModelTarget } from "./providers";
+import { toMastraModel, type AdvisorModelTarget } from "./providers";
 
 export type AdvisorChatMessage = {
   role: "system" | "user" | "assistant";
@@ -47,7 +47,7 @@ async function requestAgentText(
   options: RequestAdvisorMessagesOptions = {},
 ): Promise<string> {
   const executionOptions = {
-    model: target,
+    model: toMastraModel(target),
     abortSignal: options.signal,
     modelSettings: {
       temperature: options.temperature ?? 0.4,
