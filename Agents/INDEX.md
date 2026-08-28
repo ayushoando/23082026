@@ -30,7 +30,7 @@ change; that trio drifted once and failed the gate on files that were present.
 
 ## Authority
 
-```
+```text
 user instruction  >  live code + fresh commands  >  AGENTS.md  >  Agents/  >  docs/
 ```
 

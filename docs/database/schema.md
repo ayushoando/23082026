@@ -6,16 +6,16 @@ This reference assigns tables and migrations to the Products and Admin Supabase 
 
 ## Two databases
 
-Genuinely separate Supabase projects — confirmed by pooler user, not by convention.
+The repository configures two separate Supabase projects with distinct references, migration directories, and client factories.
 
 | DB | Project ref | Env | Migrations / Drizzle |
 |----|-------------|-----|----------------------|
 | **Products** | `erpweaiypimorcunaimz` | `PRODUCTS_DATABASE_URL` | `site/platform/supabase/migrations/` · `site/platform/drizzle/schema/catalog.ts` |
 | **Admin / Planner** | `rxzpznmxbaoxpikowmfc` | `SUPABASE_AUTH_DATABASE_URL` | `site/platform/supabase/migrations.admin/` · `site/platform/drizzle/schema/planner.ts` |
 
-`SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_URL` both point at the **products**
-project, so the `catalog-assets` storage bucket and the products DB are one
-project — asset bytes and their metadata rows live together.
+`SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_URL` both point at the **Products**
+project. The `catalog-assets` bucket stores uploaded asset bytes there; the
+`furniture_catalog` and `block_descriptors` rows remain in **Admin**.
 
 Clients: `@/platform/supabase/supabaseAdmin.ts` (products, service role),
 `auth-admin.ts` (admin, service role), `server.ts` (request-scoped anon).
@@ -41,7 +41,7 @@ The following tables are represented by current Admin migrations and generated t
 
 | Table | Role |
 |-------|------|
-| `oando_plans` | **Live Planner documents** (`payload` jsonb); FK `user_id → profiles.id` |
+| `oando_plans` | Planner document table (`payload` jsonb); FK `user_id → profiles.id` |
 | `profiles` | User row — `id`, `display_name`, `avatar_url`, `created_at` only |
 | `planner_handoffs` | BOQ handoff records (customer contact + BOQ) |
 | `planner_settings` | Planner preferences |
@@ -73,7 +73,7 @@ They predate the `oando_plans` cutover and had zero readers in `site/` or
 
 ## RLS
 
-Enabled on every table in both databases.
+Migration sources configure RLS and policies for both databases. Hosted enforcement remains present-but-unverified until an authorized environment observation records it.
 
 - Catalog + `furniture_catalog`: public `select`, writes service-role.
 - `customer_queries`: public insert.
@@ -97,11 +97,11 @@ reads fail with "permission denied for table" despite a matching policy.
 
 | Goal | Command |
 |------|---------|
-| Apply Products | `pnpm run ops db:apply` (`-- --dry` to plan first) |
-| Apply Admin | `pnpm run ops db:apply:admin` |
+| Apply Products | `pnpm run db:apply -- --dry`, then reviewed `pnpm run db:apply` |
+| Apply Admin | `pnpm run db:apply:admin -- --dry`, then reviewed `pnpm run db:apply:admin` |
 | Seed furniture library | `pnpm run seed:furniture` |
-| Regenerate admin types | `pnpm run ops db:types:admin` |
-| Regenerate products types | `pnpm run ops db:types` (needs Supabase CLI) |
+| Regenerate admin types | `pnpm run db:types:admin` |
+| Regenerate products types | `pnpm run db:types` |
 | Verify Admin Drizzle | `pnpm run ops db:sync-drizzle` |
 | Advisors | `pnpm run ops db:advisors` / `:admin` |
 

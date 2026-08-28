@@ -1,231 +1,81 @@
 # Programme governance rules
 
-This reference defines enforceable programme constraints and identifies whether enforcement is automated, manual, historical, or pending. Authority order remains user instruction > live repository evidence > [`AGENTS.md`](../../AGENTS.md) > [`Agents/`](../../Agents/INDEX.md) > `docs/`; no status or command result here overrides that order.
+This reference defines programme constraints and their evidence boundaries. Authority order is current user instruction > live repository evidence > [`AGENTS.md`](../../AGENTS.md) > [`Agents/`](../../Agents/INDEX.md) > `docs/`.
 
-**Status:** rules and configured enforcement routes are reference facts; dated measurements and “current” values below are historical until an exact authorized command is observed. Active hard blockers live only in [`Failures.md`](../../Failures.md).
+## Status vocabulary
 
-**This document does not stand alone.** `../../Agents/*.md` (indexed at
-`Agents/INDEX.md`) binds every session in this repository, programme or not — CSS lock
-([`Agents/07-css.md`](../../Agents/07-css.md)), test discipline
-([`Agents/02-testing.md`](../../Agents/02-testing.md)), failure recording
-([`Agents/04-failures.md`](../../Agents/04-failures.md)), documentation bar
-([`Agents/05-documentation.md`](../../Agents/05-documentation.md)). Where a rule here
-restates one from `Agents/`, `Agents/` is the source; this file exists to make it
-phase-enforceable, not to re-derive it. Where the two would conflict,
-`Agents/01-standard.md`'s own top rule applies: **User Wins**, then live code + fresh commands.
+Use `observed`, `configured`, `present-but-unverified`, `planned`, `historical`, `deprecated`, `blocked`, or `pending-owner-validation`. A declared command is configured, not passed. Active hard blockers belong only in [`Failures.md`](../../Failures.md).
 
-Established: 2026-07-28 · Applies from `3698209b`
+## Execution and evidence
 
-Every rule carries an enforcement column. `AUTOMATED` names the command that fails on
-violation. `MANUAL REVIEW` means no check exists and none is currently possible — those are
-the gaps, listed together in §8 so they cannot hide.
-
----
-
-## 1. Rules of engagement
-
-These four bind the worker, not the code. They are not automatable and are not marked as
-gaps — they are conditions of doing the work at all.
-
-| ID | Rule |
-|---|---|
-| **E1 — Prefer evidence** | If a task is not covered by a rule here, or two rules conflict, apply the repository authority order: current user instruction, live code and fresh command output, `AGENTS.md`, `Agents/`, then `docs/`. Proceed with the smallest sound owned change; request confirmation for destructive or production-affecting operations. |
-| **E2 — Prefer current phase** | Prefer the current phase. Related fixes needed for evidence or a green gate are allowed. Do not expand into unrelated rewrites. |
-| **E3 — Evidence, not assertion** | A checklist item is complete only with attached evidence: command output, a CI run reference, or a before/after figure. Self-assertion is not evidence. "I verified this" is not evidence. |
-| **E4 — Retire deliberately** | Removal is allowed, but it must be recoverable and listed on the current task. **Git history is the archive** for anything git tracks — files, scripts, dependencies, tests — so deleting them is fine once the task names them; do not copy them into `.archive/` as well. `.archive/` is only for material that must stay browsable without git archaeology (superseded essays, retired index pages). **Database objects are the exception**: rows are not in git, so retire a table by moving it to the `archive` schema or by a migration with a working `-- rollback`, never a bare `drop table`. List what goes on the task first. |
-| **E5 — Read-only production** | Production filesystem is read-only. All runtime writes must route through mode-aware wrappers (`plannerPersistenceMode.ts`, `furnitureCatalogMode.ts`). Raw disk helpers and dual-write are forbidden in production paths. |
-
-Two corollaries, both learned the hard way in this repository:
-
-- **Never pipe a gate command into `tail` or `head`.** It masks the exit code. A
-  non-compliant file was pushed on 2026-07-27 because `check:failures` was run through a
-  pipe and its failure was invisible.
-- **Report `verified`, `not tested` and `could-not-reproduce` as three different words.**
-
-## 2. Status and reporting
-
-| ID | Rule | Enforcement |
+| ID | Rule | Evidence |
 |---|---|---|
-| **S1** | Live plan lives under **`plans/`**; evidence → `results/`. Phase A audit MD archive removed — do not recreate. | `AUTOMATED` — `check:plans-purity` verifies `plans/` exists (via `check:docs-all`) |
-| **S2** | No unsolicited summary/analysis dumps. Findings go in `Failures.md` (not free-form report trees). | `AUTOMATED` — `pnpm run check:governance` |
-| **S3** | Every unresolved blocker is in `Failures.md` with a repro command and an owning phase. Removed when fixed, not struck through. | `PARTIAL` — `check:failures` rejects resolution/history language only. Presence of a repro command and an owning phase is **not** checked |
-| **S4** | Plan documents do not carry duplicated status. One ledger, one place. | `MANUAL REVIEW` |
+| E1 | Work from the repository root with `pnpm`; never create worktrees. | Static process inspection |
+| E2 | Preserve unrelated and pre-existing work; use explicit, disjoint ownership for concurrent work. | Diff and ownership review |
+| E3 | Run tests, typechecks, gates, builds, browser checks, coverage, and test-like commands only with exact current-session authorization and enabled-hook permission. | Authorization and command record |
+| E4 | Record exact command, arguments, working directory, exit status, scope, and redacted result. An unobserved command is unrun. | Command record |
+| E5 | Generated `results/` output is not authority or proof without its originating source or command. | Evidence review |
+| E6 | Retire tracked files through named tasks and Git history; never create duplicate archives. | Plan and diff review |
 
-No live `docs/audits/` tree. Blockers: root `Failures.md`. FOCSS token ratchet: `pnpm run check:style-tokens` + `config/quality/style-token-baseline.json`. Old dumps may exist under `.archive/docs/audits/` or git history only.
+## Architecture and persistence
 
-## 3. Styling — FOCSS + React Aria (product/admin)
-
-| ID | Rule | Enforcement |
+| ID | Rule | Evidence |
 |---|---|---|
-| **C1** | FOCSS import direction, fences and module graph hold. No cycles. | `AUTOMATED` — `pnpm run verify:focss` |
-| **C2** | The UI contract scheme freeze holds. | `AUTOMATED` — `node scripts/general/lint-ui-contract.mjs --strict` |
-| **C3** | No raw hex, `rgb()` or `rgba()` outside the token layer. Colour comes from a token. | `AUTOMATED` — `pnpm run check:style-tokens` (ratchet vs `config/quality/style-token-baseline.json`) |
-| **C4** | No raw `px` literal in a class string or inline style. Size comes from the scale. | `AUTOMATED` — same check |
-| **C5** | No Tailwind arbitrary value where a scale step or token exists. Layout-shape arbitraries (`fr`, `vh`, `aspect`, `minmax`) are permitted. | `AUTOMATED` — same check |
-| **C6** | Framework state selectors (`data-[state=…]`, `aria-[…]`, `group-has-[…]`) used as idiom are not false-positive token hits. | `AUTOMATED` — exclusion inside the C3–C5 check |
-| **C7** | Controls under `site/components/ui/` consume tokens; they do not define palette values. | `AUTOMATED` — C3–C5 on that path |
-| **C8** | Every composer class name in source has a matching CSS rule. | `AUTOMATED` — `pnpm run check:composer-styles` |
-| **C9** | Do not edit `site/app/css/core/locked/**`. | `MANUAL REVIEW` |
-| **C10** | Renderer-literal exceptions (Satori image routes) are declared, not discovered. | `AUTOMATED` — allowlist in the C3–C5 check; 12 findings excluded by it |
+| A1 | Studio and Planner remain forked and never import each other. | Static imports; authorized `pnpm run scan:boundaries` when requested |
+| A2 | Read the relevant installed Next.js 16 guide under `node_modules/next/dist/docs/` before changing Next.js code. | Task record |
+| A3 | Production filesystem is read-only. Runtime writes use mode-aware wrappers. | Selector and call-site inspection |
+| A4 | Persistence is exclusive: local disk only with `DEV_AUTH_BYPASS=1` outside production, Supabase otherwise; never dual-write. | Selector and store inspection |
+| A5 | Products owns marketing catalog/configurator migrations; Admin owns staff/customer data, plans, furniture, and descriptors. | Migration path and client inspection |
+| A6 | Route modules stay thin and delegate domain behavior to owning modules. | Static architecture review |
 
-C3–C5 run as a **per-file ratchet** (§7) against `config/quality/style-token-baseline.json` —
-fails when debt **increases**, not on pre-existing totals. Re-measure with `pnpm run check:style-tokens`.
+## Database and security
 
-**Stop-drift + correction plan** (allowed/forbidden, verification, phased remediation):
-[`focss-stop-drift.md`](./focss-stop-drift.md).
-
-## 4. Dependencies
-
-| ID | Rule | Enforcement |
+| ID | Rule | Evidence |
 |---|---|---|
-| **D1** | Prefer naming dependency add/remove/upgrade on the current plan when one exists. Not a stop gate. | `MANUAL REVIEW` |
-| **D2** | `pnpm exec`, never `npx`. `npx` resolves outside the lockfile. Count drifts — trust `pnpm run check:governance` (baseline ratchets down only). | `AUTOMATED` — `pnpm run check:governance` |
-| **D3** | Overrides live in `pnpm-workspace.yaml`. The `overrides` block in `package.json` is not read by pnpm and must not be relied on. | `AUTOMATED` — same check. **Currently 0** — no `overrides` block in `package.json` |
-| **D4** | No duplicate-capability dependencies without a recorded rationale. | `MANUAL REVIEW` |
-| **D5** | Every binary a script invokes is declared. `pwsh`, `python` and `vercel` are currently undeclared. | `MANUAL REVIEW` — not built |
-| **D6** | No gate-reachable script may require `pwsh` or `python`. CI runs `ubuntu-latest`. | `AUTOMATED` — same check. **Currently 0** |
-| **D7** | Critical and high CVEs are triaged before a phase closes. | `AUTOMATED` — `pnpm audit`. Measured 2026-08-01: **0 critical, 4 high**, 2 moderate, 1 low |
+| P1 | Every deployable schema change uses the owning Supabase migration directory. | Changed-path review |
+| P2 | Every migration includes `-- rollback`, grants, policies, and row-level security (RLS) appropriate to the table. | SQL inspection; configured governance check |
+| P3 | Run the owning dry-run before any authorized apply, then regenerate the owning database types. | Authorized command records |
+| P4 | Service-role and server credentials remain server-only and absent from client code, browser output, client-visible configuration, and documentation output. | Static security review |
+| P5 | Security capabilities unsupported by live configuration remain present-but-unverified or pending, never “enforced.” | Claim review |
+| P6 | A backup is proven only by a successful restore exercise. | Authorized restore evidence |
+| P7 | Risky procedures state prerequisites, target, impact, and recovery before executable steps. | Documentation review |
 
-## 5. Code
+## Styling and dependencies
 
-| ID | Rule | Enforcement |
+| ID | Rule | Evidence |
 |---|---|---|
-| **K1** | No new `eslint-disable` outside allowlists. Primary lint is **oxlint** via `pnpm run lint` (`site` → `tests` → `tech-docs-generator` → `scripts` → `config`). Residual disable-comment audit: `test:audit:eslint-disable`. | `AUTOMATED` — `pnpm run lint` · `pnpm run test:audit:eslint-disable` |
-| **K2** | `pnpm run typecheck` and `pnpm run typecheck:tests` exit 0. | `AUTOMATED`. Re-run after install — residual missing modules may still fail |
-| **K3** | `pnpm run build` exits 0. | `AUTOMATED`. Requires install + Next config completeness |
-| **K4** | No skipped and no hollow tests. | `AUTOMATED` — `test:audit:gate-skips`, `test:audit:hollow` |
-| **K5** | Coverage thresholds are never lowered to make a run green. | `MANUAL REVIEW` |
-| **K6** | Never weaken a threshold to make a test green. A failing honest number beats a passing adjusted one. | `MANUAL REVIEW` |
-| **K7** | The failing assertion is written before the fix. | `MANUAL REVIEW` |
-| **K8** | Route files stay thin; domain logic lives under `features/`. | `MANUAL REVIEW` |
-| **K9** | API route modules export only recognised handlers. | `AUTOMATED` — `pnpm run build` |
-| **K10** | Mutating API routes enforce CSRF. | `AUTOMATED` — `pnpm run test:audit:api-routes` |
+| C1 | `site/focss/` is the single product CSS home; preserve site, admin, Planner, and Studio zone boundaries. | Static import review |
+| C2 | Product presentation uses semantic tokens; do not add raw color or duplicate token systems. | Static review; configured token check |
+| C3 | Studio and Planner FOCSS never cross-import. | Static review; configured FOCSS check |
+| D1 | Use `pnpm exec`, never `npx`; product dependencies remain in root `package.json`. | Manifest and script review |
+| D2 | Add or upgrade dependencies only with explicit approval, a pinned version where required, and license/duplication review. | Plan and manifest review |
+| D3 | Never weaken a baseline or threshold to manufacture a green result. | Diff and evidence review |
 
-## 6. Security and data
+Configured CSS routes include `pnpm run verify:focss`, `pnpm run lint:ui:strict`, and `pnpm run check:style-tokens`. They remain unrun unless an authorized command record says otherwise. See [FOCSS drift prevention](./focss-stop-drift.md).
 
-| ID | Rule | Enforcement |
+## Testing and release
+
+| ID | Rule | Evidence |
 |---|---|---|
-| **P1** | No secret is committed. Only `.env.example` is tracked. | `AUTOMATED` — `pnpm run scan:secrets`, secretlint |
-| **P2** | `script-src` does not permit `'unsafe-inline'` in production when CSP is defined. Live CSP/security headers: **`site/proxy.ts`**. | `AUTOMATED` — `pnpm run check:governance` (+ unit coverage under `tests/unit/proxy.test.ts` when run) |
-| **P3** | The five security headers stay set. | `MANUAL REVIEW` — not built |
-| **P4** | Every migration has a `-- rollback` section. Migrations without one are tracked against the ratcheted baseline in `config/quality/governance-baseline.json`. A new migration lacking a rollback raises the count and fails the gate. | `AUTOMATED` — `pnpm run check:governance` |
-| **P5** | A backup is not proven until a restore has been exercised. | `MANUAL REVIEW` |
-| **P6** | Results contain no secrets and no production customer data. | `MANUAL REVIEW` |
+| T1 | `pnpm run test` contains two Vitest lanes; both completed summaries are required for a suite result. | Authorized command record |
+| T2 | Unit evidence does not prove browser behavior; disk-mode evidence does not prove hosted Supabase behavior. | Scope review |
+| T3 | Empty, skipped-only, or hollow tests do not count as validation. | Test review; authorized audit |
+| T4 | `pnpm run gate:fast` maps to `release:gate:fast`; `pnpm run gate` maps to the full `release:gate`. | Root `package.json` |
+| T5 | A failed authorized command remains failed until an authorized corrective rerun completes successfully. | Command ledger |
+| T6 | Coverage floors and quality thresholds may decrease debt but never rise to silence a failure. | Config diff and evidence |
 
-## 7. Ratchet rule
+## Documentation and status
 
-C3–C5, D2, P2 and P4 all have existing violations. Turning them on as blocking gates today
-would make every build red and teach everyone to bypass the gate.
+- Root files are front doors and procedures; `Agents/` contains session guidance; `docs/` contains durable reference; plan folders contain active coordination.
+- [`DOC-MAP.md`](../../DOC-MAP.md) owns placement, [`CONTENTS.md`](../../CONTENTS.md) owns the index, and [`Testing-handbook.md`](../../Testing-handbook.md) owns validation reporting.
+- Do not duplicate active status across durable docs. Historical values must be labeled and cannot close current work.
+- Documentation links use repository-relative destinations; external references use canonical HTTPS URLs.
+- Static Markdown review does not establish formal accessibility conformance.
 
-**They are enforced as a ratchet:** the baseline counts live in
-`config/quality/governance-baseline.json` (and `style-token-baseline.json` for C3–C5),
-and the check fails only when a count **increases**. Remediation lowers a baseline;
-it never rises. A phase may not close with a higher count than it started with.
+## Ratchets
 
-Re-baseline with `node scripts/general/check-governance.mjs --update`. That is a
-deliberate act recorded on the current task, not a way past a red gate.
+Governance and style-token baselines may contain existing debt. A ratchet can block increases without claiming the baseline is clean. Lower a baseline only after an authorized observation proves the count decreased and the active task records the change. Never raise a baseline to bypass a failure.
 
-> The commit `3698209b` this section previously cited as the baseline point does
-> not exist in this repository — `git cat-file` cannot resolve it. It appears to
-> have come from a pre-fork checkout. The baseline JSON files are the real record.
+## Definition of done
 
-This is the mechanism that satisfies "CI gates fail on new violations so drift can't be
-reintroduced after remediation".
-
-## 8. MANUAL REVIEW — the enforcement gaps
-
-No automated check exists for these, and none is proposed. They are checked by a person or
-not at all:
-
-`S1` one status file per phase · `S4` duplicated status · `C9` locked CSS ·
-`D1` dependency hygiene · `D4` duplicate capability · `D5` declared binaries ·
-`K5` coverage floor · `K6` threshold weakening · `K7` test-first · `K8` route thinness ·
-`P3` headers stay set · `P5` restore drill · `P6` result hygiene
-
-Thirteen of thirty-three rules. Every other rule maps to a command that CI runs.
-
-`D5` and `P3` were scoped for automation and **not built** — they are listed here rather
-than left marked `AUTOMATED` against a check that does not exist.
-
-## 9. Known breaches of this document at adoption
-
-Recorded rather than quietly fixed. Prefer evidence over inference. **Re-measured 2026-08-01** — several have since cleared:
-
-1. **S2** — unsolicited scripts inventory report (archive/git only).
-2. **C3, C4, C5** — token-bypass findings; re-measure with `pnpm run check:style-tokens`.
-3. ~~**C8** — `check:composer-styles` fails.~~ **Clear 2026-08-01** — "no unstyled class, no dead rule".
-4. ~~**K2** — `typecheck:tests` fails.~~ **Clear 2026-08-01.** `typecheck` and
-   `typecheck:tests` both exit 0. **K3** (`build`) not re-measured — do not claim it.
-5. **P2** — production CSP permits inline script. **Closed 2026-08-14 (PX-S09):** proxy emits per-request **nonce + `'self'`** (not `strict-dynamic` — Next 16 webpack does not stamp nonce on `/_next/static/chunks/*`); `P2_csp_unsafe_inline=0` (see the CSP rules earlier in this file).
-6. **P4** — migration rollback count held at the ratcheted baseline (`config/quality/governance-baseline.json`). Run `pnpm run check:governance` to verify.
-7. **D2** — `npx` still used in scripts; count from `pnpm run check:governance` (ratchet). One historically inside the PR gate path — re-check before claiming clear.
-8. ~~**The doc gates are enforced nowhere.**~~ **Fixed 2026-07-28.** The seven doc checks were reachable only through `pnpm run gate`, and no CI workflow ran `gate` — CI runs `release:gate:fast` and `release:gate` directly, so the entire documentation- and plan-integrity gate had never blocked a merge. They are now grouped as `check:docs-all` and appended to **both** CI chains, alongside `check:style-tokens` and `check:governance`. Verified by walking the workflow files: all nine are reachable, out of 49 CI-reachable scripts.
-
-Item 8 was the most important line in this document. It is the one thing that made every
-other rule optional.
-
-`gate:fast` is an alias for `release:gate:fast`. `gate` is an alias for the full `release:gate`; command presence is configured state, not an observed result.
-
-## 10. Programme goals
-
-Eight goals. Each has a target, an instrument that produces it, and a current value. A goal
-without a fresh measured value is **not measured** — never "probably fine". Derivation and
-the external standard behind each number: [`benchmarks.md`](./benchmarks.md).
-
-**“Current” column = 2026-07-28 capture** against a different tree shape. Re-measure before
-using as ship evidence. Several instruments assume Admin Product Studio / FlexLayout paths
-that are not present in the forked checkout.
-
-| ID | Goal | Target | Instrument | Current (2026-07-28 capture) |
-|---|---|---|---|---|
-| **G1** | Publish integrity | Identical ShapeDraft V2 input yields byte-identical PNG across 20 fixture renders; release identity never replaced on failure | `product-studio-png-cutover.spec.ts`, `P1.22` determinism fixtures | Cutover spec 8/8 (2026-07-25); determinism suite **not built** |
-| **G2** | No dead capability | 0 registry-declared tools without a complete create → edit → persist → reload loop | Registry liveness assertion (`P2.8`), `check:product-icons` | **1 dead tool** — Planner Text: `runtimeToolFor("text")` returns `"select"` |
-| **G3** | Accessibility | WCAG 2.2 AA, 0 unreviewed axe violations at 390/1440/1920, keyboard-complete journeys, NVDA task completion. **Exceeds AA** on target size (44×44 vs AA's 24×24) | `test:a11y`, `admin-product-studio-accessibility.spec.ts`, NVDA manual | **Not measured**; axe run blocked by B2 |
-| **G4** | Interaction performance | INP ≤ 200 ms p75, LCP ≤ 2.5 s p75, CLS ≤ 0.1, pointer→paint ≤ 100 ms, frame ≤ 16.7 ms — at the 500-entity / 2 000-item caps | `P2.20` probes | **Not measured** |
-| **G5** | Workspace ergonomics | Canvas ≥ 60 % of shell at every viewport; chrome overhead ≤ 40 %; no page-level scroll; scored benchmark **≥ 8.5/10** (raised from 6) | Layout/a11y Playwright until a dedicated ergonomics probe is restored (old `probe:w1.5-benchmark-admin` removed 2026-08-02) | 7.9/10 (2026-07-26, **predates `P1.23`–`P1.30`**); stored JSON pruned — **needs new instrument** |
-| **G6** | Configurability without invariant loss | Every optional tool toggleable and reorderable; mandatory set provably non-disableable; 0 bytes of raw React Flow / FlexLayout / Zustand JSON in persistence | Registry invariant tests, persistence assertions | Schema and registry implemented; **storage absent** (B1) |
-| **G7** | Delivery integrity | `pnpm run gate` exit 0; `typecheck:tests` exit 0; 0 skipped or hollow tests; admin publish-chain branch coverage > 90 % | `gate`, `test:audit:hollow`, `test:audit:gate-skips`, `test:coverage:admin` | Re-measure with fresh gate commands |
-| **G8** | Commercial truth | BOQ invents 0 prices; every missing price explicit in UI and export; price-book version pinned per review | `P2.5` tests | **Not started** |
-
-## 11. Evidence contract
-
-Evidence is a stored artifact plus a command that regenerates it. A sentence in a Markdown
-file is not evidence (E3).
-
-| Evidence | Location |
-|---|---|
-| Baseline | `results/browser/admin-planner-upgrade/baseline/` |
-| Product Studio browser runs | `results/browser/admin-planner-upgrade/product-studio/` |
-| Planner browser runs | `results/browser/admin-planner-upgrade/planner/` |
-| Site handoff | `results/browser/admin-planner-upgrade/site-handoff/` |
-| Accessibility and NVDA | `results/browser/admin-planner-upgrade/accessibility/` |
-| Performance | `results/browser/admin-planner-upgrade/performance/` |
-| Final owner journey | `results/browser/admin-planner-upgrade/final/` |
-| Test reports | `results/tests/` |
-| Active blockers | `Failures.md` |
-
-Only `baseline/` exists. Creating a directory is part of the work that fills it.
-
-Each browser evidence folder records route, viewport, active config revision, fixture,
-timestamp, commit SHA, console and network summary, and test or trace identity.
-
-## 12. Definition of done
-
-All eight goals in §10 hold with fresh measured values, and:
-
-- [ ] Every phase in the plan set is signed off against its exit gate.
-- [ ] Every goal G1–G8 has a measured value meeting or exceeding its target.
-- [ ] Every bar in [`benchmarks.md`](./benchmarks.md) is met, exceeded, or has a documented deviation.
-- [ ] `Failures.md` contains every unresolved blocker and no resolved one.
-- [ ] `pnpm run gate` and `pnpm run check:layout` exit 0.
-- [ ] Stored results contain no secrets and no production customer data.
-
-The 32 locked decisions in [`charter.md`](./charter.md) hold throughout. Breaking
-one is a programme change, not an implementation choice.
-
-## 13. Related
-
-- Goals: [`benchmarks.md`](./benchmarks.md)
-- FOCSS stop-drift: [`focss-stop-drift.md`](./focss-stop-drift.md)
-- Working loop: [`Agents/INDEX.md`](../../Agents/INDEX.md)
-- Blockers: [`Failures.md`](../../Failures.md)
+A programme task is complete only when its user-approved scope is implemented, required static review is closed, every authorized command has an honest terminal state, unresolved hard blockers are recorded in [`Failures.md`](../../Failures.md), and no unowned or excluded path was modified. Broader product goals remain `not-measured` until the evidence described in [benchmarks](./benchmarks.md) is observed.

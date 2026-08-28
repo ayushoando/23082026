@@ -4,7 +4,7 @@ This record is the evidence ledger for the bounded rewrite of the 34 approved Ma
 
 ## Execution status
 
-- Feature state: `in-progress`
+- Feature state: `complete` for required static Tasks 1–7, 9, and 10; optional command validation remains pending
 - Repository root: `D:\23082026`
 - Worktrees created: none
 - Additional agents used: none
@@ -75,7 +75,7 @@ Access attempts used canonical HTTPS URLs and public page content only; no repos
 | SRC-01 | W3C WAI | [Writing for Web Accessibility](https://www.w3.org/WAI/tips/writing/) | current; HTTP 200 | Clear headings, concise prose, meaningful links, explained acronyms, and purposeful alternatives | all 34 |
 | SRC-02 | W3C WAI | [Understanding Headings and Labels](https://www.w3.org/WAI/WCAG22/Understanding/headings-and-labels.html) | current; HTTP 200 | Headings and labels identify topic and purpose | all 34 |
 | SRC-03 | W3C WAI | [Understanding Link Purpose](https://www.w3.org/WAI/WCAG22/Understanding/link-purpose-in-context.html) | current; HTTP 200 | Link purpose must be understandable from text and context | all 34 |
-| SRC-04 | Diátaxis | [Diátaxis](https://diataxis.fr/) | unverified; HTTP 429 | Reader-need classification retained from approved design; no new claim derived from failed retrieval | all 34 |
+| SRC-04 | Diátaxis | [Diátaxis](https://diataxis.fr/) | current on second check; initial GET HTTP 429, later HEAD HTTP 200 | Reader-need classification retained from the approved design and confirmed against the canonical destination | all 34 |
 | SRC-05 | Microsoft | [Scannable content](https://learn.microsoft.com/en-us/style-guide/scannable-content/) | current; HTTP 200 | Front-load important information and use concise, parallel structure | all 34 |
 | SRC-06 | Microsoft | [Style quick start](https://learn.microsoft.com/en-us/contribute/content/style-quick-start) | current; HTTP 200 | Direct, task-oriented language and consistent terminology | all 34 |
 | SRC-07 | Google | [Accessible documentation](https://developers.google.com/style/accessibility) | current; HTTP 200 | Non-visual cues, accessible tables, acronym expansion, and parallel steps | all 34 |
@@ -149,40 +149,40 @@ Required checks for every row: scope, information architecture, language, access
 
 | Path | Audience | Need | Primary purpose | Authority role | Owner | Disposition | State | Evidence |
 |---|---|---|---|---|---|---|---|---|
-| `AGENTS.md` | all contributors | reference | Define the process floor | root authority | 4.1 | pending | not-reviewed | OP-01–13 |
-| `README.md` | product contributors | explanation | Introduce product and platform | root front door | 4.2 | pending | not-reviewed | CL-01,04–07 |
-| `START.md` | new contributors | tutorial | Provide first-run orientation | root onboarding | 4.2 | pending | not-reviewed | CL-01,03,06 |
-| `CONTENTS.md` | all readers | reference | Index canonical documentation | root navigation | 4.2 | pending | not-reviewed | canonical owners |
-| `DOC-MAP.md` | documentation maintainers | reference | Define placement and authority | root navigation | 4.2 | pending | not-reviewed | canonical owners |
-| `Failures.md` | maintainers | reference | Record active hard blockers | sole blocker record | 4.3 | pending | not-reviewed | CL-08 |
-| `HANDOVER.md` | next owner | explanation | Preserve historical handoff context | root operations | 4.3 | pending | not-reviewed | CF-05 |
-| `OPERATIONS_RUNBOOK.md` | operators | how-to | Deploy, migrate, back up, and recover safely | procedure owner | 4.3 | pending | not-reviewed | OP-07–10 |
-| `owners.md` | coordinators | how-to | Explain ownership and escalation | ownership reference | 4.3 | pending | not-reviewed | CL-03, CF-02 |
-| `Testing-handbook.md` | validators | how-to | Define validation evidence and lanes | evidence owner | 4.3 | pending | not-reviewed | OP-11–13 |
-| `Agents/INDEX.md` | agents | reference | Route to session handbooks | agent navigation | 4.4 | pending | not-reviewed | canonical owners |
-| `Agents/01-standard.md` | agents | how-to | Apply standard execution procedure | agent procedure | 4.4 | pending | not-reviewed | OP-01–13 |
-| `Agents/02-testing.md` | test authors | how-to | Apply testing rules | agent procedure | 4.4 | pending | not-reviewed | OP-11–13 |
-| `Agents/03-browser.md` | UI validators | how-to | Define browser evidence | evidence owner | 4.4 | pending | not-reviewed | OP-04,11–13 |
-| `Agents/04-failures.md` | agents | how-to | Record and remove blockers | agent procedure | 4.4 | pending | not-reviewed | CL-08 |
-| `Agents/05-documentation.md` | doc editors | how-to | Place and verify documentation | agent procedure | 4.4 | pending | not-reviewed | canonical owners |
-| `Agents/06-architecture.md` | implementers | how-to | Route architecture decisions | agent procedure | 4.4 | pending | not-reviewed | OP-05–09 |
-| `Agents/07-css.md` | style editors | how-to | Apply FOCSS workflow | agent procedure | 4.4 | pending | not-reviewed | CSS sources |
-| `Agents/research-gap-areas.md` | researchers | explanation | Preserve bounded research findings | research note | 4.5 | pending | not-reviewed | SRC register |
-| `Agents/research-practices.md` | researchers | how-to | Define evidence-led research practice | research note | 4.5 | pending | not-reviewed | SRC register |
-| `docs/README.md` | maintainers | reference | Index durable documentation | durable navigation | 4.6 | pending | not-reviewed | canonical owners |
-| `docs/architecture/css.md` | UI engineers | reference | Describe FOCSS architecture | durable reference | 4.6 | pending | not-reviewed | live FOCSS config |
-| `docs/architecture/layout.md` | contributors | reference | Map repository structure | durable reference | 4.6 | pending | not-reviewed | live paths |
-| `docs/architecture/product-map.md` | implementers | explanation | Explain product surfaces and placement | durable explanation | 4.6 | pending | not-reviewed | live routes and paths |
-| `docs/architecture/routes.md` | implementers | reference | Inventory page and API routes | durable reference | 4.6 | pending | not-reviewed | `site/app/**` |
-| `docs/architecture/scripts.md` | operators | reference | Explain command and script ownership | durable reference | 4.6 | pending | not-reviewed | package and scripts |
-| `docs/architecture/stack.md` | engineers | reference | Describe wired toolchain | durable reference | 4.6 | pending | not-reviewed | CL-01,07 |
-| `docs/database/drizzle.md` | data engineers | explanation | Explain database access wiring | durable explanation | 4.7 | pending | not-reviewed | OP-07–09 |
-| `docs/database/ops.md` | operators | how-to | Operate database persistence safely | durable how-to | 4.7 | pending | not-reviewed | OP-07–10 |
-| `docs/database/schema.md` | data engineers | reference | Define database ownership and schema | durable reference | 4.7 | pending | not-reviewed | OP-07–09 |
-| `docs/governance/benchmarks.md` | programme owners | reference | Define measurable bars and status | governance | 4.8 | pending | not-reviewed | evidence classes |
-| `docs/governance/charter.md` | programme owners | explanation | Preserve decisions with status | governance | 4.8 | pending | not-reviewed | live product sources |
-| `docs/governance/focss-stop-drift.md` | UI maintainers | how-to | Prevent and correct CSS drift | governance | 4.8 | pending | not-reviewed | CSS sources |
-| `docs/governance/rules.md` | programme owners | reference | Define enforceable programme rules | governance | 4.8 | pending | not-reviewed | package/config sources |
+| `AGENTS.md` | all contributors | reference | Define the process floor | root authority | 4.1 | rewritten | verified | OP-01–13 |
+| `README.md` | product contributors | explanation | Introduce product and platform | root front door | 4.2 | rewritten | verified | CL-01,04–07 |
+| `START.md` | new contributors | tutorial | Provide first-run orientation | root onboarding | 4.2 | rewritten | verified | CL-01,03,06 |
+| `CONTENTS.md` | all readers | reference | Index canonical documentation | root navigation | 4.2 | rewritten | verified | canonical owners |
+| `DOC-MAP.md` | documentation maintainers | reference | Define placement and authority | root navigation | 4.2 | rewritten | verified | canonical owners |
+| `Failures.md` | maintainers | reference | Record active hard blockers | sole blocker record | 4.3 | rewritten | verified | CL-08 |
+| `HANDOVER.md` | next owner | explanation | Preserve historical handoff context | root operations | 4.3 | rewritten | verified | CF-05 |
+| `OPERATIONS_RUNBOOK.md` | operators | how-to | Deploy, migrate, back up, and recover safely | procedure owner | 4.3 | rewritten | verified | OP-07–10 |
+| `owners.md` | coordinators | how-to | Explain ownership and escalation | ownership reference | 4.3 | rewritten | verified | CL-03, CF-02 |
+| `Testing-handbook.md` | validators | how-to | Define validation evidence and lanes | evidence owner | 4.3 | rewritten | verified | OP-11–13 |
+| `Agents/INDEX.md` | agents | reference | Route to session handbooks | agent navigation | 4.4 | rewritten | verified | canonical owners |
+| `Agents/01-standard.md` | agents | how-to | Apply standard execution procedure | agent procedure | 4.4 | rewritten | verified | OP-01–13 |
+| `Agents/02-testing.md` | test authors | how-to | Apply testing rules | agent procedure | 4.4 | rewritten | verified | OP-11–13 |
+| `Agents/03-browser.md` | UI validators | how-to | Define browser evidence | evidence owner | 4.4 | rewritten | verified | OP-04,11–13 |
+| `Agents/04-failures.md` | agents | how-to | Record and remove blockers | agent procedure | 4.4 | rewritten | verified | CL-08 |
+| `Agents/05-documentation.md` | doc editors | how-to | Place and verify documentation | agent procedure | 4.4 | rewritten | verified | canonical owners |
+| `Agents/06-architecture.md` | implementers | how-to | Route architecture decisions | agent procedure | 4.4 | rewritten | verified | OP-05–09 |
+| `Agents/07-css.md` | style editors | how-to | Apply FOCSS workflow | agent procedure | 4.4 | rewritten | verified | CSS sources |
+| `Agents/research-gap-areas.md` | researchers | explanation | Preserve bounded research findings | research note | 4.5 | rewritten | verified | SRC register |
+| `Agents/research-practices.md` | researchers | how-to | Define evidence-led research practice | research note | 4.5 | rewritten | verified | SRC register |
+| `docs/README.md` | maintainers | reference | Index durable documentation | durable navigation | 4.6 | rewritten | verified | canonical owners |
+| `docs/architecture/css.md` | UI engineers | reference | Describe FOCSS architecture | durable reference | 4.6 | rewritten | verified | live FOCSS config |
+| `docs/architecture/layout.md` | contributors | reference | Map repository structure | durable reference | 4.6 | rewritten | verified | live paths |
+| `docs/architecture/product-map.md` | implementers | explanation | Explain product surfaces and placement | durable explanation | 4.6 | rewritten | verified | live routes and paths |
+| `docs/architecture/routes.md` | implementers | reference | Inventory page and API routes | durable reference | 4.6 | rewritten | verified | `site/app/**` |
+| `docs/architecture/scripts.md` | operators | reference | Explain command and script ownership | durable reference | 4.6 | rewritten | verified | package and scripts |
+| `docs/architecture/stack.md` | engineers | reference | Describe wired toolchain | durable reference | 4.6 | rewritten | verified | CL-01,07 |
+| `docs/database/drizzle.md` | data engineers | explanation | Explain database access wiring | durable explanation | 4.7 | rewritten | verified | OP-07–09 |
+| `docs/database/ops.md` | operators | how-to | Operate database persistence safely | durable how-to | 4.7 | rewritten | verified | OP-07–10 |
+| `docs/database/schema.md` | data engineers | reference | Define database ownership and schema | durable reference | 4.7 | rewritten | verified | OP-07–09 |
+| `docs/governance/benchmarks.md` | programme owners | reference | Define measurable bars and status | governance | 4.8 | rewritten | verified | evidence classes |
+| `docs/governance/charter.md` | programme owners | explanation | Preserve decisions with status | governance | 4.8 | rewritten | verified | live product sources |
+| `docs/governance/focss-stop-drift.md` | UI maintainers | how-to | Prevent and correct CSS drift | governance | 4.8 | rewritten | verified | CSS sources |
+| `docs/governance/rules.md` | programme owners | reference | Define enforceable programme rules | governance | 4.8 | rewritten | verified | package/config sources |
 
 ## Command ledger
 
@@ -197,7 +197,7 @@ Static commands used so far: `git status --short --untracked-files=all`; `Get-Fi
 
 ## Review ledger
 
-First-pass and second-pass entries will be appended after each authority-ordered cohort. Static review does not establish runtime, renderer, test, build, browser, coverage, gate, or deployment success.
+First-pass and second-pass entries follow. Static review does not establish runtime, renderer, test, build, browser, coverage, gate, or deployment success.
 
 ### First review: cohort 1
 
@@ -231,7 +231,7 @@ All eight files are disposition `rewritten` and passed first static review: `Age
 - `Agents/research-gap-areas.md` — `rewritten`, first static review pass; unsupported best-practice mandates and stale plan claims replaced by bounded questions, status, and required evidence.
 - `Agents/research-practices.md` — `rewritten`, first static review pass; mixed product findings replaced by an authority-aware research method, evidence boundaries, security hygiene, and verified official citations.
 
-Diátaxis remains `unverified` because retrieval returned HTTP 429. No historical observation is presented as current repository truth. Security reviews are clear.
+At first review, Diátaxis was `unverified` because the initial retrieval returned HTTP 429; the later second-pass HTTP 200 recheck supersedes that temporary access state. No historical observation is presented as current repository truth. Security reviews are clear.
 
 ### First review: cohort 6
 
@@ -252,3 +252,93 @@ All four files are disposition `rewritten` and passed first static review: `docs
 ## First-pass checkpoint
 
 All 34 allowlisted paths have one provisional `rewritten` disposition, one file-specific first static review, all ten review dimensions considered, and a clear security result. The known-conflict reconciliation found one remaining in-scope stale `plans/PLAN.md` link in `AGENTS.md`; the owning cohort corrected it and statically rereviewed the plan navigation entry. Matching stale links in `workers/oando-worker-proxy/README.md`, `site/focss/README.md`, and `agent-reports/README.md` are outside the 34-path allowlist and were not modified. No same-level conflict remains. First-pass correction loops are closed; Tasks 8.1–8.4 remain unrun and pending authorization.
+
+## Second-pass review
+
+A fresh allowlist-ordered read covered all 34 final files independently of the first-pass conclusions. Each row below records static review of scope and path presence; unique title, purpose, audience need, headings, lists, tables, images, fences, and command blocks; CommonMark and accessibility; local links and anchors; external citations; commands, paths, dates, and repository facts; conflict closure; all five security dimensions; operational-contract preservation; and navigation agreement. `verified` means those static dimensions were satisfied; it is not command, renderer, runtime, test, browser, build, deployment, or hosted-environment evidence.
+
+| Path | Second-review result | Focused closure |
+|---|---|---|
+| `AGENTS.md` | verified | Generated Next.js block and sole H1 preserved; process-floor and plan link rereviewed |
+| `README.md` | verified | Architecture flow fence labelled `text` and rereviewed |
+| `START.md` | verified | No correction required |
+| `CONTENTS.md` | verified | Navigation destinations agree |
+| `DOC-MAP.md` | verified | Placement and authority destinations agree |
+| `Failures.md` | verified | Sole-blocker role retained |
+| `HANDOVER.md` | verified | Historical status remains explicit |
+| `OPERATIONS_RUNBOOK.md` | verified | Risk, dry-run, and recovery order retained |
+| `owners.md` | verified | Ownership and escalation remain evidence-honest |
+| `Testing-handbook.md` | verified | Evidence classes and authorization boundary retained |
+| `Agents/INDEX.md` | verified | Authority fence labelled `text` and rereviewed |
+| `Agents/01-standard.md` | verified | No correction required |
+| `Agents/02-testing.md` | verified | No correction required |
+| `Agents/03-browser.md` | verified | Browser-proof boundary retained |
+| `Agents/04-failures.md` | verified | Canonical blocker destination retained |
+| `Agents/05-documentation.md` | verified | Documentation placement retained |
+| `Agents/06-architecture.md` | verified | Next.js and fork prerequisites retained |
+| `Agents/07-css.md` | verified | FOCSS editing boundary retained |
+| `Agents/research-gap-areas.md` | verified | Findings remain bounded and status-classified |
+| `Agents/research-practices.md` | verified | Official-source method and security hygiene retained |
+| `docs/README.md` | verified | Count clarified as including index; scripts role corrected |
+| `docs/architecture/css.md` | verified | Configured/unrun command language retained |
+| `docs/architecture/layout.md` | verified | Live path map retained |
+| `docs/architecture/product-map.md` | verified | Blockquote fence and persistence wording rereviewed |
+| `docs/architecture/routes.md` | verified | Static inventory limitation retained |
+| `docs/architecture/scripts.md` | verified | Authority/reference role and present `scripts/tsconfig.json` retained |
+| `docs/architecture/stack.md` | verified | Live versions and integration status retained |
+| `docs/database/drizzle.md` | verified | Two-project and access boundaries retained |
+| `docs/database/ops.md` | verified | Asset-row ownership, target-vs-result, canonical apply commands, and local restore warning corrected and rereviewed |
+| `docs/database/schema.md` | verified | Hosted-state wording and Products asset bytes versus Admin catalog rows corrected and rereviewed |
+| `docs/governance/benchmarks.md` | verified | Targets remain distinct from observed results |
+| `docs/governance/charter.md` | verified | Historical decisions remain classified |
+| `docs/governance/focss-stop-drift.md` | verified | Adoption evidence labelled historical and inventory no longer labelled current |
+| `docs/governance/rules.md` | verified | Enforcement sources and status vocabulary retained |
+
+### Second-pass dependency and source closure
+
+The six shared navigation documents (`README.md`, `CONTENTS.md`, `DOC-MAP.md`, `Agents/INDEX.md`, `docs/README.md`, and `AGENTS.md`) agree on authority, onboarding, blocker, evidence, operations, agent, durable-documentation, and plan destinations. Focused corrections were routed to their original cohort owners (4.2, 4.4, 4.6, 4.7, and 4.8), then reread with affected references. No correction required an excluded path and no same-level authority conflict remains.
+
+All 12 canonical source destinations were rechecked with public HTTPS `HEAD` requests at approximately `2026-08-28T16:50Z`; each returned HTTP 200, including Diátaxis. The initial Diátaxis GET result of HTTP 429 remains recorded as retrieval history. Publisher authority, applicability, canonical destination, and supersession were reconsidered; no dependent corpus decision remains unverified. Displayed update dates remain `not-displayed` where static retrieval did not expose them.
+
+Design Properties 1–21 were applied as static acceptance checks. No property-based tests were implemented. Corpus membership is exactly 34 unique present paths; each has one owner, one `rewritten` disposition, two file-specific reviews, completed correction closure, evidence classification, and security review. No image requiring alternative text was introduced. Command examples are fenced or inline, risky procedures put warnings before execution, and no secret value or personal data appears. Optional command outcomes remain honestly `unrun`, not passed.
+
+## Containment and completion derivation
+
+Final static inspection found `34` allowlisted entries, `34` unique paths, `34` present paths, and `34` Git-tracked paths. Relative to the recorded baseline, all 34 corpus files were modified in place; none was created, deleted, moved, or renamed. Feature artifacts are `.kiro/specs/documentation-global-standards/implementation-record.md` (created during this feature, now tracked) and `.kiro/specs/documentation-global-standards/tasks.md` (modified). There are zero feature-owned changed-path exceptions.
+
+During execution, an external commit advanced `HEAD`/`origin/main` to `14639ce` and incorporated the 34 corpus rewrites, the implementation record, task status, protected-tree changes, application/support changes, tests, and temporary scripts in one commit. This agent did not create that commit and did not modify, revert, clean, stage, or otherwise integrate its out-of-scope paths. Post-commit focused corrections remain visible in the scoped working-tree diff. The concurrent out-of-scope working-tree paths reported by final `git status` are not feature-owned and are excluded from the ledger; their movement means they cannot be described as byte-identical to the session baseline, only as untouched by this feature.
+
+### Feature changed-path ledger
+
+| Outcome | Paths | Ownership / status |
+|---|---|---|
+| modified in place | `AGENTS.md`; `README.md`; `START.md`; `CONTENTS.md`; `DOC-MAP.md`; `Failures.md`; `HANDOVER.md`; `OPERATIONS_RUNBOOK.md`; `owners.md`; `Testing-handbook.md`; `Agents/INDEX.md`; `Agents/01-standard.md`; `Agents/02-testing.md`; `Agents/03-browser.md`; `Agents/04-failures.md`; `Agents/05-documentation.md`; `Agents/06-architecture.md`; `Agents/07-css.md`; `Agents/research-gap-areas.md`; `Agents/research-practices.md`; `docs/README.md`; `docs/architecture/css.md`; `docs/architecture/layout.md`; `docs/architecture/product-map.md`; `docs/architecture/routes.md`; `docs/architecture/scripts.md`; `docs/architecture/stack.md`; `docs/database/drizzle.md`; `docs/database/ops.md`; `docs/database/schema.md`; `docs/governance/benchmarks.md`; `docs/governance/charter.md`; `docs/governance/focss-stop-drift.md`; `docs/governance/rules.md` | allowlisted; sole owners 4.1–4.8; verified |
+| created, then externally committed while active | `.kiro/specs/documentation-global-standards/implementation-record.md` | permitted feature evidence artifact |
+| modified | `.kiro/specs/documentation-global-standards/tasks.md` | permitted task-status artifact |
+| deleted, moved, or renamed by feature | none | containment satisfied |
+
+Completion conditions are satisfied for all required static work: exact corpus membership, one resolved `rewritten` disposition and `verified` state per path, two file-specific reviews per path, focused correction closure, complete evidence/security classifications, no unresolved authority decision, and zero feature-owned containment exceptions. Optional Tasks 8.1–8.4 are not required completion outcomes and remain `unrun` because no exact command was authorized. Derived feature state: `complete` for Tasks 1–7, 9, and 10, with optional command validation pending and no behavioral-pass claim.
+
+## Final implementation summary
+
+All 34 approved documents have final disposition `rewritten` and state `verified` by two complete static reviews. Cohort-owned corrections and dependency rereviews are closed. Official-source status is current for the bounded editorial decisions: all 12 canonical destinations returned HTTP 200 on the second check; the initial Diátaxis 429 remains visible as history. No unresolved authority decision or out-of-scope documentation need blocks the required work.
+
+Static commands intentionally invoked from `D:\23082026` and observed:
+
+- `git status --short --untracked-files=all`: exit 0; reported feature paths plus concurrent out-of-scope test and temporary-script changes.
+- `git diff --name-status`: exit 0; reported current working-tree path outcomes; no feature-owned deletion or rename.
+- `git diff --stat`: exit 0; supplied a current working-tree summary only.
+- `git log -5 --oneline --decorate`: exit 0; showed concurrent `HEAD`/`origin/main` at `14639ce`.
+- `git show --name-status --format=fuller --stat 14639ce` and the equivalent for `aaf36a4`: exit 0; established which changes were incorporated concurrently.
+- Scoped `git status --short -- <allowlisted areas>`: exit 0; showed only current feature corrections and the two permitted spec artifacts in those areas.
+- PowerShell `Test-Path` plus `git ls-files --error-unmatch` over the exact allowlist: exit 0; `TOTAL=34 UNIQUE=34 PRESENT=34 TRACKED=34`.
+- Earlier `Get-FileHash -Algorithm SHA256` plus `git ls-files` and scoped Git status: successful after one syntactically invalid pipeline attempt; captured the clean baseline identities.
+- Public `Invoke-WebRequest -UseBasicParsing` GET/HEAD retrieval against canonical official sources: successful bounded retrieval; later HEAD check returned HTTP 200 for all 12. The first GET batch timed out at PowerShell's interactive security warning and disclosed no repository data.
+
+No test, typecheck, gate, build, coverage, browser runner/check, Docker command, database command, deployment, or test-like documentation command was intentionally invoked. Console text emitted by the execution environment alongside static Git commands is not treated as an observed validation result. No worktree was created. No subagent or worker handoff existed to review, and no worker-path integration correction was made. No unowned file was modified by this feature.
+
+Optional command states remain exactly: Task 8.1 `unrun`; Task 8.2 `unrun`; Task 8.3 `unrun`; Task 8.4 `unrun`. They are pending exact current-session authorization and hook permission, not passed.
+
+## Final checkpoint
+
+Internal static inspection confirms that this record contains the baseline, source, claim, conflict, operational, security, coverage, command, first-review, second-review, correction, containment, completion, and final-reporting records required by the approved design. The exact 34 documentation paths remain present and tracked. `tasks.md` and this record are the only permitted spec artifacts changed for this feature; `implementation-record.md` is the only feature-created artifact because `tasks.md` already existed. Optional Tasks 8.1–8.4 remain unchecked and `unrun`. Required Tasks 1–7, 9, and 10 are complete by static evidence. No prohibited validation was run or claimed, no worktree was created, and no feature write targeted an unowned path.

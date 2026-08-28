@@ -22,7 +22,7 @@ Disk only when `DEV_AUTH_BYPASS=1` (non-prod). Prod FS is read-only. Never dual-
 | Data | Supabase (prod) | Disk (dev) |
 |------|-----------------|------------|
 | Planner projects | `oando_plans` (admin) | `site/platform/Planner/data/projects/` |
-| Furniture library | `furniture_catalog` + `catalog-assets` (admin) | `site/platform/shared/data/furniture/` |
+| Furniture library | `furniture_catalog` rows (Admin); `catalog-assets` bytes (Products project) | `site/platform/shared/data/furniture/` |
 | Descriptors | `block_descriptors` (admin) | `site/inventory/descriptors/` |
 
 Selectors: `site/lib/Planner/plannerPersistenceMode.ts`, `site/lib/catalog/furnitureCatalogMode.ts`.
@@ -36,7 +36,7 @@ pnpm run ops db:advisors:performance
 pnpm run ops db:advisors:admin
 ```
 
-Ship bar: **0 SECURITY ERRORs** on Products and Admin (`scripts/db_advisors.ts`).
+Configured ship target: **0 SECURITY ERRORs** on Products and Admin (`scripts/db_advisors.ts`). This is not a current result without an authorized observed run.
 
 ## Seeding
 
@@ -49,10 +49,10 @@ Ship bar: **0 SECURITY ERRORs** on Products and Admin (`scripts/db_advisors.ts`)
 |------|---------|-----|
 | Marketing catalog | `pnpm run ops seed` | Products |
 | Configurator catalog | `pnpm run ops seed:configurator` | Products |
-| Planner managed rows | `pnpm run ops seed:managed` | Products (after `ops db:apply`) |
-| Furniture library | `pnpm run seed:furniture` | Admin (after `ops db:apply:admin`) |
-| Products migrations | `pnpm run ops db:apply` | Products |
-| Admin migrations | `pnpm run ops db:apply:admin` | Admin |
+| Planner managed rows | `pnpm run ops seed:managed` | Products (after reviewed `pnpm run db:apply -- --dry` and `pnpm run db:apply`) |
+| Furniture library | `pnpm run seed:furniture` | Admin (after reviewed `pnpm run db:apply:admin -- --dry` and `pnpm run db:apply:admin`) |
+| Products migrations | `pnpm run db:apply -- --dry`, then reviewed `pnpm run db:apply` | Products |
+| Admin migrations | `pnpm run db:apply:admin -- --dry`, then reviewed `pnpm run db:apply:admin` | Admin |
 | Admin schema verify | `pnpm run ops db:sync-drizzle` | Admin |
 
 `seed_direct.ts` is **deprecated** — not routine CI.
@@ -151,11 +151,13 @@ Database → Backups → restore/PITR on the matching project (Products or Admin
 
 ```powershell
 pnpm run ops db:test
-pnpm run ops db:apply -- --dry
-pnpm run ops db:apply:admin -- --dry
+pnpm run db:apply -- --dry
+pnpm run db:apply:admin -- --dry
 ```
 
 ## 3. Restore from R2 pg_dump
+
+**Warning — replacement risk:** `pg_restore` can overwrite or conflict with the selected database. Confirm the target URL points to the intended replacement environment, retain the source dump, and use the provider backup/PITR path for recovery before continuing.
 
 1. Download latest dump from R2 (`oando-asset-cdn` default).
 2. Create replacement Supabase projects if needed; get new URLs/keys.
@@ -168,7 +170,7 @@ pg_restore -d $env:PRODUCTS_DATABASE_URL --no-owner --no-acl -Fc products.dump
 
 Repeat for admin dump into the admin project.
 
-4. `pnpm run ops db:apply` · `pnpm run ops db:apply:admin`
+4. Run `pnpm run db:apply -- --dry` and `pnpm run db:apply:admin -- --dry`; after review, run `pnpm run db:apply` and `pnpm run db:apply:admin`.
 5. `pnpm run seed:furniture` (targets the **Admin** DB via `SUPABASE_AUTH_DATABASE_URL`) — the furniture library does not seed itself
 6. Update Vercel env → redeploy
 

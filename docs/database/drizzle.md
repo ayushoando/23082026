@@ -12,8 +12,8 @@ Two separate Supabase Postgres projects. Two ways to talk to them. Disk only whe
 
 | Role | Project ref | Postgres URL | HTTP URL + key | SQL migrations | Drizzle schema |
 |------|-------------|--------------|----------------|----------------|----------------|
-| **Products** | `erpweaiypimorcunaimz` | `PRODUCTS_DATABASE_URL` | `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` | `site/platform/supabase/migrations/` | `schema/catalog.ts` |
-| **Admin** | `rxzpznmxbaoxpikowmfc` | `SUPABASE_AUTH_DATABASE_URL` (fallback `PLANNER_DATABASE_URL`) | `NEXT_ADMIN_SUPABASE_URL` + `SUPABASE_ADMIN_SERVICE_ROLE_KEY` | `site/platform/supabase/migrations.admin/` | `schema/planner.ts` |
+| **Products** | `erpweaiypimorcunaimz` | `PRODUCTS_DATABASE_URL` | `SUPABASE_URL` + server-only `SUPABASE_SERVICE_ROLE_KEY` | `site/platform/supabase/migrations/` | `schema/catalog.ts` |
+| **Admin** | `rxzpznmxbaoxpikowmfc` | `SUPABASE_AUTH_DATABASE_URL` (fallback `PLANNER_DATABASE_URL`) | `NEXT_ADMIN_SUPABASE_URL` + server-only `SUPABASE_ADMIN_SERVICE_ROLE_KEY` | `site/platform/supabase/migrations.admin/` | `schema/planner.ts` |
 
 Staff / customers / furniture / descriptors → **Admin**. Marketing catalog / configurator / flags / themes → **Products**.
 
@@ -26,7 +26,7 @@ Staff / customers / furniture / descriptors → **Admin**. Marketing catalog / c
 | **Drizzle** | Postgres wire | `postgres` + `drizzle-orm/postgres-js` | `*_DATABASE_URL` | Yes (direct SQL) |
 | **Supabase JS** | HTTP PostgREST | `@supabase/supabase-js` | `*_SUPABASE_URL` + service-role or anon key | Service-role yes; anon no |
 
-HTTP URLs are Auth / REST only. Drizzle never uses them.
+Server-only service-role credentials bypass RLS and must remain absent from client code, browser output, and client-visible configuration. HTTP URLs are for Auth and REST; Drizzle uses only Postgres wire URLs.
 
 ```mermaid
 flowchart LR
@@ -196,4 +196,4 @@ drizzle-kit ledger under `site/platform/drizzle/migrations/` is **not** what `db
 
 - Table-by-table RLS → [`schema.md`](./schema.md)
 - Seed / backup / restore → [`ops.md`](./ops.md)
-- Proof a migration ran on an environment — run the command
+- Proof that a migration ran in an environment requires a separately authorized observation; this file records no such result.

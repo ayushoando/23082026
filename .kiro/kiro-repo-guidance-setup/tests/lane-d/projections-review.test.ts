@@ -386,7 +386,7 @@ function cleanSafetyRequest(overrides: Partial<SafetyReviewRequest> = {}): Safet
     snapshots: ["snapshot:lane-d-review"],
     knownGaps: { entries: [] },
     rollbackRecords: [rollbackRecord()],
-    proposedHandover: handoverRecord(evidenceResult.output),
+    proposedHandover: handoverRecord(evidenceReview),
     ...overrides,
   };
 }

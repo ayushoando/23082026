@@ -78,9 +78,9 @@ Authoritative debt measure: **`pnpm run check:style-tokens`** vs `config/quality
 
 **Lives here as durable governance, not as duplicated active-plan status.** When an active programme batch owns remediation, its indexed plan folder should link to this section rather than fork a second CSS ledger.
 
-Goal: migrate debt into tokens / FOCSS; ratchet baselines **down only**. Structural FOCSS (`verify:focss`) is already clean at adoption — debt is **token bypass** and **composer style coverage**, not a second CSS architecture.
+Goal: migrate debt into tokens / FOCSS; ratchet baselines **down only**. Historical adoption evidence classified structural FOCSS (`verify:focss`) as clean; current status requires a fresh authorized run. The recorded remediation focus is **token bypass** and **composer style coverage**, not a second CSS architecture.
 
-### Phase A — Inventory (current)
+### Phase A — Remediation inventory
 
 1. Re-run `pnpm run check:style-tokens` and `pnpm run ops check:composer-styles`; record exit codes and counts in `Failures.md` when they block ship.
 2. Do **not** treat ungated greps or archived hardcode-audit dumps as ship defect counts.

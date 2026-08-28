@@ -373,12 +373,8 @@ function cleanEvidenceRequest(decisions: readonly OwnerDecision[]): EvidenceRevi
   };
 }
 
-function buildHandover(): HandoverRecord {
-  const evidenceResult = createEvidenceCompatibilityReviewer().review(
-    cleanEvidenceRequest(baseDecisions()),
-  );
-  const evidenceReview = evidenceResult.output;
-  const evidenceHandoffId = evidenceReview?.handoff.handoffId ?? "handoff-EvidenceCompatibilityReviewer";
+function buildHandover(evidenceReview: ReviewResult): HandoverRecord {
+  const evidenceHandoffId = evidenceReview.handoff.handoffId;
   return {
     generatedAtUtc: "2026-08-25T00:00:00.000Z",
     reviewDateUtc: "2026-08-25",
@@ -460,17 +456,15 @@ describe("Property 13: EvidenceCompatibilityReviewer keeps unresolved decisions 
 
         const result = reviewer.review(request);
 
-        const blocking = decisions.filter(
-          (decision) =>
-            decision.approvalStatus === "rejected" || decision.approvalStatus === "expired",
-        );
+        const unresolved = decisions.filter(isUnresolved);
 
-        // A rejected/expired decision must block dependent enablement; the
-        // reviewer must never come back "pass" while such a decision exists.
-        if (blocking.length > 0) {
-          expect(result.status).toBe("blocked");
+        // Every pending, rejected, expired, or explicitly unresolved decision
+        // blocks dependent enablement. A fully approved and resolved ledger
+        // is the sole case that can pass this complete fixture.
+        expect(result.status).toBe(unresolved.length === 0 ? "pass" : "blocked");
+        if (unresolved.length > 0) {
           expect(result.blockers.length).toBeGreaterThan(0);
-          for (const decision of blocking) {
+          for (const decision of unresolved) {
             expect(
               result.blockers.some((blocker) => blocker.includes(decision.decisionId)),
             ).toBe(true);
@@ -526,15 +520,21 @@ describe("Property 13: sequential review never passes while an owner decision is
               : decision,
           );
 
+          const evidence = cleanEvidenceRequest(decisions);
+          const evidenceResult = createEvidenceCompatibilityReviewer().review(evidence);
+          const evidenceReview = evidenceResult.output;
+          if (evidenceReview === undefined) {
+            throw new Error("unresolved owner-decision fixture must produce an evidence review");
+          }
           const input: SequentialReviewInput = {
-            evidence: cleanEvidenceRequest(decisions),
+            evidence,
             safety: {
               approvalBoundaries: [approvalBoundary()],
               policyFindings: [],
               snapshots: ["snapshot-1"],
               knownGaps: { entries: [] },
               rollbackRecords: [rollbackRecord()],
-              proposedHandover: buildHandover(),
+              proposedHandover: buildHandover(evidenceReview),
             },
           };
           const before = JSON.stringify(input);
@@ -544,15 +544,11 @@ describe("Property 13: sequential review never passes while an owner decision is
           const target = decisions.find((decision) => decision.decisionId === targetId);
           if (target === undefined) throw new Error("target decision missing");
 
-          // A rejected/expired decision is a hard blocker: no both-pass, handoff
-          // blocked. pending / unresolvedStatus is a finding-level concern that
-          // still keeps the safe fallback but does not by itself fail the stage;
-          // in every case the reviewers must never emit an enabled-valid claim
-          // and must remain read-only with no rollback.
-          if (approvalStatus === "rejected" || approvalStatus === "expired") {
-            expect(output.bothReviewerStagesPass).toBe(false);
-            expect(output.blockedHandoff).toBe(true);
-          }
+          // Every pending, rejected, expired, or explicitly unresolved decision
+          // is a hard blocker: no both-pass handoff is allowed. The reviewers
+          // remain read-only and emit no rollback path in every case.
+          expect(output.bothReviewerStagesPass).toBe(false);
+          expect(output.blockedHandoff).toBe(true);
 
           const stages = [output.evidenceReview.output, output.safetyReview?.output];
           for (const stage of stages) {
@@ -582,15 +578,21 @@ describe("Property 13: sequential review never passes while an owner decision is
             approvalStatus,
             unresolvedStatus: "resolved" as const,
           }));
+          const evidence = cleanEvidenceRequest(decisions);
+          const evidenceResult = createEvidenceCompatibilityReviewer().review(evidence);
+          const evidenceReview = evidenceResult.output;
+          if (evidenceReview === undefined) {
+            throw new Error("resolved owner-decision fixture must produce an evidence review");
+          }
           const input: SequentialReviewInput = {
-            evidence: cleanEvidenceRequest(decisions),
+            evidence,
             safety: {
               approvalBoundaries: [approvalBoundary()],
               policyFindings: [],
               snapshots: ["snapshot-1"],
               knownGaps: { entries: [] },
               rollbackRecords: [rollbackRecord()],
-              proposedHandover: buildHandover(),
+              proposedHandover: buildHandover(evidenceReview),
             },
           };
           const output = runSequentialReview(input);

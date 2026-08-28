@@ -18,7 +18,7 @@ Use this index to find architecture, database, and governance references that sh
 | Stack (Node, Next, FOCSS, packages) | [`architecture/stack.md`](./architecture/stack.md) |
 | Pages + API | [`architecture/routes.md`](./architecture/routes.md) |
 | CSS | [`architecture/css.md`](./architecture/css.md) · [`governance/focss-stop-drift.md`](./governance/focss-stop-drift.md) |
-| Scripts, command authorities, and script inventory | [`architecture/scripts.md`](./architecture/scripts.md) · [catalog CSV](./architecture/scripts.csv) · [staleness CSV](./architecture/scripts-stale-review.csv) |
+| Scripts and command authorities | [`architecture/scripts.md`](./architecture/scripts.md) · [catalog CSV](./architecture/scripts.csv) · [staleness CSV](./architecture/scripts-stale-review.csv) |
 | Schema | [`database/schema.md`](./database/schema.md) |
 | Drizzle wiring | [`database/drizzle.md`](./database/drizzle.md) |
 | DB ops (modes, seed, restore) | [`database/ops.md`](./database/ops.md) |
@@ -30,12 +30,12 @@ Use this index to find architecture, database, and governance references that sh
 | Tech-docs package | [`../tech-docs-generator/README.md`](../tech-docs-generator/README.md) |
 | Blockers | [`../Failures.md`](../Failures.md) |
 
-## Layout (14 files)
+## Layout (14 files including this index)
 
 | Path | Owns |
 |------|------|
 | `architecture/layout.md` | Repository directory map (top-level + `site/`) |
-| `architecture/scripts.md` | Full tracked scripts catalog, command authorities, and documentation map |
+| `architecture/scripts.md` | Command authorities, script references, and documentation map |
 | `architecture/product-map.md` | Placement, Studio→Planner, source pointers, tech-docs |
 | `architecture/stack.md` | Toolchain, workspace, FOCSS-on-Tailwind, package truth |
 | `architecture/routes.md` | Page + API inventories |

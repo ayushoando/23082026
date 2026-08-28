@@ -50,6 +50,7 @@ import {
 } from "../../reviewers.ts";
 import {
   createRollbackManager,
+  type ExecutableRollbackRequest,
 } from "../../rollback.ts";
 import {
   ValidationRunnerService,
@@ -70,7 +71,6 @@ import {
   type KiroSurface,
   type KnownGap,
   type RollbackRecord,
-  type RollbackRequest,
   type ReviewResult,
   type SafetyReviewRequest,
   type SourceInventory,
@@ -403,7 +403,7 @@ function knownGap(overrides: Partial<KnownGap> = {}): KnownGap {
   };
 }
 
-function buildProposedHandover(evidenceReview?: ReviewResult): HandoverRecord {
+function buildProposedHandover(evidenceReview: ReviewResult): HandoverRecord {
   return {
     generatedAtUtc: "2026-08-25T00:00:00.000Z",
     reviewDateUtc: "2026-08-25",
@@ -416,7 +416,7 @@ function buildProposedHandover(evidenceReview?: ReviewResult): HandoverRecord {
     configurationPrecedenceMapRef: "precedence-1",
     capabilityDispositionTableRef: "disposition-1",
     reviewerStageRefs: [
-      evidenceReview?.handoff.handoffId ?? "handoff-EvidenceCompatibilityReviewer",
+      evidenceReview.handoff.handoffId,
       "handoff-SafetyRollbackReviewer",
     ],
     ownerDecisionRefs: [...OWNER_DECISION_IDS],
@@ -702,7 +702,7 @@ describe("Property 6: RollbackManager blocks later enablement when rollback is n
     // Generate rollback requests with one-or-more missing required fields. No
     // real bytes are ever written because every request is either incomplete or
     // references a snapshot that was never captured.
-    const requestArb: fc.Arbitrary<RollbackRequest & { readonly mode: "restore" }> = fc.record({
+    const requestArb: fc.Arbitrary<ExecutableRollbackRequest> = fc.record({
       rollbackId: fc.constantFrom("", "rb-x"),
       targetArtifactOrScope: fc.constantFrom("", "scripts/x.ts"),
       preChangeStateRef: fc.constantFrom("", "snapshot-missing"),
@@ -741,7 +741,7 @@ describe("Property 6: RollbackManager blocks later enablement when rollback is n
 
   it("a no-change disposition is rollback-ready and records 'no rollback applies' without mutation", () => {
     const manager = createRollbackManager();
-    const result = manager.restore({
+    const noChangeRequest = {
       rollbackId: "rb-nochange",
       targetArtifactOrScope: ".kiro/kiro-repo-guidance-setup/handover.ts",
       preChangeStateRef: "no-change",
@@ -749,7 +749,8 @@ describe("Property 6: RollbackManager blocks later enablement when rollback is n
       expectedSuccessSignal: "no mutation required",
       owner: "repository owner",
       mode: "no_change",
-    } as RollbackRequest & { readonly mode: "no_change" });
+    } satisfies ExecutableRollbackRequest;
+    const result = manager.restore(noChangeRequest);
 
     expect(result.status).toBe("pass");
     expect(result.output?.limitation).toBe("no rollback applies");

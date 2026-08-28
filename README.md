@@ -45,7 +45,7 @@ Studio and Planner are **fully forked** — `@studio/*` and `@planner/*` never i
 | Alias | `@studio/*` | `@planner/*` |
 | CSS | `site/focss/studio/` | `site/focss/planner/` |
 
-```
+```text
 POST /api/Studio/furniture → furniture_catalog (Admin) / disk (dev)
 GET  /api/Planner/catalog  ← same store
 ```

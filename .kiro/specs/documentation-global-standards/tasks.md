@@ -105,8 +105,8 @@ Rewrite and re-verify exactly the 34 Markdown files named by the approved requir
     - Ensure all authorized tests pass, ask the user if questions arise; if no test was authorized and observed, record it as unrun rather than passed.
     - _Requirements: 1.5–1.9, 3.4–3.9, 7.11–7.13, 8.3–8.8, 9.1–9.9, 10.11–10.14, 11.1, 11.9–11.11, 11.16–11.18_
 
-- [ ] 6. Perform a fresh complete second-pass review
-  - [ ] 6.1 Re-read and second-review the exact 34-path corpus in `.kiro/specs/documentation-global-standards/implementation-record.md`
+- [x] 6. Perform a fresh complete second-pass review
+  - [x] 6.1 Re-read and second-review the exact 34-path corpus in `.kiro/specs/documentation-global-standards/implementation-record.md`
     - Use fresh file reads in allowlist order; do not copy first-pass conclusions. Record a distinct second-review result for every path and every required dimension.
     - Verify exact corpus membership and path presence; unique title and purpose; reader need; heading/list/table/image/fence/command-block structure; CommonMark/accessibility; local links and anchors; external citations; evidence-backed commands, paths, dates, and repository facts; conflict closure; security; operational-contract preservation; and six-navigation-document agreement.
     - Recheck every official source for canonical destination, publisher authority, applicability, access, and supersession; mark failed retrieval and dependent decisions unverified without inventing a pass.
@@ -114,8 +114,8 @@ Rewrite and re-verify exactly the 34 Markdown files named by the approved requir
     - Apply all Design Properties 1–21 as static acceptance checks, explicitly excluding PBT implementation and command-pass claims.
     - _Requirements: 1.12, 2.2–2.10, 3.1–3.9, 4.1–4.10, 5.1–5.12, 6.1–6.14, 7.1–7.13, 8.1–8.9, 9.1–9.9, 10.1–10.14, 11.2–11.11, 11.21–11.24_
 
-- [ ] 7. Prove containment and derive the completion state
-  - [ ] 7.1 Finalize changed-path, coverage, and completion records in `.kiro/specs/documentation-global-standards/implementation-record.md`
+- [x] 7. Prove containment and derive the completion state
+  - [x] 7.1 Finalize changed-path, coverage, and completion records in `.kiro/specs/documentation-global-standards/implementation-record.md`
     - Compare baseline and final path maps and record every created, modified, deleted, or renamed path with ownership, allowlist status, and evidence.
     - Require all 34 original paths to remain present, exactly one resolved disposition and verified final state per path, two file-specific reviews per path, all corrections reverified, complete evidence classifications, zero changed-path exceptions, and zero required pending or failed outcomes.
     - Treat a `verified-retained` disposition as valid only with evidence for every required check; treat `consolidated-as-pointer` as valid only with a canonical destination and retained local operational context.
@@ -143,16 +143,16 @@ Rewrite and re-verify exactly the 34 Markdown files named by the approved requir
     - Report out-of-scope failures without modifying excluded assets; do not bypass the hook, broaden authorization, infer a pass, or run `pnpm run typecheck:scripts`.
     - _Requirements: 7.7, 7.13, 10.9–10.11, 10.14, 11.14–11.18, 11.21–11.22_
 
-- [ ] 9. Finalize honest implementation reporting
-  - [ ] 9.1 Complete the final summary in `.kiro/specs/documentation-global-standards/implementation-record.md`
+- [x] 9. Finalize honest implementation reporting
+  - [x] 9.1 Complete the final summary in `.kiro/specs/documentation-global-standards/implementation-record.md`
     - Report all 34 dispositions and final states, first- and second-pass evidence, correction closure, source status, unresolved authority decisions, changed paths, and exact observed or pending command states.
     - Never report a pending, unrun, denied, blocked, interrupted, failed, or unobserved command as passed; distinguish static inspection from observed command evidence.
     - If a same-level authority conflict remains, identify it as `pending-owner-validation`, preserve the competing meanings, and request owner resolution. If an observed failure is outside scope, report it without changing excluded assets.
     - State `complete` only when the coverage-derived completion conditions in Task 7.1 remain true after any authorized command records; otherwise state `incomplete` and name every unmet condition.
     - _Requirements: 1.12, 3.8–3.10, 7.7, 7.12–7.13, 10.11, 10.14, 11.15–11.24_
 
-- [ ] 10. Final checkpoint — ensure the implementation record is internally complete
-  - [ ] 10.1 Confirm the implementation record is internally complete
+- [x] 10. Final checkpoint — ensure the implementation record is internally complete
+  - [x] 10.1 Confirm the implementation record is internally complete
     - Confirm `tasks.md` and `implementation-record.md` are the only feature-created artifacts, all 34 documentation paths remain present, and no prohibited path was modified.
     - Ensure all authorized tests pass, ask the user if questions arise; preserve every unauthorized or unobserved command as pending rather than passed.
     - _Requirements: 1.1–1.3, 1.10–1.12, 10.10–10.11, 11.19–11.24_
