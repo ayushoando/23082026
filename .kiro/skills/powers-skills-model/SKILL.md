@@ -1,5 +1,6 @@
 ---
-inclusion: always
+name: powers-skills-model
+description: Use the powers and skills model to structure reusable agent capabilities and workflows.
 ---
 
 # Powers, Skills, Steering, MCP — how they relate

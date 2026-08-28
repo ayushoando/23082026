@@ -1,6 +1,6 @@
 ---
-inclusion: fileMatch
-fileMatchPattern: "site/app/ooplanner/**,site/app/oostudio/**,site/lib/Planner/**,site/lib/Studio/**,site/server/Planner/**,site/server/Studio/**,site/platform/Planner/**,site/platform/Studio/**,site/components/Planner/**,site/components/Studio/**,site/store/Planner/**,site/store/Studio/**,site/hooks/Planner/**,site/hooks/Studio/**"
+name: planner-studio
+description: Use Planner Studio guidance to plan product work, tasks, and implementation steps.
 ---
 
 # Planner & Studio Domain

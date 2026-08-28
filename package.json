@@ -104,8 +104,6 @@
   "dependencies": {
     "@ai-sdk/amazon-bedrock": "5.0.66",
     "@aws-sdk/client-s3": "^3.1119.0",
-    "@datadog/browser-rum": "7.9.0",
-    "@datadog/browser-rum-react": "7.9.0",
     "@gsap/react": "^2.1.2",
     "@hookform/resolvers": "^5.9.1",
     "@lancedb/lancedb": "^0.37.1",
