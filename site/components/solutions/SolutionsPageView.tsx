@@ -99,7 +99,7 @@ export function SolutionsPageView({
   heroKicker,
   heroTitleLead,
   heroTitleAccent,
-  heroSubtitle,
+  heroSubtitle: _heroSubtitle,
   heroPrimaryCta,
   heroSecondaryCta,
   deliveryKicker,

@@ -7,11 +7,7 @@ import {
   isPlannerEntryHref,
   type PlannerEntryContext,
 } from "@/lib/analytics/plannerEntry";
-import {
-  emitSiteEvent,
-  flushAnalyticsAfterConsent,
-  type SiteEventPayload,
-} from "@/lib/analytics/emitSiteEvent";
+import { emitSiteEvent } from "@/lib/analytics/emitSiteEvent";
 
 export type { SiteEventPayload } from "@/lib/analytics/emitSiteEvent";
 export { emitSiteEvent, flushAnalyticsAfterConsent } from "@/lib/analytics/emitSiteEvent";

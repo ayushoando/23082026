@@ -51,7 +51,7 @@ export function SolutionsCategoryPageView({
   heroKicker,
   heroTitleLead,
   heroTitleAccent,
-  heroSubtitle,
+  heroSubtitle: _heroSubtitle,
   heroPrimaryCta,
   heroSecondaryCta,
   heroImage,

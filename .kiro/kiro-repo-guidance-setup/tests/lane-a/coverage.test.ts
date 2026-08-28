@@ -6,8 +6,8 @@ import {
   buildCoverageMatrix,
   buildExclusionRegister,
   createExclusionEntry,
-} from "../../coverage.ts
-import { COMPLETE_REVIEW_STATEMENT, type SourceRecord } from "../../contracts.ts
+} from "../../coverage.ts";
+import { COMPLETE_REVIEW_STATEMENT, type SourceRecord } from "../../contracts.ts";
 
 function candidate(
   sourceId: string,

@@ -16,7 +16,7 @@ type CategoryListingHeroProps = {
 
 export function CategoryListingHero({
   categoryName,
-  description,
+  description: _description,
   heroImage,
   subcategoryLinks,
   activeSubcategories,

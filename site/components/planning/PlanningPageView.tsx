@@ -88,7 +88,7 @@ export function PlanningPageView({
   heroKicker,
   heroTitleLead,
   heroTitleAccent,
-  heroSubtitle,
+  heroSubtitle: _heroSubtitle,
   craftQuote,
   craftAttribution,
   primaryCta,

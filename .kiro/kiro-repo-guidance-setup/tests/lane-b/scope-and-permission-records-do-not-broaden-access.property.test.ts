@@ -19,8 +19,8 @@ import { describe, expect, it } from "vitest";
 import {
   assessScopePrecedence,
   DOCUMENTED_SCOPE_ORDER,
-} from "../../compatibility.ts
-import { assessApprovalBoundaryOperation } from "../../scope.ts
+} from "../../compatibility.ts";
+import { assessApprovalBoundaryOperation } from "../../scope.ts";
 import type {
   ApprovalBoundary,
   ApprovalBoundaryStatus,
@@ -31,7 +31,7 @@ import type {
   PermissionProbeOutcome,
   ScopeInput,
   ScopeRecord,
-} from "../../contracts.ts
+} from "../../contracts.ts";
 
 // The scopes that, if widened, would broaden access beyond the repository-local
 // surface. A pending/unresolved decision for any of these must never carry a

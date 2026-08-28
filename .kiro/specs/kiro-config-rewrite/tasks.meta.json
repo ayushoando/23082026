@@ -1113,6 +1113,11 @@
         "executionId": "c7d666b1-3fff-4faf-a078-eabeef529b70",
         "chatSessionId": "sess_3bdc0c20-f11e-4f65-9ace-e7ec100c8c7b",
         "timestamp": 1787923522274
+      },
+      {
+        "executionId": "167000ab-ef83-43a3-ad1e-4ba39bea7e6d",
+        "chatSessionId": "sess_441992d4-5500-41a2-9c0b-ac9666933bac",
+        "timestamp": 1787926706109
       }
     ],
     "4.11 Delete the tracked root MCP schema copies only after parity, then verify active Kiro references use `.kiro/mcp/**`.": [

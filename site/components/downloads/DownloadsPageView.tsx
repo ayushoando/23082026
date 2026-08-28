@@ -65,7 +65,7 @@ export function DownloadsPageView({
   heroKicker,
   heroTitleLead,
   heroTitleAccent,
-  heroSubtitle,
+  heroSubtitle: _heroSubtitle,
   heroPrimaryCta,
   resourceKicker,
   resourceTitle,

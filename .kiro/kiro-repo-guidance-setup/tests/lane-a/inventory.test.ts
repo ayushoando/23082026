@@ -8,11 +8,11 @@ import { join } from "node:path";
 import {
   INITIAL_SKILL_CANDIDATES,
   type InventoryRequest,
-} from "../../contracts.ts
+} from "../../contracts.ts";
 import {
   REQUIRED_CANONICAL_GUIDANCE_PATHS,
   repositoryInventory,
-} from "../../inventory.ts
+} from "../../inventory.ts";
 
 const temporaryRoots: string[] = [];
 

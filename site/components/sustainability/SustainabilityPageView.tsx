@@ -58,7 +58,7 @@ export function SustainabilityPageView({
   heroKicker,
   heroTitleLead,
   heroTitleAccent,
-  heroSubtitle,
+  heroSubtitle: _heroSubtitle,
   heroCta,
   craftQuote,
   craftAttribution,

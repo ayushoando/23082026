@@ -6,8 +6,8 @@ import {
   authorityResolver,
   hashSafeArtifact,
   provenanceLedger,
-} from "../../provenance.ts
-import type { AuthorityClaim, SourceRecord } from "../../contracts.ts
+} from "../../provenance.ts";
+import type { AuthorityClaim, SourceRecord } from "../../contracts.ts";
 
 function source(): SourceRecord {
   return {

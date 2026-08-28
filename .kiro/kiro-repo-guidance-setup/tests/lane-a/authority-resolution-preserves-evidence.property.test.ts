@@ -21,12 +21,12 @@
 import fc from "fast-check";
 import { describe, expect, it } from "vitest";
 
-import { authorityResolver } from "../../provenance.ts
+import { authorityResolver } from "../../provenance.ts";
 import type {
   AuthorityClaim,
   AuthorityRank,
   EvidenceState,
-} from "../../contracts.ts
+} from "../../contracts.ts";
 
 // Mirror of the authority order the resolver applies (provenance.ts AUTHORITY_ORDER).
 // Lower index = higher authority. Kept local so the test asserts the intended

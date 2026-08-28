@@ -66,7 +66,7 @@ export function ContactPageView({
   heroKicker,
   heroTitleLead,
   heroTitleAccent,
-  heroSubtitle,
+  heroSubtitle: _heroSubtitle,
   sectionTitle,
   introTitle,
   resourceDeskLead,

@@ -322,7 +322,7 @@ describe("Planner editor load-state integration", () => {
     mockParams.current = { id: "p_invalid" };
     const { PlannerApiError } = await import("@planner/lib/plannerApi");
     mockGetProject.mockRejectedValue(
-      new PlannerApiError(404, "Project not found", "Project not found"),
+      new PlannerApiError(404, "RESOURCE_NOT_FOUND", "Project not found", "Project not found"),
     );
 
     render(<Planner />);
@@ -343,7 +343,7 @@ describe("Planner editor load-state integration", () => {
     mockParams.current = { id: "demo-plan" };
     const { PlannerApiError } = await import("@planner/lib/plannerApi");
     mockGetProject.mockRejectedValue(
-      new PlannerApiError(401, "Authentication required", "Authentication required"),
+      new PlannerApiError(401, "AUTH_REQUIRED", "Authentication required", "Authentication required"),
     );
 
     render(<Planner />);
@@ -367,7 +367,7 @@ describe("Planner editor load-state integration", () => {
     mockParams.current = { id: "p_forbidden" };
     const { PlannerApiError } = await import("@planner/lib/plannerApi");
     mockGetProject.mockRejectedValue(
-      new PlannerApiError(403, "Insufficient permissions", "Insufficient permissions"),
+      new PlannerApiError(403, "INSUFFICIENT_PERMISSIONS", "Insufficient permissions", "Insufficient permissions"),
     );
 
     render(<Planner />);
@@ -384,7 +384,7 @@ describe("Planner editor load-state integration", () => {
     mockParams.current = { id: "p_transient" };
     const { PlannerApiError } = await import("@planner/lib/plannerApi");
     mockGetProject.mockRejectedValue(
-      new PlannerApiError(503, "Service unavailable", "Service unavailable"),
+      new PlannerApiError(503, "SERVICE_UNAVAILABLE", "Service unavailable", "Service unavailable"),
     );
 
     render(<Planner />);
@@ -398,7 +398,7 @@ describe("Planner editor load-state integration", () => {
     // Retry: clicking Try again should re-invoke getProject
     mockGetProject.mockClear();
     mockGetProject.mockRejectedValue(
-      new PlannerApiError(503, "Service unavailable", "Service unavailable"),
+      new PlannerApiError(503, "SERVICE_UNAVAILABLE", "Service unavailable", "Service unavailable"),
     );
 
     await act(async () => {
@@ -430,7 +430,7 @@ describe("Planner editor load-state integration", () => {
     mockParams.current = { id: "p_missing" };
     const { PlannerApiError } = await import("@planner/lib/plannerApi");
     mockGetProject.mockRejectedValue(
-      new PlannerApiError(404, "Not found", "Not found"),
+      new PlannerApiError(404, "RESOURCE_NOT_FOUND", "Not found", "Not found"),
     );
 
     render(<Planner />);

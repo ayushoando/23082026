@@ -10,7 +10,7 @@ import {
   LOCAL_POWER_PATH,
   POWER_FORMATS,
   type ExtensionCandidateInput,
-} from "../../capabilities.ts
+} from "../../capabilities.ts";
 
 const repositoryRoot = resolve(import.meta.dirname, "../../..");
 

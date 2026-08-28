@@ -3,15 +3,15 @@
 import fc from "fast-check";
 import { describe, expect, it } from "vitest";
 
-import { assessCompatibility } from "../../compatibility.ts
+import { assessCompatibility } from "../../compatibility.ts";
 import {
   INITIAL_SKILL_CANDIDATES,
   OWNER_DECISIONS,
   OWNER_DECISION_IDS,
   REQUIRED_SURFACE_VERSIONS,
   type OwnerDecision,
-} from "../../contracts.ts
-import { validateOwnerDecisions } from "../../owner-decisions.ts
+} from "../../contracts.ts";
+import { validateOwnerDecisions } from "../../owner-decisions.ts";
 
 const EXPECTED_SKILL_CANDIDATES = [
   "repo-map",

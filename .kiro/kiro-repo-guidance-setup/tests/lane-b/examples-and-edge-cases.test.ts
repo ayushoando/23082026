@@ -24,10 +24,10 @@ import {
   DOCUMENTED_SCOPE_ORDER,
   OBSERVED_CLI_2_VERSION,
   OBSERVED_IDE_SESSION,
-} from "../../compatibility.ts
-import { assessApprovalBoundaryOperation } from "../../scope.ts
-import { validateOwnerDecisions } from "../../owner-decisions.ts
-import { assessRepositoryPolicy } from "../../policy.ts
+} from "../../compatibility.ts";
+import { assessApprovalBoundaryOperation } from "../../scope.ts";
+import { validateOwnerDecisions } from "../../owner-decisions.ts";
+import { assessRepositoryPolicy } from "../../policy.ts";
 import {
   OWNER_DECISION_IDS,
   OWNER_DECISIONS,
@@ -42,7 +42,7 @@ import {
   type ScopeRecord,
   type SurfaceVersion,
   type ValidationRun,
-} from "../../contracts.ts
+} from "../../contracts.ts";
 
 // --- helpers -----------------------------------------------------------------
 

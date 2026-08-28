@@ -8,15 +8,7 @@ import { createBlockColorResolver, type BlockColorResolver } from "./resolveBloc
 import { roundSurface2_5DPrims, surface2_5DPrims, SUBTLE_SURFACE_GRAD } from "./surface2d5";
 import { resolveFootprint, sharingPeopleCount, type WorkstationSelection } from "./geometry";
 import type { Dim, Product } from "./types";
-import type {
-  ArcPrim,
-  BasePrim,
-  CirclePrim,
-  LinePrim,
-  PathPrim,
-  Prim,
-  RectPrim,
-} from "./blockPrimitives";
+import type { Prim } from "./blockPrimitives";
 
 export type { ArcPrim, BasePrim, CirclePrim, LinePrim, PathPrim, Prim, RectPrim } from "./blockPrimitives";
 

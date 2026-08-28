@@ -20,7 +20,9 @@ vi.mock("node:fs", async (importOriginal) => {
   );
   fsSpies.readFileSync.mockImplementation(
     ((target: Parameters<typeof actual.readFileSync>[0], options?: Parameters<typeof actual.readFileSync>[1]) =>
-      actual.readFileSync(target, options)) as typeof actual.readFileSync,
+      options === undefined
+        ? actual.readFileSync(target)
+        : actual.readFileSync(target, options)) as typeof actual.readFileSync,
   );
   return {
     ...actual,
@@ -53,7 +55,9 @@ describe("persistBlockDescriptor", () => {
       );
       fsSpies.readFileSync.mockImplementation(
         ((target: Parameters<typeof actual.readFileSync>[0], options?: Parameters<typeof actual.readFileSync>[1]) =>
-          actual.readFileSync(target, options)) as typeof actual.readFileSync,
+          options === undefined
+            ? actual.readFileSync(target)
+            : actual.readFileSync(target, options)) as typeof actual.readFileSync,
       );
     }
     fs.rmSync(dir, { recursive: true, force: true });

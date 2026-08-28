@@ -5,12 +5,12 @@ import { describe, expect, it } from "vitest";
 import {
   assessScopePrecedence,
   DOCUMENTED_SCOPE_ORDER,
-} from "../../compatibility.ts
+} from "../../compatibility.ts";
 import type {
   ConfigurationScope,
   ScopeInput,
   ScopeRecord,
-} from "../../contracts.ts
+} from "../../contracts.ts";
 
 function createScopeRecord(
   scope: ConfigurationScope,

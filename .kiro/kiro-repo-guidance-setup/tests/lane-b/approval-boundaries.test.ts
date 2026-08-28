@@ -2,12 +2,12 @@
 
 import { describe, expect, it } from "vitest";
 
-import { assessApprovalBoundaryOperation } from "../../scope.ts
+import { assessApprovalBoundaryOperation } from "../../scope.ts";
 import type {
   ApprovalBoundary,
   PermissionProbe,
   PermissionProbeOutcome,
-} from "../../contracts.ts
+} from "../../contracts.ts";
 
 function createBoundary(overrides: Partial<ApprovalBoundary> = {}): ApprovalBoundary {
   return {

@@ -129,7 +129,7 @@ export function AboutPageView({
   heroKicker,
   heroTitleLead,
   heroTitleAccent,
-  heroSubtitle,
+  heroSubtitle: _heroSubtitle,
   heroCta,
   storyKicker,
   storyTitleLead,

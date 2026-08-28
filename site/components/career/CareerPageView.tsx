@@ -134,7 +134,7 @@ export function CareerPageView({
   heroKicker,
   heroTitleLead,
   heroTitleAccent,
-  heroSubtitle,
+  heroSubtitle: _heroSubtitle,
   craftQuote,
   craftAttribution,
   introKicker,

@@ -52,7 +52,7 @@ export interface TrustedByPageViewProps {
 export function TrustedByPageView({
   heroTitleLead,
   heroTitleAccent,
-  heroSubtitle,
+  heroSubtitle: _heroSubtitle,
   overviewKicker,
   overviewTitle,
   overviewDescription,

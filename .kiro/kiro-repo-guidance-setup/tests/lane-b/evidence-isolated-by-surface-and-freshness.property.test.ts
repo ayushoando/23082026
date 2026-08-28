@@ -3,7 +3,7 @@
 import fc from "fast-check";
 import { describe, expect, it } from "vitest";
 
-import { assessCompatibility } from "../../compatibility.ts
+import { assessCompatibility } from "../../compatibility.ts";
 import {
   REQUIRED_SURFACE_VERSIONS,
   type CompatibilityInput,
@@ -11,7 +11,7 @@ import {
   type SurfaceVersion,
   type ValidationResult,
   type ValidationRun,
-} from "../../contracts.ts
+} from "../../contracts.ts";
 
 // Cloud/Crew is never enabled-valid from this local matrix (it defers), so the
 // "fresh passing exact-target run yields applicable" branch is asserted only for

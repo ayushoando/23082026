@@ -40,7 +40,7 @@ describe("check-marketing-copy-source (name-mirror)", () => {
       path.join(siteRoot, "site/i18n/marketing-parity-manifest.json"),
     );
     expect(Array.isArray(manifest.i18nConsumerPaths)).toBe(true);
-    expect(manifest.i18nConsumerPaths.length).toBeGreaterThan(0);
+    expect((manifest.i18nConsumerPaths as string[]).length).toBeGreaterThan(0);
   });
 
   it("auditMarketingCopySource detects forbidden routeCopy imports and missing next-intl", () => {

@@ -106,6 +106,9 @@ const OTHER_PUBLIC_GET_ALLOWLIST = new Set([
   // Dev diagnostics — guarded by prod-404 + rate limit (never served in prod)
   "dev/auth-bypass-status",
   "dev-tools/lighthouse",
+  // Prometheus scrape target — returns 404 in production unless
+  // OBSERVABILITY_METRICS_ENABLED=1, and exposes only oando_* counters.
+  "metrics",
 ]);
 
 const ADMIN_AUTH_MARKERS = [

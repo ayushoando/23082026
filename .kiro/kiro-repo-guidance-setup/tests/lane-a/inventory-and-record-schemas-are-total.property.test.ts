@@ -33,14 +33,14 @@ import { join } from "node:path";
 import fc from "fast-check";
 import { afterEach, describe, expect, it } from "vitest";
 
-import { repositoryInventory } from "../../inventory.ts
+import { repositoryInventory } from "../../inventory.ts";
 import {
   CAPABILITY_DISPOSITIONS,
   EVIDENCE_STATES,
   INVENTORY_STATUSES,
   type ArtifactInventoryRecord,
   type InventoryRequest,
-} from "../../contracts.ts
+} from "../../contracts.ts";
 
 const ALLOWED_MAINTENANCE_RISK = ["low", "medium", "high", "unknown with reason"] as const;
 

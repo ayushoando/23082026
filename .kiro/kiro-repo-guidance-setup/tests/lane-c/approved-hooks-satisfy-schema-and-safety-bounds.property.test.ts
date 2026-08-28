@@ -21,11 +21,11 @@ import {
   HOOK_TIMEOUT_MIN_SECONDS,
   SUPPORTED_HOOK_EVENTS,
   type EvaluatedHookRecord,
-} from "../../hooks.ts
+} from "../../hooks.ts";
 import type {
   Identifier,
   ValidationRun,
-} from "../../contracts.ts
+} from "../../contracts.ts";
 
 // ---------------------------------------------------------------------------
 // Throwaway fixture roots (OS temp dir — outside the repository tree).

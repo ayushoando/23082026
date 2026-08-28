@@ -107,7 +107,7 @@ export function ServicePageView({
   heroKicker,
   heroTitleLead,
   heroTitleAccent,
-  heroSubtitle,
+  heroSubtitle: _heroSubtitle,
   craftQuote,
   craftAttribution,
   frameworkKicker,

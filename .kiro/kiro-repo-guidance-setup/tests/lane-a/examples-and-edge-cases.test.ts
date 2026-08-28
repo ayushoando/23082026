@@ -9,12 +9,12 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   collectDiscovery,
   discoveryCollector,
-} from "../../discovery.ts
+} from "../../discovery.ts";
 import {
   buildCoverageMatrix,
   buildExclusionRegister,
   createExclusionEntry,
-} from "../../coverage.ts
+} from "../../coverage.ts";
 import {
   INITIAL_SKILL_CANDIDATES,
   COMPLETE_REVIEW_STATEMENT,
@@ -22,15 +22,15 @@ import {
   type AuthorityRank,
   type ExclusionEntry,
   type SourceRecord,
-} from "../../contracts.ts
+} from "../../contracts.ts";
 import {
   REQUIRED_CANONICAL_GUIDANCE_PATHS,
   repositoryInventory,
-} from "../../inventory.ts
+} from "../../inventory.ts";
 import {
   authorityResolver,
   provenanceLedger,
-} from "../../provenance.ts
+} from "../../provenance.ts";
 
 vi.mock("node:fs", async () => {
   const actual = await vi.importActual<typeof import("node:fs")>("node:fs");
@@ -43,7 +43,9 @@ vi.mock("node:fs", async () => {
     if (normalizedPath.endsWith("/AGENTS.md") || normalizedPath === "AGENTS.md") {
       throw Object.assign(new Error("permission denied"), { code: "EACCES" });
     }
-    return originalReadFileSync(path, options);
+    return options === undefined
+      ? originalReadFileSync(path)
+      : originalReadFileSync(path, options);
   };
   return { ...actual, readFileSync };
 });

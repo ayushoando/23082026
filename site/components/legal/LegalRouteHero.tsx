@@ -22,7 +22,7 @@ export type LegalRouteHeroProps = {
 };
 
 /** Compact editorial hero for legal routes — graded still + GSAP copy stagger. */
-export function LegalRouteHero({ title, subtitle, testId = "legal-hero" }: LegalRouteHeroProps) {
+export function LegalRouteHero({ title, subtitle: _subtitle, testId = "legal-hero" }: LegalRouteHeroProps) {
   const heroRef = useRef<HTMLElement>(null);
   const [motionReady, setMotionReady] = useState(false);
 
