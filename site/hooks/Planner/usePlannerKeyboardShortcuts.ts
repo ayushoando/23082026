@@ -13,6 +13,21 @@ type ShortcutHandlers = {
   delete?: () => void;
   escape?: () => void;
   tool?: (id: string) => void;
+  /** Arrow-key nudge (move selected object by one step). */
+  moveLeft?: () => void;
+  moveRight?: () => void;
+  moveUp?: () => void;
+  moveDown?: () => void;
+  /** Shift+Arrow resize (grow/shrink selected object). */
+  resizeWidthGrow?: () => void;
+  resizeWidthShrink?: () => void;
+  resizeHeightGrow?: () => void;
+  resizeHeightShrink?: () => void;
+  /** +/- zoom through semantic commands. */
+  zoomIn?: () => void;
+  zoomOut?: () => void;
+  /** Rotate selected object. */
+  rotate?: () => void;
 };
 
 export const useKeyboardShortcuts = (handlers: ShortcutHandlers, deps: DependencyList = []) => {
@@ -81,12 +96,60 @@ export const useKeyboardShortcuts = (handlers: ShortcutHandlers, deps: Dependenc
         handlers.escape?.();
         return;
       }
+
+      // Arrow keys: Shift+Arrow = resize, plain Arrow = move (nudge).
+      // Route through semantic commands so pointer, touch, keyboard,
+      // and accessible controls all invoke the same logic (Req 7.1–7.3).
+      if (key === "arrowleft") {
+        e.preventDefault();
+        if (e.shiftKey) handlers.resizeWidthShrink?.();
+        else handlers.moveLeft?.();
+        return;
+      }
+      if (key === "arrowright") {
+        e.preventDefault();
+        if (e.shiftKey) handlers.resizeWidthGrow?.();
+        else handlers.moveRight?.();
+        return;
+      }
+      if (key === "arrowup") {
+        e.preventDefault();
+        if (e.shiftKey) handlers.resizeHeightShrink?.();
+        else handlers.moveUp?.();
+        return;
+      }
+      if (key === "arrowdown") {
+        e.preventDefault();
+        if (e.shiftKey) handlers.resizeHeightGrow?.();
+        else handlers.moveDown?.();
+        return;
+      }
+
+      // +/- keys: zoom through semantic commands (Req 7.7 — explicit
+      // alternatives for multi-pointer gestures).
+      if (key === "+" || key === "=") {
+        e.preventDefault();
+        handlers.zoomIn?.();
+        return;
+      }
+      if (key === "-" || key === "_") {
+        e.preventDefault();
+        handlers.zoomOut?.();
+        return;
+      }
+
       if (key === "v") {
         handlers.tool?.("select");
         return;
       }
       if (key === "r") {
-        handlers.tool?.("rect");
+        // R with selection rotates; without selection switches to rect tool.
+        // The rotate handler returns early when nothing is selected.
+        if (handlers.rotate) {
+          handlers.rotate();
+        } else {
+          handlers.tool?.("rect");
+        }
         return;
       }
       if (key === "c") {

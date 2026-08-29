@@ -6,6 +6,7 @@
  * → session → owner scope → revision/idempotency → persistence.
  */
 
+import { listCatalog } from "@planner/server/plannerStore";
 import {
   createPlannerHandler,
   createPlannerRejectedMethodHandler,
@@ -42,19 +43,16 @@ export const GET = createPlannerHandler({
   operation: { invoke: listCatalogItems },
 });
 
-// Unsupported methods — 405 with structured response and Allow header
-export function POST(request: NextRequest, _context: unknown): Response {
-  return plannerMethodNotAllowed(request, ["GET"]);
-}
-
-export function PUT(request: NextRequest, _context: unknown): Response {
-  return plannerMethodNotAllowed(request, ["GET"]);
-}
-
-export function DELETE(request: NextRequest, _context: unknown): Response {
-  return plannerMethodNotAllowed(request, ["GET"]);
-}
-
-export function PATCH(request: NextRequest, _context: unknown): Response {
-  return plannerMethodNotAllowed(request, ["GET"]);
-}
+// Unsupported methods still enter the quota-first request pipeline.
+export const POST = createPlannerRejectedMethodHandler(
+  "planner.catalog.list",
+);
+export const PUT = createPlannerRejectedMethodHandler(
+  "planner.catalog.list",
+);
+export const DELETE = createPlannerRejectedMethodHandler(
+  "planner.catalog.list",
+);
+export const PATCH = createPlannerRejectedMethodHandler(
+  "planner.catalog.list",
+);

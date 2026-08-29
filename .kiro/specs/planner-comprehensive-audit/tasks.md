@@ -294,7 +294,7 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - **Property 26: Performance finding completeness**
     - Generate missed-budget findings and verify measured value, complete supported profile, bottleneck evidence, and remediation status are mandatory.
     - **Validates: Requirements 16.8**
-  - [ ]* 5.8 Expand automated browser/device profiles beyond the required representative profiles
+  - [ ] 5.8 Expand automated browser/device profiles beyond the required representative profiles
     - Add non-duplicative cross-browser/device cases only after required profiles and remediations are covered; do not make these extra profiles a prerequisite for closing already proven findings.
     - _Requirements: 6.1, 7.1, 8.1, 16.1-16.7_
   - [~] 5.9 Add targeted unit and integration regression tests for every remediated finding after Gate D

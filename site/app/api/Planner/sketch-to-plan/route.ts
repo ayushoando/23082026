@@ -6,6 +6,13 @@
  * → session → owner scope → revision/idempotency → persistence.
  */
 
+import { isFeatureEnabled } from "@/lib/featureFlags";
+import { SketchToPlanRequestSchema } from "@planner/lib/ai/sketchToPlanShared";
+import {
+  classifySketchConversionError,
+  getSketchRecoveryMessage,
+  requestSketchToPlan,
+} from "@planner/server/sketchToPlan.server";
 import {
   createPlannerHandler,
   createPlannerRejectedMethodHandler,
@@ -93,19 +100,16 @@ export const POST = createPlannerHandler({
   operation: { invoke: handleSketchToPlan },
 });
 
-// Unsupported methods — 405 with structured response and Allow header
-export function GET(request: NextRequest, _context: unknown): Response {
-  return plannerMethodNotAllowed(request, ["POST"]);
-}
-
-export function PUT(request: NextRequest, _context: unknown): Response {
-  return plannerMethodNotAllowed(request, ["POST"]);
-}
-
-export function DELETE(request: NextRequest, _context: unknown): Response {
-  return plannerMethodNotAllowed(request, ["POST"]);
-}
-
-export function PATCH(request: NextRequest, _context: unknown): Response {
-  return plannerMethodNotAllowed(request, ["POST"]);
-}
+// Unsupported methods still enter the quota-first request pipeline.
+export const GET = createPlannerRejectedMethodHandler(
+  "planner.sketch-to-plan.convert",
+);
+export const PUT = createPlannerRejectedMethodHandler(
+  "planner.sketch-to-plan.convert",
+);
+export const DELETE = createPlannerRejectedMethodHandler(
+  "planner.sketch-to-plan.convert",
+);
+export const PATCH = createPlannerRejectedMethodHandler(
+  "planner.sketch-to-plan.convert",
+);

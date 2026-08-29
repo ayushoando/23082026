@@ -159,6 +159,7 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
   projectIdRef.current = projectId;
   const [loadState, setLoadState] = useState<PlannerLoadState>(DRAFT);
   const requestKeyRef = useRef<string>("");
+  const hydratingOrResettingRef = useRef(false);
   const [retryCount, setRetryCount] = useState(0);
   const workspaceGated =
     loadState.kind === "loading" ||
@@ -172,6 +173,7 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [online, setOnline] = useState(true);
   const [saveIssue, setSaveIssue] = useState<"conflict" | "offline" | "reauth" | "server" | null>(null);
+  const [conflictRevision, setConflictRevision] = useState<number | null>(null);
   const saveIdempotencyRef = useRef<string | null>(null);
   const [sheet, setSheet] = useState<PlannerSheet>(DEFAULT_SHEET);
   const [plannerStep, setPlannerStep] = useState<PlannerStep>("draw");
@@ -191,6 +193,7 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
       // don't obscure the canvas on entry; user taps toggle buttons
       // to open them as dismissible overlays.
       setLeftCollapsed(true);
+      setRightCollapsed(true);
       setToolsCollapsed(true);
     }
     // Desktop: leave panels at their current state — don't force-collapse
@@ -618,19 +621,37 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
       onSel();
       refreshLayers();
       setSceneVersion((v) => v + 1);
-      if (!target?.data?.isGridLine && !target?.data?.isSheet) setHasUnsavedChanges(true);
+      if (
+        !hydratingOrResettingRef.current &&
+        !target?.data?.isGridLine &&
+        !target?.data?.isSheet
+      ) {
+        setHasUnsavedChanges(true);
+      }
     };
     const onAdd = (event?: { target?: fabric.FabricObject }) => {
       refreshLayers();
       setSceneVersion((v) => v + 1);
       const target = event?.target ? asOo(event.target) : undefined;
-      if (!target?.data?.isGridLine && !target?.data?.isSheet) setHasUnsavedChanges(true);
+      if (
+        !hydratingOrResettingRef.current &&
+        !target?.data?.isGridLine &&
+        !target?.data?.isSheet
+      ) {
+        setHasUnsavedChanges(true);
+      }
     };
     const onRemove = (event?: { target?: fabric.FabricObject }) => {
       refreshLayers();
       setSceneVersion((v) => v + 1);
       const target = event?.target ? asOo(event.target) : undefined;
-      if (!target?.data?.isGridLine && !target?.data?.isSheet) setHasUnsavedChanges(true);
+      if (
+        !hydratingOrResettingRef.current &&
+        !target?.data?.isGridLine &&
+        !target?.data?.isSheet
+      ) {
+        setHasUnsavedChanges(true);
+      }
     };
     c.on("selection:created", onSel);
     c.on("selection:updated", onSel);
@@ -991,6 +1012,18 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
   const duplicateSelected = canvasActions.duplicateSelected;
   const rotate90 = canvasActions.rotate90;
 
+  // Select-all routes through the existing Fabric multi-select (ActiveSelection)
+  // rather than the command's single-object fallback, but is still semantically
+  // a Planner command: the command palette and Ctrl+A all reach here.
+  const selectAll = useCallback(() => {
+    const c = fabricRef.current;
+    if (!c) return;
+    const objs = c.getObjects().filter((o) => !asOo(o).data?.isGridLine && !asOo(o).data?.isSheet && !asOo(o).data?.isGuide);
+    if (!objs.length) return;
+    const sel = new fabric.ActiveSelection(objs, { canvas: c });
+    c.setActiveObject(sel); c.requestRenderAll();
+  }, [fabricRef]);
+
   const applyAlign = useCallback((action: AlignAction) => {
     const c = fabricRef.current;
     if (!c) return;
@@ -1029,14 +1062,6 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
     setSceneVersion((v) => v + 1);
     showToast(`Aligned ${activeObjects.length} objects`);
   }, [fabricRef, showToast]);
-  const selectAll = () => {
-    const c = fabricRef.current;
-    if (!c) return;
-    const objs = c.getObjects().filter((o) => !asOo(o).data?.isGridLine && !asOo(o).data?.isSheet && !asOo(o).data?.isGuide);
-    if (!objs.length) return;
-    const sel = new fabric.ActiveSelection(objs, { canvas: c });
-    c.setActiveObject(sel); c.requestRenderAll();
-  };
   const copySel = async () => { const c = fabricRef.current; if (!c) return; const a = c.getActiveObject(); if (!a) return; clipRef.current = await a.clone(["data"]) as OoFabricObject; showToast("Copied"); };
   const pasteSel = async () => {
     if (!clipRef.current) return;
@@ -1233,47 +1258,131 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
 
   const saveProject = useCallback(async () => {
     const c = fabricRef.current;
-    if (!c) return;
+    if (!c || saving) return;
+    if (!online) {
+      setSaveIssue("offline");
+      showToast("You are offline. Reconnect to save; your canvas is preserved.", "error");
+      return;
+    }
+
+    const mutationKind = projectId ? "save" : "create";
+    const mutationIdentity = projectId ?? "draft";
+    const idempotencyKey =
+      saveIdempotencyRef.current ??
+      createPlannerIdempotencyKey(mutationKind, mutationIdentity);
+    saveIdempotencyRef.current = idempotencyKey;
     setSaving(true);
+    setSaveIssue(null);
+
     try {
-      const grid = c.getObjects().filter((o) => asOo(o).data?.isGridLine || asOo(o).data?.isSheet);
-      grid.forEach((g) => (g.excludeFromExport = true));
+      const grid = c.getObjects().filter(
+        (object) =>
+          asOo(object).data?.isGridLine || asOo(object).data?.isSheet,
+      );
+      grid.forEach((object) => (object.excludeFromExport = true));
       const canvasJson = serializeFabricCanvas(c, ["data"]) as FabricCanvasJson;
       canvasJson.objects = (canvasJson.objects || []).filter(
-        (o) => !o.data?.isGridLine && !o.data?.isSheet,
+        (object) => !object.data?.isGridLine && !object.data?.isSheet,
       );
-      // Thumbnail
-      const hiddenG = c.getObjects().filter((o) => asOo(o).data?.isGridLine);
-      hiddenG.forEach((g) => (g.visible = false)); c.requestRenderAll();
-      const thumb = c.toDataURL({ format: "png", multiplier: 0.6 });
-      hiddenG.forEach((g) => (g.visible = true)); c.requestRenderAll();
-      const payload = { name: projectName || "Untitled Plan", canvas_json: canvasJson, sheet, layers: [], thumbnail_png: thumb };
-      if (projectId) {
-        const updated = await updateProject(projectId, payload);
-        setProjectName(updated.name || payload.name);
-        try { localStorage.setItem(PLANNER_LAST_PROJECT_KEY, projectId); } catch { /* noop */ }
-        // Keep URL bound to the project so hard refresh reloads by routeId.
-        if (!routeId || routeId !== projectId) {
-          router.replace(`/ooplanner/projects/${projectId}`);
-          await new Promise((r) => requestAnimationFrame(() => r(undefined)));
-        }
-        showToast(`Saved "${updated.name}"`);
-      } else {
-        const created = await createProject(payload);
-        setProjectId(created.id);
-        trackPlannerProjectStart(created.id, "planner-save");
-        setProjectName(created.name || payload.name);
-        try { localStorage.setItem(PLANNER_LAST_PROJECT_KEY, created.id); } catch { /* noop */ }
-        router.replace(`/ooplanner/projects/${created.id}`);
-        // Yield so the browser processes the history update before we tell
-        // the caller (and tests) that saving is fully done.
-        await new Promise((r) => requestAnimationFrame(() => r(undefined)));
-        showToast(`Saved "${created.name}"`);
+
+      const hiddenGrid = c
+        .getObjects()
+        .filter((object) => asOo(object).data?.isGridLine);
+      hiddenGrid.forEach((object) => (object.visible = false));
+      c.requestRenderAll();
+      const thumbnail = c.toDataURL({ format: "png", multiplier: 0.6 });
+      hiddenGrid.forEach((object) => (object.visible = true));
+      c.requestRenderAll();
+
+      const payload = {
+        name: projectName || "Untitled Plan",
+        status: "draft",
+        geometry: {
+          contractVersion: 1,
+          schemaVersion: 1,
+          unit: "mm",
+          scalePxPerMm: SCALE_PX_PER_MM,
+          geometry: collectSceneGeometry(c, SCALE_PX_PER_MM),
+          canvasSnapshot: canvasJson,
+        },
+        sheet,
+        layers: [],
+        thumbnail_png: thumbnail,
+      };
+
+      const saved = projectId
+        ? await updateProject(projectId, payload, {
+            expectedRevision: projectRevision,
+            idempotencyKey,
+          })
+        : await createProject(payload, {
+            expectedRevision: 0,
+            idempotencyKey,
+          });
+
+      if (!projectId) {
+        setProjectId(saved.id);
+        trackPlannerProjectStart(saved.id, "planner-save");
       }
-    } catch (e) {
-      showToast(`Save failed: ${errMessage(e)}`, "error");
-    } finally { setSaving(false); }
-  }, [fabricRef, projectId, projectName, sheet, routeId, router, showToast]);
+      setProjectName(saved.name || payload.name);
+      setProjectRevision(saved.revision);
+      setHasUnsavedChanges(false);
+      setSaveIssue(null);
+      setConflictRevision(null);
+      saveIdempotencyRef.current = null;
+      try {
+        localStorage.setItem(PLANNER_LAST_PROJECT_KEY, saved.id);
+      } catch {
+        // Storage is a convenience; the route remains the authoritative binding.
+      }
+      if (!routeId || routeId !== saved.id) {
+        router.replace(`/ooplanner/projects/${saved.id}`);
+        await new Promise((resolve) =>
+          requestAnimationFrame(() => resolve(undefined)),
+        );
+      }
+      showToast(`Saved "${saved.name}"`);
+    } catch (error: unknown) {
+      if (error instanceof PlannerApiError) {
+        if (error.isConflict) {
+          setConflictRevision(error.currentRevision ?? null);
+          setSaveIssue("conflict");
+          showToast(
+            "This plan changed elsewhere. Your canvas is preserved; reload or save after reviewing the latest version.",
+            "error",
+          );
+        } else if (
+          error.isUnauthorized ||
+          error.recovery === "reauthenticate-preserve-unsaved"
+        ) {
+          setSaveIssue("reauth");
+          showToast("Sign in again to save. Your canvas is preserved.", "error");
+        } else if (error.isOffline) {
+          setSaveIssue("offline");
+          showToast("You are offline. Reconnect and retry save.", "error");
+        } else {
+          setSaveIssue("server");
+          showToast(`Save failed: ${error.detail || error.message}`, "error");
+        }
+      } else {
+        setSaveIssue("server");
+        showToast(`Save failed: ${errMessage(error)}`, "error");
+      }
+    } finally {
+      setSaving(false);
+    }
+  }, [
+    fabricRef,
+    online,
+    projectId,
+    projectName,
+    projectRevision,
+    routeId,
+    router,
+    saving,
+    sheet,
+    showToast,
+  ]);
 
   // Load project by URL id, falling back to the last-saved project id from
   // localStorage. The URL is the primary binding (shareable, matches the
@@ -1320,26 +1429,39 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
         // Stale check: if a newer request replaced this one, discard silently.
         if (requestKeyRef.current !== key) return;
 
+        hydratingOrResettingRef.current = true;
+        await c.loadFromJSON(
+          proj.canvas_json ?? {},
+          undefined,
+          { signal: controller.signal },
+        );
+
+        // Fabric hydration is asynchronous. Re-check ownership after it
+        // completes so a superseded request cannot publish stale canvas state.
+        if (controller.signal.aborted || requestKeyRef.current !== key) return;
+
         setProjectId(proj.id);
         setProjectName(proj.name);
-        setProjectRevision(
-          "revision" in proj && typeof proj.revision === "number" ? proj.revision : 1,
-        );
-        try { localStorage.setItem(PLANNER_LAST_PROJECT_KEY, proj.id); } catch { /* noop */ }
-        if (proj.sheet && proj.sheet.width_mm) setSheet({ ...DEFAULT_SHEET, ...proj.sheet });
-        c.loadFromJSON(proj.canvas_json ?? {}, () => {
-          drawGridAndSheet();
-          c.requestRenderAll();
-          refreshLayers();
-          setHasUnsavedChanges(false);
-          setSaveIssue(null);
-          saveIdempotencyRef.current = null;
-          showToast(`Loaded "${proj.name}"`);
-        });
+        setProjectRevision(proj.revision);
+        try {
+          localStorage.setItem(PLANNER_LAST_PROJECT_KEY, proj.id);
+        } catch {
+          // The route remains authoritative when storage is unavailable.
+        }
+        if (proj.sheet?.width_mm) {
+          setSheet({ ...DEFAULT_SHEET, ...proj.sheet });
+        }
+        drawGridAndSheet();
+        c.requestRenderAll();
+        refreshLayers();
+        setHasUnsavedChanges(false);
+        setSaveIssue(null);
+        saveIdempotencyRef.current = null;
+        showToast(`Loaded "${proj.name}"`);
         setLoadState(readyState(effectiveId!, proj));
       } catch (e) {
         // Aborted — silent cancellation, not a visible error.
-        if (isAbortError(e)) return;
+        if (controller.signal.aborted || isAbortError(e)) return;
         // Stale — a newer request superseded this one.
         if (requestKeyRef.current !== key) return;
 
@@ -1368,6 +1490,10 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
           console.error("[Planner] load project failed:", msg, { effectiveId, routeId });
           setLoadState(transientErrorState(effectiveId!, undefined, "Could not load the plan. Please try again."));
         }
+      } finally {
+        if (requestKeyRef.current === key) {
+          hydratingOrResettingRef.current = false;
+        }
       }
     })();
 
@@ -1377,14 +1503,49 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
   }, [ready, routeId, accessMode, fabricRef, showToast, drawGridAndSheet, refreshLayers, retryCount]);
 
   const newProject = () => {
-    const c = fabricRef.current; if (!c) return;
-    if (!window.confirm("Discard current plan and start new?")) return;
-    c.getObjects().filter((o) => !asOo(o).data?.isGridLine && !asOo(o).data?.isSheet).forEach((o) => c.remove(o));
-    c.discardActiveObject(); c.requestRenderAll();
-    setProjectId(null); setProjectName("Untitled Plan");
-    try { localStorage.removeItem(PLANNER_LAST_PROJECT_KEY); } catch { /* noop */ }
+    const c = fabricRef.current;
+    if (!c) return;
+    if (
+      hasUnsavedChanges &&
+      !window.confirm("Discard current unsaved changes and start a new plan?")
+    ) {
+      return;
+    }
+
+    requestKeyRef.current = `draft:${Date.now()}`;
+    hydratingOrResettingRef.current = true;
+    c.getObjects()
+      .filter(
+        (object) =>
+          !asOo(object).data?.isGridLine && !asOo(object).data?.isSheet,
+      )
+      .forEach((object) => c.remove(object));
+    c.discardActiveObject();
+    c.requestRenderAll();
+
+    setProjectId(null);
+    setProjectName("Untitled Plan");
+    setProjectRevision(0);
+    setHasUnsavedChanges(false);
+    setSaveIssue(null);
+    setConflictRevision(null);
+    saveIdempotencyRef.current = null;
+    setSheet(DEFAULT_SHEET);
+    setLayers([]);
+    setSelectedIds([]);
+    setPropObj(null);
+    firstPlacementRef.current = false;
+    setPlannerStep("draw");
+    setTool("wall");
+    setLoadState(DRAFT);
+    try {
+      localStorage.removeItem(PLANNER_LAST_PROJECT_KEY);
+    } catch {
+      // The draft route remains authoritative when storage is unavailable.
+    }
     router.replace("/ooplanner");
     drawGridAndSheet();
+    hydratingOrResettingRef.current = false;
   };
 
   const handleRetry = useCallback(() => {
@@ -1405,6 +1566,32 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
     router.push(buildAccessRedirect(returnPath));
   }, [router, routeId]);
 
+  const handleReloadLatest = useCallback(() => {
+    if (
+      hasUnsavedChanges &&
+      !window.confirm("Replace the local canvas with the latest saved version?")
+    ) {
+      return;
+    }
+    saveIdempotencyRef.current = null;
+    setSaveIssue(null);
+    setConflictRevision(null);
+    setHasUnsavedChanges(false);
+    setRetryCount((count) => count + 1);
+  }, [hasUnsavedChanges]);
+
+  const handleKeepLocalAfterConflict = useCallback(() => {
+    if (conflictRevision === null) {
+      showToast("Reload the latest plan before retrying this save.", "error");
+      return;
+    }
+    setProjectRevision(conflictRevision);
+    saveIdempotencyRef.current = null;
+    setSaveIssue(null);
+    setConflictRevision(null);
+    showToast("Local canvas retained. Save again to create a new revision.");
+  }, [conflictRevision, showToast]);
+
   type PlannerShortcuts = {
     undo?: () => void;
     redo?: () => void;
@@ -1416,6 +1603,17 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
     paste?: () => void | Promise<void>;
     escape?: () => void;
     tool?: (t: string) => void;
+    moveLeft?: () => void;
+    moveRight?: () => void;
+    moveUp?: () => void;
+    moveDown?: () => void;
+    resizeWidthGrow?: () => void;
+    resizeWidthShrink?: () => void;
+    resizeHeightGrow?: () => void;
+    resizeHeightShrink?: () => void;
+    zoomIn?: () => void;
+    zoomOut?: () => void;
+    rotate?: () => void;
   };
 
   useKeyboardShortcuts({
@@ -1427,6 +1625,21 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
       setTool("select");
     },
     tool: (t: string) => setTool(t as PlannerTool),
+    // Arrow-key nudge: route through semantic commands (Req 7.1–7.3)
+    moveLeft: canvasActions.moveLeft,
+    moveRight: canvasActions.moveRight,
+    moveUp: canvasActions.moveUp,
+    moveDown: canvasActions.moveDown,
+    // Shift+Arrow resize: route through semantic commands
+    resizeWidthGrow: () => { void canvasActions.commands.find((c) => c.id === "resize-width-grow")?.execute(canvasActions.commandContext); },
+    resizeWidthShrink: () => { void canvasActions.commands.find((c) => c.id === "resize-width-shrink")?.execute(canvasActions.commandContext); },
+    resizeHeightGrow: () => { void canvasActions.commands.find((c) => c.id === "resize-height-grow")?.execute(canvasActions.commandContext); },
+    resizeHeightShrink: () => { void canvasActions.commands.find((c) => c.id === "resize-height-shrink")?.execute(canvasActions.commandContext); },
+    // +/- zoom: explicit keyboard alternative for pinch gestures (Req 7.7)
+    zoomIn: canvasActions.zoomIn,
+    zoomOut: canvasActions.zoomOut,
+    // R key rotate: rotate selected object through semantic command
+    rotate: rotate90,
   } as PlannerShortcuts);
 
   useEffect(() => {
@@ -1449,8 +1662,9 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
         toggleSnap,
         goReview: () => setPlannerStep("review"),
         exportPng: doExportPNG,
+        commandContext: canvasActions.commandContext,
       }),
-    [history.undo, history.redo, toggleSnap, doExportPNG],
+    [history.undo, history.redo, toggleSnap, doExportPNG, canvasActions.commandContext],
   );
 
   const applyAiPlacements = useCallback(
@@ -1704,7 +1918,11 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
   const plannerCtx = {
     fabricRef,
     scalePxPerMm: SCALE_PX_PER_MM,
-    sheet, setSheet: (s: PlannerSheet) => setSheet(s),
+    sheet,
+    setSheet: (nextSheet: PlannerSheet) => {
+      setSheet(nextSheet);
+      setHasUnsavedChanges(true);
+    },
     propObj, setObjectProp,
     applyFill, applyStroke,
     layers, selectedIds,
@@ -1717,6 +1935,17 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
     redo: history.redo,
   };
 
+  const saveIssueMessage =
+    saveIssue === "conflict"
+      ? "This plan changed elsewhere. Choose which version to continue with."
+      : saveIssue === "offline"
+        ? "You are offline. Your canvas is preserved; reconnect before retrying."
+        : saveIssue === "reauth"
+          ? "Your session expired. Sign in again without discarding this canvas."
+          : saveIssue === "server"
+            ? "The plan could not be saved. Your local canvas is unchanged."
+            : null;
+
   return (
     <PlannerContext.Provider value={plannerCtx}>
     <div className="planner-stack" data-planner-step={plannerStep} data-viewport-class={viewport.viewportClass}>
@@ -1726,6 +1955,61 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
         onStepChange={applyPlannerStep}
         planMetrics={planMetrics}
       />
+      <p
+        className="planner-save-indicator"
+        role="status"
+        data-save-state={
+          saving ? "saving" : saveIssue ?? (hasUnsavedChanges ? "dirty" : "saved")
+        }
+      >
+        {saving
+          ? "Saving plan…"
+          : saveIssue
+            ? "Save needs attention"
+            : hasUnsavedChanges
+              ? "Unsaved changes"
+              : "All changes saved"}
+      </p>
+      {saveIssueMessage ? (
+        <section
+          className="planner-save-state"
+          role="alert"
+          data-save-issue={saveIssue}
+          data-testid="planner-save-state"
+        >
+          <span>{saveIssueMessage}</span>
+          <div className="planner-save-state__actions">
+            {saveIssue === "conflict" ? (
+              <>
+                <button className="btn btn--sm" type="button" onClick={handleReloadLatest}>
+                  Use latest saved
+                </button>
+                <button
+                  className="btn btn--primary btn--sm"
+                  type="button"
+                  onClick={handleKeepLocalAfterConflict}
+                  disabled={conflictRevision === null}
+                >
+                  Keep local canvas
+                </button>
+              </>
+            ) : saveIssue === "reauth" ? (
+              <button className="btn btn--primary btn--sm" type="button" onClick={handleSignIn}>
+                Sign in again
+              </button>
+            ) : (
+              <button
+                className="btn btn--primary btn--sm"
+                type="button"
+                onClick={() => { void saveProject(); }}
+                disabled={!online || saving}
+              >
+                Retry save
+              </button>
+            )}
+          </div>
+        </section>
+      ) : null}
     <div
       className="workspace"
       data-testid="planner-workspace"
@@ -1915,7 +2199,10 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
         >
           <ProjectMenu
             projectName={projectName}
-            onProjectNameChange={setProjectName}
+            onProjectNameChange={(name) => {
+              setProjectName(name);
+              setHasUnsavedChanges(true);
+            }}
             onAutoArrange={() => setAutoOpen(true)}
           />
           <div className="overlay-sep" />
@@ -2073,7 +2360,10 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
               <input
                 className="input input--sm topbar__project-input"
                 value={projectName}
-                onChange={(e) => setProjectName(e.target.value)}
+                onChange={(event) => {
+                  setProjectName(event.target.value);
+                  setHasUnsavedChanges(true);
+                }}
                 data-testid="project-name"
                 placeholder="Untitled plan"
                 aria-label="Plan name"
@@ -2103,14 +2393,18 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
         </div>
         <ViewportControls
           zoom={core.zoom}
-          onZoomIn={core.zoomIn}
-          onZoomOut={core.zoomOut}
+          onZoomIn={canvasActions.zoomIn}
+          onZoomOut={canvasActions.zoomOut}
           onFit={core.fitToContent}
           onZoom100={core.zoom100}
           autoFit={autoFit}
           onToggleAutoFit={() => setAutoFit((v) => !v)}
           fullscreen={fullscreen}
           onToggleFullscreen={toggleFullscreen}
+          onPanLeft={canvasActions.panLeft}
+          onPanRight={canvasActions.panRight}
+          onPanUp={canvasActions.panUp}
+          onPanDown={canvasActions.panDown}
         />
       </div>
       <aside

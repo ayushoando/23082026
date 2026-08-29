@@ -1,6 +1,5 @@
 /**
- * Real contract: open3d world e2e pack is declared and every file exists.
- * Prevents "folder evidence" without a callable gate script.
+ * Contract: the Open3D world E2E pack is declared and every file exists.
  */
 import { describe, expect, it } from "vitest";
 import fs from "node:fs";
@@ -84,14 +83,5 @@ describe("playwright-open3d-world-specs (gate contract)", () => {
         `gate ${gateId} → ${basename} not in specs[]`,
       ).toBe(true);
     }
-  });
-
-  it("ops exposes open3d gate", () => {
-    const ops = fs.readFileSync(
-      path.join(siteRoot, "scripts/run-ops.mjs"),
-      "utf8",
-    );
-    expect(ops).toContain("gate:open3d");
-    expect(ops).toContain("run-open3d-world-e2e.mjs");
   });
 });

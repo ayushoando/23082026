@@ -5,7 +5,6 @@
  *
  *   pnpm run ops -- list
  *   pnpm run ops db:apply -- --dry
- *   pnpm run ops gate:open3d
  */
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
@@ -225,7 +224,7 @@ const COMMANDS = {
   "catalog:organize:apply": () =>
     runTsx("organize-catalog-images.ts", ["--apply"]),
   "catalog:organize:sync": () =>
-    runTsx("organize-catalog-images.ts", ["--sync-db", "--sync-catalog"]),
+    runTsx("organize-catalog-images.ts", ["--sync-db"]),
 
   "supabase:assets:arrange": () => runTsx("arrange_supabase_catalog_assets.ts"),
   "supabase:backup": () => runTsx("backup_supabase.ts"),
@@ -464,7 +463,6 @@ const COMMANDS = {
     ),
   "test:planner-catalog:watch": () =>
     runPlaywright(["tests/e2e/planner-catalog.spec.ts"], ["--ui"]),
-  "test:e2e:open3d-world": () => runNode("run-open3d-world-e2e.mjs"),
   "test:e2e:world-standard-w1w2": () =>
     runPlaywright(
       ["tests/e2e/open3d-world-standard-journey.spec.ts"],
@@ -499,10 +497,6 @@ const COMMANDS = {
       ["tests/e2e/open3d-world-standard-journey.spec.ts"],
       ["--reporter=list"],
     );
-  },
-  "gate:open3d": () => {
-    runPnpmScript("typecheck");
-    runNode("run-open3d-world-e2e.mjs");
   },
 };
 

@@ -27,6 +27,14 @@
     "4.6 Write property-based test for endpoint contract completeness": {
       "status": "passed",
       "lastRunTimestamp": 1788019926621
+    },
+    "3.12 Write property-based test for responsive context preservation": {
+      "status": "passed",
+      "lastRunTimestamp": 1788022344920
+    },
+    "4.8 Write property-based test for safe structured errors": {
+      "status": "passed",
+      "lastRunTimestamp": 1788022470555
     }
   },
   "executionHistory": {

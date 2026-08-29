@@ -1,17 +1,10 @@
 /**
- * Planner Semantic Canvas Commands
+ * Planner-owned semantic canvas commands.
  *
- * Every state-changing canvas action is represented as a semantic command
- * before input bindings. Pointer, touch, keyboard, command palette, and
- * visible accessible controls invoke the same command. This ensures input
- * parity per Requirements 7.1–7.4, 7.7.
+ * All keyboard, palette, visible-control, wheel, and pan entry points resolve
+ * through this module; it deliberately has no Studio dependency.
  */
 
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
-
-/** Result of executing a command. */
 export interface PlannerCommandResult {
   /** Whether the command executed successfully. */
   success: boolean;
@@ -31,6 +24,10 @@ export interface PlannerCommandContext {
   bumpSceneVersion: () => void;
   /** Mark the document as having unsaved changes. */
   markUnsaved: () => void;
+  /** Planner's true multi-selection implementation, supplied by the UI. */
+  selectAll?: () => void;
+  /** Synchronize React viewport state after a semantic viewport command. */
+  onViewportChanged?: (zoom: number) => void;
 }
 
 /**
@@ -67,6 +64,40 @@ export interface FabricObjectLike {
   clone(properties?: string[]): Promise<FabricObjectLike>;
   getScaledWidth(): number;
   getScaledHeight(): number;
+}
+
+/** Absolute viewport outcomes produced by wheel, drag, keyboard, or controls. */
+export type PlannerViewportCommand =
+  | {
+      readonly type: "zoom";
+      readonly zoom: number;
+      readonly origin: { readonly x: number; readonly y: number };
+    }
+  | {
+      readonly type: "pan";
+      readonly viewportTransform: readonly number[];
+    };
+
+/**
+ * Canonical Planner viewport mutation. It accepts the resulting viewport,
+ * rather than a device-specific delta, so wheel, pinch alternatives, keyboard,
+ * and visible controls can converge without importing browser event types.
+ */
+export function applyPlannerViewportCommand(
+  canvas: FabricCanvasLike | null,
+  command: PlannerViewportCommand,
+): PlannerCommandResult {
+  if (!canvas) return { success: false, message: "Canvas not ready" };
+  if (command.type === "zoom") {
+    const zoom = Math.max(0.1, Math.min(8, command.zoom));
+    canvas.zoomToPoint(command.origin, zoom);
+    return { success: true };
+  }
+  if (command.viewportTransform.length !== 6) {
+    return { success: false, message: "Invalid viewport transform" };
+  }
+  canvas.setViewportTransform([...command.viewportTransform]);
+  return { success: true };
 }
 
 /**
@@ -106,18 +137,24 @@ export function createSelectAllCommand(): PlannerCommandDescriptor {
     keywords: ["select", "all"],
     keyboardBinding: "Ctrl+A",
     accessibleControlId: "cmd-select-all",
-    pointerBinding: "Ctrl+A keyboard",
+    pointerBinding: "command palette or selection menu",
+    touchBinding: "command palette or selection menu",
     execute(ctx) {
-      const c = ctx.fabricCanvas;
-      if (!c) return { success: false, message: "Canvas not ready" };
-      const objs = c.getObjects().filter(
-        (o) => !o.data?.isGridLine && !o.data?.isSheet && !o.data?.isGuide,
+      const canvas = ctx.fabricCanvas;
+      if (!canvas) return { success: false, message: "Canvas not ready" };
+      if (ctx.selectAll) {
+        ctx.selectAll();
+        return { success: true };
+      }
+      const objects = canvas.getObjects().filter(
+        (object) =>
+          !object.data?.isGridLine &&
+          !object.data?.isSheet &&
+          !object.data?.isGuide,
       );
-      if (!objs.length) return { success: false, message: "Nothing to select" };
-      // We create a simple selection — the caller (Planner.tsx) uses
-      // fabric.ActiveSelection; at the command level we just set the first
-      // object active and return success. The actual multi-select is wired
-      // through the existing callback.
+      if (!objects.length) return { success: false, message: "Nothing to select" };
+      canvas.setActiveObject(objects[0]);
+      canvas.requestRenderAll();
       return { success: true };
     },
   };
@@ -134,15 +171,13 @@ export function createDeleteCommand(): PlannerCommandDescriptor {
     touchBinding: "context menu → Delete",
     requiresSelection: true,
     execute(ctx) {
-      const c = ctx.fabricCanvas;
-      if (!c) return { success: false, message: "Canvas not ready" };
-      const active = c.getActiveObjects();
+      const canvas = ctx.fabricCanvas;
+      if (!canvas) return { success: false, message: "Canvas not ready" };
+      const active = canvas.getActiveObjects();
       if (!active.length) return { success: false, message: "No selection" };
-      for (const obj of active) {
-        c.remove(obj);
-      }
-      c.discardActiveObject();
-      c.requestRenderAll();
+      for (const object of active) canvas.remove(object);
+      canvas.discardActiveObject();
+      canvas.requestRenderAll();
       ctx.refreshLayers();
       ctx.bumpSceneVersion();
       ctx.markUnsaved();
@@ -162,15 +197,15 @@ export function createDuplicateCommand(): PlannerCommandDescriptor {
     touchBinding: "context menu → Duplicate",
     requiresSelection: true,
     async execute(ctx) {
-      const c = ctx.fabricCanvas;
-      if (!c) return { success: false, message: "Canvas not ready" };
-      const active = c.getActiveObject();
+      const canvas = ctx.fabricCanvas;
+      if (!canvas) return { success: false, message: "Canvas not ready" };
+      const active = canvas.getActiveObject();
       if (!active) return { success: false, message: "No selection" };
       const cloned = await active.clone(["data"]);
-      cloned.set({ left: (active.left || 0) + 20, top: (active.top || 0) + 20 });
-      c.add(cloned);
-      c.setActiveObject(cloned);
-      c.requestRenderAll();
+      cloned.set({ left: (active.left ?? 0) + 20, top: (active.top ?? 0) + 20 });
+      canvas.add(cloned);
+      canvas.setActiveObject(cloned);
+      canvas.requestRenderAll();
       ctx.refreshLayers();
       ctx.bumpSceneVersion();
       ctx.markUnsaved();
@@ -190,14 +225,14 @@ export function createRotateCommand(angleDeg: number = 90): PlannerCommandDescri
     touchBinding: "context menu → Rotate 90°",
     requiresSelection: true,
     execute(ctx) {
-      const c = ctx.fabricCanvas;
-      if (!c) return { success: false, message: "Canvas not ready" };
-      const active = c.getActiveObject();
+      const canvas = ctx.fabricCanvas;
+      if (!canvas) return { success: false, message: "Canvas not ready" };
+      const active = canvas.getActiveObject();
       if (!active) return { success: false, message: "No selection" };
-      active.set({ angle: (active.angle || 0) + angleDeg });
+      active.set({ angle: (active.angle ?? 0) + angleDeg });
       active.setCoords();
-      c.fire("object:modified", { target: active });
-      c.requestRenderAll();
+      canvas.fire("object:modified", { target: active });
+      canvas.requestRenderAll();
       ctx.bumpSceneVersion();
       ctx.markUnsaved();
       return { success: true, message: `Rotated ${angleDeg}°` };
@@ -215,7 +250,7 @@ export function createMoveCommand(
     up: { dx: 0, dy: -1 },
     down: { dx: 0, dy: 1 },
   };
-  const d = deltas[direction];
+  const delta = deltas[direction];
   const arrowKey = `Arrow${direction.charAt(0).toUpperCase() + direction.slice(1)}`;
 
   return {
@@ -225,19 +260,20 @@ export function createMoveCommand(
     keyboardBinding: arrowKey,
     pointerBinding: "drag",
     touchBinding: "drag",
+    accessibleControlId: `cmd-move-${direction}`,
     requiresSelection: true,
     execute(ctx) {
-      const c = ctx.fabricCanvas;
-      if (!c) return { success: false, message: "Canvas not ready" };
-      const active = c.getActiveObject();
+      const canvas = ctx.fabricCanvas;
+      if (!canvas) return { success: false, message: "Canvas not ready" };
+      const active = canvas.getActiveObject();
       if (!active) return { success: false, message: "No selection" };
       active.set({
-        left: (active.left || 0) + d.dx * stepPx,
-        top: (active.top || 0) + d.dy * stepPx,
+        left: (active.left ?? 0) + delta.dx * stepPx,
+        top: (active.top ?? 0) + delta.dy * stepPx,
       });
       active.setCoords();
-      c.fire("object:modified", { target: active });
-      c.requestRenderAll();
+      canvas.fire("object:modified", { target: active });
+      canvas.requestRenderAll();
       ctx.bumpSceneVersion();
       ctx.markUnsaved();
       return { success: true };
@@ -249,34 +285,40 @@ export function createResizeCommand(
   dimension: "width" | "height",
   delta: number,
 ): PlannerCommandDescriptor {
+  const action = delta > 0 ? "grow" : "shrink";
   return {
-    id: `resize-${dimension}-${delta > 0 ? "grow" : "shrink"}`,
+    id: `resize-${dimension}-${action}`,
     label: `Resize ${dimension} ${delta > 0 ? "larger" : "smaller"}`,
     keywords: ["resize", "scale", dimension],
-    keyboardBinding: dimension === "width"
-      ? (delta > 0 ? "Shift+ArrowRight" : "Shift+ArrowLeft")
-      : (delta > 0 ? "Shift+ArrowDown" : "Shift+ArrowUp"),
+    keyboardBinding:
+      dimension === "width"
+        ? delta > 0
+          ? "Shift+ArrowRight"
+          : "Shift+ArrowLeft"
+        : delta > 0
+          ? "Shift+ArrowDown"
+          : "Shift+ArrowUp",
     pointerBinding: "corner handle drag",
     touchBinding: "corner handle drag",
-    accessibleControlId: `cmd-resize-${dimension}-${delta > 0 ? "grow" : "shrink"}`,
+    accessibleControlId: `cmd-resize-${dimension}-${action}`,
     requiresSelection: true,
     execute(ctx) {
-      const c = ctx.fabricCanvas;
-      if (!c) return { success: false, message: "Canvas not ready" };
-      const active = c.getActiveObject();
+      const canvas = ctx.fabricCanvas;
+      if (!canvas) return { success: false, message: "Canvas not ready" };
+      const active = canvas.getActiveObject();
       if (!active) return { success: false, message: "No selection" };
-      const currentW = active.getScaledWidth();
-      const currentH = active.getScaledHeight();
+      const currentWidth = active.getScaledWidth();
+      const currentHeight = active.getScaledHeight();
       if (dimension === "width") {
-        const newW = Math.max(1, currentW + delta);
-        active.set({ scaleX: (active.scaleX || 1) * (newW / currentW) });
+        const nextWidth = Math.max(1, currentWidth + delta);
+        active.set({ scaleX: (active.scaleX ?? 1) * (nextWidth / currentWidth) });
       } else {
-        const newH = Math.max(1, currentH + delta);
-        active.set({ scaleY: (active.scaleY || 1) * (newH / currentH) });
+        const nextHeight = Math.max(1, currentHeight + delta);
+        active.set({ scaleY: (active.scaleY ?? 1) * (nextHeight / currentHeight) });
       }
       active.setCoords();
-      c.fire("object:modified", { target: active });
-      c.requestRenderAll();
+      canvas.fire("object:modified", { target: active });
+      canvas.requestRenderAll();
       ctx.bumpSceneVersion();
       ctx.markUnsaved();
       return { success: true };
@@ -294,11 +336,16 @@ export function createZoomInCommand(): PlannerCommandDescriptor {
     pointerBinding: "Ctrl+scroll up",
     touchBinding: "two-finger pinch out",
     execute(ctx) {
-      const c = ctx.fabricCanvas;
-      if (!c) return { success: false, message: "Canvas not ready" };
-      const z = Math.min(8, c.getZoom() * 1.2);
-      c.zoomToPoint({ x: c.getWidth() / 2, y: c.getHeight() / 2 }, z);
-      return { success: true };
+      const canvas = ctx.fabricCanvas;
+      if (!canvas) return { success: false, message: "Canvas not ready" };
+      const zoom = Math.min(8, canvas.getZoom() * 1.2);
+      const result = applyPlannerViewportCommand(canvas, {
+        type: "zoom",
+        zoom,
+        origin: { x: canvas.getWidth() / 2, y: canvas.getHeight() / 2 },
+      });
+      if (result.success) ctx.onViewportChanged?.(zoom);
+      return result;
     },
   };
 }
@@ -313,11 +360,16 @@ export function createZoomOutCommand(): PlannerCommandDescriptor {
     pointerBinding: "Ctrl+scroll down",
     touchBinding: "two-finger pinch in",
     execute(ctx) {
-      const c = ctx.fabricCanvas;
-      if (!c) return { success: false, message: "Canvas not ready" };
-      const z = Math.max(0.1, c.getZoom() / 1.2);
-      c.zoomToPoint({ x: c.getWidth() / 2, y: c.getHeight() / 2 }, z);
-      return { success: true };
+      const canvas = ctx.fabricCanvas;
+      if (!canvas) return { success: false, message: "Canvas not ready" };
+      const zoom = Math.max(0.1, canvas.getZoom() / 1.2);
+      const result = applyPlannerViewportCommand(canvas, {
+        type: "zoom",
+        zoom,
+        origin: { x: canvas.getWidth() / 2, y: canvas.getHeight() / 2 },
+      });
+      if (result.success) ctx.onViewportChanged?.(zoom);
+      return result;
     },
   };
 }
@@ -332,23 +384,28 @@ export function createPanCommand(
     up: { dx: 0, dy: 1 },
     down: { dx: 0, dy: -1 },
   };
-  const d = deltas[direction];
+  const delta = deltas[direction];
 
   return {
     id: `pan-${direction}`,
     label: `Pan ${direction}`,
     keywords: ["pan", "scroll", direction],
-    keyboardBinding: `Pan: H tool + Arrow${direction.charAt(0).toUpperCase() + direction.slice(1)}`,
+    keyboardBinding: `H then Arrow${direction.charAt(0).toUpperCase() + direction.slice(1)}`,
     pointerBinding: "middle-mouse drag / scroll wheel",
     touchBinding: "two-finger drag",
+    accessibleControlId: `vp-pan-${direction}`,
     execute(ctx) {
-      const c = ctx.fabricCanvas;
-      if (!c) return { success: false, message: "Canvas not ready" };
-      const vpt = [...c.viewportTransform];
-      vpt[4] += d.dx * stepPx;
-      vpt[5] += d.dy * stepPx;
-      c.setViewportTransform(vpt);
-      return { success: true };
+      const canvas = ctx.fabricCanvas;
+      if (!canvas) return { success: false, message: "Canvas not ready" };
+      const viewportTransform = [...canvas.viewportTransform];
+      viewportTransform[4] += delta.dx * stepPx;
+      viewportTransform[5] += delta.dy * stepPx;
+      const result = applyPlannerViewportCommand(canvas, {
+        type: "pan",
+        viewportTransform,
+      });
+      if (result.success) ctx.onViewportChanged?.(canvas.getZoom());
+      return result;
     },
   };
 }
@@ -357,11 +414,7 @@ export function createPanCommand(
 // Registry
 // ---------------------------------------------------------------------------
 
-/**
- * Build the complete set of Planner semantic canvas commands.
- * Every command can be invoked from pointer, touch, keyboard, command palette,
- * or visible accessible control — all routes converge here.
- */
+/** Build the complete set of Planner semantic canvas commands. */
 export function buildCanvasCommands(): PlannerCommandDescriptor[] {
   return [
     createSelectAllCommand(),
@@ -385,74 +438,63 @@ export function buildCanvasCommands(): PlannerCommandDescriptor[] {
   ];
 }
 
-/**
- * Look up a command by id from a command array.
- */
+/** Look up a command by id from a command array. */
 export function findCommand(
-  commands: PlannerCommandDescriptor[],
+  commands: readonly PlannerCommandDescriptor[],
   id: string,
 ): PlannerCommandDescriptor | undefined {
-  return commands.find((c) => c.id === id);
+  return commands.find((command) => command.id === id);
 }
 
-/**
- * Execute a command by id. Returns the result or a failure if not found.
- */
+/** Execute a command by id. Returns the result or a failure if not found. */
 export async function executeCommand(
-  commands: PlannerCommandDescriptor[],
+  commands: readonly PlannerCommandDescriptor[],
   id: string,
-  ctx: PlannerCommandContext,
+  context: PlannerCommandContext,
 ): Promise<PlannerCommandResult> {
-  const cmd = findCommand(commands, id);
-  if (!cmd) return { success: false, message: `Command "${id}" not found` };
-  return cmd.execute(ctx);
+  const command = findCommand(commands, id);
+  if (!command) return { success: false, message: `Command "${id}" not found` };
+  return command.execute(context);
 }
 
-/**
- * Filter commands for the command palette, including canvas commands.
- * Extends the existing palette commands with semantic canvas commands.
- */
+/** Filter semantic canvas commands for command-palette discovery. */
 export function filterCanvasCommands(
-  commands: PlannerCommandDescriptor[],
+  commands: readonly PlannerCommandDescriptor[],
   query: string,
 ): PlannerCommandDescriptor[] {
-  const q = query.trim().toLowerCase();
-  if (!q) return [...commands];
-  return commands.filter((c) => {
-    if (c.label.toLowerCase().includes(q)) return true;
-    if (c.id.toLowerCase().includes(q)) return true;
-    return (c.keywords ?? []).some((k) => k.toLowerCase().includes(q));
-  });
+  const normalizedQuery = query.trim().toLowerCase();
+  if (!normalizedQuery) return [...commands];
+  return commands.filter((command) =>
+    command.label.toLowerCase().includes(normalizedQuery) ||
+    command.id.toLowerCase().includes(normalizedQuery) ||
+    (command.keywords ?? []).some((keyword) =>
+      keyword.toLowerCase().includes(normalizedQuery),
+    ),
+  );
 }
 
-/**
- * Get all commands that have a keyboard binding.
- * Useful for rendering a keyboard shortcut help panel.
- */
+/** Get every command with a documented keyboard binding. */
 export function getKeyboardBindings(
-  commands: PlannerCommandDescriptor[],
+  commands: readonly PlannerCommandDescriptor[],
 ): Array<{ id: string; label: string; binding: string }> {
   return commands
-    .filter((c) => c.keyboardBinding)
-    .map((c) => ({
-      id: c.id,
-      label: c.label,
-      binding: c.keyboardBinding!,
+    .filter((command) => command.keyboardBinding)
+    .map((command) => ({
+      id: command.id,
+      label: command.label,
+      binding: command.keyboardBinding!,
     }));
 }
 
-/**
- * Get all commands that have an accessible control binding.
- * Useful for ensuring every command is reachable from visible UI.
- */
+/** Get every command with a visible accessible-control binding. */
 export function getAccessibleControls(
-  commands: PlannerCommandDescriptor[],
+  commands: readonly PlannerCommandDescriptor[],
 ): Array<{ id: string; label: string; controlId: string }> {
   return commands
-    .filter((c) => c.accessibleControlId)
-    .map((c) => ({
-      id: c.id,
-      label: c.label,
-      controlId: c.accessibleControlId!,
+    .filter((command) => command.accessibleControlId)
+    .map((command) => ({
+      id: command.id,
+      label: command.label,
+      controlId: command.accessibleControlId!,
     }));
 }

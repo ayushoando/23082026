@@ -225,8 +225,8 @@ export function createPlannerIdempotencyKey(operation: string, projectId: string
   return `${operation}-${projectId}-${random}`.replace(/[^A-Za-z0-9._~-]/g, "-").slice(0, 120);
 }
 
-function mutationPayload(payload: unknown, options?: PlannerMutationOptions): unknown {
-  if (!options || !payload || typeof payload !== "object" || Array.isArray(payload)) {
+function mutationPayload(payload: unknown, options: PlannerMutationOptions): unknown {
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
     return payload;
   }
   return {
@@ -261,13 +261,99 @@ export interface GetProjectOptions {
   signal?: AbortSignal;
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+function plannerProjectStatus(
+  value: unknown,
+): PlannerProject["status"] {
+  return value === "draft" || value === "active" || value === "archived"
+    ? value
+    : undefined;
+}
+
+/**
+ * Adapt the versioned repository contract to the legacy field names still used
+ * by the Planner UI. Keeping this at the HTTP boundary prevents camel/snake
+ * case drift from leaking into components while both response versions remain
+ * readable.
+ */
+export function normalizePlannerProject(value: unknown): PlannerProject {
+  const record = isRecord(value) ? value : {};
+  const geometry = isRecord(record.geometry) ? record.geometry : undefined;
+  const canvasCandidate = geometry?.canvasSnapshot ?? record.canvas_json;
+  const canvasJson =
+    typeof canvasCandidate === "string" || isRecord(canvasCandidate)
+      ? canvasCandidate
+      : {};
+  const canvasRecord = isRecord(canvasJson) ? canvasJson : undefined;
+  const objectsCount =
+    typeof record.objects_count === "number" &&
+    Number.isSafeInteger(record.objects_count) &&
+    record.objects_count >= 0
+      ? record.objects_count
+      : Array.isArray(canvasRecord?.objects)
+        ? canvasRecord.objects.length
+        : 0;
+  const revision =
+    typeof record.revision === "number" &&
+    Number.isSafeInteger(record.revision) &&
+    record.revision >= 0
+      ? record.revision
+      : 1;
+  const updatedAt =
+    typeof record.updatedAt === "string"
+      ? record.updatedAt
+      : typeof record.updated_at === "string"
+        ? record.updated_at
+        : typeof record.createdAt === "string"
+          ? record.createdAt
+          : typeof record.created_at === "string"
+            ? record.created_at
+            : "";
+  const thumbnailUrl =
+    typeof record.thumbnailUrl === "string" || record.thumbnailUrl === null
+      ? record.thumbnailUrl
+      : typeof record.thumbnail_url === "string" || record.thumbnail_url === null
+        ? record.thumbnail_url
+        : null;
+
+  return {
+    id: typeof record.id === "string" ? record.id : "",
+    name: typeof record.name === "string" && record.name.trim()
+      ? record.name
+      : "Untitled Plan",
+    thumbnail_url: thumbnailUrl,
+    objects_count: objectsCount,
+    revision,
+    status: plannerProjectStatus(record.status),
+    updated_at: updatedAt,
+    canvas_json: canvasJson,
+    ...(geometry ? { geometry } : {}),
+    ...(isRecord(record.sheet)
+      ? { sheet: record.sheet as PlannerProject["sheet"] }
+      : {}),
+    ...(Array.isArray(record.layers) ? { layers: record.layers } : {}),
+    ...(typeof record.user_id === "string" || record.user_id === null
+      ? { user_id: record.user_id }
+      : {}),
+    ...(typeof record.createdAt === "string"
+      ? { created_at: record.createdAt }
+      : typeof record.created_at === "string"
+        ? { created_at: record.created_at }
+        : {}),
+  };
+}
+
 export async function listProjects(
   options?: GetProjectOptions,
 ): Promise<PlannerProject[]> {
   const response = await plannerFetch("/api/Planner/projects", {
     signal: options?.signal,
   });
-  return readJson<PlannerProject[]>(response);
+  const projects = await readJson<unknown>(response);
+  return Array.isArray(projects) ? projects.map(normalizePlannerProject) : [];
 }
 
 export async function getProject(
@@ -278,35 +364,35 @@ export async function getProject(
     `/api/Planner/projects/${encodeURIComponent(id)}`,
     { signal: options?.signal },
   );
-  return readJson<PlannerProject>(response);
+  return normalizePlannerProject(await readJson<unknown>(response));
 }
 
 export async function createProject(
   payload: unknown,
-  options?: PlannerMutationOptions,
+  options: PlannerMutationOptions,
 ): Promise<PlannerProject> {
   const response = await plannerFetch(
     "/api/Planner/projects",
     jsonInit("POST", mutationPayload(payload, options)),
   );
-  return readJson<PlannerProject>(response);
+  return normalizePlannerProject(await readJson<unknown>(response));
 }
 
 export async function updateProject(
   id: string,
   payload: unknown,
-  options?: PlannerMutationOptions,
+  options: PlannerMutationOptions,
 ): Promise<PlannerProject> {
   const response = await plannerFetch(
     `/api/Planner/projects/${encodeURIComponent(id)}`,
     jsonInit("PATCH", mutationPayload(payload, options)),
   );
-  return readJson<PlannerProject>(response);
+  return normalizePlannerProject(await readJson<unknown>(response));
 }
 
 export async function deleteProject(
   id: string,
-  options?: PlannerMutationOptions,
+  options: PlannerMutationOptions,
 ): Promise<{ ok: boolean }> {
   const response = await plannerFetch(
     `/api/Planner/projects/${encodeURIComponent(id)}`,

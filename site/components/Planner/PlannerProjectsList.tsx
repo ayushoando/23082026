@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactNode, useCallback, useEffect, useState } from "react";
+import { type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -13,11 +13,13 @@ import {
   type PlannerProjectsListFailure,
 } from "@planner/components/plannerProjectsListState";
 import {
+  createPlannerIdempotencyKey,
   createProject,
   deleteProject,
   fileUrl,
   isAbortError,
   listProjects,
+  PlannerApiError,
 } from "@planner/lib/plannerApi";
 import { buildStarterProjectPayload } from "@planner/lib/starterProjectTemplate";
 import type { PlannerProject } from "@planner/lib/plannerTypes";
@@ -30,6 +32,9 @@ export function ProjectsList() {
   const [loading, setLoading] = useState(true);
   const [failure, setFailure] = useState<PlannerProjectsListFailure | null>(null);
   const [retryCount, setRetryCount] = useState(0);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [creatingSample, setCreatingSample] = useState(false);
+  const mutationKeysRef = useRef(new Map<string, string>());
 
   useEffect(() => {
     const controller = new AbortController();
@@ -64,25 +69,75 @@ export function ProjectsList() {
     setRetryCount((count) => count + 1);
   }, []);
 
-  const doDelete = async (id: string, name: string) => {
-    if (!window.confirm(`Delete "${name}"?`)) return;
+  const mutationKey = useCallback((operation: string, projectId: string) => {
+    const identity = `${operation}:${projectId}`;
+    const existing = mutationKeysRef.current.get(identity);
+    if (existing) return existing;
+    const created = createPlannerIdempotencyKey(operation, projectId);
+    mutationKeysRef.current.set(identity, created);
+    return created;
+  }, []);
+
+  const clearMutationKey = useCallback((operation: string, projectId: string) => {
+    mutationKeysRef.current.delete(`${operation}:${projectId}`);
+  }, []);
+
+  const mutationFailure = useCallback((error: unknown, action: string) => {
+    if (!(error instanceof PlannerApiError)) {
+      showToast(`${action} failed. Try again.`, "error");
+      return;
+    }
+    if (error.isUnauthorized || error.recovery === "reauthenticate-preserve-unsaved") {
+      showToast("Sign in again to continue.", "error");
+      router.push(buildAccessRedirect("/ooplanner/projects"));
+      return;
+    }
+    if (error.isConflict) {
+      showToast("This plan changed elsewhere. Refresh the list before retrying.", "error");
+      return;
+    }
+    if (error.isOffline) {
+      showToast("You are offline. Reconnect and retry; no plan was removed.", "error");
+      return;
+    }
+    showToast(`${action} failed. Try again.`, "error");
+  }, [router, showToast]);
+
+  const doDelete = async (project: PlannerProject) => {
+    if (deletingId || !window.confirm(`Delete "${project.name}"?`)) return;
+    setDeletingId(project.id);
     try {
-      await deleteProject(id);
+      await deleteProject(project.id, {
+        expectedRevision: project.revision,
+        idempotencyKey: mutationKey("delete", project.id),
+      });
+      clearMutationKey("delete", project.id);
+      setProjects((current) => current.filter((item) => item.id !== project.id));
       showToast("Deleted", "ok");
-      handleRetry();
-    } catch {
-      showToast("Delete failed", "error");
+    } catch (error: unknown) {
+      mutationFailure(error, "Delete");
+    } finally {
+      setDeletingId(null);
     }
   };
 
   const startFromSample = async () => {
+    if (creatingSample) return;
+    const templateIdentity = "starter-template";
+    setCreatingSample(true);
     try {
-      const created = await createProject(buildStarterProjectPayload());
-      trackPlannerProjectStart(created.id, "starter-template");
+      const created = await createProject(buildStarterProjectPayload(), {
+        expectedRevision: 0,
+        idempotencyKey: mutationKey("create", templateIdentity),
+      });
+      clearMutationKey("create", templateIdentity);
+      trackPlannerProjectStart(created.id, templateIdentity);
       showToast("Sample workspace created", "ok");
       router.push(`/ooplanner/projects/${created.id}`);
-    } catch {
-      showToast("Failed to create sample workspace", "error");
+    } catch (error: unknown) {
+      mutationFailure(error, "Sample creation");
+    } finally {
+      setCreatingSample(false);
     }
   };
 
@@ -157,12 +212,13 @@ export function ProjectsList() {
           </Link>
           <OoButton
             variant="ghost"
+            isDisabled={creatingSample}
             onPress={() => {
               void startFromSample();
             }}
             data-testid="empty-state-sample-workspace"
           >
-            Start from a sample workspace
+            {creatingSample ? "Creating sample…" : "Start from a sample workspace"}
           </OoButton>
         </div>
       </section>
@@ -192,11 +248,16 @@ export function ProjectsList() {
             <div className="mt-2 flex justify-end">
               <OoButton
                 variant={["ghost", "icon"]}
+                isDisabled={deletingId === project.id}
                 onPress={() => {
-                  void doDelete(project.id, project.name);
+                  void doDelete(project);
                 }}
                 data-testid={`del-${project.id}`}
-                aria-label={`Delete plan ${project.name}`}
+                aria-label={
+                  deletingId === project.id
+                    ? `Deleting plan ${project.name}`
+                    : `Delete plan ${project.name}`
+                }
               >
                 <PhIcon name="trash" size={18} />
               </OoButton>

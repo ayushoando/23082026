@@ -5,13 +5,6 @@ import { fileURLToPath } from "url";
 import sharp from "sharp";
 import { config as loadEnv } from "dotenv";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
-import {
-  Node,
-  Project,
-  SyntaxKind,
-  type ArrayLiteralExpression,
-  type ObjectLiteralExpression,
-} from "ts-morph";
 
 type CanonicalCategory =
   | "seating"
@@ -26,7 +19,6 @@ type Flags = {
   dryRun: boolean;
   apply: boolean;
   syncDb: boolean;
-  syncCatalog: boolean;
   allowMissingSlug: boolean;
 };
 
@@ -58,7 +50,6 @@ type OrganizerReport = {
     dryRun: boolean;
     apply: boolean;
     syncDb: boolean;
-    syncCatalog: boolean;
     allowMissingSlug: boolean;
   };
   summary: {
@@ -67,7 +58,6 @@ type OrganizerReport = {
     filesPlanned: number;
     filesWritten: number;
     dbRowsUpdated: number;
-    catalogProductsUpdated: number;
   };
   categoryDistribution: Record<string, number>;
   processedProducts: Array<{
@@ -93,11 +83,6 @@ type PostSyncAudit = {
     missingCount: number;
     missing: Array<{ slug: string; path: string }>;
   };
-  catalogPathAudit: {
-    updatedProducts: number;
-    missingCount: number;
-    missing: Array<{ slug: string; path: string }>;
-  };
 };
 
 const ROOT = process.cwd();
@@ -109,7 +94,6 @@ const POST_SYNC_AUDIT_PATH = path.resolve(
   "scripts",
   "catalog-postsync-audit.json",
 );
-const CATALOG_PATH = path.resolve(ROOT, "lib", "catalog.ts");
 
 const CATEGORY_ALIAS_MAP: Record<string, CanonicalCategory> = {
   "revolving chairs mesh": "seating",
@@ -129,18 +113,11 @@ const CATEGORY_ALIAS_MAP: Record<string, CanonicalCategory> = {
   "acoustic booth": "collaborative",
 };
 
-const CATALOG_SLUG_OVERRIDES_BY_PRODUCT_KEY: Record<string, string[]> = {
-  "oando-workstations::cabin-60x30": ["cabin-60x30"],
-  "oando-workstations::cabin-l-shape": ["cabin-l-shape"],
-  "oando-tables::conference-8-seater": ["conference-8-seater"],
-};
-
 export function parseFlags(argv: string[]): Flags {
   return {
     dryRun: argv.includes("--dry-run"),
     apply: argv.includes("--apply"),
     syncDb: argv.includes("--sync-db"),
-    syncCatalog: argv.includes("--sync-catalog"),
     allowMissingSlug: argv.includes("--allow-missing-slug"),
   };
 }
@@ -485,160 +462,7 @@ async function syncDb(
   return { updated, unmatched };
 }
 
-function getObjectProp(
-  obj: ObjectLiteralExpression,
-  key: string,
-): Node | undefined {
-  return obj.getProperty((prop) => {
-    if (Node.isPropertyAssignment(prop) || Node.isShorthandPropertyAssignment(prop)) {
-      return prop.getName() === key;
-    }
-    return false;
-  });
-}
-
-function setStringProperty(
-  obj: ObjectLiteralExpression,
-  key: string,
-  value: string,
-): void {
-  const existing = getObjectProp(obj, key);
-  const text = `"${value.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`;
-
-  if (existing && Node.isPropertyAssignment(existing)) {
-    existing.setInitializer(text);
-    return;
-  }
-  obj.addPropertyAssignment({
-    name: key,
-    initializer: text,
-  });
-}
-
-function setStringArrayProperty(
-  obj: ObjectLiteralExpression,
-  key: string,
-  values: string[],
-): void {
-  const initializer = `[${values
-    .map((v) => `"${v.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`)
-    .join(", ")}]`;
-  const existing = getObjectProp(obj, key);
-  if (existing && Node.isPropertyAssignment(existing)) {
-    existing.setInitializer(initializer);
-    return;
-  }
-  obj.addPropertyAssignment({
-    name: key,
-    initializer,
-  });
-}
-
-async function syncCatalog(
-  plans: ProductPlan[],
-): Promise<{ updated: number; unmatched: string[]; updatedPaths: Record<string, string[]> }> {
-  if (!(await pathExists(CATALOG_PATH))) {
-    throw new Error("lib/catalog.ts not found.");
-  }
-
-  const planBySlug = new Map<string, ProductPlan>();
-  for (const plan of plans) planBySlug.set(plan.productSlug, plan);
-
-  const matchedSlugs = new Set<string>();
-  const updatedPaths: Record<string, string[]> = {};
-  let updated = 0;
-
-  const project = new Project({
-    tsConfigFilePath: path.resolve(ROOT, "tsconfig.json"),
-    skipAddingFilesFromTsConfig: true,
-  });
-  const source = project.addSourceFileAtPath(CATALOG_PATH);
-  const decl = source.getVariableDeclaration("oandoCatalog");
-  if (!decl) throw new Error("oandoCatalog declaration not found.");
-
-  const arr = decl.getInitializerIfKindOrThrow(
-    SyntaxKind.ArrayLiteralExpression,
-  ) as ArrayLiteralExpression;
-
-  for (const categoryNode of arr.getElements()) {
-    if (!Node.isObjectLiteralExpression(categoryNode)) continue;
-    const categoryIdProp = getObjectProp(categoryNode, "id");
-    if (!categoryIdProp || !Node.isPropertyAssignment(categoryIdProp)) continue;
-    const categoryId = categoryIdProp
-      .getInitializerIfKind(SyntaxKind.StringLiteral)
-      ?.getLiteralValue();
-    if (!categoryId) continue;
-
-    const seriesProp = getObjectProp(categoryNode, "series");
-    if (!seriesProp || !Node.isPropertyAssignment(seriesProp)) continue;
-    const seriesArray = seriesProp.getInitializerIfKind(SyntaxKind.ArrayLiteralExpression);
-    if (!seriesArray) continue;
-
-    for (const seriesNode of seriesArray.getElements()) {
-      if (!Node.isObjectLiteralExpression(seriesNode)) continue;
-      const productsProp = getObjectProp(seriesNode, "products");
-      if (!productsProp || !Node.isPropertyAssignment(productsProp)) continue;
-      const productsArray = productsProp.getInitializerIfKind(
-        SyntaxKind.ArrayLiteralExpression,
-      );
-      if (!productsArray) continue;
-
-      for (const productNode of productsArray.getElements()) {
-        if (!Node.isObjectLiteralExpression(productNode)) continue;
-        const productIdProp = getObjectProp(productNode, "id");
-        if (!productIdProp || !Node.isPropertyAssignment(productIdProp)) continue;
-        const productId = productIdProp
-          .getInitializerIfKind(SyntaxKind.StringLiteral)
-          ?.getLiteralValue();
-        if (!productId) continue;
-
-        const productKey = `${categoryId}::${productId}`;
-        const candidates = [
-          `${categoryId}--${productId}`,
-          productId,
-          ...(CATALOG_SLUG_OVERRIDES_BY_PRODUCT_KEY[productKey] || []),
-        ];
-
-        let matchedPlan: ProductPlan | null = null;
-        for (const candidate of candidates) {
-          const plan = planBySlug.get(candidate);
-          if (plan) {
-            matchedPlan = plan;
-            matchedSlugs.add(candidate);
-            break;
-          }
-        }
-        if (!matchedPlan) continue;
-
-        const ordered = matchedPlan.images
-          .slice()
-          .sort((a, b) => a.rank - b.rank)
-          .map((img) => img.targetWebPath);
-        const flagship = ordered[0];
-        const scenes = ordered.slice(1);
-
-        setStringProperty(productNode, "flagshipImage", flagship);
-        setStringArrayProperty(productNode, "sceneImages", scenes);
-
-        updated += 1;
-        updatedPaths[matchedPlan.productSlug] = ordered;
-      }
-    }
-  }
-
-  await source.save();
-
-  const unmatched = plans
-    .map((p) => p.productSlug)
-    .filter((slug) => !matchedSlugs.has(slug));
-
-  return { updated, unmatched, updatedPaths };
-}
-
-async function runPostSyncAudit(
-  plans: ProductPlan[],
-  catalogUpdatedPaths: Record<string, string[]>,
-): Promise<PostSyncAudit> {
+async function runPostSyncAudit(plans: ProductPlan[]): Promise<PostSyncAudit> {
   const localMissing: string[] = [];
   for (const plan of plans) {
     for (const image of plan.images) {
@@ -679,16 +503,6 @@ async function runPostSyncAudit(
     // Keep audit best-effort if env is unavailable.
   }
 
-  const catalogMissing: Array<{ slug: string; path: string }> = [];
-  for (const [slug, paths] of Object.entries(catalogUpdatedPaths)) {
-    for (const p of paths) {
-      const abs = path.resolve(ROOT, "public", p.replace(/^\//, ""));
-      if (!(await pathExists(abs))) {
-        catalogMissing.push({ slug, path: p });
-      }
-    }
-  }
-
   return {
     generatedAt: new Date().toISOString(),
     touchedProductCount: plans.length,
@@ -702,17 +516,12 @@ async function runPostSyncAudit(
       missingCount: dbMissing.length,
       missing: dbMissing.slice(0, 200),
     },
-    catalogPathAudit: {
-      updatedProducts: Object.keys(catalogUpdatedPaths).length,
-      missingCount: catalogMissing.length,
-      missing: catalogMissing.slice(0, 200),
-    },
   };
 }
 
 async function main(): Promise<void> {
   const flags = parseFlags(process.argv.slice(2));
-  if (!flags.dryRun && !flags.apply && !flags.syncDb && !flags.syncCatalog) {
+  if (!flags.dryRun && !flags.apply && !flags.syncDb) {
     flags.dryRun = true;
   }
 
@@ -737,7 +546,6 @@ async function main(): Promise<void> {
       filesPlanned: plans.reduce((sum, p) => sum + p.images.length, 0),
       filesWritten: 0,
       dbRowsUpdated: 0,
-      catalogProductsUpdated: 0,
     },
     categoryDistribution: {},
     processedProducts: [],
@@ -751,7 +559,7 @@ async function main(): Promise<void> {
       (report.categoryDistribution[plan.category] || 0) + 1;
   }
 
-  const doApply = flags.apply || flags.syncDb || flags.syncCatalog;
+  const doApply = flags.apply || flags.syncDb;
   const { processed, filesWritten } = await applyOrganization(
     plans,
     !doApply || flags.dryRun,
@@ -760,7 +568,6 @@ async function main(): Promise<void> {
   report.summary.productsProcessed = processed.length;
   report.summary.filesWritten = filesWritten;
 
-  let catalogUpdatedPaths: Record<string, string[]> = {};
   if (flags.syncDb) {
     const supabase = createSupabaseClient();
     const db = await syncDb(supabase, plans, flags.allowMissingSlug);
@@ -772,20 +579,7 @@ async function main(): Promise<void> {
     }
   }
 
-  if (flags.syncCatalog) {
-    const catalog = await syncCatalog(plans);
-    report.summary.catalogProductsUpdated = catalog.updated;
-    catalogUpdatedPaths = catalog.updatedPaths;
-    if (catalog.unmatched.length > 0) {
-      report.warnings.push(
-        `Unmatched catalog products for slugs: ${catalog.unmatched
-          .slice(0, 20)
-          .join(", ")}`,
-      );
-    }
-  }
-
-  const postSyncAudit = await runPostSyncAudit(plans, catalogUpdatedPaths);
+  const postSyncAudit = await runPostSyncAudit(plans);
 
   await writeFile(REPORT_PATH, JSON.stringify(report, null, 2), "utf8");
   await writeFile(

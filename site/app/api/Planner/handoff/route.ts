@@ -6,6 +6,8 @@
  * → session → owner scope → revision/idempotency → persistence.
  */
 
+import { createPlannerHandoff } from "@planner/lib/handoff/createPlannerHandoff";
+import { plannerHandoffRequestSchema } from "@planner/lib/handoff/handoffSchema";
 import {
   createPlannerHandler,
   createPlannerRejectedMethodHandler,
@@ -65,19 +67,16 @@ export const POST = createPlannerHandler({
   operation: { invoke: handleHandoff },
 });
 
-// Unsupported methods — 405 with structured response and Allow header
-export function GET(request: NextRequest, _context: unknown): Response {
-  return plannerMethodNotAllowed(request, ["POST"]);
-}
-
-export function PUT(request: NextRequest, _context: unknown): Response {
-  return plannerMethodNotAllowed(request, ["POST"]);
-}
-
-export function DELETE(request: NextRequest, _context: unknown): Response {
-  return plannerMethodNotAllowed(request, ["POST"]);
-}
-
-export function PATCH(request: NextRequest, _context: unknown): Response {
-  return plannerMethodNotAllowed(request, ["POST"]);
-}
+// Unsupported methods still enter the quota-first request pipeline.
+export const GET = createPlannerRejectedMethodHandler(
+  "planner.handoff.create",
+);
+export const PUT = createPlannerRejectedMethodHandler(
+  "planner.handoff.create",
+);
+export const DELETE = createPlannerRejectedMethodHandler(
+  "planner.handoff.create",
+);
+export const PATCH = createPlannerRejectedMethodHandler(
+  "planner.handoff.create",
+);

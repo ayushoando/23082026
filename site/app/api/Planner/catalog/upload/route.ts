@@ -6,6 +6,16 @@
  * → session → owner scope → revision/idempotency → persistence.
  */
 
+import { getFurnitureCatalogMode } from "@/lib/catalog/furnitureCatalogMode";
+import { isOversizedUpload } from "@/lib/security/uploadLimits";
+import {
+  ensureStorageDirs,
+  nowIso,
+  persistCatalogUpload,
+  shortId,
+  slugify,
+  writeCatalogEntry,
+} from "@planner/server/plannerStore";
 import {
   createPlannerHandler,
   createPlannerRejectedMethodHandler,
@@ -93,19 +103,16 @@ export const POST = createPlannerHandler({
   operation: { invoke: uploadCatalogItem },
 });
 
-// Unsupported methods — 405 with structured response and Allow header
-export function GET(request: NextRequest, _context: unknown): Response {
-  return plannerMethodNotAllowed(request, ["POST"]);
-}
-
-export function PUT(request: NextRequest, _context: unknown): Response {
-  return plannerMethodNotAllowed(request, ["POST"]);
-}
-
-export function DELETE(request: NextRequest, _context: unknown): Response {
-  return plannerMethodNotAllowed(request, ["POST"]);
-}
-
-export function PATCH(request: NextRequest, _context: unknown): Response {
-  return plannerMethodNotAllowed(request, ["POST"]);
-}
+// Unsupported methods still enter the quota-first request pipeline.
+export const GET = createPlannerRejectedMethodHandler(
+  "planner.catalog.upload",
+);
+export const PUT = createPlannerRejectedMethodHandler(
+  "planner.catalog.upload",
+);
+export const DELETE = createPlannerRejectedMethodHandler(
+  "planner.catalog.upload",
+);
+export const PATCH = createPlannerRejectedMethodHandler(
+  "planner.catalog.upload",
+);

@@ -34,11 +34,10 @@ export const DELETE = createPlannerHandler({
   operation: { invoke: deletePlannerProject },
 });
 
-// Unsupported methods — 405 with structured response and Allow header
-export function POST(request: NextRequest, _context: unknown): Response {
-  return plannerMethodNotAllowed(request, ["GET", "PATCH", "DELETE"]);
-}
-
-export function PUT(request: NextRequest, _context: unknown): Response {
-  return plannerMethodNotAllowed(request, ["GET", "PATCH", "DELETE"]);
-}
+// Unsupported methods still enter the quota-first request pipeline.
+export const POST = createPlannerRejectedMethodHandler(
+  "planner.projects.get",
+);
+export const PUT = createPlannerRejectedMethodHandler(
+  "planner.projects.get",
+);
