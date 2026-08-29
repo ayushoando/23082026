@@ -29,3 +29,4 @@ Run only with current-session, explicit user authorization and when the active h
 
 Without both conditions, provide these commands to the user instead. Detail: `docs/architecture/css.md`, `.github/instructions/focss.instructions.md`.
 
+Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action.

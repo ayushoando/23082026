@@ -36,3 +36,4 @@ When the user requests validation: run the requested command, fix failures, and 
 
 ## Graph-layer integration
 Inspect imports and dependents directly from the live source tree to identify covering test files, then report the scoped command to the user.
+Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action.

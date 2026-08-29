@@ -103,3 +103,4 @@ These paths are historical/deletion records, not active runtime routes.
 ## Validation status
 
 Static configuration inspection is not behavioral validation. Tests, typechecks, gates, coverage, builds, browser checks/runners, and local services remain owner-authorized. Until required checks have observed results: **Configuration changes complete; mandatory repository validation pending owner execution/authorization.**
+Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action.

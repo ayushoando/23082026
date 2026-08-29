@@ -90,6 +90,21 @@ Next: [Quality and validation](./10-quality-validation.md).
 - **Expected Evidence:** Artifact Class, exact subfolder, filename pattern, owner/source, authored/generated state, rejected placements, and observed placement.
 - **Next Decision:** Select a Workstream/Purpose Subfolder before any Output-Producing Task write.
 
+## Artifact class and workspace boundary record
+
+Before an Output-Producing Task writes, its Route Record names the Artifact Class, exact Workstream Subfolder or Purpose Subfolder, filename pattern, owning source or script, authored-or-generated state, rejected placements, and Site Write Gate state. The Completion Record repeats those fields with observed placement evidence; a placement decision is not evidence that anything was moved.
+
+| Artifact Class | Approved destination and producer | Rejected destination or boundary |
+|---|---|---|
+| Agent Work Report | `./agents-work/<workstream>/<report-type>/` or an approved guide workstream; authored by an agent | `./agents-work/` root, `./results/`, or `./site/` |
+| Machine Evidence | `./results/<purpose>/`; produced by the owning command or script | `./results/` root, `./agents-work/`, or `./site/`; do not hand-edit generated evidence |
+| Generated Tech-Docs Output | `./generated-documents/`; produced by `./tech-docs-generator/` | `./results/`, `./agents-work/`, or `./site/` |
+| Active Plan | `./plans/<name>/` indexed by `./plans/README.md`; authored plan material | `./results/`, `./site/`, or an unowned root location |
+| True Blocker | Root `./Failures.md`; supporting authored analysis may use an approved workstream | Duplicate blocker ledgers in `./results/`, `./agents-work/`, or `./site/` |
+| Core Product Write | Explicitly approved product source, including `./site/` only after its Site Write Gate | `./site/` for reports, prompts, skills, results, plans, handoffs, generated files, or other Non-Core Artifacts |
+
+The exact workspace boundary is preserved: `./tech-docs-generator/` remains a root-level sibling of `./site/`; `./generated-documents/` remains separate generated output; and `./results/site/` is a Machine Evidence Purpose Subfolder, never a source tree or package relocation target. A move or relationship change is a separate Workspace-Boundary Task.
+
 ## Exact output and workspace boundaries
 
 - Agent-authored reports and work products use `./agents-work/<workstream>/<report-type>/` or an existing approved guide workstream; the `./agents-work/` root is not a report destination.

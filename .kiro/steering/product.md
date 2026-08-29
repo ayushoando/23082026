@@ -26,3 +26,4 @@ An office furniture catalog, configurator, and floor-planning tool for a furnitu
 ## Design Tone
 - Professional, clean, corporate aesthetic
 - Mobile-responsive but primarily desktop-used by clients
+Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action.

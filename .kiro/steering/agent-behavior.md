@@ -42,3 +42,5 @@ inclusion: always
 - Re-read `AGENTS.md` and `Agents/01-standard.md` before choosing a fallback.
 - Check `plans/README.md` for active coordination, plan ownership, and evidence placement.
 - If work is blocked, add evidence to `Failures.md`; do not create a competing blocker list.
+Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action.
+Before any action, read the current user request and applicable repository standard, declare exact scope and permissions, and stop on denial, conflict, or missing authorization.

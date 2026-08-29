@@ -110,6 +110,11 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987602741
+      },
+      {
+        "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
+        "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
+        "timestamp": 1787987848487
       }
     ],
     "1.3 Define the single fail-closed Pre-Action Gate for all six action kinds": [
@@ -117,6 +122,11 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987603847
+      },
+      {
+        "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
+        "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
+        "timestamp": 1787987991487
       }
     ],
     "1.4 Freeze required handoff fields, closed statuses, static/runtime evidence separation, and validation limits": [
@@ -124,6 +134,11 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987604957
+      },
+      {
+        "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
+        "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
+        "timestamp": 1787988162914
       }
     ],
     "2.1 Inventory all 51 required Kiro Markdown paths individually": [
@@ -131,6 +146,11 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987606049
+      },
+      {
+        "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
+        "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
+        "timestamp": 1787988386334
       }
     ],
     "2.2 Inventory all live guide Markdown paths and conditional projection surfaces": [
@@ -138,6 +158,11 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987606121
+      },
+      {
+        "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
+        "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
+        "timestamp": 1787988657835
       }
     ],
     "2.3 Reconcile current control states, physical definitions, optional branches, and command-hook limits": [
@@ -145,6 +170,11 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987606201
+      },
+      {
+        "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
+        "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
+        "timestamp": 1787988923407
       }
     ],
     "2.4 Determine HTML provenance and artifact/workspace boundaries without running a generator": [
@@ -152,6 +182,11 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987606301
+      },
+      {
+        "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
+        "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
+        "timestamp": 1787989160819
       }
     ],
     "3.1 Add Begin Here, Route Record, and common Coverage-Audited Task Card schema": [
@@ -159,6 +194,16 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987606425
+      },
+      {
+        "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
+        "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
+        "timestamp": 1787989439984
+      },
+      {
+        "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
+        "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
+        "timestamp": 1787989602443
       }
     ],
     "3.2 Add exactly the 22 D01–D22 cards and classifier rows": [
@@ -166,6 +211,16 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987606492
+      },
+      {
+        "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
+        "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
+        "timestamp": 1787989626060
+      },
+      {
+        "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
+        "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
+        "timestamp": 1787989860241
       }
     ],
     "3.3 Add the Coverage Audit, Surface Status enum, and Coverage-Gap Admission Card": [
@@ -173,6 +228,11 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987606548
+      },
+      {
+        "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
+        "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
+        "timestamp": 1787989878071
       }
     ],
     "3.4 Add artifact placement, exact workspace boundaries, and the Site Write Gate": [
@@ -180,6 +240,11 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987606618
+      },
+      {
+        "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
+        "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
+        "timestamp": 1787990094887
       }
     ],
     "3.5 Add the Locked Path Gate and exact owner-authorization wording without changing protected files": [
@@ -187,6 +252,11 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987606669
+      },
+      {
+        "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
+        "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
+        "timestamp": 1787990311669
       }
     ],
     "3.6 Add the Kiro inventory classification, four-slot records/statuses, fail-closed limitation, and static/runtime boundary": [
@@ -194,6 +264,11 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987606744
+      },
+      {
+        "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
+        "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
+        "timestamp": 1787990499385
       }
     ],
     "4.1 Augment `01-repository-map.md`": [
@@ -201,6 +276,16 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987606826
+      },
+      {
+        "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
+        "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
+        "timestamp": 1787992843567
+      },
+      {
+        "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
+        "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
+        "timestamp": 1787993040594
       }
     ],
     "4.2 Augment `02-application-architecture.md`": [
@@ -313,6 +398,16 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987615529
+      },
+      {
+        "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
+        "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
+        "timestamp": 1787999185695
+      },
+      {
+        "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
+        "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
+        "timestamp": 1787999260183
       }
     ],
     "6.3 Reconcile router, guide, inventory, status, and optional-branch references": [

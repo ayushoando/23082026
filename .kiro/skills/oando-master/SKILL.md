@@ -92,7 +92,7 @@ In every completion report, distinguish the stated task goal, changed scope, obs
 
 ## Current Guidance Deliverable: mandatory routing and completion contract
 
-This skill is the canonical first router for every Repository Task. It is prose guidance only; it does not create a runtime route, automatic Agent roster, universal pre-action interceptor, contract append, Exact-Line migration, or enforcement implementation.
+This skill is the canonical first router for every Repository Task. Its routing and contract remain prose guidance; the approved static Canonical Inclusion and Exact-Line records are explicit repository artifacts, not a runtime route, automatic Agent roster, universal pre-action interceptor, or enforcement implementation.
 
 ### Begin Here and Route Record
 
@@ -134,7 +134,7 @@ The Completion Record repeats selected/rejected skills, changed scope, exact obs
 
 ### Conditional skill routing
 
-Route additively when evidence matches:
+The observed repository-local Package Skill inventory is the nine files named in the guide: `db-migrations`, `focss-css`, `fork-boundaries`, `graph-impact`, `oando-master`, `planner-studio`, `powers-skills-model`, `repo-map`, and `verify-and-gate`. This inventory is static evidence of repository guidance, not proof of client loading or automatic activation. Route additively when evidence matches:
 
 - `repo-map` for orientation, route, feature, path, or code-location discovery.
 - `graph-impact` for Shared Code, dependencies, blast radius, or circular-dependency analysis.
@@ -190,16 +190,34 @@ Every task-start, progress, handoff, pause, and completion response uses this or
 
 Every Repository Task begins with exactly four Active Agent slots: Scout/Map (read-only), Planner/Risk (read-only), Implementer (write only after approved exclusive ownership), and Verifier/Reporter (read-only). Attach Coordinator/Serial Integration Owner to one slot; never count it as a fifth role. Publish Agent Roster, Ownership Matrix, Route Record, Deliverable Register, Pre-Action Gate Records, Handoff Register, Conflict Stop Rule, and statuses before action. Parallel work is limited to read-only research or disjoint ownership; shared paths are serial. If runtime four-slot creation cannot be observed, report `guidance-only` or `not-observed` and do not silently use one Agent. Automatic spawning and universal pre-action enforcement are Separate Approval Work.
 
-Before acting, every Agent declares that it read the current user request and applicable global standard, then states outcome, assigned scope, exact owned paths and permissions, exclusions, delivery conditions, allowed/pending validation, and next owner. Agents do only assigned work, preserve unrelated changes, do not infer permission from proximity or helpfulness, and stop on conflict, missing authorization, ambiguous ownership, contradictory evidence, hidden constraint, or scope expansion.
+Before acting, every Agent declares the Agent Compliance Contract in plain language:
+
+```text
+I read the current user request: [yes / missing source].
+I read the applicable global repository standard: [AGENTS.md and applicable named standard / missing source].
+User instructions outrank defaults; the global standard remains in force unless explicitly overridden: [override / none].
+Requested outcome: [what the user asked for].
+Assigned scope: [what I will do].
+Exact owned paths and permission for each: [paths and read-only/write permission].
+Explicit exclusions: [paths, actions, and outputs I will not touch].
+Delivery conditions: [required result and evidence].
+Validation allowed now: [exact permitted checks / none].
+Validation pending authorization: [exact checks / none].
+Expected handoff owner: [named Agent or Repository Owner].
+```
+
+Agents do only assigned work, preserve unrelated changes, do not infer permission from proximity or helpfulness, and stop on conflict, missing authorization, ambiguous ownership, contradictory evidence, hidden constraint, or scope expansion. A runtime roster or executor is not implied by this prose declaration.
 
 Every handoff contains Objective; Role and Next Owner; Scope; Paths Read and Paths Changed; Route Record; Evidence; Decisions; Coverage Gaps; Validation Command; Repository Root; Authorization State; Hook Decision; Exit Status; Validation Limitation; Blockers; Next Action; and Status. Unavailable values are `not-observed`. The coordinator rejects unreconciled scope drift and does not promote missing evidence to `verified` or `complete`.
 
 ### Separate Approval Work and completion
 
-The Current Guidance Deliverable is guide chapters, D01–D22 cards, Prompt Cookbook, response contract, handoff/coverage rules, and conditional skill-routing prose. Hook/policy/allowlist changes, runtime enforcement, automatic spawning, contract append, Exact-Line rollout, product runtime, packages, database actions, deployment, backup, external MCP, Power activation, and workspace-boundary changes remain Separate Approval Work. HTML remains untouched while Markdown-to-HTML provenance is unresolved. Completion states exact changed scope, observed static evidence, pending checks, Coverage-Gap Admissions, Separate Approval Work, and True Blockers without claiming runtime loading, command success, rendered behavior, hosted persistence, connected MCP, installed Power, or relocation from prose alone.
+The Current Guidance Deliverable is guide chapters, D01–D22 cards, Prompt Cookbook, response contract, handoff/coverage rules, and conditional skill-routing prose. The approved static Canonical Inclusion covers the named writable subset of Active Contract-Bearing Documents; the five protected `.kiro/agents/` definitions remain unchanged. Runtime hook/policy/allowlist changes, universal enforcement, automatic spawning, protected-root or protected-Agent contract append, protected Exact-Line rollout, product runtime, packages, database actions, deployment, backup, external MCP, Power activation, and workspace-boundary changes remain Separate Approval Work. HTML remains untouched while Markdown-to-HTML provenance is unresolved. Completion states exact changed scope, observed static evidence, pending checks, Coverage-Gap Admissions, Separate Approval Work, and True Blockers without claiming runtime loading, command success, rendered behavior, hosted persistence, connected MCP, installed Power, or relocation from prose alone.
 
 ## Task-classifier and protected-root reference
 
 Use the 22-row task-classifier table in `./agents-work/oando-repository-guide/README.md` as the shared routing index. It is a prose reference, not a runtime scanner: each D01–D22 row supplies the trigger, first Local Evidence, additive skill set, command class, and completion proof. If no trigger matches, route through Local Evidence and record the no-match reason; if several match, select every matching skill.
 
-The Protected Path Set is broader than root Markdown: every file directly under `./`, every path under `./docs/`, every path under `./Agents/`, and every path under `./.kiro/agents/` is read-only evidence by default. A write or delete requires the exact file to be named and authorized in the current request. This clarification does not authorize protected-path changes, contract append, Exact-Line migration, or runtime enforcement; those remain Separate Approval Work.
+The Protected Path Set is broader than root Markdown: every file directly under `./`, every path under `./docs/`, every path under `./Agents/`, and every path under `./.kiro/agents/` is read-only evidence by default. A write or delete requires the exact file to be named and authorized in the current request. This clarification does not authorize protected-path changes, protected contract append, protected Exact-Line migration, or runtime enforcement; those remain Separate Approval Work.
+Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action.
+Before any action, read the current user request and applicable repository standard, declare exact scope and permissions, and stop on denial, conflict, or missing authorization.

@@ -5,6 +5,7 @@ import "dockview-react/dist/styles/dockview.css";
 import "@focss/planner/dock.css";
 import type { DockPanelDef, DockviewApiLike } from "@planner/lib/plannerTypes";
 import { DockFloatHeaderActions } from "@planner/components/ui/PlannerDockFloatHeaderActions";
+import { PlannerDockTab } from "@planner/components/ui/PlannerDockTab";
 
 type DockviewReactProps = React.ComponentProps<typeof DockviewReact>;
 
@@ -196,6 +197,7 @@ export const DockShell = ({ panels, onReadyApi, theme = "light", storageKey }: D
           minimumHeightWithinViewport: 48,
         }}
         singleTabMode="fullwidth"
+        defaultTabComponent={PlannerDockTab}
         rightHeaderActionsComponent={DockFloatHeaderActions}
       />
     </div>

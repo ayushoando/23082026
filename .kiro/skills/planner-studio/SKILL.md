@@ -37,3 +37,4 @@ pnpm run p0:unit
 ## Graph-layer integration
 Use `node scripts/graph-impact.mjs --file=<changed-file>` to inspect affected imports before optional validation. This repository graph replaces the retired CAST integration.
 
+Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action.

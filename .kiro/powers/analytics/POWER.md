@@ -28,3 +28,4 @@ Use this power for analytics implementation and diagnosis. It documents reposito
 Use only `.kiro/mcp/**` for schema references. **Schema present** means the snapshot exists there; it does not mean **workspace configured** or **runtime installed**. `.kiro/settings/mcp.json` has an empty `mcpServers` object, so no analytics server is workspace-configured. No direct installed-power/server registry evidence was established, so runtime availability is not verified.
 
 Do not install, configure, or invent an analytics MCP server from this power.
+Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action.

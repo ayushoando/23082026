@@ -168,7 +168,9 @@ The coordinator compares each handoff with the current user request, exclusions,
 
 ## Prompt Safety Preamble
 
-Every cookbook block below includes this safety instruction: start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; do not guess paths, package names, Package Skills, or commands; select every matching Package Skill and reject the rest with reasons; classify every command as read-only inspection, Normal-Agent Eligible Check, Protected Command, or no-run pending authorization before suggesting or running it; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; classify Artifact Class and approved output home before an Output-Producing Task; keep `./tech-docs-generator/` as a root-level sibling of `./site/`, keep generated tech-docs in `./generated-documents/`, Machine Evidence in `./results/<purpose>/`, authored work in `./agents-work/<workstream>/<report-type>/`, active plans in `./plans/<name>/`, and canonical blockers in root `./Failures.md`; apply the Locked Path Gate and Site Write Gate; return the Plain-Language Response Contract and exact completion proof or an explicit unverified/pending state.
+Every cookbook block below includes this complete safety instruction: start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; do not guess paths, package names, Package Skills, or commands; select every matching Package Skill and reject the rest with plain-language reasons; classify every command as read-only inspection, Normal-Agent Eligible Check, Protected Command, or no-run pending authorization before suggesting or running it; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; treat inline markers as insufficient; classify Artifact Class, exact approved Workstream/Purpose Subfolder, filename pattern, owning source or script, authored-or-generated state, rejected placements, and Site Write Gate state before an Output-Producing Task; keep `./tech-docs-generator/` as a root-level sibling of `./site/`, keep generated tech-docs in `./generated-documents/`, Machine Evidence in `./results/<purpose>/`, authored work in `./agents-work/<workstream>/<report-type>/`, active plans in `./plans/<name>/`, and canonical blockers in root `./Failures.md`; apply the Locked Path Gate and Site Write Gate; treat AI/retrieval output as advisory and use Local Evidence plus all other matching skills when `./.kiro/skills/ai-retrieval/SKILL.md` is absent; keep hooks, policy, runtime, packages, databases, deployments, backups, external MCP, Power activation, automatic spawning, and workspace-boundary changes as Separate Approval Work; return the Plain-Language Response Contract and exact completion proof or an explicit unverified/pending state.
+
+Each fenced block then supplies its own desired-outcome placeholder, ordinary-language context, scope boundary, exact first Local Evidence, expected evidence, and stop condition. For an Output-Producing Task, the block must repeat the artifact fields and rejected placements; for a `./site/` candidate it must classify an explicitly approved Core Product Write versus a Non-Core Artifact before any write. The six standing-mode prompts below remain outside the 25-category cookbook count.
 
 ## Complete Prompt Cookbook
 
@@ -177,56 +179,56 @@ Every prompt is a complete copy-paste block. Replace bracketed values. Each bloc
 ### 1. Understand Repository
 
 ```text
-Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; do not guess paths, packages, skills, or commands; select every matching skill; classify every command before suggesting or running it; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; return the Plain-Language Response Contract.
+Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; do not guess paths, packages, skills, or commands; select every matching skill; classify every command before suggesting or running it; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; return the Plain-Language Response Contract, exact completion proof or an explicit unverified/pending state; for Output-Producing Tasks also declare Artifact Class, exact Workstream/Purpose Subfolder, filename pattern, owning source or script, authored-or-generated state, rejected placements, and Site Write Gate state.
 Desired outcome: [DESIRED_OUTCOME]. Ordinary-language context: [CONTEXT]. Scope boundary: map only; do not edit product code or protected files. First evidence: `./START.md`, `./AGENTS.md`, `./docs/architecture/layout.md`, and `./agents-work/oando-repository-guide/README.md`. Expected evidence: authority order, D01/D22 card, exact candidate paths, selected/rejected skills, risk, and unverified facts. Stop before modification or command execution and state the next owner decision.
 ```
 
 ### 2. Find Where to Work
 
 ```text
-Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; do not guess paths, packages, skills, or commands; select every matching skill; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; return the Plain-Language Response Contract.
+Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; do not guess paths, packages, skills, or commands; select every matching skill; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; return the Plain-Language Response Contract, exact completion proof or an explicit unverified/pending state; for Output-Producing Tasks also declare Artifact Class, exact Workstream/Purpose Subfolder, filename pattern, owning source or script, authored-or-generated state, rejected placements, and Site Write Gate state.
 Desired outcome: [DESIRED_OUTCOME]. Ordinary-language context: [CONTEXT]. Scope boundary: discover the owner and candidate paths only; do not edit. First evidence: `./site/app/`, `./site/features/`, `./site/components/`, `./site/lib/`, `./site/platform/`, and the matching D01–D22 card. Expected evidence: route/domain, exact candidate files, artifact boundary if output is proposed, selected/rejected skills, and risk. Stop on competing owners, absent paths, or a proposed `./site/` Non-Core Artifact.
 ```
 
 ### 3. Small UI/Icon/Alignment Fix
 
 ```text
-Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; do not guess paths, packages, skills, or commands; select every matching skill including `focss-css` when triggered; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; apply the Site Write Gate; return the Plain-Language Response Contract.
+Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; do not guess paths, packages, skills, or commands; select every matching skill including `focss-css` when triggered; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; apply the Site Write Gate; return the Plain-Language Response Contract, exact completion proof or an explicit unverified/pending state; for Output-Producing Tasks also declare Artifact Class, exact Workstream/Purpose Subfolder, filename pattern, owning source or script, authored-or-generated state, rejected placements, and Site Write Gate state.
 Desired outcome: [DESIRED_OUTCOME]. Ordinary-language context: [CONTEXT]. Scope boundary: one bounded interface outcome; do not add an icon library, custom CSS system, or unrelated cleanup. First evidence: user-facing route, nearby component, `./site/focss/`, existing Phosphor abstraction, and `./scripts/generate-svg/` when assets are involved. Expected evidence: Visual Detail Checklist, exact owned paths, loading/empty/error/keyboard/reduced-motion review, and proof limitation. Stop before any unowned write or external asset/tool proposal.
 ```
 
 ### 4. Feature
 
 ```text
-Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; do not guess paths, packages, skills, or commands; select every matching skill; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; apply the Site Write Gate; return the Plain-Language Response Contract.
+Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; do not guess paths, packages, skills, or commands; select every matching skill; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; apply the Site Write Gate; return the Plain-Language Response Contract, exact completion proof or an explicit unverified/pending state; for Output-Producing Tasks also declare Artifact Class, exact Workstream/Purpose Subfolder, filename pattern, owning source or script, authored-or-generated state, rejected placements, and Site Write Gate state.
 Desired outcome: [DESIRED_OUTCOME]. Ordinary-language context: [CONTEXT]. Scope boundary: trace route → feature → component → shared/server → platform/persistence → proof; do not implement adjacent work. First evidence: matching route, feature, component, `./site/lib/`, `./site/server/`, `./site/platform/`, and tests. Expected evidence: Route Record, exclusive owned paths, risk, data/fork/security boundaries, selected/rejected skills, and narrow proof. Stop at an unverified external/data boundary or scope expansion.
 ```
 
 ### 5. Site UI
 
 ```text
-Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; do not guess paths, packages, skills, or commands; select every matching skill including `focss-css` when triggered; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; apply the Site Write Gate; return the Plain-Language Response Contract.
+Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; do not guess paths, packages, skills, or commands; select every matching skill including `focss-css` when triggered; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; apply the Site Write Gate; return the Plain-Language Response Contract, exact completion proof or an explicit unverified/pending state; for Output-Producing Tasks also declare Artifact Class, exact Workstream/Purpose Subfolder, filename pattern, owning source or script, authored-or-generated state, rejected placements, and Site Write Gate state.
 Desired outcome: [DESIRED_OUTCOME]. Ordinary-language context: [CONTEXT]. Scope boundary: Site UI/SEO/i18n/accessibility/performance only; no report or generated file under `./site/`. First evidence: `./site/app/(site)/`, `./site/features/site/`, `./site/components/home/`, `./site/focss/site/`, and `./site/i18n/`. Expected evidence: route-to-pattern trace, Visual Detail Checklist, exact Core Product Write classification, and rendered-proof limitation. Stop before claiming browser/performance proof.
 ```
 
 ### 6. Planner
 
 ```text
-Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; select `planner-studio` and `fork-boundaries` when the Fork Tree or imports are involved; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; return the Plain-Language Response Contract.
+Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; select `planner-studio` and `fork-boundaries` when the Fork Tree or imports are involved; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; return the Plain-Language Response Contract, exact completion proof or an explicit unverified/pending state; for Output-Producing Tasks also declare Artifact Class, exact Workstream/Purpose Subfolder, filename pattern, owning source or script, authored-or-generated state, rejected placements, and Site Write Gate state.
 Desired outcome: [DESIRED_OUTCOME]. Ordinary-language context: [CONTEXT]. Scope boundary: Planner only; do not import Studio or modify unowned paths. First evidence: `./site/app/ooplanner/`, `./site/features/Planner/`, `./site/components/Planner/`, `./site/lib/Planner/`, `./site/hooks/Planner/`, `./site/store/Planner/`, `./site/server/Planner/`, `./site/platform/Planner/`, and `./site/app/api/Planner/`. Expected evidence: fork-safe Route Record, owned paths, persistence/canvas limitation, and pending boundary/browser checks. Stop before cross-fork writes or persistence action.
 ```
 
 ### 7. Studio
 
 ```text
-Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; select `planner-studio` and `fork-boundaries` when the Fork Tree or imports are involved; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; return the Plain-Language Response Contract.
+Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; select `planner-studio` and `fork-boundaries` when the Fork Tree or imports are involved; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; return the Plain-Language Response Contract, exact completion proof or an explicit unverified/pending state; for Output-Producing Tasks also declare Artifact Class, exact Workstream/Purpose Subfolder, filename pattern, owning source or script, authored-or-generated state, rejected placements, and Site Write Gate state.
 Desired outcome: [DESIRED_OUTCOME]. Ordinary-language context: [CONTEXT]. Scope boundary: Studio only; do not borrow Planner modules or claim Planner proof. First evidence: `./site/app/oostudio/`, `./site/features/Studio/`, `./site/components/Studio/`, `./site/lib/Studio/`, `./site/hooks/Studio/`, `./site/store/Studio/`, `./site/server/Studio/`, `./site/platform/Studio/`, and `./site/app/api/Studio/`. Expected evidence: Studio-only route/data/release trace, advisory AI limitation, owned paths, and pending persistence checks. Stop before cross-fork or publish changes.
 ```
 
 ### 8. Admin
 
 ```text
-Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; select every matching skill including `db-migrations`, `focss-css`, or `graph-impact` only when triggered; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; return the Plain-Language Response Contract.
+Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; select every matching skill including `db-migrations`, `focss-css`, or `graph-impact` only when triggered; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; return the Plain-Language Response Contract, exact completion proof or an explicit unverified/pending state; for Output-Producing Tasks also declare Artifact Class, exact Workstream/Purpose Subfolder, filename pattern, owning source or script, authored-or-generated state, rejected placements, and Site Write Gate state.
 Desired outcome: [DESIRED_OUTCOME]. Ordinary-language context: [CONTEXT]. Scope boundary: Admin route/feature/auth/data ownership; no remote mutation or secret exposure. First evidence: `./site/app/admin/`, `./site/features/admin/`, `./site/lib/admin/`, route docs, and the relevant database owner. Expected evidence: role/auth source, Products/Admin decision, exact owned paths, Surface Status, and unverified hosted behavior. Stop before migration, remote action, or service-role use.
 ```
 
@@ -240,98 +242,98 @@ Desired outcome: [DESIRED_OUTCOME]. Ordinary-language context: [CONTEXT]. Scope 
 ### 10. Catalog/Configurator/Quotes/Inventory
 
 ```text
-Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; select matching `db-migrations`, `focss-css`, and `graph-impact` skills when triggered; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; return the Plain-Language Response Contract.
+Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; select matching `db-migrations`, `focss-css`, and `graph-impact` skills when triggered; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; return the Plain-Language Response Contract, exact completion proof or an explicit unverified/pending state; for Output-Producing Tasks also declare Artifact Class, exact Workstream/Purpose Subfolder, filename pattern, owning source or script, authored-or-generated state, rejected placements, and Site Write Gate state.
 Desired outcome: [DESIRED_OUTCOME]. Ordinary-language context: [CONTEXT]. Scope boundary: catalog/configurator/quote/inventory trace; no seed/publish/storage/migration action. First evidence: `./site/lib/catalog/`, `./site/features/shared/catalog/`, `./site/app/(site)/products/`, `./site/app/(site)/quote-cart/`, `./site/app/admin/catalog/`, `./site/app/admin/inventory/`, `./site/app/api/configurator/`, and Products migrations. Expected evidence: Products/Admin owner, asset/release path, exact scope, and hosted-proof limitation. Stop before remote or data mutation.
 ```
 
 ### 11. Database
 
 ```text
-Start with `oando-master`, then `repo-map`; select `db-migrations` for schema/SQL/RLS/grants/rollback/ownership and every other matching skill; use Local Evidence before assumptions; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; return the Plain-Language Response Contract.
+Start with `oando-master`, then `repo-map`; select `db-migrations` for schema/SQL/RLS/grants/rollback/ownership and every other matching skill; use Local Evidence before assumptions; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; return the Plain-Language Response Contract, exact completion proof or an explicit unverified/pending state; for Output-Producing Tasks also declare Artifact Class, exact Workstream/Purpose Subfolder, filename pattern, owning source or script, authored-or-generated state, rejected placements, and Site Write Gate state.
 Desired outcome: [DESIRED_OUTCOME]. Ordinary-language context: [CONTEXT]. Scope boundary: plan/review only unless exact migration ownership is approved; no apply. First evidence: `./site/platform/supabase/migrations/`, `./site/platform/supabase/migrations.admin/`, `./site/platform/drizzle/schema/`, persistence selectors, and database docs. Expected evidence: Products/Admin owner, RLS, grants, `-- rollback`, mode, generated types/API impact, and exact pending dry-run. Stop before SQL apply, seed, or remote access.
 ```
 
 ### 12. AI/Retrieval
 
 ```text
-Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; select `ai-retrieval` only if `./.kiro/skills/ai-retrieval/SKILL.md` exists and select all other matching skills; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; return the Plain-Language Response Contract.
+Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; select `ai-retrieval` only if `./.kiro/skills/ai-retrieval/SKILL.md` exists and select all other matching skills; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; return the Plain-Language Response Contract, exact completion proof or an explicit unverified/pending state; for Output-Producing Tasks also declare Artifact Class, exact Workstream/Purpose Subfolder, filename pattern, owning source or script, authored-or-generated state, rejected placements, and Site Write Gate state.
 Desired outcome: [DESIRED_OUTCOME]. Ordinary-language context: [CONTEXT]. Scope boundary: advisory server-side AI/retrieval assessment; no provider call, package, or deployment. First evidence: `./site/lib/ai/mastra/`, `./site/app/api/ai-advisor/`, `./site/app/api/Studio/ai/`, `./site/features/Studio/`, and stack guidance. Expected evidence: Mastra/Bedrock/LanceDB/Orama/Fuse source, advisory boundary, missing-skill status if applicable, and unverified provider/deployment facts. Stop before unsupported evaluation or deployment claims.
 ```
 
 ### 13. Image/Animation/Assets
 
 ```text
-Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; select every matching visual/impact skill; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; apply the Site Write Gate; return the Plain-Language Response Contract.
+Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; select every matching visual/impact skill; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; apply the Site Write Gate; return the Plain-Language Response Contract, exact completion proof or an explicit unverified/pending state; for Output-Producing Tasks also declare Artifact Class, exact Workstream/Purpose Subfolder, filename pattern, owning source or script, authored-or-generated state, rejected placements, and Site Write Gate state.
 Desired outcome: [DESIRED_OUTCOME]. Ordinary-language context: [CONTEXT]. Scope boundary: asset/motion work only; no external capability or new package by assumption. First evidence: `./site/public/`, `./scripts/generate-svg/`, nearby component patterns, `./site/focss/`, and existing motion imports. Expected evidence: asset owner/generation path, licensing review, reduced-motion and interaction-state review, artifact destination, and visual-proof limitation. Stop before publication or external tooling.
 ```
 
 ### 14. API/Security
 
 ```text
-Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; select `db-migrations` or `graph-impact` when evidence triggers; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; return the Plain-Language Response Contract.
+Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; select `db-migrations` or `graph-impact` when evidence triggers; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; return the Plain-Language Response Contract, exact completion proof or an explicit unverified/pending state; for Output-Producing Tasks also declare Artifact Class, exact Workstream/Purpose Subfolder, filename pattern, owning source or script, authored-or-generated state, rejected placements, and Site Write Gate state.
 Desired outcome: [DESIRED_OUTCOME]. Ordinary-language context: [CONTEXT]. Scope boundary: API/security trace; no security-control weakening or hosted call. First evidence: `./site/app/api/`, `./site/lib/apiCatalog.ts`, `./site/proxy.ts`, `./site/lib/security/`, and route docs. Expected evidence: auth, CSRF, rate-limit, RLS, persistence boundary, owned paths, and unverified hosted behavior. Stop before changing security controls or exposing secrets.
 ```
 
 ### 15. Environment
 
 ```text
-Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; select matching skills; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; return the Plain-Language Response Contract.
+Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; select matching skills; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; return the Plain-Language Response Contract, exact completion proof or an explicit unverified/pending state; for Output-Producing Tasks also declare Artifact Class, exact Workstream/Purpose Subfolder, filename pattern, owning source or script, authored-or-generated state, rejected placements, and Site Write Gate state.
 Desired outcome: [DESIRED_OUTCOME]. Ordinary-language context: [CONTEXT]. Scope boundary: classify environment only; do not print, sync, commit, or change secrets. First evidence: `./.env.example`, local env paths, `./package.json`, `./pnpm-workspace.yaml`, `./START.md`, and D04. Expected evidence: redacted configured/private/generated/legacy status map, workspace boundary, and next owner action. Stop before service launch or environment mutation.
 ```
 
 ### 16. Bug/Failing Test
 
 ```text
-Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; select matching skills; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; return the Plain-Language Response Contract.
+Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; select matching skills; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; return the Plain-Language Response Contract, exact completion proof or an explicit unverified/pending state; for Output-Producing Tasks also declare Artifact Class, exact Workstream/Purpose Subfolder, filename pattern, owning source or script, authored-or-generated state, rejected placements, and Site Write Gate state.
 Desired outcome: [DESIRED_OUTCOME]. Ordinary-language context: [CONTEXT]. Scope boundary: inspect the symptom and narrow source/test owner; do not infer a failure cause from unobserved output. First evidence: reported symptom, relevant test source, `./Failures.md`, and narrow implementation path. Expected evidence: known/unverified distinction, candidate cause, exact smallest diagnostic, authorization state, and next action. Stop before running a test or changing configuration without authorization.
 ```
 
 ### 17. Gate-Failure Triage
 
 ```text
-Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; classify every proposed command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; preserve gate composition and return the Plain-Language Response Contract.
+Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; classify every proposed command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; preserve gate composition and return the Plain-Language Response Contract, exact completion proof or an explicit unverified/pending state; for Output-Producing Tasks also declare Artifact Class, exact Workstream/Purpose Subfolder, filename pattern, owning source or script, authored-or-generated state, rejected placements, and Site Write Gate state.
 Desired outcome: [DESIRED_OUTCOME]. Ordinary-language context: [CONTEXT]. Scope boundary: read-only Full Gate Failure Triage; do not alter hooks, baselines, tests, or allowlists. First evidence: exact reported command, repository root, authorization/hook state, and any current output. Expected evidence: first failed subcommand, output summary, cause classification, smallest authorized diagnostic, preserved controls, and next owner. Stop if current authorized output is absent and label the cause unverified.
 ```
 
 ### 18. Refactor
 
 ```text
-Start with `oando-master`, then `repo-map`; use `graph-impact` for Shared Code or blast radius and every other matching skill; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; return the Plain-Language Response Contract.
+Start with `oando-master`, then `repo-map`; use `graph-impact` for Shared Code or blast radius and every other matching skill; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; return the Plain-Language Response Contract, exact completion proof or an explicit unverified/pending state; for Output-Producing Tasks also declare Artifact Class, exact Workstream/Purpose Subfolder, filename pattern, owning source or script, authored-or-generated state, rejected placements, and Site Write Gate state.
 Desired outcome: [DESIRED_OUTCOME]. Ordinary-language context: [CONTEXT]. Scope boundary: preserve behavior and exact approved paths; no opportunistic cleanup. First evidence: owning source, imports/consumers, fork roots, persistence boundary, and narrow proof source. Expected evidence: exclusive ownership, impact/risk map, unchanged behavior target, rejected adjacent scope, and pending validation. Stop on shared/unowned paths, fork boundary, or new behavior.
 ```
 
 ### 19. Documentation
 
 ```text
-Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; select matching skills; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; apply the Locked Path Gate; return the Plain-Language Response Contract.
+Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; select matching skills; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; apply the Locked Path Gate; return the Plain-Language Response Contract, exact completion proof or an explicit unverified/pending state; for Output-Producing Tasks also declare Artifact Class, exact Workstream/Purpose Subfolder, filename pattern, owning source or script, authored-or-generated state, rejected placements, and Site Write Gate state.
 Desired outcome: [DESIRED_OUTCOME]. Ordinary-language context: [CONTEXT]. Scope boundary: update only the approved guide/workstream path; do not edit locked docs or HTML without provenance. First evidence: `./AGENTS.md`, `./DOC-MAP.md`, `./CONTENTS.md`, `./Agents/05-documentation.md`, `./plans/README.md`, and the owning document. Expected evidence: canonical source, placement, Markdown/HTML relationship, artifact fields, and gap/pending state. Stop before a handwritten report under `./results/` or a locked write.
 ```
 
 ### 20. Package/Dependency
 
 ```text
-Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; select `powers-skills-model` or `graph-impact` only when triggered; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; return the Plain-Language Response Contract.
+Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; select `powers-skills-model` or `graph-impact` only when triggered; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; return the Plain-Language Response Contract, exact completion proof or an explicit unverified/pending state; for Output-Producing Tasks also declare Artifact Class, exact Workstream/Purpose Subfolder, filename pattern, owning source or script, authored-or-generated state, rejected placements, and Site Write Gate state.
 Desired outcome: [DESIRED_OUTCOME]. Ordinary-language context: [CONTEXT]. Scope boundary: assess package status only; no install, manifest, lockfile, or workspace move. First evidence: `./package.json`, `./pnpm-workspace.yaml`, `./pnpm-lock.yaml`, live imports, `./site/tsconfig.json`, `./tech-docs-generator/package.json`, and stack docs. Expected evidence: declared/imported/configured/observed status, exact sibling boundary, approval need, and risk. Stop before package installation or moving `./tech-docs-generator/` into `./site/`/`./results/site/`.
 ```
 
 ### 21. Deployment/Ops
 
 ```text
-Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; select matching operational/database skills; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; return the Plain-Language Response Contract.
+Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; select matching operational/database skills; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; return the Plain-Language Response Contract, exact completion proof or an explicit unverified/pending state; for Output-Producing Tasks also declare Artifact Class, exact Workstream/Purpose Subfolder, filename pattern, owning source or script, authored-or-generated state, rejected placements, and Site Write Gate state.
 Desired outcome: [DESIRED_OUTCOME]. Ordinary-language context: [CONTEXT]. Scope boundary: read-only target/risk/rollback plan; no deploy, remote mutation, service, or backup. First evidence: `./vercel.json`, Worker, R2, observability, runbook, workflows, scripts, and instrumentation. Expected evidence: target environment, owner, data sensitivity, exact pending command, rollback/recovery, and limitation. Stop before external action.
 ```
 
 ### 22. Backup/Import/Export
 
 ```text
-Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; select matching operational/database skills; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; return the Plain-Language Response Contract.
+Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; select matching operational/database skills; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; return the Plain-Language Response Contract, exact completion proof or an explicit unverified/pending state; for Output-Producing Tasks also declare Artifact Class, exact Workstream/Purpose Subfolder, filename pattern, owning source or script, authored-or-generated state, rejected placements, and Site Write Gate state.
 Desired outcome: [DESIRED_OUTCOME]. Ordinary-language context: [CONTEXT]. Scope boundary: plan backup/import/export/recovery only; no data movement. First evidence: `./OPERATIONS_RUNBOOK.md`, R2 scripts/registry, backup workflow, data owner, and recovery path. Expected evidence: target, sensitivity, retention, restore path, exact command classification, authorization requirement, and fallback. Stop before backup, import, export, or external storage action.
 ```
 
 ### 23. Unknown Task
 
 ```text
-Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; do not guess paths, packages, skills, or commands; select every matching skill; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; return the Plain-Language Response Contract.
+Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions; do not guess paths, packages, skills, or commands; select every matching skill; classify every command; do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission; return the Plain-Language Response Contract, exact completion proof or an explicit unverified/pending state; for Output-Producing Tasks also declare Artifact Class, exact Workstream/Purpose Subfolder, filename pattern, owning source or script, authored-or-generated state, rejected placements, and Site Write Gate state.
 Desired outcome: [DESIRED_OUTCOME]. Ordinary-language context: [CONTEXT]. Scope boundary: D22 read-only discovery; do not create a category, package, Power, MCP, or runtime implementation. First evidence: `./START.md`, `./AGENTS.md`, layout docs, this guide, `./plans/README.md`, `./.kiro/skills/repo-map/SKILL.md`, and `./Failures.md`. Expected evidence: local inventory, canonical owner, risk, selected/rejected skills, Coverage-Gap Admission, and one next decision. Stop before editing from guesswork.
 ```
 
@@ -353,10 +355,10 @@ Start with `oando-master`, then `repo-map`; use Local Evidence before assumption
 ### Start Standing Multi-Agent Mode
 
 ```text
-Start Standing Multi-Agent Mode for [DESIRED_OUTCOME]. Create exactly four Active Agent slots before action: Scout/Map, Planner/Risk, Implementer, and Verifier/Reporter; designate one slot Coordinator/Serial Integration Owner. Publish the Agent Roster, Ownership Matrix, Route Record, Deliverable Register, Pre-Action Gate Records, Handoff Register, Conflict Stop Rule, and statuses. Permit parallel work only for read-only research or disjoint ownership. Keep agent reports in ./agents-work/<workstream>/<report-type>/, Machine Evidence in ./results/<purpose>/, generated tech-docs in ./generated-documents/, plans in ./plans/<name>/, and canonical blockers in ./Failures.md. Keep ./tech-docs-generator/ beside ./site/ and apply the Site Write Gate. Classify Protected Commands and return the Plain-Language Response Contract. If four runtime entries are not observed, report guidance-only/not-observed and do not fall back silently.
+Start Standing Multi-Agent Mode for [DESIRED_OUTCOME]. Create exactly four Active Agent slots before action: Scout/Map, Planner/Risk, Implementer, and Verifier/Reporter; designate one slot Coordinator/Serial Integration Owner. Publish the Agent Roster, Ownership Matrix, Route Record, Deliverable Register, Pre-Action Gate Records, Handoff Register, Conflict Stop Rule, and statuses. Permit parallel work only for read-only research or disjoint ownership. Keep agent reports in ./agents-work/<workstream>/<report-type>/, Machine Evidence in ./results/<purpose>/, generated tech-docs in ./generated-documents/, plans in ./plans/<name>/, and canonical blockers in ./Failures.md. Keep ./tech-docs-generator/ beside ./site/ and apply the Site Write Gate. Classify Protected Commands and return the Plain-Language Response Contract, exact completion proof or an explicit unverified/pending state; for Output-Producing Tasks also declare Artifact Class, exact Workstream/Purpose Subfolder, filename pattern, owning source or script, authored-or-generated state, rejected placements, and Site Write Gate state. If four runtime entries are not observed, report guidance-only/not-observed and do not fall back silently.
 ```
 
-### Launch Scout/Map and Planner/Risk
+### Launch Scout/Map and Planner/Risk in parallel
 
 ```text
 Launch a read-only Parallel Research Wave for [DESIRED_OUTCOME]. Scout/Map owns authority, paths, and evidence; Planner/Risk owns scope, skills, risk, command classification, artifact placement, and validation planning. Publish exact four-slot ownership and the Route Record before action. No writes, commands, or Implementer permission. Require a complete Handoff Record at the wave boundary and serial reconciliation. Apply Locked Path, Site Write, artifact-placement, Protected Command, and Plain-Language Response Contract rules; return not-observed where evidence is unavailable.
@@ -377,7 +379,7 @@ Launch a read-only Verifier/Reporter for [DESIRED_OUTCOME] after the Implementer
 ### Resolve a multi-agent conflict
 
 ```text
-Invoke the Conflict Stop Rule for [CONFLICT]. Stop affected writes. Preserve the four-slot Roster, Ownership Matrix, Route Record, Handoff Register, and competing evidence. Identify exact paths, owners, scope, and contradictory facts; route only the unavoidable decision to the Repository Owner. Do not overwrite, silently merge, select another tool, or infer permission. After the decision, update ownership and serially reconcile before writing. Keep Protected Commands pending without both permissions and return the Plain-Language Response Contract.
+Invoke the Conflict Stop Rule for [CONFLICT]. Stop affected writes. Preserve the four-slot Roster, Ownership Matrix, Route Record, Handoff Register, and competing evidence. Identify exact paths, owners, scope, and contradictory facts; route only the unavoidable decision to the Repository Owner. Do not overwrite, silently merge, select another tool, or infer permission. After the decision, update ownership and serially reconcile before writing. Keep Protected Commands pending without both permissions and return the Plain-Language Response Contract, exact completion proof or an explicit unverified/pending state; for Output-Producing Tasks also declare Artifact Class, exact Workstream/Purpose Subfolder, filename pattern, owning source or script, authored-or-generated state, rejected placements, and Site Write Gate state.
 ```
 
 ### Finish and close a multi-agent task

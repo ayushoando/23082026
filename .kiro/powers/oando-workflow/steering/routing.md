@@ -24,3 +24,4 @@ An empty workspace `mcpServers` object proves only that no server is configured 
 ## Database boundary
 
 Admin `rxzpznmxbaoxpikowmfc` owns plans, profiles, handoffs, teams, price books, queries, audit, furniture, and descriptors. Products `erpweaiypimorcunaimz` owns marketing catalog, configurator, flags, and themes. Confirm the owner database before migration work.
+Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action.

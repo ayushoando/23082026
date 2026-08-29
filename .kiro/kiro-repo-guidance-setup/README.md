@@ -8,7 +8,7 @@ This is governance tooling, not Next.js application runtime code. It is not a ro
 
 ## Canonical location
 
-`.kiro/kiro-repo-guidance-setup/` is the sole canonical governance root. The expected canonical inventory is 25 top-level TypeScript modules plus 43 tests in the existing subtree. Imports, embedded roots, manifests, contracts, fixtures, and documentation must continue to identify `.kiro/kiro-repo-guidance-setup/**`.
+`.kiro/kiro-repo-guidance-setup/` is the sole canonical governance root. The expected canonical inventory is 29 top-level TypeScript modules plus 43 tests in the existing subtree. Imports, embedded roots, manifests, contracts, fixtures, and documentation must continue to identify `.kiro/kiro-repo-guidance-setup/**`.
 
 Kiro-managed governance changes belong here under the repository-root `.kiro/` containment boundary. Do not recreate or route active configuration to `scripts/kiro-repo-guidance-setup/`.
 
@@ -18,6 +18,10 @@ Kiro-managed governance changes belong here under the repository-root `.kiro/` c
 - `wave-manifest.ts` freezes the canonical implementation and test roots plus execution constraints.
 - `pipeline.ts` exposes `IntegrationPipelineService` and `runIntegrationPipeline` for post-wave orchestration.
 - `integration-gate.ts` exposes `IntegrationValidationGateService` and `runIntegrationValidationGate` for final integration evidence and changed-file assessment.
+- `runtime-records.ts` defines the declared four-slot roster, closed lifecycle/enforcement vocabularies, and fail-closed validators for roster, ownership, route, gate, handoff, conflict, and completion records. Its declared runtime activation remains `not-observed`.
+- `action-gate.ts` evaluates one untrusted Action Record for each of the six controlled action kinds and denies malformed, unavailable, conflicting, unauthorized, or indeterminate state before execution.
+- `.kiro/hooks/pre-action-delegation-gate.json` and `.mjs` provide a bounded host adapter for `invoke_sub_agent` only; this is partial/static integration and does not establish universal read/write/delete/command/handoff interception.
+- `contract-coverage.ts` and `exact-line.ts` enforce the approved static document manifests and idempotent insertion rules.
 - `enablement.ts`, `validation.ts`, `reviewers.ts`, `rollback.ts`, and `handover.ts` implement the downstream decision and recovery stages.
 - The remaining top-level modules implement focused discovery, compatibility, policy, ownership, reservation, capability, hook, skill, continuity, and contract-freeze stages.
 
@@ -54,3 +58,5 @@ References to `scripts/kiro-repo-guidance-setup/` are historical only when they 
 Static inspection may verify manifests, expected file counts, relative path sets, hashes/bytes, canonical references, reconciliation decisions, and changed-path containment. Static evidence does not establish behavioral correctness and must not be reported as a passing test, typecheck, gate, build, browser check, coverage run, or service check.
 
 Behavioral validation is pending explicit repository-owner authorization and an observed run. Do not offer `pnpm run typecheck:scripts`; its referenced `scripts/tsconfig.json` is absent. Until the required repository checks are owner-authorized and observed: **Configuration changes complete; mandatory repository validation pending owner execution/authorization.**
+Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action.
+Before any action, read the current user request and applicable repository standard, declare exact scope and permissions, and stop on denial, conflict, or missing authorization.

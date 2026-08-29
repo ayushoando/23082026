@@ -34,3 +34,4 @@ pnpm run typecheck
 
 ## Graph-layer integration
 Inspect imports and dependents directly from the live source tree before an explicit migration review.
+Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action.

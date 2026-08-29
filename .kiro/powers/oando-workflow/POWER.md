@@ -44,3 +44,4 @@ Canonical schema snapshots are under `.kiro/mcp/{chrome-devtools,cloudflare-docs
 ## Repository constraints
 
 Use root `pnpm`, never create worktrees, preserve unrelated changes, keep UI work on `http://localhost:3000`, respect the production read-only filesystem, and keep Kiro-owned implementation under root `.kiro/`.
+Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action.

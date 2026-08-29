@@ -4,102 +4,118 @@
 
 ## Authority order
 
+Use this order for every documentation, placement, planning, and governance decision:
+
 ```text
 current user instruction
 → live code and fresh command output
 → AGENTS.md
 → Agents/
 → docs/
-→ plans/
+→ plans/README.md and the indexed active plan
 ```
+
+`plans/README.md` coordinates active plans after the repository authority sources; it does not override live behavior. If documentation conflicts with live evidence, preserve the live fact, label the documentation claim pending correction, and do not silently create a competing authority.
 
 ## Documentation homes
 
 | Area | Location | Use it for |
 |---|---|---|
-| Durable architecture | `docs/architecture/` | Layout, product map, stack, routes, CSS, script catalog. |
-| Database reference | `docs/database/` | Schema, Drizzle, operations, RLS/persistence/restore planning. |
-| Governance | `docs/governance/` | Rules, benchmarks, charter, FOCSS stop-drift. |
-| Root front doors | `START.md`, `README.md`, `CONTENTS.md`, `DOC-MAP.md` | Onboarding, product facts, index, documentation placement. |
-| Procedures | `OPERATIONS_RUNBOOK.md`, `Testing-handbook.md` | Deploy/migrate/backup/rollback and validation procedures. |
-| Hard blockers | `Failures.md` | The only blocker ledger. |
-| Ownership/handoff | `owners.md`, `HANDOVER.md` | Ownership/reference context; verify against live source. |
+| Durable architecture | `docs/architecture/` | Layout, product map, stack, routes, CSS, and script catalog. |
+| Database reference | `docs/database/` | Schema, Drizzle support, operations, RLS, persistence, and restore planning. |
+| Governance | `docs/governance/` | Rules, benchmarks, charter, and FOCSS stop-drift constraints. |
+| Root front doors | `START.md`, `README.md`, `CONTENTS.md`, `DOC-MAP.md` | Onboarding, product facts, indexes, and documentation placement. |
+| Procedures | `OPERATIONS_RUNBOOK.md`, `Testing-handbook.md` | Deploy, migrate, backup, rollback, and validation procedures. |
+| Hard blockers | `Failures.md` | The only canonical True Blocker ledger, with reproducible evidence. |
+| Active planning | `plans/README.md`, `plans/<name>/` | Requirements/design/tasks and plan-owned evidence for an active plan. |
+| Agent work | `agents-work/<workstream>/<report-type>/` | Human-authored guide, research, handoff, or workstream material. |
+| Existing reference location | `agent-reports/` | Historical/reference material only; do not assume it is the destination for new guide-directed work. |
+
+Durable reference changes belong under their canonical owner; active coordination belongs in an indexed plan; generated command evidence belongs under a purpose subfolder of `results/`; authored guide work belongs in the approved guide workstream. A location label is not proof that an artifact is current or generated.
 
 ## Planning and evidence
 
-| Path | Role |
+| Path | Role and boundary |
 |---|---|
-| `plans/README.md` | Planning coordination rules/index. |
-| `plans/PLAN.md` | Current live plan material, if applicable. |
-| `plans/<name>/` | Named-plan requirements/design/tasks/evidence when a plan exists. |
-| `results/` | Generated output only. Never hand-write a plan/audit report there. |
-| `Failures.md` | Genuine unresolved hard blockers only. |
+| `plans/README.md` | Planning coordination rules and index; read after authority sources. |
+| `plans/<name>/` | Named-plan requirements, design, tasks, and plan-owned evidence when that plan exists. |
+| `results/<purpose>/` | Machine-generated command/check evidence only, such as tests, site, site-ui, ops, or tooling purposes. |
+| `generated-documents/` | Disposable output owned by the root `tech-docs-generator/` package; never hand-edit. |
+| `agents-work/<workstream>/<report-type>/` | Agent-authored reports/work products and guide chapters. |
+| `Failures.md` | True Blockers only, with exact reproduction evidence and current authorization for any write. |
 
-## Agent handbooks and scoped instructions
-
-| Area | Role |
-|---|---|
-| `Agents/01-standard.md` | Core repository execution procedure. |
-| `Agents/02-testing.md` / `03-browser.md` | Test/browser evidence rules. |
-| `Agents/04-failures.md` | Blocker handling. |
-| `Agents/05-documentation.md` | Documentation procedure. |
-| `Agents/06-architecture.md` / `07-css.md` | Architecture/CSS guidance. |
-| `.github/instructions/` | Boundaries, FOCSS, migrations, testing instructions applied by scope. |
+Do not hand-write a plan, audit, guide, status, or handoff report under `results/`. Do not create a new report at the `agents-work/` root. Do not copy a locked source into an approved workstream and claim that the source changed.
 
 ## Correct placement request
 
 ```text
-Update the correct durable documentation for [change]. State which source is
-canonical, preserve authority order, and do not create a handwritten report in results/.
+Update the correct durable documentation for [change]. State the canonical owner,
+authority order, Artifact Class, exact Workstream or Purpose Subfolder, filename pattern,
+owning source or script, authored/generated state, rejected placements, and proof limit.
+Do not create a handwritten report in results/ or change a Locked Path without exact authorization.
 ```
-
-Next: [Kiro workspace](./08-kiro-workspace.md).
-
 
 ## D18 — Documentation, architecture, locked, and legacy guidance card
 
-- **Goal:** Place a durable documentation outcome under the canonical owner while preserving authority, locked sources, and legacy constraints.
+- **Goal:** Place a durable documentation outcome under the canonical owner while preserving authority, locked sources, legacy constraints, and Markdown/HTML provenance limits.
 - **Start Paths:** `./docs/architecture/`; `./docs/database/`; `./docs/governance/`; `./docs/governance/charter.md`; `./docs/governance/focss-stop-drift.md`; `./AGENTS.md`; `./DOC-MAP.md`; `./CONTENTS.md`; `./site/data/storage/`; `./agents-work/oando-repository-guide/markdown/07-docs-governance-planning.md`.
-- **Scope:** Durable docs, root procedures, plans, guide work, locked paths, legacy paths, and Markdown/HTML provenance.
-- **Evidence Steps:** Read authority; inspect the owning path; compare documentation to live evidence; classify lock/legacy/documentation risk; record canonical owner, placement, and next decision.
-- **Allowed Actions:** Read-only evidence and approved edits in owned guide files.
-- **Forbidden Actions:** Changing `./docs/`, `./Agents/`, root files, `./Failures.md`, HTML projections, or legacy source without exact authorization/provenance.
-- **Risk:** Authority, placement, scope, and stale-documentation risk.
-- **Expected Evidence:** Canonical owner, status, source relationship, exact destination, and evidence limitation.
-- **Next Decision:** Use a Workstream Subfolder for authored guide work or D22 when ownership is unclear.
+- **Scope:** Durable docs, root procedures, plans, guide work, Locked Paths, legacy paths, artifact placement, and Markdown/HTML provenance.
+- **Evidence Steps:** Read authority; inspect the canonical owner and live path; compare documentation to live evidence; classify lock/legacy/documentation risk; record owner, placement, source relationship, limitation, and next decision.
+- **Allowed Actions:** Read-only evidence and explicitly approved edits in owned guide files.
+- **Forbidden Actions:** Changing `./docs/`, `./Agents/`, direct root files, `./Failures.md`, HTML projections, or legacy sources without exact authorization and provenance; treating a copy as a source update.
+- **Risk:** Authority, placement, scope, lock, provenance, and stale-documentation risk.
+- **Expected Evidence:** Canonical owner, status, exact destination, Artifact Class, source relationship, authorization boundary, and evidence limitation.
+- **Next Decision:** Use an approved guide Workstream Subfolder for authored guide work, or route to D22 when ownership/provenance is unclear.
 
 ## D19 — Results, generated documents, agent work, and blockers card
 
-- **Goal:** Classify and place authored, generated, planned, and blocker artifacts without mixing evidence types.
+- **Goal:** Classify and place authored, generated, planned, and blocker artifacts without mixing evidence types or creating competing ledgers.
 - **Start Paths:** `./results/`; `./results/tests/`; `./results/site/`; `./results/site-ui/`; `./results/ops/`; `./generated-documents/`; `./agents-work/`; `./plans/`; `./plans/README.md`; `./Failures.md`; `./agent-reports/`; `./agents-work/oando-repository-guide/markdown/09-local-generated-environment.md`.
-- **Scope:** Artifact Class, Workstream/Purpose Subfolder, producer ownership, root legacy output, and canonical blockers.
-- **Evidence Steps:** Read placement authorities; inspect the proposed/observed artifact; compare producer and destination; classify evidence/ownership risk; record placement and next action.
+- **Scope:** Artifact Class, Workstream/Purpose Subfolder, filename, producer ownership, authored/generated state, legacy root output, and canonical blockers.
+- **Evidence Steps:** Read placement authorities; inspect the proposed or observed artifact; compare producer and destination; classify evidence/ownership risk; record placement and next action.
 - **Allowed Actions:** Read-only inventory and approved guide updates; producer-owned generation only in a separately authorized task.
-- **Forbidden Actions:** Handwritten reports in `./results/`, new reports at `./agents-work/` root, hand-editing generated output, or duplicate blocker ledgers.
-- **Risk:** Evidence integrity, discoverability, and audit risk.
-- **Expected Evidence:** Artifact Class, exact subfolder, filename pattern, owning source/script, authored/generated state, rejected placements, and observed placement.
-- **Next Decision:** Select the approved destination before any Output-Producing Task write.
+- **Forbidden Actions:** Handwritten reports in `./results/`, new reports at `./agents-work/` root, hand-editing `./generated-documents/`, duplicate blocker ledgers, or treating `./results/site/` as product source.
+- **Risk:** Evidence integrity, discoverability, ownership, and audit risk.
+- **Expected Evidence:** Artifact Class; exact subfolder; filename pattern; owning source/script; authored/generated state; rejected placements; observed placement or explicit not-observed state.
+- **Next Decision:** Select and record the approved destination before any Output-Producing Task write.
 
 ## Locked Path Gate
 
-Treat every file directly under `./`, every path under `./docs/`, every path under `./Agents/`, and every path under `./.kiro/agents/` as Locked Paths and Read-Only Evidence Sources. Root-level `./*.md` files are included, but the protected set is not limited to Markdown. Before any write or delete, classify the exact target as `Locked`, `explicitly owner-authorized`, or `writable`. Only the exact file named and authorized by the Repository Owner in the current request is owner-authorized; a general task description does not unlock neighboring files. If authorization is absent, stop before modification, preserve the source, record the unavoidable Owner Decision and Separate Approval Work, and put supporting analysis only in `./agents-work/<workstream>/<report-type>/`. Never create a copy, mirror, or generated substitute and claim the locked source changed. `./agents-work/` is distinct from `./Agents/`; `./Failures.md` remains the sole canonical blocker ledger and changes only under exact authorization.
+Treat every direct root file, every path under `./docs/`, every path under `./Agents/`, and every path under `./.kiro/agents/` as a Locked Path and Read-Only Evidence Source. This includes direct root controls such as `./AGENTS.md`, `./Failures.md`, `./DOC-MAP.md`, and `./CONTENTS.md`. Before any write or delete, classify the exact target as `Locked`, `explicitly owner-authorized`, or `writable`.
+
+Only the exact file named and authorized by the Repository Owner in the current request is owner-authorized; naming one file does not unlock its neighbors. A read grant is not write or delete permission. If authorization is absent, stop before modification, preserve the source, record the Owner Decision and Separate Approval Work, and place supporting authored analysis only in an approved `./agents-work/<workstream>/<report-type>/` folder. Never create a copy, mirror, or generated substitute and claim that a Locked Path changed. `./agents-work/` is distinct from `./Agents/`; `./Failures.md` remains the sole canonical blocker ledger.
+
+The four chapter files in this lane are explicitly owner-authorized guide workstream targets. That authorization does not extend to the README, neighboring chapters, HTML/CSS projections, root/docs/Agents files, `.kiro` controls, or any product/runtime path.
+
+## Site Write Gate
+
+`./site/` is the Next.js product source tree. Before any write under it, classify the target as one of:
+
+- **Approved Core Product Write:** an explicitly approved product outcome with exact owned paths, matching Package Skills, and expected source/static or authorized runtime evidence; or
+- **Non-Core Artifact:** a report, result, audit, handoff, prompt, plan, skill, steering file, MCP definition, generated file, temporary/debug file, or other work product that must be redirected away from `./site/`.
+
+Reject or redirect every Non-Core Artifact under `./site/`, including documentation produced by an agent. Use `./agents-work/<workstream>/<report-type>/` for authored work, `./results/<purpose>/` for machine evidence, and `./generated-documents/` for tech-docs generator output. `./results/site/` is a machine-evidence purpose folder and is not the Site Source Tree. A source-path label or documented placement decision does not prove relocation.
+
+A Site Write Gate record names the exact product outcome, owned paths, matching skills, Artifact Class, expected evidence, and rejected placement. This documentation lane has no Site Write; all four targets are under the approved guide workstream.
 
 ## Artifact placement reference
 
-| Artifact Class | Approved destination | Rejected destination |
-|---|---|---|
-| Agent Work Report | `./agents-work/<workstream>/<report-type>/` or approved guide workstream | `./agents-work/` root, `./results/`, `./site/` |
-| Machine Evidence | `./results/<purpose>/` | `./results/` root, `./agents-work/`, `./site/` |
-| Generated Tech-Docs Output | `./generated-documents/` | `./results/`, `./agents-work/`, `./site/` |
-| Active Plan | `./plans/<name>/` indexed by `./plans/README.md` | `./results/`, `./site/`, unowned root |
-| True Blocker | Root `./Failures.md` with supporting workstream analysis | Any second ledger |
-| Core Product Write | Approved product source, including `./site/` only after Site Write Gate | `./site/` for non-core artifacts |
-| Repository Skill | `./.kiro/skills/` | `./site/`, `./results/`, `./agents-work/` |
+| Artifact Class | Owner/source | Authored or generated | Approved destination | Rejected destination |
+|---|---|---|---|---|
+| Agent Work Report / guide work product | Agent or Repository Owner; exact workstream owner | Authored | `./agents-work/<workstream>/<report-type>/` or approved `./agents-work/oando-repository-guide/` | `./agents-work/` root, `./results/`, `./site/` |
+| Machine Evidence | Command/script producer | Generated | `./results/<purpose>/` | `./results/` root, `./agents-work/`, `./site/` |
+| Generated Tech-Docs Output | `./tech-docs-generator/` scripts | Generated/disposable | `./generated-documents/` | `./results/`, `./agents-work/`, `./site/` |
+| Active Plan | Plan owner | Authored | `./plans/<name>/`, indexed by `./plans/README.md` | `./results/`, `./site/`, unowned root |
+| True Blocker | Repository Owner with reproduction evidence | Authored record | Root `./Failures.md` only | Any second ledger or guide/report substitute |
+| Core Product Write | Approved product owner/source | Authored | Approved product source, including `./site/` only after Site Write Gate | `./site/` for Non-Core Artifacts |
+| Repository Skill | Skill owner | Authored | `./.kiro/skills/` | `./site/`, `./results/`, `./agents-work/` |
 
-> If it is written by an agent, use agents-work subfolders; if it is produced by a script/command, use results subfolders; if it is product source, use its approved source tree; never put report/skill/non-core work in site.
+For every Output-Producing Task, the Route Record declares Artifact Class, exact Workstream or Purpose Subfolder, filename pattern, owning source or script, authored/generated state, rejected placements, and Site Write Gate state when applicable. The Completion Record repeats those fields with observed placement evidence. Existing root artifacts without observed purpose assignment remain `legacy/owner-review pending`; no relocation is claimed.
 
-For every Output-Producing Task, the Route Record declares Artifact Class, selected Workstream or Purpose Subfolder, filename pattern, owning source/script, authored-or-generated state, rejected placements, and Site Write Gate state when applicable. The Completion Record repeats those fields with observed placement evidence. Existing root artifacts without observed purpose assignment remain `legacy/owner-review pending`; no relocation is claimed.
+## Guide projection and Separate Approval Work
 
-## Guide projection and separate approval boundary
+The current guide Markdown is the human-authored work surface under `./agents-work/oando-repository-guide/`. Matching HTML is an observed co-located projection surface, but a filename, navigation link, shared stylesheet, or content overlap does not prove that Markdown is the source or that a deterministic generator exists. Determine the Markdown-to-HTML relationship from current files, references, scripts, and generator documentation before changing any HTML/CSS. If provenance remains unresolved, leave HTML/CSS unchanged and record a Coverage-Gap Admission with the evidence checked, limitation, next source, owner action, and scope boundary.
 
-The current guide Markdown is the human-authored work surface under `./agents-work/oando-repository-guide/`. Matching HTML is not modified until a Markdown-to-HTML source relationship is evidenced. If provenance remains unresolved, leave HTML unchanged and record a Coverage-Gap Admission. Hook/policy, product runtime, package, database, deployment, backup, external MCP, Power, and workspace-boundary changes are Separate Approval Work, not documentation completion.
+Separate Approval Work includes HTML/CSS projection updates without evidenced provenance; hook/policy or command-allowlist changes; runtime enforcement, automatic Agent spawning, or contract append; product runtime and `./site/` changes; package installation or workspace-boundary changes; database/migration/RLS/grant/deployment/backup actions; external MCP configuration or Power activation; and generated-output or local-service actions. None is implied by these guide chapters.
+
+Next: [Kiro workspace](./08-kiro-workspace.md).

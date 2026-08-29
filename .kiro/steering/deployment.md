@@ -33,3 +33,4 @@ pnpm run worker:dev (manual — long running)
 
 ## Observability integration
 For explicit post-deploy verification, use the currently wired OpenTelemetry and Prometheus implementation and configuration.
+Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action.

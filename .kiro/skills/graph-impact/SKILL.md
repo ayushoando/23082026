@@ -70,3 +70,4 @@ user-driven and require explicit authorization.
   (review dependents thoroughly).
 - The page/component graph is a separate visual route graph. Its output also
   belongs under `agents-work/repository-graph/page-components/`.
+Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action.

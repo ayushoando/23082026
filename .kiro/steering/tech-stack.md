@@ -31,3 +31,4 @@ inclusion: always
 - OpenTelemetry is registered in `site/instrumentation.ts` through `@vercel/otel`.
 - Prometheus metrics are implemented in `site/lib/observability/metrics.ts`; local Prometheus and Grafana configuration lives under `config/observability/`.
 - Vercel Analytics and Speed Insights are mounted by `site/components/site/SiteAnalytics.tsx` and remain consent-gated.
+Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action.

@@ -32,3 +32,4 @@ inclusion: always
 ## Cleanup (Important)
 - Do NOT commit build logs, link error files, or `.txt` audit files to the repo
 - Files like `build-error.log`, `link_errors.json`, `unique_broken.txt` should be in `.gitignore`
+Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action.

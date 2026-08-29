@@ -23,3 +23,4 @@ fork declares its own store and they meet only at the same backing data location
 ## Before committing either tree
 Run: `pnpm run scan:boundaries`
 
+Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action.

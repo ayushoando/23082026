@@ -39,3 +39,4 @@ Detail: `.github/instructions/migrations.instructions.md`, `docs/database/`.
   Repository MCP schemas or prose references do not prove installation. Never
   run destructive SQL without explicit user confirmation.
 
+Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action.

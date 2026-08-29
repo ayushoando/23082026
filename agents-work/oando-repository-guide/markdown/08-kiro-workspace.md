@@ -83,9 +83,18 @@ A non-matching skill is rejected with a plain-language reason. If no skill match
 
 ## Kiro Markdown inventory baseline
 
-The static inventory contains 36 Active Contract-Bearing Documents, 11 Reference or History Documents, and 4 Package Documents. The active set includes the five physical files under `./.kiro/agents/`, the eight existing repository skill files, the 16 steering/power/routing files, and `./.kiro/kiro-repo-guidance-setup/README.md` as enumerated in the approved task artifact. The Reference/History set includes `./.kiro/kiro-repo-guidance-setup/RECONCILIATION.md` plus the ten specification/reference files under `./.kiro/specs/`. The Package set is the four `./.kiro/power-packages/*/skills/*/SKILL.md` files. No Generated Kiro Markdown is claimed; no Markdown is claimed under `./.kiro/hooks/`, `./.kiro/mcp/`, or `./.kiro/settings/` unless later evidence observes it.
+The static Kiro Markdown inventory is exactly **51 paths**: **36 Active Contract-Bearing Documents**, **11 Reference/History Documents**, and **4 Package Documents**. This is a path/classification record, not proof that Kiro loaded, activated, or enforced any document.
 
-The 12 live guide Markdown work surfaces are `./agents-work/oando-repository-guide/README.md` and `./agents-work/oando-repository-guide/markdown/01-repository-map.md` through `11-working-with-kiro.md`. They are human-authored guide work, separate from the 51-file `./.kiro/**/*.md` inventory. An inventory records path, classification, contract mode (`exact-block`, `canonical-inclusion`, `not-applicable`, or `not-observed`), owner, evidence state, and limitation; it never proves runtime loading.
+| Static class | Count | Current evidence and boundary |
+|---|---:|---|
+| Active Contract-Bearing | 36 | Includes the five physical files under `./.kiro/agents/`, the nine observed repository-local skill files, the steering/power/routing documents, and `./.kiro/kiro-repo-guidance-setup/README.md`; each path is inventoried individually in the approved task record. |
+| Reference/History | 11 | `./.kiro/kiro-repo-guidance-setup/RECONCILIATION.md` plus the ten specification/reference documents under `./.kiro/specs/`; reference status does not make a file active contract coverage. |
+| Package Document | 4 | The four `./.kiro/power-packages/*/skills/*/SKILL.md` paths; package presence is not workspace loading or Power installation evidence. |
+| Generated Kiro Markdown | 0 claimed | No generated Kiro Markdown is claimed. No Markdown is claimed under `./.kiro/hooks/`, `./.kiro/mcp/`, or `./.kiro/settings/` unless later evidence observes it. External/global Kiro files remain `not-observed`. |
+
+The **12 live guide Markdown work surfaces** are `./agents-work/oando-repository-guide/README.md` and `./agents-work/oando-repository-guide/markdown/01-repository-map.md` through `./agents-work/oando-repository-guide/markdown/11-working-with-kiro.md`. They are human-authored guide work, separate from the 51-file `./.kiro/**/*.md` inventory. Each inventory entry records path, classification, contract mode (`exact-block`, `canonical-inclusion`, `not-applicable`, or `not-observed`), owner, evidence state, and limitation; it never proves runtime loading.
+
+The five physical Agent definition files remain distinct from the exactly four Active Agent slots: Scout/Map, Planner/Risk, Implementer, and Verifier/Reporter. Coordinator/Serial Integration Owner is attached to one slot, not added as a fifth role. Runtime roster creation, automatic spawning, and universal enforcement remain `guidance-only`/`not-observed`.
 
 The only approved active-document contract forms are the exact full Kiro Agent Contract block or the exact Canonical Inclusion:
 
@@ -93,7 +102,7 @@ The only approved active-document contract forms are the exact full Kiro Agent C
 Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action.
 ```
 
-Reference/History, Package, Generated, and inaccessible documents are not claimed as active contract coverage. The current guidance work does not append contracts to protected Agent definitions, root standards, or other unapproved files.
+Reference/History, Package, Generated, inaccessible, and external/global-not-observed documents are not claimed as active contract coverage. The current guidance work does not append contracts to protected Agent definitions, root standards, or other unapproved files.
 
 ## Static versus runtime capability evidence
 

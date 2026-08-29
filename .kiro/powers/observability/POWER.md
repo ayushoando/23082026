@@ -33,3 +33,4 @@ Canonical schema references, when the snapshots exist, are under `.kiro/mcp/**`,
 - **runtime installed** requires direct installed-power/server registry evidence. No such registry evidence was established here, so runtime availability is not verified.
 
 Do not install, configure, or invent an observability MCP server from this power.
+Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action.

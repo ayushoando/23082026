@@ -26,6 +26,12 @@
 | `package.json` | Script names and root gate composition. |
 | `.github/workflows/` | CI versions of quality/release routines. |
 
+## Protected Command boundary and Failure Triage escalation
+
+A **Protected Command** is any Full Gate, test, coverage command, browser-test runner, build, deployment, database action, backup, or Local-Service Command. It requires both exact current-session Explicit User Authorization and Hook Permission. A command name in a plan, package manifest, prompt, inline marker, or old report is not authorization. The Full Gate `pnpm run gate` is never a default action.
+
+When a Full Gate Failure is reported or observed, escalate to read-only Failure Triage before proposing a hook, allowlist, baseline, test-selection, or gate-composition change. Record the exact command, repository-root working directory, authorization state, Hook Decision, exit status, first failed subcommand, relevant output summary, and cause classification. If current authorized output is absent, classify the cause as `unverified`, request only the smallest authorized diagnostic, and preserve Full Gate composition, test selection, coverage, quality baselines, and Hook Permission enforcement. If evidence establishes a True Blocker, record reproducible evidence only in root `./Failures.md`.
+
 ## Authorization rule
 
 Checks, builds, browser tests, DB actions, deploys, backups, and test-like operations require explicit current-session user authorization. Ask for only the exact command you want Kiro to run.

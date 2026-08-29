@@ -42,3 +42,4 @@ Static inspection is not a behavioral pass, and an unexecuted command must not b
 Use only `.kiro/mcp/**` for schema references. **Schema present** means the snapshot exists there; it does not mean **workspace configured** or **runtime installed**. `.kiro/settings/mcp.json` has an empty `mcpServers` object, so no security server is workspace-configured. No direct installed-power/server registry evidence was established, so runtime availability is not verified.
 
 Do not install, configure, or invent a security MCP server from this power.
+Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action.

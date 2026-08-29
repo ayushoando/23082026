@@ -78,3 +78,4 @@ licensing compliance.
   make them Kiro-owned.
 - Do not create competing Kiro guidance or implementation outside `.kiro/`.
 
+Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action.

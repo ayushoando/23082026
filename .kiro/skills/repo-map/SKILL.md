@@ -60,3 +60,4 @@ All graph reports belong under `agents-work/`; no graph tool may write under
   may activate `context7`; for live web research beyond the repo, `exa`.
   First confirm the named capability is present in the current installed-power
   registry. Prefer repo docs + graph; do not infer installation from prose.
+Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action.

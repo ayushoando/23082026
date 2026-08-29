@@ -42,3 +42,4 @@ is not a successful build. Record blockers in `Failures.md`.
 - Route production observability to the repository's live observability modules.
   Do not infer Sentry or Datadog RUM wiring, and use an external observability
   capability only after a direct registry check confirms availability.
+Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action.

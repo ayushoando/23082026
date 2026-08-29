@@ -41,3 +41,4 @@ edit file
 - Keep dependency inspection scoped to the changed file and its direct consumers first.
 - Expand transitively only when direct consumers show shared or cross-domain impact.
 - Do not rely on historical generated graph metrics as proof of the current worktree.
+Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action.

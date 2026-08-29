@@ -74,3 +74,4 @@ Inspect imports and dependents directly from the live source tree to narrow whic
 - Only invoke this steering file when visual testing is actually needed.
 - Narrow the route list to only routes affected by the current change.
 - Report findings as a structured table: viewport × route × issue.
+Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action.

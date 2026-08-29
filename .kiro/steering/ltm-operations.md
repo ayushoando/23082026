@@ -39,3 +39,4 @@ description: "LTM memory operations. Activates when the user asks to resume work
 - Selftest: `python ltm/bin/ltm.py selftest`
 
 Read `python_cmd` from `ltm/config.json`.
+Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action.

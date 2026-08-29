@@ -40,3 +40,4 @@ Test at: 1920w, 1440w, 1024w, 390w. Look for:
 
 ## Graph-layer integration
 Inspect imports and dependents directly from the live source tree before optional visual validation.
+Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action.

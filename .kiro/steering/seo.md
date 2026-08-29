@@ -38,3 +38,4 @@ Use Nova Act to verify rendered meta tags and OG images at each viewport width o
 
 ## Graph-layer integration
 Inspect imports and dependents directly from the live source tree before optional validation.
+Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action.

@@ -19,3 +19,4 @@ Each line: {"thread_id": "thread_NNNNNN", "ts_opened": "ISO-8601", "summary": "t
 
 ### Secret redaction
 Check for: sk_live_, sk_test_, AKIA, ghp_, gho_, -----BEGIN, Bearer, base64 strings 40+ chars. Replace with [REDACTED].
+Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action.
