@@ -1,0 +1,75 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Make the canonical entry-point and authority language explicit in `.kiro/skills/oando-master/SKILL.md`": [
+      {
+        "executionId": "19341544-e489-40fc-81a3-e152fc8d0a92",
+        "chatSessionId": "sess_1fd9bf13-c5a8-4466-82c1-f487ad6ae125",
+        "timestamp": 1787971833402
+      },
+      {
+        "executionId": "19341544-e489-40fc-81a3-e152fc8d0a92",
+        "chatSessionId": "sess_1fd9bf13-c5a8-4466-82c1-f487ad6ae125",
+        "timestamp": 1787971841513
+      },
+      {
+        "executionId": "19341544-e489-40fc-81a3-e152fc8d0a92",
+        "chatSessionId": "sess_1fd9bf13-c5a8-4466-82c1-f487ad6ae125",
+        "timestamp": 1787971929160
+      }
+    ],
+    "1.2 Reconcile conditional, additive routing for named and additional repository skills in `.kiro/skills/oando-master/SKILL.md`": [
+      {
+        "executionId": "19341544-e489-40fc-81a3-e152fc8d0a92",
+        "chatSessionId": "sess_1fd9bf13-c5a8-4466-82c1-f487ad6ae125",
+        "timestamp": 1787971833479
+      },
+      {
+        "executionId": "19341544-e489-40fc-81a3-e152fc8d0a92",
+        "chatSessionId": "sess_1fd9bf13-c5a8-4466-82c1-f487ad6ae125",
+        "timestamp": 1787971938081
+      },
+      {
+        "executionId": "19341544-e489-40fc-81a3-e152fc8d0a92",
+        "chatSessionId": "sess_1fd9bf13-c5a8-4466-82c1-f487ad6ae125",
+        "timestamp": 1787972077993
+      }
+    ],
+    "1.3 Reconcile the local-first, registry-confirmed optional Power decision in `.kiro/skills/oando-master/SKILL.md`": [
+      {
+        "executionId": "19341544-e489-40fc-81a3-e152fc8d0a92",
+        "chatSessionId": "sess_1fd9bf13-c5a8-4466-82c1-f487ad6ae125",
+        "timestamp": 1787971833537
+      },
+      {
+        "executionId": "19341544-e489-40fc-81a3-e152fc8d0a92",
+        "chatSessionId": "sess_1fd9bf13-c5a8-4466-82c1-f487ad6ae125",
+        "timestamp": 1787972085530
+      },
+      {
+        "executionId": "19341544-e489-40fc-81a3-e152fc8d0a92",
+        "chatSessionId": "sess_1fd9bf13-c5a8-4466-82c1-f487ad6ae125",
+        "timestamp": 1787972216175
+      }
+    ],
+    "1.4 Wire the completion and reporting contract together in `.kiro/skills/oando-master/SKILL.md`": [
+      {
+        "executionId": "19341544-e489-40fc-81a3-e152fc8d0a92",
+        "chatSessionId": "sess_1fd9bf13-c5a8-4466-82c1-f487ad6ae125",
+        "timestamp": 1787971833585
+      },
+      {
+        "executionId": "19341544-e489-40fc-81a3-e152fc8d0a92",
+        "chatSessionId": "sess_1fd9bf13-c5a8-4466-82c1-f487ad6ae125",
+        "timestamp": 1787972247211
+      }
+    ],
+    "2. Checkpoint - Ensure documentation reconciliation is coherent": [
+      {
+        "executionId": "19341544-e489-40fc-81a3-e152fc8d0a92",
+        "chatSessionId": "sess_1fd9bf13-c5a8-4466-82c1-f487ad6ae125",
+        "timestamp": 1787971833631
+      }
+    ]
+  }
+}

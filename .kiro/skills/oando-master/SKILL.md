@@ -5,7 +5,7 @@ description: Master router and completion contract for the oando1408 repo. Activ
 
 # oando Master Skill
 
-One entry point for work in this repo. Read this first; it routes work to the right detailed skill and defines completion. Authority order remains: current user instruction → live code + fresh commands → `AGENTS.md` → `Agents/` → `docs/`.
+`.kiro/skills/oando-master/SKILL.md` is the canonical repository-local Kiro skill workflow for Repository Task routing and completion criteria. When a Repository Task begins, read this workflow first for routing guidance and completion criteria; use the Referenced Skill Guidance for domain-specific instructions. Authority order remains: current user instruction → live repository evidence and fresh command output → `AGENTS.md` → `Agents/` → `docs/`.
 
 ## Prime directive: finish the work
 
@@ -28,16 +28,17 @@ it; provide the exact command for the user to run directly instead.
 | The task is about... | Use this skill | Typical validation |
 |----------------------|----------------|--------------------|
 | Where does X live / orienting | `repo-map` | graph inspection when needed |
-| Blast radius before editing shared code | `graph-impact` | graph-impact analysis |
+| Shared-code changes or impact analysis | `graph-impact` | graph-impact analysis |
 | CSS, tokens, Tailwind, `site/focss/**` | `focss-css` | `verify:focss`, token checks when authorized |
 | Studio/Planner code, imports across forks | `fork-boundaries` | `scan:boundaries` when authorized |
 | SQL, schema, migrations, choosing a DB | `db-migrations` | migration dry-run when authorized |
+| An evidenced condition matches an Additional Repository Skill | the matching Additional Repository Skill | that guidance's applicable validation |
 
-If two rows apply, activate both skills. If none apply, this completion contract still governs.
+Route to the Referenced Skill Guidance for every applicable row when conditions overlap; do not discard a matching route. An Additional Repository Skill is conditional on evidence of a match—do not assume a fixed inventory or default route. If no row applies, this completion contract still governs.
 
 ## Step 2 — Route to a power only when the repo cannot answer
 
-Prefer repository documentation and local source first. The installed-power registry is the source of truth. The names below are candidate routes, not installation claims.
+Start with Local Evidence: repository documentation, source files, configuration, and fresh command output. The Installed-Power Registry is the source of truth. The names below are candidate-Power guidance, not installation or availability evidence.
 
 | Need | Power |
 |---|---|
@@ -53,7 +54,13 @@ Prefer repository documentation and local source first. The installed-power regi
 | Local project memory and recall | `ltm-power` |
 | AI code-review/security-review information | `cubic-code-review` |
 
-Activate only capabilities confirmed present in the current registry and only when necessary.
+Apply these decisions in order:
+
+1. Use Local Evidence first. If it answers the Repository Task need, do not select a Power.
+2. Only when Local Evidence is insufficient, consult the Installed-Power Registry before considering a Candidate Power.
+3. When the registry confirms a needed Power, present it as an optional specialized capability; do not activate it automatically.
+4. When the registry does not confirm a Candidate Power, do not represent it as installed or activate it; continue with Local Evidence and applicable Referenced Skill Guidance.
+5. When a Repository Task requests Power activation, require Installed-Power Registry confirmation before activation. No Power is activated automatically by this workflow.
 
 ## Step 3 — Validate in the permitted lane
 
