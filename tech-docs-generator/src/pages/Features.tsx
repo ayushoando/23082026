@@ -39,7 +39,7 @@ export function Features() {
         <p className="section-subheading">
           Auto-generated product surfaces and auth roles from the live app tree and
           <code className="text-docs-text mx-1">withAuth</code> / roles helpers. Re-run{' '}
-          <code className="text-docs-text">pnpm run tech-docs:generate</code> after route or auth changes.
+          <code className="text-docs-text">pnpm run ops tech-docs:generate</code> after route or auth changes.
         </p>
       </header>
 

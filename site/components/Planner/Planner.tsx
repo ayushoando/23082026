@@ -110,7 +110,11 @@ import type { SketchRoomMm, SketchWallMm } from "@planner/lib/ai/sketchToPlanSha
 
 // Types, constants, and panel configs live in PlannerConstants.ts
 
-const Planner = () => {
+export interface PlannerProps {
+  accessMode?: "authenticated" | "guest";
+}
+
+const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
   const params = useParams();
   const routeId = typeof params.id === "string" ? params.id : params.id?.[0];
   const router = useRouter();
@@ -1217,16 +1221,17 @@ const Planner = () => {
   //
   // Strict effective-id precedence:
   //   1. routeId (authoritative for /ooplanner/projects/[id])
-  //   2. localStorage fallback (bare /ooplanner only)
+  //   2. localStorage fallback for an authenticated bare /ooplanner entry only
   //   3. Draft (no project to load)
-  // A failed routeId NEVER falls through to a localStorage project.
+  // Guest entry never attempts a remembered private project, so catalog and
+  // handoff workflows remain reachable without triggering a project request.
   useEffect(() => {
     if (!ready) return;
 
     // --- Compute effective id with strict precedence ---
     let effectiveId: string | undefined = routeId;
-    const isLocalStorageFallback = !effectiveId;
-    if (!effectiveId) {
+    const isLocalStorageFallback = !effectiveId && accessMode === "authenticated";
+    if (!effectiveId && accessMode === "authenticated") {
       try { effectiveId = localStorage.getItem(PLANNER_LAST_PROJECT_KEY) || undefined; } catch { /* noop */ }
     }
     if (!effectiveId) {
@@ -1299,7 +1304,7 @@ const Planner = () => {
     return () => {
       controller.abort();
     };
-  }, [ready, routeId, fabricRef, showToast, drawGridAndSheet, refreshLayers, retryCount]);
+  }, [ready, routeId, accessMode, fabricRef, showToast, drawGridAndSheet, refreshLayers, retryCount]);
 
   const newProject = () => {
     const c = fabricRef.current; if (!c) return;
@@ -1644,6 +1649,7 @@ const Planner = () => {
     <div
       className="workspace"
       data-testid="planner-workspace"
+      data-access-mode={accessMode}
       data-load-state={loadState.kind}
       aria-busy={loadState.kind === "loading" ? "true" : undefined}
     >

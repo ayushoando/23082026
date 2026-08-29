@@ -2,7 +2,7 @@
  * Dark-product inventory coverage — broad include, NO thresholds.
  * Do not chase 90% on this total. Use dual rollup for diagnosis.
  *
- *   pnpm run test:coverage:inventory
+ *   pnpm run ops test:coverage:inventory
  */
 import { defineConfig } from "vitest/config";
 import path from "path";

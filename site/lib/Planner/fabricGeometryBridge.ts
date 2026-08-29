@@ -3,6 +3,11 @@
  * Positions use min-edge (top-left) convention for rects; walls use centreline endpoints.
  */
 
+import {
+  PLANNER_SCALE_PX_PER_MM,
+  assertPlannerScale,
+} from "@planner/lib/plannerGeometryContract";
+
 export type PlannerMmRect = {
   id: string;
   xMm: number;
@@ -88,14 +93,21 @@ function scaledSize(obj: FabricLikeObject): { w: number; h: number } {
   return { w: Math.abs(w), h: Math.abs(h) };
 }
 
-/** px → mm using scale_px_per_mm (px per mm). */
-export function pxToMm(px: number, scalePxPerMm: number): number {
-  if (!scalePxPerMm || scalePxPerMm <= 0) return 0;
-  return px / scalePxPerMm;
+/** px → mm at the canonical Planner scale. */
+export function pxToMm(
+  px: number,
+  scalePxPerMm: number = PLANNER_SCALE_PX_PER_MM,
+): number {
+  assertPlannerScale(scalePxPerMm);
+  return px / PLANNER_SCALE_PX_PER_MM;
 }
 
-export function mmToPx(mm: number, scalePxPerMm: number): number {
-  return mm * scalePxPerMm;
+export function mmToPx(
+  mm: number,
+  scalePxPerMm: number = PLANNER_SCALE_PX_PER_MM,
+): number {
+  assertPlannerScale(scalePxPerMm);
+  return mm * PLANNER_SCALE_PX_PER_MM;
 }
 
 export function furnitureFromFabric(
@@ -190,8 +202,9 @@ function openingFromFabric(
 
 export function collectSceneGeometry(
   canvas: FabricLikeCanvas | FabricLikeObject[] | null | undefined,
-  scalePxPerMm: number,
+  scalePxPerMm: number = PLANNER_SCALE_PX_PER_MM,
 ): PlannerSceneGeometry {
+  assertPlannerScale(scalePxPerMm);
   const objects: FabricLikeObject[] = Array.isArray(canvas)
     ? canvas
     : canvas?.getObjects?.() ?? canvas?.objects ?? [];

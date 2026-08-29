@@ -311,6 +311,20 @@ describe("Planner editor load-state integration", () => {
     expect(mockGetProject).not.toHaveBeenCalled();
   });
 
+  it("keeps a guest entry in Draft even when a private project id is remembered", async () => {
+    vi.mocked(Storage.prototype.getItem).mockReturnValue("private-plan");
+    mockGetProject.mockResolvedValue(makeProject("private-plan"));
+
+    render(<Planner accessMode="guest" />);
+
+    await waitFor(() => {
+      const workspace = screen.getByTestId("planner-workspace");
+      expect(workspace).toHaveAttribute("data-access-mode", "guest");
+      expect(workspace).toHaveAttribute("data-load-state", "draft");
+    });
+    expect(mockGetProject).not.toHaveBeenCalled();
+  });
+
   it("uses route id (useParams.id) for getProject — route-id precedence", async () => {
     mockParams.current = { id: "p_route_1" };
     const d = deferred<ReturnType<typeof makeProject>>();

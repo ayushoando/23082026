@@ -98,15 +98,15 @@ const rlsDiagram = `flowchart LR
 
 const migrationCommands = [
   { cmd: 'pnpm run db:apply', desc: 'Apply pending migrations to linked Supabase' },
-  { cmd: 'pnpm run db:sync-drizzle', desc: 'Sync Drizzle schema to Supabase' },
+  { cmd: 'pnpm run ops db:sync-drizzle', desc: 'Sync Drizzle schema to Supabase' },
   { cmd: 'pnpm run db:types', desc: 'Generate TypeScript types from Supabase schema' },
   { cmd: 'pnpm run db:types:admin', desc: 'Generate admin-specific types' },
-  { cmd: 'pnpm run db:advisors:security', desc: 'Run security advisor checks' },
-  { cmd: 'pnpm run db:advisors:performance', desc: 'Run performance advisor checks' },
+  { cmd: 'pnpm run ops db:advisors:security', desc: 'Run security advisor checks' },
+  { cmd: 'pnpm run ops db:advisors:performance', desc: 'Run performance advisor checks' },
   { cmd: 'pnpm run db:test', desc: 'Test database connection' },
-  { cmd: 'pnpm run db:ensure-plans', desc: 'Ensure plans table exists' },
-  { cmd: 'pnpm run db:backup-dropped', desc: 'Backup dropped tables before changes' },
-  { cmd: 'pnpm run seed', desc: 'Seed development data' },
+  { cmd: 'pnpm run ops db:ensure-plans', desc: 'Ensure plans table exists' },
+  { cmd: 'pnpm run ops db:backup-dropped', desc: 'Backup dropped tables before changes' },
+  { cmd: 'pnpm run ops seed', desc: 'Seed development data' },
 ]
 
 export function Database() {

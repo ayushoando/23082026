@@ -44,7 +44,7 @@ export function TechStack() {
           Product surface map + package inventory. Dependencies are generated from
           root <code className="text-docs-text mx-1">package.json</code> and
           <code className="text-docs-text mx-1">pnpm-lock.yaml</code>
-          (<code className="text-docs-text mx-1">pnpm run tech-docs:generate</code>).
+          (<code className="text-docs-text mx-1">pnpm run ops tech-docs:generate</code>).
         </p>
       </header>
 
@@ -318,7 +318,7 @@ export function TechStack() {
               <li><span className="text-docs-text">Dev tooling:</span> root <code className="text-docs-text">devDependencies</code></li>
               <li><span className="text-docs-text">Docs package:</span> <code className="text-docs-text">tech-docs-generator</code> package deps</li>
               <li><span className="text-docs-text">Version:</span> lockfile resolved version; description shows the requested range from the manifest</li>
-              <li><span className="text-docs-text">Regenerate:</span> <code className="text-docs-text">pnpm run tech-docs:generate</code> (or tech-docs build)</li>
+              <li><span className="text-docs-text">Regenerate:</span> <code className="text-docs-text">pnpm run ops tech-docs:generate</code> (or tech-docs build)</li>
             </ul>
           </div>
           </CollapsibleSection>

@@ -132,6 +132,8 @@ function writeMarkdown(generatedAt, counts, files) {
     if (category.length > 200) lines.push(`- … +${category.length - 200} more`);
     lines.push("");
   }
+
+  while (lines.at(-1) === "") lines.pop();
   fs.writeFileSync(INVENTORY_MD, `${lines.join("\n")}\n`, "utf8");
 }
 

@@ -11,10 +11,27 @@ import { isDevAuthBypassEnabled } from "@/lib/auth/devAuthBypass";
 
 export type PlannerPersistenceMode = "disk" | "supabase";
 
+export class PlannerPersistenceConfigurationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "PlannerPersistenceConfigurationError";
+  }
+}
+
+function assertUnambiguousBypassFlag(env: NodeJS.ProcessEnv): void {
+  const value = env.DEV_AUTH_BYPASS;
+  if (value !== undefined && value !== "" && value !== "0" && value !== "1") {
+    throw new PlannerPersistenceConfigurationError(
+      "DEV_AUTH_BYPASS must be unset, 0, or 1 for Planner persistence",
+    );
+  }
+}
+
 export function getPlannerPersistenceMode(
   env: NodeJS.ProcessEnv = process.env,
 ): PlannerPersistenceMode {
-  if (isDevAuthBypassEnabled(env)) {
+  assertUnambiguousBypassFlag(env);
+  if (env.NODE_ENV !== "production" && isDevAuthBypassEnabled(env)) {
     return "disk";
   }
   return "supabase";
@@ -24,11 +41,35 @@ export function getPlannerPersistenceMode(
 export function isPlannerPersistenceConfigured(
   env: NodeJS.ProcessEnv = process.env,
 ): boolean {
-  if (getPlannerPersistenceMode(env) === "disk") {
-    return true;
-  }
+  const mode = getPlannerPersistenceMode(env);
+  if (mode === "disk") return true;
   return Boolean(
     env.NEXT_ADMIN_SUPABASE_URL?.trim() &&
       env.SUPABASE_ADMIN_SERVICE_ROLE_KEY?.trim(),
   );
+}
+
+export interface PlannerPersistenceOperations<T> {
+  disk: () => Promise<T>;
+  supabase: () => Promise<T>;
+}
+
+/** Select exactly one backend for an operation. Selected failures are never retried elsewhere. */
+export async function runPlannerPersistenceOperation<T>(
+  operations: PlannerPersistenceOperations<T>,
+  env: NodeJS.ProcessEnv = process.env,
+): Promise<T> {
+  const mode = getPlannerPersistenceMode(env);
+  if (
+    mode === "supabase" &&
+    !(
+      env.NEXT_ADMIN_SUPABASE_URL?.trim() &&
+      env.SUPABASE_ADMIN_SERVICE_ROLE_KEY?.trim()
+    )
+  ) {
+    throw new PlannerPersistenceConfigurationError(
+      "Planner Supabase mode requires NEXT_ADMIN_SUPABASE_URL and SUPABASE_ADMIN_SERVICE_ROLE_KEY",
+    );
+  }
+  return operations[mode]();
 }

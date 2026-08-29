@@ -17,12 +17,29 @@ import {
 import {
   getPlannerPersistenceMode,
   isPlannerPersistenceConfigured,
+  runPlannerPersistenceOperation,
 } from "@planner/lib/plannerPersistenceMode";
 import {
   assertPlannerDocument,
   type PlannerDocument,
   type PlannerDocumentStatus,
 } from "@planner/lib/plannerDocument";
+export {
+  PLANNER_GATE_B_CONTRACT,
+  PLANNER_PROJECT_CONTRACT_VERSION,
+  PLANNER_PROJECT_SCHEMA_VERSION,
+  PLANNER_REPOSITORY_CONTRACT_VERSION,
+  readPlannerProjectEnvelope,
+  toPlannerProjectResponse,
+} from "@planner/lib/plannerProjectRepository";
+export type {
+  PlannerProjectEnvelopeV1,
+  PlannerProjectRepositoryV1,
+  PlannerProjectResponseV1,
+  PlannerRepositoryContextV1,
+  PlannerRepositoryResultV1,
+  SavePlannerProjectRequestV1,
+} from "@planner/lib/plannerProjectRepository";
 
 export type PlannerSaveSummary = {
   id: string;
@@ -170,73 +187,73 @@ function ownsProject(
   return typeof owner === "string" && owner.length > 0 && owner === userId;
 }
 
-async function assertSupabaseReady(): Promise<void> {
-  if (!isPlannerPersistenceConfigured()) {
-    throw new Error(
-      "Planner Supabase mode requires NEXT_ADMIN_SUPABASE_URL and SUPABASE_ADMIN_SERVICE_ROLE_KEY (or DEV_AUTH_BYPASS=1 for disk).",
-    );
-  }
-}
-
 /** Raw project records (disk shape) for both modes. */
 export async function listProjectRecords(opts?: {
   userId?: string | null;
 }): Promise<Record<string, unknown>[]> {
-  if (getPlannerPersistenceMode() === "disk") {
-    let projects = await listProjectsFromDisk();
-    if (opts?.userId) {
-      projects = projects.filter((p) => ownsProject(p, opts.userId));
-    }
-    return projects;
-  }
-  await assertSupabaseReady();
-  const { listProjectsFromSupabase } = await import(
-    "@planner/lib/projectsStore.supabase"
-  );
-  return listProjectsFromSupabase({ userId: opts?.userId });
+  return runPlannerPersistenceOperation({
+    disk: async () => {
+      let projects = await listProjectsFromDisk();
+      if (opts?.userId) {
+        projects = projects.filter((project) => ownsProject(project, opts.userId));
+      }
+      return projects;
+    },
+    supabase: async () => {
+      const { listProjectsFromSupabase } = await import(
+        "@planner/lib/projectsStore.supabase"
+      );
+      return listProjectsFromSupabase({ userId: opts?.userId });
+    },
+  });
 }
 
 export async function loadProjectRecord(
   id: string,
 ): Promise<Record<string, unknown> | null> {
-  if (getPlannerPersistenceMode() === "disk") {
-    return loadProject(id);
-  }
-  await assertSupabaseReady();
-  const { loadProjectFromSupabase } = await import(
-    "@planner/lib/projectsStore.supabase"
-  );
-  return loadProjectFromSupabase(id);
+  return runPlannerPersistenceOperation({
+    disk: () => loadProject(id),
+    supabase: async () => {
+      const { loadProjectFromSupabase } = await import(
+        "@planner/lib/projectsStore.supabase"
+      );
+      return loadProjectFromSupabase(id);
+    },
+  });
 }
 
 export async function writeProjectRecord(
   project: Record<string, unknown>,
   opts?: { userId?: string | null; email?: string | null },
 ): Promise<Record<string, unknown>> {
-  if (getPlannerPersistenceMode() === "disk") {
-    const next = {
-      ...project,
-      user_id: opts?.userId ?? project.user_id ?? null,
-    };
-    await writeProject(next);
-    return next;
-  }
-  await assertSupabaseReady();
-  const { writeProjectToSupabase } = await import(
-    "@planner/lib/projectsStore.supabase"
-  );
-  return writeProjectToSupabase(project, opts);
+  return runPlannerPersistenceOperation({
+    disk: async () => {
+      const next = {
+        ...project,
+        user_id: opts?.userId ?? project.user_id ?? null,
+      };
+      await writeProject(next);
+      return next;
+    },
+    supabase: async () => {
+      const { writeProjectToSupabase } = await import(
+        "@planner/lib/projectsStore.supabase"
+      );
+      return writeProjectToSupabase(project, opts);
+    },
+  });
 }
 
 export async function deleteProjectRecord(id: string): Promise<boolean> {
-  if (getPlannerPersistenceMode() === "disk") {
-    return deleteProjectFiles(id);
-  }
-  await assertSupabaseReady();
-  const { deleteProjectFromSupabase } = await import(
-    "@planner/lib/projectsStore.supabase"
-  );
-  return deleteProjectFromSupabase(id);
+  return runPlannerPersistenceOperation({
+    disk: () => deleteProjectFiles(id),
+    supabase: async () => {
+      const { deleteProjectFromSupabase } = await import(
+        "@planner/lib/projectsStore.supabase"
+      );
+      return deleteProjectFromSupabase(id);
+    },
+  });
 }
 
 export async function listPlannerDocumentsFromStore(opts?: {

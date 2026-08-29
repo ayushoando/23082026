@@ -1,7 +1,7 @@
 # scripts/AsNeeded — allowlist
 
 **Purpose:** One-shot tools and explicitly allowlisted specialized validators.
-**Rule:** Only basenames listed here may live under `scripts/AsNeeded/`; a listed validator may be a package-gate dependency.
+**Rule:** Only basenames listed here may live under `scripts/AsNeeded/`; a listed validator may be a package-gate dependency, including `verify-focss.mjs` for `verify:focss`.
 
 ```powershell
 node scripts/AsNeeded/<name>
@@ -21,7 +21,7 @@ node scripts/AsNeeded/<name>
 
 ## Do **not** put here
 
-- Anything in root `package.json` `scripts`
+- Root package script entrypoints or unallowlisted package-gate dependencies; intentionally allowlisted specialized validators, including `verify-focss.mjs` for `verify:focss`, are permitted.
 - `generate-svg.mjs` / `generate-svg/*`
 - `scripts/general/*`
 - Probe / one-shot diagnostics (do not reintroduce under root `scripts/` unless gated)

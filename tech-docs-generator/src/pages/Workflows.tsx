@@ -163,7 +163,7 @@ const siteWorkflowModules: SiteWorkflowModule[] = [
       intro: 'How marketing site links, embeds, and shares design system with the interactive planner workspace.',
       steps: [
         { num: 1, title: 'Entry points', instruction: 'Marketing CTAs link to /ooplanner (and guest planner surfaces). Shared FOCSS tokens ensure visual continuity.', cmd: '—' },
-        { num: 2, title: 'Catalog bridge', instruction: 'Use site/lib/catalog + platform data. Never duplicate product facts in marketing site-data.', cmd: 'pnpm run catalog:blocks:qa' },
+        { num: 2, title: 'Catalog bridge', instruction: 'Use site/lib/catalog + platform data. Never duplicate product facts in marketing site-data.', cmd: 'pnpm run ops catalog:blocks:qa' },
         { num: 3, title: 'Theme sync', instruction: 'tech-docs-generator syncs css from site/focss. Verify in generated-documents/data/css/.', mermaid: `flowchart TB\n  Tokens[site/focss/base/tokens] --> Site[Marketing]\n  Tokens --> Planner[focss/planner]\n  Tokens --> TechDocs[tech-stack]` },
         { num: 4, title: 'Visual QA screenshot', instruction: 'Capture hero CTA + planner embed side-by-side for anti-copy validation.', screenshotDesc: 'Side-by-side: marketing card leading into planner canvas with matching bronze/ocean accents' },
       ]
@@ -182,7 +182,7 @@ const siteWorkflowModules: SiteWorkflowModule[] = [
       steps: [
         { num: 1, title: 'Local gate', instruction: 'typecheck + lint + test relevant scope from repo root (product package is root, not oando-site).', cmd: 'pnpm run typecheck && pnpm run lint && pnpm run test:unit' },
         { num: 2, title: 'Full release gate', instruction: 'Per START.md + Failures.md. Captures all artifacts under results/.', cmd: 'pnpm run release:gate' },
-        { num: 3, title: 'Tech docs sync', instruction: 'Regenerate and build tech docs to validate rendered workflows.', cmd: 'pnpm run tech-docs:build' },
+        { num: 3, title: 'Tech docs sync', instruction: 'Regenerate and build tech docs to validate rendered workflows.', cmd: 'pnpm run build:tech-docs' },
         { num: 4, title: 'Screenshots & a11y', instruction: 'Playwright + MCP lighthouse runs. Attach to gate evidence.', mermaid: `sequenceDiagram\n  participant Dev\n  participant CI\n  participant Gate\n  Dev->>CI: PR + preview\n  CI->>Gate: lint/type/test/a11y\n  Gate-->>Vercel: deploy if pass` , screenshotDesc: 'Playwright HTML report + lighthouse scores panel for / and /planner/guest/' },
       ]
     },

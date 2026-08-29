@@ -149,8 +149,8 @@ export function Overview() {
             { cmd: 'pnpm run typecheck', desc: 'TypeScript check (site/tsconfig; TS 7.x)' },
             { cmd: 'pnpm run lint', desc: 'oxlint (site + tests)' },
             { cmd: 'pnpm run test', desc: 'Run Vitest unit tests' },
-            { cmd: 'pnpm run test:planner', desc: 'Planner-specific tests' },
-            { cmd: 'pnpm run test:e2e:nav', desc: 'Playwright navigation smoke' },
+            { cmd: 'pnpm run ops test:planner', desc: 'Planner-specific tests' },
+            { cmd: 'pnpm run ops test:e2e:nav', desc: 'Playwright navigation smoke' },
             { cmd: 'pnpm run build', desc: 'Production build (site + tech-docs)' },
             { cmd: 'pnpm run release:gate', desc: 'Full pre-release pipeline' },
           ].map(({ cmd, desc }) => (

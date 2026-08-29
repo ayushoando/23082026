@@ -73,9 +73,9 @@ const securityLayers = [
     color: 'text-danger-400',
     bg: 'bg-danger-500/10',
     points: [
-      'pnpm run lint:secrets / scan:secrets',
-      'pnpm run db:advisors:security (Supabase advisors)',
-      'pnpm run audit:supabase:admin (when wired)',
+      'pnpm run ops lint:secrets / scan:secrets',
+      'pnpm run ops db:advisors:security (Supabase advisors)',
+      'pnpm run ops audit:supabase:admin (when wired)',
       'test:priority-8 covers proxy / CSRF / withAuth unit surface',
     ],
   },
@@ -233,7 +233,7 @@ export async function rateLimit(
         <CollapsibleSection title="Secret scanning" badge="pnpm" defaultOpen={false}>
           <div className="space-y-3">
             <p className="text-base text-docs-text-muted leading-relaxed">
-              Root scripts: <code className="text-brand-400">pnpm run lint:secrets</code> (secretlint) and{' '}
+              Root scripts: <code className="text-brand-400">pnpm run ops lint:secrets</code> (secretlint) and{' '}
               <code className="text-brand-400">pnpm run scan:secrets</code>. Fast gate wires{' '}
               <code className="text-brand-400">scan:secrets</code>. There is no committed{' '}
               <code className="text-brand-400">.husky/pre-commit</code> in this checkout — do not claim husky hooks without checking disk.
@@ -242,7 +242,7 @@ export async function rateLimit(
               <div className="card">
                 <h4 className="text-base font-semibold text-docs-text-strong mb-1">Local / gate</h4>
                 <p className="text-sm text-docs-text-muted leading-relaxed">
-                  <code className="text-brand-400">pnpm run lint:secrets</code> ·{' '}
+                  <code className="text-brand-400">pnpm run ops lint:secrets</code> ·{' '}
                   <code className="text-brand-400">pnpm run scan:secrets</code> ·{' '}
                   <code className="text-brand-400">pnpm run gate</code>
                 </p>

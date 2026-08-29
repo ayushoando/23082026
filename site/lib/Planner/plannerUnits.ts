@@ -1,4 +1,8 @@
 import type { PlannerUnit } from "@planner/store/plannerUiStore";
+import {
+  PLANNER_SCALE_PX_PER_MM,
+  assertPlannerScale,
+} from "@planner/lib/plannerGeometryContract";
 
 /** Unit conversion and canvas scaling helpers. Canonical world unit: mm. */
 export const MM_PER_INCH = 25.4;
@@ -25,5 +29,18 @@ export const formatDim = (mm: number, unit: PlannerUnit | string): string => {
   return `${Math.round(val)} mm`;
 };
 
-export const pxToMm = (px: number, scale: number): number => px / scale;
-export const mmToPx = (mm: number, scale: number): number => mm * scale;
+export const pxToMm = (
+  px: number,
+  scale: number = PLANNER_SCALE_PX_PER_MM,
+): number => {
+  assertPlannerScale(scale);
+  return px / PLANNER_SCALE_PX_PER_MM;
+};
+
+export const mmToPx = (
+  mm: number,
+  scale: number = PLANNER_SCALE_PX_PER_MM,
+): number => {
+  assertPlannerScale(scale);
+  return mm * PLANNER_SCALE_PX_PER_MM;
+};

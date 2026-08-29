@@ -15,7 +15,7 @@ export function LiveRepoSection({
       <h2 className="text-xl font-bold text-docs-text-strong mb-3">{title}</h2>
       <p className="text-sm text-docs-text-muted mb-4">
         Extracted from the repo on last sync. Re-run{' '}
-        <code className="text-brand-400">pnpm run tech-docs:generate</code> after site changes.
+        <code className="text-brand-400">pnpm run ops tech-docs:generate</code> after site changes.
       </p>
       {children}
     </section>

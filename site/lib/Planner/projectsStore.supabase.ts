@@ -7,6 +7,12 @@ import "server-only";
 
 import type { Json } from "@/platform/supabase/types";
 import { createSupabaseAuthAdminClient } from "@/platform/supabase/auth-admin";
+export type {
+  PlannerProjectEnvelopeV1,
+  PlannerProjectRepositoryV1,
+  PlannerRepositoryContextV1,
+  SavePlannerProjectRequestV1,
+} from "@planner/lib/plannerProjectRepository";
 
 type OandoPlanRow = {
   id: string;

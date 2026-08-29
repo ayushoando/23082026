@@ -134,6 +134,8 @@ function productsProjectIdFromEnv() {
   return "erpweaiypimorcunaimz";
 }
 
+const syncAllDocs = () => runGeneral("generate-docs.mjs", ["--all"]);
+
 /** @type {Record<string, (args: string[]) => void>} */
 const COMMANDS = {
   list: () => {
@@ -280,8 +282,8 @@ const COMMANDS = {
 
   "verify:db-svg": () => runAsNeeded("verify-db-svg-matrix.mjs"),
 
-  "docs:sync": () => runGeneral("generate-docs.mjs", ["--all"]),
-  "docs:sync:all": () => runGeneral("generate-docs.mjs", ["--all"]),
+  "docs:sync": syncAllDocs,
+  "docs:sync:all": syncAllDocs,
   "docs:sync:routes": () => runGeneral("generate-route-index.mjs"),
   "docs:sync:sitemap-csv": () => runTsx("generate-sitemap-csv.ts"),
   "docs:check": () => runGeneral("generate-docs.mjs", ["--check"]),
