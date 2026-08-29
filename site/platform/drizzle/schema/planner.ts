@@ -1,4 +1,5 @@
-import { boolean, date, integer, pgTable, text, timestamp, jsonb, uuid, index, primaryKey, uniqueIndex } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
+import { bigint, boolean, check, date, integer, pgTable, text, timestamp, jsonb, uuid, index, primaryKey, uniqueIndex } from "drizzle-orm/pg-core";
 
 export const profiles = pgTable("profiles", {
   id: uuid("id").primaryKey(),
@@ -17,8 +18,10 @@ export const plans = pgTable("oando_plans", {
   payload: jsonb("payload").notNull().default({}),
   thumbnailUrl: text("thumbnail_url"),
   status: text("status").notNull().default("draft"),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  revision: bigint("revision", { mode: "number" }).notNull().default(1),
+  schemaVersion: integer("schema_version").notNull().default(1),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 }, (table) => [
   index("plans_user_id_idx").on(table.userId),
   index("plans_status_idx").on(table.status),
@@ -27,6 +30,32 @@ export const plans = pgTable("oando_plans", {
   index("plans_user_id_status_idx").on(table.userId, table.status),
   index("plans_user_id_created_at_idx").on(table.userId, table.createdAt),
   index("plans_user_id_updated_at_idx").on(table.userId, table.updatedAt),
+  check("oando_plans_revision_check", sql`${table.revision} >= 1`),
+  check("oando_plans_schema_version_check", sql`${table.schemaVersion} >= 0`),
+]);
+
+export const plannerOperationIdempotency = pgTable("planner_operation_idempotency", {
+  ownerId: uuid("owner_id").notNull().references(() => profiles.id, { onDelete: "cascade" }),
+  operation: text("operation").$type<"create" | "save" | "delete">().notNull(),
+  projectId: uuid("project_id").notNull(),
+  idempotencyKey: text("idempotency_key").notNull(),
+  requestFingerprint: text("request_fingerprint").notNull(),
+  responseStatus: text("response_status").$type<"processing" | "success" | "not_found" | "conflict">().notNull(),
+  responseRevision: bigint("response_revision", { mode: "number" }),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+}, (table) => [
+  uniqueIndex("planner_operation_idempotency_identity_key").on(
+    table.ownerId,
+    table.operation,
+    table.projectId,
+    table.idempotencyKey,
+  ),
+  index("planner_operation_idempotency_created_at_idx").on(table.createdAt),
+  check("planner_operation_idempotency_operation_check", sql`${table.operation} in ('create', 'save', 'delete')`),
+  check("planner_operation_idempotency_key_check", sql`char_length(${table.idempotencyKey}) between 1 and 120 and ${table.idempotencyKey} ~ '^[A-Za-z0-9._~-]+$'`),
+  check("planner_operation_idempotency_fingerprint_check", sql`char_length(${table.requestFingerprint}) between 1 and 256`),
+  check("planner_operation_idempotency_status_check", sql`${table.responseStatus} in ('processing', 'success', 'not_found', 'conflict')`),
+  check("planner_operation_idempotency_revision_check", sql`${table.responseRevision} is null or ${table.responseRevision} >= 1`),
 ]);
 
 export const teams = pgTable("teams", {

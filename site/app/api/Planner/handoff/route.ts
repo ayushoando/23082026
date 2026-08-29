@@ -1,44 +1,83 @@
 /**
  * POST /api/Planner/handoff — record BOQ handoff for staff follow-up.
- * Persists to admin Supabase `planner_handoffs` (service role).
+ *
+ * Requests flow through the Planner request-processing pipeline which
+ * enforces: correlation → quota → method/validation → origin/CSRF
+ * → session → owner scope → revision/idempotency → persistence.
  */
 
-import type { NextRequest } from "next/server";
-import { withAuth, type AuthContext } from "@/features/shared/api/withAuth";
-import { success, validationError, error } from "@/features/shared/api/apiResponse";
-import { ApiError, API_ERROR_CODES } from "@/features/shared/api/ApiError";
-import { plannerHandoffRequestSchema } from "@/lib/Planner/handoff/handoffSchema";
-import { createPlannerHandoff } from "@/lib/Planner/handoff/createPlannerHandoff";
+import {
+  createPlannerHandler,
+  createPlannerRejectedMethodHandler,
+} from "@planner/server/plannerRouteAdapter";
+import type {
+  PlannerOperationContext,
+  PlannerOperationResult,
+} from "@planner/lib/plannerRequestPipeline";
 
-export const POST = withAuth(
-  async (req, auth: AuthContext) => {
-    const body = await (req as NextRequest).json().catch(() => null);
-    const parsed = plannerHandoffRequestSchema.safeParse(body);
-    if (!parsed.success) {
-      return validationError(parsed.error.issues);
-    }
-    const result = await createPlannerHandoff(parsed.data, {
-      createdBy: auth.user?.id ?? null,
-    });
-    if (!result.ok) {
-      const status = result.kind === "not_configured" ? 503 : 500;
-      const code =
-        result.kind === "not_configured"
-          ? API_ERROR_CODES.SERVICE_UNAVAILABLE
-          : API_ERROR_CODES.DATABASE_ERROR;
-      return error(new ApiError(status, code, result.message));
-    }
-    return success({
+async function handleHandoff(
+  context: PlannerOperationContext,
+): Promise<PlannerOperationResult<unknown>> {
+  const body = context.request.body;
+  const parsed = plannerHandoffRequestSchema.safeParse(body);
+  if (!parsed.success) {
+    return {
+      ok: false,
+      status: 400,
+      code: "INVALID_REQUEST",
+      metadata: {
+        issues: parsed.error.issues.map((issue) => ({
+          path: issue.path.map(String).join(".") || "(root)",
+          message: issue.message,
+        })),
+      },
+    };
+  }
+
+  const result = await createPlannerHandoff(parsed.data, {
+    createdBy: context.session?.ownerId ?? null,
+  });
+  if (!result.ok) {
+    const code =
+      result.kind === "not_configured" ? "SERVICE_UNAVAILABLE" : "INTERNAL_ERROR";
+    const status = result.kind === "not_configured" ? 503 : 500;
+    return {
+      ok: false,
+      status,
+      code,
+      metadata: {},
+    };
+  }
+  return {
+    ok: true,
+    status: 200,
+    data: {
       referenceId: result.referenceId,
       createdAt: result.createdAt,
       idempotentReplay: result.idempotentReplay,
       message: result.message,
-    });
-  },
-  {
-    role: "guest",
-    rateLimitScope: "planner-handoff:post",
-    rateLimit: 20,
-    requireCsrf: true,
-  },
-);
+    },
+  };
+}
+
+export const POST = createPlannerHandler({
+  endpointId: "planner.handoff.create",
+  operation: { invoke: handleHandoff },
+});
+
+// Unsupported methods — 405 with structured response and Allow header
+export function GET(request: NextRequest, _context: unknown): Response {
+  return plannerMethodNotAllowed(request, ["POST"]);
+}
+
+export function PUT(request: NextRequest, _context: unknown): Response {
+  return plannerMethodNotAllowed(request, ["POST"]);
+}
+
+export function DELETE(request: NextRequest, _context: unknown): Response {
+  return plannerMethodNotAllowed(request, ["POST"]);
+}
+
+export function PATCH(request: NextRequest, _context: unknown): Response {
+  return plannerMethodNotAllowed(request, ["POST"]);
+}

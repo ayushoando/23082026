@@ -81,7 +81,7 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - _Requirements: 14.8-14.10, 17.7, 18.1-18.9, 19.2, 19.4-19.8_
 
 - [ ] 2. Workstream 2 — Remediate fork, geometry, and persistence integrity
-  - [-] 2.1 Audit every inventoried Planner/Studio dependency and remediate all fork-boundary violations
+  - [x] 2.1 Audit every inventoried Planner/Studio dependency and remediate all fork-boundary violations
     - Remove Planner-to-Studio, Studio-to-Planner, and cross-zone FOCSS imports; create independent Planner-owned equivalents where needed and extend findings to all affected workflows.
     - Preserve Planner API casing and approved shared-infrastructure boundaries.
     - _Requirements: 2.1, 2.3, 3.1, 3.2, 3.6_
@@ -93,11 +93,11 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - Normalize persisted physical units and validated scale metadata, adapt known legacy snapshots deterministically, and return an explicit unsupported-scale/version result rather than silently applying Studio scale.
     - Preserve dimensions, placement, rotation, and source records through round trips; publish the resulting typed geometry contract at Gate B.
     - _Requirements: 3.3, 3.5, 4.3, 13.7, 13.8_
-  - [~] 2.4 Write property-based test for Planner scale conversion
+  - [x] 2.4 Write property-based test for Planner scale conversion
     - **Property 4: Planner scale conversion**
     - Generate finite representable millimetre values and verify `mm × 0.05` and inverse conversion within stored precision.
     - **Validates: Requirements 3.3, 3.4**
-  - [~] 2.5 Write property-based test for geometry persistence round trip
+  - [x] 2.5 Write property-based test for geometry persistence round trip
     - **Property 5: Geometry persistence round trip**
     - Generate valid geometry and verify serialize-save-load-deserialize preserves physical state and never applies `0.2 px/mm` or lossy conversion.
     - **Validates: Requirements 3.5, 4.3, 13.8**
@@ -120,23 +120,23 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - Validate current versions, purely migrate known older versions in memory, preserve unsupported source records, and exclude successfully deleted records from subsequent owner list/load results.
     - Reconcile the final persistence contract with workstream 4 at Gate C before regression integration.
     - _Requirements: 4.5, 13.6, 13.7, 14.6_
-  - [~] 2.11 Write property-based test for exclusive persistence selection
+  - [x] 2.11 Write property-based test for exclusive persistence selection
     - **Property 18: Exclusive persistence selection**
     - Generate runtime configurations, operations, and adapter failures and verify exactly one approved adapter or no adapter for invalid configuration, with no fallback write.
     - **Validates: Requirements 12.1, 12.2, 12.3, 12.4, 12.5, 12.6, 12.7, 12.8**
-  - [~] 2.12 Write property-based test for revision compare-and-swap
+  - [x] 2.12 Write property-based test for revision compare-and-swap
     - **Property 19: Revision compare-and-swap**
     - Generate current/expected revisions and valid saves and verify atomic single increments, timestamp rules, and unchanged records after stale requests.
     - **Validates: Requirements 4.4, 13.2, 13.4**
-  - [~] 2.13 Write property-based test for idempotent mutation
+  - [x] 2.13 Write property-based test for idempotent mutation
     - **Property 20: Idempotent mutation**
     - Generate owner-scoped retries and fingerprints and verify exactly one create/save/delete effect or conflict on mismatched reuse.
     - **Validates: Requirements 13.3**
-  - [~] 2.14 Write property-based test for delete unavailability
+  - [x] 2.14 Write property-based test for delete unavailability
     - **Property 21: Delete unavailability**
     - Generate owned records and confirmed deletions and verify subsequent list/load exclusion and deterministic UI result.
     - **Validates: Requirements 4.5, 13.6**
-  - [~] 2.15 Write property-based test for schema compatibility safety
+  - [x] 2.15 Write property-based test for schema compatibility safety
     - **Property 22: Schema compatibility safety**
     - Generate current, known-old, and unsupported versions and verify validation/migration or unchanged source with explicit unsupported result.
     - **Validates: Requirements 13.1, 13.7, 14.6**
@@ -222,7 +222,7 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - **Validates: Requirements 10.1, 10.2, 15.1, 15.2, 15.5, 15.6, 15.7**
 
 - [ ] 4. Workstream 4 — Remediate API, security, authorization, and conditional Admin database contracts
-  - [-] 4.1 Implement explicit typed endpoint descriptors and compatible client adapters
+  - [x] 4.1 Implement explicit typed endpoint descriptors and compatible client adapters
     - Cover methods, path/query/header/body schemas, success/error envelopes, statuses, auth/owner policy, CSRF/origin policy, and rate limits for catalog, upload, handoff, projects, project item, and sketch-to-plan endpoints found in inventory.
     - Use versioned adapters/dual-read parsing during transition, converge handlers and clients within each finding, and publish the endpoint contract at Gate B.
     - _Requirements: 11.1, 11.7, 15.1_
@@ -236,19 +236,19 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
   - [~] 4.4 Remediate safe structured errors and correlation responses
     - Return stable codes and correlation identifiers while excluding secrets, credentials, stack traces, tokens, request bodies, project content, and cross-owner data.
     - _Requirements: 11.8, 11.9, 17.3_
-  - [~] 4.5 Write property-based test for server-derived owner scope
+  - [x] 4.5 Write property-based test for server-derived owner scope
     - **Property 14: Server-derived owner scope**
     - Generate mixed-owner records and arbitrary client owner identifiers and verify server-session scope controls all list/item outcomes without disclosure or mutation.
     - **Validates: Requirements 10.3, 10.4, 10.5, 10.6, 10.7**
-  - [~] 4.6 Write property-based test for endpoint contract completeness
+  - [x] 4.6 Write property-based test for endpoint contract completeness
     - **Property 15: Endpoint contract completeness**
     - Generate/inspect endpoint descriptors and verify every endpoint defines all method, schema, status, auth, authorization, CSRF/origin, and rate-limit fields.
     - **Validates: Requirements 11.1**
-  - [~] 4.7 Write property-based test for security checks preceding persistence
+  - [x] 4.7 Write property-based test for security checks preceding persistence
     - **Property 16: Security checks precede persistence**
     - Generate invalid methods, inputs, origins, CSRF tokens, sessions, owner scopes, and quota states and verify the structured response and zero persistence calls.
     - **Validates: Requirements 11.2, 11.3, 11.4, 11.5, 11.6, 11.7**
-  - [~] 4.8 Write property-based test for safe structured errors
+  - [x] 4.8 Write property-based test for safe structured errors
     - **Property 17: Safe structured errors**
     - Generate internal exceptions and sensitive payload fragments and verify stable safe errors, correlation ids, and prohibited-data exclusion.
     - **Validates: Requirements 11.8, 11.9**
@@ -282,7 +282,7 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - **Property 25: Observability failure isolation**
     - Generate exporter failures and operation outcomes and verify user/persistence results remain unchanged and the redacted fallback event is emitted.
     - **Validates: Requirements 17.6**
-  - [-] 5.5 Add deterministic representative-project fixtures and supported-profile measurement code
+  - [x] 5.5 Add deterministic representative-project fixtures and supported-profile measurement code
     - Cover room boundary, at least ten furniture objects, rotation, dimensions, labels, metadata, route LCP/CLS, non-canvas INP, canvas FPS, direct feedback, API latency, and 20-cycle listener/subscription cleanup.
     - Record viewport/orientation/input/browser/device/CPU/network fixture, warm/cold status, sample count, method, and evidence class without claiming unexecuted browser or integration results.
     - _Requirements: 16.1-16.7, 18.1, 19.4_
@@ -290,7 +290,7 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - At Gate D, return each measured bottleneck to the exclusive product-file owner, require the smallest serial remediation, preserve behavior, and accept the handback only after its measured value, profile, bottleneck evidence, remediation, and exact pending/observed verification are bound to the finding.
     - Defect remediation is required; if no authorized measurement exists, retain the candidate as validation-pending rather than asserting compliance.
     - _Requirements: 2.1, 2.6, 16.1-16.8_
-  - [~] 5.7 Write property-based test for performance finding completeness
+  - [x] 5.7 Write property-based test for performance finding completeness
     - **Property 26: Performance finding completeness**
     - Generate missed-budget findings and verify measured value, complete supported profile, bottleneck evidence, and remediation status are mandatory.
     - **Validates: Requirements 16.8**

@@ -112,17 +112,39 @@ export async function thumbnailFromPng(pngBytes: Buffer, maxSize = 240): Promise
   }
 }
 
-export async function listProjectsFromDisk(): Promise<Record<string, unknown>[]> {
+export async function listProjectsFromDisk(options: {
+  ignoreAtomicState?: boolean;
+} = {}): Promise<Record<string, unknown>[]> {
   await ensureStorageDirs();
   const entries = await fs.readdir(PROJECTS_DIR);
+  const atomicStateIds = options.ignoreAtomicState
+    ? new Set<string>()
+    : new Set(
+        entries
+          .filter((name) => name.endsWith(".planner-state.json"))
+          .map((name) => name.slice(0, -".planner-state.json".length)),
+      );
   const withStat: Array<{ name: string; mtime: number }> = [];
   for (const name of entries) {
-    if (!name.endsWith(".json")) continue;
+    if (!name.endsWith(".json") || name.endsWith(".planner-state.json")) continue;
+    if (atomicStateIds.has(name.slice(0, -".json".length))) continue;
     const st = await fs.stat(path.join(PROJECTS_DIR, name));
     withStat.push({ name, mtime: st.mtimeMs });
   }
   withStat.sort((a, b) => b.mtime - a.mtime);
   const projects: Record<string, unknown>[] = [];
+  if (!options.ignoreAtomicState) {
+    for (const projectId of atomicStateIds) {
+      try {
+        const state = await readJson<{ project?: Record<string, unknown> | null }>(
+          path.join(PROJECTS_DIR, `${projectId}.planner-state.json`),
+        );
+        if (state.project) projects.push(state.project);
+      } catch {
+        /* skip invalid/incomplete atomic state */
+      }
+    }
+  }
   for (const { name } of withStat) {
     try {
       projects.push(await readJson(path.join(PROJECTS_DIR, name)));
@@ -133,7 +155,19 @@ export async function listProjectsFromDisk(): Promise<Record<string, unknown>[]>
   return projects;
 }
 
-export async function loadProject(projectId: string): Promise<Record<string, unknown> | null> {
+export async function loadProject(
+  projectId: string,
+  options: { ignoreAtomicState?: boolean } = {},
+): Promise<Record<string, unknown> | null> {
+  if (!options.ignoreAtomicState) {
+    const atomicStatePath = path.join(PROJECTS_DIR, `${projectId}.planner-state.json`);
+    try {
+      const state = await readJson<{ project?: Record<string, unknown> | null }>(atomicStatePath);
+      return state.project ?? null;
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+    }
+  }
   const meta = path.join(PROJECTS_DIR, `${projectId}.json`);
   try {
     await fs.access(meta);

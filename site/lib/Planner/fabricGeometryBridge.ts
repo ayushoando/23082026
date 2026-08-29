@@ -99,7 +99,7 @@ export function pxToMm(
   scalePxPerMm: number = PLANNER_SCALE_PX_PER_MM,
 ): number {
   assertPlannerScale(scalePxPerMm);
-  return px / PLANNER_SCALE_PX_PER_MM;
+  return px / scalePxPerMm;
 }
 
 export function mmToPx(
@@ -107,7 +107,7 @@ export function mmToPx(
   scalePxPerMm: number = PLANNER_SCALE_PX_PER_MM,
 ): number {
   assertPlannerScale(scalePxPerMm);
-  return mm * PLANNER_SCALE_PX_PER_MM;
+  return mm * scalePxPerMm;
 }
 
 export function furnitureFromFabric(
@@ -263,4 +263,116 @@ export function furnitureToCenterOrigin(rect: PlannerMmRect): {
     depthMm: rect.depthMm,
     rotationDeg: rect.rotationDeg,
   };
+}
+
+/**
+ * Extract scene geometry using an arbitrary positive scale. Unlike
+ * `collectSceneGeometry`, this does not assert the canonical Planner scale.
+ * It is used only during deterministic legacy-snapshot adaptation where the
+ * persisted scale differs from the canonical Planner scale.
+ *
+ * The caller is responsible for subsequently rescaling the resulting mm
+ * values to the canonical Planner scale via `rescaleGeometry`.
+ */
+export function collectSceneGeometryAtScale(
+  canvas: FabricLikeCanvas | FabricLikeObject[] | null | undefined,
+  scalePxPerMm: number,
+): PlannerSceneGeometry {
+  if (scalePxPerMm <= 0 || !Number.isFinite(scalePxPerMm)) {
+    return { furniture: [], walls: [], doors: [], windows: [] };
+  }
+  const rawPxToMm = (px: number): number => px / scalePxPerMm;
+  const objects: FabricLikeObject[] = Array.isArray(canvas)
+    ? canvas
+    : canvas?.getObjects?.() ?? canvas?.objects ?? [];
+
+  const furniture: PlannerMmRect[] = [];
+  const walls: PlannerMmWall[] = [];
+  const doors: PlannerMmOpening[] = [];
+  const windows: PlannerMmOpening[] = [];
+
+  objects.forEach((obj, index) => {
+    if (obj.data?.isGridLine || obj.data?.isSheet || obj.data?.isGuide || obj.data?.isPreview) {
+      return;
+    }
+    const kind = obj.data?.kind;
+
+    if (kind === "furniture") {
+      const { w, h } = scaledSize(obj);
+      const dimW = obj.data?.dimensions?.width_mm;
+      const dimD = obj.data?.dimensions?.depth_mm;
+      const widthMm = typeof dimW === "number" && dimW > 0 ? dimW : rawPxToMm(w);
+      const depthMm = typeof dimD === "number" && dimD > 0 ? dimD : rawPxToMm(h);
+      const catalogId = typeof obj.data?.furniture_id === "string" ? obj.data.furniture_id : undefined;
+      const label = typeof obj.data?.label === "string" ? obj.data.label : undefined;
+      const id = objectId(obj, catalogId || "furniture");
+      furniture.push({
+        id: id === "furniture" ? `furniture_${index}` : id,
+        xMm: rawPxToMm(finite(obj.left)),
+        yMm: rawPxToMm(finite(obj.top)),
+        widthMm,
+        depthMm,
+        rotationDeg: finite(obj.angle),
+        catalogId,
+        label,
+      });
+      return;
+    }
+
+    if (kind === "wall") {
+      const wallId = objectId(obj, "wall");
+      if (
+        typeof obj.x1 === "number" &&
+        typeof obj.y1 === "number" &&
+        typeof obj.x2 === "number" &&
+        typeof obj.y2 === "number"
+      ) {
+        walls.push({
+          id: wallId === "wall" ? `wall_${index}` : wallId,
+          x1Mm: rawPxToMm(obj.x1),
+          y1Mm: rawPxToMm(obj.y1),
+          x2Mm: rawPxToMm(obj.x2),
+          y2Mm: rawPxToMm(obj.y2),
+          thicknessMm: Math.max(1, rawPxToMm(finite(obj.strokeWidth, 1))),
+        });
+      } else {
+        const { w, h } = scaledSize(obj);
+        const left = finite(obj.left);
+        const top = finite(obj.top);
+        walls.push({
+          id: wallId === "wall" ? `wall_${index}` : wallId,
+          x1Mm: rawPxToMm(left),
+          y1Mm: rawPxToMm(top),
+          x2Mm: rawPxToMm(left + w),
+          y2Mm: rawPxToMm(top + h),
+          thicknessMm: Math.max(1, rawPxToMm(finite(obj.strokeWidth, 1))),
+        });
+      }
+      return;
+    }
+
+    if (kind === "door" || kind === "window") {
+      const { w, h } = scaledSize(obj);
+      const openingId = objectId(obj, kind);
+      const wallRef = typeof obj.data?.wallId === "string" ? obj.data.wallId : undefined;
+      const pos = typeof obj.data?.position === "number" && Number.isFinite(obj.data.position)
+        ? obj.data.position
+        : undefined;
+      const opening: PlannerMmOpening = {
+        id: openingId === kind ? `${kind}_${index}` : openingId,
+        kind,
+        xMm: rawPxToMm(finite(obj.left)),
+        yMm: rawPxToMm(finite(obj.top)),
+        widthMm: rawPxToMm(w),
+        depthMm: rawPxToMm(h),
+        rotationDeg: finite(obj.angle),
+        wallId: wallRef,
+        position: pos,
+      };
+      if (kind === "door") doors.push(opening);
+      else windows.push(opening);
+    }
+  });
+
+  return { furniture, walls, doors, windows };
 }

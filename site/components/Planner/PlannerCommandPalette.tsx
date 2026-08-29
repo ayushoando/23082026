@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { filterCommands, type PlannerCommand } from "@planner/lib/commands/registry";
 
 type Props = {
@@ -12,31 +12,75 @@ type Props = {
 export function PlannerCommandPalette({ open, commands, onClose }: Props) {
   const [query, setQuery] = useState("");
   const filtered = useMemo(() => filterCommands(commands, query), [commands, query]);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const invokerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    if (!open) setQuery("");
+    if (!open) {
+      setQuery("");
+      invokerRef.current?.focus();
+      invokerRef.current = null;
+      return;
+    }
+    invokerRef.current = document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null;
+    queueMicrotask(() => inputRef.current?.focus());
   }, [open]);
 
   if (!open) return null;
 
   return (
-    <div className="planner-command-palette" data-testid="planner-command-palette" role="dialog" aria-label="Command palette">
+    <div
+      ref={dialogRef}
+      className="planner-command-palette"
+      data-testid="planner-command-palette"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="planner-command-palette-title"
+      onKeyDown={(event) => {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          onClose();
+          return;
+        }
+        if (event.key !== "Tab") return;
+        const focusable = dialogRef.current?.querySelectorAll<HTMLElement>(
+          'input, button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        );
+        if (!focusable?.length) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }}
+    >
+      <h2 id="planner-command-palette-title" className="planner-command-palette__title">
+        Command palette
+      </h2>
       <input
+        ref={inputRef}
         className="input"
-        autoFocus
         placeholder="Type a command…"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         data-testid="planner-command-query"
+        aria-controls="planner-command-list"
         onKeyDown={(e) => {
-          if (e.key === "Escape") onClose();
           if (e.key === "Enter" && filtered[0]) {
+            e.preventDefault();
             filtered[0].run();
             onClose();
           }
         }}
       />
-      <ul data-testid="planner-command-list">
+      <ul id="planner-command-list" data-testid="planner-command-list" aria-live="polite">
         {filtered.map((cmd) => (
           <li key={cmd.id}>
             <button
@@ -52,6 +96,7 @@ export function PlannerCommandPalette({ open, commands, onClose }: Props) {
             </button>
           </li>
         ))}
+        {filtered.length === 0 ? <li className="planner-command-palette__empty">No matching commands</li> : null}
       </ul>
       <button type="button" className="btn btn--sm" onClick={onClose} data-testid="planner-command-close">
         Close

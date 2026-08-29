@@ -15,13 +15,20 @@ import type { FurnitureItem, PlannerProject } from "@planner/lib/plannerTypes";
 const PLANNER_API_ERROR_CODES = {
   VALIDATION_ERROR: "VALIDATION_ERROR" as const,
   INVALID_INPUT: "INVALID_INPUT" as const,
+  INVALID_REQUEST: "INVALID_REQUEST" as const,
   MISSING_REQUIRED_FIELD: "MISSING_REQUIRED_FIELD" as const,
   AUTH_REQUIRED: "AUTH_REQUIRED" as const,
   INVALID_CREDENTIALS: "INVALID_CREDENTIALS" as const,
   INSUFFICIENT_PERMISSIONS: "INSUFFICIENT_PERMISSIONS" as const,
+  OWNER_SCOPE_REJECTED: "OWNER_SCOPE_REJECTED" as const,
   CSRF_FAILED: "CSRF_FAILED" as const,
+  CSRF_REJECTED: "CSRF_REJECTED" as const,
   RESOURCE_NOT_FOUND: "RESOURCE_NOT_FOUND" as const,
+  NOT_FOUND: "NOT_FOUND" as const,
   RATE_LIMIT_EXCEEDED: "RATE_LIMIT_EXCEEDED" as const,
+  RATE_LIMITED: "RATE_LIMITED" as const,
+  REVISION_CONFLICT: "REVISION_CONFLICT" as const,
+  OFFLINE: "OFFLINE" as const,
   INTERNAL_ERROR: "INTERNAL_ERROR" as const,
   DATABASE_ERROR: "DATABASE_ERROR" as const,
   SERVICE_UNAVAILABLE: "SERVICE_UNAVAILABLE" as const,
@@ -34,13 +41,32 @@ export class PlannerApiError extends Error {
   readonly status: number;
   readonly code: PlannerApiErrorCode;
   readonly detail: string | undefined;
+  readonly correlationId: string | undefined;
+  readonly currentRevision: number | undefined;
+  readonly retryAfterSeconds: number | undefined;
+  readonly recovery: "reauthenticate-preserve-unsaved" | undefined;
 
-  constructor(status: number, code: PlannerApiErrorCode, message: string, detail?: string) {
+  constructor(
+    status: number,
+    code: PlannerApiErrorCode,
+    message: string,
+    options: {
+      detail?: string;
+      correlationId?: string;
+      currentRevision?: number;
+      retryAfterSeconds?: number;
+      recovery?: "reauthenticate-preserve-unsaved";
+    } = {},
+  ) {
     super(message);
     this.name = "PlannerApiError";
     this.status = status;
     this.code = code;
-    this.detail = detail;
+    this.detail = options.detail;
+    this.correlationId = options.correlationId;
+    this.currentRevision = options.currentRevision;
+    this.retryAfterSeconds = options.retryAfterSeconds;
+    this.recovery = options.recovery;
   }
 
   get isNotFound(): boolean {
@@ -55,8 +81,16 @@ export class PlannerApiError extends Error {
     return this.status === 403;
   }
 
+  get isConflict(): boolean {
+    return this.status === 409 || this.code === "REVISION_CONFLICT";
+  }
+
+  get isOffline(): boolean {
+    return this.code === "OFFLINE";
+  }
+
   get isTransient(): boolean {
-    return this.status === 429 || this.status >= 500;
+    return this.isOffline || this.status === 429 || this.status >= 500;
   }
 }
 
@@ -74,8 +108,10 @@ function statusErrorCode(status: number): PlannerApiErrorCode {
       return PLANNER_API_ERROR_CODES.INSUFFICIENT_PERMISSIONS;
     case 404:
       return PLANNER_API_ERROR_CODES.RESOURCE_NOT_FOUND;
+    case 409:
+      return PLANNER_API_ERROR_CODES.REVISION_CONFLICT;
     case 429:
-      return PLANNER_API_ERROR_CODES.RATE_LIMIT_EXCEEDED;
+      return PLANNER_API_ERROR_CODES.RATE_LIMITED;
     case 503:
       return PLANNER_API_ERROR_CODES.SERVICE_UNAVAILABLE;
     default:
@@ -91,11 +127,22 @@ async function readJson<T>(res: Response): Promise<T> {
   if (!res.ok) {
     let detail = `Request failed (${res.status})`;
     let code = statusErrorCode(res.status);
+    let correlationId = res.headers.get("x-correlation-id") ?? undefined;
+    let currentRevision: number | undefined;
+    let retryAfterSeconds: number | undefined;
+    let recovery: "reauthenticate-preserve-unsaved" | undefined;
 
     try {
       const body = (await res.json()) as {
+        correlationId?: string;
         detail?: string;
-        error?: { code?: string; message?: string } | string;
+        error?: {
+          code?: string;
+          currentRevision?: number;
+          message?: string;
+          recovery?: string;
+          retryAfterSeconds?: number;
+        } | string;
         message?: string;
       };
       if (typeof body.detail === "string" && body.detail) {
@@ -112,18 +159,33 @@ async function readJson<T>(res: Response): Promise<T> {
       ) {
         detail = body.error.message;
       }
-      if (
-        body.error &&
-        typeof body.error === "object" &&
-        typeof body.error.code === "string" &&
-        isPlannerApiErrorCode(body.error.code)
-      ) {
-        code = body.error.code;
+      if (body.error && typeof body.error === "object") {
+        if (typeof body.error.code === "string" && isPlannerApiErrorCode(body.error.code)) {
+          code = body.error.code;
+        }
+        if (Number.isSafeInteger(body.error.currentRevision)) {
+          currentRevision = body.error.currentRevision;
+        }
+        if (Number.isSafeInteger(body.error.retryAfterSeconds)) {
+          retryAfterSeconds = body.error.retryAfterSeconds;
+        }
+        if (body.error.recovery === "reauthenticate-preserve-unsaved") {
+          recovery = body.error.recovery;
+        }
+      }
+      if (typeof body.correlationId === "string" && body.correlationId) {
+        correlationId = body.correlationId;
       }
     } catch {
       // Non-JSON errors retain the status-derived safe classification.
     }
-    throw new PlannerApiError(res.status, code, detail, detail);
+    throw new PlannerApiError(res.status, code, detail, {
+      detail,
+      correlationId,
+      currentRevision,
+      retryAfterSeconds,
+      recovery,
+    });
   }
   if (res.status === 204) {
     return undefined as T;
@@ -140,6 +202,40 @@ function jsonInit(method: string, payload?: unknown): RequestInit {
   };
 }
 
+async function plannerFetch(path: string, init?: RequestInit): Promise<Response> {
+  try {
+    return await browserApiFetch(path, init);
+  } catch (error: unknown) {
+    if (isAbortError(error)) throw error;
+    throw new PlannerApiError(0, PLANNER_API_ERROR_CODES.OFFLINE, "No network connection", {
+      detail: "Your work is still available in this browser. Reconnect and try again.",
+    });
+  }
+}
+
+export interface PlannerMutationOptions {
+  expectedRevision: number;
+  idempotencyKey: string;
+}
+
+export function createPlannerIdempotencyKey(operation: string, projectId: string): string {
+  const random = typeof crypto !== "undefined" && "randomUUID" in crypto
+    ? crypto.randomUUID()
+    : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  return `${operation}-${projectId}-${random}`.replace(/[^A-Za-z0-9._~-]/g, "-").slice(0, 120);
+}
+
+function mutationPayload(payload: unknown, options?: PlannerMutationOptions): unknown {
+  if (!options || !payload || typeof payload !== "object" || Array.isArray(payload)) {
+    return payload;
+  }
+  return {
+    ...(payload as Record<string, unknown>),
+    expectedRevision: options.expectedRevision,
+    idempotencyKey: options.idempotencyKey,
+  };
+}
+
 /** Catalog the Planner places on plans — listing is read-only. */
 export const listFurniture = async (
   params: Record<string, string> = {},
@@ -148,13 +244,13 @@ export const listFurniture = async (
   const path = qs
     ? `/api/Planner/catalog?${qs}`
     : "/api/Planner/catalog";
-  const response = await browserApiFetch(path);
+  const response = await plannerFetch(path);
   return readJson<FurnitureItem[]>(response);
 };
 
 /** Planner-side custom furniture upload. */
 export async function uploadFurniture(formData: FormData): Promise<FurnitureItem> {
-  const response = await browserApiFetch(apiPath("/api/Planner/catalog/upload"), {
+  const response = await plannerFetch(apiPath("/api/Planner/catalog/upload"), {
     method: "POST",
     body: formData,
   });
@@ -168,7 +264,7 @@ export interface GetProjectOptions {
 export async function listProjects(
   options?: GetProjectOptions,
 ): Promise<PlannerProject[]> {
-  const response = await browserApiFetch("/api/Planner/projects", {
+  const response = await plannerFetch("/api/Planner/projects", {
     signal: options?.signal,
   });
   return readJson<PlannerProject[]>(response);
@@ -178,17 +274,20 @@ export async function getProject(
   id: string,
   options?: GetProjectOptions,
 ): Promise<PlannerProject> {
-  const response = await browserApiFetch(
+  const response = await plannerFetch(
     `/api/Planner/projects/${encodeURIComponent(id)}`,
     { signal: options?.signal },
   );
   return readJson<PlannerProject>(response);
 }
 
-export async function createProject(payload: unknown): Promise<PlannerProject> {
-  const response = await browserApiFetch(
+export async function createProject(
+  payload: unknown,
+  options?: PlannerMutationOptions,
+): Promise<PlannerProject> {
+  const response = await plannerFetch(
     "/api/Planner/projects",
-    jsonInit("POST", payload),
+    jsonInit("POST", mutationPayload(payload, options)),
   );
   return readJson<PlannerProject>(response);
 }
@@ -196,18 +295,22 @@ export async function createProject(payload: unknown): Promise<PlannerProject> {
 export async function updateProject(
   id: string,
   payload: unknown,
+  options?: PlannerMutationOptions,
 ): Promise<PlannerProject> {
-  const response = await browserApiFetch(
+  const response = await plannerFetch(
     `/api/Planner/projects/${encodeURIComponent(id)}`,
-    jsonInit("PATCH", payload),
+    jsonInit("PATCH", mutationPayload(payload, options)),
   );
   return readJson<PlannerProject>(response);
 }
 
-export async function deleteProject(id: string): Promise<{ ok: boolean }> {
-  const response = await browserApiFetch(
+export async function deleteProject(
+  id: string,
+  options?: PlannerMutationOptions,
+): Promise<{ ok: boolean }> {
+  const response = await plannerFetch(
     `/api/Planner/projects/${encodeURIComponent(id)}`,
-    { method: "DELETE" },
+    jsonInit("DELETE", options),
   );
   return readJson<{ ok: boolean }>(response);
 }
@@ -223,7 +326,7 @@ export interface PlannerHandoffResponse {
 export async function submitPlannerHandoff(
   payload: PlannerHandoffRequest,
 ): Promise<PlannerHandoffResponse> {
-  const response = await browserApiFetch(
+  const response = await plannerFetch(
     apiPath("/api/Planner/handoff"),
     jsonInit("POST", payload),
   );
@@ -248,7 +351,7 @@ export type PlannerSketchToPlanResponse =
 export async function convertSketchToPlan(
   payload: SketchToPlanRequest,
 ): Promise<PlannerSketchToPlanResponse> {
-  const response = await browserApiFetch(
+  const response = await plannerFetch(
     apiPath("/api/Planner/sketch-to-plan"),
     jsonInit("POST", payload),
   );
@@ -260,7 +363,7 @@ export async function createExport(payload: {
   data_url: string;
   name?: string;
 }): Promise<unknown> {
-  const response = await browserApiFetch(
+  const response = await plannerFetch(
     "/api/exports",
     jsonInit("POST", payload),
   );

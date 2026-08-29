@@ -13,6 +13,7 @@ import {
   resolveLoadedSansFamily,
   resolveLoadedSansFamilyShort,
 } from "@/lib/fonts";
+import { PLANNER_SCALE_PX_PER_MM } from "@planner/lib/plannerGeometryContract";
 
 export const OO = {
   white50: "#FFFFFF",
@@ -113,7 +114,7 @@ export const OO_SWATCHES: readonly string[] = [
 ];
 
 /** Floor plan canvas scale: 0.05 px per mm (wide sheets). */
-export const SCALE_PX_PER_MM = 0.05;
+export const SCALE_PX_PER_MM = PLANNER_SCALE_PX_PER_MM;
 /** Default wall thickness when drawing walls (mm). */
 export const DEFAULT_WALL_THICKNESS_MM = 150;
 /** Default plan sheet size (mm). */

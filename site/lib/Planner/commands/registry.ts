@@ -1,3 +1,9 @@
+import {
+  buildCanvasCommands,
+  type PlannerCommandDescriptor,
+  type PlannerCommandContext,
+} from "./canvasCommands";
+
 export type PlannerCommand = {
   id: string;
   label: string;
@@ -18,6 +24,25 @@ export function filterCommands(
   });
 }
 
+/**
+ * Adapt a PlannerCommandDescriptor to the PlannerCommand shape consumed by
+ * the command palette. Each descriptor's `execute` is bound to the provided
+ * context so the palette can call `run()` without context plumbing.
+ */
+export function descriptorToPaletteCommand(
+  descriptor: PlannerCommandDescriptor,
+  ctx: PlannerCommandContext,
+): PlannerCommand {
+  return {
+    id: descriptor.id,
+    label: descriptor.label,
+    keywords: descriptor.keywords,
+    run: () => {
+      void descriptor.execute(ctx);
+    },
+  };
+}
+
 export function buildPaletteCommands(handlers: {
   setTool: (tool: string) => void;
   undo?: () => void;
@@ -25,8 +50,10 @@ export function buildPaletteCommands(handlers: {
   toggleSnap?: () => void;
   goReview?: () => void;
   exportPng?: () => void;
+  /** When provided, canvas commands are included in the palette. */
+  commandContext?: PlannerCommandContext;
 }): PlannerCommand[] {
-  return [
+  const base: PlannerCommand[] = [
     { id: "tool-select", label: "Tool: Select", keywords: ["v"], run: () => handlers.setTool("select") },
     { id: "tool-pan", label: "Tool: Pan", keywords: ["h", "hand"], run: () => handlers.setTool("pan") },
     { id: "tool-wall", label: "Tool: Wall", keywords: ["w"], run: () => handlers.setTool("wall") },
@@ -48,4 +75,21 @@ export function buildPaletteCommands(handlers: {
       ? [{ id: "export-png", label: "Export PNG", keywords: ["export", "png"], run: handlers.exportPng }]
       : []),
   ];
+
+  // Merge semantic canvas commands into the palette when a context is available
+  if (handlers.commandContext) {
+    const canvasDescriptors = buildCanvasCommands();
+    const canvasEntries = canvasDescriptors.map((d) =>
+      descriptorToPaletteCommand(d, handlers.commandContext!),
+    );
+    // Avoid duplicating ids already in the base list
+    const baseIds = new Set(base.map((c) => c.id));
+    for (const entry of canvasEntries) {
+      if (!baseIds.has(entry.id)) {
+        base.push(entry);
+      }
+    }
+  }
+
+  return base;
 }

@@ -13,6 +13,8 @@ import {
   PLANNER_GEOMETRY_SCHEMA_VERSION,
   PLANNER_GEOMETRY_UNIT,
   PLANNER_SCALE_PX_PER_MM,
+  readPlannerGeometry,
+  type PlannerGeometryReadResult,
   type PlannerGeometrySnapshotV1,
 } from "@planner/lib/plannerGeometryContract";
 
@@ -54,4 +56,18 @@ export function serializePlannerGeometry(
     geometry: collectSceneGeometry(canvas, PLANNER_SCALE_PX_PER_MM),
     ...(canvasSnapshot ? { canvasSnapshot } : {}),
   };
+}
+
+/**
+ * Deserialize persisted Planner geometry. Validates scale metadata, adapts
+ * known legacy snapshots deterministically, and returns an explicit error for
+ * unsupported scale/version rather than silently applying Studio scale.
+ *
+ * This is the canonical deserialization entry point for the persistence
+ * boundary (Gate B contract).
+ */
+export function deserializePlannerGeometry(
+  input: unknown,
+): PlannerGeometryReadResult {
+  return readPlannerGeometry(input);
 }

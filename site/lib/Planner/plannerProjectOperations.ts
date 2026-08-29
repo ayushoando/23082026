@@ -1,0 +1,441 @@
+/** Pure Gate B mutation transitions. Adapters must commit one transition atomically. */
+
+import {
+  PLANNER_PROJECT_CONTRACT_VERSION,
+  PLANNER_PROJECT_SCHEMA_VERSION,
+  PLANNER_REPOSITORY_CONTRACT_VERSION,
+  isValidPlannerIdempotencyKey,
+  readPlannerProjectEnvelope,
+  readPlannerProjectWrite,
+  toPlannerProjectResponse,
+  toPlannerProjectSummary,
+  type PlannerProjectEnvelopeV1,
+  type PlannerProjectRepositoryV1,
+  type PlannerProjectResponseV1,
+  type PlannerProjectSummaryV1,
+  type PlannerRepositoryContextV1,
+  type PlannerRepositoryResultV1,
+  type SavePlannerProjectRequestV1,
+} from "@planner/lib/plannerProjectRepository";
+import {
+  PlannerPersistenceConfigurationError,
+  runContextualPlannerPersistenceOperation,
+} from "@planner/lib/plannerPersistenceMode";
+
+export type PlannerProjectMutationOperationV1 = "create" | "save" | "delete";
+
+export interface PlannerIdempotencyReceiptV1 {
+  ownerId: string;
+  operation: PlannerProjectMutationOperationV1;
+  projectId: string;
+  key: string;
+  fingerprint: string;
+  result:
+    | PlannerRepositoryResultV1<PlannerProjectResponseV1>
+    | PlannerRepositoryResultV1<{ id: string; deleted: true }>;
+}
+
+export interface PlannerProjectAtomicStateV1 {
+  project: PlannerProjectEnvelopeV1 | null;
+  receipts: readonly PlannerIdempotencyReceiptV1[];
+}
+
+export type PlannerProjectMutationCommandV1 =
+  | {
+      operation: "create" | "save";
+      projectId: string;
+      request: SavePlannerProjectRequestV1;
+    }
+  | {
+      operation: "delete";
+      projectId: string;
+      expectedRevision: number;
+      idempotencyKey: string;
+    };
+
+export type PlannerProjectMutationValueV1 =
+  | PlannerProjectResponseV1
+  | { id: string; deleted: true };
+
+export interface PlannerProjectMutationTransitionV1 {
+  state: PlannerProjectAtomicStateV1;
+  result: PlannerRepositoryResultV1<PlannerProjectMutationValueV1>;
+  effect: "none" | "created" | "saved" | "deleted";
+}
+
+function canonical(value: unknown): string {
+  if (value === null || typeof value !== "object") {
+    return JSON.stringify(value) ?? "undefined";
+  }
+  if (Array.isArray(value)) return `[${value.map(canonical).join(",")}]`;
+  const record = value as Record<string, unknown>;
+  return `{${Object.keys(record)
+    .sort()
+    .map((key) => `${JSON.stringify(key)}:${canonical(record[key])}`)
+    .join(",")}}`;
+}
+
+export function fingerprintPlannerMutation(command: PlannerProjectMutationCommandV1): string {
+  return canonical(command);
+}
+
+function receiptIdentity(
+  context: PlannerRepositoryContextV1,
+  command: PlannerProjectMutationCommandV1,
+): string {
+  const key = command.operation === "delete" ? command.idempotencyKey : command.request.idempotencyKey;
+  return `${context.ownerId}\u0000${command.operation}\u0000${command.projectId}\u0000${key}`;
+}
+
+function receiptIdentityFromStored(receipt: PlannerIdempotencyReceiptV1): string {
+  return `${receipt.ownerId}\u0000${receipt.operation}\u0000${receipt.projectId}\u0000${receipt.key}`;
+}
+
+function conflict(
+  message: string,
+  currentRevision?: number,
+): PlannerRepositoryResultV1<PlannerProjectMutationValueV1> {
+  return {
+    ok: false,
+    code: "CONFLICT",
+    message,
+    ...(currentRevision === undefined ? {} : { currentRevision }),
+  };
+}
+
+function appendReceipt(
+  state: PlannerProjectAtomicStateV1,
+  context: PlannerRepositoryContextV1,
+  command: PlannerProjectMutationCommandV1,
+  fingerprint: string,
+  result: PlannerIdempotencyReceiptV1["result"],
+  project: PlannerProjectEnvelopeV1 | null,
+): PlannerProjectAtomicStateV1 {
+  const key = command.operation === "delete" ? command.idempotencyKey : command.request.idempotencyKey;
+  return {
+    project,
+    receipts: [
+      ...state.receipts,
+      {
+        ownerId: context.ownerId,
+        operation: command.operation,
+        projectId: command.projectId,
+        key,
+        fingerprint,
+        result,
+      },
+    ],
+  };
+}
+
+function validContext(context: PlannerRepositoryContextV1): boolean {
+  return Boolean(context.ownerId.trim() && context.correlationId.trim());
+}
+
+/**
+ * Compute one complete CAS/idempotency transition from one adapter snapshot.
+ * The selected adapter must persist `transition.state` as one atomic operation;
+ * the facade must not read from or retry through another adapter.
+ */
+export function applyPlannerProjectMutation(
+  state: PlannerProjectAtomicStateV1,
+  context: PlannerRepositoryContextV1,
+  command: PlannerProjectMutationCommandV1,
+  now: string,
+): PlannerProjectMutationTransitionV1 {
+  if (!validContext(context)) {
+    return {
+      state,
+      result: { ok: false, code: "FORBIDDEN", message: "Verified owner context is required" },
+      effect: "none",
+    };
+  }
+  const nowMs = Date.parse(now);
+  if (Number.isNaN(nowMs)) {
+    return {
+      state,
+      result: { ok: false, code: "INVALID_PROJECT", message: "Operation time must be ISO-8601" },
+      effect: "none",
+    };
+  }
+
+  const key = command.operation === "delete" ? command.idempotencyKey : command.request.idempotencyKey;
+  if (!isValidPlannerIdempotencyKey(key)) {
+    return {
+      state,
+      result: {
+        ok: false,
+        code: "INVALID_IDEMPOTENCY_KEY",
+        message: "Idempotency key must be a bounded opaque token",
+      },
+      effect: "none",
+    };
+  }
+
+  const fingerprint = fingerprintPlannerMutation(command);
+  const identity = receiptIdentity(context, command);
+  const receipt = state.receipts.find(
+    (candidate) => receiptIdentityFromStored(candidate) === identity,
+  );
+  if (receipt) {
+    if (receipt.fingerprint !== fingerprint) {
+      return {
+        state,
+        result: conflict("Idempotency key was already used for a different request", state.project?.revision),
+        effect: "none",
+      };
+    }
+    return {
+      state,
+      result: receipt.result.ok
+        ? { ...receipt.result, replayed: true }
+        : receipt.result,
+      effect: "none",
+    };
+  }
+
+  if (command.operation === "delete") {
+    const current = state.project;
+    if (!current || current.id !== command.projectId || current.ownerId !== context.ownerId) {
+      return { state, result: { ok: false, code: "NOT_FOUND", message: "Project not found" }, effect: "none" };
+    }
+    if (command.expectedRevision !== current.revision) {
+      return { state, result: conflict("Project revision is stale", current.revision), effect: "none" };
+    }
+    const result = { ok: true as const, value: { id: current.id, deleted: true as const } };
+    return {
+      state: appendReceipt(state, context, command, fingerprint, result, null),
+      result,
+      effect: "deleted",
+    };
+  }
+
+  if (command.request.contractVersion !== PLANNER_REPOSITORY_CONTRACT_VERSION) {
+    return {
+      state,
+      result: { ok: false, code: "INVALID_PROJECT", message: "Unsupported repository contract" },
+      effect: "none",
+    };
+  }
+  if (command.request.project.id !== command.projectId) {
+    return {
+      state,
+      result: { ok: false, code: "INVALID_PROJECT", message: "Path and project identities differ" },
+      effect: "none",
+    };
+  }
+  const write = readPlannerProjectWrite(command.request.project);
+  if (!write.ok) {
+    return { state, result: write, effect: "none" };
+  }
+
+  if (command.operation === "create") {
+    if (command.request.expectedRevision !== 0) {
+      return { state, result: conflict("Project creation requires expected revision 0"), effect: "none" };
+    }
+    if (state.project) {
+      return { state, result: conflict("Project already exists", state.project.revision), effect: "none" };
+    }
+    const project: PlannerProjectEnvelopeV1 = {
+      contractVersion: PLANNER_PROJECT_CONTRACT_VERSION,
+      schemaVersion: PLANNER_PROJECT_SCHEMA_VERSION,
+      ...write.value,
+      ownerId: context.ownerId,
+      revision: 1,
+      createdAt: now,
+      updatedAt: now,
+    };
+    const result = { ok: true as const, value: toPlannerProjectResponse(project) };
+    return {
+      state: appendReceipt(state, context, command, fingerprint, result, project),
+      result,
+      effect: "created",
+    };
+  }
+
+  const current = state.project;
+  if (!current || current.id !== command.projectId || current.ownerId !== context.ownerId) {
+    return { state, result: { ok: false, code: "NOT_FOUND", message: "Project not found" }, effect: "none" };
+  }
+  if (command.request.expectedRevision !== current.revision) {
+    return { state, result: conflict("Project revision is stale", current.revision), effect: "none" };
+  }
+  const currentUpdatedMs = Date.parse(current.updatedAt);
+  const updatedAt = new Date(Math.max(nowMs, currentUpdatedMs + 1)).toISOString();
+  const project: PlannerProjectEnvelopeV1 = {
+    contractVersion: PLANNER_PROJECT_CONTRACT_VERSION,
+    schemaVersion: PLANNER_PROJECT_SCHEMA_VERSION,
+    ...write.value,
+    ownerId: context.ownerId,
+    revision: current.revision + 1,
+    createdAt: current.createdAt,
+    updatedAt,
+  };
+  const result = { ok: true as const, value: toPlannerProjectResponse(project) };
+  return {
+    state: appendReceipt(state, context, command, fingerprint, result, project),
+    result,
+    effect: "saved",
+  };
+}
+
+/** Adapter port: one call must atomically compare and commit the returned state. */
+export interface PlannerProjectAtomicAdapterV1 {
+  readonly mode: "disk" | "supabase";
+  list(ownerId: string): Promise<readonly unknown[]>;
+  load(ownerId: string, projectId: string): Promise<unknown | null>;
+  mutate(
+    context: PlannerRepositoryContextV1,
+    command: PlannerProjectMutationCommandV1,
+  ): Promise<PlannerProjectMutationTransitionV1>;
+}
+
+export interface PlannerProjectAdapterSetV1 {
+  disk: PlannerProjectAtomicAdapterV1;
+  supabase: PlannerProjectAtomicAdapterV1;
+}
+
+function repositoryFailure(error: unknown): PlannerRepositoryResultV1<never> {
+  if (error instanceof PlannerPersistenceConfigurationError) {
+    return { ok: false, code: "CONFIGURATION_ERROR", message: error.message };
+  }
+  return {
+    ok: false,
+    code: "PERSISTENCE_FAILURE",
+    message: "Selected Planner persistence adapter failed",
+  };
+}
+
+async function withSelectedAdapter<TResult>(
+  context: PlannerRepositoryContextV1,
+  adapters: PlannerProjectAdapterSetV1,
+  operation: (adapter: PlannerProjectAtomicAdapterV1) => Promise<TResult>,
+  env: NodeJS.ProcessEnv,
+): Promise<TResult> {
+  return runContextualPlannerPersistenceOperation(
+    context,
+    {
+      disk: () => operation(adapters.disk),
+      supabase: () => operation(adapters.supabase),
+    },
+    env,
+  );
+}
+
+function projectMutationResult(
+  result: PlannerRepositoryResultV1<PlannerProjectMutationValueV1>,
+): PlannerRepositoryResultV1<PlannerProjectResponseV1> {
+  if (!result.ok) return result;
+  if ("deleted" in result.value) {
+    return { ok: false, code: "PERSISTENCE_FAILURE", message: "Adapter returned an invalid mutation result" };
+  }
+  return result;
+}
+
+function deleteMutationResult(
+  result: PlannerRepositoryResultV1<PlannerProjectMutationValueV1>,
+): PlannerRepositoryResultV1<{ id: string; deleted: true }> {
+  if (!result.ok) return result;
+  if (!("deleted" in result.value)) {
+    return { ok: false, code: "PERSISTENCE_FAILURE", message: "Adapter returned an invalid delete result" };
+  }
+  return result;
+}
+
+/** Compose the Gate B repository over exactly one runtime-selected atomic adapter. */
+export function createPlannerProjectRepository(
+  adapters: PlannerProjectAdapterSetV1,
+  env: NodeJS.ProcessEnv = process.env,
+): PlannerProjectRepositoryV1 {
+  return {
+    contractVersion: PLANNER_REPOSITORY_CONTRACT_VERSION,
+    async list(context) {
+      try {
+        const sources = await withSelectedAdapter(
+          context,
+          adapters,
+          (adapter) => adapter.list(context.ownerId),
+          env,
+        );
+        const summaries: PlannerProjectSummaryV1[] = [];
+        for (const source of sources) {
+          const read = readPlannerProjectEnvelope(source, { ownerId: context.ownerId });
+          if (!read.ok) return read;
+          summaries.push(toPlannerProjectSummary(read.value));
+        }
+        summaries.sort((left, right) =>
+          right.updatedAt.localeCompare(left.updatedAt) || left.id.localeCompare(right.id),
+        );
+        return { ok: true, value: summaries };
+      } catch (error) {
+        return repositoryFailure(error);
+      }
+    },
+    async load(context, id) {
+      try {
+        const source = await withSelectedAdapter(
+          context,
+          adapters,
+          (adapter) => adapter.load(context.ownerId, id),
+          env,
+        );
+        if (source === null) return { ok: true, value: null };
+        const read = readPlannerProjectEnvelope(source, { ownerId: context.ownerId });
+        if (!read.ok) return read;
+        return { ok: true, value: toPlannerProjectResponse(read.value) };
+      } catch (error) {
+        return repositoryFailure(error);
+      }
+    },
+    async create(context, request) {
+      try {
+        const transition = await withSelectedAdapter(
+          context,
+          adapters,
+          (adapter) =>
+            adapter.mutate(context, {
+              operation: "create",
+              projectId: request.project.id,
+              request,
+            }),
+          env,
+        );
+        return projectMutationResult(transition.result);
+      } catch (error) {
+        return repositoryFailure(error);
+      }
+    },
+    async save(context, id, request) {
+      try {
+        const transition = await withSelectedAdapter(
+          context,
+          adapters,
+          (adapter) => adapter.mutate(context, { operation: "save", projectId: id, request }),
+          env,
+        );
+        return projectMutationResult(transition.result);
+      } catch (error) {
+        return repositoryFailure(error);
+      }
+    },
+    async delete(context, id, expectedRevision, idempotencyKey) {
+      try {
+        const transition = await withSelectedAdapter(
+          context,
+          adapters,
+          (adapter) =>
+            adapter.mutate(context, {
+              operation: "delete",
+              projectId: id,
+              expectedRevision,
+              idempotencyKey,
+            }),
+          env,
+        );
+        return deleteMutationResult(transition.result);
+      } catch (error) {
+        return repositoryFailure(error);
+      }
+    },
+  };
+}

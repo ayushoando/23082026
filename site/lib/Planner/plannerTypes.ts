@@ -77,9 +77,15 @@ export type PlannerProject = {
   name: string;
   thumbnail_url?: string | null;
   objects_count: number;
+  revision: number;
+  status?: "draft" | "active" | "archived";
   updated_at: string;
   /** Present on full load/save payloads from `/api/Planner/projects`. */
   canvas_json?: string | Record<string, unknown>;
+  geometry?: {
+    canvasSnapshot?: Record<string, unknown>;
+    [key: string]: unknown;
+  };
   sheet?: Partial<PlannerSheet> & { width_mm?: number };
   layers?: unknown;
   user_id?: string | null;

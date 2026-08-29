@@ -1,85 +1,111 @@
-import { NextResponse } from "next/server";
-import {
-  ensureStorageDirs,
-  nowIso,
-  persistCatalogUpload,
-  shortId,
-  slugify,
-  writeCatalogEntry,
-} from "@planner/server/plannerStore";
-import { withAuth } from "@/features/shared/api/withAuth";
-import { getFurnitureCatalogMode } from "@/lib/catalog/furnitureCatalogMode";
-import { isOversizedUpload } from "@/lib/security/uploadLimits";
-
 /**
- * Planner-side custom furniture upload (CatalogRail → "Upload custom").
+ * POST /api/Planner/catalog/upload — Planner-side custom furniture upload.
  *
- * Writes into the same on-disk library the Studio uses, through the Planner's
- * own handler — the Planner never calls a Studio route.
+ * Requests flow through the Planner request-processing pipeline which
+ * enforces: correlation → quota → method/validation → origin/CSRF
+ * → session → owner scope → revision/idempotency → persistence.
  */
-export const POST = withAuth(
-  async (request) => {
-    if (getFurnitureCatalogMode() === "disk") {
-      await ensureStorageDirs();
-    }
-    let form: FormData;
-    try {
-      form = await request.formData();
-    } catch {
-      return NextResponse.json({ detail: "Expected multipart/form-data" }, { status: 400 });
-    }
-    const file = form.get("file");
-    const name = String(form.get("name") || "upload");
-    const category = String(form.get("category") || "uncategorized");
-    const width_mm = Number(form.get("width_mm") || 0);
-    const depth_mm = Number(form.get("depth_mm") || 0);
-    const height_mm = Number(form.get("height_mm") || 0);
-    const subcategory = String(form.get("subcategory") || "") || null;
-    const tagsRaw = String(form.get("tags") || "");
-    if (!(file instanceof File)) {
-      return NextResponse.json({ detail: "file required" }, { status: 400 });
-    }
-    if (isOversizedUpload(file)) {
-      return NextResponse.json({ detail: "File too large" }, { status: 413 });
-    }
 
-    const itemId = `f_${slugify(name)}_${shortId()}`;
-    const now = nowIso();
-    const raw = Buffer.from(await file.arrayBuffer());
-    const isSvg =
-      (file.type || "").includes("svg") || file.name.toLowerCase().endsWith(".svg");
-    const urls = await persistCatalogUpload({ itemId, bytes: raw, isSvg });
+import {
+  createPlannerHandler,
+  createPlannerRejectedMethodHandler,
+} from "@planner/server/plannerRouteAdapter";
+import type {
+  PlannerOperationContext,
+  PlannerOperationResult,
+} from "@planner/lib/plannerRequestPipeline";
 
-    const item = {
-      id: itemId,
-      name,
-      category,
-      subcategory,
-      tags: tagsRaw
-        .split(",")
-        .map((t) => t.trim())
-        .filter(Boolean),
-      dimensions: { width_mm, depth_mm, height_mm },
-      notes: null,
-      is_custom: true,
-      thumbnail_url: urls.thumbnail_url ?? null,
-      top_png_url: urls.top_png_url ?? null,
-      top_svg_url: urls.top_svg_url ?? null,
-      front_png_url: null,
-      side_png_url: null,
-      top_fabric_json: null,
-      front_fabric_json: null,
-      side_fabric_json: null,
-      created_at: now,
-      updated_at: now,
+async function uploadCatalogItem(
+  context: PlannerOperationContext,
+): Promise<PlannerOperationResult<unknown>> {
+  if (getFurnitureCatalogMode() === "disk") {
+    await ensureStorageDirs();
+  }
+
+  const body = context.request.body as Record<string, unknown>;
+  const file = body.file;
+  const name = String(body.name || "upload");
+  const category = String(body.category || "uncategorized");
+  const width_mm = Number(body.width_mm || 0);
+  const depth_mm = Number(body.depth_mm || 0);
+  const height_mm = Number(body.height_mm || 0);
+  const subcategory = String(body.subcategory || "") || null;
+  const tagsRaw = String(body.tags || "");
+
+  if (!(file instanceof File)) {
+    return {
+      ok: false,
+      status: 400,
+      code: "INVALID_REQUEST",
+      metadata: {
+        issues: [{ path: "body.file", message: "File is required" }],
+      },
     };
-    await writeCatalogEntry(item);
-    return NextResponse.json(item, { status: 201 });
-  },
-  {
-    role: "member",
-    rateLimitScope: "planner-catalog-upload:post",
-    rateLimit: 15,
-    requireCsrf: true,
-  },
-);
+  }
+  if (isOversizedUpload(file)) {
+    return {
+      ok: false,
+      status: 400,
+      code: "INVALID_REQUEST",
+      metadata: {
+        issues: [{ path: "body.file", message: "File too large" }],
+      },
+    };
+  }
+
+  const itemId = `f_${slugify(name)}_${shortId()}`;
+  const now = nowIso();
+  const raw = Buffer.from(await file.arrayBuffer());
+  const isSvg =
+    (file.type || "").includes("svg") ||
+    file.name.toLowerCase().endsWith(".svg");
+  const urls = await persistCatalogUpload({ itemId, bytes: raw, isSvg });
+
+  const item = {
+    id: itemId,
+    name,
+    category,
+    subcategory,
+    tags: tagsRaw
+      .split(",")
+      .map((t) => t.trim())
+      .filter(Boolean),
+    dimensions: { width_mm, depth_mm, height_mm },
+    notes: null,
+    is_custom: true,
+    thumbnail_url: urls.thumbnail_url ?? null,
+    top_png_url: urls.top_png_url ?? null,
+    top_svg_url: urls.top_svg_url ?? null,
+    front_png_url: null,
+    side_png_url: null,
+    top_fabric_json: null,
+    front_fabric_json: null,
+    side_fabric_json: null,
+    created_at: now,
+    updated_at: now,
+  };
+  await writeCatalogEntry(item);
+  return { ok: true, status: 201, data: item };
+}
+
+export const POST = createPlannerHandler({
+  endpointId: "planner.catalog.upload",
+  operation: { invoke: uploadCatalogItem },
+});
+
+// Unsupported methods — 405 with structured response and Allow header
+export function GET(request: NextRequest, _context: unknown): Response {
+  return plannerMethodNotAllowed(request, ["POST"]);
+}
+
+export function PUT(request: NextRequest, _context: unknown): Response {
+  return plannerMethodNotAllowed(request, ["POST"]);
+}
+
+export function DELETE(request: NextRequest, _context: unknown): Response {
+  return plannerMethodNotAllowed(request, ["POST"]);
+}
+
+export function PATCH(request: NextRequest, _context: unknown): Response {
+  return plannerMethodNotAllowed(request, ["POST"]);
+}

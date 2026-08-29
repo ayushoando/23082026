@@ -27,8 +27,12 @@ type UploadForm = {
 const CatalogRail = ({ onDragStart, onItemClick }: CatalogRailProps) => {
   const items = useCatalogStore((s) => s.items);
   const categories = useCatalogStore((s) => s.categories);
+  const loading = useCatalogStore((s) => s.loading);
+  const catalogError = useCatalogStore((s) => s.error);
   const refresh = useCatalogStore((s) => s.refresh);
   const showToast = usePlannerUIStore((s) => s.showToast);
+  const accessMode = usePlannerUIStore((s) => s.accessMode);
+  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
   const [q, setQ] = useState("");
   const [cat, setCat] = useState("all");
   const [uploadOpen, setUploadOpen] = useState(false);
@@ -57,6 +61,10 @@ const CatalogRail = ({ onDragStart, onItemClick }: CatalogRailProps) => {
     item.thumbnail_url ?? item.thumb_url;
 
   const doUpload = async () => {
+    if (accessMode === "guest") {
+      showToast("Sign in to upload custom furniture", "error");
+      return;
+    }
     if (!upload.file || !upload.name) {
       showToast("Name + file required", "error");
       return;
@@ -97,18 +105,46 @@ const CatalogRail = ({ onDragStart, onItemClick }: CatalogRailProps) => {
         </div>
         <div className="catalog-categories">
           {categories.map((c) => (
-            <button key={c} className="chip" data-active={cat === c} onClick={() => setCat(c)} data-testid={`cat-${c}`}>
+            <button
+              key={c}
+              type="button"
+              className="chip"
+              data-active={cat === c}
+              aria-pressed={cat === c}
+              onClick={() => setCat(c)}
+              data-testid={`cat-${c}`}
+            >
               {c === "all" ? "All" : c}
             </button>
           ))}
         </div>
-        <button className="btn btn--sm" onClick={() => setUploadOpen(true)} data-testid="btn-upload" style={{ width: "100%", justifyContent: "center" }}>
+        <button
+          type="button"
+          className="btn btn--sm catalog-upload-trigger"
+          onClick={() => setUploadOpen(true)}
+          data-testid="btn-upload"
+          disabled={accessMode === "guest"}
+          aria-describedby={accessMode === "guest" ? "planner-catalog-guest-note" : undefined}
+        >
           <PhIcon name="upload" size={18} /> Upload custom
         </button>
+        {accessMode === "guest" ? (
+          <p id="planner-catalog-guest-note" className="catalog-guest-note">
+            Guest browsing is read-only. Sign in to upload custom furniture.
+          </p>
+        ) : null}
       </div>
 
       <div className="side-panel__section" style={{ flex: 1, overflow: "auto", padding: "10px 12px 20px" }}>
-        <div className="catalog-grid">
+        {loading ? (
+          <div className="empty-state" role="status" aria-busy="true">Loading catalog…</div>
+        ) : catalogError ? (
+          <div className="catalog-state" role="alert">
+            <p>Catalog unavailable. Your current selection is preserved.</p>
+            <button type="button" className="btn btn--sm" onClick={() => void refresh()}>Try again</button>
+          </div>
+        ) : (
+        <div className="catalog-grid" aria-label="Furniture catalog results">
           {filtered.map((item) => {
             const thumb = thumbUrl(item);
             const thumbSrc = thumb ? fileUrl(thumb) : null;
@@ -123,10 +159,16 @@ const CatalogRail = ({ onDragStart, onItemClick }: CatalogRailProps) => {
                   e.dataTransfer.setData("application/furniture-id", item.id);
                   onDragStart?.(item);
                 }}
-                onClick={() => onItemClick?.(item)}
+                data-selected={selectedItemId === item.id ? "true" : "false"}
+                aria-pressed={selectedItemId === item.id}
+                onClick={() => {
+                  setSelectedItemId(item.id);
+                  onItemClick?.(item);
+                }}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
+                    setSelectedItemId(item.id);
                     onItemClick?.(item);
                   }
                 }}
@@ -146,9 +188,10 @@ const CatalogRail = ({ onDragStart, onItemClick }: CatalogRailProps) => {
             );
           })}
           {filtered.length === 0 && (
-            <div className="empty-state" style={{ gridColumn: "1/-1" }}>No items match</div>
+            <div className="empty-state" style={{ gridColumn: "1/-1" }} role="status">No items match</div>
           )}
         </div>
+        )}
       </div>
 
       {uploadOpen && (

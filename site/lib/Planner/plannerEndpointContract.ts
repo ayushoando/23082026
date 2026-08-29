@@ -169,38 +169,86 @@ const furnitureItemSchema = {
 
 const projectSchema = {
   type: "object",
-  required: ["id", "name", "objects_count", "updated_at"],
+  required: [
+    "contractVersion",
+    "schemaVersion",
+    "id",
+    "name",
+    "revision",
+    "status",
+    "geometry",
+    "sheet",
+    "layers",
+    "thumbnailUrl",
+    "createdAt",
+    "updatedAt",
+  ],
   properties: {
+    contractVersion: { type: "number", minimum: 1, finite: true },
+    schemaVersion: { type: "number", minimum: 1, finite: true },
     id: nonEmptyStringSchema,
     name: nonEmptyStringSchema,
-    objects_count: { type: "number", minimum: 0, finite: true },
-    updated_at: { type: "string", format: "iso-date-time" },
-    created_at: { type: "string", format: "iso-date-time" },
-    thumbnail_url: stringSchema,
-    canvas_json: unknownSchema,
+    revision: { type: "number", minimum: 1, finite: true },
+    status: { type: "string", enum: ["draft", "active", "archived"] },
+    geometry: unknownSchema,
     sheet: unknownSchema,
-    layers: unknownSchema,
-    user_id: stringSchema,
-  },
-  additionalProperties: true,
-} as const satisfies PlannerSchema;
-
-const projectWriteSchema = {
-  type: "object",
-  required: ["name"],
-  properties: {
-    name: nonEmptyStringSchema,
-    canvas_json: unknownSchema,
-    sheet: unknownSchema,
-    layers: unknownSchema,
-    thumbnail_png: { type: "string", format: "data-url" },
+    layers: { type: "array", items: unknownSchema },
+    thumbnailUrl: unknownSchema,
+    createdAt: { type: "string", format: "iso-date-time" },
+    updatedAt: { type: "string", format: "iso-date-time" },
   },
   additionalProperties: false,
 } as const satisfies PlannerSchema;
 
+const projectSummarySchema = {
+  type: "object",
+  required: ["id", "name", "revision", "status", "thumbnailUrl", "updatedAt"],
+  properties: {
+    id: nonEmptyStringSchema,
+    name: nonEmptyStringSchema,
+    revision: { type: "number", minimum: 1, finite: true },
+    status: { type: "string", enum: ["draft", "active", "archived"] },
+    thumbnailUrl: unknownSchema,
+    updatedAt: { type: "string", format: "iso-date-time" },
+  },
+  additionalProperties: false,
+} as const satisfies PlannerSchema;
+
+const projectWriteFields = {
+  name: nonEmptyStringSchema,
+  status: { type: "string", enum: ["draft", "active", "archived"] },
+  geometry: unknownSchema,
+  canvas_json: unknownSchema,
+  sheet: unknownSchema,
+  layers: unknownSchema,
+  thumbnail_png: { type: "string", format: "data-url" },
+  thumbnailUrl: stringSchema,
+  expectedRevision: { type: "number", minimum: 0, finite: true },
+  idempotencyKey: { type: "string", minLength: 1, maxLength: 120 },
+} as const;
+
+const projectWriteSchema = {
+  type: "object",
+  required: ["name", "expectedRevision", "idempotencyKey"],
+  properties: projectWriteFields,
+  additionalProperties: false,
+} as const satisfies PlannerSchema;
+
 const projectPatchSchema = {
-  ...projectWriteSchema,
-  required: [],
+  type: "object",
+  required: ["expectedRevision", "idempotencyKey"],
+  properties: projectWriteFields,
+  additionalProperties: false,
+} as const satisfies PlannerSchema;
+
+const projectDeleteSchema = {
+  type: "object",
+  required: ["expectedRevision", "idempotencyKey"],
+  properties: {
+    expectedRevision: { type: "number", minimum: 1, finite: true },
+    idempotencyKey: { type: "string", minLength: 1, maxLength: 120 },
+  },
+  additionalProperties: false,
 } as const satisfies PlannerSchema;
 
 const projectIdParameter = {
@@ -211,7 +259,7 @@ const projectIdParameter = {
 
 const cookieHeader = {
   name: "cookie",
-  required: true,
+  required: false,
   schema: {
     type: "string",
     minLength: 1,
@@ -254,6 +302,8 @@ function standardErrors(
               ? "Owned resource is absent or deliberately undisclosed"
               : status === 405
                 ? "Method is not exposed by the route module"
+                : status === 409
+                ? "Revision or idempotency conflict"
                 : status === 413
                   ? "Upload exceeds the configured size limit"
                   : status === 429
@@ -439,7 +489,7 @@ export const PLANNER_ENDPOINT_DESCRIPTORS = [
     path: "/api/Planner/projects",
     request: { path: [], query: [], headers: memberHeaders, body: noneSchema, contentType: "none" },
     responses: {
-      success: [{ status: 200, envelope: "legacy-raw", schema: { type: "array", items: projectSchema }, description: "Projects scoped to the authenticated owner" }],
+      success: [{ status: 200, envelope: "planner-v1", schema: { type: "array", items: projectSummarySchema }, description: "Projects scoped to the authenticated owner" }],
       errors: standardErrors([401, 405, 429, 500, 503]),
     },
     security: { auth: "member", owner: "authenticated-owner-list", csrf: "not-required", origin: "same-site-cookie" },
@@ -453,8 +503,8 @@ export const PLANNER_ENDPOINT_DESCRIPTORS = [
     path: "/api/Planner/projects",
     request: { path: [], query: [], headers: jsonHeaders, body: projectWriteSchema, contentType: "application/json" },
     responses: {
-      success: [{ status: 201, envelope: "legacy-raw", schema: projectSchema, description: "Created owner-scoped project" }],
-      errors: standardErrors([400, 401, 403, 405, 429, 500, 503]),
+      success: [{ status: 201, envelope: "planner-v1", schema: projectSchema, description: "Created owner-scoped project" }],
+      errors: standardErrors([400, 401, 403, 405, 409, 429, 500, 503]),
     },
     security: { auth: "member", owner: "server-derived-creator", csrf: "double-submit-cookie", origin: "same-site-cookie-and-csrf" },
     rateLimit: { ...baseRateLimit, scope: "planner-projects:post", requests: 30 },
@@ -467,7 +517,7 @@ export const PLANNER_ENDPOINT_DESCRIPTORS = [
     path: "/api/Planner/projects/{id}",
     request: { path: [projectIdParameter], query: [], headers: memberHeaders, body: noneSchema, contentType: "none" },
     responses: {
-      success: [{ status: 200, envelope: "legacy-raw", schema: projectSchema, description: "Owned project; admins may access any project" }],
+      success: [{ status: 200, envelope: "planner-v1", schema: projectSchema, description: "Owned project under the non-disclosing item policy" }],
       errors: standardErrors([401, 404, 405, 429, 500, 503]),
     },
     security: { auth: "member", owner: "authenticated-owner-or-admin-item", csrf: "not-required", origin: "same-site-cookie" },
@@ -481,8 +531,8 @@ export const PLANNER_ENDPOINT_DESCRIPTORS = [
     path: "/api/Planner/projects/{id}",
     request: { path: [projectIdParameter], query: [], headers: jsonHeaders, body: projectPatchSchema, contentType: "application/json" },
     responses: {
-      success: [{ status: 200, envelope: "legacy-raw", schema: projectSchema, description: "Updated owned project" }],
-      errors: standardErrors([400, 401, 403, 404, 405, 429, 500, 503]),
+      success: [{ status: 200, envelope: "planner-v1", schema: projectSchema, description: "Updated owned project" }],
+      errors: standardErrors([400, 401, 403, 404, 405, 409, 429, 500, 503]),
     },
     security: { auth: "member", owner: "authenticated-owner-or-admin-item", csrf: "double-submit-cookie", origin: "same-site-cookie-and-csrf" },
     rateLimit: { ...baseRateLimit, scope: "planner-projects-id:patch", requests: 30 },
@@ -493,10 +543,10 @@ export const PLANNER_ENDPOINT_DESCRIPTORS = [
     contractVersion: PLANNER_ENDPOINT_CONTRACT_VERSION,
     method: "DELETE",
     path: "/api/Planner/projects/{id}",
-    request: { path: [projectIdParameter], query: [], headers: csrfOnlyHeaders, body: noneSchema, contentType: "none" },
+    request: { path: [projectIdParameter], query: [], headers: jsonHeaders, body: projectDeleteSchema, contentType: "application/json" },
     responses: {
-      success: [{ status: 200, envelope: "legacy-raw", schema: { type: "object", required: ["ok"], properties: { ok: { type: "boolean" } } }, description: "Deletion confirmation" }],
-      errors: standardErrors([401, 403, 404, 405, 429, 500, 503]),
+      success: [{ status: 200, envelope: "planner-v1", schema: { type: "object", required: ["ok"], properties: { ok: { type: "boolean" } } }, description: "Deletion confirmation" }],
+      errors: standardErrors([400, 401, 403, 404, 405, 409, 429, 500, 503]),
     },
     security: { auth: "member", owner: "authenticated-owner-or-admin-item", csrf: "double-submit-cookie", origin: "same-site-cookie-and-csrf" },
     rateLimit: { ...baseRateLimit, scope: "planner-projects-id:delete", requests: 20 },

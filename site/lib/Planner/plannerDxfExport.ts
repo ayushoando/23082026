@@ -2,6 +2,10 @@
 // Minimal ASCII DXF R12 exporter for a Fabric.ts canvas.
 import type { Canvas, Group, IText, Line, Polyline, Textbox } from "fabric";
 import type { OoFabricObject } from "@planner/lib/plannerTypes";
+import {
+  PLANNER_SCALE_PX_PER_MM,
+  assertPlannerScale,
+} from "@planner/lib/plannerGeometryContract";
 
 const LAYERS = {
   wall: { name: "WALLS", color: 7 },
@@ -18,7 +22,10 @@ type PointMm = { x: number; y: number };
 
 const DEFAULT_LAYER = "MISC";
 
-const pxToMm = (px: number, pxPerMm: number): number => px / pxPerMm;
+const pxToMm = (px: number, pxPerMm: number): number => {
+  assertPlannerScale(pxPerMm);
+  return px / pxPerMm;
+};
 
 const g = (code: number | string, value: number | string): string => `${code}\n${value}\n`;
 
@@ -195,14 +202,22 @@ const objectToDxf = (o: OoFabricObject, pxPerMm: number): string => {
   return "";
 };
 
-export const canvasToDxf = (canvas: Canvas, { pxPerMm }: { pxPerMm: number }): string => {
-  if (!canvas || !pxPerMm) throw new Error("canvasToDxf requires canvas + pxPerMm");
+export const canvasToDxf = (
+  canvas: Canvas,
+  { pxPerMm = PLANNER_SCALE_PX_PER_MM }: { pxPerMm?: number } = {},
+): string => {
+  if (!canvas) throw new Error("canvasToDxf requires a canvas");
+  assertPlannerScale(pxPerMm);
   const entities = canvas.getObjects().map((obj) => objectToDxf(obj as OoFabricObject, pxPerMm)).filter(Boolean);
   const body = openSection("ENTITIES") + entities.join("") + closeSection();
   return header() + tablesSection() + body + g(0, "EOF").trimEnd();
 };
 
-export const downloadDxf = (canvas: Canvas, filename: string, { pxPerMm }: { pxPerMm: number }): void => {
+export const downloadDxf = (
+  canvas: Canvas,
+  filename: string,
+  { pxPerMm = PLANNER_SCALE_PX_PER_MM }: { pxPerMm?: number } = {},
+): void => {
   const dxf = canvasToDxf(canvas, { pxPerMm });
   const blob = new Blob([dxf], { type: "application/dxf" });
   const url = URL.createObjectURL(blob);

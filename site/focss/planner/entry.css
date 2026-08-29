@@ -14,5 +14,6 @@
 @import "./polish.css";
 @import "./workspace-shell.css";
 @import "./workspace.css";
+@import "./responsive.css";
 /* After workspace so OO tokens win over dockview-react CSS imported from TSX */
 @import "./dock.css";

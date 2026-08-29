@@ -1,8 +1,9 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
 import { PhIcon } from "@planner/components/ui/PlannerPhIcon";
 import type { PhIconName } from "@planner/components/ui/plannerPhIconMap";
+import { useRovingTabindex } from "@planner/hooks/usePlannerFocusManager";
 
 /**
  * Floor Planner top toolbar. Wired via the `handlers` map keyed by item id —
@@ -11,6 +12,9 @@ import type { PhIconName } from "@planner/components/ui/plannerPhIconMap";
  * export) render that node instead, since those carry feature-flag gating
  * or a dropdown a single button can't express. Mirrors the equivalent
  * Studio fix (`StudioTopToolbar.tsx`).
+ *
+ * Roving tabindex (Req 7.5): only one button per group is in tab order;
+ * arrow keys move focus between buttons within the group.
  */
 
 type ToolbarItem = {
@@ -81,6 +85,57 @@ const PLANNER_TOOLBAR_GROUPS: ToolbarGroup[] = [
   },
 ];
 
+/** Individual toolbar group with roving tabindex. */
+function ToolbarGroup({
+  group,
+  handlers,
+}: {
+  group: ToolbarGroup;
+  handlers: Record<string, ToolbarItemHandler>;
+}) {
+  const groupRef = useRef<HTMLDivElement>(null);
+  const { onKeyDown } = useRovingTabindex(groupRef, { orientation: "horizontal" });
+
+  return (
+    <div
+      ref={groupRef}
+      className="oo-toolbar__group"
+      role="group"
+      aria-label={group.label}
+      onKeyDown={onKeyDown}
+    >
+      {group.items.map((item, itemIndex) => {
+        const h = handlers[item.id];
+        if (h?.content !== undefined) {
+          return (
+            <span key={item.id} className="oo-toolbar__slot" data-item={item.id}>
+              {h.content}
+            </span>
+          );
+        }
+        return (
+          <button
+            key={item.id}
+            type="button"
+            className="oo-toolbar__btn"
+            data-item={item.id}
+            data-active={h?.active ? "true" : "false"}
+            aria-label={item.label}
+            aria-pressed={h?.active === true}
+            data-testid={`planner-toolbar-${item.id}`}
+            onClick={h?.onClick}
+            disabled={h?.disabled}
+            tabIndex={itemIndex === 0 ? 0 : -1}
+          >
+            <PhIcon name={item.icon} size={18} />
+            <span className="oo-toolbar__label">{item.label}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 type PlannerTopToolbarProps = {
   handlers?: Record<string, ToolbarItemHandler>;
 };
@@ -92,35 +147,7 @@ export function PlannerTopToolbar({ handlers = {} }: PlannerTopToolbarProps) {
       {PLANNER_TOOLBAR_GROUPS.map((group, index) => (
         <div key={group.id} className="oo-toolbar__group-wrap">
           {index > 0 ? <div className="oo-toolbar__sep" aria-hidden="true" /> : null}
-          <div className="oo-toolbar__group" role="group" aria-label={group.label}>
-            {group.items.map((item) => {
-              const h = handlers[item.id];
-              if (h?.content !== undefined) {
-                return (
-                  <span key={item.id} className="oo-toolbar__slot" data-item={item.id}>
-                    {h.content}
-                  </span>
-                );
-              }
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  className="oo-toolbar__btn"
-                  data-item={item.id}
-                  data-active={h?.active ? "true" : "false"}
-                  aria-label={item.label}
-                  aria-pressed={h?.active === true}
-                  data-testid={`planner-toolbar-${item.id}`}
-                  onClick={h?.onClick}
-                  disabled={h?.disabled}
-                >
-                  <PhIcon name={item.icon} size={18} />
-                  <span className="oo-toolbar__label">{item.label}</span>
-                </button>
-              );
-            })}
-          </div>
+          <ToolbarGroup group={group} handlers={handlers} />
         </div>
       ))}
     </div>

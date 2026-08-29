@@ -7,9 +7,10 @@ import {
   pxToMm,
   mmToPx,
 } from "@/lib/Planner/fabricGeometryBridge";
+import { PLANNER_SCALE_PX_PER_MM } from "@planner/lib/plannerGeometryContract";
 
 describe("fabricGeometryBridge", () => {
-  const scale = 0.1; // 1 px = 10 mm
+  const scale = PLANNER_SCALE_PX_PER_MM; // 0.05 px/mm → 1 px = 20 mm
 
   it("maps furniture data + left/top/width/height to mm rect", () => {
     const rect = furnitureFromFabric(
@@ -27,10 +28,10 @@ describe("fabricGeometryBridge", () => {
     );
     expect(rect).toEqual({
       id: "f1",
-      xMm: 100,
-      yMm: 200,
-      widthMm: 50,
-      depthMm: 30,
+      xMm: 200,
+      yMm: 400,
+      widthMm: 100,
+      depthMm: 60,
       rotationDeg: 0,
       catalogId: "desk-a",
       label: undefined,
@@ -85,8 +86,9 @@ describe("fabricGeometryBridge", () => {
       },
       scale,
     );
-    expect(rect?.widthMm).toBe(40);
-    expect(rect?.depthMm).toBe(20);
+    // 4 px / 0.05 = 80 mm, 2 px / 0.05 = 40 mm
+    expect(rect?.widthMm).toBe(80);
+    expect(rect?.depthMm).toBe(40);
   });
 
   it("maps wall line endpoints to mm", () => {
@@ -105,9 +107,9 @@ describe("fabricGeometryBridge", () => {
       id: "w1",
       x1Mm: 0,
       y1Mm: 0,
-      x2Mm: 500,
+      x2Mm: 1000,
       y2Mm: 0,
-      thicknessMm: 15,
+      thicknessMm: 30,
     });
   });
 
@@ -127,11 +129,11 @@ describe("fabricGeometryBridge", () => {
     );
     expect(wall).toEqual({
       id: "w-rect",
-      x1Mm: 100,
-      y1Mm: 200,
-      x2Mm: 500,
-      y2Mm: 220,
-      thicknessMm: 20,
+      x1Mm: 200,
+      y1Mm: 400,
+      x2Mm: 1000,
+      y2Mm: 440,
+      thicknessMm: 40,
     });
   });
 
@@ -278,13 +280,22 @@ describe("fabricGeometryBridge", () => {
     expect(c.yMm).toBe(20);
   });
 
-  it("pxToMm divides by scale and guards non-positive scale", () => {
-    expect(pxToMm(5, 0.1)).toBe(50);
-    expect(pxToMm(5, 0)).toBe(0);
-    expect(pxToMm(5, -1)).toBe(0);
+  it("pxToMm converts at the Planner scale and rejects non-Planner scales", () => {
+    // Planner scale: 0.05 px/mm → 5 px / 0.05 = 100 mm
+    expect(pxToMm(5, PLANNER_SCALE_PX_PER_MM)).toBe(100);
+    expect(pxToMm(0, PLANNER_SCALE_PX_PER_MM)).toBe(0);
+
+    // Non-Planner scales are rejected
+    expect(() => pxToMm(5, 0.1)).toThrow(/Unsupported Planner scale/);
+    expect(() => pxToMm(5, 0)).toThrow(/Unsupported Planner scale/);
+    expect(() => pxToMm(5, -1)).toThrow(/Unsupported Planner scale/);
   });
 
-  it("mmToPx multiplies by scale", () => {
-    expect(mmToPx(50, 0.1)).toBe(5);
+  it("mmToPx converts at the Planner scale", () => {
+    expect(mmToPx(100, PLANNER_SCALE_PX_PER_MM)).toBe(5);
+    expect(mmToPx(1000, PLANNER_SCALE_PX_PER_MM)).toBe(50);
+
+    // Non-Planner scales are rejected
+    expect(() => mmToPx(50, 0.1)).toThrow(/Unsupported Planner scale/);
   });
 });

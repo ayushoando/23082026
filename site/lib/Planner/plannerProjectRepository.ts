@@ -1,8 +1,11 @@
 /** Gate B project-envelope and repository contracts for Planner consumers. */
 
+import { collectSceneGeometryAtScale, type FabricLikeCanvas } from "@planner/lib/fabricGeometryBridge";
 import {
   PLANNER_GEOMETRY_CONTRACT_VERSION,
   PLANNER_GEOMETRY_SCHEMA_VERSION,
+  PLANNER_GEOMETRY_UNIT,
+  PLANNER_SCALE_PX_PER_MM,
   type PlannerGeometryReadResult,
   type PlannerGeometrySnapshotV1,
   readPlannerGeometry,
@@ -10,7 +13,9 @@ import {
 
 export const PLANNER_PROJECT_CONTRACT_VERSION = 1 as const;
 export const PLANNER_PROJECT_SCHEMA_VERSION = 1 as const;
+export const PLANNER_PROJECT_KNOWN_OLD_SCHEMA_VERSION = 0 as const;
 export const PLANNER_REPOSITORY_CONTRACT_VERSION = 1 as const;
+export const PLANNER_IDEMPOTENCY_KEY_MAX_LENGTH = 120 as const;
 
 export type PlannerProjectStatusV1 = "draft" | "active" | "archived";
 
@@ -32,6 +37,12 @@ export interface PlannerProjectEnvelopeV1 {
 
 export type PlannerProjectResponseV1 = Omit<PlannerProjectEnvelopeV1, "ownerId">;
 
+/** Client-writable fields. Owner, revision, and timestamps are server controlled. */
+export type PlannerProjectWriteV1 = Pick<
+  PlannerProjectResponseV1,
+  "id" | "name" | "status" | "geometry" | "sheet" | "layers" | "thumbnailUrl"
+>;
+
 export interface PlannerProjectSummaryV1 {
   id: string;
   name: string;
@@ -42,20 +53,23 @@ export interface PlannerProjectSummaryV1 {
 }
 
 export interface PlannerRepositoryContextV1 {
+  /** Verified server-session owner. Never populate this from a request body. */
   ownerId: string;
   correlationId: string;
 }
 
 export interface SavePlannerProjectRequestV1 {
   contractVersion: typeof PLANNER_REPOSITORY_CONTRACT_VERSION;
-  project: PlannerProjectEnvelopeV1;
+  project: PlannerProjectWriteV1;
   expectedRevision: number;
   idempotencyKey: string;
 }
 
 export type PlannerRepositoryErrorCodeV1 =
+  | "CONFIGURATION_ERROR"
   | "CONFLICT"
   | "FORBIDDEN"
+  | "INVALID_IDEMPOTENCY_KEY"
   | "INVALID_PROJECT"
   | "NOT_FOUND"
   | "PERSISTENCE_FAILURE"
@@ -63,7 +77,7 @@ export type PlannerRepositoryErrorCodeV1 =
   | "UNSUPPORTED_SCHEMA_VERSION";
 
 export type PlannerRepositoryResultV1<T> =
-  | { ok: true; value: T }
+  | { ok: true; value: T; replayed?: boolean }
   | {
       ok: false;
       code: PlannerRepositoryErrorCodeV1;
@@ -98,21 +112,31 @@ export interface PlannerProjectRepositoryV1 {
 }
 
 export type PlannerProjectReadResult =
-  | { ok: true; value: PlannerProjectEnvelopeV1; source: "current" | "legacy" }
+  | {
+      ok: true;
+      value: PlannerProjectEnvelopeV1;
+      source: "current" | "known-old";
+    }
   | {
       ok: false;
       code: "INVALID_PROJECT" | "UNSUPPORTED_SCHEMA_VERSION" | "UNSUPPORTED_GEOMETRY";
       message: string;
+      /** Exact input reference; unsupported and invalid records are never rewritten. */
       source: unknown;
       geometryResult?: PlannerGeometryReadResult;
     };
+
+export interface PlannerProjectReadOptions {
+  /** Server-derived owner used to adapt ownerless known-old disk records. */
+  ownerId?: string;
+}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
 
 function requiredString(value: unknown): string | null {
-  return typeof value === "string" && value.trim() ? value : null;
+  return typeof value === "string" && value.trim() ? value.trim() : null;
 }
 
 function isoDate(value: unknown): string | null {
@@ -120,8 +144,68 @@ function isoDate(value: unknown): string | null {
   return Number.isNaN(Date.parse(value)) ? null : value;
 }
 
-function status(value: unknown): PlannerProjectStatusV1 {
+function projectStatus(value: unknown): PlannerProjectStatusV1 {
   return value === "draft" || value === "archived" ? value : "active";
+}
+
+function parseRecord(value: unknown): Record<string, unknown> | undefined {
+  if (isRecord(value)) return value;
+  if (typeof value !== "string") return undefined;
+  try {
+    const parsed: unknown = JSON.parse(value);
+    return isRecord(parsed) ? parsed : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+function legacyGeometryInput(
+  input: Record<string, unknown>,
+  payload: Record<string, unknown> | undefined,
+): unknown {
+  const explicit =
+    input.geometry ?? input.geometrySnapshot ?? payload?.geometry ?? payload?.geometrySnapshot;
+  if (explicit !== undefined) return explicit;
+
+  const canvas = parseRecord(input.canvas_json ?? input.scene_json ?? payload?.canvas_json ?? payload?.scene);
+  if (!canvas) return undefined;
+  const sheet = parseRecord(input.sheet ?? payload?.sheet);
+  const scale =
+    canvas.scalePxPerMm ??
+    canvas.scale_px_per_mm ??
+    sheet?.scalePxPerMm ??
+    sheet?.scale_px_per_mm ??
+    PLANNER_SCALE_PX_PER_MM;
+
+  // Determine the extraction scale. When the persisted canvas carries a
+  // non-Planner scale (e.g. Studio 0.2 px/mm), extract geometry at that
+  // scale so px→mm conversion is correct (px / legacy_scale = mm).
+  const scaleNum = typeof scale === "number" && Number.isFinite(scale) && scale > 0
+    ? scale
+    : PLANNER_SCALE_PX_PER_MM;
+
+  // Extract at the legacy scale — this produces correct mm values.
+  const geometry = collectSceneGeometryAtScale(canvas as FabricLikeCanvas, scaleNum);
+
+  if (scaleNum === PLANNER_SCALE_PX_PER_MM) {
+    // Current scale: tag normally.
+    return {
+      unit: PLANNER_GEOMETRY_UNIT,
+      scalePxPerMm: PLANNER_SCALE_PX_PER_MM,
+      geometry,
+      canvasSnapshot: canvas,
+    };
+  }
+
+  // Legacy scale: the mm values are already correct (px / legacy_scale).
+  // For known legacy scales, readPlannerGeometry will accept and re-tag;
+  // for unknown scales it will reject with UNSUPPORTED_PLANNER_SCALE.
+  return {
+    unit: PLANNER_GEOMETRY_UNIT,
+    scalePxPerMm: scaleNum,
+    geometry,
+    canvasSnapshot: canvas,
+  };
 }
 
 export function toPlannerProjectResponse(
@@ -131,7 +215,27 @@ export function toPlannerProjectResponse(
   return response;
 }
 
-export function readPlannerProjectEnvelope(input: unknown): PlannerProjectReadResult {
+export function toPlannerProjectSummary(
+  envelope: PlannerProjectEnvelopeV1,
+): PlannerProjectSummaryV1 {
+  return {
+    id: envelope.id,
+    name: envelope.name,
+    revision: envelope.revision,
+    status: envelope.status,
+    thumbnailUrl: envelope.thumbnailUrl,
+    updatedAt: envelope.updatedAt,
+  };
+}
+
+/**
+ * Validate a persisted project. Missing/zero schema is the single known-old form.
+ * Migration is pure and in-memory; callers must explicitly save to persist V1.
+ */
+export function readPlannerProjectEnvelope(
+  input: unknown,
+  options: PlannerProjectReadOptions = {},
+): PlannerProjectReadResult {
   if (!isRecord(input)) {
     return {
       ok: false,
@@ -143,9 +247,12 @@ export function readPlannerProjectEnvelope(input: unknown): PlannerProjectReadRe
 
   const projectContract = input.contractVersion ?? input.contract_version;
   const projectSchema = input.schemaVersion ?? input.schema_version;
+  const knownOldSchema =
+    projectSchema === undefined || projectSchema === PLANNER_PROJECT_KNOWN_OLD_SCHEMA_VERSION;
   if (
     projectContract !== undefined &&
-    projectContract !== PLANNER_PROJECT_CONTRACT_VERSION
+    projectContract !== PLANNER_PROJECT_CONTRACT_VERSION &&
+    projectContract !== PLANNER_PROJECT_KNOWN_OLD_SCHEMA_VERSION
   ) {
     return {
       ok: false,
@@ -154,10 +261,7 @@ export function readPlannerProjectEnvelope(input: unknown): PlannerProjectReadRe
       source: input,
     };
   }
-  if (
-    projectSchema !== undefined &&
-    projectSchema !== PLANNER_PROJECT_SCHEMA_VERSION
-  ) {
+  if (projectSchema !== PLANNER_PROJECT_SCHEMA_VERSION && !knownOldSchema) {
     return {
       ok: false,
       code: "UNSUPPORTED_SCHEMA_VERSION",
@@ -166,14 +270,25 @@ export function readPlannerProjectEnvelope(input: unknown): PlannerProjectReadRe
     };
   }
 
+  const persistedOwner = requiredString(input.ownerId ?? input.user_id);
+  const ownerId = options.ownerId ?? persistedOwner;
+  if (options.ownerId && persistedOwner && persistedOwner !== options.ownerId) {
+    return {
+      ok: false,
+      code: "INVALID_PROJECT",
+      message: "Persisted Planner project owner does not match server owner scope",
+      source: input,
+    };
+  }
+
   const id = requiredString(input.id);
-  const ownerId = requiredString(input.ownerId ?? input.user_id);
-  const name = requiredString(input.name);
+  const name = requiredString(input.name ?? input.project_name);
   const createdAt = isoDate(input.createdAt ?? input.created_at);
   const updatedAt = isoDate(input.updatedAt ?? input.updated_at);
   const revisionRaw = input.revision ?? 1;
   if (
     !id ||
+    !isValidPlannerProjectId(id) ||
     !ownerId ||
     !name ||
     !createdAt ||
@@ -190,13 +305,8 @@ export function readPlannerProjectEnvelope(input: unknown): PlannerProjectReadRe
     };
   }
 
-  const payload = isRecord(input.payload) ? input.payload : undefined;
-  const geometryInput =
-    input.geometry ??
-    input.geometrySnapshot ??
-    payload?.geometry ??
-    payload?.geometrySnapshot;
-  const geometryResult = readPlannerGeometry(geometryInput);
+  const payload = parseRecord(input.payload);
+  const geometryResult = readPlannerGeometry(legacyGeometryInput(input, payload));
   if (!geometryResult.ok) {
     return {
       ok: false,
@@ -207,13 +317,16 @@ export function readPlannerProjectEnvelope(input: unknown): PlannerProjectReadRe
     };
   }
 
+  const sheet = parseRecord(input.sheet ?? payload?.sheet) ?? {};
+  const layersRaw = input.layers ?? payload?.layers;
   return {
     ok: true,
     source:
       projectSchema === PLANNER_PROJECT_SCHEMA_VERSION &&
+      projectContract === PLANNER_PROJECT_CONTRACT_VERSION &&
       geometryResult.source === "current"
         ? "current"
-        : "legacy",
+        : "known-old",
     value: {
       contractVersion: PLANNER_PROJECT_CONTRACT_VERSION,
       schemaVersion: PLANNER_PROJECT_SCHEMA_VERSION,
@@ -221,10 +334,10 @@ export function readPlannerProjectEnvelope(input: unknown): PlannerProjectReadRe
       ownerId,
       name,
       revision: Number(revisionRaw),
-      status: status(input.status),
+      status: projectStatus(input.status),
       geometry: geometryResult.value,
-      sheet: isRecord(input.sheet) ? input.sheet : {},
-      layers: Array.isArray(input.layers) ? input.layers : [],
+      sheet,
+      layers: Array.isArray(layersRaw) ? layersRaw : [],
       thumbnailUrl:
         typeof (input.thumbnailUrl ?? input.thumbnail_url) === "string"
           ? String(input.thumbnailUrl ?? input.thumbnail_url)
@@ -235,10 +348,90 @@ export function readPlannerProjectEnvelope(input: unknown): PlannerProjectReadRe
   };
 }
 
+/** Reject owner/revision/timestamp injection and validate all client-writable fields. */
+export function readPlannerProjectWrite(input: unknown):
+  | { ok: true; value: PlannerProjectWriteV1 }
+  | { ok: false; code: "INVALID_PROJECT" | "UNSUPPORTED_GEOMETRY"; message: string } {
+  if (!isRecord(input)) {
+    return { ok: false, code: "INVALID_PROJECT", message: "Planner project write must be an object" };
+  }
+  if (
+    "ownerId" in input ||
+    "owner_id" in input ||
+    "user_id" in input ||
+    "revision" in input ||
+    "createdAt" in input ||
+    "created_at" in input ||
+    "updatedAt" in input ||
+    "updated_at" in input
+  ) {
+    return {
+      ok: false,
+      code: "INVALID_PROJECT",
+      message: "Owner, revision, and timestamps are server-derived fields",
+    };
+  }
+  const id = requiredString(input.id);
+  const name = requiredString(input.name);
+  if (!id || !isValidPlannerProjectId(id) || !name) {
+    return {
+      ok: false,
+      code: "INVALID_PROJECT",
+      message: "Project id must be a bounded opaque token and name is required",
+    };
+  }
+  const geometryResult = readPlannerGeometry(input.geometry);
+  if (!geometryResult.ok) {
+    return { ok: false, code: "UNSUPPORTED_GEOMETRY", message: geometryResult.message };
+  }
+  return {
+    ok: true,
+    value: {
+      id,
+      name,
+      status: projectStatus(input.status),
+      geometry: geometryResult.value,
+      sheet: isRecord(input.sheet) ? input.sheet : {},
+      layers: Array.isArray(input.layers) ? input.layers : [],
+      thumbnailUrl: typeof input.thumbnailUrl === "string" ? input.thumbnailUrl : null,
+    },
+  };
+}
+
+export function isValidPlannerProjectId(value: unknown): value is string {
+  return (
+    typeof value === "string" &&
+    value.length > 0 &&
+    value.length <= 120 &&
+    /^[A-Za-z0-9][A-Za-z0-9._~-]*$/.test(value)
+  );
+}
+
+export function isValidPlannerIdempotencyKey(value: unknown): value is string {
+  return (
+    typeof value === "string" &&
+    value.length > 0 &&
+    value.length <= PLANNER_IDEMPOTENCY_KEY_MAX_LENGTH &&
+    /^[A-Za-z0-9._~-]+$/.test(value)
+  );
+}
+
 export const PLANNER_GATE_B_CONTRACT = {
   geometryContractVersion: PLANNER_GEOMETRY_CONTRACT_VERSION,
   geometrySchemaVersion: PLANNER_GEOMETRY_SCHEMA_VERSION,
+  geometryUnit: PLANNER_GEOMETRY_UNIT,
+  geometryScalePxPerMm: PLANNER_SCALE_PX_PER_MM,
   projectContractVersion: PLANNER_PROJECT_CONTRACT_VERSION,
   projectSchemaVersion: PLANNER_PROJECT_SCHEMA_VERSION,
   repositoryContractVersion: PLANNER_REPOSITORY_CONTRACT_VERSION,
+  ownerSource: "verified-server-session",
+  /** Known legacy scales that are deterministically adapted on deserialization. */
+  knownLegacyScales: [0.2] as readonly number[],
+  /**
+   * Serialization contract: persisted geometry uses millimetres as the
+   * canonical unit with explicit scale metadata. Known legacy snapshots
+   * (Studio 0.2 px/mm) are adapted deterministically; unknown scales
+   * produce an explicit UNSUPPORTED_PLANNER_SCALE error.
+   */
+  serializationPolicy: "normalize-mm-validate-scale-adapt-known-legacy" as const,
 } as const;

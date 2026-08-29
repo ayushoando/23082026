@@ -54,12 +54,15 @@ export interface PlannerPersistenceOperations<T> {
   supabase: () => Promise<T>;
 }
 
-/** Select exactly one backend for an operation. Selected failures are never retried elsewhere. */
-export async function runPlannerPersistenceOperation<T>(
-  operations: PlannerPersistenceOperations<T>,
-  env: NodeJS.ProcessEnv = process.env,
-): Promise<T> {
-  const mode = getPlannerPersistenceMode(env);
+export interface PlannerContextualPersistenceOperations<TContext, TResult> {
+  disk: (context: TContext) => Promise<TResult>;
+  supabase: (context: TContext) => Promise<TResult>;
+}
+
+function assertSelectedModeConfigured(
+  mode: PlannerPersistenceMode,
+  env: NodeJS.ProcessEnv,
+): void {
   if (
     mode === "supabase" &&
     !(
@@ -71,5 +74,25 @@ export async function runPlannerPersistenceOperation<T>(
       "Planner Supabase mode requires NEXT_ADMIN_SUPABASE_URL and SUPABASE_ADMIN_SERVICE_ROLE_KEY",
     );
   }
+}
+
+/** Select exactly one backend for an operation. Selected failures are never retried elsewhere. */
+export async function runPlannerPersistenceOperation<T>(
+  operations: PlannerPersistenceOperations<T>,
+  env: NodeJS.ProcessEnv = process.env,
+): Promise<T> {
+  const mode = getPlannerPersistenceMode(env);
+  assertSelectedModeConfigured(mode, env);
   return operations[mode]();
+}
+
+/** Pass verified owner/correlation context to exactly one selected adapter. */
+export async function runContextualPlannerPersistenceOperation<TContext, TResult>(
+  context: TContext,
+  operations: PlannerContextualPersistenceOperations<TContext, TResult>,
+  env: NodeJS.ProcessEnv = process.env,
+): Promise<TResult> {
+  const mode = getPlannerPersistenceMode(env);
+  assertSelectedModeConfigured(mode, env);
+  return operations[mode](context);
 }

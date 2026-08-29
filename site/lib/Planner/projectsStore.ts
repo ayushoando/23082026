@@ -24,6 +24,16 @@ import {
   type PlannerDocument,
   type PlannerDocumentStatus,
 } from "@planner/lib/plannerDocument";
+import {
+  createPlannerProjectRepository,
+} from "@planner/lib/plannerProjectOperations";
+import { plannerProjectDiskAdapter } from "@planner/server/plannerProjectDiskAdapter";
+import { plannerProjectSupabaseAdapter } from "@planner/server/plannerProjectSupabaseAdapter";
+export {
+  createPlannerProjectRepository,
+  applyPlannerProjectMutation,
+  fingerprintPlannerMutation,
+} from "@planner/lib/plannerProjectOperations";
 export {
   PLANNER_GATE_B_CONTRACT,
   PLANNER_PROJECT_CONTRACT_VERSION,
@@ -36,6 +46,7 @@ export type {
   PlannerProjectEnvelopeV1,
   PlannerProjectRepositoryV1,
   PlannerProjectResponseV1,
+  PlannerProjectWriteV1,
   PlannerRepositoryContextV1,
   PlannerRepositoryResultV1,
   SavePlannerProjectRequestV1,
@@ -80,6 +91,15 @@ export type PlannerAnalyticsRow = {
   created_at: string;
   updated_at: string;
 };
+
+/**
+ * Live normalized Planner repository. Every operation selects exactly one concrete
+ * adapter; selected-adapter failures are returned without fallback or dual write.
+ */
+export const plannerProjectRepository = createPlannerProjectRepository({
+  disk: plannerProjectDiskAdapter,
+  supabase: plannerProjectSupabaseAdapter,
+});
 
 /** Active store is ready (disk always; Supabase when admin env set). */
 export function isPlannerDatabaseConfigured(): boolean {

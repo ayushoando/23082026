@@ -52,9 +52,29 @@ export function PlannerAiPanel({
   const [includeRooms, setIncludeRooms] = useState(true);
   const [sketchState, setSketchState] = useState<SketchToPlanUiState>({ status: "idle" });
   const fileRef = useRef<HTMLInputElement | null>(null);
+  const panelRef = useRef<HTMLDivElement | null>(null);
+  const invokerRef = useRef<HTMLElement | null>(null);
   const showToast = usePlannerUIStore((s) => s.showToast);
   const spaceSuggestOn = isFeatureEnabled("plannerAiSpaceSuggest");
   const sketchOn = isFeatureEnabled("sketchToPlan");
+
+  // Capture invoker, move focus into the panel, and restore on close (Req 7.6).
+  useEffect(() => {
+    invokerRef.current =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    queueMicrotask(() => {
+      const panel = panelRef.current;
+      if (!panel) return;
+      const firstFocusable = panel.querySelector<HTMLElement>(
+        'button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      );
+      firstFocusable?.focus();
+    });
+    return () => {
+      invokerRef.current?.focus();
+      invokerRef.current = null;
+    };
+  }, []);
 
   // Same defect class the Studio audit found and fixed in
   // ui/StudioFloatingPanel.tsx — Escape had no wiring here at all.
@@ -188,7 +208,7 @@ export function PlannerAiPanel({
 
   return (
     <>
-      <div className="planner-ai-float" data-testid="planner-ai-panel">
+      <div className="planner-ai-float" data-testid="planner-ai-panel" ref={panelRef}>
         <header className="planner-ai-float__head">
           <strong>AI assist</strong>
           <button

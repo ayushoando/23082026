@@ -34,7 +34,7 @@ export const pxToMm = (
   scale: number = PLANNER_SCALE_PX_PER_MM,
 ): number => {
   assertPlannerScale(scale);
-  return px / PLANNER_SCALE_PX_PER_MM;
+  return px / scale;
 };
 
 export const mmToPx = (
@@ -42,5 +42,5 @@ export const mmToPx = (
   scale: number = PLANNER_SCALE_PX_PER_MM,
 ): number => {
   assertPlannerScale(scale);
-  return mm * PLANNER_SCALE_PX_PER_MM;
+  return mm * scale;
 };

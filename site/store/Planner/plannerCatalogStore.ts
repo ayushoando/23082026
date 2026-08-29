@@ -12,6 +12,27 @@ type CatalogStore = {
   addItem: (item: FurnitureItem) => void;
 };
 
+/** Keep guest catalog state limited to the fields required for browsing and placement. */
+export function toPublicPlannerFurniture(item: FurnitureItem): FurnitureItem {
+  return {
+    id: item.id,
+    name: item.name,
+    category: item.category,
+    subcategory: item.subcategory ?? null,
+    tags: Array.isArray(item.tags) ? [...item.tags] : [],
+    dimensions: {
+      width_mm: item.dimensions.width_mm,
+      depth_mm: item.dimensions.depth_mm,
+      height_mm: item.dimensions.height_mm,
+    },
+    top_png_url: item.top_png_url ?? null,
+    top_svg_url: item.top_svg_url ?? null,
+    thumb_url: item.thumb_url ?? null,
+    thumbnail_url: item.thumbnail_url ?? null,
+    is_custom: Boolean(item.is_custom),
+  };
+}
+
 export const useCatalogStore = create<CatalogStore>((set) => ({
   items: [],
   loading: false,
@@ -20,7 +41,7 @@ export const useCatalogStore = create<CatalogStore>((set) => ({
   refresh: async () => {
     set({ loading: true, error: null });
     try {
-      const items = (await listFurniture()) as FurnitureItem[];
+      const items = (await listFurniture()).map(toPublicPlannerFurniture);
       const cats = Array.from(new Set(items.map((i) => i.category).filter(Boolean)));
       set({ items, categories: ["all", ...cats.sort()], loading: false });
     } catch (e) {

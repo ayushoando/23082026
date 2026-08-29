@@ -1,12 +1,27 @@
 import { z } from "zod";
 
-export const plannerHandoffContactSchema = z.object({
-  name: z.string().trim().min(1, "Name is required").max(120),
-  email: z.string().trim().email().or(z.literal("")).optional().default(""),
-  phone: z.string().trim().max(40).optional().default(""),
-  company: z.string().trim().max(120).optional().default(""),
-  notes: z.string().trim().max(2000).optional().default(""),
-});
+export const plannerHandoffContactSchema = z
+  .object({
+    name: z.string().trim().min(1, "Name is required").max(120),
+    email: z.string().trim().email("Enter a valid email address").or(z.literal("")).optional().default(""),
+    phone: z.string().trim().max(40).optional().default(""),
+    company: z.string().trim().max(120).optional().default(""),
+    notes: z.string().trim().max(2000).optional().default(""),
+  })
+  .superRefine((contact, context) => {
+    if (!contact.email && !contact.phone) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["email"],
+        message: "Enter an email address or phone number",
+      });
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["phone"],
+        message: "Enter an email address or phone number",
+      });
+    }
+  });
 
 export const plannerHandoffBoqSchema = z.object({
   projectId: z.string().trim().min(1),
@@ -21,6 +36,8 @@ export const plannerHandoffBoqSchema = z.object({
 export const plannerHandoffRequestSchema = z.object({
   contact: plannerHandoffContactSchema,
   boq: plannerHandoffBoqSchema,
+  consent: z.literal(true, { error: "Consent is required" }),
+  inquiryType: z.enum(["quote", "design-support", "product-question"]),
   idempotencyKey: z.string().trim().min(1).max(120),
   projectNotes: z.string().trim().max(2000).optional(),
 });

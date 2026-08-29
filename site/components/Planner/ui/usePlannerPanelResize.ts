@@ -89,17 +89,49 @@ export function usePanelResize({
     [edge, maxWidth, minWidth, width],
   );
 
+  const resizeBy = useCallback(
+    (delta: number) => {
+      setWidth((current) => Math.min(maxWidth, Math.max(minWidth, current + delta)));
+    },
+    [maxWidth, minWidth],
+  );
+
+  const onKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
+      const direction = edge === "start" ? 1 : -1;
+      const step = event.shiftKey ? 40 : 10;
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        resizeBy(-step * direction);
+      } else if (event.key === "ArrowRight") {
+        event.preventDefault();
+        resizeBy(step * direction);
+      } else if (event.key === "Home") {
+        event.preventDefault();
+        setWidth(minWidth);
+      } else if (event.key === "End") {
+        event.preventDefault();
+        setWidth(maxWidth);
+      }
+    },
+    [edge, maxWidth, minWidth, resizeBy],
+  );
+
   return {
     width,
     setWidth,
     active,
     handleProps: {
       role: "separator" as const,
+      tabIndex: 0,
+      "aria-label": edge === "start" ? "Resize right panel" : "Resize left panel",
       "aria-orientation": "vertical" as const,
       "aria-valuenow": width,
       "aria-valuemin": minWidth,
       "aria-valuemax": maxWidth,
+      "aria-valuetext": `${width} pixels wide`,
       "data-testid": "side-panel-resize",
+      onKeyDown,
       onPointerDown,
     },
   };

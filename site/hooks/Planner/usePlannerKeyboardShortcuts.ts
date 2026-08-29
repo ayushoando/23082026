@@ -24,6 +24,15 @@ export const useKeyboardShortcuts = (handlers: ShortcutHandlers, deps: Dependenc
         (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable);
       const ctrl = e.ctrlKey || e.metaKey;
       const key = e.key.toLowerCase();
+
+      // Editing text must never trigger canvas mutations (for example Cmd+A
+      // selecting every object or Backspace deleting a selection). Escape is
+      // intentionally allowed so an open modal/menu can still close.
+      if (inField && key !== "escape") return;
+      if (e.repeat && (key === "delete" || key === "backspace" || (ctrl && key === "d"))) {
+        return;
+      }
+
       if (ctrl && key === "z" && !e.shiftKey) {
         e.preventDefault();
         handlers.undo?.();
@@ -63,7 +72,6 @@ export const useKeyboardShortcuts = (handlers: ShortcutHandlers, deps: Dependenc
         return;
       }
 
-      if (inField) return;
       if (key === "delete" || key === "backspace") {
         e.preventDefault();
         handlers.delete?.();

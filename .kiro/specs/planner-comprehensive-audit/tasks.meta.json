@@ -1,5 +1,34 @@
 {
-  "pbtResults": {},
+  "pbtResults": {
+    "5.7 Write property-based test for performance finding completeness": {
+      "status": "passed",
+      "lastRunTimestamp": 1788016414930
+    },
+    "1.6 Write property-based test for finding traceability and impact closure": {
+      "status": "passed",
+      "lastRunTimestamp": 1788017661361
+    },
+    "1.7 Write property-based test for evidence-gated finding transitions": {
+      "status": "passed",
+      "lastRunTimestamp": 1788017726062
+    },
+    "2.4 Write property-based test for Planner scale conversion": {
+      "status": "passed",
+      "lastRunTimestamp": 1788018547080
+    },
+    "2.5 Write property-based test for geometry persistence round trip": {
+      "status": "passed",
+      "lastRunTimestamp": 1788018582127
+    },
+    "4.5 Write property-based test for server-derived owner scope": {
+      "status": "passed",
+      "lastRunTimestamp": 1788019907179
+    },
+    "4.6 Write property-based test for endpoint contract completeness": {
+      "status": "passed",
+      "lastRunTimestamp": 1788019926621
+    }
+  },
   "executionHistory": {
     "1.1 Implement typed coverage, workflow-trace, evidence, validation, and finding models plus deterministic validators in the approved audit workstream": [
       {
@@ -142,6 +171,16 @@
         "executionId": "08e5e37c-1e3f-4c7c-b3a3-65c45061aaca",
         "chatSessionId": "sess_9d31cb2a-70eb-4a60-99ea-13c144a0974a",
         "timestamp": 1788014581965
+      },
+      {
+        "executionId": "c6219a3f-eafe-4b30-9bc4-92f258bac2f6",
+        "chatSessionId": "sess_9d31cb2a-70eb-4a60-99ea-13c144a0974a",
+        "timestamp": 1788015478889
+      },
+      {
+        "executionId": "c6219a3f-eafe-4b30-9bc4-92f258bac2f6",
+        "chatSessionId": "sess_9d31cb2a-70eb-4a60-99ea-13c144a0974a",
+        "timestamp": 1788015577294
       }
     ],
     "2.3 Remediate serialization and deserialization scale integrity": [
@@ -195,6 +234,11 @@
         "executionId": "08e5e37c-1e3f-4c7c-b3a3-65c45061aaca",
         "chatSessionId": "sess_9d31cb2a-70eb-4a60-99ea-13c144a0974a",
         "timestamp": 1788014608396
+      },
+      {
+        "executionId": "08e5e37c-1e3f-4c7c-b3a3-65c45061aaca",
+        "chatSessionId": "sess_9d31cb2a-70eb-4a60-99ea-13c144a0974a",
+        "timestamp": 1788015213693
       }
     ],
     "3.2 Remediate create, load, edit, save, and delete workflows": [
@@ -214,6 +258,16 @@
         "executionId": "08e5e37c-1e3f-4c7c-b3a3-65c45061aaca",
         "chatSessionId": "sess_9d31cb2a-70eb-4a60-99ea-13c144a0974a",
         "timestamp": 1788014584245
+      },
+      {
+        "executionId": "c6219a3f-eafe-4b30-9bc4-92f258bac2f6",
+        "chatSessionId": "sess_9d31cb2a-70eb-4a60-99ea-13c144a0974a",
+        "timestamp": 1788015488492
+      },
+      {
+        "executionId": "c6219a3f-eafe-4b30-9bc4-92f258bac2f6",
+        "chatSessionId": "sess_9d31cb2a-70eb-4a60-99ea-13c144a0974a",
+        "timestamp": 1788015583842
       }
     ],
     "3.4 Remediate failure-safe editing, unsaved navigation, offline, conflict, and reauthentication behavior": [
@@ -832,6 +886,31 @@
         "executionId": "08e5e37c-1e3f-4c7c-b3a3-65c45061aaca",
         "chatSessionId": "sess_9d31cb2a-70eb-4a60-99ea-13c144a0974a",
         "timestamp": 1788014614697
+      },
+      {
+        "executionId": "08e5e37c-1e3f-4c7c-b3a3-65c45061aaca",
+        "chatSessionId": "sess_9d31cb2a-70eb-4a60-99ea-13c144a0974a",
+        "timestamp": 1788015230682
+      },
+      {
+        "executionId": "c6219a3f-eafe-4b30-9bc4-92f258bac2f6",
+        "chatSessionId": "sess_9d31cb2a-70eb-4a60-99ea-13c144a0974a",
+        "timestamp": 1788015472384
+      },
+      {
+        "executionId": "c6219a3f-eafe-4b30-9bc4-92f258bac2f6",
+        "chatSessionId": "sess_9d31cb2a-70eb-4a60-99ea-13c144a0974a",
+        "timestamp": 1788015562778
+      },
+      {
+        "executionId": "dc121249-526a-42b4-bd39-82b2668919f8",
+        "chatSessionId": "sess_9d31cb2a-70eb-4a60-99ea-13c144a0974a",
+        "timestamp": 1788015675564
+      },
+      {
+        "executionId": "dc121249-526a-42b4-bd39-82b2668919f8",
+        "chatSessionId": "sess_9d31cb2a-70eb-4a60-99ea-13c144a0974a",
+        "timestamp": 1788015693697
       }
     ],
     "4.2 Enforce request-processing order before persistence": [
@@ -839,6 +918,16 @@
         "executionId": "08e5e37c-1e3f-4c7c-b3a3-65c45061aaca",
         "chatSessionId": "sess_9d31cb2a-70eb-4a60-99ea-13c144a0974a",
         "timestamp": 1788014586733
+      },
+      {
+        "executionId": "c6219a3f-eafe-4b30-9bc4-92f258bac2f6",
+        "chatSessionId": "sess_9d31cb2a-70eb-4a60-99ea-13c144a0974a",
+        "timestamp": 1788015497151
+      },
+      {
+        "executionId": "c6219a3f-eafe-4b30-9bc4-92f258bac2f6",
+        "chatSessionId": "sess_9d31cb2a-70eb-4a60-99ea-13c144a0974a",
+        "timestamp": 1788015594373
       }
     ],
     "4.3 Remediate server-derived owner scope and session-expiry handling": [
@@ -942,6 +1031,11 @@
         "executionId": "08e5e37c-1e3f-4c7c-b3a3-65c45061aaca",
         "chatSessionId": "sess_9d31cb2a-70eb-4a60-99ea-13c144a0974a",
         "timestamp": 1788014628368
+      },
+      {
+        "executionId": "08e5e37c-1e3f-4c7c-b3a3-65c45061aaca",
+        "chatSessionId": "sess_9d31cb2a-70eb-4a60-99ea-13c144a0974a",
+        "timestamp": 1788015219530
       }
     ],
     "5.6 Remediate every evidenced performance-budget or cleanup defect after required product remediation and capture comparable before/after definitions": [
@@ -956,6 +1050,16 @@
         "executionId": "08e5e37c-1e3f-4c7c-b3a3-65c45061aaca",
         "chatSessionId": "sess_9d31cb2a-70eb-4a60-99ea-13c144a0974a",
         "timestamp": 1788014588745
+      },
+      {
+        "executionId": "c6219a3f-eafe-4b30-9bc4-92f258bac2f6",
+        "chatSessionId": "sess_9d31cb2a-70eb-4a60-99ea-13c144a0974a",
+        "timestamp": 1788015503837
+      },
+      {
+        "executionId": "c6219a3f-eafe-4b30-9bc4-92f258bac2f6",
+        "chatSessionId": "sess_9d31cb2a-70eb-4a60-99ea-13c144a0974a",
+        "timestamp": 1788015599110
       }
     ],
     "5.9 Add targeted unit and integration regression tests for every remediated finding after Gate D": [

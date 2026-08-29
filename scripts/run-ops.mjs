@@ -66,7 +66,7 @@ function runTsx(rel, args = []) {
     "exec",
     "tsx",
     "--tsconfig",
-    path.join(ROOT, "scripts", "tsconfig.json"),
+    path.join(ROOT, "site", "tsconfig.json"),
     path.join(ROOT, "scripts", rel),
     ...args,
   ]);

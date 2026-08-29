@@ -88,7 +88,15 @@ import {
 } from "@planner/lib/plannerSnapStatusLabel";
 import { exportPNG, exportPDF, downloadDataUrl, exportSVG } from "@planner/lib/plannerExporters";
 import { downloadDxf } from "@planner/lib/plannerDxfExport";
-import { createProject, updateProject, getProject, fileUrl, PlannerApiError, isAbortError } from "@planner/lib/plannerApi";
+import {
+  createProject,
+  updateProject,
+  getProject,
+  fileUrl,
+  createPlannerIdempotencyKey,
+  PlannerApiError,
+  isAbortError,
+} from "@planner/lib/plannerApi";
 import {
   type PlannerLoadState,
   DRAFT,
@@ -105,8 +113,12 @@ import { serializeFabricCanvas } from "@planner/lib/plannerFabricSerialize";
 import { useRuntimeFeatureFlags } from "@/lib/hooks/useRuntimeFeatureFlags";
 import { PlannerCommandPalette } from "@planner/components/PlannerCommandPalette";
 import { buildPaletteCommands } from "@planner/lib/commands/registry";
+import { createCanvasActions, type CanvasActionCallbacks } from "@planner/lib/commands/useCanvasActions";
+import type { FabricCanvasLike } from "@planner/lib/commands/canvasCommands";
 import type { PlacementOp } from "@planner/lib/ai/applySuggestedLayout";
 import type { SketchRoomMm, SketchWallMm } from "@planner/lib/ai/sketchToPlanShared";
+import { usePlannerViewport } from "@planner/hooks/usePlannerViewport";
+import { PlannerTabletPanelScrim } from "@planner/components/PlannerTabletPanelScrim";
 
 // Types, constants, and panel configs live in PlannerConstants.ts
 
@@ -119,7 +131,12 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
   const routeId = typeof params.id === "string" ? params.id : params.id?.[0];
   const router = useRouter();
   const { wrapperRef, canvasElRef, fabricRef, ready } = useFabric({ background: OO.canvasBg });
+  const viewport = usePlannerViewport();
   const showToast = usePlannerUIStore((s) => s.showToast);
+  const setAccessMode = usePlannerUIStore((s) => s.setAccessMode);
+  useEffect(() => {
+    setAccessMode(accessMode);
+  }, [accessMode, setAccessMode]);
   const snapEnabled = usePlannerUIStore((s) => s.snapEnabled);
   const toggleSnap = usePlannerUIStore((s) => s.toggleSnap);
   const showGrid = usePlannerUIStore((s) => s.showGrid);
@@ -151,30 +168,62 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
     loadState.kind === "transient-error";
   const firstPlacementRef = useRef(false);
   const [saving, setSaving] = useState(false);
+  const [projectRevision, setProjectRevision] = useState(0);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [online, setOnline] = useState(true);
+  const [saveIssue, setSaveIssue] = useState<"conflict" | "offline" | "reauth" | "server" | null>(null);
+  const saveIdempotencyRef = useRef<string | null>(null);
   const [sheet, setSheet] = useState<PlannerSheet>(DEFAULT_SHEET);
   const [plannerStep, setPlannerStep] = useState<PlannerStep>("draw");
   const [leftCollapsed, setLeftCollapsed] = useState(false);
   const [rightCollapsed, setRightCollapsed] = useState(true);
   const [toolsCollapsed, setToolsCollapsed] = useState(false);
   useEffect(() => {
-    // Fixed-width side panels (60px tool rail + 320px catalog) squeeze the
-    // canvas to 0 width below the design system's own sm breakpoint
-    // (--breakpoint-sm: 640px) — worst at the "Place furniture" step, whose
-    // catalog aside is full-bleed. Collapse both panels so the canvas stays
-    // usable; the overlay dock-tab buttons reopen them on demand, same
-    // mechanism Studio's equivalent 2b fix uses.
-    const mql = window.matchMedia("(max-width: 639px)");
-    const collapseForNarrowViewport = (narrow: boolean) => {
-      if (!narrow) return;
+    // Collapse panels on phone/tablet to keep the canvas usable.
+    // On desktop, panels remain open. The overlay dock-tab buttons reopen
+    // them on demand at any viewport class.
+    if (viewport.isPhone) {
       setLeftCollapsed(true);
       setRightCollapsed(true);
       setToolsCollapsed(true);
+    } else if (viewport.isTablet) {
+      // Tablet: panels are overlays — collapse by default so they
+      // don't obscure the canvas on entry; user taps toggle buttons
+      // to open them as dismissible overlays.
+      setLeftCollapsed(true);
+      setToolsCollapsed(true);
+    }
+    // Desktop: leave panels at their current state — don't force-collapse
+    // or force-open on resize. This preserves user's panel configuration
+    // across resize/orientation changes.
+  }, [viewport.viewportClass]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    const updateOnlineState = () => {
+      const nextOnline = navigator.onLine;
+      setOnline(nextOnline);
+      if (nextOnline) {
+        setSaveIssue((issue) => (issue === "offline" ? null : issue));
+      }
     };
-    collapseForNarrowViewport(mql.matches);
-    const onChange = (e: MediaQueryListEvent) => collapseForNarrowViewport(e.matches);
-    mql.addEventListener("change", onChange);
-    return () => mql.removeEventListener("change", onChange);
+    updateOnlineState();
+    window.addEventListener("online", updateOnlineState);
+    window.addEventListener("offline", updateOnlineState);
+    return () => {
+      window.removeEventListener("online", updateOnlineState);
+      window.removeEventListener("offline", updateOnlineState);
+    };
   }, []);
+
+  useEffect(() => {
+    if (!hasUnsavedChanges) return;
+    const warnBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", warnBeforeUnload);
+    return () => window.removeEventListener("beforeunload", warnBeforeUnload);
+  }, [hasUnsavedChanges]);
+
   const [activeLeftDock, setActiveLeftDock] = useState("catalog");
   const [activeRightDock, setActiveRightDock] = useState("props");
   const [drawSheetOpen, setDrawSheetOpen] = useState(true);
@@ -313,12 +362,9 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
 
   const applyPlannerStep = useCallback((step: PlannerStep) => {
     setPlannerStep(step);
-    // Below the sm breakpoint the side panels are collapsed by the
-    // narrow-viewport effect above (fixed-width panels leave 0px for the
-    // canvas) — step navigation must not fight that by force-opening a
-    // panel again; the overlay dock-tab buttons remain available to open
-    // one on demand.
-    const narrow = typeof window !== "undefined" && window.matchMedia("(max-width: 639px)").matches;
+    // On phone and tablet, panels stay collapsed — they overlay the canvas
+    // and are opened on demand via toggle buttons.
+    const narrow = viewport.isPhone || viewport.isTablet;
     if (step === "draw") {
       setDrawSheetOpen(true);
       setDrawColorOpen(false);
@@ -344,7 +390,7 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
     queueMicrotask(() => {
       rightDockApiRef.current?.getPanel("boq")?.api?.setActive?.();
     });
-  }, []);
+  }, [viewport.isPhone, viewport.isTablet]);
 
   const planMetrics = useMemo(() => {
     void sceneVersion;
@@ -572,9 +618,20 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
       onSel();
       refreshLayers();
       setSceneVersion((v) => v + 1);
+      if (!target?.data?.isGridLine && !target?.data?.isSheet) setHasUnsavedChanges(true);
     };
-    const onAdd = () => { refreshLayers(); setSceneVersion((v) => v + 1); };
-    const onRemove = () => { refreshLayers(); setSceneVersion((v) => v + 1); };
+    const onAdd = (event?: { target?: fabric.FabricObject }) => {
+      refreshLayers();
+      setSceneVersion((v) => v + 1);
+      const target = event?.target ? asOo(event.target) : undefined;
+      if (!target?.data?.isGridLine && !target?.data?.isSheet) setHasUnsavedChanges(true);
+    };
+    const onRemove = (event?: { target?: fabric.FabricObject }) => {
+      refreshLayers();
+      setSceneVersion((v) => v + 1);
+      const target = event?.target ? asOo(event.target) : undefined;
+      if (!target?.data?.isGridLine && !target?.data?.isSheet) setHasUnsavedChanges(true);
+    };
     c.on("selection:created", onSel);
     c.on("selection:updated", onSel);
     c.on("selection:cleared", clear);
@@ -915,17 +972,24 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
     };
   }, [ready, fabricRef, wrapperRef, placeFurnitureAt]);
 
-  // Actions
-  const deleteSelected = () => { const c = fabricRef.current; if (!c) return; c.getActiveObjects().forEach((o) => c.remove(o)); c.discardActiveObject(); c.requestRenderAll(); };
-  const duplicateSelected = async () => {
-    const c = fabricRef.current; if (!c) return;
-    const a = c.getActiveObject(); if (!a) return;
-    const cl = await a.clone(["data"]);
-    cl.set({ left: (a.left || 0) + 20, top: (a.top || 0) + 20 });
-    tag(cl, asOo(a).data?.label as string | undefined, asOo(a).data?.kind as string | undefined);
-    c.add(cl); c.setActiveObject(cl); c.requestRenderAll();
-  };
-  const rotate90 = () => { const c = fabricRef.current; if (!c) return; const a = c.getActiveObject(); if (!a) return; a.set({ angle: (a.angle || 0) + 90 }); a.setCoords(); c.fire("object:modified", { target: a }); c.requestRenderAll(); };
+  // Actions — route through semantic Planner commands (Req 7.1–7.4, 7.7)
+  const canvasActions: CanvasActionCallbacks = useMemo(
+    () =>
+      createCanvasActions({
+        fabricCanvas: fabricRef.current as unknown as FabricCanvasLike | null,
+        showToast,
+        refreshLayers,
+        bumpSceneVersion: () => setSceneVersion((v) => v + 1),
+        markUnsaved: () => setHasUnsavedChanges(true),
+      }),
+    // Refresh when canvas ready state changes — the fabricRef.current changes
+    // from null to a Canvas once useFabric initialises.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [ready, showToast, refreshLayers],
+  );
+  const deleteSelected = canvasActions.deleteSelected;
+  const duplicateSelected = canvasActions.duplicateSelected;
+  const rotate90 = canvasActions.rotate90;
 
   const applyAlign = useCallback((action: AlignAction) => {
     const c = fabricRef.current;
@@ -1258,12 +1322,18 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
 
         setProjectId(proj.id);
         setProjectName(proj.name);
+        setProjectRevision(
+          "revision" in proj && typeof proj.revision === "number" ? proj.revision : 1,
+        );
         try { localStorage.setItem(PLANNER_LAST_PROJECT_KEY, proj.id); } catch { /* noop */ }
         if (proj.sheet && proj.sheet.width_mm) setSheet({ ...DEFAULT_SHEET, ...proj.sheet });
         c.loadFromJSON(proj.canvas_json ?? {}, () => {
           drawGridAndSheet();
           c.requestRenderAll();
           refreshLayers();
+          setHasUnsavedChanges(false);
+          setSaveIssue(null);
+          saveIdempotencyRef.current = null;
           showToast(`Loaded "${proj.name}"`);
         });
         setLoadState(readyState(effectiveId!, proj));
@@ -1546,6 +1616,16 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
     ],
   );
 
+  /** Dismiss all tablet overlay panels at once (scrim tap or Escape). */
+  const dismissTabletPanels = useCallback(() => {
+    setLeftCollapsed(true);
+    setRightCollapsed(true);
+    setToolsCollapsed(true);
+  }, []);
+
+  /** Whether any panel is open on tablet (drives scrim visibility). */
+  const tabletPanelOpen = viewport.isTablet && (!leftCollapsed || !rightCollapsed || !toolsCollapsed);
+
   const toolbarHandlers: Record<string, ToolbarItemHandler> = {
     new: { onClick: newProject },
     open: { onClick: () => router.push("/ooplanner/projects") },
@@ -1639,7 +1719,7 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
 
   return (
     <PlannerContext.Provider value={plannerCtx}>
-    <div className="planner-stack" data-planner-step={plannerStep}>
+    <div className="planner-stack" data-planner-step={plannerStep} data-viewport-class={viewport.viewportClass}>
       <PlannerTopToolbar handlers={toolbarHandlers} />
       <PlannerWorkflowBar
         currentStep={plannerStep}
@@ -1651,6 +1731,7 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
       data-testid="planner-workspace"
       data-access-mode={accessMode}
       data-load-state={loadState.kind}
+      data-viewport-class={viewport.viewportClass}
       aria-busy={loadState.kind === "loading" ? "true" : undefined}
     >
       {workspaceGated && (
@@ -1661,6 +1742,10 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
           onBackToProjects={handleBackToProjects}
         />
       )}
+      <PlannerTabletPanelScrim
+        visible={tabletPanelOpen}
+        onDismiss={dismissTabletPanels}
+      />
       <div className="planner-mobile-shell" data-testid="planner-mobile-shell">
         <div className="planner-mobile-canvas" data-testid="planner-mobile-canvas" aria-hidden="true" />
         <div className="planner-mobile-bottom-chrome" data-testid="planner-mobile-bottom-chrome" data-mobile-chrome="bottom">

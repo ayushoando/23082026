@@ -138,6 +138,14 @@
 .ooplanner-root .canvas-stage { container-type: inline-size; container-name: canvas-stage; }
 .ooplanner-root .canvas-stage__inner { position: absolute; inset: 0; }
 
+/* Restrict touch-action suppression to the active gesture region (the Fabric
+   canvas) rather than the whole page. This prevents browser gestures (pull-to-
+   refresh, pinch-zoom, overscroll) from replacing Planner drawing/pan/zoom
+   gestures inside the canvas, while leaving normal touch scrolling intact in
+   panels, toolbars, and other non-canvas chrome.
+   Requirements 7.4 — touch-action scoped to active gesture region. */
+.ooplanner-root .canvas-stage__inner canvas { touch-action: none; }
+
 .ooplanner-root .side-panel {
   width: var(--shell-panel-w);
   background: var(--surface-panel);

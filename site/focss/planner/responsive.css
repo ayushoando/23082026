@@ -1,0 +1,300 @@
+/* ──────────────────────────────────────────────────────────────────────────
+ * Planner responsive layout — tablet overlay panels, phone grouped commands,
+ * visual-viewport-aware modal scrolling, and cross-breakpoint state preservation.
+ *
+ * Breakpoints:
+ *   phone:   0–639px
+ *   tablet:  640–1023px
+ *   desktop: 1024px+
+ *
+ * Requirements: 2.2, 6.1–6.7
+ * ────────────────────────────────────────────────────────────────────────── */
+
+/* ── Tablet: 640–1023px ─────────────────────────────────────────────────── */
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  /* Panels become dismissible overlays instead of fixed side panels */
+  .ooplanner-root .side-panel {
+    position: fixed;
+    top: var(--shell-topbar-h);
+    bottom: 0;
+    z-index: 40;
+    max-width: min(360px, 85vw);
+    box-shadow: var(--shadow-lift);
+    transition: transform 200ms ease-out, opacity 160ms ease-out;
+    will-change: transform, opacity;
+  }
+
+  .ooplanner-root .side-panel--left {
+    left: 0;
+    border-right: 1px solid var(--border-soft);
+    border-left: none;
+  }
+
+  .ooplanner-root .side-panel--tools {
+    left: 0;
+    border-right: 1px solid var(--border-soft);
+    border-left: none;
+  }
+
+  .ooplanner-root .side-panel:not(.side-panel--left):not(.side-panel--tools) {
+    right: 0;
+    left: auto;
+    border-left: 1px solid var(--border-soft);
+    border-right: none;
+  }
+
+  /* Collapsed state: slide out */
+  .ooplanner-root .side-panel[data-collapsed="true"] {
+    transform: translateX(-100%);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .ooplanner-root .side-panel:not(.side-panel--left):not(.side-panel--tools)[data-collapsed="true"] {
+    transform: translateX(100%);
+  }
+
+  /* Tablet overlay scrim behind open panels — lets tap-outside dismiss */
+  .ooplanner-root .tablet-panel-scrim {
+    display: none;
+  }
+
+  .ooplanner-root .tablet-panel-scrim[data-visible="true"] {
+    display: block;
+    position: fixed;
+    inset: 0;
+    top: var(--shell-topbar-h);
+    z-index: 35;
+    background: color-mix(in srgb, var(--color-midnight-900) 22%, transparent);
+    animation: tablet-scrim-in 160ms ease-out;
+  }
+
+  @keyframes tablet-scrim-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* Resize handles are unnecessary in tablet overlay mode */
+  .ooplanner-root .side-panel__resize {
+    display: none;
+  }
+
+  /* Toolbar: hide labels, compact gap */
+  .ooplanner-root .oo-toolbar__label {
+    display: none;
+  }
+
+  .ooplanner-root .oo-toolbar__sep {
+    margin: 4px 4px;
+  }
+
+  /* Step bar: compact layout */
+  .ooplanner-root .pw-step-bar__copy small {
+    display: none;
+  }
+
+  /* Topbar compact */
+  .ooplanner-root .topbar {
+    gap: 10px;
+    padding: 0 14px;
+  }
+
+  .ooplanner-root .topbar__brand-sub {
+    display: none;
+  }
+
+  /* Canvas overlay: keep all buttons reachable */
+  .ooplanner-root .overlay-btn-label {
+    display: none;
+  }
+}
+
+/* ── Desktop: 1024px+ ───────────────────────────────────────────────────── */
+
+@media (min-width: 1024px) {
+  /* Restore side panels as static regions — no overlap */
+  .ooplanner-root .side-panel {
+    position: relative;
+    z-index: auto;
+    max-width: none;
+    box-shadow: none;
+    transition: none;
+    will-change: auto;
+    transform: none;
+    opacity: 1;
+  }
+
+  /* Ensure panels don't exceed canvas-safe width */
+  .ooplanner-root .side-panel--left,
+  .ooplanner-root .side-panel--tools {
+    max-width: 400px;
+  }
+
+  /* Tablet scrim is never shown on desktop */
+  .ooplanner-root .tablet-panel-scrim {
+    display: none !important;
+  }
+}
+
+/* ── Visual-viewport-aware modal scrolling ──────────────────────────────── */
+
+.ooplanner-root .dialog-scrim {
+  /* Use dvh for dynamic viewport height (accounts for mobile browser chrome) */
+  max-height: 100dvh;
+  overflow: hidden;
+}
+
+.ooplanner-root .dialog {
+  max-height: calc(100dvh - 40px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Scrollable dialog body — keeps action rows always visible */
+.ooplanner-root .dialog__body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Action row stays fixed at dialog bottom */
+.ooplanner-root .dialog__actions {
+  flex-shrink: 0;
+  position: sticky;
+  bottom: 0;
+  background: var(--surface-panel);
+  padding-top: 12px;
+  border-top: 1px solid var(--border-soft);
+}
+
+/* Phone: tighter dialog padding, full-width actions */
+@media (max-width: 639px) {
+  .ooplanner-root .dialog-scrim {
+    padding: 8px;
+    align-items: flex-end;
+  }
+
+  .ooplanner-root .dialog {
+    max-width: 100%;
+    max-height: calc(100dvh - 16px);
+    border-radius: 16px 16px 8px 8px;
+    padding: 16px;
+  }
+
+  .ooplanner-root .dialog__actions {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .ooplanner-root .dialog__actions .btn {
+    width: 100%;
+    justify-content: center;
+    min-height: 44px;
+  }
+}
+
+/* Tablet: cap dialog width, contained scrolling */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .ooplanner-root .dialog {
+    max-width: min(480px, calc(100vw - 32px));
+    max-height: calc(100dvh - 48px);
+  }
+}
+
+/* ── On-screen keyboard compensation ────────────────────────────────────── */
+
+/* When visualViewport shrinks (keyboard open), anchor modals to the visual
+   viewport rather than the layout viewport so action buttons stay reachable. */
+@supports (height: 1dvh) {
+  .ooplanner-root .dialog-scrim {
+    height: 100dvh;
+  }
+}
+
+/* ── Reduced motion ─────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .ooplanner-root .side-panel {
+    transition: none;
+  }
+
+  @keyframes tablet-scrim-in {
+    from { opacity: 1; }
+    to { opacity: 1; }
+  }
+}
+
+/* ── Panel open state on tablet: no page horizontal scroll ──────────────── */
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .ooplanner-root .workspace {
+    overflow-x: hidden;
+  }
+
+  /* Canvas stage fills remaining space without being pushed by overlay panels */
+  .ooplanner-root .canvas-stage {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+/* ── Phone: ensure no horizontal page scroll ────────────────────────────── */
+
+@media (max-width: 639px) {
+  .ooplanner-root .planner-stack {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
+  .ooplanner-root .workspace {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
+  /* Canvas overlay becomes a compact floating bar */
+  .ooplanner-root .canvas-overlay {
+    left: 8px;
+    right: 8px;
+    top: 8px;
+    max-width: calc(100vw - 16px);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .ooplanner-root .canvas-overlay .overlay-btn-label {
+    display: none;
+  }
+
+  /* Step bar: single-row compact */
+  .ooplanner-root .pw-step-bar {
+    padding: 4px 8px;
+    gap: 4px;
+  }
+
+  .ooplanner-root .pw-step-bar__steps {
+    gap: 4px;
+  }
+
+  .ooplanner-root .pw-step-bar__btn {
+    padding: 4px 6px;
+    min-height: 36px;
+    gap: 6px;
+  }
+
+  .ooplanner-root .pw-step-bar__copy small {
+    display: none;
+  }
+
+  .ooplanner-root .pw-step-bar__num {
+    width: 24px;
+    height: 24px;
+    font-size: 11px;
+  }
+
+  .ooplanner-root .pw-step-bar__copy strong {
+    font-size: 11px;
+  }
+}

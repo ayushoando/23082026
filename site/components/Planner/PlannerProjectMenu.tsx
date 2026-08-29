@@ -29,12 +29,20 @@ export function ProjectMenu({
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
+  const nameInputRef = useRef<HTMLInputElement | null>(null);
   const panelId = useId();
 
   const closeMenu = useCallback(() => {
     setOpen(false);
+    // Restore focus to the trigger on close (Req 7.6).
     triggerRef.current?.focus();
   }, []);
+
+  // Move focus into the panel when it opens (Req 7.6).
+  useEffect(() => {
+    if (!open) return;
+    queueMicrotask(() => nameInputRef.current?.focus());
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -89,6 +97,7 @@ export function ProjectMenu({
         <label className="project-menu__field">
           <span className="project-menu__field-label">Name</span>
           <input
+            ref={nameInputRef}
             className="input input--sm project-menu__input"
             value={projectName}
             onChange={(e) => onProjectNameChange(e.target.value)}

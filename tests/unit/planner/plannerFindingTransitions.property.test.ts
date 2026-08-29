@@ -324,17 +324,26 @@ describe("Planner comprehensive audit Property 3", () => {
   it("accepts exactly the declared monotonic lifecycle edges", () => {
     fc.assert(
       fc.property(plannerPathsArb, statePairArb, (paths, [from, to]) => {
+        const fromNeedsObserved =
+          from === "remediated-with-evidence" ||
+          from === "compliant-with-evidence";
         const needsObservedTarget =
           to === "compliant-with-evidence" ||
           (from === "remediated-validation-pending" &&
             to === "remediated-with-evidence");
+        const observed =
+          fromNeedsObserved ||
+          (needsObservedTarget && from === "candidate");
+        const classification: "defect" | "compliant" =
+          from === "compliant-with-evidence" ||
+          (from === "candidate" && to === "compliant-with-evidence")
+            ? "compliant"
+            : "defect";
         let registry = registryForState(
           paths,
           from,
-          needsObservedTarget && from === "candidate",
-          from === "candidate" && to === "compliant-with-evidence"
-            ? "compliant"
-            : "defect",
+          observed,
+          classification,
         );
         const id = findingId(registry);
         const allowed = FINDING_TRANSITIONS[from].includes(to);
