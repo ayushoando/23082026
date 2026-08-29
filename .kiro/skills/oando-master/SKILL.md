@@ -75,16 +75,16 @@ Run the smallest check that proves the specific change. Non-test static inspecti
    - Lint: `pnpm run lint`
 3. Read the changed path and confirm it remains coherent.
 
-If a required test-like check is not currently authorized or permitted, state it precisely as pending user validation rather than inventing a pass.
+Classify an observed result from a Test-Like Command as Validation Evidence only when the exact command had both current-session User Authorization and Hook Permission. If a required Test-Like Command lacks either condition, identify that exact command as Pending User Validation; do not claim it passed.
 
 ## Step 4 — Declare done
 
-The task is complete when all applicable conditions hold:
+A task can be reported as fully complete only when all applicable conditions hold:
 
-- The user's stated goal is met.
-- Every required permitted validation command has an observed result.
-- Any validation failure is fixed within scope or explicitly identified as an unrelated blocker with evidence.
-- Studio/Planner boundaries remain intact if either fork changed.
-- No blocker was introduced; record a true blocker in root `Failures.md` with a repro command.
+- The stated Repository Task goal is met.
+- Every required permitted validation command has an observed result classified as Validation Evidence.
+- Any validation failure is fixed within scope or escalated only when evidence establishes a True Blocker that prevents completion within the authorized scope.
+- If a Studio or Planner Fork Tree changed, applicable Fork Boundary validation evidence is observed.
+- No evidenced True Blocker prevents completion within the authorized scope.
 
-Report what changed, the exact validation outcomes, and any user-owned command still pending. Never claim a test passed when it did not run, and never claim rendered behavior from static evidence alone. Repo root and `pnpm` only; UI uses `http://localhost:3000`.
+In every completion report, distinguish the stated task goal, changed scope, observed Validation Evidence with exact command outcomes, and Pending User Validation with each exact command. If a changed Fork Tree lacks applicable Fork Boundary validation evidence, report that validation as pending rather than report the task as fully complete. Escalate only an evidenced True Blocker that prevents completion within the authorized scope, and record it in root `Failures.md` with reproduction evidence. Never claim a test passed when it did not run, and never claim rendered behavior from static evidence alone. Repo root and `pnpm` only; UI uses `http://localhost:3000`.
