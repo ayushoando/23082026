@@ -3,19 +3,26 @@
  * Fail on hollow Vitest cases (release-gate Phase 04b).
  * Usage: node scripts/general/audit-hollow-tests.mjs [--exclude-marketing]
  */
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { findHollowPatternViolations } from "./hollow-test-patterns.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const siteRoot = path.resolve(__dirname, "../..");
-const testsRoot = path.join(siteRoot, "tests");
+const siteRoot = process.env.MONOREPO_ROOT
+  ? path.resolve(process.env.MONOREPO_ROOT)
+  : path.resolve(__dirname, "../..");
+const testRoots = [
+  path.join(siteRoot, "tests"),
+  path.join(siteRoot, ".kiro", "kiro-repo-guidance-setup", "tests"),
+  path.join(siteRoot, ".kiro", "specs"),
+];
 
 const excludeMarketing = process.argv.includes("--exclude-marketing");
 const MARKETING_SEGMENT = `${path.sep}tests${path.sep}unit${path.sep}app${path.sep}(site)${path.sep}`;
 
 function walk(dir, files = []) {
+  if (!existsSync(dir)) return files;
   for (const entry of readdirSync(dir)) {
     const full = path.join(dir, entry);
     if (statSync(full).isDirectory()) {
@@ -29,12 +36,14 @@ function walk(dir, files = []) {
 
 const failures = [];
 
-for (const file of walk(testsRoot)) {
-  if (excludeMarketing && file.includes(MARKETING_SEGMENT)) continue;
+for (const testRoot of testRoots) {
+  for (const file of walk(testRoot)) {
+    if (excludeMarketing && file.includes(MARKETING_SEGMENT)) continue;
 
-  const rel = path.relative(siteRoot, file).replaceAll("\\", "/");
-  const source = readFileSync(file, "utf8");
-  failures.push(...findHollowPatternViolations(source, { file: rel }));
+    const rel = path.relative(siteRoot, file).replaceAll("\\", "/");
+    const source = readFileSync(file, "utf8");
+    failures.push(...findHollowPatternViolations(source, { file: rel }));
+  }
 }
 
 if (failures.length > 0) {

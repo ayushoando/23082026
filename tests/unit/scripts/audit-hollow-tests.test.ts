@@ -2,6 +2,7 @@
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
+import os from "node:os";
 import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
@@ -54,6 +55,34 @@ describe("audit-hollow-tests", () => {
       file: "tests/example.test.ts",
     });
     expect(hits.some((h) => h.reason === "zero-expect")).toBe(true);
+  });
+
+  it.each([
+    ".kiro/kiro-repo-guidance-setup/tests/sample.test.ts",
+    ".kiro/specs/example/tests/sample.test.ts",
+  ])("flags hollow tests in contained Kiro root %s", (relativeTestPath) => {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "audit-hollow-kiro-"));
+    try {
+      const absolute = path.join(tmp, relativeTestPath);
+      fs.mkdirSync(path.dirname(absolute), { recursive: true });
+      fs.writeFileSync(absolute, "it('empty', () => { const value = 1; });\n");
+
+      let stderr = "";
+      try {
+        execFileSync(process.execPath, [scriptPath], {
+          cwd: siteRoot,
+          encoding: "utf8",
+          env: { ...process.env, MONOREPO_ROOT: tmp },
+          stdio: ["ignore", "pipe", "pipe"],
+        });
+      } catch (error) {
+        stderr = String((error as { stderr?: string }).stderr ?? "");
+      }
+      expect(stderr).toContain("zero-expect");
+      expect(stderr.replaceAll("\\", "/")).toContain(relativeTestPath);
+    } finally {
+      fs.rmSync(tmp, { recursive: true, force: true });
+    }
   });
 
   it("runs hollow audit against the live tests tree without crashing", () => {

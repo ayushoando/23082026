@@ -61,7 +61,7 @@ The co-located HTML surface is conditionally treated as a projection: `./agents-
 
 Start with one ordinary-language sentence describing the desired outcome. Do not require the contributor to know a path, package, skill, command, or workflow mode. The router performs these steps before any modification or output selection:
 
-1. Read `./.kiro/skills/oando-master/SKILL.md` first and preserve the authority order: current user instruction → live code and fresh command output → `./AGENTS.md` → `./Agents/` → `./docs/`; use `./plans/README.md` for active coordination after those sources.
+1. Read `./.kiro/skills/oando-master/SKILL.md` first and preserve the authority order: current user instruction → live code and fresh command output → `AGENTS.md` → `Agents/` → `docs/`; use `./plans/README.md` for active coordination after those sources. The repository file reference is `./AGENTS.md`.
 2. Restate the outcome with an action verb and the inferred Product Surface or repository domain; define specialized terms before requesting a decision.
 3. Select exact first evidence locations and explain why each is first.
 4. Select one D01–D22 Domain Index card, or D22 when the topic is unfamiliar.
@@ -551,7 +551,7 @@ Before any `./site/` write, the Route Record must classify the target as an expl
 
 ## Plain-Language Response Contract
 
-Every task-start, progress, handoff, pause, and completion response uses this field order: **Outcome; Known; Unverified; Exact First Evidence Locations; Selected Skills; Rejected Skills and Reasons; Numbered Next Actions; Likely Files or Areas; Risk; Allowed Checks; Protected or Pending Checks; Exact Completion Proof; Unavoidable Owner Decisions.** Explain specialized terms before requesting a decision. If an output is produced, also report Artifact Class, exact Workstream Subfolder or Purpose Subfolder, filename pattern, owning source or script, authored-or-generated state, rejected placements, Locked Path Gate, Site Write Gate when relevant, and observed placement. Missing proof remains `pending`, `blocked`, or `not-observed`; it is never silently promoted to pass, wired, complete, runtime, rendered, hosted, or relocated.
+Explain specialized terms before requesting a decision. Every task-start, progress, handoff, pause, and completion response uses this field order: **Outcome; Known; Unverified; Exact First Evidence Locations; Selected Skills; Rejected Skills and Reasons; Numbered Next Actions; Likely Files or Areas; Risk; Allowed Checks; Protected or Pending Checks; Exact Completion Proof; Unavoidable Owner Decisions.** If an output is produced, also report Artifact Class, exact Workstream Subfolder or Purpose Subfolder, filename pattern, owning source or script, authored-or-generated state, rejected placements, Locked Path Gate, Site Write Gate when relevant, and observed placement. Missing proof remains `pending`, `blocked`, or `not-observed`; it is never silently promoted to pass, wired, complete, runtime, rendered, hosted, or relocated.
 
 ### Completion Record
 

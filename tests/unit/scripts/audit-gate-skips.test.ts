@@ -89,4 +89,35 @@ describe("audit-gate-skips", () => {
       fs.rmSync(tmp, { recursive: true, force: true });
     }
   });
+
+  it.each([
+    ".kiro/kiro-repo-guidance-setup/tests/sample.test.ts",
+    ".kiro/specs/example/tests/sample.test.ts",
+  ])("audits contained Kiro test root %s", (relativeTestPath) => {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "audit-gate-skips-kiro-"));
+    try {
+      fs.mkdirSync(path.join(tmp, "config/build"), { recursive: true });
+      fs.mkdirSync(path.join(tmp, "tests/manifests"), { recursive: true });
+      fs.mkdirSync(path.dirname(path.join(tmp, relativeTestPath)), { recursive: true });
+      fs.writeFileSync(path.join(tmp, "config/build/playwright-gate-specs.json"), '{"specs":[]}\n');
+      fs.writeFileSync(path.join(tmp, "tests/manifests/skip-exceptions.json"), '{"version":1,"exceptions":[]}\n');
+      fs.writeFileSync(path.join(tmp, relativeTestPath), "test.skip('contained', () => {});\n");
+
+      let stderr = "";
+      try {
+        execFileSync(process.execPath, [scriptPath], {
+          cwd: monorepoRoot,
+          encoding: "utf8",
+          env: { ...process.env, MONOREPO_ROOT: tmp },
+          stdio: ["ignore", "pipe", "pipe"],
+        });
+      } catch (error) {
+        stderr = String((error as { stderr?: string }).stderr ?? "");
+      }
+      expect(stderr).toContain("contains-skip");
+      expect(stderr.replaceAll("\\", "/")).toContain(relativeTestPath);
+    } finally {
+      fs.rmSync(tmp, { recursive: true, force: true });
+    }
+  });
 });

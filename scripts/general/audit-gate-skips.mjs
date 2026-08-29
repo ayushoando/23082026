@@ -11,6 +11,11 @@ const repoRoot = process.env.MONOREPO_ROOT
   ? path.resolve(process.env.MONOREPO_ROOT)
   : path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const testsRoot = path.join(repoRoot, "tests");
+const testRoots = [
+  testsRoot,
+  path.join(repoRoot, ".kiro", "kiro-repo-guidance-setup", "tests"),
+  path.join(repoRoot, ".kiro", "specs"),
+];
 const gateConfigPath = path.join(repoRoot, "config", "build", "playwright-gate-specs.json");
 const exceptionPath = path.join(testsRoot, "manifests", "skip-exceptions.json");
 const TEST_SOURCE = /\.[cm]?[jt]sx?$/i;
@@ -72,14 +77,16 @@ if (!fs.existsSync(gateConfigPath)) {
   }
 }
 
-for (const absolute of walk(testsRoot)) {
-  const file = posix(path.relative(repoRoot, absolute));
-  const source = fs.readFileSync(absolute, "utf8");
-  const sources = { raw: source, code: codeOnly(source) };
-  for (const pattern of patterns) {
-    if (!pattern.re.test(sources[pattern.source])) continue;
-    const exception = exceptions.find((entry) => entry.file === file && entry.rule === pattern.id && validException(entry));
-    if (!exception) failures.push({ file, reason: pattern.id });
+for (const testRoot of testRoots) {
+  for (const absolute of walk(testRoot)) {
+    const file = posix(path.relative(repoRoot, absolute));
+    const source = fs.readFileSync(absolute, "utf8");
+    const sources = { raw: source, code: codeOnly(source) };
+    for (const pattern of patterns) {
+      if (!pattern.re.test(sources[pattern.source])) continue;
+      const exception = exceptions.find((entry) => entry.file === file && entry.rule === pattern.id && validException(entry));
+      if (!exception) failures.push({ file, reason: pattern.id });
+    }
   }
 }
 

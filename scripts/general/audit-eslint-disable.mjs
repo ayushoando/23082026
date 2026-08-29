@@ -19,6 +19,8 @@ const SCAN_DIRS = [
   "site/features",
   "site/lib",
   "tests",
+  ".kiro/kiro-repo-guidance-setup/tests",
+  ".kiro/specs",
   "scripts",
 ];
 const SCAN_SKIP_FILES = new Set(["scripts/general/audit-eslint-disable.mjs"]);

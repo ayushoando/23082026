@@ -1,10 +1,10 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import * as fc from "fast-check";
 import { describe, expect, it } from "vitest";
 
-const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
+const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../../../..");
 
 const readFixture = (relativePath: string): string =>
   readFileSync(resolve(REPO_ROOT, relativePath), "utf8");
@@ -17,6 +17,17 @@ const repositoryMap = readFixture(
 const workingWithKiro = readFixture(
   "agents-work/oando-repository-guide/markdown/11-working-with-kiro.md",
 );
+const kiroWorkspace = readFixture(
+  "agents-work/oando-repository-guide/markdown/08-kiro-workspace.md",
+);
+const mcpConfiguration = readFixture(".kiro/settings/mcp.json");
+const aiRetrievalSkillPath = ".kiro/skills/ai-retrieval/SKILL.md";
+const aiRetrievalSkillPresent = existsSync(
+  resolve(REPO_ROOT, aiRetrievalSkillPath),
+);
+const aiRetrievalSkill = aiRetrievalSkillPresent
+  ? readFixture(aiRetrievalSkillPath)
+  : "";
 
 const sectionBetween = (
   source: string,
@@ -87,6 +98,21 @@ const operatingSequence = sectionBetween(
   workingWithKiro,
   "### Operating sequence",
   "### Handoff Record",
+);
+const property6RouterRouting = sectionBetween(
+  router,
+  "### Conditional skill routing",
+  "### Domain and surface safeguards",
+);
+const property6GuideRouting = sectionBetween(
+  kiroWorkspace,
+  "## Conditional repository skill routing",
+  "## Kiro Markdown inventory baseline",
+);
+const property6GuideCapabilityEvidence = sectionBetween(
+  kiroWorkspace,
+  "## Static versus runtime capability evidence",
+  "Use the Plain-Language Response Contract",
 );
 
 const authorityOrder = [
@@ -942,5 +968,516 @@ describe("Property 4: Mandatory ordered Plain-Language Response Contract", () =>
       }),
       { numRuns: 100 },
     );
+  });
+});
+
+interface PromptCookbookCategoryExpectation {
+  readonly number: number;
+  readonly name: string;
+  readonly scopeBoundary: string;
+  readonly firstEvidence: string;
+  readonly stopCondition: string;
+  readonly routingMarker?: string;
+}
+
+const property5CategoryExpectations: readonly PromptCookbookCategoryExpectation[] = [
+  {
+    number: 1,
+    name: "Understand Repository",
+    scopeBoundary: "map only; do not edit product code or protected files.",
+    firstEvidence:
+      "`./START.md`, `./AGENTS.md`, `./docs/architecture/layout.md`, and `./agents-work/oando-repository-guide/README.md`.",
+    stopCondition:
+      "Stop before modification or command execution and state the next owner decision.",
+    routingMarker: "select every matching skill",
+  },
+  {
+    number: 2,
+    name: "Find Where to Work",
+    scopeBoundary: "discover the owner and candidate paths only; do not edit.",
+    firstEvidence:
+      "`./site/app/`, `./site/features/`, `./site/components/`, `./site/lib/`, `./site/platform/`, and the matching D01–D22 card.",
+    stopCondition:
+      "Stop on competing owners, absent paths, or a proposed `./site/` Non-Core Artifact.",
+    routingMarker: "select every matching skill",
+  },
+  {
+    number: 3,
+    name: "Small UI/Icon/Alignment Fix",
+    scopeBoundary:
+      "one bounded interface outcome; do not add an icon library, custom CSS system, or unrelated cleanup.",
+    firstEvidence:
+      "user-facing route, nearby component, `./site/focss/`, existing Phosphor abstraction, and `./scripts/generate-svg/` when assets are involved.",
+    stopCondition:
+      "Stop before any unowned write or external asset/tool proposal.",
+    routingMarker: "select every matching skill including `focss-css` when triggered",
+  },
+  {
+    number: 4,
+    name: "Feature",
+    scopeBoundary:
+      "trace route → feature → component → shared/server → platform/persistence → proof; do not implement adjacent work.",
+    firstEvidence:
+      "matching route, feature, component, `./site/lib/`, `./site/server/`, `./site/platform/`, and tests.",
+    stopCondition: "Stop at an unverified external/data boundary or scope expansion.",
+    routingMarker: "select every matching skill",
+  },
+  {
+    number: 5,
+    name: "Site UI",
+    scopeBoundary:
+      "Site UI/SEO/i18n/accessibility/performance only; no report or generated file under `./site/`.",
+    firstEvidence:
+      "`./site/app/(site)/`, `./site/features/site/`, `./site/components/home/`, `./site/focss/site/`, and `./site/i18n/`.",
+    stopCondition: "Stop before claiming browser/performance proof.",
+    routingMarker: "select every matching skill including `focss-css` when triggered",
+  },
+  {
+    number: 6,
+    name: "Planner",
+    scopeBoundary: "Planner only; do not import Studio or modify unowned paths.",
+    firstEvidence:
+      "`./site/app/ooplanner/`, `./site/features/Planner/`, `./site/components/Planner/`, `./site/lib/Planner/`, `./site/hooks/Planner/`, `./site/store/Planner/`, `./site/server/Planner/`, `./site/platform/Planner/`, and `./site/app/api/Planner/`.",
+    stopCondition: "Stop before cross-fork writes or persistence action.",
+    routingMarker: "select `planner-studio` and `fork-boundaries` when the Fork Tree or imports are involved",
+  },
+  {
+    number: 7,
+    name: "Studio",
+    scopeBoundary: "Studio only; do not borrow Planner modules or claim Planner proof.",
+    firstEvidence:
+      "`./site/app/oostudio/`, `./site/features/Studio/`, `./site/components/Studio/`, `./site/lib/Studio/`, `./site/hooks/Studio/`, `./site/store/Studio/`, `./site/server/Studio/`, `./site/platform/Studio/`, and `./site/app/api/Studio/`.",
+    stopCondition: "Stop before cross-fork or publish changes.",
+    routingMarker: "select `planner-studio` and `fork-boundaries` when the Fork Tree or imports are involved",
+  },
+  {
+    number: 8,
+    name: "Admin",
+    scopeBoundary: "Admin route/feature/auth/data ownership; no remote mutation or secret exposure.",
+    firstEvidence:
+      "`./site/app/admin/`, `./site/features/admin/`, `./site/lib/admin/`, route docs, and the relevant database owner.",
+    stopCondition: "Stop before migration, remote action, or service-role use.",
+    routingMarker:
+      "select every matching skill including `db-migrations`, `focss-css`, or `graph-impact` only when triggered",
+  },
+  {
+    number: 9,
+    name: "CRM/Unwired Assessment",
+    scopeBoundary:
+      "compare CRM browser workspace and customer-query operations; do not combine them.",
+    firstEvidence:
+      "`./site/app/admin/crm/`, `./site/features/crm/`, `./site/app/admin/customer-queries/`, `./site/app/api/customer-queries/`, and `./site/features/ops/`.",
+    stopCondition: "Stop before calling an unverified surface wired.",
+    routingMarker: "select matching skills",
+  },
+  {
+    number: 10,
+    name: "Catalog/Configurator/Quotes/Inventory",
+    scopeBoundary:
+      "catalog/configurator/quote/inventory trace; no seed/publish/storage/migration action.",
+    firstEvidence:
+      "`./site/lib/catalog/`, `./site/features/shared/catalog/`, `./site/app/(site)/products/`, `./site/app/(site)/quote-cart/`, `./site/app/admin/catalog/`, `./site/app/admin/inventory/`, `./site/app/api/configurator/`, and Products migrations.",
+    stopCondition: "Stop before remote or data mutation.",
+    routingMarker:
+      "select matching `db-migrations`, `focss-css`, and `graph-impact` skills when triggered",
+  },
+  {
+    number: 11,
+    name: "Database",
+    scopeBoundary:
+      "plan/review only unless exact migration ownership is approved; no apply.",
+    firstEvidence:
+      "`./site/platform/supabase/migrations/`, `./site/platform/supabase/migrations.admin/`, `./site/platform/drizzle/schema/`, persistence selectors, and database docs.",
+    stopCondition: "Stop before SQL apply, seed, or remote access.",
+    routingMarker:
+      "select `db-migrations` for schema/SQL/RLS/grants/rollback/ownership and every other matching skill",
+  },
+  {
+    number: 12,
+    name: "AI/Retrieval",
+    scopeBoundary: "advisory server-side AI/retrieval assessment; no provider call, package, or deployment.",
+    firstEvidence:
+      "`./site/lib/ai/mastra/`, `./site/app/api/ai-advisor/`, `./site/app/api/Studio/ai/`, `./site/features/Studio/`, and stack guidance.",
+    stopCondition: "Stop before unsupported evaluation or deployment claims.",
+    routingMarker:
+      "select `ai-retrieval` only if `./.kiro/skills/ai-retrieval/SKILL.md` exists and select all other matching skills",
+  },
+  {
+    number: 13,
+    name: "Image/Animation/Assets",
+    scopeBoundary: "asset/motion work only; no external capability or new package by assumption.",
+    firstEvidence:
+      "`./site/public/`, `./scripts/generate-svg/`, nearby component patterns, `./site/focss/`, and existing motion imports.",
+    stopCondition: "Stop before publication or external tooling.",
+    routingMarker: "select every matching visual/impact skill",
+  },
+  {
+    number: 14,
+    name: "API/Security",
+    scopeBoundary: "API/security trace; no security-control weakening or hosted call.",
+    firstEvidence:
+      "`./site/app/api/`, `./site/lib/apiCatalog.ts`, `./site/proxy.ts`, `./site/lib/security/`, and route docs.",
+    stopCondition: "Stop before changing security controls or exposing secrets.",
+    routingMarker: "select `db-migrations` or `graph-impact` when evidence triggers",
+  },
+  {
+    number: 15,
+    name: "Environment",
+    scopeBoundary: "classify environment only; do not print, sync, commit, or change secrets.",
+    firstEvidence:
+      "`./.env.example`, local env paths, `./package.json`, `./pnpm-workspace.yaml`, `./START.md`, and D04.",
+    stopCondition: "Stop before service launch or environment mutation.",
+    routingMarker: "select matching skills",
+  },
+  {
+    number: 16,
+    name: "Bug/Failing Test",
+    scopeBoundary:
+      "inspect the symptom and narrow source/test owner; do not infer a failure cause from unobserved output.",
+    firstEvidence:
+      "reported symptom, relevant test source, `./Failures.md`, and narrow implementation path.",
+    stopCondition: "Stop before running a test or changing configuration without authorization.",
+    routingMarker: "select matching skills",
+  },
+  {
+    number: 17,
+    name: "Gate-Failure Triage",
+    scopeBoundary:
+      "read-only Full Gate Failure Triage; do not alter hooks, baselines, tests, or allowlists.",
+    firstEvidence:
+      "exact reported command, repository root, authorization/hook state, and any current output.",
+    stopCondition: "Stop if current authorized output is absent and label the cause unverified.",
+  },
+  {
+    number: 18,
+    name: "Refactor",
+    scopeBoundary: "preserve behavior and exact approved paths; no opportunistic cleanup.",
+    firstEvidence:
+      "owning source, imports/consumers, fork roots, persistence boundary, and narrow proof source.",
+    stopCondition: "Stop on shared/unowned paths, fork boundary, or new behavior.",
+    routingMarker:
+      "use `graph-impact` for Shared Code or blast radius and every other matching skill",
+  },
+  {
+    number: 19,
+    name: "Documentation",
+    scopeBoundary:
+      "update only the approved guide/workstream path; do not edit locked docs or HTML without provenance.",
+    firstEvidence:
+      "`./AGENTS.md`, `./DOC-MAP.md`, `./CONTENTS.md`, `./Agents/05-documentation.md`, `./plans/README.md`, and the owning document.",
+    stopCondition: "Stop before a handwritten report under `./results/` or a locked write.",
+    routingMarker: "select matching skills",
+  },
+  {
+    number: 20,
+    name: "Package/Dependency",
+    scopeBoundary: "assess package status only; no install, manifest, lockfile, or workspace move.",
+    firstEvidence:
+      "`./package.json`, `./pnpm-workspace.yaml`, `./pnpm-lock.yaml`, live imports, `./site/tsconfig.json`, `./tech-docs-generator/package.json`, and stack docs.",
+    stopCondition: "Stop before package installation or moving `./tech-docs-generator/` into `./site/`/`./results/site/`.",
+    routingMarker:
+      "select `powers-skills-model` or `graph-impact` only when triggered",
+  },
+  {
+    number: 21,
+    name: "Deployment/Ops",
+    scopeBoundary: "read-only target/risk/rollback plan; no deploy, remote mutation, service, or backup.",
+    firstEvidence:
+      "`./vercel.json`, Worker, R2, observability, runbook, workflows, scripts, and instrumentation.",
+    stopCondition: "Stop before external action.",
+    routingMarker: "select matching operational/database skills",
+  },
+  {
+    number: 22,
+    name: "Backup/Import/Export",
+    scopeBoundary: "plan backup/import/export/recovery only; no data movement.",
+    firstEvidence:
+      "`./OPERATIONS_RUNBOOK.md`, R2 scripts/registry, backup workflow, data owner, and recovery path.",
+    stopCondition: "Stop before backup, import, export, or external storage action.",
+    routingMarker: "select matching operational/database skills",
+  },
+  {
+    number: 23,
+    name: "Unknown Task",
+    scopeBoundary:
+      "D22 read-only discovery; do not create a category, package, Power, MCP, or runtime implementation.",
+    firstEvidence:
+      "`./START.md`, `./AGENTS.md`, layout docs, this guide, `./plans/README.md`, `./.kiro/skills/repo-map/SKILL.md`, and `./Failures.md`.",
+    stopCondition: "Stop before editing from guesswork.",
+    routingMarker: "select every matching skill",
+  },
+  {
+    number: 24,
+    name: "Finish Current Task",
+    scopeBoundary:
+      "reconcile only the current Route Record, ownership, changed paths, handoffs, gaps, and evidence; do not add cleanup.",
+    firstEvidence:
+      "current Route Record, Agent Roster, Ownership Matrix, changed scope, handoffs, and target files.",
+    stopCondition: "Stop if proof, ownership, or authorization is unresolved.",
+    routingMarker: "select every matching skill",
+  },
+  {
+    number: 25,
+    name: "Emergency Prompt for an Overwhelmed Owner",
+    scopeBoundary: "",
+    firstEvidence: "",
+    stopCondition: "",
+    routingMarker: "select every matching Package Skill",
+  },
+] as const;
+
+const property5PromptCookbook = sectionBetween(
+  workingWithKiro,
+  "## Complete Prompt Cookbook",
+  "## Six Standing Multi-Agent prompts outside the cookbook count",
+);
+const property5SafetyPreamble = sectionBetween(
+  workingWithKiro,
+  "## Prompt Safety Preamble",
+  "## Complete Prompt Cookbook",
+);
+const property5StandingPromptSection = sectionBetween(
+  workingWithKiro,
+  "## Six Standing Multi-Agent prompts outside the cookbook count",
+  "## Artifact and owner-control reminder",
+);
+const property5StandingPromptNames = [
+  "Start Standing Multi-Agent Mode",
+  "Launch Scout/Map and Planner/Risk in parallel",
+  "Hand an approved scope to Implementer",
+  "Launch Verifier/Reporter",
+  "Resolve a multi-agent conflict",
+  "Finish and close a multi-agent task",
+] as const;
+const property5SafetyPreambleMarkers = [
+  "start with `oando-master`, then `repo-map`",
+  "use Local Evidence before assumptions",
+  "do not guess paths, package names, Package Skills, or commands",
+  "select every matching Package Skill and reject the rest with plain-language reasons",
+  "classify every command as read-only inspection, Normal-Agent Eligible Check, Protected Command, or no-run pending authorization before suggesting or running it",
+  "do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission",
+  "treat inline markers as insufficient",
+  "classify Artifact Class, exact approved Workstream/Purpose Subfolder, filename pattern, owning source or script, authored-or-generated state, rejected placements, and Site Write Gate state before an Output-Producing Task",
+  "keep `./tech-docs-generator/` as a root-level sibling of `./site/`",
+  "keep generated tech-docs in `./generated-documents/`",
+  "Machine Evidence in `./results/<purpose>/`",
+  "authored work in `./agents-work/<workstream>/<report-type>/`",
+  "active plans in `./plans/<name>/`",
+  "canonical blockers in root `./Failures.md`",
+  "apply the Locked Path Gate and Site Write Gate",
+  "treat AI/retrieval output as advisory",
+  "keep hooks, policy, runtime, packages, databases, deployments, backups, external MCP, Power activation, automatic spawning, and workspace-boundary changes as Separate Approval Work",
+  "return the Plain-Language Response Contract and exact completion proof or an explicit unverified/pending state.",
+] as const;
+
+const property5CategoryArbitrary = fc.constantFrom(
+  "Understand Repository",
+  "Find Where to Work",
+  "Small UI/Icon/Alignment Fix",
+  "Feature",
+  "Site UI",
+  "Planner",
+  "Studio",
+  "Admin",
+  "CRM/Unwired Assessment",
+  "Catalog/Configurator/Quotes/Inventory",
+  "Database",
+  "AI/Retrieval",
+  "Image/Animation/Assets",
+  "API/Security",
+  "Environment",
+  "Bug/Failing Test",
+  "Gate-Failure Triage",
+  "Refactor",
+  "Documentation",
+  "Package/Dependency",
+  "Deployment/Ops",
+  "Backup/Import/Export",
+  "Unknown Task",
+  "Finish Current Task",
+  "Emergency Prompt for an Overwhelmed Owner",
+);
+
+const property5CategorySection = (
+  expectation: PromptCookbookCategoryExpectation,
+): string => {
+  const heading = `### ${expectation.number}. ${expectation.name}`;
+  const start = property5PromptCookbook.indexOf(heading);
+  const nextHeading = property5PromptCookbook.indexOf(
+    "\n### ",
+    start + heading.length,
+  );
+  const end = nextHeading >= 0 ? nextHeading : property5PromptCookbook.length;
+
+  if (start < 0 || end < 0) {
+    throw new Error(`Could not locate Prompt Cookbook category ${expectation.name}.`);
+  }
+
+  return property5PromptCookbook.slice(start, end);
+};
+
+const property5PromptBody = (
+  expectation: PromptCookbookCategoryExpectation,
+): string => {
+  const section = property5CategorySection(expectation);
+  const blocks = [...section.matchAll(/```text\r?\n([\s\S]*?)\r?\n```/g)];
+
+  if (blocks.length !== 1) {
+    throw new Error(
+      `Expected exactly one text prompt block for ${expectation.name}, found ${blocks.length}.`,
+    );
+  }
+
+  return blocks[0]?.[1] ?? "";
+};
+
+const property5FieldValue = (body: string, label: string): string => {
+  const marker = `${label}:`;
+  const line = body.split(/\r?\n/).find((candidate) => candidate.startsWith(marker));
+
+  if (!line) {
+    throw new Error(`Missing Prompt Cookbook field ${JSON.stringify(label)}.`);
+  }
+
+  return line.slice(marker.length).trim();
+};
+
+const property5CategoryExpectation = (
+  categoryName: string,
+): PromptCookbookCategoryExpectation => {
+  const expectation = property5CategoryExpectations.find(
+    ({ name }) => name === categoryName,
+  );
+
+  if (!expectation) {
+    throw new Error(`No Property 5 expectation exists for ${categoryName}.`);
+  }
+
+  return expectation;
+};
+
+const assertProperty5Category = (categoryName: string): void => {
+  const expectation = property5CategoryExpectation(categoryName);
+  const body = property5PromptBody(expectation);
+
+  for (const marker of [
+    "Start with `oando-master`, then `repo-map`",
+    "Local Evidence before assumptions",
+    "Protected Command",
+    "exact current-session Explicit User Authorization",
+    "Hook Permission",
+    "Plain-Language Response Contract",
+  ]) {
+    expect(body, `${expectation.name} safety marker: ${marker}`).toContain(marker);
+  }
+
+  expect(body).toMatch(/classify every (?:proposed )?(?:command|check)/i);
+
+  if (expectation.name !== "Emergency Prompt for an Overwhelmed Owner") {
+    expect(property5FieldValue(body, "Desired outcome")).toBe("[DESIRED_OUTCOME]");
+    expect(property5FieldValue(body, "Ordinary-language context")).toBe("[CONTEXT]");
+    expect(property5FieldValue(body, "Scope boundary")).toBe(expectation.scopeBoundary);
+    expect(property5FieldValue(body, "First evidence")).toBe(expectation.firstEvidence);
+    expect(property5FieldValue(body, "Expected evidence")).not.toBe("");
+
+    const stopCondition = body
+      .split(/\r?\n/)
+      .find((line) => line.startsWith("Stop "));
+    expect(stopCondition, `${expectation.name} stop condition`).toBe(
+      expectation.stopCondition,
+    );
+    expect(body).toMatch(/exact completion proof|Completion Record|Coverage-Gap Admission Card/);
+  }
+
+  if (expectation.routingMarker) {
+    expect(body, `${expectation.name} additive skill routing`).toContain(
+      expectation.routingMarker,
+    );
+  }
+
+  if (body.includes("Output-Producing Tasks")) {
+    for (const artifactMarker of [
+      "Artifact Class",
+      "exact Workstream/Purpose Subfolder",
+      "filename pattern",
+      "owning source or script",
+      "authored-or-generated state",
+      "rejected placements",
+      "Site Write Gate state",
+    ]) {
+      expect(body, `${expectation.name} artifact marker: ${artifactMarker}`).toContain(
+        artifactMarker,
+      );
+    }
+  }
+};
+
+// **Validates: Requirements 16.1, 16.2, 16.3, 16.4, 16.5, 22.1, 22.2, 22.3, 22.4, 22.5, 22.6, 22.7**
+describe("Property 5: Complete safe Prompt Cookbook", () => {
+  it("preserves the safe prompt contract for arbitrary cookbook categories", () => {
+    fc.assert(
+      fc.property(property5CategoryArbitrary, (categoryName) => {
+        assertProperty5Category(categoryName);
+      }),
+      { numRuns: 100 },
+    );
+  });
+
+  it("keeps exactly 25 categories ordered once and standing prompts outside the count", () => {
+    expectInOrder(property5SafetyPreamble, property5SafetyPreambleMarkers);
+    expect(property5SafetyPreamble).toContain(
+      "Every cookbook block below includes this complete safety instruction:",
+    );
+    expect(property5SafetyPreamble).toContain(
+      "Each fenced block then supplies its own desired-outcome placeholder, ordinary-language context placeholder, scope boundary, exact first Local Evidence, expected evidence, and stop condition.",
+    );
+
+    const categoryHeadings = [
+      ...property5PromptCookbook.matchAll(/^### (\d+)\. (.+)$/gm),
+    ].map((match) => ({
+      number: Number(match[1] ?? "0"),
+      name: match[2] ?? "",
+    }));
+    const expectedHeadings = property5CategoryExpectations.map(({ number, name }) => ({
+      number,
+      name,
+    }));
+
+    expect(categoryHeadings).toHaveLength(25);
+    expect(new Set(categoryHeadings.map(({ name }) => name)).size).toBe(25);
+    expect(categoryHeadings).toEqual(expectedHeadings);
+
+    for (const expectation of property5CategoryExpectations) {
+      expect(
+        categoryHeadings.filter(({ number, name }) =>
+          number === expectation.number && name === expectation.name,
+        ),
+        `${expectation.name} heading count`,
+      ).toHaveLength(1);
+      assertProperty5Category(expectation.name);
+    }
+
+    const standingPromptHeadings = [
+      ...property5StandingPromptSection.matchAll(/^### (.+)$/gm),
+    ].map((match) => match[1]?.trim() ?? "");
+
+    expect(standingPromptHeadings).toEqual(property5StandingPromptNames);
+    expect(standingPromptHeadings).toHaveLength(6);
+    expect(
+      standingPromptHeadings.some((name) =>
+        property5CategoryExpectations.some((expectation) => expectation.name === name),
+      ),
+    ).toBe(false);
+
+    const emergencyExpectation = property5CategoryExpectation(
+      "Emergency Prompt for an Overwhelmed Owner",
+    );
+    const emergencyBody = property5PromptBody(emergencyExpectation).trim();
+
+    expect(emergencyBody).toBe(
+      "Start with `oando-master`, then `repo-map`; use Local Evidence before assumptions, classify every command, do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission, select every matching Package Skill, and return the Plain-Language Response Contract while helping me choose the safest next action for [DESIRED_OUTCOME].",
+    );
+    expect(emergencyBody.split(/\r?\n/)).toHaveLength(1);
+    expect(emergencyBody.match(/[.!?](?:\s|$)/g) ?? []).toHaveLength(1);
   });
 });

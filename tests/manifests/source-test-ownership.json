@@ -2,6 +2,10 @@
   "version": 1,
   "mode": "hybrid-migration",
   "canonicalTestKinds": ["unit", "integration", "e2e"],
+  "standaloneTestRoots": [
+    ".kiro/kiro-repo-guidance-setup/tests",
+    ".kiro/specs/*/tests"
+  ],
   "sourceRoots": [
     { "sourceRoot": "site/app", "testRoot": "site/app", "domain": "site-routes" },
     { "sourceRoot": "site/components", "testRoot": "site/components", "domain": "site-components" },

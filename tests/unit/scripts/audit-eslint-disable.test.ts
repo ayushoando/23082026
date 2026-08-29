@@ -28,6 +28,8 @@ describe("audit " + "eslint" + " suppress directives", () => {
     expect(source).toContain("site/app");
     expect(source).toContain("site/features");
     expect(source).toContain("site/lib");
+    expect(source).toContain(".kiro/kiro-repo-guidance-setup/tests");
+    expect(source).toContain(".kiro/specs");
     expect(source).not.toMatch(/SCAN_DIRS = \["app", "components"/);
   });
 
@@ -92,6 +94,37 @@ describe("audit " + "eslint" + " suppress directives", () => {
       expect(failed).toBe(true);
       expect(stderr).toMatch(new RegExp(`audit-${token}: \\d+ file\\(s\\)`));
       expect(stderr.replaceAll("\\", "/")).toContain("site/lib/bad.ts");
+    } finally {
+      fs.rmSync(tmp, { recursive: true, force: true });
+    }
+  });
+
+  it.each([
+    ".kiro/kiro-repo-guidance-setup/tests/bad.test.ts",
+    ".kiro/specs/example/tests/bad.test.ts",
+  ])("audits suppress directives in contained Kiro root %s", (relativeTestPath) => {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "eslint-audit-kiro-"));
+    try {
+      const absolute = path.join(tmp, relativeTestPath);
+      fs.mkdirSync(path.dirname(absolute), { recursive: true });
+      fs.writeFileSync(
+        absolute,
+        `// ${token}-next-line no-console\nconsole.log(1);\n`,
+        "utf8",
+      );
+
+      let stderr = "";
+      try {
+        execFileSync(process.execPath, [scriptPath], {
+          cwd: monorepoRoot,
+          encoding: "utf8",
+          env: { ...process.env, MONOREPO_ROOT: tmp },
+          stdio: ["ignore", "pipe", "pipe"],
+        });
+      } catch (error) {
+        stderr = String((error as { stderr?: string }).stderr ?? "");
+      }
+      expect(stderr.replaceAll("\\", "/")).toContain(relativeTestPath);
     } finally {
       fs.rmSync(tmp, { recursive: true, force: true });
     }

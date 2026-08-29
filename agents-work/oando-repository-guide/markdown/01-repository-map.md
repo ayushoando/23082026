@@ -139,7 +139,7 @@ This chapter is the evidence-oriented detail for **D01 — Repository map and au
 
 ### Exact first evidence and current guide workstream
 
-Begin with Local Evidence: read the exact paths below for the stated reason, then compare their claims with the live repository paths available to the task. `./AGENTS.md`, every path under `./docs/`, and every other direct root file are read-only evidence under the Locked Path Gate; `./plans/README.md` is the active planning-coordination source; the guide workstream is authored material under `./agents-work/`.
+Begin with Local Evidence: read the exact paths below for the stated reason, then compare their claims with the live repository paths available to the task. Root process guidance, architecture documentation, and every other direct root file are read-only evidence under the Locked Path Gate; active planning coordination comes from the plans index; the guide workstream is authored material in its dedicated agents-work subtree.
 
 | Exact first evidence location | Why it is first | Static classification and limitation |
 |---|---|---|

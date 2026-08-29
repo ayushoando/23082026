@@ -10,6 +10,8 @@ const repoRoot = process.env.MONOREPO_ROOT
   ? path.resolve(process.env.MONOREPO_ROOT)
   : path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const testsRoot = path.join(repoRoot, "tests");
+const governanceTestsRoot = path.join(repoRoot, ".kiro", "kiro-repo-guidance-setup", "tests");
+const specsRoot = path.join(repoRoot, ".kiro", "specs");
 const manifestPath = path.join(testsRoot, "manifests", "source-test-ownership.json");
 const TEST_FILE = /\.(test|spec)\.[cm]?[jt]sx?$/i;
 const SOURCE_ROOTS = [
@@ -30,6 +32,10 @@ const SOURCE_ROOTS = [
   "tech-docs-generator/scripts",
 ];
 const DEFAULT_MANIFEST = {
+  standaloneTestRoots: [
+    ".kiro/kiro-repo-guidance-setup/tests",
+    ".kiro/specs/*/tests",
+  ],
   sourceRoots: SOURCE_ROOTS.map((sourceRoot) => ({ sourceRoot, testRoot: sourceRoot })),
   e2eRouteRoots: [
     "tests/e2e/site/app/(site)",
@@ -72,6 +78,17 @@ function canonicalTestPrefixes(manifest) {
     }
   }
   return prefixes;
+}
+
+function matchesStandaloneTestRoot(relative, pattern) {
+  const escaped = pattern.replace(/[.+?^${}()|[\]\\]/g, "\\$&").replaceAll("*", "[^/]+");
+  return new RegExp(`^${escaped}/`).test(relative);
+}
+
+function canonicalStandaloneLocation(relative, manifest) {
+  return (manifest.standaloneTestRoots ?? []).some((root) =>
+    matchesStandaloneTestRoot(relative, root),
+  );
 }
 
 function migrationEntry(relative, manifest) {
@@ -143,35 +160,39 @@ for (const root of SOURCE_ROOTS) {
 
 const canonicalPrefixes = canonicalTestPrefixes(manifest);
 const e2eRoots = manifest.e2eRouteRoots ?? [];
-for (const absolute of walk(testsRoot)) {
-  const relative = posix(path.relative(repoRoot, absolute));
-  const source = /\.[cm]?[jt]sx?$/.test(absolute) ? fs.readFileSync(absolute, "utf8") : "";
+const scanRoots = [testsRoot, governanceTestsRoot, specsRoot];
+for (const scanRoot of scanRoots) {
+  for (const absolute of walk(scanRoot)) {
+    const relative = posix(path.relative(repoRoot, absolute));
+    const source = /\.[cm]?[jt]sx?$/.test(absolute) ? fs.readFileSync(absolute, "utf8") : "";
 
-  if (relative.includes("/Planner/") && /@studio\//i.test(source)) {
-    violations.push(`fork boundary: ${relative} imports Studio from a Planner test`);
-  }
-  if (relative.includes("/Studio/") && /@planner\//i.test(source)) {
-    violations.push(`fork boundary: ${relative} imports Planner from a Studio test`);
-  }
-
-  const isExecutable = TEST_FILE.test(path.basename(absolute));
-  if (!isExecutable) continue;
-  const canonical =
-    (canonicalPrefixes.some((prefix) => relative.startsWith(prefix)) && canonicalLocation(relative, manifest)) ||
-    e2eRoots.some((prefix) => relative === prefix || relative.startsWith(`${prefix}/`));
-  if (canonical) continue;
-
-  const migration = migrationEntry(relative, manifest);
-  if (migration) {
-    const invalid = validateMigrationEntry(migration, relative);
-    if (invalid) violations.push(invalid);
-    else {
-      const suggestion = suggestedPath(relative, source) ?? `${migration.replacementRoot}${path.posix.basename(relative)}`;
-      migrationWarnings.push(`${relative} -> ${suggestion}`);
+    if (relative.includes("/Planner/") && /@studio\//i.test(source)) {
+      violations.push(`fork boundary: ${relative} imports Studio from a Planner test`);
     }
-    continue;
+    if (relative.includes("/Studio/") && /@planner\//i.test(source)) {
+      violations.push(`fork boundary: ${relative} imports Planner from a Studio test`);
+    }
+
+    const isExecutable = TEST_FILE.test(path.basename(absolute));
+    if (!isExecutable) continue;
+    const canonical =
+      canonicalStandaloneLocation(relative, manifest) ||
+      (canonicalPrefixes.some((prefix) => relative.startsWith(prefix)) && canonicalLocation(relative, manifest)) ||
+      e2eRoots.some((prefix) => relative === prefix || relative.startsWith(`${prefix}/`));
+    if (canonical) continue;
+
+    const migration = migrationEntry(relative, manifest);
+    if (migration) {
+      const invalid = validateMigrationEntry(migration, relative);
+      if (invalid) violations.push(invalid);
+      else {
+        const suggestion = suggestedPath(relative, source) ?? `${migration.replacementRoot}${path.posix.basename(relative)}`;
+        migrationWarnings.push(`${relative} -> ${suggestion}`);
+      }
+      continue;
+    }
+    violations.push(`non-canonical test: ${relative}`);
   }
-  violations.push(`non-canonical test: ${relative}`);
 }
 
 if (violations.length > 0) {

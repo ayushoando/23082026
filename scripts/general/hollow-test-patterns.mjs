@@ -1,6 +1,6 @@
 /**
  * Shared Vitest hollow-test heuristics for:
- * - scripts/general/audit-hollow-tests.mjs (whole tests/ tree)
+ * - scripts/general/audit-hollow-tests.mjs (all canonical test roots)
  * - tech-docs-generator/scripts/fake-test-audit.mjs (tech-docs lane)
  */
 

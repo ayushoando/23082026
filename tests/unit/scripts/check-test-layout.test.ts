@@ -87,4 +87,52 @@ describe("check-test-layout (name-mirror)", () => {
       fs.rmSync(tmp, { recursive: true, force: true });
     }
   });
+
+  it("accepts both contained Kiro test roots as canonical", () => {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "check-test-layout-kiro-"));
+    try {
+      const paths = [
+        ".kiro/kiro-repo-guidance-setup/tests/governance.test.ts",
+        ".kiro/specs/example/tests/spec-owned.spec.ts",
+      ];
+      for (const relative of paths) {
+        fs.mkdirSync(path.dirname(path.join(tmp, relative)), { recursive: true });
+        fs.writeFileSync(path.join(tmp, relative), "export {};\n");
+      }
+
+      const output = execFileSync(process.execPath, [scriptPath], {
+        cwd: monorepoRoot,
+        encoding: "utf8",
+        env: { ...process.env, MONOREPO_ROOT: tmp },
+      });
+      expect(output).toContain("test layout OK");
+    } finally {
+      fs.rmSync(tmp, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects spec tests outside the contained tests directory", () => {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "check-test-layout-kiro-bad-"));
+    try {
+      const relative = ".kiro/specs/example/misplaced.test.ts";
+      fs.mkdirSync(path.dirname(path.join(tmp, relative)), { recursive: true });
+      fs.writeFileSync(path.join(tmp, relative), "export {};\n");
+
+      let stderr = "";
+      try {
+        execFileSync(process.execPath, [scriptPath], {
+          cwd: monorepoRoot,
+          encoding: "utf8",
+          env: { ...process.env, MONOREPO_ROOT: tmp },
+        });
+      } catch (error) {
+        stderr = String((error as { stderr?: string }).stderr ?? "");
+      }
+      expect(stderr).toContain(
+        "non-canonical test: .kiro/specs/example/misplaced.test.ts",
+      );
+    } finally {
+      fs.rmSync(tmp, { recursive: true, force: true });
+    }
+  });
 });

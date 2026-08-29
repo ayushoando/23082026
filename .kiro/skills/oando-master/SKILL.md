@@ -98,7 +98,13 @@ This skill is the canonical first router for every Repository Task. Its routing 
 
 Accept an ordinary-language desired outcome as the only required contributor input. Before any repository modification or output-path selection:
 
-1. Read this skill first, then apply authority order: current user instruction → live code and fresh command output → `AGENTS.md` → `Agents/` → `docs/`; use `plans/README.md` for active coordination after those sources.
+1. Read this skill first, then apply authority order:
+   1. current user instruction
+   2. live code and fresh command output
+   3. `AGENTS.md`
+   4. `Agents/`
+   5. `docs/`
+   Use `plans/README.md` for active coordination after those sources.
 2. Restate the outcome with an action verb and named domain/Product Surface; define specialized terms.
 3. Select exact first evidence locations with a reason for each.
 4. Choose a D01–D22 Repository Domain Index card in `./agents-work/oando-repository-guide/README.md`, using D22 for an unfamiliar area.
@@ -124,7 +130,7 @@ Artifact Class / selected Workstream or Purpose Subfolder / filename pattern:
 Owning source or script / authored or generated:
 Rejected placements:
 Locked Path Gate state:
-Site Write Gate state, when relevant:
+Site Write Gate state: [when relevant]
 Validation State:
 Unavoidable Owner Decisions:
 Next action:
@@ -184,7 +190,7 @@ Every observed check records exact command, repository-root cwd, scope, authoriz
 
 ### Plain-Language Response Contract
 
-Every task-start, progress, handoff, pause, and completion response uses this order: Outcome; Known; Unverified; Exact First Evidence Locations; Selected Skills; Rejected Skills and Reasons; Numbered Next Actions; Likely Files or Areas; Risk; Allowed Checks; Protected or Pending Checks; Exact Completion Proof; Unavoidable Owner Decisions. Explain specialized terms before decisions. For Output-Producing Tasks include Artifact Class, selected subfolder, filename pattern, owner/source, authored/generated state, rejected placements, observed placement, and Site Write Gate state.
+Explain specialized terms before decisions. Every task-start, progress, handoff, pause, and completion response uses this order: Outcome; Known; Unverified; Exact First Evidence Locations; Selected Skills; Rejected Skills and Reasons; Numbered Next Actions; Likely Files or Areas; Risk; Allowed Checks; Protected or Pending Checks; Exact Completion Proof; Unavoidable Owner Decisions. For Output-Producing Tasks include Artifact Class, selected subfolder, filename pattern, owner/source, authored/generated state, rejected placements, observed placement, and Site Write Gate state.
 
 ### Standing Multi-Agent Mode and compliance
 
@@ -208,7 +214,7 @@ Expected handoff owner: [named Agent or Repository Owner].
 
 Agents do only assigned work, preserve unrelated changes, do not infer permission from proximity or helpfulness, and stop on conflict, missing authorization, ambiguous ownership, contradictory evidence, hidden constraint, or scope expansion. A runtime roster or executor is not implied by this prose declaration.
 
-Every handoff contains Objective; Role and Next Owner; Scope; Paths Read and Paths Changed; Route Record; Evidence; Decisions; Coverage Gaps; Validation Command; Repository Root; Authorization State; Hook Decision; Exit Status; Validation Limitation; Blockers; Next Action; and Status. Unavailable values are `not-observed`. The coordinator rejects unreconciled scope drift and does not promote missing evidence to `verified` or `complete`.
+Every handoff contains Objective; Role and Next Owner; Scope; Paths Read and Paths Changed; Route Record; Evidence; Decisions; Coverage Gaps; Validation Command; Repository Root; Authorization State; Hook Decision; Exit Status; Validation Limitation; Blockers; Next Action; and Status. An unavailable value is `not-observed`, not omitted. The coordinator rejects unreconciled scope drift and does not promote missing evidence to `verified` or `complete`.
 
 ### Separate Approval Work and completion
 
