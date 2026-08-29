@@ -1,10 +1,6 @@
 import { cookies } from "next/headers";
 import { getRequestConfig } from "next-intl/server";
-import { defaultLocale, locales, type Locale } from "./config";
-
-function isLocale(value: string | undefined): value is Locale {
-  return value !== undefined && (locales as readonly string[]).includes(value);
-}
+import { defaultLocale, isLocale, type Locale } from "./config";
 
 async function loadMessages(locale: Locale) {
   if (locale === "hi") {

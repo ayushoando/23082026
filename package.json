@@ -50,7 +50,6 @@
     "docs:check": "node scripts/general/generate-docs.mjs --check",
     "docs:sync": "node scripts/general/generate-docs.mjs --all",
     "lint:ui": "node scripts/general/lint-ui-contract.mjs",
-    "typecheck:scripts": "pnpm exec tsc -p scripts/tsconfig.json --noEmit",
     "failures:sync": "node scripts/export-pending-failures.mjs",
     "pretest": "pnpm run test:clean",
     "test": "node scripts/run-full-vitest.mjs",

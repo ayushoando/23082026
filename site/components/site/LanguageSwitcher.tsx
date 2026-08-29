@@ -1,27 +1,28 @@
 "use client";
 
 import { useEffect, useId, useState } from "react";
+import { isLocale, type Locale } from "@/i18n/config";
 import { cn } from "@/lib/utils";
 
-const LANGUAGE_NAMES: Record<string, string> = {
+const LANGUAGE_NAMES: Record<Locale, string> = {
   en: "English",
   hi: "हिन्दी",
 };
 
 /** Full labels for footer / mobile drawer. */
-const LANGUAGE_NAMES_FULL: Record<string, string> = {
+const LANGUAGE_NAMES_FULL: Record<Locale, string> = {
   en: "English",
   hi: "हिन्दी (Hindi)",
 };
 
-export type LanguageSwitcherProps = {
+export interface LanguageSwitcherProps {
   /**
    * `header` — compact select for site chrome (desktop + drawer).
    * `footer` — labeled block for footer (default).
    */
   variant?: "header" | "footer";
   className?: string;
-};
+}
 
 export function LanguageSwitcher({
   variant = "footer",
@@ -29,13 +30,14 @@ export function LanguageSwitcher({
 }: LanguageSwitcherProps) {
   const reactId = useId();
   const selectId = `locale-switcher-${variant}-${reactId}`;
-  const [currentLocale, setCurrentLocale] = useState("en");
+  const [currentLocale, setCurrentLocale] = useState<Locale>("en");
 
   useEffect(() => {
     function syncFromCookie() {
       const match = document.cookie.match(/(^|;)\s*NEXT_LOCALE\s*=\s*([^;]+)/);
-      if (match) {
-        setCurrentLocale(match[2]);
+      const cookieLocale = match?.[2];
+      if (isLocale(cookieLocale)) {
+        setCurrentLocale(cookieLocale);
       }
     }
     syncFromCookie();
@@ -43,6 +45,9 @@ export function LanguageSwitcher({
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const nextLocale = e.target.value;
+    if (!isLocale(nextLocale)) {
+      return;
+    }
     // Secure flag on HTTPS (SITE-S20 / 8.3) — cookie never sent over plain http.
     const secure = window.location.protocol === "https:" ? "; Secure" : "";
     document.cookie = `NEXT_LOCALE=${nextLocale}; path=/; max-age=31536000; SameSite=Lax${secure}`;

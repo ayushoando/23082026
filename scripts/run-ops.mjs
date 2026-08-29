@@ -278,19 +278,13 @@ const COMMANDS = {
   "lint:type-aware": () => runGeneral("run-oxlint.mjs", ["--type-aware"]),
   "lint:ui": () => runGeneral("lint-ui-contract.mjs"),
 
-  "typecheck:scripts": () =>
-    run("pnpm", ["exec", "tsc", "-p", "scripts/tsconfig.json", "--noEmit"]),
-
   "verify:db-svg": () => runAsNeeded("verify-db-svg-matrix.mjs"),
 
   "docs:sync": () => runGeneral("generate-docs.mjs", ["--all"]),
   "docs:sync:all": () => runGeneral("generate-docs.mjs", ["--all"]),
   "docs:sync:routes": () => runGeneral("generate-route-index.mjs"),
   "docs:sync:sitemap-csv": () => runTsx("generate-sitemap-csv.ts"),
-  "docs:sync:coverage": () => runGeneral("generate-docs.mjs", ["--coverage"]),
   "docs:check": () => runGeneral("generate-docs.mjs", ["--check"]),
-  "docs:check:coverage": () =>
-    runGeneral("generate-docs.mjs", ["--coverage", "--check"]),
   "docs:check:root-links": () => runGeneral("check-root-markdown-links.mjs"),
 
   "site-ui:matrix": () => runNode("generate-site-ui-route-matrix.mjs"),

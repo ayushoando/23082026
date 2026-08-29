@@ -15,6 +15,7 @@ node scripts/AsNeeded/<name>
 
 | `_scan-circular-imports.mjs` | audit | Static import cycle scan |
 | `audit-css-packages.mjs` | audit | Broken imports / unreferenced CSS |
+| `audit-focss-static-defects.mjs` | audit | Read-only FOCSS custom-property, selector, reduced-motion, and orphan-style audit (`--json` for machine output) |
 | `verify-focss.mjs` | verify | Canonical FOCSS structure, imports, fences, and module graph (`verify:focss`; `--scope=<name>`) |
 | `verify-db-svg-matrix.mjs` | verify | DB/SVG matrix (`verify:db-svg`) |
 

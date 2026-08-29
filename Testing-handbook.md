@@ -19,7 +19,7 @@ Canonical sources: the [process floor](./AGENTS.md), root `package.json`, [activ
 | | `pnpm run …` |
 |--|-------------|
 | Layout / docs | `check:layout` · `check:docs-all` · `docs:check:root-links` |
-| Types | `typecheck` · `typecheck:tests` · `typecheck:scripts` (currently configured; no result inferred) |
+| Types | `typecheck` · `typecheck:tests` |
 | Tests / gates | `test` (**2 lanes**) · `p0:unit` · `test:priority-7` · `test:priority-8` · `gate` · `release:gate` |
 | Coverage | `test:coverage` · `test:coverage:site` · `test:coverage:admin` · `ops test:coverage:inventory` |
 | E2E / a11y | `test:planner-catalog` · `test:a11y` |

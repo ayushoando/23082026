@@ -33,7 +33,7 @@ Canvas fidelity, catalog honesty, and clear handoff matter equally.
 | `site/hooks`, `site/store`, `site/server` | Forked app hooks/stores/disk servers under `Planner/` / `Studio/` |
 | `site/platform/` | DB, Supabase, types, route contracts |
 | `site/focss/` | Shared CSS tree (`@focss/*`) — not a package |
-| `site/i18n/` | next-intl home; message files for `en` and `hi`; runtime currently loads English (`request.ts`) |
+| `site/i18n/` | next-intl home; message files for `en` and `hi`; `request.ts` selects the validated `NEXT_LOCALE` cookie and defaults to English |
 | `site/platform/{shared,Studio,Planner}/data/` | Furniture library, uploads, projects, exports — **dev disk mode only** |
 | `tests/` | Unit (name-mirror), integration, browser |
 | `site/inventory/descriptors/` | Descriptor JSON / local release records — **dev disk mode only** |
@@ -133,7 +133,7 @@ Shared rules: semantic tokens; distinct loading/empty/error states; no silent fa
 | Legacy `/planner` app routes | **absent** — no longer tracked in `Failures.md`; re-verify residual `@/features/planner/*` imports if a build error appears |
 | Product Studio admin (`/admin/product-studio`) | **absent** |
 | Edge | **`site/proxy.ts` present** (Next 16); no `middleware.ts` |
-| i18n | **`site/i18n/` present** — message files + English runtime (see stack §7 / plan 14); plugin `./i18n/request.ts`; root shim for monorepo `process.cwd()` |
+| i18n | **`site/i18n/` present** — `en`/`hi` messages; validated `NEXT_LOCALE` runtime with English fallback (see stack §7); plugin `./i18n/request.ts`; root shim for monorepo `process.cwd()` |
 
 Blockers: [`Failures.md`](../../Failures.md). Stack: [`stack.md`](./stack.md).
 

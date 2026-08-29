@@ -109,7 +109,6 @@ scripts/syncClientLogosFromR2.ts,root,entrypoint,Synchronize client logos from R
 scripts/syncVendorCdnAssets.mjs,root,entrypoint,Synchronize vendor CDN assets,Ops assets:cdn:sync,present
 scripts/translate-deferred-marketing-flat.mjs,root,entrypoint,Translate deferred marketing locales,,present
 scripts/trim-catalog.mjs,root,entrypoint,Trim catalog data,,present
-scripts/tsconfig.json,root,config,TypeScript configuration for scripts,typecheck:scripts,present
 scripts/tsconfig.tsbuildinfo,root,support,TypeScript build metadata,,untracked
 scripts/ui-polish-pass1-audit.mjs,root,audit,Audit first pass UI polish,,present
 scripts/uploadCdnAssets.ts,root,entrypoint,Upload CDN assets,Ops assets:cdn upload routes,present
@@ -173,11 +172,6 @@ scripts/AsNeeded/_audit-stale-scripts.mjs,AsNeeded,audit,Audit stale scripts,,pr
 scripts/AsNeeded/_scan-circular-imports.mjs,AsNeeded,analysis,Scan circular imports,,present
 scripts/AsNeeded/audit-css-packages.mjs,AsNeeded,audit,Audit CSS packages,,present
 scripts/AsNeeded/audit-focss-static-defects.mjs,AsNeeded,audit,Audit static FOCSS defects,,present
-scripts/AsNeeded/compare-focss-trees.mjs,AsNeeded,analysis,Compare FOCSS trees,,present
-scripts/AsNeeded/count-focss-hardcodes.mjs,AsNeeded,analysis,Count hard coded FOCSS values,,present
-scripts/AsNeeded/finalize-surface-classify.mjs,AsNeeded,entrypoint,Finalize surface classification,,present
-scripts/AsNeeded/reapply-feature-flags-grants.mjs,AsNeeded,entrypoint,Reapply feature flag grants,,present
-scripts/AsNeeded/smoke-site-pages.mjs,AsNeeded,check,Smoke site pages,,present
 scripts/AsNeeded/verify-db-svg-matrix.mjs,AsNeeded,check,Verify database SVG matrix,ops verify:db-svg,present
 scripts/AsNeeded/verify-focss.mjs,AsNeeded,check,Verify FOCSS structure imports fences and module graph,verify:focss,present
 scripts/codemods/.gitkeep,codemods,support,Directory retention placeholder,,present

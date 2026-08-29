@@ -15,11 +15,11 @@ Implement the audit as an evidence-driven TypeScript workstream. Begin with live
     - Discover `site/app/ooplanner/**`, `site/app/api/Planner/**`, all Planner feature/component/lib/hook/store/server/platform/FOCSS roots, reachable shared support, and relevant tests/configuration without freezing the design baseline as a file list.
     - Assign `wired`, `present-but-unverified`, `demo/local-only`, `generated`, `legacy`, `unwired/absent`, or `unreachable` with source evidence and identify route/import documentation conflicts in favor of live source.
     - _Requirements: 1.1, 1.2, 1.4, 1.5_
-  - [~] 1.3 Implement complete workflow tracing and generate the first evidence matrix
+  - [x] 1.3 Implement complete workflow tracing and generate the first evidence matrix
     - Trace entry/auth, list, create, load, edit, save, delete, catalog browse/select/upload where reachable, handoff, sketch-to-plan, offline/reconnect, conflict recovery, and unsaved destructive navigation from route entry through UI/state/API/persistence to user-visible outcome.
     - Link every trace to applicable viewport classes, input methods, required states, security controls, persistence modes, requirements, findings, and verification methods; reject orphan inventory rows and incomplete traces.
     - _Requirements: 1.3, 1.6, 5.1, 6.1, 7.1, 10.1-10.5, 19.3_
-  - [~] 1.4 Implement the finding registry and monotonic lifecycle enforcement
+  - [-] 1.4 Implement the finding registry and monotonic lifecycle enforcement
     - Create exactly one compliant or defect finding per audited area, require adjacent-impact expansion before closure, and enforce terminal classifications and evidence/pending/blocker fields.
     - Preserve unrelated paths in remediation records and map each finding to the narrowest applicable verification.
     - _Requirements: 2.1, 2.3-2.6, 18.1, 19.1, 19.2, 19.7, 19.8_

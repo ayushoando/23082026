@@ -127,6 +127,8 @@ function makeDataset(): PlannerAuditDataset {
           persistenceModes: ["disk", "supabase"],
         },
         requirementRefs: [...TASK_REQUIREMENTS],
+        findingIds: ["finding-coverage"],
+        verificationRefs: ["validation-static"],
         evidenceRefs: ["evidence-source"],
       },
     ],

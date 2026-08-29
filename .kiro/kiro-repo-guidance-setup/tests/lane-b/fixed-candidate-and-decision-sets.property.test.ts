@@ -20,6 +20,10 @@ const EXPECTED_SKILL_CANDIDATES = [
   "fork-boundaries",
   "focss-css",
   "db-migrations",
+  "ai-retrieval",
+  "planner-studio",
+  "powers-skills-model",
+  "oando-master",
 ] as const;
 
 const REQUIRED_SEPARATE_CAPABILITIES = [

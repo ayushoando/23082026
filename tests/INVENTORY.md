@@ -1,25 +1,67 @@
 # Test inventory
 
-Auto-generated file list and counts. Folder rules: `tests/CONTENTS.md`.
+Generated executable-test and support-file inventory. Layout rules: `tests/CONTENTS.md`.
 
-*Updated: 2026-08-22 — run `pnpm run docs:sync` to refresh.*
+*Updated: 2026-08-29 — regenerate through the repository docs workflow.*
 
 ## Counts
 
 | Kind | Count |
-|------|-------|
-| Vitest (active) | 648 |
-| Vitest (excluded in config) | 0 |
-| Playwright | 100 |
-| Helpers | 23 |
-| **Total files** | **771** |
+|---|---:|
+| Vitest executable files | 706 |
+| Playwright executable specs | 80 |
+| Helpers | 37 |
+| Fixtures | 13 |
+| Snapshots | 12 |
+| Other assets | 10 |
+| **Total files** | **858** |
 
-JSON: `results/test-inventory.json` · Migration: `results/test-migration-map.json` · Coverage: `results/coverage-summary.json` (`pnpm run docs:sync:coverage`)
+## vitest
 
-## Files by category
-
-### vitest
-
+- `.kiro/kiro-repo-guidance-setup/tests/integration/enablement.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/integration/integration-gate.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/integration/local-surface-e2e.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/integration/reviewer-contract.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-a/authority-resolution-preserves-evidence.property.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-a/coverage.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-a/discovery.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-a/examples-and-edge-cases.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-a/inventory-and-record-schemas-are-total.property.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-a/inventory.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-a/provenance.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-b/approval-boundaries.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-b/compatibility.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-b/evidence-isolated-by-surface-and-freshness.property.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-b/examples-and-edge-cases.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-b/fixed-candidate-and-decision-sets.property.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-b/policy.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-b/scope-and-permission-records-do-not-broaden-access.property.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-b/scope-precedence.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-c/approved-hooks-satisfy-schema-and-safety-bounds.property.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-c/capabilities.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-c/continuity-evidence-does-not-cross-data-boundaries.property.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-c/continuity.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-c/examples-and-edge-cases.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-c/extension-routing-and-execution-plans-are-bounded.property.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-c/hooks.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-c/incompatible-crew-behavior-is-blocked.property.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-c/skill-authority-unique-and-prerequisites-explicit.property.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-c/skills.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-d/contract-freeze.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-d/contracts-validation.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-d/controlled-rollback.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-d/enablement-property6.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-d/handover-property14.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-d/handover.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-d/owner-decisions-property13.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-d/policy-property15.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-d/projections-review.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-d/reservations-wave-guard.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-d/reviewers.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-d/rollback.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-d/validation.test.ts`
+- `.kiro/kiro-repo-guidance-setup/tests/lane-d/wave-property16.test.ts`
+- `.kiro/specs/oando-master/tests/oando-master-properties.test.ts`
 - `tests/integration/app/sitemap-catalog-emit.test.ts`
 - `tests/integration/components/pwa/ServiceWorkerRegister.test.tsx`
 - `tests/integration/features/ops/CustomerQueriesOpsPageView.test.tsx`
@@ -176,53 +218,9 @@ JSON: `results/test-inventory.json` · Migration: `results/test-migration-map.js
 - `tests/unit/app/api/Planner/sketch-to-plan/route.test.ts`
 - `tests/unit/app/api/plans/[id]/route.test.ts`
 - `tests/unit/app/api/plans/route.test.ts`
-- `tests/unit/app/api/products/filter/route.test.ts`
-- `tests/unit/app/api/products/route.test.ts`
-- `tests/unit/app/api/Studio/furniture/[id]/publish/route.test.ts`
-- `tests/unit/app/api/Studio/furniture/[id]/route.test.ts`
-- `tests/unit/app/api/Studio/furniture/route.test.ts`
-- `tests/unit/app/api/theme/route.test.ts`
-- `tests/unit/app/api/tracking/route.test.ts`
-- `tests/unit/app/css/site/components/missing-components.test.ts`
-- `tests/unit/app/global-error.test.tsx`
-- `tests/unit/app/layout.test.tsx`
-- `tests/unit/app/not-found.test.tsx`
-- `tests/unit/app/offline/layout.test.tsx`
-- `tests/unit/app/offline/page.test.tsx`
-- `tests/unit/app/offline/ReloadButton.test.tsx`
-- `tests/unit/app/plannerRootViewportLock.test.ts`
-- `tests/unit/app/robots.test.ts`
-- `tests/unit/app/sitemap.test.ts`
-- `tests/unit/components/analytics/KpiIntegrityMonitor.test.tsx`
-- `tests/unit/components/career/CareerPageView.test.tsx`
-- `tests/unit/components/career/JobCard.test.tsx`
-- `tests/unit/components/ClientBadge.test.tsx`
-- `tests/unit/components/contact/ContactPageView.test.tsx`
-- `tests/unit/components/contact/CustomerQueryForm.test.tsx`
-- `tests/unit/components/home/CategoryGrid.test.tsx`
-- `tests/unit/components/home/CollectionsSectionHeading.test.tsx`
-- `tests/unit/components/home/Hero.test.tsx`
-- `tests/unit/components/home/HomepageHero.test.tsx`
-- `tests/unit/components/home/InteractiveTools.test.tsx`
-- `tests/unit/components/home/KpiCounter.test.tsx`
-- `tests/unit/components/home/layout/HomeCatalogLayout.test.tsx`
-- `tests/unit/components/home/layout/HomeMarketingLayout.test.tsx`
-- `tests/unit/components/home/layout/HomeSection.test.tsx`
-- `tests/unit/components/home/layout/HomeSectionInner.test.tsx`
-- `tests/unit/components/home/layout/index.test.ts`
-- `tests/unit/components/home/layout/SiteWorkspaceShell.test.tsx`
-- `tests/unit/components/home/marketingSurfaces.test.tsx`
-- `tests/unit/components/home/ShowcaseCarousel.test.tsx`
-- `tests/unit/components/home/WhyChooseUs.test.tsx`
-- `tests/unit/components/legal/QuerySectionScroll.test.tsx`
-- `tests/unit/components/Planner/PlannerProjectsList.test.tsx`
-- `tests/unit/components/ProductGallery.test.tsx`
-- `tests/unit/components/products/CatalogMobile.test.tsx`
-- `tests/unit/components/products/CompareShortlistHydrator.test.tsx`
-- `tests/unit/components/products/compareSurfaces.test.tsx`
-- … +448 more
+- … +506 more
 
-### playwright
+## playwright
 
 - `tests/e2e/accessibility.spec.ts`
 - `tests/e2e/admin-csrf-matrix-af14.spec.ts`
@@ -241,19 +239,6 @@ JSON: `results/test-inventory.json` · Migration: `results/test-migration-map.js
 - `tests/e2e/chrome-fab-viewport.spec.ts`
 - `tests/e2e/dashboard-verification.spec.ts`
 - `tests/e2e/design-kit-visual-regression.spec.ts`
-- `tests/e2e/design-kit-visual-regression.spec.ts-snapshots/design-kit-buttons-density.png`
-- `tests/e2e/design-kit-visual-regression.spec.ts-snapshots/design-kit-full.png`
-- `tests/e2e/design-kit-visual-regression.spec.ts-snapshots/design-kit-materials.png`
-- `tests/e2e/design-kit-visual-regression.spec.ts-snapshots/design-kit-site-materials.png`
-- `tests/e2e/design-kit-visual-regression.spec.ts-snapshots/design-kit-site-surfaces.png`
-- `tests/e2e/fixtures/sketch-1x1.png`
-- `tests/e2e/globalSetup.mjs`
-- `tests/e2e/globalTeardown.mjs`
-- `tests/e2e/guestProjectSetup.ts`
-- `tests/e2e/helpers/isolatedAdminSvgPublish.ts`
-- `tests/e2e/helpers/isolatedAdminSvgPublishWorker.ts`
-- `tests/e2e/helpers/planSymbolPngFixture.ts`
-- `tests/e2e/helpers/warmDevRoute.ts`
 - `tests/e2e/home-hero-layout.spec.ts`
 - `tests/e2e/marketing-desktop-layout.spec.ts`
 - `tests/e2e/marketing-mobile-scroll.spec.ts`
@@ -303,7 +288,6 @@ JSON: `results/test-inventory.json` · Migration: `results/test-migration-map.js
 - `tests/e2e/planner-responsiveness.spec.ts`
 - `tests/e2e/planner-scroll-fix.spec.ts`
 - `tests/e2e/planner-shell-100dvh.spec.ts`
-- `tests/e2e/plannerCanvasHelpers.ts`
 - `tests/e2e/showrooms-console-clean.spec.ts`
 - `tests/e2e/site-a11y-smoke.spec.ts`
 - `tests/e2e/site-assistant-shell.spec.ts`
@@ -311,23 +295,26 @@ JSON: `results/test-inventory.json` · Migration: `results/test-migration-map.js
 - `tests/e2e/site-locale-switch.spec.ts`
 - `tests/e2e/site-navigation-screenshots.spec.ts`
 - `tests/e2e/site-navigation-smoke.spec.ts`
-- `tests/e2e/site-ui-helpers.ts`
 - `tests/e2e/site-visual-regression.spec.ts`
-- `tests/e2e/site-visual-regression.spec.ts-snapshots/wave1-about.png`
-- `tests/e2e/site-visual-regression.spec.ts-snapshots/wave1-contact.png`
-- `tests/e2e/site-visual-regression.spec.ts-snapshots/wave1-homepage.png`
-- `tests/e2e/site-visual-regression.spec.ts-snapshots/wave2-products.png`
-- `tests/e2e/site-visual-regression.spec.ts-snapshots/wave2-quote-cart.png`
-- `tests/e2e/site-visual-regression.spec.ts-snapshots/wave2-solutions.png`
 - `tests/e2e/sketch-to-plan-pipeline.spec.ts`
 - `tests/e2e/studio-phone-chrome.spec.ts`
 - `tests/e2e/touch-targets.spec.ts`
 - `tests/e2e/viewport-matrix-audit.spec.ts`
+- `tests/e2e/visual-audit-full-site.spec.ts`
 - `tests/e2e/zz-direct-nav-check.spec.ts`
 
-### helper
+## helper
 
-- `tests/fixtures/plannerTestUuids.ts`
+- `tests/e2e/globalSetup.mjs`
+- `tests/e2e/globalTeardown.mjs`
+- `tests/e2e/guestProjectSetup.ts`
+- `tests/e2e/helpers/isolatedAdminSvgPublish.ts`
+- `tests/e2e/helpers/isolatedAdminSvgPublishWorker.ts`
+- `tests/e2e/helpers/planSymbolPngFixture.ts`
+- `tests/e2e/helpers/warmDevRoute.ts`
+- `tests/e2e/plannerCanvasHelpers.ts`
+- `tests/e2e/site-ui-helpers.ts`
+- `tests/e2e/visual-audit-pages.ts`
 - `tests/helpers/adminCatalogIsolation.ts`
 - `tests/helpers/globalSetup.ts`
 - `tests/helpers/mockNextImage.tsx`
@@ -340,6 +327,11 @@ JSON: `results/test-inventory.json` · Migration: `results/test-migration-map.js
 - `tests/playwright-inspect.ts`
 - `tests/setup.node.ts`
 - `tests/setup.ts`
+- `tests/support/accessibility/assertA11y.ts`
+- `tests/support/page-objects/WorkspacePage.ts`
+- `tests/support/ui-states/assertNoOverflow.ts`
+- `tests/support/ui-states/uiStateMatrix.ts`
+- `tests/support/visual/visualBaseline.ts`
 - `tests/tech-docs-generator/global-setup.mjs`
 - `tests/tech-docs-generator/helpers/shared-repo-model.mjs`
 - `tests/tech-docs-generator/setup.ts`
@@ -351,10 +343,47 @@ JSON: `results/test-inventory.json` · Migration: `results/test-migration-map.js
 - `tests/vitest.site.config.ts`
 - `tests/vitest.tech-docs.config.ts`
 
-## See also
+## fixture
 
-- `CONTENTS.md`
-- `../README.md`
+- `tests/fixtures/planner-3d-parity.json`
+- `tests/fixtures/planner-guest-wall.json`
+- `tests/fixtures/plannerTestUuids.ts`
+- `tests/fixtures/svg-editor-v2/full-safe.svg`
+- `tests/fixtures/svg-editor-v2/hostile/css-url.svg`
+- `tests/fixtures/svg-editor-v2/hostile/data-url.svg`
+- `tests/fixtures/svg-editor-v2/hostile/duplicate-id.svg`
+- `tests/fixtures/svg-editor-v2/hostile/entity.svg`
+- `tests/fixtures/svg-editor-v2/hostile/event-handler.svg`
+- `tests/fixtures/svg-editor-v2/hostile/script.svg`
+- `tests/fixtures/svg-editor-v2/hostile/unresolved-reference.svg`
+- `tests/fixtures/svg-editor-v2/minimal-safe.svg`
+- `tests/support/fixtures/viewportTiers.ts`
 
----
-*Generated by `scripts/general/generate-docs.mjs` / `generate-test-inventory.mjs` — do not hand-edit; re-run `pnpm run docs:sync`.*
+## snapshot
+
+- `tests/e2e/design-kit-visual-regression.spec.ts-snapshots/design-kit-buttons-density.png`
+- `tests/e2e/design-kit-visual-regression.spec.ts-snapshots/design-kit-full.png`
+- `tests/e2e/design-kit-visual-regression.spec.ts-snapshots/design-kit-materials.png`
+- `tests/e2e/design-kit-visual-regression.spec.ts-snapshots/design-kit-site-materials.png`
+- `tests/e2e/design-kit-visual-regression.spec.ts-snapshots/design-kit-site-surfaces.png`
+- `tests/e2e/fixtures/sketch-1x1.png`
+- `tests/e2e/site-visual-regression.spec.ts-snapshots/wave1-about.png`
+- `tests/e2e/site-visual-regression.spec.ts-snapshots/wave1-contact.png`
+- `tests/e2e/site-visual-regression.spec.ts-snapshots/wave1-homepage.png`
+- `tests/e2e/site-visual-regression.spec.ts-snapshots/wave2-products.png`
+- `tests/e2e/site-visual-regression.spec.ts-snapshots/wave2-quote-cart.png`
+- `tests/e2e/site-visual-regression.spec.ts-snapshots/wave2-solutions.png`
+
+## asset
+
+- `tests/CONTENTS.md`
+- `tests/INVENTORY.md`
+- `tests/manifests/coverage-exceptions.json`
+- `tests/manifests/skip-exceptions.json`
+- `tests/manifests/source-test-ownership.json`
+- `tests/manifests/visual-baselines.json`
+- `tests/package.json`
+- `tests/tech-docs-generator/tsconfig.json`
+- `tests/tsconfig.json`
+- `tests/tsconfig.tsbuildinfo`
+

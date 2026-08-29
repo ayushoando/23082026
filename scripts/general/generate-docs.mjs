@@ -1,11 +1,9 @@
 /**
  * One generator — one pass. No separate "check" that regenerates again.
  *
- * pnpm run docs:sync              test inventory + JSON (fast; after test changes)
- * pnpm run docs:sync:all          above + API route inventory
- * pnpm run docs:sync:coverage     sync + vitest coverage summary
- * pnpm run docs:check             sync + fail if tracked JSON/INVENTORY stale
- * pnpm run docs:check:coverage    coverage sync + fail if stale
+ * pnpm run docs:sync      test inventory + JSON (fast; after test changes)
+ * pnpm run docs:sync:all  above + API route inventory
+ * pnpm run docs:check     sync + fail if tracked JSON/INVENTORY stale
  */
 import { spawnSync } from "node:child_process";
 import path from "node:path";
@@ -16,18 +14,14 @@ const protectedDir = path.dirname(fileURLToPath(import.meta.url));
 const scriptsDir = path.resolve(protectedDir, "..");
 const argv = process.argv.slice(2);
 const withAll = argv.includes("--all");
-const withCoverage = argv.includes("--coverage");
 const withCheck = argv.includes("--check");
 
 const TRACKED = ["tests/INVENTORY.md"];
 
-/** Relative to scripts/ (siblings in general/ stay gate-critical; coverage stays at scripts/). */
+/** Relative to scripts/; generator siblings in general/ stay gate-critical. */
 const steps = [
   ...(withAll ? ["general/generate-route-index.mjs"] : []),
   "general/generate-test-inventory.mjs",
-  ...(withCoverage
-    ? ["generate-coverage-summary.mjs", "analyze-coverage-report.mjs"]
-    : []),
 ];
 
 for (const name of steps) {

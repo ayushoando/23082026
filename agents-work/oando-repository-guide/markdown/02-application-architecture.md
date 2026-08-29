@@ -46,7 +46,7 @@ This page covers every meaningful layer of the main Next.js application under `.
 | Path | Role / rule |
 |---|---|
 | `./site/focss/` | Tailwind v4 + FOCSS CSS source: `base`, `site`, `admin`, `planner`, and `studio`. No cross-zone imports. |
-| `./site/i18n/` | next-intl config, routing, request, `en`/`hi` messages, parity/pending translations. Runtime currently loads English according to static architecture evidence. |
+| `./site/i18n/` | next-intl config, routing, request, `en`/`hi` messages, parity/pending translations. Runtime validates `NEXT_LOCALE`, defaults invalid or missing values to `en`, and loads the selected bundle. |
 | `./site/inventory/descriptors/` | Local dev-mode descriptor/release records; production equivalent is Admin Supabase. |
 | `./site/public/` | Deployable public assets, logos, discovery files, and manifests; a legacy PNG catalog mirror is not release authority. |
 | `./site/data/` | Legacy data area. Do not write `./site/data/storage/`. |

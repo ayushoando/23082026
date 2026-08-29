@@ -67,8 +67,11 @@ function createFixture(overrides: { readonly wrongName?: string; readonly extra?
     ".github/instructions/boundaries.instructions.md",
     ".github/instructions/focss.instructions.md",
     ".github/instructions/migrations.instructions.md",
+    ".kiro/settings/mcp.json",
+    "Agents/01-standard.md",
     "Agents/02-testing.md",
     "Agents/07-css.md",
+    "agents-work/oando-repository-guide/README.md",
     "docs/architecture/layout.md",
     "docs/architecture/stack.md",
     "docs/architecture/routes.md",
@@ -76,18 +79,30 @@ function createFixture(overrides: { readonly wrongName?: string; readonly extra?
     "docs/architecture/css.md",
     "docs/database/schema.md",
     "docs/database/ops.md",
+    "plans/README.md",
     "config/build/postcss.config.mjs",
     "scripts/graph-impact.mjs",
     "scripts/scan-boundaries.mjs",
+    "site/app/api/ai-advisor/route.ts",
+    "site/components/Planner",
+    "site/components/Studio",
+    "site/lib/ai/mastra",
     "site/platform/supabase",
     "tests/vitest.config.ts",
     "tests/vitest.tech-docs.config.ts",
   ]);
   canonicalPaths.add(STEERING_PATH);
 
+  const directoryPaths = new Set([
+    "site/components/Planner",
+    "site/components/Studio",
+    "site/lib/ai/mastra",
+    "site/platform/supabase",
+  ]);
+
   for (const path of canonicalPaths) {
     const absolutePath = join(root, path);
-    if (path === "site/platform/supabase") {
+    if (directoryPaths.has(path)) {
       mkdirSync(absolutePath, { recursive: true });
       continue;
     }
@@ -98,10 +113,14 @@ function createFixture(overrides: { readonly wrongName?: string; readonly extra?
         JSON.stringify(
           {
             scripts: {
+              "check:layout": "node scripts/check-layout.mjs",
               "docs:sync": "node scripts/docs-sync.mjs",
               "gate:fast": "node scripts/gate-fast.mjs",
               gate: "node scripts/gate.mjs",
+              lint: "node scripts/lint.mjs",
+              "p0:unit": "node scripts/p0-unit.mjs",
               "scan:boundaries": "node scripts/scan-boundaries.mjs",
+              typecheck: "node scripts/typecheck.mjs",
               "verify:focss": "node scripts/verify-focss.mjs",
               "lint:ui:strict": "node scripts/lint-ui.mjs",
               "check:style-tokens": "node scripts/style-tokens.mjs",
@@ -116,6 +135,8 @@ function createFixture(overrides: { readonly wrongName?: string; readonly extra?
         ),
         "utf8",
       );
+    } else if (path === ".kiro/settings/mcp.json") {
+      writeFileSync(absolutePath, '{"mcpServers":{}}\n', "utf8");
     } else if (path === STEERING_PATH) {
       writeFileSync(absolutePath, "---\ninclusion: always\n---\nrelationship fixture\n", "utf8");
     } else {
@@ -143,12 +164,12 @@ afterEach(() => {
 });
 
 describe("SkillEvaluator", () => {
-  it("validates the six live manifests, designates repo-map, and resolves all overlaps without claiming activation", () => {
+  it("validates the ten live manifests, designates repo-map, and resolves all overlaps without claiming activation", () => {
     const root = createFixture();
     const result = evaluateSkills({ repositoryRoot: root });
 
-    expect(result.status).toBe("partial");
-    expect(result.output?.skills).toHaveLength(6);
+    expect(result.status, result.blockers.join("\n")).toBe("partial");
+    expect(result.output?.skills).toHaveLength(INITIAL_SKILL_CANDIDATES.length);
     expect(result.output?.exactCandidateSet).toEqual(INITIAL_SKILL_CANDIDATES);
     expect(result.output?.primaryRepositoryGuidanceSkill).toBe(PRIMARY_REPOSITORY_GUIDANCE_SKILL);
     expect(result.output?.skills.filter((skill) => skill.isPrimaryRepositoryGuidanceSkill)).toHaveLength(1);
@@ -161,7 +182,9 @@ describe("SkillEvaluator", () => {
     expect(result.output?.skills.every((skill) => skill.activationScope.startsWith("unverified:"))).toBe(true);
 
     const resolutions = result.output?.overlapResolutions ?? [];
-    expect(resolutions.length).toBeGreaterThanOrEqual(11);
+    expect(resolutions.length).toBeGreaterThanOrEqual(
+      INITIAL_SKILL_CANDIDATES.length,
+    );
     expect(resolutions.every((resolution) => ["merge", "delegate", "retire", "reject"].includes(resolution.resolution))).toBe(
       true,
     );
@@ -175,7 +198,9 @@ describe("SkillEvaluator", () => {
         .filter((resolution) => resolution.sourcePath.includes("steering/") && !resolution.targetPath.endsWith("repo-map/SKILL.md"))
         .every((resolution) => resolution.authoritativePath === resolution.targetPath),
     ).toBe(true);
-    expect(result.output?.steering).toHaveLength(11);
+    expect(result.output?.steering.map((record) => record.path)).toEqual([
+      STEERING_PATH,
+    ]);
     expect(result.output?.steering.find((record) => record.path === STEERING_PATH)?.inclusion).toBe("always");
     expect(result.output?.steering.every((record) => record.inventoryStatus === "present and readable")).toBe(true);
   });
@@ -189,7 +214,7 @@ describe("SkillEvaluator", () => {
     expect(result.output?.activationScopeClaimsAllowed).toBe(true);
     expect(result.output?.skills.every((skill) => skill.activationClaimed)).toBe(true);
     expect(result.output?.skills.every((skill) => !skill.activationScope.startsWith("unverified:"))).toBe(true);
-    expect(result.output?.activationEvidenceRefs).toHaveLength(6);
+    expect(result.output?.activationEvidenceRefs).toHaveLength(INITIAL_SKILL_CANDIDATES.length);
     expect(result.output?.skills.every((skill) => skill.validationRunRefs.length === 1)).toBe(true);
   });
 
@@ -206,7 +231,7 @@ describe("SkillEvaluator", () => {
     expect(result.status).toBe("partial");
     expect(result.output?.activationScopeClaimsAllowed).toBe(false);
     expect(result.output?.skills.every((skill) => skill.activationClaimed === false)).toBe(true);
-    expect(result.output?.activationBlockers).toHaveLength(6);
+    expect(result.output?.activationBlockers).toHaveLength(INITIAL_SKILL_CANDIDATES.length);
   });
 
 
@@ -266,9 +291,9 @@ describe("SkillEvaluator", () => {
     const result = evaluateSkills({ repositoryRoot: root });
 
     expect(result.status).toBe("blocked");
-    expect(result.output?.skills).toHaveLength(6);
+    expect(result.output?.skills).toHaveLength(INITIAL_SKILL_CANDIDATES.length);
     expect(result.output?.exactCandidateSet).toEqual(INITIAL_SKILL_CANDIDATES);
-    expect(result.blockers.some((blocker) => blocker.includes("exactly six manifests"))).toBe(true);
+    expect(result.blockers.some((blocker) => blocker.includes(`exactly ${INITIAL_SKILL_CANDIDATES.length} manifests`))).toBe(true);
     expect(result.output?.activationScopeClaimsAllowed).toBe(false);
   });
 });

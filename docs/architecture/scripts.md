@@ -33,7 +33,7 @@ A file's presence or name does not prove that it is safe, current, reachable, or
 - Do not use `npx` or install dependencies in `site/`.
 - A command is `configured` when declared, `observed` only after an authorized completed run, and `pending` when unrun or blocked.
 - Tests, typechecks, gates, builds, browser checks, coverage, and test-like checks require exact current-session authorization and enabled-hook permission.
-- `scripts/tsconfig.json` is currently present and root `package.json` declares `typecheck:scripts`; this is static availability, not a pass result.
+- `scripts/tsconfig.json` is absent, so no `typecheck:scripts` command is declared. Use the product and test TypeScript commands only when separately authorized.
 
 ## Updating this reference
 

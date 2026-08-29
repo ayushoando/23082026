@@ -114,7 +114,7 @@ The named root commands are protected operations: Products uses `pnpm run db:app
 
 | Area | Location / rule |
 |---|---|
-| Marketing i18n | `site/i18n/` with `en`/`hi`; runtime currently loads English |
+| Marketing i18n | `site/i18n/` with `en`/`hi`; runtime validates `NEXT_LOCALE`, defaults to `en`, and loads the selected bundle |
 | Root next-intl shim | `i18n/request.ts` |
 | SEO/discovery | Marketing routes, metadata, robots/sitemap, public `.well-known`/security files |
 | Static public files | `site/public/` |

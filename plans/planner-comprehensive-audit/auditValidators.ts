@@ -325,6 +325,8 @@ function validateWorkflowTraces(
   dataset: PlannerAuditDataset,
   routeIds: ReadonlySet<string>,
   evidenceIds: ReadonlySet<string>,
+  validationIds: ReadonlySet<string>,
+  findingIds: ReadonlySet<string>,
   issues: ValidationIssue[],
 ): void {
   dataset.workflowTraces.forEach((trace, traceIndex) => {
@@ -340,6 +342,24 @@ function validateWorkflowTraces(
     validateRequirementRefs(
       trace.requirementRefs,
       `${path}.requirementRefs`,
+      issues,
+    );
+    requireNonEmptyReferences(trace.findingIds, `${path}.findingIds`, issues);
+    validateReferences(
+      trace.findingIds,
+      findingIds,
+      `${path}.findingIds`,
+      issues,
+    );
+    requireNonEmptyReferences(
+      trace.verificationRefs,
+      `${path}.verificationRefs`,
+      issues,
+    );
+    validateReferences(
+      trace.verificationRefs,
+      validationIds,
+      `${path}.verificationRefs`,
       issues,
     );
     requireNonEmptyReferences(trace.evidenceRefs, `${path}.evidenceRefs`, issues);
@@ -818,7 +838,14 @@ export function validateAuditDataset(
 
   validateEvidenceRecords(dataset.evidence, "evidence", issues);
   validateCoverageItems(dataset.coverageItems, evidenceIds, issues);
-  validateWorkflowTraces(dataset, routeIds, evidenceIds, issues);
+  validateWorkflowTraces(
+    dataset,
+    routeIds,
+    evidenceIds,
+    validationIds,
+    findingIds,
+    issues,
+  );
   dataset.validations.forEach((record, index) =>
     validateValidationRecord(
       record,

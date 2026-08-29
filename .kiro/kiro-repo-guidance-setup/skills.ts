@@ -1,9 +1,9 @@
 /**
  * Lane C SkillEvaluator.
  *
- * This evaluator is deliberately read-only. It inspects the six domain-skill
- * manifests and the mandatory oando-master routing skill separately from the
- * candidate set, then projects typed records. It never activates a skill, changes inclusion scope, invokes
+ * This evaluator is deliberately read-only. It inspects every live repository
+ * skill manifest, while distinguishing the mandatory oando-master router from
+ * domain-specific candidates, then projects typed records. It never activates a skill, changes inclusion scope, invokes
  * a command, or contacts an external service.
  */
 
@@ -28,7 +28,7 @@ import {
 
 export const SKILL_ROOT = ".kiro/skills" as const;
 export const STEERING_ROOT = ".kiro/steering" as const;
-export const STEERING_PATH = `${STEERING_ROOT}/powers-skills-model.md` as const;
+export const STEERING_PATH = `${STEERING_ROOT}/INDEX.md` as const;
 export const PRIMARY_REPOSITORY_GUIDANCE_SKILL = "repo-map" as const satisfies SkillCandidate;
 export const SKILL_OWNER = "repository owner" as const;
 export const OD08_DECISION_ID = "OD-08" as const;
@@ -311,6 +311,123 @@ const SKILL_METADATA: Readonly<Record<SkillCandidate, SkillMetadata>> = {
     activationScope: "on-demand for schema or database migration work; activation only after validation",
     maintenanceRisk: "high",
   },
+  "ai-retrieval": {
+    canonicalSources: [
+      "AGENTS.md",
+      "docs/architecture/stack.md",
+      "docs/architecture/product-map.md",
+      "site/lib/ai/mastra",
+      "site/app/api/ai-advisor/route.ts",
+      "package.json",
+    ],
+    rootCommands: ["pnpm run typecheck", "pnpm run lint"],
+    constraints: [
+      "keep provider credentials and server-only AI modules out of browser code",
+      "treat retrieval and model output as advisory untrusted data",
+      "preserve deterministic catalog-grounded fallback behavior",
+      "do not infer provider reachability, route execution, or retrieval quality from static imports",
+    ],
+    prerequisites: [
+      "AGENTS.md",
+      "docs/architecture/stack.md",
+      "docs/architecture/product-map.md",
+      "site/lib/ai/mastra",
+      "site/app/api/ai-advisor/route.ts",
+      "package.json",
+    ],
+    activationScope: "on-demand for repository AI, provider, retrieval, embedding, or advisor-route work; activation only after validation",
+    maintenanceRisk: "high",
+  },
+  "planner-studio": {
+    canonicalSources: [
+      "AGENTS.md",
+      ".github/instructions/boundaries.instructions.md",
+      "docs/architecture/product-map.md",
+      "scripts/scan-boundaries.mjs",
+      "site/components/Planner",
+      "site/components/Studio",
+    ],
+    rootCommands: [
+      "pnpm run scan:boundaries",
+      "pnpm run typecheck",
+      "pnpm run p0:unit",
+    ],
+    constraints: [
+      "Planner and Studio remain forked and never import one another",
+      "preserve each fork's component, library, hook, store, server, and platform boundaries",
+      "use mode-aware persistence and never dual-write disk plus Supabase",
+      "run fork-boundary validation before completing changes to either fork tree",
+    ],
+    prerequisites: [
+      "AGENTS.md",
+      ".github/instructions/boundaries.instructions.md",
+      "docs/architecture/product-map.md",
+      "scripts/scan-boundaries.mjs",
+      "site/components/Planner",
+      "site/components/Studio",
+      "package.json",
+    ],
+    activationScope: "on-demand for Planner or Studio product and implementation work; activation only after validation",
+    maintenanceRisk: "high",
+  },
+  "powers-skills-model": {
+    canonicalSources: [
+      "AGENTS.md",
+      ".kiro/skills/oando-master/SKILL.md",
+      ".kiro/skills/repo-map/SKILL.md",
+      ".kiro/steering/INDEX.md",
+      ".kiro/settings/mcp.json",
+    ],
+    rootCommands: [],
+    constraints: [
+      "keep Powers, skills, steering, and MCP as distinct capability layers",
+      "treat schema presence, workspace configuration, runtime installation, and activation as separate evidence states",
+      "keep repository Kiro configuration and supporting implementation under the root .kiro directory",
+      "do not invent MCP servers, Power installation, or runtime availability",
+    ],
+    prerequisites: [
+      "AGENTS.md",
+      ".kiro/skills/oando-master/SKILL.md",
+      ".kiro/skills/repo-map/SKILL.md",
+      ".kiro/steering/INDEX.md",
+      ".kiro/settings/mcp.json",
+    ],
+    activationScope: "on-demand for repository-local Power, skill, steering, MCP, or capability-packaging work; activation only after validation",
+    maintenanceRisk: "medium",
+  },
+  "oando-master": {
+    canonicalSources: [
+      "AGENTS.md",
+      "START.md",
+      "Agents/01-standard.md",
+      "docs/architecture/product-map.md",
+      "plans/README.md",
+      "agents-work/oando-repository-guide/README.md",
+      "package.json",
+    ],
+    rootCommands: [
+      "pnpm run check:layout",
+      "pnpm run gate:fast",
+      "pnpm run gate",
+    ],
+    constraints: [
+      "apply the repository authority order before every action",
+      "route every repository task through matching skills and live local evidence",
+      "preserve protected paths, unrelated work, and explicit command authorization",
+      "do not declare completion while an applicable observed blocker remains",
+    ],
+    prerequisites: [
+      "AGENTS.md",
+      "START.md",
+      "Agents/01-standard.md",
+      "docs/architecture/product-map.md",
+      "plans/README.md",
+      "agents-work/oando-repository-guide/README.md",
+      "package.json",
+    ],
+    activationScope: "mandatory first router and completion contract for repository tasks; activation only after validation",
+    maintenanceRisk: "high",
+  },
 } as const satisfies Readonly<Record<SkillCandidate, SkillMetadata>>;
 
 const STEERING_CANONICAL_SOURCES = [
@@ -321,6 +438,10 @@ const STEERING_CANONICAL_SOURCES = [
   ".kiro/skills/fork-boundaries/SKILL.md",
   ".kiro/skills/focss-css/SKILL.md",
   ".kiro/skills/db-migrations/SKILL.md",
+  ".kiro/skills/ai-retrieval/SKILL.md",
+  ".kiro/skills/planner-studio/SKILL.md",
+  ".kiro/skills/powers-skills-model/SKILL.md",
+  ".kiro/skills/oando-master/SKILL.md",
 ] as const satisfies readonly RepositoryPath[];
 
 const STEERING_RULES = [
@@ -646,7 +767,7 @@ function validationMatchesSkill(
   const scoped = run.scope.toLowerCase();
   const exactPath = path.toLowerCase();
   const skillPath = `.kiro/skills/${skill}/skill.md`;
-  const allSkills = /all\s+six\s+(?:local\s+)?skills|six\s+(?:local\s+)?skill\s+manifests/.test(scoped);
+  const allSkills = /all\s+(?:\d+\s+)?(?:local\s+)?skills|(?:\d+\s+)?skill\s+manifests/.test(scoped);
   const namespaced = scoped.includes(exactPath) || scoped.includes(skillPath) || allSkills;
   const manifestAndPrerequisiteChecks = /\bmanifest\b/.test(searchable) && /\bprerequisite(?:s)?\b/.test(searchable);
   return manifestAndPrerequisiteChecks && namespaced;
@@ -921,7 +1042,7 @@ export function evaluateSkills(input: SkillEvaluatorInput = {}): StageResult<Ski
   const inspections = INITIAL_SKILL_CANDIDATES.map((folder) => inspectManifest(repositoryRoot, folder, skillRoot));
   const extraManifests = discoverExtraManifests(repositoryRoot, skillRoot);
   const structuralBlockers = extraManifests.length > 0
-    ? [`skill candidate set must contain exactly six manifests; unexpected manifests: ${extraManifests.join(", ")}`]
+    ? [`skill candidate set must contain exactly ${INITIAL_SKILL_CANDIDATES.length} manifests; unexpected manifests: ${extraManifests.join(", ")}`]
     : [];
 
   const skillResults = inspections.map((inspection) =>

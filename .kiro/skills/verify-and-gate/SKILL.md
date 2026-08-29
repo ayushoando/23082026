@@ -1,6 +1,6 @@
 ﻿---
 name: verify-and-gate
-description: Explicit-user-authorized test and gate workflow for this repo. Use only when the user explicitly asks to run tests or gates and an enabled pre-execution hook permits execution.
+description: Use when the user explicitly authorizes repository tests or gates and the enabled pre-execution hook permits the requested command.
 ---
 
 # Verify and Gate

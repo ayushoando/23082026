@@ -1,6 +1,6 @@
 ---
 name: powers-skills-model
-description: Use the powers and skills model to structure reusable agent capabilities and workflows.
+description: Use when repository work concerns reusable Kiro powers, skills, steering, MCP capability packaging, or agent workflow structure.
 ---
 
 # Powers, Skills, Steering, MCP — how they relate

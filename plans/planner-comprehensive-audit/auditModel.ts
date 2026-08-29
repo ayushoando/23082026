@@ -165,6 +165,8 @@ export interface WorkflowTrace {
   stages: WorkflowTraceStage[];
   coverage: CoverageDimensions;
   requirementRefs: RequirementRef[];
+  findingIds: FindingRef[];
+  verificationRefs: ValidationRef[];
   evidenceRefs: EvidenceRef[];
 }
 

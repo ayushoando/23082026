@@ -1,6 +1,6 @@
 ---
 name: planner-studio
-description: Use Planner Studio guidance to plan product work, tasks, and implementation steps.
+description: Use when work concerns Planner or Studio product routes, components, canvas behavior, persistence, catalog handoff, or implementation planning.
 ---
 
 # Planner & Studio Domain
