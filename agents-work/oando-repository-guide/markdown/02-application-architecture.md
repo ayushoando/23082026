@@ -73,3 +73,44 @@ Start at the route in site/app/.
 ```
 
 Use [Product domains](./03-product-domains.md) for surface-specific ownership and [Data/API](./04-data-api-persistence.md) for database/persistence/API work.
+
+
+## Coverage-audited routing for application changes
+
+Use this chapter for D05 APIs and D06 Site UI, SEO, accessibility, and performance. A product change starts at the user-facing route, then traces feature behavior, components, shared/server logic, platform/persistence, and the narrowest proof. The route is a candidate until live source evidence confirms it.
+
+### D05 APIs card
+
+- **Goal:** Trace an API outcome from its route handler through authentication, data ownership, and evidence.
+- **Start Paths:** `./site/app/api/`; `./site/lib/apiCatalog.ts`; `./site/proxy.ts`; `./docs/architecture/routes.md`; `./agents-work/oando-repository-guide/markdown/04-data-api-persistence.md`.
+- **Scope:** Route ownership, auth/CSRF/rate-limit boundary, persistence, and API proof.
+- **Evidence Steps:** Read authority; inspect route/catalog/proxy paths; compare route docs with live handlers; classify data/security/release risk; record the Route Record and proof limitation.
+- **Allowed Actions:** Read-only tracing or an explicitly approved Core Product Write to owned source paths.
+- **Forbidden Actions:** Hosted calls, migrations, secret exposure, or claiming behavior from a route filename.
+- **Risk:** API, auth, data, and release risk.
+- **Expected Evidence:** Exact route source, auth/data boundary, selected skills, and unverified hosted behavior.
+- **Next Decision:** Select `graph-impact` for shared/API dependency impact and `db-migrations` when schema/ownership evidence matches.
+
+### D06 Site UI card
+
+- **Goal:** Improve a Site UI outcome through the route, feature, component, FOCSS zone, SEO, i18n, and accessibility layers.
+- **Start Paths:** `./site/app/(site)/`; `./site/features/site/`; `./site/components/home/`; `./site/focss/site/`; `./site/i18n/`; `./docs/architecture/routes.md`; `./docs/architecture/product-map.md`; `./docs/architecture/stack.md`.
+- **Scope:** UI structure, metadata, responsive behavior, loading/empty/error states, keyboard reachability, and performance planning.
+- **Evidence Steps:** Read authority; inspect route and neighboring patterns; compare docs with source; classify UI/accessibility/shared-code risk; record the visual checklist and proof limitation.
+- **Allowed Actions:** Approved Core Product Writes only after the Site Write Gate; reuse existing components and semantic tokens.
+- **Forbidden Actions:** Non-Core Artifacts under `./site/`, custom CSS systems, cross-zone imports, or browser/performance claims without observed proof.
+- **Risk:** Product UI, accessibility, responsive behavior, and shared-code risk.
+- **Expected Evidence:** Route-to-component trace, matching skills, Visual Detail Checklist, and exact rendered-proof limitation.
+- **Next Decision:** Route styling/token work to `focss-css`; route shared impact to `graph-impact`; keep browser checks pending without authorization.
+
+### Forked application boundaries
+
+Planner and Studio have separate route, feature, component, library, hook, store, server, and platform roots. `./site/app/ooplanner/` and `./site/app/oostudio/` are separate Product Surfaces; do not use one fork as an implementation shortcut for the other. A Planner or Studio task selects `planner-studio`, and a Fork Tree change or cross-import evaluation also selects `fork-boundaries`. Shared data/API contracts do not permit cross-fork module imports.
+
+### Site Write Gate
+
+Before any proposed write under `./site/`, the Route Record states the exact Core Product outcome, owned paths, matching skills, and expected evidence. A report, result, prompt, plan, skill, steering file, MCP definition, generated file, temporary file, debug file, or other Non-Core Artifact is rejected and redirected to its approved home. `./results/site/` remains Machine Evidence and is never a source-tree relocation target.
+
+### Completion boundary
+
+The Plain-Language Response Contract is required for start, progress, handoff, pause, and completion responses. Static source tracing cannot prove rendered interaction, browser accessibility, hosted API behavior, or persistence. Name each as unverified or pending unless an exact authorized observation exists.

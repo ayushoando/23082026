@@ -77,7 +77,20 @@ vi.mock("fabric", () => ({
 }));
 
 /* Mock the heavy Planner hooks */
-const mockFabricRef = { current: null };
+const mockFabricCanvas = {
+  getObjects: vi.fn(() => []),
+  remove: vi.fn(),
+  add: vi.fn(),
+  sendObjectToBack: vi.fn(),
+  bringObjectToFront: vi.fn(),
+  requestRenderAll: vi.fn(),
+  getWidth: vi.fn(() => 1000),
+  getHeight: vi.fn(() => 1000),
+  loadFromJSON: vi.fn((_json: unknown, callback?: () => void) => callback?.()),
+  on: vi.fn(),
+  off: vi.fn(),
+};
+const mockFabricRef = { current: mockFabricCanvas };
 vi.mock("@planner/hooks/usePlannerFabric", () => ({
   useFabric: () => ({
     wrapperRef: { current: document.createElement("div") },
@@ -88,7 +101,15 @@ vi.mock("@planner/hooks/usePlannerFabric", () => ({
 }));
 
 vi.mock("@planner/hooks/usePlannerHistory", () => ({
-  useHistory: () => ({ undo: vi.fn(), redo: vi.fn(), canUndo: false, canRedo: false, push: vi.fn() }),
+  useHistory: () => ({
+    undo: vi.fn(),
+    redo: vi.fn(),
+    canUndo: false,
+    canRedo: false,
+    push: vi.fn(),
+    suspend: vi.fn(),
+    resume: vi.fn(),
+  }),
 }));
 
 vi.mock("@planner/hooks/usePlannerCanvasCore", () => ({

@@ -867,3 +867,164 @@ For this requirement:
 14. THE Completion Record SHALL distinguish requested work from extra proposed work, SHALL identify every changed file and reason, SHALL distinguish validation actually run from validation not run, and SHALL remain incomplete until unresolved scope drift, missing authorization, ownership conflict, and remaining issues are either resolved or explicitly assigned to an owner.
 15. THE Agent Compliance Contract SHALL preserve the repository placement boundaries: `./docs/`, `./Agents/`, and root-level `./*.md` are Locked Paths and read-only evidence by default; Agent-authored reports use `./agents-work/<workstream>/<report-type>/`; machine output uses `./results/<purpose>/`; `./tech-docs-generator/` remains a root-level sibling of `./site/`; and `./site/` accepts only an explicitly approved Core Product Write while reports, skills, results, prompts, plans, generated files, and other Non-Core Artifacts are redirected elsewhere.
 16. THIS requirements revision SHALL be guidance/specification work only. It SHALL not authorize tests, gates, builds, typechecks, scripts, package or configuration changes, application implementation, UI changes, database actions, deployment actions, or other commands; any such work remains separately scoped and explicitly authorized.
+
+
+## Clarification Handoff Reconciliation
+
+Four completed read-only clarification handoffs were reconciled into this requirements revision. The handoffs agree that the repository needs one canonical Agent Contract, literal coverage of the applicable Kiro Markdown surfaces, an exact four-Agent standing roster, controlled execution with pre-action decisions, fail-closed denial, serial integration, protected-path locking, explicit deliverables and statuses, and an honest distinction between guidance and runtime enforcement.
+
+The handoffs also identify a live conflict. The workspace currently contains five agent definition files under `./.kiro/agents/`: `capability-powers-author.md`, `containment-reconciler.md`, `hook-localizer.md`, `spec-task-runner.md`, and `spec-task-runner2.md`. An older specification claims exactly four agents. This revision does not delete, rename, or modify `./.kiro/agents/spec-task-runner2.md` or any other agent definition. The current user instruction controls the intended active roster: every Repository Task uses exactly four active Agent slots, with Coordinator/Serial Integration Owner, Scout/Map, Planner/Risk, Implementer, and Verifier/Reporter duties assigned within the four-slot model; the Coordinator duty is not a fifth active Agent. The physical definition-file count and the active-roster count are separate facts.
+
+No current requirement in this addendum claims that the existing Kiro runtime automatically assigns four Agents, intercepts every Agent action, or enforces every gate below. Those are required deliverables for a separately approved controlled-executor implementation. Until observed evidence establishes that implementation, the enforcement state remains `guidance-only` or `not-observed`, as defined below.
+
+## Supplemental Glossary
+
+- **Kiro Agent Contract**: The exact pre-action declaration that every Agent must provide before participating in a Repository Task. The declaration contains the current user request state, applicable repository standard state, outcome, assigned scope, exact owned paths and permissions, exclusions, delivery conditions, next owner, allowed validation, pending validation, and status.
+- **Canonical Inclusion**: The exact line `Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action.` A Canonical Inclusion points to the canonical contract without paraphrasing or weakening the contract.
+- **Exact-Line Rule**: The one-time rule that inserts the exact line `Before any action, read the current user request and applicable repository standard, declare exact scope and permissions, and stop on denial, conflict, or missing authorization.` exactly once in each owner-authorized target guidance file.
+- **Active Contract-Bearing Document**: A Kiro Markdown document that gives current Agent, skill, steering, power, or governance-setup instructions and therefore must contain the exact Kiro Agent Contract block or the Canonical Inclusion.
+- **Reference or History Document**: A Kiro Markdown document that records a specification, reconciliation, historical decision, or other evidence and is inventoried but is not an active Agent instruction surface unless a later owner-authorized task changes its classification.
+- **Generated Kiro Markdown**: A Markdown file produced by a Kiro or repository generator rather than maintained as an authored instruction or specification source.
+- **Package Document**: A Markdown document stored under `./.kiro/power-packages/` as a distributable package skill rather than as the active workspace skill surface.
+- **Kiro Markdown Inventory**: The static, path-by-path record of every file matching `./.kiro/**/*.md`, its classification, its contract mode, its owner, and its evidence status.
+- **Controlled-Executor Workflow**: A workflow in which a coordinator creates the four-Agent roster and ownership records, a Pre-Action Enforcement Layer decides each proposed Agent action before execution, Implementer writes remain exclusive or serially integrated, and Verifier/Reporter closes the task with evidence.
+- **Pre-Action Enforcement Layer**: A real execution-interception component or host-integrated gate that receives each proposed Agent action before the action occurs and returns an allow or deny decision with a reason and an auditable record. Markdown instructions, prompts, self-attestation, post-action review, or a save hook alone do not constitute a Pre-Action Enforcement Layer.
+- **Pre-Action Gate**: The action-specific decision made by the Pre-Action Enforcement Layer for a read, write, delete, command, delegation, or handoff.
+- **Action Record**: The pre-action data containing task identifier, Agent identifier, role, action type, exact target or command, requested scope, ownership decision, authorization state, hook decision when relevant, decision, reason, and timestamp or equivalent ordering evidence.
+- **Fail-Closed Denial**: A denial that prevents the proposed action and does not fall back to another tool, Agent, path, command, permission, or inferred approval when a required gate is missing, unavailable, ambiguous, conflicting, or denied.
+- **Four-Agent Standing Mode**: The required default mode with exactly four active Agent slots from task start. One slot is designated Coordinator/Serial Integration Owner; the four named duties Scout/Map, Planner/Risk, Implementer, and Verifier/Reporter are assigned across those four slots, with the Coordinator duty attached to a slot and never counted as a fifth Agent.
+- **Active Agent**: An Agent with a recorded roster entry, role, permission state, owned scope, and status for the current Repository Task. A definition file on disk is not an active Agent until the roster records the Agent.
+- **Coordinator**: The active Agent responsible for the Route Record, Agent Roster, Ownership Matrix, Pre-Action Gate state, conflict stop decisions, serial integration, and Completion Record. The Coordinator is the Serial Integration Owner and is not an additional fifth Agent.
+- **Serial Integration**: Reconciliation by one Serial Integration Owner after each research or implementation handoff and before a shared path or subsequently overlapping path receives another write.
+- **Protected Path Set**: `./docs/**`, `./Agents/**`, every file directly under the repository root matching `./*` as a Root File, and `./.kiro/agents/**`. The set includes root control files such as `./AGENTS.md`, `./README.md`, `./START.md`, `./CONTENTS.md`, `./DOC-MAP.md`, `./Testing-handbook.md`, `./OPERATIONS_RUNBOOK.md`, `./Failures.md`, and `./HANDOVER.md` when present.
+- **Protected Path Lock**: The fail-closed rule that permits a Protected Path to be read as evidence but permits a write or delete only when the Repository Owner names the exact file path in the current request.
+- **Deliverable Register**: The task record naming the Agent Roster, Ownership Matrix, Route Record, Pre-Action Gate Records, Handoff Record Register, Conflict Stop Record when applicable, and Completion Record, with each owner and status.
+- **Status Vocabulary**: The only permitted lifecycle values `planned`, `assigned`, `ready`, `in-progress`, `blocked`, `denied`, `handoff-ready`, `serial-integrated`, `verified`, `complete`, `pending-owner`, and `not-observed`.
+- **Enforcement Status Vocabulary**: The only permitted enforcement values `guidance-only`, `not-observed`, `partially-enforced`, `enforced`, and `blocked`.
+- **External or Global Kiro File**: A Kiro file outside the accessible workspace, including a user-global Kiro installation or external Kiro configuration, for which this repository has no current path and no observed read or write evidence.
+- **Exact Deliverable**: A named output with a specified owner, path or record home, required fields, status, and evidence needed for closure.
+
+## Requirements Addendum
+
+### Requirement 33: Apply one canonical contract to every applicable Kiro Markdown document
+
+**User Story:** As a repository owner, I want every applicable workspace Kiro Markdown document to carry the same Agent Contract, so that agents receive one consistent pre-action boundary instead of locally rewritten instructions.
+
+#### Acceptance Criteria
+
+1. THE Repository Guide and Master Router SHALL designate the Kiro Agent Contract and the Canonical Inclusion as the only approved contract forms for Active Contract-Bearing Documents.
+2. WHEN an Active Contract-Bearing Document is updated for contract coverage, THE document SHALL contain either the exact Kiro Agent Contract block or the exact Canonical Inclusion, and THE document SHALL not replace either form with a paraphrase.
+3. WHEN the Kiro Markdown Inventory is produced, THE inventory SHALL list every one of the following 36 Active Contract-Bearing Documents individually: `./.kiro/agents/capability-powers-author.md`; `./.kiro/agents/containment-reconciler.md`; `./.kiro/agents/hook-localizer.md`; `./.kiro/agents/spec-task-runner.md`; `./.kiro/agents/spec-task-runner2.md`; `./.kiro/skills/db-migrations/SKILL.md`; `./.kiro/skills/focss-css/SKILL.md`; `./.kiro/skills/fork-boundaries/SKILL.md`; `./.kiro/skills/graph-impact/SKILL.md`; `./.kiro/skills/oando-master/SKILL.md`; `./.kiro/skills/planner-studio/SKILL.md`; `./.kiro/skills/powers-skills-model/SKILL.md`; `./.kiro/skills/repo-map/SKILL.md`; `./.kiro/skills/verify-and-gate/SKILL.md`; `./.kiro/steering/agent-behavior.md`; `./.kiro/steering/ai.md`; `./.kiro/steering/api.md`; `./.kiro/steering/coding-standards.md`; `./.kiro/steering/database.md`; `./.kiro/steering/deployment.md`; `./.kiro/steering/graph-layer.md`; `./.kiro/steering/INDEX.md`; `./.kiro/steering/ltm-memory-format.md`; `./.kiro/steering/ltm-operations.md`; `./.kiro/steering/nova-act-viewport.md`; `./.kiro/steering/product.md`; `./.kiro/steering/seo.md`; `./.kiro/steering/tech-stack.md`; `./.kiro/steering/testing.md`; `./.kiro/steering/ui-css.md`; `./.kiro/powers/analytics/POWER.md`; `./.kiro/powers/oando-workflow/POWER.md`; `./.kiro/powers/observability/POWER.md`; `./.kiro/powers/security/POWER.md`; `./.kiro/powers/oando-workflow/steering/routing.md`; and `./.kiro/kiro-repo-guidance-setup/README.md`.
+4. WHEN the Kiro Markdown Inventory is produced, THE inventory SHALL list the following ten specification/reference documents individually and classify them as Reference or History Documents: `./.kiro/specs/documentation-global-standards/design.md`; `./.kiro/specs/documentation-global-standards/implementation-record.md`; `./.kiro/specs/documentation-global-standards/requirements.md`; `./.kiro/specs/documentation-global-standards/tasks.md`; `./.kiro/specs/kiro-config-rewrite/design.md`; `./.kiro/specs/kiro-config-rewrite/requirements.md`; `./.kiro/specs/kiro-config-rewrite/tasks.md`; `./.kiro/specs/oando-master/design.md`; `./.kiro/specs/oando-master/requirements.md`; and `./.kiro/specs/oando-master/tasks.md`.
+5. WHEN the Kiro Markdown Inventory is produced, THE inventory SHALL list the following four Package Documents individually and classify them as Package Documents rather than active workspace contract surfaces: `./.kiro/power-packages/analytics/skills/analytics/SKILL.md`; `./.kiro/power-packages/oando-workflow/skills/oando-workflow/SKILL.md`; `./.kiro/power-packages/observability/skills/observability/SKILL.md`; and `./.kiro/power-packages/security/skills/security/SKILL.md`.
+6. WHEN the Kiro Markdown Inventory is produced, THE inventory SHALL record `./.kiro/kiro-repo-guidance-setup/RECONCILIATION.md` as a Reference or History Document, SHALL record that no Generated Kiro Markdown was observed in the inspected `./.kiro/` tree, and SHALL record that no Markdown files were observed under `./.kiro/hooks/`, `./.kiro/mcp/`, or `./.kiro/settings/`.
+7. IF a Kiro Markdown document is classified as Reference or History Document, Generated Kiro Markdown, or Package Document, THEN THE Repository Guide and Master Router SHALL record the classification and SHALL not claim that the Active Contract-Bearing Document contract was appended to that document unless a separate owner-approved scope selects it.
+8. IF an External or Global Kiro File is inaccessible, THEN THE Repository Guide and Master Router SHALL record the file as `not-observed` and SHALL not claim that the file was inspected, changed, or covered by the Kiro Markdown Inventory.
+9. THE Repository Guide and Master Router SHALL treat the Kiro Markdown Inventory as static evidence of paths and classifications only and SHALL not treat path presence or contract text as proof of runtime loading or enforcement.
+
+### Requirement 34: Start every Repository Task in Four-Agent Standing Mode with controlled execution
+
+**User Story:** As a repository owner, I want every Repository Task to use four coordinated Agent slots from the beginning, so that research, planning, implementation, verification, and integration cannot silently collapse into uncontrolled single-Agent work.
+
+#### Acceptance Criteria
+
+1. WHEN a Repository Task starts, THE Controlled-Executor Workflow SHALL create exactly four Active Agent roster entries before any Agent exploration, modification, command proposal, delegation, or handoff.
+2. WHEN the four Active Agent roster entries are created, THE Coordinator SHALL designate one slot as Coordinator/Serial Integration Owner and SHALL assign the Scout/Map, Planner/Risk, Implementer, and Verifier/Reporter duties across the four slots without creating a fifth Coordinator Agent.
+3. WHEN a Repository Task starts, THE Controlled-Executor Workflow SHALL publish the Agent Roster, Ownership Matrix, Route Record, Deliverable Register, Conflict Stop Rule, and status for all four Active Agents before the first Agent action.
+4. WHILE a Repository Task is in Four-Agent Standing Mode, THE Scout/Map duty SHALL perform read-only orientation and evidence discovery, THE Planner/Risk duty SHALL perform read-only scope and risk planning, THE Implementer duty SHALL remain read-only until an approved exclusive write scope exists, and THE Verifier/Reporter duty SHALL remain read-only and shall review evidence and closure.
+5. WHEN a Repository Task contains an approved implementation scope, THE Controlled-Executor Workflow SHALL grant the Implementer write permission only for the exact paths recorded in the Ownership Matrix and SHALL retain serial ownership for shared paths.
+6. WHEN an Agent handoff is ready, THE Serial Integration Owner SHALL reconcile the handoff against the current user request, Route Record, Agent Roster, Ownership Matrix, exclusions, delivery conditions, and prior evidence before another Agent receives a write permission or shared-path assignment.
+7. IF Agent ownership sets overlap, Agent edits conflict, evidence contradicts, or a handoff cannot be reconciled, THEN THE Conflict Stop Rule SHALL deny affected writes and SHALL route the conflict to Repository Owner review and Serial Integration.
+8. WHEN the physical Agent definition inventory contains more than four files, THE Controlled-Executor Workflow SHALL distinguish the physical definition-file count from the four Active Agent roster count and SHALL not delete, rename, disable, or modify a definition file to make the counts appear equal.
+9. IF the current runtime cannot create or prove exactly four Active Agent roster entries, THEN THE Controlled-Executor Workflow SHALL set Enforcement Status to `not-observed` or `guidance-only`, SHALL not silently fall back to a one-Agent workflow, and SHALL leave automatic assignment as a separate approval-required implementation gap.
+10. THE Requirements Addendum SHALL preserve the existing exactly three Special Requirements and SHALL add these controls as normal Requirements rather than as a fourth Special Requirement.
+
+### Requirement 35: Enforce a real pre-action gate for every Agent action
+
+**User Story:** As a repository owner, I want every Agent action checked before execution, so that instructions become a controlled-executor boundary rather than an honor-system prompt.
+
+#### Acceptance Criteria
+
+1. THE Pre-Action Enforcement Layer SHALL be an executable or host-integrated pre-action component that evaluates an Action Record before execution and returns an explicit allow or deny decision with a reason; a Markdown document, prompt, self-attestation, post-action reviewer, or save hook alone SHALL not satisfy this requirement.
+2. WHEN an Agent proposes a read, THE Pre-Action Gate SHALL verify the task identifier, Agent identifier, assigned role, exact target path, read permission, Protected Path classification, and current status before allowing the read.
+3. WHEN an Agent proposes a write, THE Pre-Action Gate SHALL verify the exact target path, exclusive or serial ownership, write permission, current Route Record, Protected Path Lock state, and delivery-condition match before allowing the write.
+4. WHEN an Agent proposes a delete, THE Pre-Action Gate SHALL verify the exact target path, explicit deletion scope, owner authorization, exclusive ownership, and Protected Path Lock state before allowing the delete.
+5. WHEN an Agent proposes a command, THE Pre-Action Gate SHALL verify command classification, repository-root working directory, exact current-session Explicit User Authorization when required, Hook Permission when required, and the command's recorded scope before allowing the command.
+6. WHEN an Agent proposes delegation, THE Pre-Action Gate SHALL verify that the Coordinator is delegating, that the receiving Agent is one of the four Active Agents, that the role and exact owned paths are recorded, and that the delivery conditions and next owner are present before allowing delegation.
+7. WHEN an Agent proposes a handoff, THE Pre-Action Gate SHALL verify that the Handoff Record contains every required field, that changed paths match ownership, that validation state distinguishes observed from not run, and that a receiving owner is recorded before accepting the handoff.
+8. IF an Action Record is missing, malformed, stale, ambiguous, contradictory, denied, or unavailable, THEN THE Pre-Action Enforcement Layer SHALL deny the proposed action before execution, SHALL not select an alternate tool or permission, and SHALL record the denial reason and next owner action.
+9. IF the Pre-Action Enforcement Layer is unavailable or returns an indeterminate result, THEN THE Controlled-Executor Workflow SHALL apply Fail-Closed Denial and SHALL set Enforcement Status to `blocked` or `not-observed` rather than allowing the action.
+10. THE Pre-Action Enforcement Layer SHALL evaluate reads, writes, deletes, commands, delegation, and handoffs through the same fail-closed decision boundary, even when a repository hook covers only one command-tool family.
+11. THE Repository Guide and Master Router SHALL identify any action that occurred without an observed Pre-Action decision as `not-observed` and SHALL not report the action as controlled or enforced.
+
+### Requirement 36: Lock protected paths against later Agent writes and deletes
+
+**User Story:** As a repository owner, I want repository authority, root control files, and Kiro Agent definitions protected from later Agent writes, so that only an exact user-named path can change those controls.
+
+#### Acceptance Criteria
+
+1. THE Protected Path Lock SHALL classify every path under `./docs/`, every path under `./Agents/`, every Root File directly under `./`, and every path under `./.kiro/agents/` as protected read-only evidence by default.
+2. WHEN an Agent proposes a write or delete under the Protected Path Set, THE Pre-Action Gate SHALL require the Repository Owner to name the exact file path in the current request before allowing the action.
+3. IF the current request does not name the exact Protected Path file, THEN THE Protected Path Lock SHALL deny the write or delete before execution, SHALL preserve the file, and SHALL record the requested change as a pending Owner Decision and Separate Approval Work.
+4. WHEN the current request names one exact Protected Path file, THE Protected Path Lock SHALL authorize only that exact file for the current task and SHALL keep every other Protected Path file locked.
+5. THE Protected Path Lock SHALL permit Agents to read Protected Paths as Read-Only Evidence Sources and SHALL not permit a read permission to become write or delete permission.
+6. IF an Agent proposes a copy, mirror, generated substitute, or report elsewhere instead of an authorized Protected Path change, THEN THE Repository Guide and Master Router SHALL reject any claim that the Protected Path was updated.
+7. THE Repository Guide and Master Router SHALL designate `./AGENTS.md` and the selected directly applicable files under `./Agents/` as future Exact-Line Rule targets, while this requirements-only phase SHALL not claim that those files were changed.
+
+### Requirement 37: Define exact task deliverables and status vocabulary
+
+**User Story:** As a repository owner, I want every controlled task to emit the same records and statuses, so that a handoff can be checked without reconstructing hidden coordination.
+
+#### Acceptance Criteria
+
+1. WHEN a Repository Task starts, THE Deliverable Register SHALL contain exactly these named deliverables: Agent Roster; Ownership Matrix; Route Record; Pre-Action Gate Records; Handoff Record Register; Conflict Stop Record when a conflict occurs; and Completion Record.
+2. THE Agent Roster SHALL contain exactly four Active Agent entries with Agent identifier, role, Coordinator designation, read/write permission, owned scope, Multi-Agent Availability State, lifecycle status, and next owner.
+3. THE Ownership Matrix SHALL map each task objective, evidence item, artifact, and exact repository path to one exclusive Agent owner or the Serial Integration Owner and SHALL identify shared paths as serial ownership.
+4. THE Route Record SHALL contain Task Outcome, domain, candidate paths, selected and rejected skills with reasons, Workflow Mode, Operational-Risk Classification, Artifact Class when output is produced, Command Classification, Protected Path Lock state, Site Write Gate state when relevant, and next action.
+5. THE Pre-Action Gate Records SHALL contain one Action Record for every proposed read, write, delete, command, delegation, and handoff, including an allow or deny decision and reason.
+6. THE Handoff Record Register SHALL contain the Objective; Role and Next Owner; Scope; Paths Read and Paths Changed; Route Record; Evidence; Decisions; Coverage Gaps; Validation Command; Repository Root; Authorization State; Hook Decision; Exit Status; Validation Limitation; Blockers; Next Action; and status, or SHALL mark an unavailable field `not-observed`.
+7. THE Completion Record SHALL contain every changed file and why it changed, validation actually run with the exact observed result, validation not run with the exact pending or unauthorized reason, remaining issues, unverified behavior, blockers, next owner action, scope and exclusions, Multi-Agent Evidence, and the final lifecycle status.
+8. THE Status Vocabulary SHALL be limited to `planned`, `assigned`, `ready`, `in-progress`, `blocked`, `denied`, `handoff-ready`, `serial-integrated`, `verified`, `complete`, `pending-owner`, and `not-observed`.
+9. THE Enforcement Status Vocabulary SHALL be limited to `guidance-only`, `not-observed`, `partially-enforced`, `enforced`, and `blocked`.
+10. WHEN a deliverable changes state, THE Controlled-Executor Workflow SHALL record the new status using the Status Vocabulary and SHALL not replace a missing or pending state with `verified` or `complete`.
+11. IF a required deliverable, field, owner, status, or evidence value is missing, THEN THE Completion Record SHALL remain `blocked`, `pending-owner`, or `not-observed` and SHALL name the next owner action.
+
+### Requirement 38: State runtime, enforcement, and access limitations honestly
+
+**User Story:** As a repository owner, I want documentation claims to distinguish static contract text from observed runtime controls, so that the guide does not promise enforcement that the workspace cannot currently demonstrate.
+
+#### Acceptance Criteria
+
+1. THE Repository Guide and Master Router SHALL report contract text, path inventory, and static read-back as static evidence and SHALL not report static evidence as proof of automatic Agent spawning, tool interception, fail-closed denial, rendered behavior, command success, or runtime loading.
+2. WHEN no current-session evidence establishes a real Pre-Action Enforcement Layer, THE Repository Guide and Master Router SHALL set Enforcement Status to `guidance-only` or `not-observed` and SHALL identify controlled-executor implementation as Separate Approval Work.
+3. WHEN a current-session evidence source establishes only a command-specific hook, THE Repository Guide and Master Router SHALL report the observed command scope and SHALL not generalize that scope to reads, writes, deletes, delegation, or handoffs.
+4. IF an External or Global Kiro File is inaccessible, THEN THE Completion Record SHALL state `not-observed`, identify the access limitation, and SHALL not claim that the file was changed or covered.
+5. WHEN the five-file `./.kiro/agents/` conflict is reported, THE Completion Record SHALL name all five observed definition files, preserve `spec-task-runner2.md`, state the four-active-roster decision, and identify runtime enforcement as unobserved unless a separate observed implementation proves otherwise.
+6. THE current requirements-only phase SHALL modify only `./.kiro/specs/oando-master/requirements.md`; THE phase SHALL not modify application code, any file under `./.kiro/agents/`, root `./AGENTS.md`, any file under `./Agents/`, or any other file.
+
+### Requirement 39: Add the one-time exact-line rule to owner-authorized guidance files
+
+**User Story:** As a repository owner, I want the pre-action rule visible in the root standard and directly applicable Agent guidance exactly once, so that later agents cannot miss the rule or receive conflicting copies.
+
+#### Acceptance Criteria
+
+1. THE Exact-Line Rule SHALL use this exact line, including capitalization and punctuation: `Before any action, read the current user request and applicable repository standard, declare exact scope and permissions, and stop on denial, conflict, or missing authorization.`
+2. WHEN a future owner-authorized contract rollout changes `./AGENTS.md`, THE rollout SHALL insert the Exact-Line Rule exactly once in `./AGENTS.md` and SHALL record the line count as one.
+3. WHEN a future owner-authorized contract rollout selects directly applicable files under `./Agents/`, THE rollout SHALL insert the Exact-Line Rule exactly once in each selected file and SHALL record every exact selected path and line count as one; `./Agents/01-standard.md` SHALL be selected because it is the directly applicable standard named by the current repository procedure.
+4. IF an Exact-Line Rule target already contains the exact line, THEN THE rollout SHALL retain one occurrence and SHALL not append a duplicate.
+5. IF the exact line cannot be inserted into an owner-authorized target, THEN THE rollout SHALL stop, record the target and reason as a blocker or pending Owner Decision, and SHALL not claim completion.
+6. THE current requirements-only phase SHALL define this future deliverable without changing `./AGENTS.md` or any file under `./Agents/`.
+7. THE Exact-Line Rule rollout SHALL use the Protected Path Lock, a Route Record, exclusive ownership, serial integration, and a Completion Record; it SHALL not infer authorization from the phrase `relevant guidance` without naming exact target files.
+
+### Requirement 40: Close the clarification integration with an honest coordinator handoff
+
+**User Story:** As a repository owner, I want the requirements integration to state exactly what changed and what remains unverified, so that the next owner can continue without mistaking static reading for enforcement.
+
+#### Acceptance Criteria
+
+1. WHEN this clarification integration ends, THE Coordinator SHALL provide a handoff that names each changed file and why it changed, validation actually run with exact observed static-read results, validation not run with the exact command or reason, remaining issues, and the next owner.
+2. THE Coordinator SHALL identify `./.kiro/specs/oando-master/requirements.md` as the only changed file in this phase and SHALL state that the file was changed to append the clarification reconciliation, supplemental glossary, and normal requirements addendum.
+3. THE Coordinator SHALL state that no tests, gates, builds, typechecks, scripts, package commands, implementation commands, application-code changes, Agent-definition changes, root-standard changes, or `./Agents/` changes were run or performed in this phase.
+4. THE Coordinator SHALL state that static read-only validation covered the existing requirements structure, the three Special Requirements, the five-file Agent definition inventory, and the 51-file `./.kiro/**/*.md` classification baseline, without claiming runtime enforcement or external/global Kiro coverage.
+5. IF any required four-Agent roster, Pre-Action Enforcement Layer, Exact-Line Rule rollout, protected-path lock implementation, or active-document contract append remains unobserved, THEN THE handoff SHALL identify the item as `not-observed` or `pending-owner` and SHALL name the next owner action rather than reporting completion.
+6. THE Requirements Addendum SHALL retain exactly three Special Requirements and SHALL not create a fourth Special Requirement heading.
