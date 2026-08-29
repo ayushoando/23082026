@@ -31,34 +31,32 @@ describe("i18n marketing parity", () => {
     expect(output).toMatch(/locales hi\)/);
   }, 30_000);
 
-  it.skipIf(manifest.deferredLocales.length === 0)(
-    "deferred locales translate wave1 hero copy away from English",
-    () => {
-      const en = JSON.parse(
-        fs.readFileSync(path.join(messagesDir, "en.json"), "utf8"),
+  it("declares no deferred locales or translates their wave1 hero copy away from English", () => {
+    expect(Array.isArray(manifest.deferredLocales)).toBe(true);
+    const en = JSON.parse(
+      fs.readFileSync(path.join(messagesDir, "en.json"), "utf8"),
+    );
+    for (const locale of manifest.deferredLocales) {
+      const messages = JSON.parse(
+        fs.readFileSync(path.join(messagesDir, `${locale}.json`), "utf8"),
       );
-      for (const locale of manifest.deferredLocales) {
-        const messages = JSON.parse(
-          fs.readFileSync(path.join(messagesDir, `${locale}.json`), "utf8"),
-        );
-        for (const namespace of manifest.wave1Namespaces) {
-          const enSample =
-            en[namespace]?.heroTitle ??
-            en[namespace]?.heroTitleLead ??
-            en[namespace]?.headlineLead ??
-            en[namespace]?.subtitle ??
-            en[namespace]?.hero?.title?.[0];
-          const localeSample =
-            messages[namespace]?.heroTitle ??
-            messages[namespace]?.heroTitleLead ??
-            messages[namespace]?.headlineLead ??
-            messages[namespace]?.subtitle ??
-            messages[namespace]?.hero?.title?.[0];
-          if (typeof enSample === "string") {
-            expect(localeSample, `${locale}/${namespace}`).not.toBe(enSample);
-          }
+      for (const namespace of manifest.wave1Namespaces) {
+        const enSample =
+          en[namespace]?.heroTitle ??
+          en[namespace]?.heroTitleLead ??
+          en[namespace]?.headlineLead ??
+          en[namespace]?.subtitle ??
+          en[namespace]?.hero?.title?.[0];
+        const localeSample =
+          messages[namespace]?.heroTitle ??
+          messages[namespace]?.heroTitleLead ??
+          messages[namespace]?.headlineLead ??
+          messages[namespace]?.subtitle ??
+          messages[namespace]?.hero?.title?.[0];
+        if (typeof enSample === "string") {
+          expect(localeSample, `${locale}/${namespace}`).not.toBe(enSample);
         }
       }
-    },
-  );
+    }
+  });
 });

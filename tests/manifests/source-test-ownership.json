@@ -1,0 +1,162 @@
+{
+  "version": 1,
+  "mode": "hybrid-migration",
+  "canonicalTestKinds": ["unit", "integration", "e2e"],
+  "sourceRoots": [
+    { "sourceRoot": "site/app", "testRoot": "site/app", "domain": "site-routes" },
+    { "sourceRoot": "site/components", "testRoot": "site/components", "domain": "site-components" },
+    { "sourceRoot": "site/features", "testRoot": "site/features", "domain": "site-features" },
+    { "sourceRoot": "site/focss", "testRoot": "site/focss", "domain": "site-styles" },
+    { "sourceRoot": "site/hooks", "testRoot": "site/hooks", "domain": "site-hooks" },
+    { "sourceRoot": "site/i18n", "testRoot": "site/i18n", "domain": "site-i18n" },
+    { "sourceRoot": "site/lib", "testRoot": "site/lib", "domain": "site-lib" },
+    { "sourceRoot": "site/platform", "testRoot": "site/platform", "domain": "site-platform" },
+    { "sourceRoot": "site/server", "testRoot": "site/server", "domain": "site-server" },
+    { "sourceRoot": "site/store", "testRoot": "site/store", "domain": "site-store" },
+    { "sourceRoot": "scripts", "testRoot": "scripts", "domain": "tooling" },
+    { "sourceRoot": "config", "testRoot": "config", "domain": "configuration" },
+    { "sourceRoot": "workers", "testRoot": "workers", "domain": "workers" },
+    { "sourceRoot": "tech-docs-generator/src", "testRoot": "tech-docs-generator/src", "domain": "tech-docs" },
+    { "sourceRoot": "tech-docs-generator/scripts", "testRoot": "tech-docs-generator/scripts", "domain": "tech-docs-tooling" }
+  ],
+  "e2eRouteRoots": [
+    "tests/e2e/site/app/(site)",
+    "tests/e2e/site/app/admin",
+    "tests/e2e/site/app/ooplanner",
+    "tests/e2e/site/app/oostudio",
+    "tests/e2e/tech-docs-generator"
+  ],
+  "supportRoot": "tests/support",
+  "nonExecutable": [
+    "**/*.d.ts",
+    "**/*.json",
+    "**/*.css",
+    "**/*.png",
+    "**/*.svg",
+    "**/generated-documents/**",
+    "**/node_modules/**",
+    "**/.next/**",
+    "**/dist/**"
+  ],
+  "migrationAllowlist": [
+    {
+      "prefix": "tests/unit/app/",
+      "owner": "Repository Owner",
+      "reason": "Move to tests/unit/site/app in the route migration wave.",
+      "expires": "2026-12-31",
+      "replacementRoot": "tests/unit/site/app/"
+    },
+    {
+      "prefix": "tests/unit/components/",
+      "owner": "Repository Owner",
+      "reason": "Move to tests/unit/site/components in the UI migration wave.",
+      "expires": "2026-12-31",
+      "replacementRoot": "tests/unit/site/components/"
+    },
+    {
+      "prefix": "tests/unit/features/",
+      "owner": "Repository Owner",
+      "reason": "Move to tests/unit/site/features in bounded feature waves.",
+      "expires": "2026-12-31",
+      "replacementRoot": "tests/unit/site/features/"
+    },
+    {
+      "prefix": "tests/unit/hooks/",
+      "owner": "Repository Owner",
+      "reason": "Move to tests/unit/site/hooks.",
+      "expires": "2026-12-31",
+      "replacementRoot": "tests/unit/site/hooks/"
+    },
+    {
+      "prefix": "tests/unit/i18n/",
+      "owner": "Repository Owner",
+      "reason": "Move to tests/unit/site/i18n.",
+      "expires": "2026-12-31",
+      "replacementRoot": "tests/unit/site/i18n/"
+    },
+    {
+      "prefix": "tests/unit/lib/",
+      "owner": "Repository Owner",
+      "reason": "Move to tests/unit/site/lib in bounded library waves.",
+      "expires": "2026-12-31",
+      "replacementRoot": "tests/unit/site/lib/"
+    },
+    {
+      "prefix": "tests/unit/platform/",
+      "owner": "Repository Owner",
+      "reason": "Move to tests/unit/site/platform.",
+      "expires": "2026-12-31",
+      "replacementRoot": "tests/unit/site/platform/"
+    },
+    {
+      "prefix": "tests/unit/server/",
+      "owner": "Repository Owner",
+      "reason": "Move to tests/unit/site/server.",
+      "expires": "2026-12-31",
+      "replacementRoot": "tests/unit/site/server/"
+    },
+    {
+      "prefix": "tests/unit/store/",
+      "owner": "Repository Owner",
+      "reason": "Move to tests/unit/site/store.",
+      "expires": "2026-12-31",
+      "replacementRoot": "tests/unit/site/store/"
+    },
+    {
+      "prefix": "tests/unit/planner/",
+      "owner": "Repository Owner",
+      "reason": "Split across source-mirrored Planner component/lib/hook/store roots.",
+      "expires": "2026-12-31",
+      "replacementRoot": "tests/unit/site/"
+    },
+    {
+      "prefix": "tests/unit/studio/",
+      "owner": "Repository Owner",
+      "reason": "Split across source-mirrored Studio component/lib/hook/store roots.",
+      "expires": "2026-12-31",
+      "replacementRoot": "tests/unit/site/"
+    },
+    {
+      "prefix": "tests/unit/scripts/",
+      "owner": "Repository Owner",
+      "reason": "Move tests for scripts/general under tests/unit/scripts/general while preserving root-script tests.",
+      "expires": "2026-12-31",
+      "replacementRoot": "tests/unit/scripts/general/"
+    },
+    {
+      "prefix": "tests/integration/",
+      "owner": "Repository Owner",
+      "reason": "Move integration suites under source-root-preserving paths.",
+      "expires": "2026-12-31",
+      "replacementRoot": "tests/integration/site/"
+    },
+    {
+      "prefix": "tests/e2e/",
+      "owner": "Repository Owner",
+      "reason": "Move executable specs to route-owned roots and support files to tests/support.",
+      "expires": "2026-12-31",
+      "replacementRoot": "tests/e2e/site/app/"
+    },
+    {
+      "prefix": "tests/tech-docs-generator/",
+      "owner": "Repository Owner",
+      "reason": "Split tests between mirrored unit/integration/e2e tech-docs roots.",
+      "expires": "2026-12-31",
+      "replacementRoot": "tests/unit/tech-docs-generator/"
+    },
+    {
+      "prefix": "tests/helpers/",
+      "owner": "Repository Owner",
+      "reason": "Move shared helpers to tests/support.",
+      "expires": "2026-12-31",
+      "replacementRoot": "tests/support/"
+    },
+    {
+      "prefix": "tests/fixtures/",
+      "owner": "Repository Owner",
+      "reason": "Move fixtures to tests/support/fixtures.",
+      "expires": "2026-12-31",
+      "replacementRoot": "tests/support/fixtures/"
+    }
+  ]
+}

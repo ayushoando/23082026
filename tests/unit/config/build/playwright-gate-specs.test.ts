@@ -82,33 +82,19 @@ describe("playwright-gate-specs.json", () => {
     }
   });
 
-  it("includes every Playwright path from release:gate e2e scripts", () => {
+  it("the release gate delegates to the manifest-driven browser runner", () => {
     const packageJson = JSON.parse(
       fs.readFileSync(path.join(siteRoot, "package.json"), "utf8"),
     ) as { scripts?: Record<string, string> };
     const scripts = packageJson.scripts ?? {};
-    const releaseGate = scripts["release:gate"] ?? "";
-    expect(releaseGate, "release:gate script missing").toContain("test:a11y");
-    expect(releaseGate).toContain("test:planner-catalog");
+    expect(scripts["release:gate"]).toContain("test:browser:gate");
+    expect(scripts["test:browser:gate"]).toContain("run-playwright-gate.mjs");
 
-    const a11y = scripts["test:a11y"] ?? "";
-    const plannerCatalog = scripts["test:planner-catalog"] ?? "";
-    const fromScripts = new Set<string>();
-    for (const script of [a11y, plannerCatalog]) {
-      for (const match of script.matchAll(/tests\/e2e\/[\w.-]+\.spec\.ts/g)) {
-        fromScripts.add(match[0]);
-      }
-    }
-    expect(fromScripts.size, "expected e2e specs in gate scripts").toBeGreaterThan(0);
-
-    const manifest = JSON.parse(
-      fs.readFileSync(manifestPath, "utf8"),
-    ) as GateManifest;
-    const listed = new Set(manifest.specs);
-    for (const rel of fromScripts) {
-      expect(listed.has(rel), `gate-specs missing release:gate e2e: ${rel}`).toBe(
-        true,
-      );
-    }
+    const runner = fs.readFileSync(
+      path.join(siteRoot, "scripts/general/run-playwright-gate.mjs"),
+      "utf8",
+    );
+    expect(runner).toContain("playwright-gate-specs.json");
+    expect(runner).toContain("...specs");
   });
 });

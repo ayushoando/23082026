@@ -1,8 +1,10 @@
 // @vitest-environment node
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 import {
-  COVERAGE_GATE,
   COVERAGE_GATE_ADMIN,
   COVERAGE_GATE_PLANNER,
   COVERAGE_GATE_SITE,
@@ -13,32 +15,31 @@ import {
   isLargeBucket,
 } from "../../../scripts/coverage-policy.mjs";
 
+const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../..");
+
 describe("coverage-policy (name-mirror)", () => {
-  it("exposes 95% floors for planner and admin, 90% for site", () => {
-    for (const gate of [COVERAGE_GATE_PLANNER, COVERAGE_GATE_ADMIN]) {
+  it("uses the approved metric-specific floor for every release profile", () => {
+    for (const gate of [COVERAGE_GATE_PLANNER, COVERAGE_GATE_ADMIN, COVERAGE_GATE_SITE]) {
+      expect(gate.lines).toBe(100);
+      expect(gate.functions).toBe(100);
       expect(gate.statements).toBe(95);
       expect(gate.branches).toBe(95);
-      expect(gate.functions).toBe(95);
-      expect(gate.lines).toBe(95);
     }
-    expect(COVERAGE_GATE_SITE.statements).toBe(90);
-    expect(COVERAGE_GATE_SITE.branches).toBe(90);
-    expect(COVERAGE_GATE_SITE.profile).toBe("site");
-    expect(COVERAGE_GATE).toBe(COVERAGE_GATE_SITE);
   });
 
-  it("marks inventory aspiration at the same 95% quality bar", () => {
+  it("keeps inventory diagnostic while exposing the same aspiration", () => {
+    expect(COVERAGE_INVENTORY_ASPIRATION.lines).toBe(100);
     expect(COVERAGE_INVENTORY_ASPIRATION.statements).toBe(95);
     expect(COVERAGE_INVENTORY_ASPIRATION.profile).toBe("planner-inventory");
   });
 
-  it("classifies pct against gate", () => {
-    expect(fileStatusVsGate(91, "lines", "site")).toContain("PASS");
-    expect(fileStatusVsGate(50, "lines", "site")).toContain("PARTIAL");
+  it("classifies percentages against the selected profile and metric", () => {
+    expect(fileStatusVsGate(100, "lines", "site")).toContain("PASS");
+    expect(fileStatusVsGate(99, "lines", "site")).toContain("PARTIAL");
+    expect(fileStatusVsGate(95, "statements", "planner")).toContain("PASS");
+    expect(fileStatusVsGate(94, "branches", "admin")).toContain("PARTIAL");
     expect(fileStatusVsGate(10, "lines", "site")).toContain("LOW");
     expect(fileStatusVsGate(0, "lines", "site")).toContain("FAIL");
-    expect(fileStatusVsGate(95, "lines", "planner")).toContain("PASS");
-    expect(fileStatusVsGate(70, "lines", "planner")).toContain("PARTIAL");
   });
 
   it("detects high-mass and large-bucket shares", () => {
@@ -49,10 +50,27 @@ describe("coverage-policy (name-mirror)", () => {
     expect(isLargeBucket(100, 10000, 0.05)).toBe(false);
   });
 
-  it("returns agent coverage readme text", () => {
+  it("describes strict gates, reviewed exclusions, and diagnostic inventory", () => {
     const text = coverageReadmeForAgents();
-    expect(text).toContain("Gate files");
-    expect(text).toContain("Site ship gate: 90/90/90/90");
-    expect(text).toContain("95/95/95/95");
+    expect(text).toContain("100% lines");
+    expect(text).toContain("95% statements");
+    expect(text).toContain("owner-reviewed");
+    expect(text).toContain("diagnostic-only");
+  });
+
+  it("wires every release profile to the shared manifest thresholds", () => {
+    const shared = fs.readFileSync(path.join(repositoryRoot, "tests/vitest.shared.ts"), "utf8");
+    const site = fs.readFileSync(path.join(repositoryRoot, "tests/vitest.site.config.ts"), "utf8");
+    const admin = fs.readFileSync(path.join(repositoryRoot, "tests/vitest.admin.coverage.config.ts"), "utf8");
+    const packageJson = JSON.parse(fs.readFileSync(path.join(repositoryRoot, "package.json"), "utf8")) as {
+      scripts: Record<string, string>;
+    };
+
+    expect(shared).toContain('manifests", "coverage-exceptions.json"');
+    expect(shared).toContain("VITEST_COVERAGE_THRESHOLDS");
+    expect(site).toContain("thresholds: { ...VITEST_COVERAGE_THRESHOLDS }");
+    expect(admin).toContain("thresholds: { ...VITEST_COVERAGE_THRESHOLDS }");
+    expect(packageJson.scripts["release:gate:core"]).toContain("test:coverage:admin");
+    expect(packageJson.scripts["test:coverage:admin"]).toContain("generate-coverage-report.mjs admin");
   });
 });

@@ -27,6 +27,13 @@ Kiro-managed governance changes belong here under the repository-root `.kiro/` c
 
 There is no package-level barrel or standalone command in this directory. Consumers should import the specific contract or stage they need.
 
+## Capability reconciliation
+
+- The selected optional repository skill is `.kiro/skills/ai-retrieval/SKILL.md`. It routes the observed server-only Mastra, provider, embedding, LanceDB, Orama, catalog-retrieval, advisory-output, and route-contract evidence; it does not activate providers or make model output authoritative.
+- The four legacy repository Power documents under `.kiro/powers/` remain routing-only and contain no MCP server. Their local-first, least-privilege, empty-workspace-MCP boundaries remain consistent; no Power was activated.
+- `.kiro/settings/mcp.json` remains `{ "mcpServers": {} }`. The repository's MCP schema snapshots and Power prose are not evidence of a configured, connected, authenticated, or runtime-available server.
+- The planner client-to-route relationship remains a coverage gap: `site/lib/ai/mastra/plannerAdvisorClient.ts` names `/api/planner/ai-advisor`, while the observed canonical App Router advisor endpoint is `/api/ai-advisor`. No product route repair is included in this governance change.
+
 ## Tests and harness targeting
 
 Tests are grouped by implementation lane and integration scope:

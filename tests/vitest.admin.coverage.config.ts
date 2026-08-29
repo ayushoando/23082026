@@ -7,6 +7,7 @@ import {
   VITEST_COMMON_COVERAGE_REPORTERS,
   VITEST_COMMON_EXCLUDE,
   VITEST_COVERAGE_DIRS,
+  VITEST_COVERAGE_THRESHOLDS,
   VITEST_REPO_ROOT,
   VITEST_SETUP_FILE,
   VITEST_WORKSPACE_ROOT,
@@ -81,13 +82,8 @@ export default defineConfig({
         "**/scripts/**",
         "**/tests/**",
       ],
-      // User quality bar: 90% floor on admin include.
-      thresholds: {
-        statements: 90,
-        branches: 90,
-        functions: 90,
-        lines: 90,
-      },
+      // Approved metric-specific floor from tests/manifests/coverage-exceptions.json.
+      thresholds: { ...VITEST_COVERAGE_THRESHOLDS },
     },
   },
 });

@@ -28,7 +28,7 @@ test.describe("sketch-to-plan pipeline", () => {
     await waitForPlannerCanvas(page);
   });
 
-  test("uploads a sketch image and reaches sketch recovery UI", async ({ page }, testInfo) => {
+  test("uploads a sketch image and reaches sketch recovery UI", async ({ page }) => {
     await expect(page.getByTestId("planner-workspace")).toBeVisible({ timeout: 20_000 });
 
     // Sketch lives under AI assist float (feature-flagged sketchToPlan).
@@ -37,10 +37,10 @@ test.describe("sketch-to-plan pipeline", () => {
     await aiToggle.click();
 
     const sketchSection = page.getByTestId("planner-sketch-section");
-    if (!(await sketchSection.isVisible().catch(() => false))) {
-      testInfo.skip(true, "sketchToPlan feature flag off — no sketch UI in this env");
-      return;
-    }
+    await expect(
+      sketchSection,
+      "sketchToPlan must be enabled for the release browser gate",
+    ).toBeVisible({ timeout: 15_000 });
 
     const fileInput = page.getByTestId("planner-sketch-file");
     await fileInput.setInputFiles(SKETCH_FIXTURE);

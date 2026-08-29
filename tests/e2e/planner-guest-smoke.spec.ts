@@ -1,11 +1,11 @@
 /**
- * R3 — Guest Playwright smoke (optional / isolated).
+ * R3 — Guest Playwright smoke.
  *
- * Soft-skips when BASE_URL is unset or the target server is unreachable.
- * Not on the release:gate Playwright list (audit-gate-skips allows skip here).
+ * Missing base URLs and unavailable servers are hard failures: release evidence
+ * must never become green by silently skipping this journey.
  *
  * Run:
- *   pnpm --filter oando-site exec playwright test -c config/build/playwright.config.ts tests/e2e/planner-guest-smoke.spec.ts
+ *   pnpm exec playwright test -c config/build/playwright.config.ts tests/e2e/planner-guest-smoke.spec.ts
  */
 import { expect, test } from "@playwright/test";
 
@@ -24,20 +24,14 @@ test.describe("Planner guest smoke (R3)", () => {
   }) => {
     test.setTimeout(120_000);
     const targetBase = (baseURL ?? envBaseURL).trim();
-    test.skip(!targetBase, "No BASE_URL / PLAYWRIGHT_BASE_URL — skip guest smoke");
+    expect(targetBase, "PLAYWRIGHT_BASE_URL or configured baseURL").not.toBe("");
 
-    try {
-      const probe = await request.get("/", {
-        timeout: 8_000,
-        failOnStatusCode: false,
-      });
-      test.skip(
-        probe.status() === 0 || probe.status() >= 500,
-        `Server down (status ${probe.status()}) — skip guest smoke`,
-      );
-    } catch {
-      test.skip(true, "Server down / unreachable — skip guest smoke");
-    }
+    const probe = await request.get("/", {
+      timeout: 8_000,
+      failOnStatusCode: false,
+    });
+    expect(probe.status(), "guest smoke server status").toBeGreaterThan(0);
+    expect(probe.status(), "guest smoke server status").toBeLessThan(500);
 
     // Uses enterGuestPlannerWorkspace: races topbar/fabric/setup (guest auto-skip OK).
     await enterGuestPlannerWorkspace(page, { projectName: "R3 guest smoke" });

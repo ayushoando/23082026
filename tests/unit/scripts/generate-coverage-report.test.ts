@@ -55,6 +55,7 @@ describe("generate-coverage-report (name-mirror)", () => {
       );
       expect(json.total.lines.pct).toBe(100);
       expect(json.profile).toBe("planner");
+      expect(json.files[0].status).toContain("planner gate");
     } finally {
       fs.rmSync(tmpCwd, { recursive: true, force: true });
     }

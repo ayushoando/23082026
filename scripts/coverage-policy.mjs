@@ -1,84 +1,52 @@
-/**
- * Coverage policy — correct files + achievable numbers (2026-07-09).
- *
- * NEVER hardcode absolute statement totals from old runs.
- *
- * TWO PROFILES
- * ------------
- * 1) **Gate** (`pnpm run test:coverage` → vitest.config.ts)
- *    **Include-first allowlist** (not “everything minus excludes”)
- *    Files: pure open3d catalog/model/lib + shared boq/export (+ planner/lib)
- *    Short exclude only carves svg/ + GlbExport *inside* that allowlist
- *    Thresholds: 95/95/95/95 (statements/branches/functions/lines)
- *
- * 2) **Inventory** (`pnpm run test:coverage:inventory`)
- *    Broad include, no thresholds — dark-product meter only.
- *
- * 3) **Site** (`pnpm run test:coverage:site`)
- *    Scoped marketing/catalog logic; thresholds 90/90/90/90 (vitest.site.config.ts).
- *
- * 4) **Admin** (`pnpm run test:coverage:admin`)
- *    Full `features/admin/**` tree; thresholds 95/95/95/95.
- *
- * SVG / scripts / public assets are NOT in the gate denominator.
- * Source of include globs: vitest.shared.ts (VITEST_PLANNER_GATE_*).
- */
+/** Coverage policy shared by Planner, Studio, Site, Admin, and reports. */
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-/** Planner ship gate — matches vitest.config.ts / vitest.shared GATE allowlist */
-export const COVERAGE_GATE_PLANNER = {
-  statements: 95,
-  branches: 95,
-  functions: 95,
-  lines: 95,
-  profile: "planner-gate",
-  meaning:
-    "95% floor on forked allowlist: lib/Planner + lib/Studio + server/* + browserApi + withAuth + proxy. Expand suite before lowering.",
-};
+const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const manifestPath = path.join(repositoryRoot, "tests", "manifests", "coverage-exceptions.json");
+const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
 
-/** Admin ship gate — matches vitest.admin.coverage.config.ts */
-export const COVERAGE_GATE_ADMIN = {
-  statements: 95,
-  branches: 95,
-  functions: 95,
-  lines: 95,
-  profile: "admin",
-  meaning: "95% floor on features/admin tree — grow tests, do not lower gate",
-};
+/** The approved policy is data, not a copied comment or profile-local constant. */
+export const APPROVED_COVERAGE_POLICY = Object.freeze({ ...manifest.policy });
 
-/** Site ship gate — matches vitest.site.config.ts */
-export const COVERAGE_GATE_SITE = {
-  statements: 90,
-  branches: 90,
-  functions: 90,
-  lines: 90,
-  profile: "site",
-  meaning: "90% floor on scoped site logic — matches vitest.site.config.ts, not planner UI",
-};
+function gate(profile, meaning) {
+  return Object.freeze({ ...APPROVED_COVERAGE_POLICY, profile, meaning });
+}
 
-/** @deprecated alias — prefer COVERAGE_GATE_PLANNER or COVERAGE_GATE_SITE */
+export const COVERAGE_GATE_PLANNER = gate(
+  "planner",
+  "Full Planner and Studio fork surfaces; expand tests rather than lowering the gate.",
+);
+export const COVERAGE_GATE_ADMIN = gate(
+  "admin",
+  "Admin feature surface; expand tests rather than lowering the gate.",
+);
+export const COVERAGE_GATE_SITE = gate(
+  "site",
+  "Scoped marketing, catalog, configurator, advisor, assistant, and operations logic.",
+);
+
+/** @deprecated alias — prefer an explicit profile gate. */
 export const COVERAGE_GATE = COVERAGE_GATE_SITE;
 
-/** Inventory aspiration — broad meter, not a hard ship gate */
-export const COVERAGE_INVENTORY_ASPIRATION = {
-  statements: 95,
-  branches: 95,
-  functions: 95,
-  lines: 95,
-  profile: "planner-inventory",
-  meaning:
-    "Align inventory aspiration with 95% quality bar; inventory profile still has no hard fail threshold.",
-};
+/** Broad diagnostic meter; it does not fail the release gate by itself. */
+export const COVERAGE_INVENTORY_ASPIRATION = gate(
+  "planner-inventory",
+  "Broad source inventory aspiration; the inventory profile remains diagnostic-only.",
+);
 
 export function fileStatusVsGate(pct, metric = "lines", profile = "site") {
-  const gate =
-    profile === "planner"
-      ? (COVERAGE_GATE_PLANNER[metric] ?? COVERAGE_GATE_PLANNER.lines)
-      : profile === "admin"
-        ? (COVERAGE_GATE_ADMIN[metric] ?? COVERAGE_GATE_ADMIN.lines)
-        : (COVERAGE_GATE_SITE[metric] ?? COVERAGE_GATE_SITE.lines);
-  if (pct >= gate) return `PASS (>= ${gate}% ${profile} gate)`;
-  if (pct > 0 && pct >= gate * 0.5) return `PARTIAL (< ${gate}% ${profile} gate)`;
-  if (pct > 0) return `LOW (< ${Math.round(gate * 0.5)}%)`;
+  const profiles = {
+    planner: COVERAGE_GATE_PLANNER,
+    admin: COVERAGE_GATE_ADMIN,
+    site: COVERAGE_GATE_SITE,
+  };
+  const gateForProfile = profiles[profile] ?? COVERAGE_GATE_SITE;
+  const floor = gateForProfile[metric] ?? gateForProfile.lines;
+  if (pct >= floor) return `PASS (>= ${floor}% ${profile} gate)`;
+  if (pct > 0 && pct >= floor * 0.5) return `PARTIAL (< ${floor}% ${profile} gate)`;
+  if (pct > 0) return `LOW (< ${Math.round(floor * 0.5)}%)`;
   return "FAIL (0%)";
 }
 
@@ -94,9 +62,9 @@ export function isLargeBucket(stmtTotal, universeTotal, share = 0.05) {
 
 export function coverageReadmeForAgents() {
   return [
-    "Gate files = pure open3d catalog/model/lib + shared boq/export (see vitest.shared GATE include).",
-    "Exclude _archive, svg pipeline, scripts, public SVG, giant UI shells from gate denominator.",
-    "Planner/admin ship gates: 95/95/95/95. Site ship gate: 90/90/90/90. Inventory profile has no hard threshold.",
-    "Expand tests to meet the floor; do not lower gates.",
+    "Planner, Studio, Site, and Admin use the policy in tests/manifests/coverage-exceptions.json.",
+    "Ship gate: 100% lines, 100% functions, 95% statements, and 95% branches.",
+    "Every eligibility exclusion is owner-reviewed; metric exceptions must be explicit and expiring.",
+    "The broad inventory profile is diagnostic-only.",
   ].join(" ");
 }

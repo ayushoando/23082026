@@ -1,47 +1,92 @@
 #!/usr/bin/env node
 /**
- * Fail on test.skip / describe.skip in gate Playwright specs.
+ * Reject silent skips, focused tests, and line-coverage ignores across every test lane.
+ * Temporary exceptions must be explicit, owned, scoped, expiring, and name a replacement.
  */
-import { readFileSync, existsSync } from "node:fs";
+import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const monorepoRoot = path.resolve(__dirname, "../..");
-const configPath = path.join(
-  monorepoRoot,
-  "config",
-  "build",
-  "playwright-gate-specs.json",
-);
+const repoRoot = process.env.MONOREPO_ROOT
+  ? path.resolve(process.env.MONOREPO_ROOT)
+  : path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
+const testsRoot = path.join(repoRoot, "tests");
+const gateConfigPath = path.join(repoRoot, "config", "build", "playwright-gate-specs.json");
+const exceptionPath = path.join(testsRoot, "manifests", "skip-exceptions.json");
+const TEST_SOURCE = /\.[cm]?[jt]sx?$/i;
+const skipRe = /\b(?:test|describe|it)\s*\.\s*(?:skip(?:If)?|fixme)\s*\(/;
+const patterns = [
+  { id: "contains-skip", re: skipRe, source: "code" },
+  { id: "contains-test-info-skip", re: /\btestInfo\s*\.\s*skip\s*\(/, source: "code" },
+  { id: "contains-focused-test", re: /\b(?:test|describe|it)\s*\.\s*only\s*\(/, source: "code" },
+  { id: "contains-coverage-ignore", re: /(?:istanbul|v8)\s+ignore|coverage\s+ignore/i, source: "raw" },
+];
 
-if (!existsSync(configPath)) {
-  process.stderr.write(`Missing ${configPath}\n`);
-  process.exit(1);
+function posix(value) {
+  return value.replaceAll("\\", "/");
 }
 
-const { specs = [] } = JSON.parse(readFileSync(configPath, "utf8"));
-const skipRe = /\b(test|describe)\s*\.\s*skip\s*\(/;
-const failures = [];
-
-for (const spec of specs) {
-  const filePath = path.join(monorepoRoot, spec);
-  if (!existsSync(filePath)) {
-    failures.push({ spec, reason: "missing-file" });
-    continue;
+function walk(directory, files = []) {
+  if (!fs.existsSync(directory)) return files;
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+    if (["node_modules", ".git", "__snapshots__"].includes(entry.name)) continue;
+    const absolute = path.join(directory, entry.name);
+    if (entry.isDirectory()) walk(absolute, files);
+    else if (TEST_SOURCE.test(entry.name)) files.push(absolute);
   }
-  const source = readFileSync(filePath, "utf8");
-  if (skipRe.test(source)) {
-    failures.push({ spec, reason: "contains-skip" });
+  return files;
+}
+
+function codeOnly(source) {
+  return source.replace(
+    /("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`|\/\/[^\n\r]*|\/\*[\s\S]*?\*\/)/g,
+    (match) => match.replace(/[^\n\r]/g, " "),
+  );
+}
+
+function loadExceptions() {
+  if (!fs.existsSync(exceptionPath)) return [];
+  const parsed = JSON.parse(fs.readFileSync(exceptionPath, "utf8"));
+  return Array.isArray(parsed.exceptions) ? parsed.exceptions : [];
+}
+
+function validException(entry) {
+  const required = ["file", "rule", "owner", "reason", "expires", "replacementTest"];
+  if (required.some((field) => !String(entry[field] ?? "").trim())) return false;
+  const expiry = Date.parse(entry.expires);
+  return !Number.isNaN(expiry) && expiry >= Date.now();
+}
+
+const failures = [];
+const exceptions = loadExceptions();
+for (const entry of exceptions) {
+  if (!validException(entry)) failures.push({ file: entry.file ?? "<unknown>", reason: "invalid-exception" });
+}
+
+if (!fs.existsSync(gateConfigPath)) {
+  failures.push({ file: posix(path.relative(repoRoot, gateConfigPath)), reason: "missing-file" });
+} else {
+  const gate = JSON.parse(fs.readFileSync(gateConfigPath, "utf8"));
+  for (const spec of gate.specs ?? []) {
+    if (!fs.existsSync(path.join(repoRoot, spec))) failures.push({ file: spec, reason: "missing-file" });
+  }
+}
+
+for (const absolute of walk(testsRoot)) {
+  const file = posix(path.relative(repoRoot, absolute));
+  const source = fs.readFileSync(absolute, "utf8");
+  const sources = { raw: source, code: codeOnly(source) };
+  for (const pattern of patterns) {
+    if (!pattern.re.test(sources[pattern.source])) continue;
+    const exception = exceptions.find((entry) => entry.file === file && entry.rule === pattern.id && validException(entry));
+    if (!exception) failures.push({ file, reason: pattern.id });
   }
 }
 
 if (failures.length > 0) {
   process.stderr.write(`audit-gate-skips: ${failures.length} issue(s)\n`);
-  for (const f of failures) {
-    process.stderr.write(`  ${f.spec} — ${f.reason}\n`);
-  }
+  for (const failure of failures) process.stderr.write(`  ${failure.file} — ${failure.reason}\n`);
   process.exit(1);
 }
 
-process.stdout.write("audit-gate-skips: ok\n");
+process.stdout.write(`audit-gate-skips: ok (${exceptions.length} reviewed exception(s))\n`);

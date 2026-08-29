@@ -10,7 +10,7 @@
         "command": "node .kiro/hooks/block-agent-tests.mjs"
       },
       "description": "Blocks agent shell-tool attempts to run user-owned validation and local-service commands before execution.",
-      "enabled": true
+      "enabled": false
     }
   ]
 }

@@ -50,7 +50,7 @@ licensing compliance.
 - Kiro's **Requirements-First** option is a Feature Spec workflow. It is the
   gated requirements -> design -> tasks flow:
   <https://kiro.dev/docs/specs/feature-specs/requirements-first/>.
-- This repository retains exactly nine repo-specific skills: `db-migrations`,
+- This repository retains exactly ten repo-specific skills: `ai-retrieval`, `db-migrations`,
   `focss-css`, `fork-boundaries`, `graph-impact`, `oando-master`,
   `planner-studio`, `powers-skills-model`, `repo-map`, and `verify-and-gate`.
   Kiro spec artifacts live under `.kiro/specs/<name>/`; active plan coordination

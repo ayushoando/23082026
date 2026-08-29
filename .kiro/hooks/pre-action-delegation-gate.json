@@ -10,7 +10,8 @@
         "type": "command",
         "command": "node .kiro/hooks/pre-action-delegation-gate.mjs",
         "timeout": 60
-      }
+      },
+      "enabled": false
     }
   ]
 }

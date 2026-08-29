@@ -436,6 +436,16 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987620709
+      },
+      {
+        "executionId": "43a83a01-802f-4662-9859-0f09110fdab0",
+        "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
+        "timestamp": 1787999719637
+      },
+      {
+        "executionId": "43a83a01-802f-4662-9859-0f09110fdab0",
+        "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
+        "timestamp": 1787999751083
       }
     ],
     "8.2 Approve and implement, in a separate scope, the executable/host-integrated Pre-Action Enforcement Layer": [
@@ -443,6 +453,16 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987622512
+      },
+      {
+        "executionId": "abd50e64-68f9-4d49-9d87-e7a2c4110fea",
+        "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
+        "timestamp": 1788000419271
+      },
+      {
+        "executionId": "abd50e64-68f9-4d49-9d87-e7a2c4110fea",
+        "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
+        "timestamp": 1788000435292
       }
     ],
     "8.3 Approve and implement, in a separate scope, the Protected Path Lock and Exact-Line rollout": [
@@ -450,6 +470,16 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987623678
+      },
+      {
+        "executionId": "9c5b7119-52b9-4430-9bf3-d0125d98bc75",
+        "chatSessionId": "sess_21faa332-6951-41f6-bba8-4e17bf8ef7ef",
+        "timestamp": 1788000751931
+      },
+      {
+        "executionId": "9c5b7119-52b9-4430-9bf3-d0125d98bc75",
+        "chatSessionId": "sess_21faa332-6951-41f6-bba8-4e17bf8ef7ef",
+        "timestamp": 1788000812661
       }
     ],
     "8.4 Approve and observe the runtime four-slot roster and records/status checker without changing five physical definitions": [
@@ -457,6 +487,16 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987623814
+      },
+      {
+        "executionId": "d046c313-88de-4d2a-b00a-5f62c081634f",
+        "chatSessionId": "sess_21faa332-6951-41f6-bba8-4e17bf8ef7ef",
+        "timestamp": 1788001184982
+      },
+      {
+        "executionId": "d046c313-88de-4d2a-b00a-5f62c081634f",
+        "chatSessionId": "sess_21faa332-6951-41f6-bba8-4e17bf8ef7ef",
+        "timestamp": 1788001342468
       }
     ],
     "9.1 Map every Special Requirement, Requirement 1–40 criterion, Design §21–32 decision, and Property 1–20 to an open implementation or static-audit leaf": [
@@ -492,6 +532,16 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987624367
+      },
+      {
+        "executionId": "d046c313-88de-4d2a-b00a-5f62c081634f",
+        "chatSessionId": "sess_21faa332-6951-41f6-bba8-4e17bf8ef7ef",
+        "timestamp": 1788001362375
+      },
+      {
+        "executionId": "d046c313-88de-4d2a-b00a-5f62c081634f",
+        "chatSessionId": "sess_21faa332-6951-41f6-bba8-4e17bf8ef7ef",
+        "timestamp": 1788001604522
       }
     ],
     "10.2 Property 2: Complete additive Route Records": [
@@ -499,6 +549,16 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987624560
+      },
+      {
+        "executionId": "d046c313-88de-4d2a-b00a-5f62c081634f",
+        "chatSessionId": "sess_21faa332-6951-41f6-bba8-4e17bf8ef7ef",
+        "timestamp": 1788001609433
+      },
+      {
+        "executionId": "d046c313-88de-4d2a-b00a-5f62c081634f",
+        "chatSessionId": "sess_21faa332-6951-41f6-bba8-4e17bf8ef7ef",
+        "timestamp": 1788001988812
       }
     ],
     "10.3 Property 3: Complete 22-card coverage and ordered evidence": [
@@ -506,6 +566,16 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987624726
+      },
+      {
+        "executionId": "d046c313-88de-4d2a-b00a-5f62c081634f",
+        "chatSessionId": "sess_21faa332-6951-41f6-bba8-4e17bf8ef7ef",
+        "timestamp": 1788001995566
+      },
+      {
+        "executionId": "d046c313-88de-4d2a-b00a-5f62c081634f",
+        "chatSessionId": "sess_21faa332-6951-41f6-bba8-4e17bf8ef7ef",
+        "timestamp": 1788002263299
       }
     ],
     "10.4 Property 4: Ordered Plain-Language Response Contract": [
@@ -513,6 +583,16 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987624848
+      },
+      {
+        "executionId": "d046c313-88de-4d2a-b00a-5f62c081634f",
+        "chatSessionId": "sess_21faa332-6951-41f6-bba8-4e17bf8ef7ef",
+        "timestamp": 1788002273199
+      },
+      {
+        "executionId": "d046c313-88de-4d2a-b00a-5f62c081634f",
+        "chatSessionId": "sess_21faa332-6951-41f6-bba8-4e17bf8ef7ef",
+        "timestamp": 1788002492132
       }
     ],
     "10.5 Property 5: Complete safe Prompt Cookbook": [
@@ -520,6 +600,11 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987624960
+      },
+      {
+        "executionId": "d046c313-88de-4d2a-b00a-5f62c081634f",
+        "chatSessionId": "sess_21faa332-6951-41f6-bba8-4e17bf8ef7ef",
+        "timestamp": 1788002500709
       }
     ],
     "10.6 Property 6: Conditional skill routing and local-first capability selection": [
@@ -625,6 +710,13 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987626423
+      }
+    ],
+    "8. Keep separate approval tracks explicit; do not execute them in this phase": [
+      {
+        "executionId": "d046c313-88de-4d2a-b00a-5f62c081634f",
+        "chatSessionId": "sess_21faa332-6951-41f6-bba8-4e17bf8ef7ef",
+        "timestamp": 1788001342713
       }
     ]
   }

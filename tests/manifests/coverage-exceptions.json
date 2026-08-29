@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "policy": {
+    "lines": 100,
+    "functions": 100,
+    "statements": 95,
+    "branches": 95
+  },
+  "eligibilityExclusions": [
+    {
+      "patterns": ["**/*.d.ts"],
+      "owner": "Repository Owner",
+      "reason": "Type declarations contain no executable runtime behavior."
+    },
+    {
+      "patterns": ["**/*.test.{ts,tsx}", "**/*.spec.{ts,tsx}", "**/*.mock.{ts,tsx}"],
+      "owner": "Repository Owner",
+      "reason": "Test and test-double sources are evidence rather than product coverage subjects."
+    },
+    {
+      "patterns": ["**/node_modules/**", "**/.next/**", "**/dist/**", "**/build/**"],
+      "owner": "Repository Owner",
+      "reason": "Dependencies and generated build output are not repository-authored source."
+    },
+    {
+      "patterns": ["**/archive/**", "**/_archive/**", "**/generated-documents/**"],
+      "owner": "Repository Owner",
+      "reason": "Archived and generated artifacts are outside the executable ship surface."
+    },
+    {
+      "patterns": ["**/public/**", "**/*.svg"],
+      "owner": "Repository Owner",
+      "reason": "Static assets require decode and visual evidence rather than line instrumentation."
+    }
+  ],
+  "exceptions": []
+}

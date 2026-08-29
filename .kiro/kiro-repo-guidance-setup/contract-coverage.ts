@@ -9,11 +9,12 @@ export const CANONICAL_INCLUSION =
   "Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action." as const;
 
 /**
- * The approved writable subset of the 36-document active inventory.
+ * The approved writable subset of the 37-document active inventory.
  * The five physical Agent definitions are protected and intentionally excluded
  * until their exact files are named in a current owner request.
  */
 export const ACTIVE_CONTRACT_TARGETS = [
+  "./.kiro/skills/ai-retrieval/SKILL.md",
   "./.kiro/skills/db-migrations/SKILL.md",
   "./.kiro/skills/focss-css/SKILL.md",
   "./.kiro/skills/fork-boundaries/SKILL.md",

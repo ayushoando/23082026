@@ -40,11 +40,7 @@ test.describe("marketing desktop layout — 1920×1080 oversized guard (Plan 13 
         timeout: 60_000,
       });
 
-      // Allow 404 on rider if catalog seed missing — still assert the error shell doesn't overflow.
-      // Soft-404 is acceptable; hard overflow is not.
-      if (response && response.status() >= 500) {
-        test.skip(true, `server ${response.status()} on ${route.path} — layout guard defers until server green`);
-      }
+      expect(response?.status() ?? 0, `server response for ${route.path}`).toBeLessThan(500);
 
       // 1) No horizontal overflow
       const overflow = await page.evaluate(() => ({

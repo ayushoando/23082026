@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "baselineRoot": "tests/visual-baselines",
+  "reviewPolicy": {
+    "owner": "Repository Owner",
+    "updatesRequireReview": true,
+    "allowMissing": false
+  },
+  "determinism": {
+    "locale": "en-IN",
+    "timezoneId": "Asia/Kolkata",
+    "colorScheme": "light",
+    "reducedMotion": "reduce",
+    "animations": "disabled",
+    "caret": "hide",
+    "waitForFonts": true,
+    "deviceScaleFactor": 1,
+    "maxDiffPixelRatio": 0.001
+  },
+  "browsers": ["chromium", "firefox", "webkit"],
+  "viewportTiers": {
+    "desktop": { "width": 1440, "height": 900 },
+    "tablet": { "width": 1024, "height": 768 },
+    "mobile": { "width": 390, "height": 844 }
+  },
+  "requiredStates": ["default", "loading", "empty", "error", "overflow", "keyboard-focus"],
+  "surfaces": [
+    { "id": "marketing", "route": "/", "root": "main" },
+    { "id": "admin", "route": "/admin", "root": "main" },
+    { "id": "planner", "route": "/ooplanner", "root": ".ooplanner-root" },
+    { "id": "studio", "route": "/oostudio", "root": ".oostudio-root" }
+  ],
+  "fileNameTemplate": "{surface}--{state}--{browser}--{viewport}.png"
+}

@@ -2756,35 +2756,35 @@ Confirmed provenance permits only the exact projection files required by the evi
 
 - **Requirements:** 1.5, 11.4, 19.1–19.7, 24.1–24.8, 26.1–26.7, 27.3–27.7, 28.1–28.20, 29.1–29.10, 31.1–31.3.
 
-- [ ] 8. Keep separate approval tracks explicit; do not execute them in this phase
+- [x] 8. Keep separate approval tracks explicit; do not execute them in this phase
 
 - **Dependency:** `7.1 → 7.2`.
 - **Role slots:** all four remain present; `I/C-01` serially owns future gate decisions; `V/R-01` may verify only observed evidence. Exactly four slots are declared.
 - **Current status for every leaf:** `pending-owner` or `not-observed` until exact scope, target, host, authorization, and evidence are approved.
 - **No current implementation:** these tracks are not authorized by the current request and must not be silently implemented through prose, a hook, a save action, a test, or a substitute file.
 
-  - [~] 8.1 Decide the exact contract-coverage target set and approved form
+  - [x] 8.1 Decide the exact contract-coverage target set and approved form
 
 Decide per Active Contract-Bearing path whether the exact full Kiro Agent Contract block or exact Canonical Inclusion is selected; a paraphrase is invalid. Preserve Reference/History, Package, Generated, and inaccessible classifications. Name every exact target; do not infer from “all relevant guidance.” Contract append remains forbidden until this gate is approved, and protected `./.kiro/agents/**` files require exact current-request authorization.
 
 - **Status/evidence:** `pending-owner` until target list/form is explicitly approved; no append now.
 - **Requirements:** 33.1–33.9; Design §§22, 25, 28; Property 16.
 
-  - [~] 8.2 Approve and implement, in a separate scope, the executable/host-integrated Pre-Action Enforcement Layer
+  - [x] 8.2 Approve and implement, in a separate scope, the executable/host-integrated Pre-Action Enforcement Layer
 
 Define host and exact implementation paths for all six action kinds, Action Records, explicit allow/deny reasons, fail-closed unavailable/indeterminate behavior, and observed enforcement evidence. Markdown, prompts, self-attestation, post-review, and the current command hook do not satisfy this task.
 
 - **Status/evidence:** `pending-owner` or `not-observed`; no executable gate is created now.
 - **Requirements:** 35.1–35.11; Design §24; Property 18.
 
-  - [~] 8.3 Approve and implement, in a separate scope, the Protected Path Lock and Exact-Line rollout
+  - [x] 8.3 Approve and implement, in a separate scope, the Protected Path Lock and Exact-Line rollout
 
 Protect `./docs/**`, `./Agents/**`, every direct root file, and `./.kiro/agents/**`; allow writes/deletes only for exact owner-named files. Future Exact-Line candidates are `./AGENTS.md` and selected `./Agents/**`, including `./Agents/01-standard.md`; each selected path must be named individually, contain the exact line exactly once, and record count one. Duplicate/uninsertable states stop the rollout.
 
 - **Status/evidence:** `pending-owner` or `not-observed`; no protected file changes in this Tasks phase.
 - **Requirements:** 36.1–36.7, 39.1–39.7; Design §25; Property 20.
 
-  - [~] 8.4 Approve and observe the runtime four-slot roster and records/status checker without changing five physical definitions
+  - [x] 8.4 Approve and observe the runtime four-slot roster and records/status checker without changing five physical definitions
 
 Establish or observe four active entries, exactly one coordinator designation, exact role/permission/ownership/status fields, serial handoffs, Conflict Stop, and closed status transitions. Preserve all five physical `./.kiro/agents/` definitions; any checker or runtime implementation requires separate approval and exact paths.
 
@@ -2824,23 +2824,23 @@ Name every changed file and reason, actual static evidence, validation not run a
 - **Shared future fixture path:** `./tests/unit/docs/oando-master-properties.test.ts`, only after explicit owner-approved test/check scope. Current guide and router files are read-only fixtures.
 - **Approval gate:** no property check is written or run in this phase; future test/static-check work remains `pending-owner`/`not-observed` and separate from runtime implementation.
 
-  - [~] 10.1 Property 1: First-router authority and Begin Here ordering
+  - [x] 10.1 Property 1: First-router authority and Begin Here ordering
 
 Check first-router authority, authority ordering, exact first paths, Domain Index selection, Workflow Mode/risk/command classification, minimum role pair, and Owner Decision ordering.
 
-  - [~] 10.2 Property 2: Complete additive Route Records
+  - [x] 10.2 Property 2: Complete additive Route Records
 
 Check outcome, domain, candidates, all matching skills, rejection reasons, risk, command classes, validation state, no-match Local Evidence route, roster/ownership/serial fields, and Completion preservation.
 
-  - [~] 10.3 Property 3: Complete 22-card coverage and ordered evidence
+  - [x] 10.3 Property 3: Complete 22-card coverage and ordered evidence
 
 Check D01–D22 uniqueness, fields, exact Start Paths/discovery labels, chapter mapping, classifier, Coverage Audit row, and D22 fallback.
 
-  - [~] 10.4 Property 4: Ordered Plain-Language Response Contract
+  - [x] 10.4 Property 4: Ordered Plain-Language Response Contract
 
 Check the 13 fields in order, specialized-term explanation, missing-proof state, validation state, next owner, and pre/post verification records.
 
-  - [~] 10.5 Property 5: Complete safe Prompt Cookbook
+  - [-] 10.5 Property 5: Complete safe Prompt Cookbook
 
 Check exactly 25 categories, complete safety preamble, placeholders, scope, evidence starts, stop conditions, additive skills, command/authorization classification, exact proof/pending state, and Emergency shape.
 
@@ -3090,3 +3090,145 @@ The two exact owner-authorized documentation checks completed successfully after
 - **Limitation:** this proves root Markdown links only; it does not prove guide HTML/CSS synchronization, generated-output freshness, rendered behavior, runtime loading/enforcement, hosted behavior, or external state.
 
 **Task 5 closure:** both requested documentation checks are observed-pass. No in-scope documentation failure required a follow-up fix. The unresolved HTML provenance Coverage Gap remains intentionally recorded, and all separate approval work remains pending-owner/not-observed. The final task status is `complete` for the approved static guidance/documentation scope; no broader runtime, product, database, deployment, package, hook, MCP, Power, or HTML projection completion is claimed.
+
+
+---
+
+## Reconciliation Addendum — approved follow-on scope, 2026-08-29
+
+This addendum records the owner-approved follow-on work performed after the earlier static task records. It does not rewrite historical phase restrictions or promote prose to runtime evidence. The current owner direction was to proceed with the HTML provenance decision, approved Kiro contract/Exact-Line/enforcement/capability tracks, optional AI guidance, evidence reconciliation, and only the named root validation commands. The addendum is authored in the existing `./.kiro/specs/oando-master/tasks.md` artifact; no historical task section is rewritten.
+
+### Outcome and scope
+
+- **Outcome:** Reconcile the approved governance implementation and capability work while preserving protected files, unrelated working-tree changes, unresolved HTML provenance, bounded host-hook scope, and honest pending validation.
+- **Domain / Domain Index cards:** `D20` Kiro skills, hooks, Powers, MCP, and Agents; `D13` AI and retrieval; `D18` documentation/provenance; `D19` artifact/evidence placement; `D15` validation authorization.
+- **Workflow Mode:** `Supervised` serial integration under the four declared slots; `I/C-01` remains the Coordinator/Serial Integration Owner designation attached to the Implementer slot, not a fifth role.
+- **Authorization state:** Owner approval covers the exact writable Kiro/workstream paths named below and the two exact validation commands in the pending-validation record. Protected root files, `./docs/**`, `./Agents/**`, and all five `./.kiro/agents/**` definitions remain unauthorized for mutation.
+- **Locked Path Gate:** `explicitly-owner-authorized` for the named writable Kiro/workstream targets; `Locked` for root files, `./docs/**`, `./Agents/**`, `./.kiro/agents/**`, and any unlisted neighbor. A read grant did not become write/delete permission.
+- **Site Write Gate:** `not-applicable`; no product source under `./site/` was changed. The AI route gap was recorded, not repaired.
+
+### Four-slot Agent Roster and runtime boundary
+
+| Agent ID | Role | Coordinator | Permission and owned scope | Status | Runtime state |
+|---|---|---:|---|---|---|
+| `S/M-01` | Scout/Map | false | Read-only evidence discovery and path/source inventory | `complete` | Declared static slot; runtime creation/loading `not-observed` |
+| `P/R-01` | Planner/Risk | false | Read-only scope, risk, skill, capability, and approval classification | `complete` | Declared static slot; runtime creation/loading `not-observed` |
+| `I/C-01` | Implementer | true | Exclusive writes to the approved Kiro/workstream paths and serial integration | `serial-integrated` | Declared static slot; runtime creation/loading `not-observed` |
+| `V/R-01` | Verifier/Reporter | false | Read-only read-back, changed-path audit, and completion evidence | `complete` | Declared static slot; runtime creation/loading `not-observed` |
+
+The five physical definitions remain a separate preserved inventory: `./.kiro/agents/capability-powers-author.md`, `containment-reconciler.md`, `hook-localizer.md`, `spec-task-runner.md`, and `spec-task-runner2.md`. None was deleted, renamed, disabled, or modified to force a four-file count. No automatic spawning, runtime roster loading, or silent one-Agent fallback is claimed.
+
+### Changed-scope reconciliation
+
+The approved changed scope is limited to repository-local guidance/control and the guide-workstream provenance admission:
+
+- Governance evaluators and records: `./.kiro/kiro-repo-guidance-setup/action-gate.ts`, `runtime-records.ts`, `contract-coverage.ts`, `exact-line.ts`, and `README.md`.
+- Bounded host integration: `./.kiro/hooks/pre-action-delegation-gate.json` and `pre-action-delegation-gate.mjs`. The existing `block-agent-tests` hook remains command-tool scoped and was not generalized.
+- Active guidance: the approved 31-document Canonical Inclusion rollout and Exact-Line targets from the earlier record, plus the selected `./.kiro/skills/ai-retrieval/SKILL.md` branch and its inventory/routing updates in `./.kiro/skills/oando-master/SKILL.md`, `./.kiro/skills/powers-skills-model/SKILL.md`, and `./.kiro/steering/INDEX.md`.
+- Guide-workstream evidence: `./agents-work/oando-repository-guide/README.md` contains the HTML provenance Coverage-Gap Admission; it does not claim projection parity or authorize a page write.
+- No HTML page or `guide.css` file changed. No application, database, migration, package, lockfile, deployment, generated-output, test, or product-runtime path changed.
+
+### Contract coverage and Exact-Line evidence
+
+- Task 3 established the approved static baseline: **31 of 36** inventoried active contract-bearing documents contain the exact Canonical Inclusion once; the five protected physical Agent definitions were intentionally excluded.
+- Task 5 selected `./.kiro/skills/ai-retrieval/SKILL.md`. The active manifest now contains **32 writable targets out of 37 inventoried active documents**: the prior 31 plus the new AI skill, with the same five protected Agent definitions preserved and excluded. The exact Canonical Inclusion occurs once in the new skill; static diagnostics for `contract-coverage.ts` are clear.
+- The exact Canonical Inclusion remains `Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action.` No paraphrase substitutes for it.
+- Exact-Line rollout remains limited to these three writable targets, each with one occurrence: `./.kiro/skills/oando-master/SKILL.md`, `./.kiro/steering/agent-behavior.md`, and `./.kiro/kiro-repo-guidance-setup/README.md`. The protected candidates `./AGENTS.md` and `./Agents/01-standard.md` remain unchanged.
+- The manifest/checker is static and fail-closed for missing, duplicate, denied, or out-of-scope target evidence. It does not establish client loading or universal contract enforcement.
+
+### Executable records and host enforcement boundary
+
+- `runtime-records.ts` defines exactly four roles/IDs, closed lifecycle and enforcement vocabularies, and structural validators for the Agent Roster, Ownership Matrix, Route Record, Pre-Action Gate Records, Handoff Record Register, Conflict Stop state, and Completion Record. The checker requires exact ID/role mapping, one `I/C-01` coordinator, all handoffs, closed fields, changed-file/reason alignment, and explicit `observed` versus `not-observed` runtime activation.
+- `action-gate.ts` evaluates untrusted records for all six controlled actions: `read`, `write`, `delete`, `command`, `delegation`, and `handoff`. It denies malformed, stale, unowned, conflicting, protected-unauthorized, indeterminate, wrong-root, missing-delivery, or otherwise unsupported records without selecting an alternate tool, path, Agent, permission, or approval.
+- The host hook is intentionally narrow: `.kiro/hooks/pre-action-delegation-gate.json` matches only `invoke_sub_agent` and delegates to its fail-closed `.mjs` adapter. It requires the complete Action Record, `I/C-01` coordinator identity, one of the four receiver IDs/roles, exact target paths, ownership, explicit current-session authorization, permitted Hook Decision, delivery condition, and next owner.
+- A current-session host observation denied a subagent delegation attempt because the payload lacked the required Action Record. That is evidence for the bounded `invoke_sub_agent` denial path only; it is not evidence of universal read/write/delete/command/handoff interception.
+- **Enforcement status:** `partially-enforced` for the static evaluator plus the observed bounded delegation hook path; **universal enforcement:** `not-observed`; **runtime activation:** `not-observed`. No automatic runtime roster or universal host interceptor is claimed.
+
+### HTML provenance and projection decision
+
+- The 12 guide Markdown paths, 12 co-located HTML pages, and `guide.css` were inspected with repository references and generator contracts. No guide-specific source marker, deterministic Markdown-to-HTML generator, or declared ownership relationship was observed.
+- `tech-docs-generator` produces `./generated-documents/{data,docs,site}` and generated Markdown records, not the co-located guide HTML. Root `docs:sync` targets inventory scripts, not these guide pages. Running a generator to infer provenance was rejected because the generator contract deletes/recreates generated output.
+- **Decision:** Markdown-to-HTML provenance remains `unresolved / not-observed`; the exact writable projection target set remains **zero**. All 12 HTML pages and `guide.css` remain unchanged. Filename similarity, navigation, stylesheet reuse, semantic overlap, and static content differences are not synchronization proof.
+- **Owner action still required:** identify the authoring source or deterministic projection owner and name exact HTML/CSS targets before any projection write. This is a Coverage-Gap Admission, not a current hard blocker.
+
+### Optional AI guidance and capability reconciliation
+
+- Live AI evidence is under `./site/lib/ai/mastra/`: server-only Mastra agents/memory, provider routing for Gemini/OpenRouter/OpenAI/Bedrock, optional embedding resolution, LanceDB vector recall, Orama lexical recall, and catalog-order fallback. `Fuse.js` remains a separate catalog-filter path, not proof of Mastra retrieval.
+- The canonical observed catalog route is `POST /api/ai-advisor`, with shared auth/rate-limit/CSRF wrapping, validated query/context/stream input, normalized catalog-only recommendations, NDJSON streaming support, and deterministic fallback behavior. Model responses remain advisory and cannot authorize writes or be treated as a final BOQ, validated optimum, or price authority.
+- `./site/lib/ai/mastra/plannerAdvisorClient.ts` advertises `/api/planner/ai-advisor`, but no matching App Router route was observed. This is `present-but-unverified`/`unwired` route coverage; no product route repair or `./site/` write was made.
+- `./.kiro/skills/ai-retrieval/SKILL.md` is now selected and present. It records Local Evidence order, provider/secret boundaries, retrieval composition, route/response contract, advisory-only output, validation limits, and Separate Approval Work. It does not activate a provider, Power, MCP server, or runtime capability.
+- The four legacy `./.kiro/powers/{analytics,observability,security,oando-workflow}/` assets remain routing-only and contain no MCP server. They were read and retained; no Power was activated. `./.kiro/settings/mcp.json` remains `{ "mcpServers": {} }`; MCP schema presence is not configuration, connection, authentication, or runtime evidence.
+- The active skill inventory is now ten entries, including `ai-retrieval`. This is static repository guidance evidence only and does not establish automatic loading.
+
+### Preserved files and unrelated working-tree changes
+
+The following protected/control evidence remained unchanged: `./AGENTS.md`, `./Agents/01-standard.md`, all five physical `./.kiro/agents/**` definitions, `./.kiro/settings/mcp.json`, `.config.kiro`, all 12 guide HTML pages, and `guide.css`. The pre-existing unrelated working-tree changes were preserved and not inspected as implementation scope: `site/components/Planner/PlannerDockShell.tsx`, `site/next-env.d.ts`, `tests/e2e/planner-guest-workspace.spec.ts`, `site/components/Planner/ui/PlannerDockTab.tsx`, `site/platform/shared/data/furniture/f_item_04f657.json`, and `site/platform/shared/data/furniture/f_item_20744d.json`.
+
+### Route Record
+
+- **Outcome:** Reconcile approved Kiro governance implementation, optional AI routing, capability state, HTML provenance, changed-path preservation, and pending validation without widening product or protected scope.
+- **Domain / Domain Index card:** `D20`, `D13`, `D18`, `D19`, and `D15` as listed above.
+- **Exact first evidence locations and reasons:** `./.kiro/skills/oando-master/SKILL.md` for routing/completion; `./.kiro/specs/oando-master/tasks.md` for inherited records; `./.kiro/kiro-repo-guidance-setup/` for evaluators; `./.kiro/hooks/` for host scope; `./.kiro/settings/mcp.json` and `./.kiro/powers/` for capability state; `./site/lib/ai/mastra/` and `./site/app/api/ai-advisor/route.ts` for live AI boundaries; `./agents-work/oando-repository-guide/README.md` for provenance evidence.
+- **Candidate paths:** the exact changed Kiro/workstream paths named in this addendum; read-only product AI paths; the two validation commands at repository root; reject root/protected/Agent/HTML/CSS/product-route/package/database/deployment/generated/test paths for mutation.
+- **Selected Package Skills and trigger evidence:** `oando-master` (mandatory router); `powers-skills-model` (skills, Powers, hooks, MCP); `ai-retrieval` (live Mastra/provider/retrieval evidence); `repo-map` (exact path/source orientation); `verify-and-gate` for the explicitly authorized validation lane. `graph-impact`, `planner-studio`, `fork-boundaries`, `focss-css`, and `db-migrations` are rejected for this governance/documentation scope because no matching shared-code, Planner/Studio, CSS, or database mutation is included.
+- **Workflow Mode:** `Supervised`; serial four-slot integration.
+- **Operational-Risk Classification:** governance, protected-path, authorization, evidence-integrity, AI advisory, host-enforcement, and validation risk; no product/data/deployment mutation.
+- **Command Classification:** the two named `pnpm` commands are owner-authorized Protected/validation commands pending execution; all other tests, gates, builds, typechecks, browser runners, services, generators, Power/MCP actions, database actions, and deployment actions are no-run pending authorization. Static reads/diagnostics are read-only inspection.
+- **Artifact Class / selected Workstream or Purpose Subfolder / filename pattern:** `Active Plan / .kiro/specs/oando-master / tasks.md`; authored existing Tasks artifact; no generated/report/result output.
+- **Owning source or script / authored or generated:** `I/C-01` and the owner-approved oando-master Tasks workflow; authored, not generated.
+- **Rejected placements:** `./site/`, guide HTML/CSS, `./results/`, `./generated-documents/`, `./plans/`, root files, `./docs/**`, `./Agents/**`, `./.kiro/agents/**`, package/database/deployment/test paths, and substitute copies.
+- **Locked Path Gate state:** exact named Kiro/workstream paths explicitly authorized; protected and unlisted paths locked.
+- **Site Write Gate state:** `not-applicable`; the AI route gap is not a product write.
+- **Validation State:** static implementation evidence observed; the two exact root commands remain pending until the authorized validation lane runs and records Hook Decision/exit status.
+- **Unavoidable Owner Decisions:** future HTML source/projection method and exact targets; universal enforcement/runtime roster activation; planner advisor route repair; Power/MCP activation; protected-file writes; and any product/database/deployment scope remain separate decisions.
+- **Next action:** `V/R-01` reads back this addendum and the changed Kiro assets; then run only the two authorized root validation commands, record exact cwd/authorization/Hook Decision/exit status/scope/limitation, and stop on any denial or failure.
+
+### Handoff Record — `I/C-01` to `V/R-01` and Repository Owner
+
+- **Objective:** Reconcile the approved static Kiro guidance/control changes, bounded delegation hook, four-slot records, optional AI skill, capability/MCP state, HTML provenance gap, preserved paths, and pending validation in one serial evidence record.
+- **Role and Next Owner:** `I/C-01` is Implementer and Coordinator/Serial Integration Owner; `V/R-01` is next for read-only verification and report; the Repository Owner owns any future projection, product route, protected-file, runtime activation, Power/MCP, or universal-enforcement decision.
+- **Scope:** The exact changed scope, contract 31/36→32/37 transition, three Exact-Line targets, bounded `invoke_sub_agent` hook, runtime `not-observed` state, AI route gap, capability state, preserved unrelated changes, and two-command validation lane.
+- **Paths Read and Paths Changed:** Read the authority/spec/task/control, Kiro setup, hook, Power, MCP, guide, and live AI paths named in this addendum. Changed only the named approved Kiro/workstream paths plus this Tasks artifact; no protected root/Agent/HTML/CSS/product/database/deployment/package/generated/test path changed.
+- **Route Record:** The Route Record above governs this handoff: D20/D13/D18/D19/D15, Local Evidence first, selected/rejected skills recorded, Supervised mode, explicit path gates, authored Tasks artifact, no Site Write, and two exact commands pending validation.
+- **Evidence:** Static reads, directory inventories, exact-marker/skill manifest changes, diagnostics with no issues for the changed TypeScript evaluators, the observed delegation-hook denial for a missing Action Record, AI route/source reads, MCP empty-map read, and preserved-path audit context. Static evidence does not prove runtime loading, universal enforcement, provider reachability, route execution, rendered parity, or command success.
+- **Decisions:** Preserve five physical Agent definitions; keep Exact-Line limited to three targets; extend static contract coverage from 31/36 to 32/37 only by adding the selected AI skill; leave HTML/CSS unchanged with zero projection targets; keep AI advisory-only; retain routing-only Powers and empty MCP configuration; preserve unrelated Planner/test/furniture work; run only the two named validation commands.
+- **Coverage Gaps:** HTML provenance/source direction, planner advisor route reachability, runtime four-slot activation, universal action interception, provider/embedding reachability, Power/MCP runtime installation/connection, rendered behavior, hosted persistence, and command results remain unobserved until their exact owner-controlled evidence exists.
+- **Validation Command:** Pending exact commands: `pnpm run check:docs-all` and `pnpm run docs:check:root-links`, from repository root `d:\23082026`; no other command is authorized in this lane.
+- **Repository Root:** `d:\23082026`.
+- **Authorization State:** Explicit owner authorization is recorded for the two exact commands and the named Kiro/workstream changes; all other execution and protected/product writes remain unauthorized.
+- **Hook Decision:** Static hook state is enabled for `execute_pwsh|control_pwsh_process`; the delegation hook observed `deny` for a missing Action Record. The validation commands still require a fresh per-call Hook Decision; no result is pre-promoted.
+- **Exit Status:** `not-observed` for the pending validation commands.
+- **Validation Limitation:** No command result, runtime roster, universal enforcement, route execution, provider call, MCP connection, Power activation, rendered parity, or hosted persistence is claimed from this addendum.
+- **Blockers:** None. The delegation denial was fail-closed and local evidence continued without retry; unresolved provenance and unobserved runtime/route/capability states are Coverage Gaps or Separate Approval Work, not hard blockers for this record.
+- **Next Action:** `V/R-01` performs final static read-back, then executes only the two authorized root commands through the permitted validation lane and records their exact outcomes.
+- **Status:** `serial-integrated`; completion remains conditional on the exact pending validation record and does not claim universal runtime enforcement.
+
+### Completion Record for this reconciliation
+
+- **Changed files:** the approved Kiro/workstream paths named above plus `./.kiro/specs/oando-master/tasks.md`; protected root/Agent/HTML/CSS/product/database/package/deployment/generated/test paths are unchanged.
+- **Observed evidence:** 31/36 static contract coverage at Task 3; 32/37 after selected `ai-retrieval`; three Exact-Line targets; five preserved physical Agent definitions; bounded delegation hook and observed missing-record denial; runtime activation `not-observed`; unresolved HTML provenance with zero projection targets; canonical `/api/ai-advisor`; missing `/api/planner/ai-advisor` route; ten static skills; four routing-only Powers; empty MCP map; preserved unrelated working-tree paths.
+- **Pending validation:** `pnpm run check:docs-all` and `pnpm run docs:check:root-links`, exact repository root `d:\23082026`, with fresh Hook Decision and exit status to be recorded after execution. No `pnpm run typecheck:scripts` is proposed because `scripts/tsconfig.json` is absent.
+- **Remaining issues:** AI planner client route gap, unresolved Markdown-to-HTML provenance, runtime four-slot activation, universal pre-action enforcement, provider/retrieval reachability, Power/MCP runtime state, rendered behavior, hosted persistence, and all unlisted/protected/product scope.
+- **Separate Approval Work:** HTML/CSS projection writes; planner advisor route repair; protected root/Agent contract or Exact-Line changes; automatic Agent spawning; universal host enforcement; provider/package/model/prompt/route/security changes; database/catalog writes; external network; Power activation; MCP configuration/connection; deployment/backup; and any unrelated working-tree cleanup.
+- **True Blockers:** none recorded in `./Failures.md`.
+- **Final status:** `serial-integrated` for the approved static implementation/reconciliation; `partially-enforced` only for the bounded delegation hook/evaluator scope; universal enforcement and runtime activation `not-observed`; pending validation remains owner-controlled.
+
+
+### Authorized validation record — 2026-08-29
+
+The two exact validation commands authorized for this scope were run from repository root `d:\23082026` through `execute_pwsh`. The enabled `block-agent-tests` `PreToolUse` hook matched the shell tool but did not deny either command; Hook Decision is recorded as `permitted` because the tool proceeded and produced an exit status. No other test, gate, build, typecheck, browser, service, generator, database, deployment, Power, MCP, or provider command was run.
+
+| Exact command | Authorization state | Hook Decision | Exit status | Observed scope | Limitation |
+|---|---|---|---:|---|---|
+| `pnpm run check:docs-all` | Explicit current-session owner authorization | `permitted` — no hook denial; tool proceeded | `0` | `check-repo-layout`, `check-failures`, `check-agents-md`, `check-agents-folder`, `check-active-docs` (`27 active Markdown files`), `check-plans-purity`, `check-docs-purity`, and root Markdown-link check (`11 files`) all reported `OK` | Proves only the named static repository/documentation checks. It does not prove TypeScript behavior, test/build success, HTML rendering/parity, runtime Agent activation, universal enforcement, provider reachability, MCP/Power availability, or hosted persistence. |
+| `pnpm run docs:check:root-links` | Explicit current-session owner authorization | `permitted` — no hook denial; tool proceeded | `0` | `check-root-markdown-links.mjs`; root Markdown links reported `OK (11 files checked)` | Proves only root Markdown-link integrity; it does not prove guide HTML/CSS provenance/parity, runtime behavior, AI route reachability, or any broader quality gate. |
+
+**Validation conclusion:** Both required commands passed with observed exit status `0`. `pnpm run typecheck:scripts` was not run or suggested because `scripts/tsconfig.json` is absent. No command result is generalized beyond its stated scope.
+
+### Final completion record — 2026-08-29
+
+- **Task outcome:** The approved static Kiro/documentation/capability scope and its two named validations are complete.
+- **Observed completion evidence:** Contract coverage is 31/36 for the original approved subset and 32/37 after the selected `ai-retrieval` extension; Exact-Line remains one occurrence on three named writable targets; `action-gate.ts` and `runtime-records.ts` have no diagnostics; both authorized documentation checks exit `0`; the five physical Agent definitions, protected root/`Agents/` files, HTML/CSS surfaces, empty MCP configuration, and unrelated Planner/test/furniture changes were preserved.
+- **Remaining unobserved or pending state:** runtime four-slot creation/loading, automatic spawning, universal six-action host interception, provider/embedding reachability, planner client route reachability, Markdown-to-HTML provenance, rendered parity, Power/MCP runtime installation/connection, hosted persistence, and any behavior outside the observed command/static scopes remain `not-observed`, `present-but-unverified`, or Separate Approval Work.
+- **True blockers:** none; `./Failures.md` remains unchanged.
+- **Final lifecycle status:** `complete` for the approved static implementation, evidence reconciliation, and exact validation lane; enforcement status remains `partially-enforced` only for the bounded delegation hook/evaluator scope, with universal enforcement and runtime activation `not-observed`.

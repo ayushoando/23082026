@@ -1,8 +1,23 @@
+import fs from "node:fs";
 import path from "path";
 import { fileURLToPath } from "node:url";
 
 /** This folder (`tests/`) — vitest config home. */
 const TESTS_DIR = path.dirname(fileURLToPath(import.meta.url));
+
+interface CoverageThresholds {
+  lines: number;
+  functions: number;
+  statements: number;
+  branches: number;
+}
+
+const coverageManifest = JSON.parse(
+  fs.readFileSync(path.join(TESTS_DIR, "manifests", "coverage-exceptions.json"), "utf8"),
+) as { policy: CoverageThresholds };
+
+/** Single threshold source shared by every release coverage profile. */
+export const VITEST_COVERAGE_THRESHOLDS = Object.freeze({ ...coverageManifest.policy });
 
 /** Monorepo root (parent of `tests/` and `site/`). */
 export const VITEST_WORKSPACE_ROOT = path.resolve(TESTS_DIR, "..");
@@ -134,18 +149,25 @@ export const VITEST_COMMON_COVERAGE_REPORTERS = [
 ] as const;
 
 /**
- * Planner/Studio ship gate allowlist — only modules with suite ownership ≥90%.
- * Expand this list when tests bring a file over the floor (never lower thresholds).
- * Inventory profile covers the full fork tree for dark metering.
+ * Planner/Studio release coverage. This is source-surface based, not a historical
+ * seven-file allowlist; uncovered eligible files must remain visible.
  */
 export const VITEST_PLANNER_GATE_COVERAGE_INCLUDE = [
+  "app/ooplanner/**/*.{ts,tsx}",
+  "app/oostudio/**/*.{ts,tsx}",
+  "components/Planner/**/*.{ts,tsx}",
+  "components/Studio/**/*.{ts,tsx}",
+  "features/Planner/**/*.{ts,tsx}",
+  "features/Studio/**/*.{ts,tsx}",
+  "hooks/Planner/**/*.{ts,tsx}",
+  "hooks/Studio/**/*.{ts,tsx}",
+  "lib/Planner/**/*.{ts,tsx}",
+  "lib/Studio/**/*.{ts,tsx}",
+  "server/Planner/**/*.{ts,tsx}",
+  "server/Studio/**/*.{ts,tsx}",
+  "store/Planner/**/*.{ts,tsx}",
+  "store/Studio/**/*.{ts,tsx}",
   "lib/api/browserApi.ts",
-  "lib/Planner/plannerApi.ts",
-  "lib/Planner/plannerSnap.ts",
-  "lib/Planner/plannerTokens.ts",
-  "lib/Studio/studioDrawColors.ts",
-  "lib/Studio/studioSnap.ts",
-  "lib/Studio/studioTokens.ts",
 ] as const;
 
 export const VITEST_PLANNER_GATE_COVERAGE_EXCLUDE = [
@@ -156,13 +178,8 @@ export const VITEST_PLANNER_GATE_COVERAGE_EXCLUDE = [
   "**/node_modules/**",
 ] as const;
 
-/** Floor: 90% on gated include set (user quality bar). Expand tests before lowering. */
-export const VITEST_PLANNER_GATE_THRESHOLDS = {
-  statements: 90,
-  branches: 90,
-  functions: 90,
-  lines: 90,
-} as const;
+/** Approved profile thresholds loaded from the owner-reviewed manifest. */
+export const VITEST_PLANNER_GATE_THRESHOLDS = VITEST_COVERAGE_THRESHOLDS;
 
 export const VITEST_PLANNER_INVENTORY_COVERAGE_INCLUDE = [
   "app/api/**/*.{ts,tsx}",

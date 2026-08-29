@@ -1,204 +1,129 @@
-/**
- * Refresh tests inventory + legacy migration map for docs:sync.
- * Writes:
- *   results/test-inventory.json
- *   results/test-migration-map.json
- *   tests/INVENTORY.md (markdown summary)
- */
+/** Generate a non-overlapping test, support, and migration inventory. */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { REPO_ROOT } from "../lib/repoRoot.mjs";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const TESTS_DIR = path.join(REPO_ROOT, "tests");
 const RESULTS_DIR = path.join(REPO_ROOT, "results");
 const INVENTORY_JSON = path.join(RESULTS_DIR, "test-inventory.json");
 const MIGRATION_JSON = path.join(RESULTS_DIR, "test-migration-map.json");
 const INVENTORY_MD = path.join(TESTS_DIR, "INVENTORY.md");
+const OWNERSHIP_PATH = path.join(TESTS_DIR, "manifests", "source-test-ownership.json");
 
-/** @typedef {{ name: string; path: string; kind: string; runner: string }} InventoryFile */
-
-function walk(dir, acc = []) {
-  if (!fs.existsSync(dir)) return acc;
-  for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
-    const full = path.join(dir, ent.name);
-    if (ent.isDirectory()) {
-      if (ent.name === "node_modules" || ent.name === ".git") continue;
-      walk(full, acc);
-    } else {
-      acc.push(full);
-    }
-  }
-  return acc;
+function posix(value) {
+  return value.replaceAll("\\", "/");
 }
 
-function classify(relPosix) {
-  const base = path.posix.basename(relPosix);
-  if (base === "setup.ts" || base.endsWith(".setup.ts")) {
-    return { kind: "helper", runner: "helper" };
+function walk(directory, files = []) {
+  if (!fs.existsSync(directory)) return files;
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+    if (["node_modules", ".git"].includes(entry.name)) continue;
+    const absolute = path.join(directory, entry.name);
+    if (entry.isDirectory()) walk(absolute, files);
+    else files.push(absolute);
   }
-  if (/\.spec\.(ts|tsx|js|mjs)$/.test(base) || relPosix.includes("/e2e/")) {
-    return { kind: "playwright", runner: "playwright" };
-  }
-  if (/\.test\.(ts|tsx|js|mjs)$/.test(base)) {
-    if (relPosix.includes("excluded") || relPosix.includes("/skip/")) {
-      return { kind: "vitestExcluded", runner: "vitest" };
-    }
-    return { kind: "vitest", runner: "vitest" };
-  }
-  if (
-    base.endsWith(".ts") ||
-    base.endsWith(".tsx") ||
-    base.endsWith(".mjs") ||
-    base.endsWith(".js")
-  ) {
-    return { kind: "helper", runner: "helper" };
-  }
-  return null;
-}
-
-function collectFiles() {
-  /** @type {InventoryFile[]} */
-  const files = [];
-  for (const abs of walk(TESTS_DIR)) {
-    const rel = path.relative(REPO_ROOT, abs).replace(/\\/g, "/");
-    if (!rel.startsWith("tests/")) continue;
-    const c = classify(rel);
-    if (!c) continue;
-    files.push({
-      name: path.posix.basename(rel),
-      path: rel,
-      kind: c.kind,
-      runner: c.runner,
-    });
-  }
-  files.sort((a, b) => a.path.localeCompare(b.path));
   return files;
 }
 
-function loadMigrationPairs() {
-  /** @type {{ from: string; to: string }[]} */
-  const pairs = [];
-  if (fs.existsSync(MIGRATION_JSON)) {
-    try {
-      const prev = JSON.parse(fs.readFileSync(MIGRATION_JSON, "utf8"));
-      if (Array.isArray(prev.pairs)) {
-        for (const p of prev.pairs) {
-          if (
-            p &&
-            typeof p.from === "string" &&
-            typeof p.to === "string" &&
-            p.from.includes("tests/unit/") &&
-            p.to.includes("tests/unit/")
-          ) {
-            pairs.push({ from: p.from, to: p.to });
-          }
-        }
-      }
-    } catch {
-      /* rebuild below */
-    }
+export function classifyTestInventoryPath(relative) {
+  const base = path.posix.basename(relative);
+  if (/\.spec\.(?:ts|tsx|js|mjs)$/.test(base)) return { kind: "playwright", runner: "playwright" };
+  if (/\.test\.(?:ts|tsx|js|mjs)$/.test(base)) return { kind: "vitest", runner: "vitest" };
+  if (relative.includes("-snapshots/") || /\.(?:png|webp)$/.test(base)) return { kind: "snapshot", runner: "support" };
+  if (relative.includes("/fixtures/") || relative.startsWith("tests/fixtures/") || relative.startsWith("tests/support/fixtures/")) {
+    return { kind: "fixture", runner: "support" };
   }
-  if (pairs.length === 0) {
-    // Seed at least one documented historical rename so docs:sync contract holds.
-    pairs.push({
-      from: "tests/unit/planner-3d-types.test.ts",
-      to: "tests/unit/features/planner/3d/types.test.ts",
-    });
+  if (/^(?:setup|globalSetup|globalTeardown)\.[cm]?[jt]s$/.test(base) || /\.(?:setup|helper)\.[cm]?[jt]sx?$/.test(base)) {
+    return { kind: "helper", runner: "support" };
   }
-  return pairs;
+  if (/\.[cm]?[jt]sx?$/.test(base)) return { kind: "helper", runner: "support" };
+  return { kind: "asset", runner: "support" };
 }
 
-function writeMarkdown(counts, files) {
-  const byKind = {
-    vitest: files.filter((f) => f.kind === "vitest"),
-    vitestExcluded: files.filter((f) => f.kind === "vitestExcluded"),
-    playwright: files.filter((f) => f.kind === "playwright"),
-    helper: files.filter((f) => f.kind === "helper"),
-  };
+function collectFiles() {
+  return walk(TESTS_DIR)
+    .map((absolute) => {
+      const relative = posix(path.relative(REPO_ROOT, absolute));
+      const classification = classifyTestInventoryPath(relative);
+      return { name: path.posix.basename(relative), path: relative, ...classification };
+    })
+    .sort((a, b) => a.path.localeCompare(b.path));
+}
+
+function loadMigrationPairs() {
+  if (!fs.existsSync(OWNERSHIP_PATH)) return [];
+  const manifest = JSON.parse(fs.readFileSync(OWNERSHIP_PATH, "utf8"));
+  return (manifest.migrationAllowlist ?? []).map((entry) => ({
+    from: entry.prefix,
+    to: entry.replacementRoot,
+    owner: entry.owner,
+    reason: entry.reason,
+    expires: entry.expires,
+  }));
+}
+
+function countsFor(files) {
+  const counts = { total: files.length, vitest: 0, playwright: 0, helpers: 0, fixtures: 0, snapshots: 0, assets: 0 };
+  for (const file of files) {
+    if (file.kind === "vitest") counts.vitest += 1;
+    else if (file.kind === "playwright") counts.playwright += 1;
+    else if (file.kind === "helper") counts.helpers += 1;
+    else if (file.kind === "fixture") counts.fixtures += 1;
+    else if (file.kind === "snapshot") counts.snapshots += 1;
+    else counts.assets += 1;
+  }
+  return counts;
+}
+
+function writeMarkdown(generatedAt, counts, files) {
+  const labels = ["vitest", "playwright", "helper", "fixture", "snapshot", "asset"];
   const lines = [
     "# Test inventory",
     "",
-    "Auto-generated file list and counts. Folder rules: `tests/CONTENTS.md`.",
+    "Generated executable-test and support-file inventory. Layout rules: `tests/CONTENTS.md`.",
     "",
-    `*Updated: ${new Date().toISOString().slice(0, 10)} — run \`pnpm run docs:sync\` to refresh.*`,
+    `*Updated: ${generatedAt.slice(0, 10)} — regenerate through the repository docs workflow.*`,
     "",
     "## Counts",
     "",
     "| Kind | Count |",
-    "|------|-------|",
-    `| Vitest (active) | ${counts.vitest} |`,
-    `| Vitest (excluded in config) | ${counts.vitestExcluded} |`,
-    `| Playwright | ${counts.playwright} |`,
+    "|---|---:|",
+    `| Vitest executable files | ${counts.vitest} |`,
+    `| Playwright executable specs | ${counts.playwright} |`,
     `| Helpers | ${counts.helpers} |`,
+    `| Fixtures | ${counts.fixtures} |`,
+    `| Snapshots | ${counts.snapshots} |`,
+    `| Other assets | ${counts.assets} |`,
     `| **Total files** | **${counts.total}** |`,
     "",
-    "JSON: `results/test-inventory.json` · Migration: `results/test-migration-map.json` · Coverage: `results/coverage-summary.json` (`pnpm run docs:sync:coverage`)",
-    "",
-    "## Files by category",
-    "",
   ];
-  for (const [label, list] of Object.entries(byKind)) {
-    if (list.length === 0) continue;
-    lines.push(`### ${label}`, "");
-    for (const f of list.slice(0, 200)) {
-      lines.push(`- \`${f.path}\``);
-    }
-    if (list.length > 200) lines.push(`- … +${list.length - 200} more`);
+  for (const label of labels) {
+    const category = files.filter((file) => file.kind === label);
+    if (category.length === 0) continue;
+    lines.push(`## ${label}`, "");
+    for (const file of category.slice(0, 200)) lines.push(`- \`${file.path}\``);
+    if (category.length > 200) lines.push(`- … +${category.length - 200} more`);
     lines.push("");
   }
-  lines.push(
-    "## See also",
-    "",
-    "- `CONTENTS.md`",
-    "- `../README.md`",
-    "",
-    "---",
-    "*Generated by `scripts/general/generate-docs.mjs` / `generate-test-inventory.mjs` — do not hand-edit; re-run `pnpm run docs:sync`.*",
-    "",
-  );
-  fs.writeFileSync(INVENTORY_MD, lines.join("\n"), "utf8");
+  fs.writeFileSync(INVENTORY_MD, `${lines.join("\n")}\n`, "utf8");
 }
 
-const files = collectFiles();
-const counts = {
-  total: files.length,
-  vitest: files.filter((f) => f.kind === "vitest").length,
-  vitestExcluded: files.filter((f) => f.kind === "vitestExcluded").length,
-  playwright: files.filter((f) => f.kind === "playwright").length,
-  helpers: files.filter((f) => f.kind === "helper").length,
-};
+export function generateTestInventory() {
+  const files = collectFiles();
+  const counts = countsFor(files);
+  const generatedAt = new Date().toISOString();
+  const migrationPairs = loadMigrationPairs();
 
-const generatedAt = new Date().toISOString();
-const inventory = {
-  generatedAt,
-  source: "tests/",
-  counts,
-  vitestExclude: [],
-  files,
-  byKind: {},
-};
+  fs.mkdirSync(RESULTS_DIR, { recursive: true });
+  fs.writeFileSync(INVENTORY_JSON, `${JSON.stringify({ version: 2, generatedAt, source: "tests/", counts, files }, null, 2)}\n`, "utf8");
+  fs.writeFileSync(MIGRATION_JSON, `${JSON.stringify({ version: 2, generatedAt, description: "Hybrid migration to source-root-preserving test paths", pairs: migrationPairs }, null, 2)}\n`, "utf8");
+  writeMarkdown(generatedAt, counts, files);
 
-const migration = {
-  generatedAt,
-  commit: generatedAt.slice(0, 10),
-  description:
-    "Legacy flat tests/unit/* retired; mirrored under tests/unit/features/…",
-  pairs: loadMigrationPairs(),
-};
+  console.log(`[generate-test-inventory] total=${counts.total} vitest=${counts.vitest} playwright=${counts.playwright} support=${counts.helpers + counts.fixtures + counts.snapshots + counts.assets}`);
+  return { counts, files, migrationPairs };
+}
 
-fs.mkdirSync(RESULTS_DIR, { recursive: true });
-fs.writeFileSync(INVENTORY_JSON, JSON.stringify(inventory, null, 2) + "\n", "utf8");
-fs.writeFileSync(MIGRATION_JSON, JSON.stringify(migration, null, 2) + "\n", "utf8");
-writeMarkdown(counts, files);
-
-console.log(
-  `[generate-test-inventory] total=${counts.total} vitest=${counts.vitest} playwright=${counts.playwright} helpers=${counts.helpers}`,
-);
-console.log(`  wrote ${path.relative(REPO_ROOT, INVENTORY_JSON)}`);
-console.log(`  wrote ${path.relative(REPO_ROOT, MIGRATION_JSON)}`);
-console.log(`  wrote ${path.relative(REPO_ROOT, INVENTORY_MD)}`);
-
-// silence unused
-void __dirname;
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  generateTestInventory();
+}

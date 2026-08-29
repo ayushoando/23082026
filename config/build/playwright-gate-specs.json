@@ -1,6 +1,6 @@
 {
-  "version": 2,
-  "description": "Playwright specs run by site release:gate (test:a11y + test:planner-catalog). Paths relative to site/",
+  "version": 3,
+  "description": "Repository-root Playwright specs required by the browser release gate. All run across the configured browser and viewport matrix.",
   "specs": [
     "tests/e2e/accessibility.spec.ts",
     "tests/e2e/admin-smoke.spec.ts",

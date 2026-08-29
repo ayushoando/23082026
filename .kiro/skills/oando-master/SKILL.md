@@ -134,7 +134,7 @@ The Completion Record repeats selected/rejected skills, changed scope, exact obs
 
 ### Conditional skill routing
 
-The observed repository-local Package Skill inventory is the nine files named in the guide: `db-migrations`, `focss-css`, `fork-boundaries`, `graph-impact`, `oando-master`, `planner-studio`, `powers-skills-model`, `repo-map`, and `verify-and-gate`. This inventory is static evidence of repository guidance, not proof of client loading or automatic activation. Route additively when evidence matches:
+The observed repository-local Package Skill inventory is the ten files named in the guide: `ai-retrieval`, `db-migrations`, `focss-css`, `fork-boundaries`, `graph-impact`, `oando-master`, `planner-studio`, `powers-skills-model`, `repo-map`, and `verify-and-gate`. This inventory is static evidence of repository guidance, not proof of client loading or automatic activation. Route additively when evidence matches:
 
 - `repo-map` for orientation, route, feature, path, or code-location discovery.
 - `graph-impact` for Shared Code, dependencies, blast radius, or circular-dependency analysis.
@@ -144,9 +144,9 @@ The observed repository-local Package Skill inventory is the nine files named in
 - `db-migrations` for schema selection, SQL, migrations, RLS, grants, rollback, or Products/Admin ownership.
 - `powers-skills-model` for repository-local skills, steering, Powers, MCPs, agents, or capability packaging.
 - `verify-and-gate` only after exact current-session Explicit User Authorization and Hook Permission are established for the requested validation.
-- `ai-retrieval` only if `./.kiro/skills/ai-retrieval/SKILL.md` exists and the evidence concerns `./site/lib/ai/mastra/`, Mastra, Bedrock, LanceDB, Orama, Fuse.js, embeddings, retrieval, advisory output, or provider behavior. Until it exists, record the missing Package Skill and route through Local Evidence, `repo-map`, and every other matching skill.
+- `ai-retrieval` for evidence concerning `./site/lib/ai/mastra/`, Mastra, Bedrock, LanceDB, Orama, Fuse.js, embeddings, retrieval, advisory output, or provider behavior. It remains guidance-only: route through Local Evidence, preserve server-only/provider boundaries, and do not infer route reachability or runtime capability.
 
-A skill directory or schema file does not prove installation, applicability, connection, or runtime loading. Use Local Evidence before any Power. Consult the Installed-Power Registry only when Local Evidence cannot answer the question; present a confirmed Power as optional, never activate automatically, and use a read-only least-privilege fallback for external access.
+A skill directory or schema file does not prove installation, applicability, connection, or runtime loading. Use Local Evidence before any Power. Consult the Installed-Power Registry only when Local Evidence cannot answer the question; present a confirmed Power as optional, never activate automatically, and use a read-only least-privilege fallback for external access. If a recurring repository task lacks a matching Package Skill, record a separate Package Skill proposal with its trigger, canonical location, authority sources, safety boundary, and completion expectation; do not represent the proposal as an available skill.
 
 ### Domain and surface safeguards
 

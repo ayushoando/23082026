@@ -95,7 +95,7 @@ Unavoidable Owner Decisions:
 Next action:
 ```
 
-A matching skill is additive: select all matching skills, not one assumed skill. If none matches, select Local Evidence and record why. The Completion Record repeats selected and rejected skills, changed scope, observed evidence, pending validation, and true blockers.
+A matching skill is additive: select all matching skills, not one assumed skill. If none matches, select Local Evidence and record why. If a recurring repository task lacks a matching Package Skill, record a separate Package Skill proposal with its trigger, canonical location, authority sources, safety boundary, and completion expectation; do not represent the proposal as an available skill. The Completion Record repeats selected and rejected skills, changed scope, observed evidence, pending validation, and true blockers.
 
 ## Coverage-Audited Repository Domain Index
 

@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, beforeAll } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { AI_ASSISTANT_WELCOME_MESSAGE } from "@/features/site/data/assistant";
 
@@ -10,13 +10,18 @@ vi.mock("@/lib/consent", () => ({
   hasConsentChoice: () => true,
 }));
 
+vi.mock("@/features/site/assistant/UnifiedAssistant", () => ({
+  UnifiedAssistant: () => (
+    <div>
+      <button type="button" aria-label="Open AI chatbot">Open assistant</button>
+      <p>Hi, I am your workspace AI assistant. Share your requirement and I will suggest practical options.</p>
+    </div>
+  ),
+}));
+
 import DynamicBotWrapper from "@/features/site/assistant/DynamicBotWrapper";
 
 describe("DynamicBotWrapper", () => {
-  beforeAll(async () => {
-    await import("@/features/site/assistant/UnifiedAssistant");
-  }, 60_000);
-
   it("renders the lazily loaded unified assistant", async () => {
     render(<DynamicBotWrapper />);
     expect(

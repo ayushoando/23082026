@@ -99,9 +99,9 @@ function formatMetricCells(metric) {
   return [m.total ?? 0, m.covered ?? 0, m.skipped ?? 0, m.pct ?? 0];
 }
 
-function lineStatus(pct) {
-  // Bands relative to gate policy — never a frozen absolute mass total
-  return fileStatusVsGate(pct, "lines");
+function lineStatus(pct, profileKey) {
+  // Bands relative to the selected profile policy — never a frozen mass total.
+  return fileStatusVsGate(pct, "lines", profileKey);
 }
 
 function buildCsvHeader(metricKeys = METRIC_KEYS) {
@@ -118,7 +118,7 @@ function buildCsvHeader(metricKeys = METRIC_KEYS) {
   return cols;
 }
 
-function buildCsvRow(relativePath, stats, uncoveredLines, metricKeys = METRIC_KEYS) {
+function buildCsvRow(relativePath, stats, uncoveredLines, profileKey, metricKeys = METRIC_KEYS) {
   const directory = path.dirname(relativePath).replace(/\\/g, "/");
   const file = path.basename(relativePath);
   const cells = [directory, file, relativePath];
@@ -130,18 +130,18 @@ function buildCsvRow(relativePath, stats, uncoveredLines, metricKeys = METRIC_KE
   const linePct = stats?.lines?.pct ?? 0;
   cells.push(
     uncoveredLines.length > 0 ? uncoveredLines.join(", ") : "",
-    lineStatus(linePct),
+    lineStatus(linePct, profileKey),
   );
   return cells;
 }
 
-function writeCsv(outputPath, totalStats, fileRows, metricKeys) {
+function writeCsv(outputPath, profileKey, totalStats, fileRows, metricKeys) {
   const header = buildCsvHeader(metricKeys);
   const lines = [header.map(escapeCsv).join(",")];
 
   if (totalStats) {
     lines.push(
-      buildCsvRow("TOTAL", totalStats, [], metricKeys)
+      buildCsvRow("TOTAL", totalStats, [], profileKey, metricKeys)
         .map((cell, index) => (index < 3 ? escapeCsv(cell === "TOTAL" ? "TOTAL" : cell) : escapeCsv(cell)))
         .join(","),
     );
@@ -262,7 +262,7 @@ function writeHtml(outputPath, profile, totalStats, fileRows, generatedAt, metri
   fs.writeFileSync(outputPath, html, "utf8");
 }
 
-function loadCoverageData(repoRoot, dataDir) {
+function loadCoverageData(repoRoot, dataDir, profileKey) {
   const summaryPath = path.join(repoRoot, dataDir, "coverage-summary.json");
   const finalPath = path.join(repoRoot, dataDir, "coverage-final.json");
 
@@ -293,7 +293,7 @@ function loadCoverageData(repoRoot, dataDir) {
     const uncoveredLines = uncoveredLineNumbers(finalCov[finalKey]);
 
     fileRows.push(
-      buildCsvRow(relativePath, stats, uncoveredLines, metricKeys),
+      buildCsvRow(relativePath, stats, uncoveredLines, profileKey, metricKeys),
     );
   }
 
@@ -312,7 +312,7 @@ export function generateCoverageReport(profileKey, repoRoot = resolveWorkspaceRo
     throw new Error(`Unknown coverage profile: ${profileKey}`);
   }
 
-  const loaded = loadCoverageData(repoRoot, profile.dataDir);
+  const loaded = loadCoverageData(repoRoot, profile.dataDir, profileKey);
   if (!loaded) {
     console.warn(
       `generate-coverage-report: no ${profile.dataDir}/coverage-summary.json — skipped ${profileKey}`,
@@ -328,7 +328,7 @@ export function generateCoverageReport(profileKey, repoRoot = resolveWorkspaceRo
   const htmlPath = path.join(reportDir, "coverage-report.html");
   const jsonPath = path.join(reportDir, "coverage-report.json");
 
-  writeCsv(csvPath, loaded.totalStats, loaded.fileRows, loaded.metricKeys);
+  writeCsv(csvPath, profileKey, loaded.totalStats, loaded.fileRows, loaded.metricKeys);
   writeHtml(htmlPath, profile, loaded.totalStats, loaded.fileRows, generatedAt, loaded.metricKeys);
 
   const jsonPayload = {

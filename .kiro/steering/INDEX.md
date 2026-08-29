@@ -43,7 +43,7 @@ Maximum active agents: five. Their write scopes do not overlap during a parallel
 
 ## Skills
 
-`db-migrations`, `focss-css`, `fork-boundaries`, `graph-impact`, `oando-master`, `planner-studio`, `powers-skills-model`, `repo-map`, and `verify-and-gate`.
+`ai-retrieval`, `db-migrations`, `focss-css`, `fork-boundaries`, `graph-impact`, `oando-master`, `planner-studio`, `powers-skills-model`, `repo-map`, and `verify-and-gate`.
 
 ## Powers
 

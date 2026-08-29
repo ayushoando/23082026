@@ -94,5 +94,58 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm exec playwright install --with-deps chromium
-      - run: pnpm run release:gate
+      - run: pnpm run release:gate:core
+
+  browser-matrix:
+    name: Browser matrix shard ${{ matrix.shard }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ["1/4", "2/4", "3/4", "4/4"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps
+      - run: pnpm run test:browser:gate -- --shard=${{ matrix.shard }} --reporter=blob
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-blob-${{ strategy.job-index }}
+          path: blob-report/
+          if-no-files-found: error
+          retention-days: 7
+
+  browser-report:
+    if: always()
+    needs: browser-matrix
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: playwright-blob-*
+          path: all-blob-reports
+          merge-multiple: true
+      - run: pnpm exec playwright merge-reports --reporter=html all-blob-reports
+        env:
+          PLAYWRIGHT_HTML_OUTPUT_DIR: results/playwright-report
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-html-report
+          path: results/playwright-report/
+          if-no-files-found: error
+          retention-days: 14

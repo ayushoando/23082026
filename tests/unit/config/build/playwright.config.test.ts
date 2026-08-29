@@ -1,100 +1,113 @@
 // @vitest-environment node
-/**
- * Name-mirror: config/build/playwright.config.ts
- * Asserts exported Playwright config shape without launching browsers.
- */
-import { describe, expect, it } from "vitest";
+/** Static Playwright matrix and CI contracts; does not launch browsers. */
+import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { describe, expect, it } from "vitest";
+
 import playwrightConfig from "../../../../config/build/playwright.config";
 
-function reporterEntry(
-  reporters: unknown,
-  name: string,
-): unknown {
+const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
+
+function reporterEntry(reporters: unknown, name: string): unknown {
   if (!Array.isArray(reporters)) return undefined;
-  for (const entry of reporters) {
-    if (Array.isArray(entry) && entry[0] === name) return entry;
-    if (entry === name) return entry;
-  }
-  return undefined;
+  return reporters.find((entry) => (Array.isArray(entry) ? entry[0] === name : entry === name));
 }
 
 describe("config/build/playwright.config.ts", () => {
-  it("exports a defined Playwright config object", () => {
-    expect(playwrightConfig).toBeDefined();
-    expect(typeof playwrightConfig).toBe("object");
+  it("points executable discovery at spec files under tests", () => {
+    expect(String(playwrightConfig.testDir)).toContain("tests");
+    expect(playwrightConfig.testMatch).toEqual(["**/*.spec.ts", "**/*.spec.tsx"]);
+    expect(playwrightConfig.testIgnore).toEqual(["**/*.test.ts", "**/*.test.tsx"]);
+    expect(path.normalize(String(playwrightConfig.outputDir))).toContain(path.normalize("results/test-results"));
   });
 
-  it("points testDir and matchers at e2e specs under tests/", () => {
-    expect(playwrightConfig.testDir).toBeDefined();
-    expect(String(playwrightConfig.testDir)).toContain("tests");
+  it("defines Chromium, Firefox, and WebKit across desktop, tablet, and mobile", () => {
+    const expectedNames = [
+      "chromium-desktop",
+      "chromium-tablet",
+      "chromium-mobile",
+      "firefox-desktop",
+      "firefox-tablet",
+      "firefox-mobile",
+      "webkit-desktop",
+      "webkit-tablet",
+      "webkit-mobile",
+    ];
+    const projects = playwrightConfig.projects ?? [];
+    expect(projects.map((project) => project.name)).toEqual(expectedNames);
+    expect(projects).toHaveLength(9);
 
-    const match = playwrightConfig.testMatch;
-    expect(match).toBeDefined();
-    const matchList = Array.isArray(match) ? match : [match];
-    expect(
-      matchList.some(
-        (pattern) =>
-          typeof pattern === "string" &&
-          (pattern.includes(".spec.ts") || pattern.includes("**/*")),
-      ),
-    ).toBe(true);
-
-    const ignore = playwrightConfig.testIgnore;
-    if (ignore !== undefined) {
-      const ignoreList = Array.isArray(ignore) ? ignore : [ignore];
-      expect(
-        ignoreList.some(
-          (pattern) => typeof pattern === "string" && pattern.includes(".test."),
-        ),
-      ).toBe(true);
+    const expectedViewports = {
+      desktop: { width: 1440, height: 900 },
+      tablet: { width: 1024, height: 768 },
+      mobile: { width: 390, height: 844 },
+    };
+    for (const project of projects) {
+      const tier = project.name?.split("-").at(-1) as keyof typeof expectedViewports;
+      expect(project.use?.viewport).toEqual(expectedViewports[tier]);
+      expect(project.use?.locale).toBe("en-IN");
+      expect(project.use?.timezoneId).toBe("Asia/Kolkata");
+      expect(project.use?.deviceScaleFactor).toBe(1);
     }
   });
 
-  it("routes artifacts under results/ and uses list+html+json reporters", () => {
-    expect(
-      path.normalize(String(playwrightConfig.outputDir ?? "")),
-    ).toContain(path.normalize("results/test-results"));
-
+  it("uses deterministic screenshots and durable local reporters", () => {
     expect(reporterEntry(playwrightConfig.reporter, "list")).toBeDefined();
     expect(reporterEntry(playwrightConfig.reporter, "html")).toBeDefined();
     expect(reporterEntry(playwrightConfig.reporter, "json")).toBeDefined();
+    const screenshot = playwrightConfig.expect?.toHaveScreenshot;
+    expect(screenshot).toMatchObject({
+      maxDiffPixelRatio: 0.001,
+      animations: "disabled",
+      caret: "hide",
+    });
+    expect(playwrightConfig.snapshotPathTemplate).toContain("-snapshots");
   });
 
-  it("configures chromium project and use.baseURL", () => {
-    const projects = playwrightConfig.projects;
-    expect(Array.isArray(projects)).toBe(true);
-    expect(projects?.length).toBeGreaterThan(0);
-    expect(projects?.some((p) => p.name === "chromium")).toBe(true);
+  it("uses localhost and a bounded reusable web server", () => {
+    const baseURL = String(playwrightConfig.use?.baseURL ?? "");
+    expect(baseURL).toMatch(/^http:\/\/localhost:/);
+    expect(baseURL).not.toContain("127.0.0.1");
 
-    const baseURL = playwrightConfig.use?.baseURL;
-    expect(typeof baseURL).toBe("string");
-    expect(String(baseURL).length).toBeGreaterThan(0);
-    expect(String(baseURL)).toMatch(/^https?:\/\//);
-  });
-
-  it("webServer is either undefined (user base URL) or a command/url object", () => {
     const webServer = playwrightConfig.webServer;
-    if (webServer === undefined) {
-      expect(webServer).toBeUndefined();
-      return;
-    }
-
+    if (webServer === undefined) return;
     const servers = Array.isArray(webServer) ? webServer : [webServer];
-    expect(servers.length).toBeGreaterThan(0);
     for (const server of servers) {
-      expect(typeof server.command).toBe("string");
-      expect(String(server.command).length).toBeGreaterThan(0);
-      expect(typeof server.url).toBe("string");
-      expect(String(server.url)).toMatch(/^https?:\/\//);
-      expect(typeof server.timeout).toBe("number");
+      expect(server.url).toMatch(/^http:\/\/localhost:/);
+      expect(server.command).toContain("pnpm run");
       expect(server.timeout).toBeGreaterThan(0);
     }
   });
 
-  it("sets timeout and fullyParallel", () => {
-    expect(typeof playwrightConfig.timeout).toBe("number");
-    expect(playwrightConfig.timeout).toBeGreaterThan(0);
-    expect(playwrightConfig.fullyParallel).toBe(true);
+  it("keeps the release browser gate manifest-driven", () => {
+    const runner = fs.readFileSync(
+      path.join(repositoryRoot, "scripts/general/run-playwright-gate.mjs"),
+      "utf8",
+    );
+    const manifest = JSON.parse(
+      fs.readFileSync(path.join(repositoryRoot, "config/build/playwright-gate-specs.json"), "utf8"),
+    ) as { specs: string[]; excluded: string[] };
+    const packageJson = JSON.parse(fs.readFileSync(path.join(repositoryRoot, "package.json"), "utf8")) as {
+      scripts: Record<string, string>;
+    };
+    expect(runner).toContain("playwright-gate-specs.json");
+    expect(manifest.specs).toHaveLength(8);
+    expect(manifest.excluded).toEqual([]);
+    expect(packageJson.scripts["release:gate"]).toContain("test:browser:gate");
+    expect(packageJson.scripts["test:browser:gate"]).toContain("run-playwright-gate.mjs");
+  });
+
+  it("shards blob reports in CI and merges one HTML evidence artifact", () => {
+    const workflow = fs.readFileSync(
+      path.join(repositoryRoot, ".github/workflows/release-gate.yml"),
+      "utf8",
+    );
+    expect(workflow).toContain('shard: ["1/4", "2/4", "3/4", "4/4"]');
+    expect(workflow).toContain("playwright install --with-deps");
+    expect(workflow).toContain("--reporter=blob");
+    expect(workflow).toContain("playwright merge-reports --reporter=html");
+    expect(workflow).toContain("playwright-html-report");
+    expect(workflow).not.toContain("install --with-deps chromium");
   });
 });
