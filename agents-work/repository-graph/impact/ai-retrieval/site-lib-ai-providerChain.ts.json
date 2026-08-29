@@ -1,0 +1,12 @@
+{
+  "mode": "file",
+  "file": "site/lib/ai/providerChain.ts",
+  "domain": "ai-retrieval",
+  "depth": 2,
+  "depthMeaning": "The seed is distance 0; --depth=N includes dependents up to N import hops.",
+  "directDependencies": [
+    "site/lib/ai/mastra/providerFetch.ts"
+  ],
+  "directDependents": [],
+  "dependents": []
+}

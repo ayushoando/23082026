@@ -1,6 +1,6 @@
 # 03 · Product domains
 
-[← Application architecture](02-application-architecture.md) · [Next: data, API, and persistence →](04-data-api-persistence.md)
+[← Application architecture](02-application-architecture.md) · [Next: data, API, and persistence →](./04-data-api-persistence.md)
 
 ## Marketing site
 
@@ -75,4 +75,4 @@ Use semantic tokens, utilities, existing components, explicit empty/error/loadin
 | AI/retrieval | `site/lib/ai/mastra/` |
 | Fuzzy/full-text/vector retrieval | Fuse, Orama, LanceDB via server-side catalog/AI code |
 
-Use [Data/API](04-data-api-persistence.md) for exact data ownership and release/persistence rules.
+Use [Data/API](./04-data-api-persistence.md) for exact data ownership and release/persistence rules.

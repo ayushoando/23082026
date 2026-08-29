@@ -23,10 +23,17 @@ specific claim before relying on it.
 ## Step 2 — Map dependencies with the graph (not manual scanning)
 Script: `scripts/graph-impact.mjs` (see the graph-impact skill).
 - Whole-repo shape: `node scripts/graph-impact.mjs --stats`
-  (file/edge counts, per-domain counts, high fan-in/fan-out).
+  (file/edge counts, per-domain counts, high fan-in/fan-out). The JSON report is
+  saved under `agents-work/repository-graph/stats/`.
 - Blast radius of a file: `node scripts/graph-impact.mjs --file=<path>`.
+  The JSON report is saved under `agents-work/repository-graph/impact/`.
 - Cycles: `node scripts/graph-impact.mjs --circles`.
-One graph query replaces reading dozens of files to find dependents.
+  The JSON report is saved under `agents-work/repository-graph/cycles/`.
+- Page/component graph: `pnpm exec node scripts/generate-page-component-graph.mjs`.
+  Its route graph is saved under `agents-work/repository-graph/page-components/`.
+
+All graph reports belong under `agents-work/`; no graph tool may write under
+`site/` or `results/`. One graph query replaces reading dozens of files.
 
 ## Step 3 — Regenerate inventories when docs look stale
 `pnpm run docs:sync` (repo root) regenerates route/API inventories.

@@ -1,6 +1,6 @@
 # 02 · Application architecture
 
-[← Full map](01-repository-map.md) · [Next: product domains →](03-product-domains.md)
+[← Full map](01-repository-map.md) · [Next: product domains →](./03-product-domains.md)
 
 This page covers every meaningful layer of the main Next.js application under `site/`.
 
@@ -72,4 +72,4 @@ Start at the route in site/app/.
 → Find proof in tests/.
 ```
 
-Use [Product domains](03-product-domains.md) for surface-specific ownership and [Data/API](04-data-api-persistence.md) for database/persistence/API work.
+Use [Product domains](./03-product-domains.md) for surface-specific ownership and [Data/API](./04-data-api-persistence.md) for database/persistence/API work.

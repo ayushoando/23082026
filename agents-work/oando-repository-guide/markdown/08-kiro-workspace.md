@@ -1,6 +1,6 @@
 # 08 · Kiro workspace
 
-[← Docs, governance, and planning](07-docs-governance-planning.md) · [Next: local/generated/environment →](09-local-generated-environment.md)
+[← Docs, governance, and planning](07-docs-governance-planning.md) · [Next: local/generated/environment →](./09-local-generated-environment.md)
 
 `.kiro/` is the repository-local Kiro control plane. It is not product runtime code.
 
@@ -48,4 +48,4 @@ least-privilege setup and a fallback; do not configure it yet.
 - `skills-lock.json` participates in skill/workspace lock configuration.
 - `.github/instructions/` also contributes task-scoped agent guidance.
 
-Next: [Local, generated, and environment areas](09-local-generated-environment.md).
+Next: [Local, generated, and environment areas](./09-local-generated-environment.md).

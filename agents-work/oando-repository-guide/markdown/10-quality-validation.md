@@ -1,6 +1,6 @@
 # 10 · Quality and validation
 
-[← Local/generated/environment](09-local-generated-environment.md) · [Next: working with Kiro →](11-working-with-kiro.md)
+[← Local/generated/environment](09-local-generated-environment.md) · [Next: working with Kiro →](./11-working-with-kiro.md)
 
 ## Match proof to the changed area
 
@@ -47,4 +47,4 @@ A good report says: command, root cwd, scope, exit/result, what was not verified
 
 Use [Operations and infrastructure](06-operations-infrastructure.md) to plan data/deployment order, then explicitly authorize only approved checks/actions.
 
-Next: [Working with Kiro](11-working-with-kiro.md).
+Next: [Working with Kiro](./11-working-with-kiro.md).

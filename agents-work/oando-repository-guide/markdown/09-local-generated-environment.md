@@ -1,6 +1,6 @@
 # 09 · Local, generated, and environment areas
 
-[← Kiro workspace](08-kiro-workspace.md) · [Next: quality and validation →](10-quality-validation.md)
+[← Kiro workspace](08-kiro-workspace.md) · [Next: quality and validation →](./10-quality-validation.md)
 
 These paths matter to development but are not normal product feature source.
 
@@ -49,4 +49,4 @@ Explain whether it is safe to edit, how it is regenerated, and what current sour
 should be changed instead. Do not modify it yet.
 ```
 
-Next: [Quality and validation](10-quality-validation.md).
+Next: [Quality and validation](./10-quality-validation.md).

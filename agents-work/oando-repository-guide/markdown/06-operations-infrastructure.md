@@ -1,6 +1,6 @@
 # 06 · Operations and infrastructure
 
-[← Tooling, CI, and tech docs](05-tooling-ci-tech-docs.md) · [Next: docs, governance, and planning →](07-docs-governance-planning.md)
+[← Tooling, CI, and tech docs](05-tooling-ci-tech-docs.md) · [Next: docs, governance, and planning →](./07-docs-governance-planning.md)
 
 ## Deployment surfaces
 
@@ -57,4 +57,4 @@ safe observations, customer impact, fallback, recovery path, and approval points
 Do not perform external or write actions.
 ```
 
-Next: [Docs, governance, and planning](07-docs-governance-planning.md).
+Next: [Docs, governance, and planning](./07-docs-governance-planning.md).

@@ -4,7 +4,13 @@ import path from "node:path";
 import { extractRouteRecords } from "../tech-docs-generator/scripts/extract-routes.mjs";
 
 const ROOT = process.cwd();
-const OUT = path.resolve(readArg("--out", "results/site/page-component-graph"));
+const AGENTS_WORK_ROOT = path.resolve(ROOT, "agents-work");
+const requestedOut = path.resolve(ROOT, readArg("--out", "agents-work/repository-graph/page-components"));
+const relativeOut = path.relative(AGENTS_WORK_ROOT, requestedOut);
+if (relativeOut.startsWith(`..${path.sep}`) || relativeOut === ".." || path.isAbsolute(relativeOut)) {
+  throw new Error("Page/component graph output must remain under agents-work/");
+}
+const OUT = requestedOut;
 const SKIP_DIRS = new Set(["node_modules", ".next", ".git", "results", "dist", "coverage"]);
 const EXTENSIONS = ["", ".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".css"];
 const INDEX_FILES = ["index.ts", "index.tsx", "index.js", "index.jsx", "index.mjs", "index.cjs"];

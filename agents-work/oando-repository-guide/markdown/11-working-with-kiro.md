@@ -1,6 +1,6 @@
 # 11 · Working with Kiro
 
-[← Quality and validation](10-quality-validation.md) · [Return to start](README.md)
+[← Quality and validation](10-quality-validation.md) · [Return to start](../README.md)
 
 ## Select the session and control mode
 
@@ -60,4 +60,4 @@ Say “Use the repository skills for this task,” or name `repo-map`, `graph-im
 
 MCP is not needed for normal source, UI, database migration, test, script, docs, or local workflow work. Consider it only for a recurring approved need for live provider state or external systems, and start read-only with least privilege.
 
-[Return to the guide index](README.md).
+[Return to the guide index](../README.md).

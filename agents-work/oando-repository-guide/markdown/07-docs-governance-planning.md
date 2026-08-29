@@ -1,6 +1,6 @@
 # 07 · Docs, governance, and planning
 
-[← Operations and infrastructure](06-operations-infrastructure.md) · [Next: Kiro workspace →](08-kiro-workspace.md)
+[← Operations and infrastructure](06-operations-infrastructure.md) · [Next: Kiro workspace →](./08-kiro-workspace.md)
 
 ## Authority order
 
@@ -53,4 +53,4 @@ Update the correct durable documentation for [change]. State which source is
 canonical, preserve authority order, and do not create a handwritten report in results/.
 ```
 
-Next: [Kiro workspace](08-kiro-workspace.md).
+Next: [Kiro workspace](./08-kiro-workspace.md).

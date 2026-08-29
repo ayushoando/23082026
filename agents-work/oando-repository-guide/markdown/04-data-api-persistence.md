@@ -1,6 +1,6 @@
 # 04 · Data, API, and persistence
 
-[← Product domains](03-product-domains.md) · [Next: tooling, CI, and tech docs →](05-tooling-ci-tech-docs.md)
+[← Product domains](03-product-domains.md) · [Next: tooling, CI, and tech docs →](./05-tooling-ci-tech-docs.md)
 
 ## Two database ownership model
 
@@ -53,4 +53,4 @@ Draft the SQL with grants, RLS policies, and -- rollback. Identify generated typ
 API contracts, application code, tests, and the required dry-run. Do not apply it.
 ```
 
-Next: [Tooling, CI, and tech docs](05-tooling-ci-tech-docs.md).
+Next: [Tooling, CI, and tech docs](./05-tooling-ci-tech-docs.md).

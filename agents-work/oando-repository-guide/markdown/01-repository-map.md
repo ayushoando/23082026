@@ -1,6 +1,6 @@
 # 01 · Full repository map
 
-[Start](README.md) · [Next: application architecture →](02-application-architecture.md)
+[Start](../README.md) · [Next: application architecture →](./02-application-architecture.md)
 
 This is the exhaustive functional map. It includes all meaningful repository areas while intentionally excluding dependency contents and individual generated files.
 
@@ -66,10 +66,10 @@ This is the exhaustive functional map. It includes all meaningful repository are
 
 | If the task is about… | Start at… |
 |---|---|
-| Product page/API behavior | [Application architecture](02-application-architecture.md) then [Product domains](03-product-domains.md) |
-| DB, RLS, catalog/furniture persistence | [Data, API, and persistence](04-data-api-persistence.md) |
-| Test, check, script, CI, or generated tech docs | [Tooling, CI, and tech docs](05-tooling-ci-tech-docs.md) |
-| Deploy, Worker, R2, backup, incident | [Operations and infrastructure](06-operations-infrastructure.md) |
-| Docs, plan, policy, ownership, blocker | [Docs, governance, and planning](07-docs-governance-planning.md) |
-| Kiro configuration or external-tool capability | [Kiro workspace](08-kiro-workspace.md) |
-| Local environment or generated output | [Local, generated, and environment](09-local-generated-environment.md) |
+| Product page/API behavior | [Application architecture](./02-application-architecture.md) then [Product domains](./03-product-domains.md) |
+| DB, RLS, catalog/furniture persistence | [Data, API, and persistence](./04-data-api-persistence.md) |
+| Test, check, script, CI, or generated tech docs | [Tooling, CI, and tech docs](./05-tooling-ci-tech-docs.md) |
+| Deploy, Worker, R2, backup, incident | [Operations and infrastructure](./06-operations-infrastructure.md) |
+| Docs, plan, policy, ownership, blocker | [Docs, governance, and planning](./07-docs-governance-planning.md) |
+| Kiro configuration or external-tool capability | [Kiro workspace](./08-kiro-workspace.md) |
+| Local environment or generated output | [Local, generated, and environment](./09-local-generated-environment.md) |

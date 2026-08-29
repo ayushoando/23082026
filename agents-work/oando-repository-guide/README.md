@@ -7,17 +7,17 @@ This is the complete, multi-page map of the repository: product code, data, APIs
 | Need | Open |
 |---|---|
 | Start, scope, and full coverage index | This page |
-| Every root directory/file category and its status | [01 · Full repository map](01-repository-map.md) |
-| All Next.js `site/` layers, routes, assets, and configuration | [02 · Application architecture](02-application-architecture.md) |
-| Marketing, Admin, Planner, Studio, UI, catalog, and AI | [03 · Product domains](03-product-domains.md) |
-| Databases, Supabase, APIs, persistence, i18n, security | [04 · Data, API, and persistence](04-data-api-persistence.md) |
-| Tests, scripts, config, CI, and tech-docs generator | [05 · Tooling, CI, and tech docs](05-tooling-ci-tech-docs.md) |
-| Vercel, Cloudflare Worker, R2, backup, deployment, incidents | [06 · Operations and infrastructure](06-operations-infrastructure.md) |
-| Canonical docs, planning, governance, agent handbooks, blockers | [07 · Docs, governance, and planning](07-docs-governance-planning.md) |
-| `.kiro`, skills, steering, hooks, specs, powers, MCP schemas, LTM | [08 · Kiro workspace](08-kiro-workspace.md) |
-| Environment files, generated output, results, editor/VCS/local tooling | [09 · Local, generated, and environment areas](09-local-generated-environment.md) |
-| Tests, gates, evidence, validation authorization | [10 · Quality and validation](10-quality-validation.md) |
-| Vibe/Spec/Plan, Autopilot/Supervised, prompts, and skills | [11 · Working with Kiro](11-working-with-kiro.md) |
+| Every root directory/file category and its status | [01 · Full repository map](markdown/01-repository-map.md) |
+| All Next.js `site/` layers, routes, assets, and configuration | [02 · Application architecture](markdown/02-application-architecture.md) |
+| Marketing, Admin, Planner, Studio, UI, catalog, and AI | [03 · Product domains](markdown/03-product-domains.md) |
+| Databases, Supabase, APIs, persistence, i18n, security | [04 · Data, API, and persistence](markdown/04-data-api-persistence.md) |
+| Tests, scripts, config, CI, and tech-docs generator | [05 · Tooling, CI, and tech docs](markdown/05-tooling-ci-tech-docs.md) |
+| Vercel, Cloudflare Worker, R2, backup, deployment, incidents | [06 · Operations and infrastructure](markdown/06-operations-infrastructure.md) |
+| Canonical docs, planning, governance, agent handbooks, blockers | [07 · Docs, governance, and planning](markdown/07-docs-governance-planning.md) |
+| `.kiro`, skills, steering, hooks, specs, powers, MCP schemas, LTM | [08 · Kiro workspace](markdown/08-kiro-workspace.md) |
+| Environment files, generated output, results, editor/VCS/local tooling | [09 · Local, generated, and environment areas](markdown/09-local-generated-environment.md) |
+| Tests, gates, evidence, validation authorization | [10 · Quality and validation](markdown/10-quality-validation.md) |
+| Vibe/Spec/Plan, Autopilot/Supervised, prompts, and skills | [11 · Working with Kiro](markdown/11-working-with-kiro.md) |
 
 ## Coverage rules
 
@@ -46,4 +46,4 @@ persistence, tests, tooling, and operational risks. Do not change code yet.
 
 The live repository has **no root `supabase/` directory**—Supabase code and migrations are under `site/platform/supabase/`. It also has **no root `mcp/` directory**—MCP schemas are under `.kiro/mcp/`. This guide uses the live paths.
 
-The HTML version is `index.html` in the same folder and provides the same guide as a tabbed site.
+The HTML version is `html/index.html`, with all rendered pages and `guide.css` under `html/`; the Markdown chapters are under `markdown/`.

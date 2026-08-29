@@ -1,6 +1,6 @@
 # 05 · Tooling, CI, and tech docs
 
-[← Data, API, and persistence](04-data-api-persistence.md) · [Next: operations and infrastructure →](06-operations-infrastructure.md)
+[← Data, API, and persistence](04-data-api-persistence.md) · [Next: operations and infrastructure →](./06-operations-infrastructure.md)
 
 ## Tests
 
@@ -61,4 +61,4 @@ Many scripts can mutate remote data or infrastructure. Treat them as operational
 
 The SPA is separate from `site/`, does not use FOCSS, runs locally on port 3001, and is still included in root `pnpm run build`.
 
-Use [Quality and validation](10-quality-validation.md) before authorizing a test/gate, and [Operations](06-operations-infrastructure.md) for deploy/backup work.
+Use [Quality and validation](./10-quality-validation.md) before authorizing a test/gate, and [Operations](./06-operations-infrastructure.md) for deploy/backup work.
