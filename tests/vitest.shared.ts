@@ -70,8 +70,6 @@ export const VITEST_SETUP_FILE = path.resolve(VITEST_TESTS_DIR, "setup.ts");
  * Tests live one level up at monorepo `tests/`.
  */
 export const VITEST_TEST_INCLUDE = [
-  "../.kiro/kiro-repo-guidance-setup/tests/**/*.test.ts",
-  "../.kiro/kiro-repo-guidance-setup/tests/**/*.test.tsx",
   "../tests/**/*.test.ts",
   "../tests/**/*.test.tsx",
 ] as const;
@@ -100,6 +98,8 @@ export const VITEST_COMMON_EXCLUDE = [
   "**/archive/**",
   "../tests/archive/**",
   "**/tests/archive/**",
+  // Kiro guidance tests run only in their isolated workflow.
+  "../.kiro/kiro-repo-guidance-setup/tests/**",
   "**/public/**",
   "**/results/**",
   "scripts/**",

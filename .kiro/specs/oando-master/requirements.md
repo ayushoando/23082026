@@ -121,6 +121,19 @@ The revision preserves the existing master-router responsibilities for authority
 - **Generated Documents Directory**: The directory at `./generated-documents/` that receives output from the Tech-Docs Generator Package and remains separate from `./site/` and `./results/`.
 - **Workspace-Boundary Task**: A separately approved Repository Task that specifically authorizes changing the placement or relationship of a workspace package or generated-output directory.
 - **Exact Directory Path**: A repository-relative directory name written with a leading `./`, a trailing `/`, and enough surrounding path context to distinguish similarly named directories.
+- **Standing Multi-Agent Mode**: The default operating mode for every Repository Task in which an Orchestrator assigns and tracks multiple Agents with declared roles, bounded ownership, explicit handoffs, serial integration, and evidence-based closure; Standing Multi-Agent Mode is a persistent repository rule rather than a one-time suggestion or package-installation step.
+- **Agent Roster**: The task-start record listing every active Agent, declared role, read-only or write permission, owned scope, availability state, and current status for a Repository Task.
+- **Ownership Matrix**: The mapping from each Repository Task objective, evidence item, artifact, and repository path to one exclusive Agent owner and the Serial Integration Owner, including serial ownership for shared paths.
+- **Parallel Research Wave**: A bounded simultaneous work phase limited to read-only research or disjoint exclusive file ownership, with a declared start, end, and handoff point.
+- **Serial Integration Owner**: The single Orchestrator or Agent responsible for reconciling Handoff Records, resolving or escalating conflicts, sequencing shared-path writes, and producing the final Completion Record for a Repository Task.
+- **Multi-Agent Availability State**: The recorded capacity state `available`, `limited`, or `unavailable`; `available` means at least two required Agents can be assigned, `limited` means at least one required Agent or role cannot be assigned, and `unavailable` means no second Agent can be assigned.
+- **Orchestrator**: The repository-task coordinator responsible for selecting Workflow Mode, assigning Agents, publishing the Agent Roster and Ownership Matrix, enforcing the Route Record and Site Write Gate, and sequencing Serial Integration.
+- **Multi-Agent Evidence**: The Roster, Ownership Matrix, Route Record, Handoff Records, status messages, conflict decisions, verification evidence, and Completion Record that demonstrate Standing Multi-Agent Mode for a Repository Task.
+- **Repository Owner**: The person or governing owner who receives plain-language status, controls Owner Decisions and Protected Command authorization, and accepts the Completion Record.
+- **Locked Path**: A repository path that agents and guide work may read as authority or evidence but may not change unless the Repository Owner explicitly names and authorizes the exact file in the current request; this specification treats `./docs/`, `./Agents/`, and root-level Markdown files matching `./*.md` as Locked Paths, while `./.kiro/` remains governed by the current spec and Site Write Gate.
+- **Locked Path Gate**: The Route Record control performed before any proposed write that classifies the exact target as Locked, explicitly owner-authorized, or writable and stops an unapproved write to a Locked Path.
+- **Owner-Authorized File**: The exact file within a Locked Path that the Repository Owner explicitly names and authorizes in the current request; general task wording does not authorize another file in the same path.
+- **Read-Only Evidence Source**: A Locked Path or other repository source that agents may inspect as authority or evidence but may not use as an implementation or report destination.
 
 ## Special Requirements
 
@@ -650,3 +663,207 @@ The following beginner-friendly reference is normative for output placement:
 8. IF a Repository Task proposes moving `./tech-docs-generator/` into `./site/` or `./results/site/`, THEN THE Repository Guide and Master Router SHALL reject the proposed move and SHALL require the user to separately approve a dedicated Workspace-Boundary Task before the move can be considered.
 9. THE Repository Guide and Master Router SHALL reserve `./site/` for Core Product Writes and SHALL direct reports, results, skills, prompts, Agent Work Reports, generated files, and other Non-Core Artifacts to their approved non-site repository homes.
 10. IF a Route Record, Outcome-Focused Task Card, or Prompt Cookbook prompt proposes a report, result, skill, prompt, Agent Work Report, generated file, or other Non-Core Artifact under `./site/`, THEN THE Site Write Gate SHALL stop the proposal and SHALL redirect the artifact to its approved repository home.
+
+### Requirement 30: Enforce “Always Use Multiple Subagents” through Standing Multi-Agent Mode
+
+**User Story:** As a repository owner, I want every Repository Task to begin and end with bounded multi-agent coordination, so that research, planning, implementation, verification, and evidence remain explicit, conflict-safe, and owner-controlled.
+
+The “Always Use Multiple Subagents” rule is expressed through Standing Multi-Agent Mode, a persistent Repository Guide and Master Router rule. Standing Multi-Agent Mode is not a one-time suggestion, a request to install a package, an automatic-spawning implementation, or a replacement for the existing routing, artifact-placement, Site Write Gate, Protected Command, or Separate Approval Work boundaries.
+
+#### Acceptance Criteria
+
+1. WHEN a Repository Task starts, THE Repository Guide and Master Router SHALL select Standing Multi-Agent Mode as the default operating mode for the entire Repository Task without requiring the Repository Owner to select a mode.
+2. WHEN a Repository Task is ready to begin repository exploration or a repository write, THE Orchestrator SHALL assign at least two Agents with declared roles before the exploration or write begins.
+3. WHERE the Multi-Agent Availability State is `available`, THE Orchestrator SHALL assign Scout/Map and Planner/Risk as the minimum default pair, and both roles SHALL have read-only permission.
+4. WHEN a Repository Task contains an approved implementation scope, THE Orchestrator SHALL add an Implementer with explicitly approved exclusive paths before the first implementation write.
+5. WHEN a Repository Task requires verification, THE Orchestrator SHALL add a read-only Verifier/Reporter and SHALL keep the total active Agent count at four or fewer.
+6. WHERE a Parallel Research Wave is declared, THE Orchestrator SHALL permit simultaneous Agents only for read-only research or disjoint exclusive file ownership.
+7. IF a target is shared by Agents or is a shared file, manifest, configuration, migration, hook, generated output, result path, or guide/router shared terminology, THEN THE Orchestrator SHALL assign serial ownership and SHALL prohibit simultaneous writes to the target.
+8. WHEN a Repository Task starts, THE Orchestrator SHALL publish an Agent Roster containing every active Agent, declared role, permission, owned scope, Multi-Agent Availability State, and status.
+9. WHEN a Repository Task starts, THE Orchestrator SHALL publish an Ownership Matrix that maps every task objective, evidence item, artifact, and repository path to one exclusive Agent owner or the Serial Integration Owner.
+10. WHEN a Repository Task starts, THE Orchestrator SHALL publish a Route Record for the task and SHALL designate one Serial Integration Owner before any exploration or write begins.
+11. WHEN a Repository Task starts, THE Orchestrator SHALL establish a Handoff Record set for the task and SHALL mark the set `not applicable—no transfer` when the task has no Agent transfer.
+12. WHEN an Agent transfers work or evidence, THE receiving Agent or Serial Integration Owner SHALL complete a Handoff Record with the Objective, Role and Next Owner, Scope, Paths Read and Paths Changed, Route Record, Evidence, Decisions, Coverage Gaps, Validation Command, Repository Root, Authorization State, Hook Decision, Exit Status, Validation Limitation, Blockers, and Next Action, or shall mark each unavailable field `not observed`.
+13. WHEN a Repository Task starts, THE Orchestrator SHALL attach the Conflict Stop Rule to the Agent Roster and Ownership Matrix.
+14. IF Agent ownership sets overlap, Agent edits conflict, or Agent evidence contradicts, THEN THE Conflict Stop Rule SHALL stop all affected writes before further modification and SHALL route the conflict to Repository Owner review and Serial Integration.
+15. WHEN an Implementer is assigned, THE Orchestrator SHALL provide the Repository Owner with a plain-language status using the Plain-Language Response Contract before the first implementation write, including the approved outcome, known and unverified facts, Route Record, Ownership Matrix, artifact destination, Site Write Gate state, allowed checks, Protected Commands pending authorization, and next action.
+16. WHEN the Verifier/Reporter completes verification, THE Verifier/Reporter SHALL provide the Repository Owner with a Completion Record using the Plain-Language Response Contract, including Multi-Agent Evidence, changed scope, observed evidence, pending validation, Coverage-Gap Admission Cards, Separate Approval Work, and True Blockers.
+17. IF the Multi-Agent Availability State is `limited` or `unavailable`, THEN THE Orchestrator SHALL record the unavailable Agent or role, SHALL not silently switch to a single-Agent workflow, and SHALL mark Multi-Agent Evidence as pending owner review.
+18. THE Repository Guide and Master Router SHALL persist Standing Multi-Agent Mode in `./agents-work/oando-repository-guide/README.md` and `./.kiro/skills/oando-master/SKILL.md` as the default rule for every Repository Task.
+19. THE Current Guidance Deliverable SHALL describe Standing Multi-Agent Mode as repository guidance only and SHALL classify automatic Agent spawning, hook changes, package installation, and runtime-code changes as Separate Approval Work.
+20. WHEN the Repository Guide and Master Router select a Workflow Mode, THE Repository Guide and Master Router SHALL select and explain one of Vibe, Plan, Spec, Autopilot, or Supervised without requiring the Repository Owner to choose the mode.
+21. WHEN Standing Multi-Agent Mode guidance is added, THE Repository Guide and Master Router SHALL preserve exactly the three existing Special Requirements and SHALL not create a fourth Special Requirement.
+22. WHEN Standing Multi-Agent Mode guidance is added, THE Repository Guide and Master Router SHALL preserve all 22 existing Repository Domain Index cards and SHALL not rename, remove, merge, or replace a card.
+23. WHEN Standing Multi-Agent Mode guidance is added, THE Repository Guide and Master Router SHALL preserve all 25 existing Prompt Cookbook categories and SHALL keep the standing-mode prompt set separate from the Prompt Cookbook category count.
+24. WHEN Standing Multi-Agent Mode guidance is added, THE Repository Guide and Master Router SHALL preserve Workstream Subfolder, Purpose Subfolder, generated-documents, active-plan, and root-Failures.md artifact-placement rules.
+25. WHEN Standing Multi-Agent Mode guidance names the tech-docs workspace, THE Repository Guide and Master Router SHALL preserve the exact boundary in which `./tech-docs-generator/` remains a root-level sibling of `./site/`, generated output remains under `./generated-documents/`, and machine evidence remains under `./results/`.
+26. WHEN Standing Multi-Agent Mode guidance names a product-source target, THE Site Write Gate SHALL preserve the strict `./site/` boundary by permitting only an explicitly approved Core Product Write and redirecting every Non-Core Artifact to its approved non-site home.
+27. WHEN Standing Multi-Agent Mode guidance identifies automatic spawning, hook, package, runtime, database, deployment, backup, external MCP, Power, or other implementation work, THE Repository Guide and Master Router SHALL classify the work as Separate Approval Work and SHALL not treat the requirements revision as implementation approval.
+
+#### Workflow mode selection guidance
+
+The Repository Owner describes the desired outcome in ordinary language. The Repository Guide and Master Router selects and explains the mode; the Repository Owner is not required to choose a mode.
+
+| Workflow Mode | Router selection guidance | Plain-language explanation |
+|---|---|---|
+| `Vibe` | Read-only discovery or a small, low-risk, reversible task with no Protected Command and no shared-path write | Use for finding facts or making a narrowly bounded low-risk adjustment after the roster and route are recorded. |
+| `Plan` | A multi-step task that needs scope, ownership, risk, artifact placement, or validation planning before implementation | Use when the work needs a bounded execution plan before an Implementer is assigned. |
+| `Spec` | A feature, policy, workflow, or cross-domain change requiring requirements, design, acceptance criteria, or explicit approval boundaries | Use when the task needs durable requirements and decisions before implementation. |
+| `Autopilot` | An approved, bounded implementation with exclusive ownership, no unresolved Owner Decision, and known permitted checks | Use when the Orchestrator can execute the approved scope without pausing for routine decisions. |
+| `Supervised` | High-risk work, shared or serial paths, Protected Commands, external systems, migrations, deployments, or a Repository Owner request for stepwise checkpoints | Use when the Repository Owner must review scope, writes, conflicts, commands, or evidence at defined checkpoints. |
+
+#### Standing Multi-Agent Mode copy-paste prompts
+
+Each prompt below is a complete copy-paste prompt. Each prompt includes the artifact-placement rules, Site Write Gate, Protected Command authorization rule, and Plain-Language Response Contract so the prompt remains safe when copied without surrounding context.
+
+##### 1. Start Standing Multi-Agent Mode
+
+```text
+Start Standing Multi-Agent Mode for this Repository Task.
+
+Desired outcome: [describe the outcome in ordinary language].
+Orchestrator: treat Standing Multi-Agent Mode as the default for this entire task, not as a one-time suggestion or package-installation request. Set and report the Multi-Agent Availability State. Before any repository exploration or write, assign at least two Agents with declared roles; use Scout/Map (read-only) and Planner/Risk (read-only) as the minimum default pair when available. Add Implementer only for an approved implementation scope and Verifier/Reporter when verification is required; never exceed four active Agents. Publish the Agent Roster, Ownership Matrix, Route Record, Handoff Record register, Conflict Stop Rule, and Serial Integration Owner before work starts. Do not silently switch to a single-Agent workflow; if the required pair is unavailable, record the limitation and mark Multi-Agent Evidence pending owner review.
+
+Controls: Put agent-authored reports and work products in ./agents-work/<workstream>/<report-type>/ or an existing approved workstream folder; put command-generated Machine Evidence in ./results/<purpose>/; put tech-docs output in ./generated-documents/; put active plans in ./plans/<name>/; put canonical True Blockers in ./Failures.md. Keep ./tech-docs-generator/ as a root-level sibling of ./site/. Before any ./site/ write, apply the Site Write Gate: classify the target in the Route Record as an explicitly approved Core Product Write or a Non-Core Artifact; stop and redirect every Non-Core Artifact, report, prompt, skill, result, generated file, plan, handoff, or audit to its approved non-site home.
+
+Protected Commands: Treat tests, gates, coverage, browser runs, builds, deployments, database actions, backups, and local-service commands as Protected Commands. Do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission. Classify every proposed command before execution.
+
+Report contract: Return the Plain-Language Response Contract in this order: Outcome; Known; Unverified; Exact First Evidence Locations; Selected Skills; Rejected Skills and Reasons; Numbered Next Actions; Likely Files or Areas; Risk; Allowed Checks; Protected or Pending Checks; Exact Completion Proof; and Unavoidable Owner Decisions. Send the Repository Owner a plain-language status before implementation and a Completion Record after verification.
+```
+
+##### 2. Launch Scout/Map and Planner/Risk in parallel
+
+```text
+Launch the default Parallel Research Wave for this Repository Task.
+
+Desired outcome: [describe the outcome in ordinary language]. Assign exactly two read-only Agents in parallel: Scout/Map owns repository orientation, authority ordering, candidate paths, and evidence discovery; Planner/Risk owns scope decomposition, matching Package Skills, Workflow Mode, Operational-Risk Classification, command classification, artifact placement, ownership proposals, and validation planning. Publish the Agent Roster, Ownership Matrix, Route Record, Handoff Record register, Conflict Stop Rule, and Serial Integration Owner first. Allow parallel work only because both assignments are read-only. Do not write files, edit shared terminology, or silently add an Implementer. At the wave boundary, require Handoff Records and serial reconciliation by the Serial Integration Owner.
+
+Controls: Put agent-authored reports and work products in ./agents-work/<workstream>/<report-type>/ or an existing approved workstream folder; put command-generated Machine Evidence in ./results/<purpose>/; put tech-docs output in ./generated-documents/; put active plans in ./plans/<name>/; put canonical True Blockers in ./Failures.md. Keep ./tech-docs-generator/ as a root-level sibling of ./site/. Before any ./site/ write, apply the Site Write Gate: classify the target in the Route Record as an explicitly approved Core Product Write or a Non-Core Artifact; stop and redirect every Non-Core Artifact to its approved non-site home.
+
+Protected Commands: Treat tests, gates, coverage, browser runs, builds, deployments, database actions, backups, and local-service commands as Protected Commands. Do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission. Classify every proposed command before execution.
+
+Report contract: Each Agent returns the Plain-Language Response Contract in this order: Outcome; Known; Unverified; Exact First Evidence Locations; Selected Skills; Rejected Skills and Reasons; Numbered Next Actions; Likely Files or Areas; Risk; Allowed Checks; Protected or Pending Checks; Exact Completion Proof; and Unavoidable Owner Decisions. Each Handoff Record must include the required objective, ownership, paths, evidence, decisions, validation, authorization, blockers, and next action fields, or mark a field not observed.
+```
+
+##### 3. Hand an approved scope to Implementer
+
+```text
+Hand this approved scope to an Implementer.
+
+Approved outcome: [state the approved outcome]. Approved paths: [list exact exclusive repository paths]. The Orchestrator must first provide the Repository Owner a plain-language implementation status, publish the Route Record and Ownership Matrix, confirm the Implementer has exclusive ownership, and confirm the Site Write Gate state. The Implementer may write only the approved paths, must stop before an unowned or shared target, and must hand off changed paths, decisions, evidence, validation state, blockers, and next action. Shared files, manifests, configs, migrations, hooks, generated outputs, result paths, and guide/router shared terminology remain serial ownership. Invoke the Conflict Stop Rule before any further affected write if ownership overlaps, edits conflict, or evidence contradicts.
+
+Controls: Put agent-authored reports and work products in ./agents-work/<workstream>/<report-type>/ or an existing approved workstream folder; put command-generated Machine Evidence in ./results/<purpose>/; put tech-docs output in ./generated-documents/; put active plans in ./plans/<name>/; put canonical True Blockers in ./Failures.md. Keep ./tech-docs-generator/ as a root-level sibling of ./site/. Before any ./site/ write, apply the Site Write Gate: classify the target in the Route Record as an explicitly approved Core Product Write or a Non-Core Artifact; permit only the approved Core Product Write and redirect every Non-Core Artifact to its approved non-site home.
+
+Protected Commands: Treat tests, gates, coverage, browser runs, builds, deployments, database actions, backups, and local-service commands as Protected Commands. Do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission. Classify every proposed command before execution and mark unapproved checks pending.
+
+Report contract: Before writing, return the Plain-Language Response Contract in this order: Outcome; Known; Unverified; Exact First Evidence Locations; Selected Skills; Rejected Skills and Reasons; Numbered Next Actions; Likely Files or Areas; Risk; Allowed Checks; Protected or Pending Checks; Exact Completion Proof; and Unavoidable Owner Decisions. At handoff, return a Handoff Record with every required field and identify the Verifier/Reporter or Serial Integration Owner as next owner.
+```
+
+##### 4. Launch Verifier/Reporter
+
+```text
+Launch a read-only Verifier/Reporter for this Repository Task.
+
+Desired outcome: [state the implementation or documentation outcome to verify]. Assign Verifier/Reporter only after the Implementer or research Agents provide their Handoff Records. The Verifier/Reporter owns evidence reconciliation, Route Record and Ownership Matrix review, artifact-placement review, Site Write Gate review, coverage-gap review, conflict review, and Completion Record drafting. The Verifier/Reporter must not modify implementation files or silently repair an ownership conflict. If evidence contradicts or ownership overlaps, invoke the Conflict Stop Rule and return the issue to the Serial Integration Owner and Repository Owner.
+
+Controls: Put agent-authored reports and work products in ./agents-work/<workstream>/<report-type>/ or an existing approved workstream folder; put command-generated Machine Evidence in ./results/<purpose>/; put tech-docs output in ./generated-documents/; put active plans in ./plans/<name>/; put canonical True Blockers in ./Failures.md. Keep ./tech-docs-generator/ as a root-level sibling of ./site/. Before any proposed ./site/ write, apply the Site Write Gate: classify the target in the Route Record as an explicitly approved Core Product Write or a Non-Core Artifact; stop and redirect every Non-Core Artifact to its approved non-site home.
+
+Protected Commands: Treat tests, gates, coverage, browser runs, builds, deployments, database actions, backups, and local-service commands as Protected Commands. Do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission. Classify each check and report pending authorization or hook state rather than inferring a pass.
+
+Report contract: Return the Plain-Language Response Contract in this order: Outcome; Known; Unverified; Exact First Evidence Locations; Selected Skills; Rejected Skills and Reasons; Numbered Next Actions; Likely Files or Areas; Risk; Allowed Checks; Protected or Pending Checks; Exact Completion Proof; and Unavoidable Owner Decisions. Then provide a Completion Record containing Multi-Agent Evidence, changed scope, observed evidence, pending validation, Coverage-Gap Admission Cards, Separate Approval Work, and True Blockers.
+```
+
+##### 5. Resolve a multi-agent conflict
+
+```text
+Invoke the Conflict Stop Rule for this Repository Task.
+
+Conflict: [describe the overlapping ownership, edit conflict, or contradictory evidence]. Stop all affected writes immediately. The Orchestrator must preserve the current Agent Roster, Ownership Matrix, Route Record, Handoff Records, and Serial Integration Owner; identify the exact paths and evidence in conflict; classify shared files, manifests, configs, migrations, hooks, generated outputs, result paths, and guide/router shared terminology as serial ownership; and route the decision to the Repository Owner. No Agent may silently overwrite, merge, reinterpret, or continue affected work. After the Repository Owner decision, the Serial Integration Owner must update ownership, reconcile the Handoff Records, and authorize the next bounded action.
+
+Controls: Put agent-authored reports and work products in ./agents-work/<workstream>/<report-type>/ or an existing approved workstream folder; put command-generated Machine Evidence in ./results/<purpose>/; put tech-docs output in ./generated-documents/; put active plans in ./plans/<name>/; put canonical True Blockers in ./Failures.md. Keep ./tech-docs-generator/ as a root-level sibling of ./site/. Before any ./site/ write, apply the Site Write Gate: classify the target in the Route Record as an explicitly approved Core Product Write or a Non-Core Artifact; stop and redirect every Non-Core Artifact to its approved non-site home.
+
+Protected Commands: Treat tests, gates, coverage, browser runs, builds, deployments, database actions, backups, and local-service commands as Protected Commands. Do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission. Classify every proposed diagnostic before execution; preserve the existing control while the conflict remains unresolved.
+
+Report contract: Return the Plain-Language Response Contract in this order: Outcome; Known; Unverified; Exact First Evidence Locations; Selected Skills; Rejected Skills and Reasons; Numbered Next Actions; Likely Files or Areas; Risk; Allowed Checks; Protected or Pending Checks; Exact Completion Proof; and Unavoidable Owner Decisions. Include a conflict Handoff Record with the conflict evidence, blocked paths, Owner Decision, updated owner, validation state, blocker state, and next action.
+```
+
+##### 6. Finish and close a multi-agent task
+
+```text
+Finish and close this Standing Multi-Agent Repository Task.
+
+Desired outcome: [state the outcome being closed]. The Serial Integration Owner must reconcile every Agent Roster entry, Ownership Matrix assignment, Route Record, Handoff Record, Conflict Stop Rule decision, artifact destination, Site Write Gate decision, and validation result. The Verifier/Reporter must review the final scope read-only and confirm that all writes were exclusive or serially integrated. Record any unavailable Agent, missing handoff, unverified behavior, pending Protected Command, Coverage-Gap Admission Card, Separate Approval Work, or True Blocker; do not silently convert pending evidence into a pass. Send the Repository Owner a plain-language status before implementation if that status is missing, and send the Completion Record only after verification.
+
+Controls: Put agent-authored reports and work products in ./agents-work/<workstream>/<report-type>/ or an existing approved workstream folder; put command-generated Machine Evidence in ./results/<purpose>/; put tech-docs output in ./generated-documents/; put active plans in ./plans/<name>/; put canonical True Blockers in ./Failures.md. Keep ./tech-docs-generator/ as a root-level sibling of ./site/. Before any ./site/ write, apply the Site Write Gate: classify the target in the Route Record as an explicitly approved Core Product Write or a Non-Core Artifact; permit only the approved Core Product Write and redirect every Non-Core Artifact to its approved non-site home.
+
+Protected Commands: Treat tests, gates, coverage, browser runs, builds, deployments, database actions, backups, and local-service commands as Protected Commands. Do not run a Protected Command without exact current-session Explicit User Authorization and Hook Permission. Report each exact command, authorization state, hook decision, exit status, scope, and validation limitation; identify unrun checks as pending.
+
+Report contract: Return the Plain-Language Response Contract in this order: Outcome; Known; Unverified; Exact First Evidence Locations; Selected Skills; Rejected Skills and Reasons; Numbered Next Actions; Likely Files or Areas; Risk; Allowed Checks; Protected or Pending Checks; Exact Completion Proof; and Unavoidable Owner Decisions. The Completion Record must state the final Agent Roster, Ownership Matrix, Route Record, Multi-Agent Evidence, changed scope, observed evidence, pending validation, Coverage-Gap Admission Cards, Separate Approval Work, True Blockers, and next owner action.
+```
+
+
+### Requirement 31: Enforce the Locked Path Gate for protected repository guidance
+
+**User Story:** As a Repository Owner, I want durable guidance and root control documents protected from unapproved edits, so that agents can use those files as evidence without changing repository authority or hiding required owner decisions.
+
+The following beginner-readable reference is normative for locked-path handling:
+
+#### Locked Path Gate reference
+
+| Target | Default Route Record class | May agents read it? | Write rule |
+|---|---|---|---|
+| `./docs/` | `Locked` | Yes, as a Read-Only Evidence Source | Write only the exact file that the Repository Owner explicitly names and authorizes in the current request. |
+| `./Agents/` | `Locked` | Yes, as a Read-Only Evidence Source | Write only the exact file that the Repository Owner explicitly names and authorizes in the current request. |
+| Root-level Markdown matching `./*.md`, including `./README.md`, `./AGENTS.md`, `./START.md`, `./CONTENTS.md`, `./DOC-MAP.md`, `./Testing-handbook.md`, `./OPERATIONS_RUNBOOK.md`, `./Failures.md`, `./HANDOVER.md`, `./owners.md`, and similar root Markdown | `Locked` | Yes, as a Read-Only Evidence Source | Write only the exact file that the Repository Owner explicitly names and authorizes in the current request; a general task request is not authorization. |
+| `./Failures.md` as the canonical True Blocker ledger | `Locked` | Yes, as a Read-Only Evidence Source | Change only after the Repository Owner explicitly authorizes the exact file; without authorization, record the blocker as pending owner action and keep supporting analysis under an approved `./agents-work/<workstream>/<report-type>/` folder. |
+| `./agents-work/<workstream>/<report-type>/` | `writable` when the artifact is an approved Agent Work Report or guide work product | Yes | Use the approved Workstream Subfolder; `./agents-work/` is distinct from `./Agents/`. |
+| `./.kiro/` | `writable` only within the current spec or skill scope | Yes | Apply the current spec, skill, artifact-placement, and Site Write Gate rules; this path is not authorization to change a Locked Path. |
+
+#### Required Locked Path Gate copy-paste wording
+
+> Before any write, apply the Locked Path Gate: classify the exact target in the Route Record as `Locked`, explicitly owner-authorized, or `writable`. Treat `./docs/`, `./Agents/`, and root-level `./*.md` files as read-only evidence unless the Repository Owner explicitly names and authorizes the exact file in the current request; do not treat a general task request as authorization. If the exact locked file is not authorized, stop before writing, explain the exact file and reason, record the change as an unavoidable Owner Decision and Separate Approval Work, and place supporting analysis only in an approved `./agents-work/<workstream>/<report-type>/` folder. Do not create a copy elsewhere and claim that the locked source was updated. `./agents-work/` is distinct from `./Agents/`, and `./.kiro/` remains governed by the current spec and Site Write Gate. For `./Failures.md`, keep the canonical ledger unchanged until exact owner authorization exists and record pending owner action instead.
+
+#### Acceptance Criteria
+
+1. THE Repository Guide and Master Router SHALL define `./docs/`, `./Agents/`, and root-level Markdown files matching `./*.md` as Locked Paths that remain read-only unless the Repository Owner explicitly names and authorizes the exact file in the current request.
+2. WHEN a Repository Task proposes any repository write, THE Route Record SHALL classify the exact target as `Locked`, explicitly owner-authorized, or `writable` before the write begins.
+3. THE Repository Guide and Master Router SHALL permit Locked Paths to serve as Read-Only Evidence Sources and SHALL exclude Locked Paths from implementation and report destinations.
+4. IF a proposed write targets a Locked Path without an Owner-Authorized File, THEN THE Locked Path Gate SHALL stop the write before modification, explain the exact file and reason, and record the change as an unavoidable Owner Decision and Separate Approval Work.
+5. IF a Repository Owner authorizes one exact file in a Locked Path, THEN THE Locked Path Gate SHALL treat only that exact file as an Owner-Authorized File and SHALL keep other files in the Locked Path classified as Locked.
+6. THE Repository Guide and Master Router SHALL distinguish `./agents-work/` from `./Agents/` and SHALL allow guide work and Agent Work Reports only under an approved `./agents-work/<workstream>/<report-type>/` folder.
+7. IF a Repository Task requires a change to `./Failures.md` without explicit authorization for that exact file, THEN THE Repository Guide and Master Router SHALL keep the canonical blocker ledger unchanged, record the blocker as pending owner action, and direct supporting analysis to an approved Workstream Subfolder.
+8. THE Repository Guide and Master Router SHALL keep `./.kiro/` spec and skill work governed by the current spec, artifact-placement rules, and Site Write Gate rather than treating `./.kiro/` as permission to change a Locked Path.
+9. IF a Repository Task proposes a copy in another location as a substitute for an unauthorized Locked Path change, THEN THE Repository Guide and Master Router SHALL reject the claim that the Locked Path was updated and SHALL preserve the change as an unavoidable Owner Decision and Separate Approval Work.
+10. THE Repository Guide and Master Router SHALL publish the Locked Path Gate reference table and Required Locked Path Gate copy-paste wording before a contributor selects a write path.
+
+### Requirement 32: Enforce an Agent Compliance Contract and stop scope drift
+
+**User Story:** As a non-expert repository owner, I want every Agent to say what it may do, what it must not do, and how it will prove completion before work begins, so that helpful-looking extra work cannot silently change the task.
+
+For this requirement:
+
+- **Current user request** means the complete request that started the Repository Task, including explicit scope, exclusions, and validation limits.
+- **Applicable global repository standard** means the repository-wide `AGENTS.md` and any directly applicable standard or handbook it names, such as `Agents/01-standard.md`.
+- **Assigned scope** means the approved outcome and the exact work an Agent is responsible for.
+- **Delivery conditions** means the plain-language facts and evidence that must be handed back before the Agent can say its assignment is complete.
+- **Scope drift** means work, paths, decisions, commands, or outputs that were not in the assigned scope or later-approved change record.
+- **Agent Compliance Contract** means the pre-work, in-work, stop, coordination, and handoff rules below.
+
+#### Acceptance Criteria
+
+1. BEFORE an Agent begins repository exploration, modification, or command proposal, THE Agent Compliance Contract SHALL require the Agent to read the current user request in full and the applicable global repository standard, and SHALL require the Agent to state that both were read or identify the exact missing source.
+2. THE Agent Compliance Contract SHALL state that current user instructions outrank defaults and that the applicable global repository standard remains in force unless the current user explicitly overrides a specific rule; an Agent SHALL not treat silence as an override.
+3. BEFORE work begins, EVERY Agent SHALL state in plain language the requested outcome, assigned scope, exact owned paths, read/write permission for each owned path, explicit exclusions, delivery conditions, expected handoff owner, and allowed or pending validation.
+4. THE Agent Compliance Contract SHALL require the coordinator to record each Agent declaration in the Agent Roster and Ownership Matrix before that Agent begins any repository exploration or writes any file.
+5. EVERY Agent SHALL perform only requested and assigned work. An Agent SHALL NOT infer permission for adjacent cleanup, refactoring, tests, test configuration, scripts, documentation, package or dependency changes, configuration changes, UI changes, generated output, or other helpful additions merely because the addition appears useful or nearby.
+6. THE Repository Guide and Master Router SHALL state that tests and scripts are not assumed to be declared by `package.json` or an ordinary test configuration. Any proposed test or script work SHALL require repository evidence for the exact target and exact current-session authorization; any execution additionally requires the applicable Hook Permission. No Agent may add or run such work from convention, an inline marker, or an inferred need.
+7. WHEN a small quality defect is directly within the requested outcome and an owned path, THE Agent SHALL resolve it even if the requested functionality already works; THE Agent SHALL stop and request a scope decision when resolving it would require an adjacent path, new behavior, new command, or unrelated cleanup.
+8. EVERY Agent SHALL preserve unrelated work and SHALL NOT overwrite, revert, reformat, rename, or clean up an unowned change. Existing changes are evidence to preserve, not permission to expand the assignment.
+9. IF an Agent encounters a conflict, missing authorization, ambiguous ownership, hidden repository constraint, contradictory evidence, or a request that expands the task, THEN THE Agent SHALL stop the affected work, state the exact issue and paths or actions involved, and surface it to the coordinator or Repository Owner instead of deciding silently.
+10. THE Agent Compliance Contract SHALL explain that scope drift can arise from ambiguous ownership, default helpful behavior, hidden repository constraints, or task expansion, and SHALL name a control for each cause: exact ownership declarations for ambiguous ownership; explicit exclusions and no-inferred-permission rules for helpful behavior; mandatory reading of the current user request and applicable global standard plus live evidence for hidden constraints; and a re-route, approval, and delivery-condition check for task expansion.
+11. BEFORE integration, THE coordinator SHALL compare each Agent handoff with the current user request, Route Record, Agent Roster, Ownership Matrix, exclusions, and delivery conditions; THE coordinator SHALL reject or reconcile scope drift before accepting the handoff, SHALL not hide drift inside a combined change, and SHALL record the owner decision when the scope must change.
+12. THE coordinator SHALL use no more than four Agents, SHALL assign disjoint ownership for parallel work, SHALL integrate work serially, and SHALL invoke the Conflict Stop Rule before further affected writes when ownership overlaps, edits conflict, evidence contradicts, or a handoff cannot be reconciled to the approved scope.
+13. EVERY Agent handoff SHALL be written in plain language and SHALL list: each changed file and why that file changed; validation actually run, with the exact command and observed result or `none`; validation not run, with the exact command or check that remains pending or the reason it was not applicable; remaining issues, unverified behavior, blockers, and the next owner action.
+14. THE Completion Record SHALL distinguish requested work from extra proposed work, SHALL identify every changed file and reason, SHALL distinguish validation actually run from validation not run, and SHALL remain incomplete until unresolved scope drift, missing authorization, ownership conflict, and remaining issues are either resolved or explicitly assigned to an owner.
+15. THE Agent Compliance Contract SHALL preserve the repository placement boundaries: `./docs/`, `./Agents/`, and root-level `./*.md` are Locked Paths and read-only evidence by default; Agent-authored reports use `./agents-work/<workstream>/<report-type>/`; machine output uses `./results/<purpose>/`; `./tech-docs-generator/` remains a root-level sibling of `./site/`; and `./site/` accepts only an explicitly approved Core Product Write while reports, skills, results, prompts, plans, generated files, and other Non-Core Artifacts are redirected elsewhere.
+16. THIS requirements revision SHALL be guidance/specification work only. It SHALL not authorize tests, gates, builds, typechecks, scripts, package or configuration changes, application implementation, UI changes, database actions, deployment actions, or other commands; any such work remains separately scoped and explicitly authorized.

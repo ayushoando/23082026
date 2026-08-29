@@ -36,6 +36,7 @@ The guide and skill are instructions for human and agent behavior. Their records
 - Require the Plain-Language Response Contract at every task lifecycle point.
 - Provide all 25 copy-paste Prompt Cookbook categories with one shared safety preamble and category-specific evidence paths.
 - Define exactly four multi-agent roles, safe parallelism, exclusive ownership, handoffs, serial integration, and the Conflict Stop Rule.
+- Enforce a non-expert Agent Compliance Contract that requires pre-work reading and scope declarations, rejects inferred permission and scope drift, preserves unrelated work, stops conflicts, and produces a plain-language handoff with changed-file reasons and honest validation state.
 - Preserve honest Surface Status and explicitly admit missing or unverified areas.
 - Keep Protected Commands under exact owner authorization and hook permission, while separating current guidance from separately approved implementation or policy work.
 - Make artifact class, approved subfolder, owning producer, and authored/generated state explicit for every output-producing task, and enforce the Site Write Gate for every proposed `./site/` write.
@@ -416,6 +417,64 @@ Next Action
 ```
 
 The Handoff Record is included in the Plain-Language Response Contract or linked from it and is placed according to the artifact rules below. Handoffs do not authorize commands or expand ownership.
+
+### 10.3 Agent Compliance Contract: the pre-work and handoff gate
+
+The existing four-role procedure is strengthened by an explicit contract that every Agent can follow without repository expertise. The contract is a gate, not a suggestion: an Agent does not begin assigned work until the declaration is visible, and a coordinator does not integrate a handoff until the declaration and delivery conditions still match the current user request.
+
+#### Before work begins
+
+Every Agent must return this short declaration in plain language before any repository exploration, before any write, and before proposing a command:
+
+```text
+I read the current user request: [yes / missing source].
+I read the applicable global repository standard: [AGENTS.md and applicable named standard / missing source].
+User instructions outrank defaults. The global standard remains in force unless the user explicitly overrides a specific rule: [record any override / none].
+Requested outcome: [what the user asked for].
+My assigned scope: [what I will do].
+My owned paths and permission: [exact paths, read-only or write].
+My exclusions: [exact paths, actions, and outputs I will not touch].
+My delivery conditions: [what must be true and what evidence I will hand back].
+Validation allowed now: [exact permitted checks / none].
+Validation pending authorization: [exact checks / none].
+Next owner: [named Agent or Repository Owner].
+```
+
+The coordinator records the declaration in the Agent Roster and Ownership Matrix before that Agent begins any repository exploration or writes any file. “Owned paths” means exact repository paths, not a feature name or a broad directory. “Exclusions” include adjacent cleanup, tests, scripts, documentation, package or configuration changes, UI changes, generated output, and any other work not named in the request. A useful neighboring change is still out of scope unless the user authorizes it and the Route Record is updated.
+
+#### While work is in progress
+
+- The Agent performs only the requested outcome inside the assigned scope and owned paths.
+- The Agent does not infer permission from proximity, convention, a package script, an ordinary test configuration, an inline marker, an old plan, or the fact that the requested functionality appears to work.
+- Tests and scripts require repository evidence for the exact target and exact current-session authorization; execution also requires Hook Permission. They are never assumed to be available because a name appears in `package.json` or a normal test configuration.
+- A small quality defect that is directly inside the requested outcome and an owned path should be fixed even when the main functionality works. If fixing it needs an adjacent path, new behavior, a new command, or unrelated cleanup, the Agent stops and surfaces the scope decision instead of expanding silently.
+- The Agent preserves unrelated work and never overwrites, reverts, reformats, renames, or cleans up an unowned change.
+- A conflict, missing authorization, ambiguous ownership, hidden repository constraint, contradictory evidence, or task expansion is a stop condition. The Agent reports the exact path, action, and decision needed; it does not choose silently.
+
+#### Why scope drift happens and the controls that stop it
+
+| Why drift happens | Control before work or integration |
+|---|---|
+| Ownership is described broadly or two Agents believe they own the same file. | Publish exact paths, read/write permission, one owner per path, and serial ownership for shared files in the Agent Roster and Ownership Matrix. |
+| An Agent follows default “helpful” behavior and performs nearby cleanup or extra validation. | Publish explicit exclusions, require a user-request match for every change, and reject inferred permission for cleanup, tests, scripts, docs, packages, configuration, or UI. |
+| A hidden repository rule changes what is safe or where output belongs. | Read the current user request, `AGENTS.md`, and the directly applicable repository standard first; then check live evidence and apply Locked Path, artifact-placement, Site Write, and Protected Command rules. |
+| The task expands during implementation or a handoff bundles a new objective. | Re-route the new objective, obtain explicit owner approval, update scope/ownership/delivery conditions, and integrate only after the coordinator reconciles the change serially. |
+
+#### Coordinator responsibility
+
+The coordinator is responsible for rejecting or reconciling scope drift before integration. The coordinator checks every handoff against the current user request, Route Record, Agent Roster, Ownership Matrix, exclusions, and delivery conditions. The coordinator must not hide an out-of-scope file in a larger change or treat a useful addition as approved. The coordinator uses at most four Agents, permits parallel work only for read-only research or disjoint ownership, integrates changes serially, and invokes the Conflict Stop Rule before any affected write when ownership overlaps, edits conflict, evidence contradicts, or a handoff cannot be reconciled. The coordinator role is a coordination function, not a fifth Agent role.
+
+#### Plain-language handoff and delivery check
+
+Every Agent handoff must list, in language the Repository Owner can understand:
+
+1. **Changed files:** each exact path and why that file changed; write `none` when no file changed.
+2. **Validation actually run:** each exact command or inspection and its observed result; write `none` when no validation ran. An unobserved command is unrun.
+3. **Validation not run:** each exact check that remains pending, was not authorized, was blocked, or was not applicable, with the reason.
+4. **Remaining issues:** unresolved scope questions, conflicts, unverified behavior, blockers, and the next owner action.
+5. **Scope confirmation:** the assigned scope, exclusions respected, next owner, and any proposed work that was deliberately not performed.
+
+A missing field, unexplained changed file, or unresolved drift makes the handoff incomplete. The Completion Record must preserve the distinction between actual evidence and pending validation and must not claim that a command, rendered behavior, hosted behavior, or implementation occurred when it did not.
 
 ## 11. Explicit artifact, workspace, and evidence boundaries
 

@@ -124,21 +124,21 @@ Rewrite and re-verify exactly the 34 Markdown files named by the approved requir
     - Apply static acceptance checks from Design Properties 1, 6, 7, 14, and 20–21.
     - _Requirements: 1.1–1.3, 1.10–1.12, 3.1–3.10, 7.11, 8.7–8.9, 11.10–11.11, 11.19–11.24_
 
-- [ ] 8. Run only explicitly authorized exact-command validation
-  - [ ]* 8.1 Run `pnpm run check:docs-all` only with exact current-session authorization and hook permission
+- [x] 8. Run only explicitly authorized exact-command validation
+  - [x] 8.1 Run `pnpm run check:docs-all` only with exact current-session authorization and hook permission
     - Run from the repository root without substitution or expansion; record authorization, hook decision, exact command and arguments, working directory, exit status, redacted output summary, and evidence class in `implementation-record.md`.
     - If absent, denied, blocked, interrupted, unobserved, or failed, retain the exact non-pass state. Correct only in-scope documentation defects through the sole owner and rerun only with applicable fresh exact authorization.
     - _Requirements: 7.7, 7.13, 9.8, 10.10–10.11, 10.14, 11.12–11.17, 11.21–11.22_
 
-  - [ ]* 8.2 Run `pnpm run docs:check:root-links` only with exact current-session authorization and hook permission
+  - [x] 8.2 Run `pnpm run docs:check:root-links` only with exact current-session authorization and hook permission
     - Run and record evidence under the same exact-command, repository-root, redaction, failure-honesty, scoped-correction, and rerun rules as Task 8.1.
     - _Requirements: 7.7, 7.13, 9.8, 10.10–10.11, 10.14, 11.12–11.17, 11.21–11.22_
 
-  - [ ]* 8.3 Run `pnpm run check:layout` only with exact current-session authorization and hook permission
+  - [x] 8.3 Run `pnpm run check:layout` only with exact current-session authorization and hook permission
     - Run and record evidence under the same exact-command, repository-root, redaction, failure-honesty, scoped-correction, and rerun rules as Task 8.1.
     - _Requirements: 7.7, 7.13, 9.8, 10.10–10.11, 10.14, 11.12–11.17, 11.21–11.22_
 
-  - [ ]* 8.4 Run a broader gate only when the user names and authorizes that exact command and the hook permits it
+  - [x] 8.4 Run a broader gate only when the user names and authorizes that exact command and the hook permits it
     - Do not select a gate on the user's behalf. Record the exact authorized test, build, coverage, browser, `pnpm run gate:fast`, or `pnpm run gate` command and its observed state without generalizing its evidence scope.
     - Report out-of-scope failures without modifying excluded assets; do not bypass the hook, broaden authorization, infer a pass, or run `pnpm run typecheck:scripts`.
     - _Requirements: 7.7, 7.13, 10.9–10.11, 10.14, 11.14–11.18, 11.21–11.22_

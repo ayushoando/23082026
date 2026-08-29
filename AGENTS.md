@@ -17,6 +17,7 @@ This document defines the repository-wide execution and safety floor. Current us
 ## 1. Truth
 
 - **Authority order:** user instruction > live code and fresh command output > `AGENTS.md` > `Agents/` > `docs/`.
+**User Wins:**  User always wins, User Wins.
 - Never invent browser, build, test, or gate state. An unobserved command is unrun.
 - Tests, gates, builds, browser checks, coverage, and test-like commands require exact current-session user authorization and enabled-hook permission.
 - **Blockers:** record hard blockers only in [`Failures.md`](./Failures.md).
