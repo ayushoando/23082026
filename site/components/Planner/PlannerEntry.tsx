@@ -4,12 +4,17 @@ import Planner from "@planner/components/Planner";
 import { buildAccessRedirect } from "@/lib/auth/plannerRedirect";
 
 export type PlannerAccessMode = "authenticated" | "guest";
+export type PlannerProjectStartIntent = "new" | "resume";
 
 export interface PlannerEntryProps {
   accessMode: PlannerAccessMode;
+  projectStartIntent?: PlannerProjectStartIntent;
 }
 
-export function PlannerEntry({ accessMode }: PlannerEntryProps) {
+export function PlannerEntry({
+  accessMode,
+  projectStartIntent = "resume",
+}: PlannerEntryProps) {
   const isGuest = accessMode === "guest";
 
   return (
@@ -36,7 +41,7 @@ export function PlannerEntry({ accessMode }: PlannerEntryProps) {
           {isGuest ? "Sign in to save" : "View saved plans"}
         </Link>
       </section>
-      <Planner accessMode={accessMode} />
+      <Planner accessMode={accessMode} projectStartIntent={projectStartIntent} />
     </div>
   );
 }

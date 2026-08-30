@@ -180,14 +180,22 @@ function legacyGeometryInput(
   // Determine the extraction scale. When the persisted canvas carries a
   // non-Planner scale (e.g. Studio 0.2 px/mm), extract geometry at that
   // scale so px→mm conversion is correct (px / legacy_scale = mm).
-  const scaleNum = typeof scale === "number" && Number.isFinite(scale) && scale > 0
-    ? scale
-    : PLANNER_SCALE_PX_PER_MM;
+  // Omitted legacy metadata predates the versioned contract and is known to
+  // use Planner scale. Explicit malformed metadata must reach the geometry
+  // contract unchanged so it returns UNSUPPORTED_PLANNER_SCALE instead of
+  // silently defaulting a corrupt snapshot to Planner scale.
+  if (typeof scale !== "number" || !Number.isFinite(scale) || scale <= 0) {
+    return {
+      unit: PLANNER_GEOMETRY_UNIT,
+      scalePxPerMm: scale,
+    };
+  }
 
-  // Extract at the legacy scale — this produces correct mm values.
-  const geometry = collectSceneGeometryAtScale(canvas as FabricLikeCanvas, scaleNum);
+  // Extract at the validated persisted scale — this produces correct mm values
+  // for canonical Planner snapshots and known legacy Studio snapshots alike.
+  const geometry = collectSceneGeometryAtScale(canvas as FabricLikeCanvas, scale);
 
-  if (scaleNum === PLANNER_SCALE_PX_PER_MM) {
+  if (scale === PLANNER_SCALE_PX_PER_MM) {
     // Current scale: tag normally.
     return {
       unit: PLANNER_GEOMETRY_UNIT,
@@ -202,7 +210,7 @@ function legacyGeometryInput(
   // for unknown scales it will reject with UNSUPPORTED_PLANNER_SCALE.
   return {
     unit: PLANNER_GEOMETRY_UNIT,
-    scalePxPerMm: scaleNum,
+    scalePxPerMm: scale,
     geometry,
     canvasSnapshot: canvas,
   };

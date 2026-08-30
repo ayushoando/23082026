@@ -18,6 +18,26 @@ import {
 /* ================================================================== */
 
 describe("plannerWorkflowState — structural completeness", () => {
+  const requiredStateKindsByWorkflow: Readonly<
+    Record<PlannerWorkflowId, readonly PlannerRequiredStateKind[]>
+  > = {
+    "entry-auth": ["default", "loading", "success", "unauthenticated", "forbidden", "rate-limited", "server-error", "recovery"],
+    "project-list": ["loading", "empty", "success", "unauthenticated", "forbidden", "rate-limited", "server-error", "recovery"],
+    "project-create": ["default", "loading", "success", "validation-error", "unauthenticated", "forbidden", "rate-limited", "server-error", "recovery"],
+    "project-load": ["loading", "success", "unauthenticated", "forbidden", "rate-limited", "stale", "server-error", "recovery"],
+    "project-edit": ["default", "success", "validation-error", "server-error", "recovery"],
+    "project-save": ["default", "loading", "success", "validation-error", "unauthenticated", "forbidden", "rate-limited", "conflict", "stale", "offline", "server-error", "recovery"],
+    "project-delete": ["default", "loading", "success", "unauthenticated", "forbidden", "rate-limited", "server-error", "recovery"],
+    "catalog-browse": ["default", "loading", "empty", "success", "rate-limited", "server-error", "recovery"],
+    "catalog-select": ["default", "success", "validation-error", "server-error", "recovery"],
+    "catalog-upload": ["default", "loading", "success", "validation-error", "unauthenticated", "forbidden", "rate-limited", "server-error", "recovery"],
+    handoff: ["default", "loading", "success", "validation-error", "rate-limited", "server-error", "recovery"],
+    "sketch-to-plan": ["default", "loading", "success", "validation-error", "forbidden", "rate-limited", "server-error", "recovery"],
+    "offline-reconnect": ["offline", "server-error", "stale", "conflict", "recovery"],
+    "conflict-recovery": ["conflict", "stale", "server-error", "recovery"],
+    "unsaved-destructive-navigation": ["default", "success", "recovery"],
+  };
+
   it("covers every declared workflow id in the map", () => {
     for (const wf of ALL_WORKFLOW_IDS) {
       expect(PLANNER_WORKFLOW_STATE_MAP[wf]).toBeDefined();
@@ -25,16 +45,14 @@ describe("plannerWorkflowState — structural completeness", () => {
     }
   });
 
-  it("every workflow has at least default and loading states", () => {
-    for (const wf of ALL_WORKFLOW_IDS) {
-      expect(
-        getPlannerRequiredState(wf, "default"),
-        `${wf} should have a default state`,
-      ).toBeDefined();
-      expect(
-        getPlannerRequiredState(wf, "loading"),
-        `${wf} should have a loading state`,
-      ).toBeDefined();
+  it("declares every state applicable to each covered workflow", () => {
+    for (const [workflow, kinds] of Object.entries(requiredStateKindsByWorkflow)) {
+      for (const kind of kinds) {
+        expect(
+          getPlannerRequiredState(workflow as PlannerWorkflowId, kind),
+          `${workflow} should define its applicable ${kind} state`,
+        ).toBeDefined();
+      }
     }
   });
 
@@ -116,9 +134,9 @@ describe("plannerWorkflowState — descriptor contract", () => {
     ];
     forEachState((wf, kind, state) => {
       if (!errorKinds.includes(kind)) return;
-      // entry-routing/unauthenticated is an informational guest-workspace
+      // entry-auth/unauthenticated is an informational guest-workspace
       // notification, not a blocking error — status role is correct there.
-      if (wf === "entry-routing" && kind === "unauthenticated") {
+      if (wf === "entry-auth" && kind === "unauthenticated") {
         expect(state.accessible.role, `${wf}/${kind} is informational`).toBe("status");
         return;
       }
@@ -308,8 +326,8 @@ describe("plannerWorkflowState — lookup helpers", () => {
     expect(ALL_REQUIRED_STATE_KINDS.length).toBe(13);
   });
 
-  it("ALL_WORKFLOW_IDS has exactly 11 workflows", () => {
-    expect(ALL_WORKFLOW_IDS.length).toBe(11);
+  it("ALL_WORKFLOW_IDS has exactly 15 workflows", () => {
+    expect(ALL_WORKFLOW_IDS.length).toBe(15);
   });
 });
 
@@ -351,8 +369,8 @@ describe("plannerWorkflowState — requirements traceability", () => {
     expect(state.actions.some((a) => a.id === "cancel")).toBe(true);
   });
 
-  it("lead-handoff validation-error preserves valid values (Req 15.4)", () => {
-    const state = getPlannerRequiredState("lead-handoff", "validation-error")!;
+  it("handoff validation-error preserves valid values (Req 15.4)", () => {
+    const state = getPlannerRequiredState("handoff", "validation-error")!;
     expect(state.memoryRule).toBe("preserve");
     expect(state.focusTarget.kind).toBe("first-invalid-field");
   });

@@ -124,9 +124,13 @@ import { PlannerTabletPanelScrim } from "@planner/components/PlannerTabletPanelS
 
 export interface PlannerProps {
   accessMode?: "authenticated" | "guest";
+  projectStartIntent?: "new" | "resume";
 }
 
-const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
+const Planner = ({
+  accessMode = "authenticated",
+  projectStartIntent = "resume",
+}: PlannerProps) => {
   const params = useParams();
   const routeId = typeof params.id === "string" ? params.id : params.id?.[0];
   const router = useRouter();
@@ -1394,8 +1398,8 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
   //
   // Strict effective-id precedence:
   //   1. routeId (authoritative for /ooplanner/projects/[id])
-  //   2. localStorage fallback for an authenticated bare /ooplanner entry only
-  //   3. Draft (no project to load)
+  //   2. localStorage fallback for an authenticated `/ooplanner` resume entry
+  //   3. Draft for an explicit `?new=1` entry or when no project is available
   // Guest entry never attempts a remembered private project, so catalog and
   // handoff workflows remain reachable without triggering a project request.
   useEffect(() => {
@@ -1403,8 +1407,12 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
 
     // --- Compute effective id with strict precedence ---
     let effectiveId: string | undefined = routeId;
-    const isLocalStorageFallback = !effectiveId && accessMode === "authenticated";
-    if (!effectiveId && accessMode === "authenticated") {
+    const shouldResumeLastProject =
+      !effectiveId &&
+      accessMode === "authenticated" &&
+      projectStartIntent === "resume";
+    const isLocalStorageFallback = shouldResumeLastProject;
+    if (shouldResumeLastProject) {
       try { effectiveId = localStorage.getItem(PLANNER_LAST_PROJECT_KEY) || undefined; } catch { /* noop */ }
     }
     if (!effectiveId) {
@@ -1500,7 +1508,17 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
     return () => {
       controller.abort();
     };
-  }, [ready, routeId, accessMode, fabricRef, showToast, drawGridAndSheet, refreshLayers, retryCount]);
+  }, [
+    ready,
+    routeId,
+    accessMode,
+    projectStartIntent,
+    fabricRef,
+    showToast,
+    drawGridAndSheet,
+    refreshLayers,
+    retryCount,
+  ]);
 
   const newProject = () => {
     const c = fabricRef.current;
@@ -1830,15 +1848,17 @@ const Planner = ({ accessMode = "authenticated" }: PlannerProps) => {
     ],
   );
 
-  /** Dismiss all tablet overlay panels at once (scrim tap or Escape). */
+  /** Dismiss all narrow-viewport overlay panels at once (scrim tap or Escape). */
   const dismissTabletPanels = useCallback(() => {
     setLeftCollapsed(true);
     setRightCollapsed(true);
     setToolsCollapsed(true);
   }, []);
 
-  /** Whether any panel is open on tablet (drives scrim visibility). */
-  const tabletPanelOpen = viewport.isTablet && (!leftCollapsed || !rightCollapsed || !toolsCollapsed);
+  /** Whether any panel is open in a tablet or phone viewport (drives scrim visibility). */
+  const tabletPanelOpen =
+    (viewport.isTablet || viewport.isPhone) &&
+    (!leftCollapsed || !rightCollapsed || !toolsCollapsed);
 
   const toolbarHandlers: Record<string, ToolbarItemHandler> = {
     new: { onClick: newProject },

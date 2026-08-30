@@ -10,14 +10,13 @@ interface PlannerTabletPanelScrimProps {
 }
 
 /**
- * Tablet-only scrim behind open overlay panels.
+ * Narrow-viewport scrim behind open overlay panels.
  *
- * On tablet viewports (640–1023px), side panels are overlaid rather than
- * inline. This scrim provides a dismissal surface so panels don't obscure
- * the canvas without a way to close them (Requirement 6.4).
+ * On tablet and phone viewports (0–1023px), side panels are overlaid rather
+ * than inline. This scrim provides a dismissal surface so panels do not
+ * obscure the canvas or command chrome without a reversible exit.
  *
- * On desktop, the scrim is hidden via CSS (`.tablet-panel-scrim` display: none).
- * On phone, panels use the mobile bottom chrome instead.
+ * On desktop, the scrim is hidden via CSS.
  */
 export function PlannerTabletPanelScrim({
   visible,

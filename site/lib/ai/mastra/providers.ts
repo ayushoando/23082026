@@ -34,6 +34,46 @@ type AdvisorBedrockTarget = {
 
 export type AdvisorModelTarget = AdvisorRouterTarget | AdvisorBedrockTarget;
 
+// ---------------------------------------------------------------------------
+// Allowlist — only provider/label pairs listed here may enter the model chain.
+// Add a new row only after owner approval; do not derive from env-var presence.
+// ---------------------------------------------------------------------------
+
+type AllowlistEntry = {
+  /** Must match an AdvisorProviderId value. */
+  provider: AdvisorProviderId;
+  /** Must match the label string used when constructing the chain target. */
+  label: string;
+};
+
+export const APPROVED_PROVIDER_MODELS: readonly AllowlistEntry[] = [
+  { provider: "gemini",     label: "gemini" },
+  { provider: "openrouter", label: "openrouter" },
+  { provider: "openrouter", label: "openrouter-backup" },
+  { provider: "openai",     label: "openai" },
+  { provider: "bedrock",    label: "bedrock" },
+] as const;
+
+/**
+ * Returns true only when the given provider/label pair exists verbatim in
+ * APPROVED_PROVIDER_MODELS. A configured API key alone is insufficient —
+ * the pair must appear in the approved set.
+ */
+export function isAllowlisted(provider: AdvisorProviderId, label: string): boolean {
+  return APPROVED_PROVIDER_MODELS.some(
+    (entry) => entry.provider === provider && entry.label === label,
+  );
+}
+
+/**
+ * Returns a new array containing only chain targets whose provider/label pair
+ * appears in APPROVED_PROVIDER_MODELS. Callers that construct chains outside
+ * resolveAdvisorModelChain may use this as a post-hoc filter.
+ */
+export function filterAllowlistedChain(chain: AdvisorModelTarget[]): AdvisorModelTarget[] {
+  return chain.filter((target) => isAllowlisted(target.provider, target.label));
+}
+
 const DEFAULT_OPENROUTER_MODEL = env.OPENROUTER_MODEL || "openrouter/auto";
 
 function toOpenRouterModelId(model: string): `${string}/${string}` {
@@ -121,34 +161,44 @@ export function resolveAdvisorModelChain(): AdvisorModelTarget[] {
 
   const geminiKey = env.GEMINI_API_KEY?.trim() || process.env.GEMINI_API_KEY?.trim();
   if (geminiKey) {
-    chain.push({
+    const candidate: AdvisorModelTarget = {
       provider: "gemini",
       label: "gemini",
       providerId: "google",
       modelId: env.GEMINI_MODEL || "gemini-2.5-flash",
       url: "https://generativelanguage.googleapis.com/v1beta/openai/",
       apiKey: geminiKey,
-    });
+    };
+    if (isAllowlisted(candidate.provider, candidate.label)) {
+      chain.push(candidate);
+    }
   }
 
   const primaryKey = env.OPENROUTER_API_KEY_PRIMARY?.trim();
   if (primaryKey) {
-    pushOpenRouterTarget(chain, primaryKey, "openrouter");
+    // Build without pushing so we can allowlist-check first.
+    const label = "openrouter";
+    if (isAllowlisted("openrouter", label)) {
+      pushOpenRouterTarget(chain, primaryKey, label);
+    }
   }
 
   const backupKey = env.OPENROUTER_API_KEY_BACKUP?.trim();
   if (backupKey) {
-    pushOpenRouterTarget(chain, backupKey, "openrouter-backup");
+    const label = "openrouter-backup";
+    if (isAllowlisted("openrouter", label)) {
+      pushOpenRouterTarget(chain, backupKey, label);
+    }
   }
 
   // Keep the existing Gemini/OpenRouter order stable; new providers are fallbacks.
   const openAiKey = env.OPENAI_API_KEY?.trim();
-  if (openAiKey) {
+  if (openAiKey && isAllowlisted("openai", "openai")) {
     pushOpenAITarget(chain, openAiKey);
   }
 
   const bedrockTarget = createBedrockTarget();
-  if (bedrockTarget) {
+  if (bedrockTarget && isAllowlisted(bedrockTarget.provider, bedrockTarget.label)) {
     chain.push(bedrockTarget);
   }
 

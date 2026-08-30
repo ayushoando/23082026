@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import { SCALE_PX_PER_MM } from "@planner/lib/plannerPalette";
+import {
+  PLANNER_SCALE_PX_PER_MM,
+  plannerMmToPx,
+} from "@planner/lib/plannerGeometryContract";
 import { buildStarterProjectPayload } from "@planner/lib/starterProjectTemplate";
 
 describe("starterProjectTemplate", () => {
@@ -10,8 +13,7 @@ describe("starterProjectTemplate", () => {
     const canvas = payload.canvas_json as { objects: Array<{ left: number }> };
     expect(canvas.objects).toHaveLength(6);
     expect(payload.sheet?.width_mm).toBe(15000);
-    expect(payload.sheet?.scale_px_per_mm).toBe(0.05);
-    expect(payload.sheet?.scale_px_per_mm).toBe(SCALE_PX_PER_MM);
-    expect(canvas.objects[0]?.left).toBe(2000 * SCALE_PX_PER_MM);
+    expect(payload.sheet?.scale_px_per_mm).toBe(PLANNER_SCALE_PX_PER_MM);
+    expect(canvas.objects[0]?.left).toBe(plannerMmToPx(2000));
   });
 });

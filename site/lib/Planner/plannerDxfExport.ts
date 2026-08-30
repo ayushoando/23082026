@@ -5,6 +5,7 @@ import type { OoFabricObject } from "@planner/lib/plannerTypes";
 import {
   PLANNER_SCALE_PX_PER_MM,
   assertPlannerScale,
+  plannerPxToMm,
 } from "@planner/lib/plannerGeometryContract";
 
 const LAYERS = {
@@ -24,7 +25,7 @@ const DEFAULT_LAYER = "MISC";
 
 const pxToMm = (px: number, pxPerMm: number): number => {
   assertPlannerScale(pxPerMm);
-  return px / pxPerMm;
+  return plannerPxToMm(px);
 };
 
 const g = (code: number | string, value: number | string): string => `${code}\n${value}\n`;

@@ -6,6 +6,8 @@
 import {
   PLANNER_SCALE_PX_PER_MM,
   assertPlannerScale,
+  plannerMmToPx,
+  plannerPxToMm,
 } from "@planner/lib/plannerGeometryContract";
 
 export type PlannerMmRect = {
@@ -99,7 +101,7 @@ export function pxToMm(
   scalePxPerMm: number = PLANNER_SCALE_PX_PER_MM,
 ): number {
   assertPlannerScale(scalePxPerMm);
-  return px / scalePxPerMm;
+  return plannerPxToMm(px);
 }
 
 export function mmToPx(
@@ -107,7 +109,7 @@ export function mmToPx(
   scalePxPerMm: number = PLANNER_SCALE_PX_PER_MM,
 ): number {
   assertPlannerScale(scalePxPerMm);
-  return mm * scalePxPerMm;
+  return plannerMmToPx(mm);
 }
 
 export function furnitureFromFabric(

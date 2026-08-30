@@ -89,7 +89,7 @@ describe("PlannerProjectsList states and routing", () => {
     expect(await screen.findByTestId("projects-empty-state")).toBeInTheDocument();
     expect(screen.getByTestId("empty-state-new-plan")).toHaveAttribute(
       "href",
-      "/ooplanner",
+      "/ooplanner?new=1",
     );
     expect(screen.getByTestId("empty-state-sample-workspace")).toBeInTheDocument();
   });
@@ -127,6 +127,15 @@ describe("PlannerProjectsList states and routing", () => {
       "/access?next=%2Fooplanner%2Fprojects",
     );
     expect(screen.queryByRole("button", { name: "Try again" })).not.toBeInTheDocument();
+  });
+
+  it("routes the header new-plan action to an explicit blank draft", async () => {
+    render(<ProjectsList />);
+
+    expect(await screen.findByTestId("btn-new-project")).toHaveAttribute(
+      "href",
+      "/ooplanner?new=1",
+    );
   });
 
   it("uses a route link for opening a project and keeps delete as a separate control", async () => {

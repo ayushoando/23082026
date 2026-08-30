@@ -1,6 +1,6 @@
-# AI Package Remediation — Implementation Tasks
+# Implementation Plan: AI Package Remediation
 
-## Task-list status and execution boundary
+## Overview
 
 This task list translates the approved `bugfix.md` and `design.md` into later, owner-gated work. It does not authorize or record a source edit, test, command, package operation, provider call, secret/configuration change, migration, deployment, or runtime result. Every unchecked item remains pending until the Repository Owner grants exact current-session approval for its named scope; every protected command additionally requires enabled-hook permission.
 
@@ -15,7 +15,7 @@ The remediation remains advisory-only. Model output, retrieval hits, provider la
 - Record observed outputs as observed, failures as counterexamples, and unrun checks as pending. Do not convert an owner decision, a plan, or a configuration key's presence into a runtime claim.
 - Do not modify `package.json`, the lockfile, secrets, runtime configuration, migrations, or deployment state unless a later owner approval names the exact path and package/version or configuration scope.
 
-## Dependency graph and sequencing
+## Task Dependency Graph
 
 ```text
 0. Phase-zero decision record (record format and evidence boundary)
@@ -42,7 +42,7 @@ Tasks 1 and 2 are standalone, pre-fix test tasks and must remain before all impl
 
 ## Phase zero — decision and approval record
 
-- [ ] 0. Establish the evidenced phase-zero decision and approval record
+- [x] 0. Establish the evidenced phase-zero decision and approval record
   - **Candidate artifact (requires a later exact file-creation approval):** `.kiro/specs/ai-package-remediation/decision-record.md`. Do not edit `bugfix.md` or `design.md` unless the owner separately names either file.
   - **Implementation intent:** create a phase-by-phase record that distinguishes `[STATIC-FACT]`, `[UNVERIFIED]`, and `[OWNER-DECISION]`; identifies the approving authority, decision date/scope, affected surface, acceptance condition, rollback owner, and status (`pending`, `approved`, `rejected`, or `superseded`). The record itself must not imply provider reachability, a package change, or deployment.
   - **Prerequisites / owner gates:** exact approval to create the decision record; no source, package, secret, configuration, migration, provider, or deployment authorization follows from that approval.
@@ -61,30 +61,30 @@ Tasks 1 and 2 are standalone, pre-fix test tasks and must remain before all impl
     - **Owner gate:** the chosen mode and any runtime configuration change require exact approval before Task 3.2; a remote-store decision is not proof that a store is reachable.
     - _Requirements: 1.4, 1.5, 2.4, 2.5, 2.9, 2.10, 3.2, 3.5, 3.6_
 
-  - [-] 0.3 Record provider/model, data-minimization, retention, and cost decisions as pending until explicitly approved
+  - [x] 0.3 Record provider/model, data-minimization, retention, and cost decisions as pending until explicitly approved
     - List only owner-approved `{ provider, model }` pairs; define the approved catalog/context fields, prohibited personal or sensitive data, server-only credential boundary, provider retention assumptions, and cost-accountability owner.
     - Record how an empty or unavailable approved set degrades deterministically without presenting model output as authoritative.
     - **Owner gate:** no provider-set, model, secret, environment, or data-policy change may begin until the owner approves the exact decision and scope.
     - _Requirements: 1.6, 2.6, 2.7, 2.8, 2.10, 3.2, 3.4, 3.7_
 
-  - [~] 0.4 Record the evaluation-threshold decision
+  - [x] 0.4 Record the evaluation-threshold decision
     - Define whether the owner approves numeric thresholds for grounded-catalog accuracy, structured-response validity, fallback visibility, latency, error rate, retrieval contribution, and provider selection, or explicitly decides that a metric has no fixed target.
     - **Owner gate:** no threshold may be invented by an implementer; metric instrumentation may proceed only after the metric set and privacy boundary are approved.
     - _Requirements: 1.6, 2.7, 2.9, 2.10_
 
-  - [~] 0.5 Verify the LanceDB manifest/registry question without asserting a result in advance
+  - [x] 0.5 Verify the LanceDB manifest/registry question without asserting a result in advance
     - Capture the declared manifest range, then—only under a later approved evidence-gathering scope—compare it with installed/resolvable and official metadata. Mark the result as verified, unresolved, or blocked; do not state that a discrepancy exists or that a version resolves until evidence is collected.
     - **Owner gate:** this is a verification task, not package authorization. Any registry/network lookup, package operation, manifest edit, or lockfile edit needs its own approval.
     - _Requirements: 1.2, 1.7, 2.2, 2.8, 2.10, 3.6, 3.7_
 
-  - [~] 0.6 Record optional AI Gateway, remote-vector, and pgvector spikes as separate decisions
+  - [x] 0.6 Record optional AI Gateway, remote-vector, and pgvector spikes as separate decisions
     - Define a narrow question, comparison criteria, authorized evidence source, bounded candidate paths, expected rollback, and a stop condition for each optional spike. Keep all spikes `defer` unless the owner explicitly selects one.
     - **Owner gate:** a spike is not part of the minimal-churn path and cannot add packages, call providers, create migrations, or change deployment/configuration without a separate exact approval.
     - _Requirements: 2.2, 2.5, 2.6, 2.8, 2.9, 2.10, 3.6, 3.7_
 
 ## Pre-fix baseline tasks
 
-- [~] 1. Write bug-condition exploration property tests
+- [-] 1. Write bug-condition exploration property tests
   - **Property 1: Bug Condition** - Safe, contract-conforming AI delivery remediation
   - **CRITICAL:** write these tests before implementing any fix. Run them on the unfixed baseline only after an exact current-session test authorization and hook permission. Their expected result is failure; do not weaken the assertions or alter production code to make the baseline pass.
   - **Bug_Condition (`isBugCondition(input)`):** a decision lacks an evidenced phase contract; a Planner advisor request targets a missing or case-mismatched handler; a production vector recall lacks a configured remote store and attempts a local filesystem write; or a package/provider change lacks owner approval and an exact pin.
@@ -100,7 +100,7 @@ Tasks 1 and 2 are standalone, pre-fix test tasks and must remain before all impl
   - **Prerequisites / owner gates:** Task 0.1 must at least establish the record format; exact test-file write approval, exact test command authorization, and hook permission are required. Package, source, configuration, and provider changes remain prohibited.
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 2.10_
 
-- [~] 2. Write preservation property tests before implementing the fix
+- [x] 2. Write preservation property tests before implementing the fix
   - **Property 2: Preservation** - Existing catalog safety, degraded behavior, INR discipline, and retrieval separation
   - **IMPORTANT:** use observation-first methodology. On the unfixed baseline, observe and record behavior for inputs where `isBugCondition(input)` is false, then encode those observed patterns in property tests. These tests must pass before any remediation implementation begins.
   - **Non-bug condition (`NOT isBugCondition(input)`):** a valid catalog advisor request, a dev-mode disk vector recall, an existing route, or an already-approved dependency path. The tests must preserve these behaviors rather than infer new behavior.
@@ -118,12 +118,12 @@ Tasks 1 and 2 are standalone, pre-fix test tasks and must remain before all impl
 
 ## Owner-approved implementation
 
-- [ ] 3. Implement only the owner-approved remediation scopes
+- [~] 3. Implement only the owner-approved remediation scopes
   - **Prerequisites / owner gates:** Tasks 1 and 2 are complete with their results honestly recorded; every child task has its named Phase-zero decision approved; the owner grants exact source/test scope. Parent completion does not authorize a child task, a package change, a secret/configuration change, a provider call, a migration, or deployment.
   - **Implementation intent:** apply the smallest reversible change using existing packages where possible. Keep catalog and Planner contracts independent, retain advisory-only behavior, preserve the Studio/Planner boundary, and use deterministic degradation whenever an approved capability is unavailable.
   - _Requirements: 2.1, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 2.10, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7_
 
-  - [~] 3.1 Repair the Planner advisor endpoint with an independent, non-streaming-by-default contract
+  - [x] 3.1 Repair the Planner advisor endpoint with an independent, non-streaming-by-default contract
     - **Candidate paths:** `site/app/api/planner/ai-advisor/route.ts` (new only after path/case approval); `site/lib/ai/mastra/plannerAdvisorClient.ts`; `site/features/shared/api/schemas.ts`; existing server-only AI/provider helpers; relevant auth/rate-limit helpers; future tests under `tests/unit/app/api/planner/ai-advisor/`.
     - **Implementation intent:** implement only the owner-approved canonical route/path casing. Validate `PlannerAdvisorRequest` independently from the catalog contract; return a single JSON `PlannerAdvisorResponse` by default, unless the owner separately approves streaming. Apply the approved auth, CSRF, rate-limit, input-validation, and error-envelope policy; return a deterministic `degraded: true` response for unavailable/invalid model capability rather than an automatic plan change. Normalize any catalog-specific Planner recommendation against known catalog records. Do not import Studio code or mutate Planner persistence.
     - **Test / validation intent:** use the same route/path cases created in Task 1 plus schema, rejected-boundary, degraded-response, no-mutation, and no-Studio-import coverage. Use mocked provider/retrieval seams only. Source review and any type/lint/unit/integration execution require separate exact approval and hook permission.
@@ -133,7 +133,7 @@ Tasks 1 and 2 are standalone, pre-fix test tasks and must remain before all impl
     - _Preservation: catalog route behavior, server-only secrets, existing controls, advisory-only semantics, and Studio/Planner separation remain unchanged._
     - _Requirements: 1.3, 2.3, 2.6, 2.9, 2.10, 3.1, 3.2, 3.4, 3.6, 3.7_
 
-  - [~] 3.2 Make vector retrieval explicitly remote-or-degrade and production-safe
+  - [x] 3.2 Make vector retrieval explicitly remote-or-degrade and production-safe
     - **Candidate paths:** `site/lib/ai/mastra/lanceVectorStore.ts`, `site/lib/ai/mastra/catalogRag.ts`, `site/lib/ai/mastra/catalogRetrieval.ts`, and focused tests under `tests/unit/lib/ai/mastra/`.
     - **Implementation intent:** add a typed capability decision that recognizes a specifically approved remote URI as remote-capable and otherwise reports vector retrieval as unavailable in production before any local-path initialization/write seam. Preserve deterministic vector → lexical → catalog-order ordering and slug-level deduplication. When a remote store is configured, use that store only; when it is absent or fails, fall through to lexical/catalog-order without a production filesystem write. Keep source attribution available to the owner-approved response/observability boundary without silently changing a public client contract. Apply index freshness and `ensureCatalogVectorIndex(force)` recovery only to the owner-approved remote mode.
     - **Test / validation intent:** extend the Task 1 no-local-write property and Task 2 ordering/preservation property with mocked filesystem, environment, remote-store, embedding, and clock seams. Assert zero local write calls for all non-remote production configurations, remote-only selection for approved remote configurations, deterministic fallback ordering/deduplication, and explicit unavailable capability. No actual remote store, embedding, or provider call is permitted in these tests.
@@ -143,7 +143,7 @@ Tasks 1 and 2 are standalone, pre-fix test tasks and must remain before all impl
     - _Preservation: dev-mode behavior, Orama lexical retrieval, catalog-order tail filling, slug deduplication, and Fuse.js separation remain intact unless an approved decision explicitly changes them._
     - _Requirements: 1.4, 1.5, 2.4, 2.5, 2.9, 2.10, 3.2, 3.5, 3.6, 3.7_
 
-  - [~] 3.3 Enforce the explicit provider/model allowlist and data-policy boundary
+  - [x] 3.3 Enforce the explicit provider/model allowlist and data-policy boundary
     - **Candidate paths:** `site/lib/ai/mastra/providers.ts`, `site/lib/ai/mastra/providerFetch.ts` only if needed to carry approved metadata, `site/lib/env.server.ts` for server-only validation, the approved decision record, and focused unit/property tests under `tests/unit/lib/ai/mastra/`.
     - **Implementation intent:** gate model-chain selection on the owner-approved `{ provider, model }` allowlist rather than key presence alone. Retain server-only credential access; pass only the approved catalog/context fields; prohibit secrets, raw unnecessary personal data, and raw session identifiers from logs, prompts, metrics, or client payloads. Ensure an unavailable/empty allowlist reaches the existing deterministic degraded behavior rather than a hidden provider attempt.
     - **Test / validation intent:** property-test arbitrary configured-key/allowlist combinations against mocked model factories: only allowlisted pairs may be selected, no allowlist means no provider invocation, and allowed request payloads exclude forbidden data. Re-run catalog/Planner fallback tests without a provider network call.
@@ -153,7 +153,7 @@ Tasks 1 and 2 are standalone, pre-fix test tasks and must remain before all impl
     - _Preservation: existing catalog security controls execute before a provider call; fallback visibility, advisory-only behavior, and INR guidance remain intact._
     - _Requirements: 1.6, 2.6, 2.7, 2.8, 2.9, 2.10, 3.1, 3.2, 3.3, 3.4, 3.6, 3.7_
 
-  - [~] 3.4 Add privacy-safe AI observability and an owner-gated evaluation harness
+  - [x] 3.4 Add privacy-safe AI observability and an owner-gated evaluation harness
     - **Candidate paths:** `site/lib/observability/metrics.ts`, a focused server-only AI metrics module under `site/lib/observability/`, approved catalog/Planner route or helper instrumentation points, and deterministic fixtures/tests under `tests/unit/` and `tests/e2e/`.
     - **Implementation intent:** emit aggregate counters/histograms only for grounded-catalog accuracy, structured-response validity, fallback/degraded visibility, latency, error class, approved provider selection, and retrieval-source contribution. Construct representative catalog and Planner scenarios plus unavailable-provider, malformed-output, retrieval-failure, timeout, authorization, CSRF, and rate-limit cases. Exclude prompts containing personal data, provider keys, raw session identifiers, and model response bodies from metrics.
     - **Test / validation intent:** use fixture-driven unit/property tests to check metric labels/cardinality and that schema validity, catalog grounding, fallback visibility, provider selection, and retrieval contribution are measured without sensitive payloads. Treat any integration/E2E/retrieval evaluation as pending until exact command authorization and hook permission; do not make a provider call solely for metrics evaluation.
@@ -162,7 +162,7 @@ Tasks 1 and 2 are standalone, pre-fix test tasks and must remain before all impl
     - _Preservation: existing OpenTelemetry/Prometheus plumbing, catalog response contracts, secret boundary, and advisory-only behavior remain unchanged unless separately approved._
     - _Requirements: 1.6, 2.1, 2.6, 2.7, 2.9, 2.10, 3.1, 3.2, 3.4, 3.6, 3.7_
 
-  - [~] 3.5 Complete the package decision gate and preserve the minimal-churn recommendation
+  - [x] 3.5 Complete the package decision gate and preserve the minimal-churn recommendation
     - **Candidate paths:** the approved decision record; root `package.json` and lockfile only if the owner later approves a named package at an exact version; package-specific tests only if a package change is separately approved.
     - **Implementation intent:** review each direct AI/retrieval dependency and any shortlisted alternative against official-source/license evidence, compatibility with the repository's Node.js/Next.js 16/React 19/TypeScript context, active source usage, supply-chain/transitive risk, provider/data/cost impact, migration complexity, and rollback feasibility. Maintain the current minimal-churn recommendation—retain/reconfigure existing packages rather than change them—unless a documented owner decision supersedes it.
     - **LanceDB verification:** complete Task 0.5 as evidence collection. Treat the manifest-versus-registry question as unresolved until verified; do not use it as a claim that a package is broken or as justification for a package operation.

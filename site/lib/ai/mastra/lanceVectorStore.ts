@@ -72,15 +72,43 @@ export class LanceCatalogVectorStore extends MastraVector {
     return /^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(uri);
   }
 
+  /**
+   * Returns true when the current environment is production-like AND the
+   * configured URI is not a remote store URI.  In that state any attempt to
+   * connect would call `assertDevDiskWritable()` (which throws EROFS) and
+   * then try a local filesystem write — both of which are illegal in
+   * production.  Callers should return an "unavailable" sentinel value
+   * instead of calling `conn()`.
+   */
+  private isProductionNonRemote(): boolean {
+    const env = process.env;
+    const isProduction = env.NODE_ENV !== "development";
+    const isBypass = env.DEV_AUTH_BYPASS === "1";
+    return isProduction && !isBypass && !this.isRemoteUri(this.uri);
+  }
+
   private async conn(): Promise<Connection> {
     if (!this.connection) {
       if (!this.isRemoteUri(this.uri)) {
         assertDevDiskWritable();
         fs.mkdirSync(this.uri, { recursive: true });
       }
-      this.connection = connect(this.uri);
+      // Store a temporary reference; clear it on rejection so the next
+      // caller can retry rather than re-receiving the same rejected promise.
+      const pending = connect(this.uri);
+      this.connection = pending;
+      pending.catch(() => {
+        // Only clear if we are still holding this same promise — a concurrent
+        // caller may have already replaced it with a new attempt.
+        if (this.connection === pending) {
+          this.connection = null;
+        }
+      });
     }
-    return this.connection;
+    // this.connection is non-null here: either it was set above (new pending)
+    // or it was already non-null entering the method.  The .catch() callback
+    // is always async and cannot run synchronously before this return.
+    return this.connection!;
   }
 
   private async openTable(indexName: string): Promise<Table | null> {
@@ -93,6 +121,9 @@ export class LanceCatalogVectorStore extends MastraVector {
   }
 
   async createIndex({ indexName, dimension }: CreateIndexParams): Promise<void> {
+    if (this.isProductionNonRemote()) {
+      return;
+    }
     const conn = await this.conn();
     const name = sanitizeTableName(indexName);
     if ((await conn.tableNames()).includes(name)) {
@@ -115,11 +146,21 @@ export class LanceCatalogVectorStore extends MastraVector {
   }
 
   async listIndexes(): Promise<string[]> {
+    if (this.isProductionNonRemote()) {
+      return [];
+    }
     const conn = await this.conn();
     return conn.tableNames();
   }
 
   async describeIndex({ indexName }: DescribeIndexParams): Promise<IndexStats> {
+    if (this.isProductionNonRemote()) {
+      return {
+        dimension: this.indexDimensions.get(indexName) ?? CATALOG_EMBEDDING_DIMENSION,
+        count: 0,
+        metric: "cosine",
+      };
+    }
     const tbl = await this.openTable(indexName);
     if (!tbl) {
       return {
@@ -137,6 +178,9 @@ export class LanceCatalogVectorStore extends MastraVector {
   }
 
   async deleteIndex({ indexName }: DeleteIndexParams): Promise<void> {
+    if (this.isProductionNonRemote()) {
+      return;
+    }
     const conn = await this.conn();
     const name = sanitizeTableName(indexName);
     if ((await conn.tableNames()).includes(name)) {
@@ -146,6 +190,9 @@ export class LanceCatalogVectorStore extends MastraVector {
   }
 
   async upsert({ indexName, vectors, metadata = [], ids }: UpsertVectorParams): Promise<string[]> {
+    if (this.isProductionNonRemote()) {
+      return [];
+    }
     const dimension = vectors[0]?.length ?? CATALOG_EMBEDDING_DIMENSION;
     await this.createIndex({ indexName, dimension });
 
@@ -185,6 +232,10 @@ export class LanceCatalogVectorStore extends MastraVector {
       return [];
     }
 
+    if (this.isProductionNonRemote()) {
+      return [];
+    }
+
     const tbl = await this.openTable(indexName);
     if (!tbl) {
       return [];
@@ -212,6 +263,9 @@ export class LanceCatalogVectorStore extends MastraVector {
   }
 
   async deleteVector({ indexName, id }: DeleteVectorParams): Promise<void> {
+    if (this.isProductionNonRemote()) {
+      return;
+    }
     const tbl = await this.openTable(indexName);
     if (!tbl) {
       return;
@@ -221,6 +275,9 @@ export class LanceCatalogVectorStore extends MastraVector {
 
   async deleteVectors({ indexName, ids }: DeleteVectorsParams): Promise<void> {
     if (!ids?.length) {
+      return;
+    }
+    if (this.isProductionNonRemote()) {
       return;
     }
     const tbl = await this.openTable(indexName);

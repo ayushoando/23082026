@@ -85,11 +85,11 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - Remove Planner-to-Studio, Studio-to-Planner, and cross-zone FOCSS imports; create independent Planner-owned equivalents where needed and extend findings to all affected workflows.
     - Preserve Planner API casing and approved shared-infrastructure boundaries.
     - _Requirements: 2.1, 2.3, 3.1, 3.2, 3.6_
-  - [~] 2.2 Audit and remediate Planner scale use across geometry behavior
+  - [x] 2.2 Audit and remediate Planner scale use across geometry behavior
     - Consolidate Planner-local `0.05 px/mm` use across creation, placement, snapping, measurement, selection transforms, resize, rotate, export, and display without importing Studio geometry helpers.
     - Correct every evidenced `0.2 px/mm`, implicit-scale, or inconsistent-unit path.
     - _Requirements: 2.1, 3.3, 3.4_
-  - [~] 2.3 Remediate serialization and deserialization scale integrity
+  - [x] 2.3 Remediate serialization and deserialization scale integrity
     - Normalize persisted physical units and validated scale metadata, adapt known legacy snapshots deterministically, and return an explicit unsupported-scale/version result rather than silently applying Studio scale.
     - Preserve dimensions, placement, rotation, and source records through round trips; publish the resulting typed geometry contract at Gate B.
     - _Requirements: 3.3, 3.5, 4.3, 13.7, 13.8_
@@ -141,15 +141,15 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - Generate current, known-old, and unsupported versions and verify validation/migration or unchanged source with explicit unsupported result.
     - **Validates: Requirements 13.1, 13.7, 14.6**
 
-- [ ] 3. Workstream 3 — Remediate UI/UX, responsive, input, and accessibility behavior
-  - [-] 3.1 Remediate `/ooplanner` and project-route entry, list, and routing behavior
+- [~] 3. Workstream 3 — Remediate UI/UX, responsive, input, and accessibility behavior
+  - [x] 3.1 Remediate `/ooplanner` and project-route entry, list, and routing behavior
     - Produce deterministic guest/authenticated entry states, project-list loading/empty/error states, reachable next actions, and thin App Router entries with business logic in Planner-owned modules.
     - _Requirements: 2.1, 4.1, 5.1-5.3, 10.1-10.3_
   - [~] 3.2 Remediate create, load, edit, save, and delete workflows against the Gate B contracts
     - Initialize valid defaults, restore all view-independent content, save one coherent revision, require delete confirmation, and return deterministic post-delete state.
     - Fix every verified dead end, stale selection, incorrect metadata, or data-loss path discovered by the traces without rewriting geometry/persistence or API contract owner files.
     - _Requirements: 2.1, 4.2-4.5, 13.1, 13.2, 13.6_
-  - [~] 3.3 Implement typed required-state mappings for every covered workflow
+  - [x] 3.3 Implement typed required-state mappings for every covered workflow
     - Distinguish default, loading, empty, success, validation, server, unauthenticated, forbidden, rate-limited, conflict, stale, offline, and recovery states where applicable.
     - Give each state an accessible status, focus target, memory-preservation rule, and deterministic next/recovery action; clear obsolete errors after successful retry.
     - _Requirements: 4.8, 5.1-5.8_
@@ -172,7 +172,7 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - **Property 9: Form value preservation**
     - Generate mixed valid/invalid project and handoff forms and verify all invalid fields are associated while valid values remain unchanged and no submission occurs.
     - **Validates: Requirements 5.4, 8.5, 15.3, 15.4**
-  - [~] 3.9 Implement and remediate desktop, tablet, and phone layout parity
+  - [x] 3.9 Implement and remediate desktop, tablet, and phone layout parity
     - Preserve document, unsaved state, active tool/workflow, and meaningful selection across resize/orientation changes.
     - Keep commands reachable without page-level horizontal scrolling; use reversible panels, dismissible tablet overlays, non-overlapping desktop regions, and visual-viewport-aware modal scrolling.
     - _Requirements: 2.2, 6.1-6.7_
@@ -226,11 +226,11 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - Cover methods, path/query/header/body schemas, success/error envelopes, statuses, auth/owner policy, CSRF/origin policy, and rate limits for catalog, upload, handoff, projects, project item, and sketch-to-plan endpoints found in inventory.
     - Use versioned adapters/dual-read parsing during transition, converge handlers and clients within each finding, and publish the endpoint contract at Gate B.
     - _Requirements: 11.1, 11.7, 15.1_
-  - [~] 4.2 Enforce request-processing order before persistence
+  - [x] 4.2 Enforce request-processing order before persistence
     - Apply correlation, quota, validation, origin/CSRF, verified session, owner scope, revision/idempotency, and persistence in the designed order; return structured failures and `405`/`Allow` where applicable.
     - Prove invalid requests cannot invoke a persistence adapter.
     - _Requirements: 11.2-11.7_
-  - [~] 4.3 Remediate server-derived owner scope and session-expiry handling
+  - [-] 4.3 Remediate server-derived owner scope and session-expiry handling
     - Derive identity only from the verified server session, list only owned records, use one documented non-disclosing item policy, reject/ignore client owner identifiers, and retain unsaved UI state on expiry through a typed handoff to workstream 3.
     - _Requirements: 10.3-10.8, 11.5_
   - [~] 4.4 Remediate safe structured errors and correlation responses
@@ -294,7 +294,7 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - **Property 26: Performance finding completeness**
     - Generate missed-budget findings and verify measured value, complete supported profile, bottleneck evidence, and remediation status are mandatory.
     - **Validates: Requirements 16.8**
-  - [ ] 5.8 Expand automated browser/device profiles beyond the required representative profiles
+  - [~] 5.8 Expand automated browser/device profiles beyond the required representative profiles
     - Add non-duplicative cross-browser/device cases only after required profiles and remediations are covered; do not make these extra profiles a prerequisite for closing already proven findings.
     - _Requirements: 6.1, 7.1, 8.1, 16.1-16.7_
   - [~] 5.9 Add targeted unit and integration regression tests for every remediated finding after Gate D

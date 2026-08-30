@@ -143,17 +143,21 @@ export interface PlannerRequiredState {
  * Every workflow the audit covers. State mappings are keyed by this type.
  */
 export type PlannerWorkflowId =
+  | "entry-auth"
   | "project-list"
   | "project-create"
   | "project-load"
+  | "project-edit"
   | "project-save"
   | "project-delete"
-  | "project-edit"
   | "catalog-browse"
+  | "catalog-select"
   | "catalog-upload"
-  | "lead-handoff"
+  | "handoff"
   | "sketch-to-plan"
-  | "entry-routing";
+  | "offline-reconnect"
+  | "conflict-recovery"
+  | "unsaved-destructive-navigation";
 
 /* ------------------------------------------------------------------ */
 /*  Workflow → applicable-state mapping type                           */
@@ -358,6 +362,53 @@ function catalogBrowseStates(): ReadonlyMap<PlannerRequiredStateKind, PlannerReq
   ]);
 }
 
+/* -- catalog-select ------------------------------------------------ */
+
+function catalogSelectStates(): ReadonlyMap<PlannerRequiredStateKind, PlannerRequiredState> {
+  return new Map<PlannerRequiredStateKind, PlannerRequiredState>([
+    ["default", makeState("default", "Choose furniture", "Select an item from the catalog to place it on your plan.", noneIdle("Choose furniture to place"), FOCUS_PRIMARY, "preserve", [{ id: "select-furniture", label: "Choose furniture", primary: true }], false)],
+    ["success", makeState("success", "Furniture placed", "The selected furniture item has been added to your plan.", statusIdle("Furniture placed"), FOCUS_NONE, "preserve", [], false)],
+    ["validation-error", makeState("validation-error", "Cannot place furniture", "Choose a valid furniture item and placement before trying again.", alertIdle("Furniture placement validation failed"), FOCUS_INVALID, "preserve", [ACTION_RETRY, ACTION_DISMISS], true)],
+    ["server-error", makeState("server-error", "Furniture placement failed", "The furniture item could not be placed. Your current plan is unchanged.", alertIdle("Furniture placement failed"), FOCUS_HEADING, "preserve", [ACTION_RETRY, ACTION_DISMISS], true)],
+    ["recovery", makeState("recovery", "Furniture ready to place", "You can choose furniture and try the placement again.", statusIdle("Furniture placement recovery"), FOCUS_PRIMARY, "preserve", [{ id: "select-furniture", label: "Choose furniture", primary: true }], true)],
+  ]);
+}
+
+/* -- offline-reconnect --------------------------------------------- */
+
+function offlineReconnectStates(): ReadonlyMap<PlannerRequiredStateKind, PlannerRequiredState> {
+  return new Map<PlannerRequiredStateKind, PlannerRequiredState>([
+    ["success", makeState("success", "Connection checked", "The latest saved plan is ready to review alongside your preserved work.", statusIdle("Connection checked"), FOCUS_NONE, "preserve", [], false)],
+    ["offline", makeState("offline", "You are offline", "Your unsaved plan remains available until you reconnect.", alertIdle("Offline — unsaved plan preserved"), FOCUS_HEADING, "preserve", [ACTION_RECONNECT], true)],
+    ["server-error", makeState("server-error", "Connection check failed", "We could not confirm the latest saved plan. Your local work is preserved.", alertIdle("Connection check failed — local work preserved"), FOCUS_HEADING, "preserve", [ACTION_RETRY], true)],
+    ["stale", makeState("stale", "Plan needs refreshing", "A newer saved version may exist. Reload it before replacing your local work.", alertIdle("Plan may be stale"), FOCUS_PRIMARY, "preserve", [ACTION_RELOAD, ACTION_KEEP_LOCAL], true)],
+    ["conflict", makeState("conflict", "Reconnect conflict", "Your local plan and the saved version differ. Choose which version to keep.", alertIdle("Reconnect conflict — choose a version"), FOCUS_HEADING, "preserve", [ACTION_USE_SERVER, ACTION_KEEP_LOCAL], false)],
+    ["recovery", makeState("recovery", "Connection restored", "Review the latest plan before saving your preserved work.", statusIdle("Connection restored — review required"), FOCUS_PRIMARY, "preserve", [ACTION_RELOAD, ACTION_KEEP_LOCAL], true)],
+  ]);
+}
+
+/* -- conflict-recovery --------------------------------------------- */
+
+function conflictRecoveryStates(): ReadonlyMap<PlannerRequiredStateKind, PlannerRequiredState> {
+  return new Map<PlannerRequiredStateKind, PlannerRequiredState>([
+    ["success", makeState("success", "Conflict resolved", "The selected plan version is ready for your next action.", statusIdle("Conflict resolved"), FOCUS_NONE, "preserve", [], false)],
+    ["conflict", makeState("conflict", "Save conflict needs a decision", "Another version was saved first. Choose how to resolve the conflict.", alertIdle("Save conflict needs a decision"), FOCUS_HEADING, "preserve", [ACTION_USE_SERVER, ACTION_KEEP_LOCAL], false)],
+    ["stale", makeState("stale", "Saved version is outdated", "Reload the current saved version before deciding whether to keep local work.", alertIdle("Saved version is outdated"), FOCUS_PRIMARY, "preserve", [ACTION_RELOAD, ACTION_KEEP_LOCAL], true)],
+    ["server-error", makeState("server-error", "Could not resolve conflict", "The latest version could not be loaded. Your local plan is still available.", alertIdle("Conflict resolution failed — local plan preserved"), FOCUS_HEADING, "preserve", [ACTION_RETRY], true)],
+    ["recovery", makeState("recovery", "Conflict information updated", "The latest plan is available for an explicit resolution decision.", statusIdle("Conflict information updated"), FOCUS_PRIMARY, "preserve", [ACTION_RELOAD, ACTION_KEEP_LOCAL], true)],
+  ]);
+}
+
+/* -- unsaved-destructive-navigation -------------------------------- */
+
+function unsavedDestructiveNavigationStates(): ReadonlyMap<PlannerRequiredStateKind, PlannerRequiredState> {
+  return new Map<PlannerRequiredStateKind, PlannerRequiredState>([
+    ["default", makeState("default", "Keep unsaved changes?", "Choose whether to continue editing or discard the current unsaved plan.", noneIdle("Unsaved changes need a decision"), FOCUS_PRIMARY, "prompt", [{ id: "continue-editing", label: "Continue editing", primary: true }, ACTION_DISCARD], false)],
+    ["success", makeState("success", "New draft started", "Your previous plan was discarded and a new draft is ready.", statusIdle("New draft started"), FOCUS_NONE, "clear", [{ id: "start-editing", label: "Start editing", primary: true }], false)],
+    ["recovery", makeState("recovery", "Unsaved plan retained", "Your current plan remains open and unchanged.", statusIdle("Unsaved plan retained"), FOCUS_PRIMARY, "preserve", [{ id: "continue-editing", label: "Continue editing", primary: true }], true)],
+  ]);
+}
+
 /* -- catalog-upload ------------------------------------------------ */
 
 function catalogUploadStates(): ReadonlyMap<PlannerRequiredStateKind, PlannerRequiredState> {
@@ -398,6 +449,7 @@ function sketchToPlanStates(): ReadonlyMap<PlannerRequiredStateKind, PlannerRequ
     ["loading", makeState("loading", "Converting…", "Your sketch is being analyzed and converted.", statusBusy("Converting sketch"), FOCUS_HEADING, "preserve", [], false)],
     ["success", makeState("success", "Conversion complete", "Your sketch has been converted. Review the generated objects before applying.", statusIdle("Sketch converted"), FOCUS_NONE, "preserve", [], false)],
     ["validation-error", makeState("validation-error", "Invalid sketch input", "The sketch data is not valid. Check the image and prompt.", alertIdle("Sketch conversion validation failed"), FOCUS_INVALID, "preserve", [ACTION_RETRY], true)],
+    ["forbidden", makeState("forbidden", "Sketch conversion unavailable", "Your account cannot use sketch conversion right now.", alertIdle("Sketch conversion unavailable"), FOCUS_HEADING, "preserve", [ACTION_DISMISS], false)],
     ["server-error", makeState("server-error", "Conversion failed", "The sketch could not be converted right now. Your original image is preserved.", alertIdle("Sketch conversion failed"), FOCUS_HEADING, "preserve", [ACTION_RETRY], true)],
     ["rate-limited", makeState("rate-limited", "Conversion limit reached", "Please wait before converting another sketch.", alertIdle("Rate limited — wait before converting"), FOCUS_HEADING, "preserve", [ACTION_WAIT_RETRY], true)],
     ["offline", makeState("offline", "You are offline", "Sketch conversion requires a network connection.", alertIdle("Offline — cannot convert sketch"), FOCUS_HEADING, "preserve", [ACTION_RECONNECT], true)],
@@ -413,6 +465,8 @@ function entryRoutingStates(): ReadonlyMap<PlannerRequiredStateKind, PlannerRequ
     ["loading", makeState("loading", "Starting planner…", "Checking your session and preparing the workspace.", statusBusy("Starting planner"), FOCUS_HEADING, "preserve", [], false)],
     ["success", makeState("success", "Planner ready", "The floor planner workspace is ready.", statusIdle("Planner ready"), FOCUS_NONE, "clear", [], false)],
     ["unauthenticated", makeState("unauthenticated", "Guest workspace", "You are browsing as a guest. Sign in to access your saved plans.", statusIdle("Guest workspace — sign in for saved plans"), FOCUS_NONE, "preserve", [ACTION_SIGN_IN], false)],
+    ["forbidden", makeState("forbidden", "Planner access unavailable", "Your account cannot access the requested planner workspace.", alertIdle("Planner access unavailable"), FOCUS_HEADING, "preserve", [ACTION_GUEST_WORKSPACE], false)],
+    ["rate-limited", makeState("rate-limited", "Please wait before continuing", "Too many requests were made while starting the planner.", alertIdle("Planner start rate limited"), FOCUS_HEADING, "preserve", [ACTION_WAIT_RETRY], true)],
     ["server-error", makeState("server-error", "Could not start planner", "The planner workspace could not be initialized.", alertIdle("Planner initialization failed"), FOCUS_HEADING, "preserve", [ACTION_RETRY], true)],
     ["offline", makeState("offline", "You are offline", "The planner requires a network connection to start.", alertIdle("Offline — cannot start planner"), FOCUS_HEADING, "preserve", [ACTION_RECONNECT], true)],
     ["recovery", makeState("recovery", "Connection restored", "You are back online. Retry to start the planner.", statusIdle("Connection restored"), FOCUS_PRIMARY, "preserve", [ACTION_RETRY], true)],
@@ -424,17 +478,21 @@ function entryRoutingStates(): ReadonlyMap<PlannerRequiredStateKind, PlannerRequ
 /* ================================================================== */
 
 export const PLANNER_WORKFLOW_STATE_MAP: PlannerWorkflowStateMap = {
+  "entry-auth": entryRoutingStates(),
   "project-list": projectListStates(),
   "project-create": projectCreateStates(),
   "project-load": projectLoadStates(),
+  "project-edit": projectEditStates(),
   "project-save": projectSaveStates(),
   "project-delete": projectDeleteStates(),
-  "project-edit": projectEditStates(),
   "catalog-browse": catalogBrowseStates(),
+  "catalog-select": catalogSelectStates(),
   "catalog-upload": catalogUploadStates(),
-  "lead-handoff": leadHandoffStates(),
+  handoff: leadHandoffStates(),
   "sketch-to-plan": sketchToPlanStates(),
-  "entry-routing": entryRoutingStates(),
+  "offline-reconnect": offlineReconnectStates(),
+  "conflict-recovery": conflictRecoveryStates(),
+  "unsaved-destructive-navigation": unsavedDestructiveNavigationStates(),
 };
 
 /* ================================================================== */
@@ -484,17 +542,21 @@ export const ALL_REQUIRED_STATE_KINDS: readonly PlannerRequiredStateKind[] = [
  * All covered workflow identifiers.
  */
 export const ALL_WORKFLOW_IDS: readonly PlannerWorkflowId[] = [
+  "entry-auth",
   "project-list",
   "project-create",
   "project-load",
+  "project-edit",
   "project-save",
   "project-delete",
-  "project-edit",
   "catalog-browse",
+  "catalog-select",
   "catalog-upload",
-  "lead-handoff",
+  "handoff",
   "sketch-to-plan",
-  "entry-routing",
+  "offline-reconnect",
+  "conflict-recovery",
+  "unsaved-destructive-navigation",
 ] as const;
 
 /* ------------------------------------------------------------------ */

@@ -248,6 +248,32 @@ describe("Serialization round trip (Task 2.3)", () => {
       expect(result.value.geometry.geometry.furniture[0].depthMm).toBe(800);
       expect(result.value.geometry.geometry.furniture[0].rotationDeg).toBe(45);
     });
+
+    it("rejects a legacy canvas with explicit invalid scale metadata", () => {
+      const project = {
+        id: "proj-invalid-scale",
+        user_id: "owner-a",
+        name: "Invalid Scale",
+        revision: 1,
+        status: "active",
+        canvas_json: { scale_px_per_mm: 0, objects: [] },
+        sheet: {},
+        layers: [],
+        created_at: "2026-01-01T00:00:00.000Z",
+        updated_at: "2026-01-01T00:00:00.000Z",
+      };
+
+      const result = readPlannerProjectEnvelope(project, { ownerId: "owner-a" });
+
+      expect(result.ok).toBe(false);
+      if (result.ok) return;
+      expect(result.code).toBe("UNSUPPORTED_GEOMETRY");
+      expect(result.geometryResult).toMatchObject({
+        ok: false,
+        code: "UNSUPPORTED_PLANNER_SCALE",
+      });
+      expect(result.source).toBe(project);
+    });
   });
 
   describe("rescaleGeometry (utility for raw px→mm correction)", () => {

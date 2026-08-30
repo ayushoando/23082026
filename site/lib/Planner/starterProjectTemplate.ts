@@ -1,4 +1,7 @@
-import { SCALE_PX_PER_MM } from "@planner/lib/plannerPalette";
+import {
+  PLANNER_SCALE_PX_PER_MM,
+  plannerMmToPx,
+} from "@planner/lib/plannerGeometryContract";
 
 const STARTER_ITEMS = [
   { id: "starter-desk-1", name: "Workstation 1", width_mm: 1400, depth_mm: 700, left_mm: 2000, top_mm: 1500 },
@@ -10,10 +13,10 @@ const STARTER_ITEMS = [
 ] as const;
 
 function furnitureRect(item: (typeof STARTER_ITEMS)[number]) {
-  const wPx = item.width_mm * SCALE_PX_PER_MM;
-  const dPx = item.depth_mm * SCALE_PX_PER_MM;
-  const left = item.left_mm * SCALE_PX_PER_MM;
-  const top = item.top_mm * SCALE_PX_PER_MM;
+  const wPx = plannerMmToPx(item.width_mm);
+  const dPx = plannerMmToPx(item.depth_mm);
+  const left = plannerMmToPx(item.left_mm);
+  const top = plannerMmToPx(item.top_mm);
   return {
     type: "Rect",
     version: "7.4.0",
@@ -54,7 +57,7 @@ export function buildStarterProjectPayload() {
       width_mm: 15000,
       height_mm: 10000,
       unit: "mm",
-      scale_px_per_mm: SCALE_PX_PER_MM,
+      scale_px_per_mm: PLANNER_SCALE_PX_PER_MM,
     },
     layers: [],
   };

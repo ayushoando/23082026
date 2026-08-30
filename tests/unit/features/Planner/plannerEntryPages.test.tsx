@@ -10,8 +10,18 @@ vi.mock("@/lib/auth/plannerSession", () => ({
 }));
 
 vi.mock("@planner/components/PlannerEntry", () => ({
-  PlannerEntry: ({ accessMode }: { accessMode: string }) => (
-    <div data-testid="planner-entry" data-access-mode={accessMode} />
+  PlannerEntry: ({
+    accessMode,
+    projectStartIntent,
+  }: {
+    accessMode: string;
+    projectStartIntent: string;
+  }) => (
+    <div
+      data-testid="planner-entry"
+      data-access-mode={accessMode}
+      data-project-start-intent={projectStartIntent}
+    />
   ),
 }));
 
@@ -58,6 +68,25 @@ describe("Planner route feature entries", () => {
     expect(screen.getByTestId("planner-entry")).toHaveAttribute(
       "data-access-mode",
       "guest",
+    );
+    expect(screen.getByTestId("planner-entry")).toHaveAttribute(
+      "data-project-start-intent",
+      "resume",
+    );
+  });
+
+  it("starts a new authenticated draft without resuming a remembered project", async () => {
+    mocks.getOptionalPlannerUser.mockResolvedValue({ id: "owner-1" });
+
+    render(await PlannerPage({ searchParams: Promise.resolve({ new: "1" }) }));
+
+    expect(screen.getByTestId("planner-entry")).toHaveAttribute(
+      "data-access-mode",
+      "authenticated",
+    );
+    expect(screen.getByTestId("planner-entry")).toHaveAttribute(
+      "data-project-start-intent",
+      "new",
     );
   });
 

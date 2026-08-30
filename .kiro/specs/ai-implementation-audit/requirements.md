@@ -32,7 +32,7 @@ Changes to providers, packages, model identifiers, prompts, route contracts, aut
 
 ## Requirements
 
-### Requirement 1
+### Requirement 1: Full AI Stack Audit with Severity and Evidence
 
 **User Story:** As a maintainer, I want a full audit of the AI stack recorded with severity and evidence, so that remediation can be sequenced by impact.
 
@@ -43,7 +43,7 @@ Changes to providers, packages, model identifiers, prompts, route contracts, aut
 3. THE Auditor SHALL sequence remediation of recorded Findings in order of descending Severity.
 4. WHERE a Finding concerns an Approval_Gated_Change, THE Auditor SHALL flag that Finding for approval before the corresponding change is applied.
 
-### Requirement 2
+### Requirement 2: Safe Remediation of Confirmed Findings
 
 **User Story:** As a maintainer, I want confirmed findings remediated safely, so that fixes do not introduce unreviewed risk.
 
@@ -54,7 +54,7 @@ Changes to providers, packages, model identifiers, prompts, route contracts, aut
 3. THE AI_Stack SHALL retain the existing Catalog_Advisor_Route contract fields `recommendations`, `summary`, `totalBudget`, `nextActions`, `warnings`, `pricingMode`, and `fallbackUsed` after remediation.
 4. WHEN remediation modifies a module, THE AI_Stack SHALL preserve behavior in modules unrelated to the Finding.
 
-### Requirement 3
+### Requirement 3: Missing Planner Advisor Route
 
 **User Story:** As a Planner user, I want the missing planner advisor route to exist, so that the planner advisor client receives valid responses instead of failures.
 
@@ -68,7 +68,7 @@ Changes to providers, packages, model identifiers, prompts, route contracts, aut
 6. IF no provider in the Provider_Chain returns a usable response, THEN THE Planner_Advisor_Route SHALL return a Heuristic_Fallback result with `fallbackUsed` set to `true`.
 7. IF the request body fails validation, THEN THE Planner_Advisor_Route SHALL return a `400` validation error response.
 
-### Requirement 4
+### Requirement 4: Fixed-Order Provider Chain Resolution
 
 **User Story:** As a maintainer, I want the provider chain to resolve in a fixed order, so that routing and failover are predictable.
 
@@ -79,7 +79,7 @@ Changes to providers, packages, model identifiers, prompts, route contracts, aut
 3. WHEN a provider target returns an unusable or errored response, THE AI_Stack SHALL advance to the next available target in the Provider_Chain.
 4. THE AI_Stack SHALL keep provider secrets and model identifiers on the server side.
 
-### Requirement 5
+### Requirement 5: Ranked, Deduplicated, Fail-Open Retrieval Pipeline
 
 **User Story:** As a maintainer, I want the retrieval pipeline to rank, dedupe, and fail open, so that grounding stays relevant and resilient.
 
@@ -91,7 +91,7 @@ Changes to providers, packages, model identifiers, prompts, route contracts, aut
 4. IF a retrieval layer raises an error, THEN THE Retrieval_Pipeline SHALL degrade to catalog order and return available results.
 5. WHERE the trimmed query is shorter than 2 characters, THE Retrieval_Pipeline SHALL return products in catalog order.
 
-### Requirement 6
+### Requirement 6: AI Routes Wired into Existing Observability
 
 **User Story:** As an operator, I want the AI routes wired into existing observability, so that provider use, fallback, retrieval, latency, and errors are measurable.
 

@@ -205,7 +205,7 @@ export function ProjectsList() {
         <div className="mt-2 flex flex-wrap justify-center gap-3">
           <Link
             className="btn btn--primary"
-            href="/ooplanner"
+            href="/ooplanner?new=1"
             data-testid="empty-state-new-plan"
           >
             <PhIcon name="plus" size={18} /> Create your first plan
@@ -282,7 +282,7 @@ export function ProjectsList() {
             {summary}
           </p>
         </div>
-        <Link className="btn btn--primary" href="/ooplanner" data-testid="btn-new-project">
+        <Link className="btn btn--primary" href="/ooplanner?new=1" data-testid="btn-new-project">
           <PhIcon name="plus" size={18} /> New plan
         </Link>
       </header>
