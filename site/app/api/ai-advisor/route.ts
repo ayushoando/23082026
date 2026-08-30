@@ -23,6 +23,7 @@ import { ApiError, API_ERROR_CODES } from "@/features/shared/api/ApiError";
 import { success, error } from "@/features/shared/api/apiResponse";
 import { CatalogAdvisorRequestSchema } from "@/features/shared/api/schemas";
 import { isMissingUserHistoryTable } from "@/lib/tracking/userHistoryRepository";
+import { recordAdvisorRequest, type AiRetrievalSource } from "@/lib/observability/aiMetrics";
 
 type ProductLite = Awaited<ReturnType<typeof getProductsFresh>>[number];
 type AdvisorClientConfig = {
@@ -568,6 +569,7 @@ async function handleCatalogAdvisor(
   const productsByUrlKey = new Map(products.map((product) => [product.slug, product]));
   const advisorClients = resolveAdvisorClients();
   const fallbackResult = buildFallbackAdvisorResponse(query, products, context);
+  const advisorStartTime = Date.now();
 
   if (advisorClients.length === 0) {
     return stream
@@ -631,7 +633,7 @@ async function handleCatalogAdvisor(
             `[ai-advisor] ${advisorClient.provider} stream error${
               isTimeout ? " (timeout)" : ""
             }:`,
-            providerError,
+            isTimeout ? "timeout" : "provider error",
           );
         }
 
@@ -643,6 +645,12 @@ async function handleCatalogAdvisor(
       await streamResolvedResult(controller, fallbackResult);
     });
   }
+
+  // Map retrieval source labels to the observability-layer naming convention.
+  const mapRetrievalSources = (
+    sources: readonly ("vector" | "lexical" | "catalog-order")[],
+  ): AiRetrievalSource[] =>
+    sources.map((s) => (s === "catalog-order" ? "catalog_order" : s) as AiRetrievalSource);
 
   for (const advisorClient of advisorClients) {
     try {
@@ -658,6 +666,14 @@ async function handleCatalogAdvisor(
         : null;
 
       if (result) {
+        recordAdvisorRequest({
+          surface: "catalog",
+          provider: advisorClient.provider,
+          fallbackUsed: false,
+          degraded: false,
+          latencyMs: Date.now() - advisorStartTime,
+          retrievalSources: mapRetrievalSources(retrieved.sources),
+        });
         return success(result);
       }
     } catch (providerError) {
@@ -666,11 +682,20 @@ async function handleCatalogAdvisor(
         `[ai-advisor] ${advisorClient.provider} provider error${
           isTimeout ? " (timeout)" : ""
         }:`,
-        providerError,
+        isTimeout ? "timeout" : "provider error",
       );
     }
   }
 
+  recordAdvisorRequest({
+    surface: "catalog",
+    provider: "unknown",
+    fallbackUsed: true,
+    degraded: true,
+    latencyMs: Date.now() - advisorStartTime,
+    fallbackReason: "provider_error",
+    retrievalSources: mapRetrievalSources(retrieved.sources),
+  });
   return success(fallbackResult);
 }
 

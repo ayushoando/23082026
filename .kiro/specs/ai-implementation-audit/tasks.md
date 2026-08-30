@@ -32,28 +32,28 @@ All code is TypeScript with named exports. Tests live under `tests/`. Commands r
     - Tag each finding's `changeClass` (`safe` vs an approval-gated class) so gated items are flagged for approval and deferred
     - _Requirements: 1.1, 1.2, 1.4, 2.2_
 
-  - [~] 2.2 Write unit tests for the findings dataset invariants
+  - [x] 2.2 Write unit tests for the findings dataset invariants
     - Assert every finding has a non-empty `location` and `evidence`, a valid `severity`, and a valid `changeClass`
     - Assert `sequenceBySeverity(AI_STACK_FINDINGS)` groups gated vs non-gated correctly via `isApprovalGated`
     - _Requirements: 1.2, 1.4_
 
-- [ ] 3. Checkpoint - audit recorded and sequenced
+- [x] 3. Checkpoint - audit recorded and sequenced
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 4. Safe remediation of non-gated findings
-  - [ ] 4.1 Apply non-gated fixes to the catalog advisor path while preserving its contract
+- [~] 4. Safe remediation of non-gated findings
+  - [x] 4.1 Apply non-gated fixes to the catalog advisor path while preserving its contract
     - Remediate only findings classed `safe` in `site/app/api/ai-advisor/route.ts` and any non-gated helpers, leaving provider ids, prompts, retrieval ranking, auth rules, LanceDB, and db writes untouched
     - Preserve the exact Catalog_Advisor_Route response fields: `recommendations`, `summary`, `totalBudget`, `nextActions`, `warnings`, `pricingMode`, `fallbackUsed`
     - Preserve behavior in modules unrelated to each finding
     - Defer any approval-gated change: surface it for approval, do not apply
     - _Requirements: 2.1, 2.2, 2.3, 2.4_
 
-  - [ ] 4.2 Write property test for catalog contract retention
+  - [x] 4.2 Write property test for catalog contract retention
     - **Feature: ai-implementation-audit, Property 3: Catalog advisor response retains all contract fields**
     - For arbitrary query/context/non-empty product set, assert every built response (provider-success, catalog-unavailable, fallback) contains all seven contract fields with expected types
     - **Validates: Requirements 2.3**
 
-  - [ ] 4.3 Write unit tests for unrelated-module preservation
+  - [x] 4.3 Write unit tests for unrelated-module preservation
     - Assert remediated modules do not alter exports/behavior of modules unrelated to their findings
     - _Requirements: 2.4_
 
@@ -130,28 +130,28 @@ All code is TypeScript with named exports. Tests live under `tests/`. Commands r
 - [ ] 7. Checkpoint - planner route and observability wired
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 8. Provider chain and retrieval audit verification (tests only; changes gated)
-  - [ ] 8.1 Write property test for credential-gated provider subsequence
+- [x] 8. Provider chain and retrieval audit verification (tests only; changes gated)
+  - [x] 8.1 Write property test for credential-gated provider subsequence
     - **Feature: ai-implementation-audit, Property 8: Provider chain is a credential-gated subsequence of the canonical order**
     - For arbitrary credential configs, assert `resolveAdvisorModelChain` output is a subsequence of [gemini, openrouter, openrouter-backup, openai, bedrock] and a target is present iff its credentials are configured
     - **Validates: Requirements 4.1, 4.2**
 
-  - [ ] 8.2 Write property test for failover to first usable target
+  - [x] 8.2 Write property test for failover to first usable target
     - **Feature: ai-implementation-audit, Property 9: Failover advances to the first usable target**
     - For arbitrary provider-outcome sequences, assert the stack returns the first usable target's result, skipping earlier errored/unusable targets, else the fallback
     - **Validates: Requirements 4.3**
 
-  - [ ] 8.3 Write property test for ranked, deduplicated, capped retrieval
+  - [x] 8.3 Write property test for ranked, deduplicated, capped retrieval
     - **Feature: ai-implementation-audit, Property 11: Retrieval output is ordered, deduplicated, and capped**
     - For queries of length ≥ 2 and limit N, assert unique slugs, at most N results, and `sources` is a subsequence of [vector, lexical, catalog-order]
     - **Validates: Requirements 5.1, 5.2, 5.3**
 
-  - [ ] 8.4 Write property test for fail-open retrieval
+  - [x] 8.4 Write property test for fail-open retrieval
     - **Feature: ai-implementation-audit, Property 12: Retrieval fails open to catalog order**
     - For inputs where one or more recall layers throw, assert `retrieveCatalogProducts` does not throw and returns catalog-order products up to the limit
     - **Validates: Requirements 5.4**
 
-  - [ ] 8.5 Write property test for short-query catalog order
+  - [x] 8.5 Write property test for short-query catalog order
     - **Feature: ai-implementation-audit, Property 13: Short queries return catalog order**
     - For any trimmed query of length < 2, assert the return equals `products.slice(0, limit)` with `sources` equal to `["catalog-order"]`
     - **Validates: Requirements 5.5**

@@ -16,11 +16,8 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import * as fc from "fast-check";
 
 // ---------------------------------------------------------------------------
-// Mocks — established before importing the module under test.
-//
-// We mock @prometheus-io/client and @/lib/observability/metrics so the module
-// initialises without errors.  We then spy on `recordAdvisorRequest` after
-// import so assertions target the real call site inside `withAiObservability`.
+// Mocks — established BEFORE importing the module under test so that Vitest's
+// module registry honours the mock during the module's own initialisation.
 // ---------------------------------------------------------------------------
 
 vi.mock("server-only", () => ({}));
@@ -29,7 +26,7 @@ vi.mock("@/lib/observability/metrics", () => ({
   getMetricsRegistry: () => ({}),
 }));
 
-// Capture inc/observe calls so spy assertions work even with the mocked client
+// Capture every Prometheus inc/observe call so assertions can inspect them.
 const mockCounterInc = vi.fn();
 const mockHistogramObserve = vi.fn();
 const mockGaugeInc = vi.fn();
@@ -58,28 +55,54 @@ vi.mock("@prometheus-io/client", () => {
 
 // ---------------------------------------------------------------------------
 // Import module under test AFTER mocks are registered.
-// Spy on recordAdvisorRequest so we can inspect calls from withAiObservability.
 // ---------------------------------------------------------------------------
 
-const aiMetrics = await import("@/lib/observability/aiMetrics");
-const { withAiObservability } = aiMetrics;
-
-// Spy wraps the real export — this intercepts calls made by withAiObservability
-// because both share the same module binding in ESM via vi's hoisting.
-const recordAdvisorSpy = vi.spyOn(aiMetrics, "recordAdvisorRequest");
+const { withAiObservability } = await import("@/lib/observability/aiMetrics");
 
 // ---------------------------------------------------------------------------
-// Reset between tests
+// Reset between tests — clear the singleton so each group sees a fresh registry.
 // ---------------------------------------------------------------------------
 
 beforeEach(() => {
-  recordAdvisorSpy.mockClear();
   mockCounterInc.mockClear();
   mockHistogramObserve.mockClear();
   mockGaugeInc.mockClear();
-  // Clear the singleton so each test group sees a fresh registry
-  (globalThis as typeof globalThis & { __oandoAiAdvisorMetrics?: unknown }).__oandoAiAdvisorMetrics = undefined;
+  (
+    globalThis as typeof globalThis & { __oandoAiAdvisorMetrics?: unknown }
+  ).__oandoAiAdvisorMetrics = undefined;
 });
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+/** Pull every call to `oando_ai_advisor_requests_total` from the counter spy. */
+function requestCalls() {
+  return mockCounterInc.mock.calls.filter(
+    ([name]) => name === "oando_ai_advisor_requests_total",
+  );
+}
+
+/** Pull latency histogram calls. */
+function latencyCalls() {
+  return mockHistogramObserve.mock.calls.filter(
+    ([name]) => name === "oando_ai_advisor_latency_ms",
+  );
+}
+
+/** Pull fallback counter calls. */
+function fallbackCalls() {
+  return mockCounterInc.mock.calls.filter(
+    ([name]) => name === "oando_ai_advisor_fallback_total",
+  );
+}
+
+/** Pull retrieval-source gauge calls. */
+function retrievalCalls() {
+  return mockGaugeInc.mock.calls.filter(
+    ([name]) => name === "oando_ai_advisor_retrieval_sources",
+  );
+}
 
 // ---------------------------------------------------------------------------
 // Arbitraries
@@ -96,14 +119,18 @@ const providerArb = fc.constantFrom(
 );
 
 const sourcesArb = fc.array(
-  fc.constantFrom("vector" as const, "lexical" as const, "catalog_order" as const),
+  fc.constantFrom(
+    "vector" as const,
+    "lexical" as const,
+    "catalog_order" as const,
+  ),
   { minLength: 0, maxLength: 4 },
 );
 
 /**
- * Produces an AiRequestObservation-shaped object with arbitrary valid values.
- * `option` with `nil: undefined` may return `null` in some fc versions —
- * we normalise those to `undefined` in the `.map` step.
+ * Generates an AiRequestObservation-shaped value with arbitrary valid fields.
+ * `fc.option` with `nil: undefined` may return `null` in some fc versions;
+ * the `.map` step normalises those to `undefined`.
  */
 const observationArb = fc
   .record({
@@ -122,18 +149,20 @@ const observationArb = fc
   }));
 
 // ---------------------------------------------------------------------------
-// Property 14: Requests record provider, fallback, and retrieval-layer metrics
+// Property 14 — Requests record provider, fallback, and retrieval-layer metrics
 // ---------------------------------------------------------------------------
 
 describe(
   "Feature: ai-implementation-audit, Property 14: Requests record provider, fallback, and retrieval-layer metrics",
   () => {
     it(
-      "recordAdvisorRequest is called exactly once per withAiObservability invocation",
+      "oando_ai_advisor_requests_total is incremented exactly once per call",
       async () => {
         await fc.assert(
           fc.asyncProperty(routeArb, observationArb, async (route, obs) => {
-            recordAdvisorSpy.mockClear();
+            mockCounterInc.mockClear();
+            mockHistogramObserve.mockClear();
+            mockGaugeInc.mockClear();
 
             const result = await withAiObservability(
               route,
@@ -142,7 +171,7 @@ describe(
             );
 
             expect(result).toBe("ok");
-            expect(recordAdvisorSpy).toHaveBeenCalledTimes(1);
+            expect(requestCalls()).toHaveLength(1);
           }),
           { numRuns: 100 },
         );
@@ -150,11 +179,11 @@ describe(
     );
 
     it(
-      "recordAdvisorRequest receives the surface from the observation's route",
+      "requests_total label carries surface matching the observation route",
       async () => {
         await fc.assert(
           fc.asyncProperty(observationArb, async (obs) => {
-            recordAdvisorSpy.mockClear();
+            mockCounterInc.mockClear();
 
             await withAiObservability(
               obs.route,
@@ -162,9 +191,8 @@ describe(
               () => obs,
             );
 
-            const call = recordAdvisorSpy.mock.calls[0]?.[0];
-            expect(call).toBeDefined();
-            expect(call!.surface).toBe(obs.route);
+            const [, labels] = requestCalls()[0]!;
+            expect(labels.surface).toBe(obs.route);
           }),
           { numRuns: 100 },
         );
@@ -172,11 +200,11 @@ describe(
     );
 
     it(
-      "recordAdvisorRequest receives the fallback flag from the observation",
+      "requests_total label carries fallback='true' when fallback is true, 'false' otherwise",
       async () => {
         await fc.assert(
           fc.asyncProperty(observationArb, async (obs) => {
-            recordAdvisorSpy.mockClear();
+            mockCounterInc.mockClear();
 
             await withAiObservability(
               obs.route,
@@ -184,9 +212,8 @@ describe(
               () => obs,
             );
 
-            const call = recordAdvisorSpy.mock.calls[0]?.[0];
-            expect(call).toBeDefined();
-            expect(call!.fallbackUsed).toBe(obs.fallback);
+            const [, labels] = requestCalls()[0]!;
+            expect(labels.fallback).toBe(obs.fallback ? "true" : "false");
           }),
           { numRuns: 100 },
         );
@@ -194,11 +221,11 @@ describe(
     );
 
     it(
-      "recordAdvisorRequest receives the provider from the observation (or 'unknown' when absent)",
+      "requests_total label carries provider from observation, or 'unknown' when absent",
       async () => {
         await fc.assert(
           fc.asyncProperty(observationArb, async (obs) => {
-            recordAdvisorSpy.mockClear();
+            mockCounterInc.mockClear();
 
             await withAiObservability(
               obs.route,
@@ -206,12 +233,11 @@ describe(
               () => obs,
             );
 
-            const call = recordAdvisorSpy.mock.calls[0]?.[0];
-            expect(call).toBeDefined();
+            const [, labels] = requestCalls()[0]!;
             if (obs.provider !== undefined) {
-              expect(call!.provider).toBe(obs.provider);
+              expect(labels.provider).toBe(obs.provider);
             } else {
-              expect(call!.provider).toBe("unknown");
+              expect(labels.provider).toBe("unknown");
             }
           }),
           { numRuns: 100 },
@@ -220,26 +246,50 @@ describe(
     );
 
     it(
-      "recordAdvisorRequest receives retrievalSources matching the observation sources",
+      "retrieval-source gauge is incremented once per source in observation.sources",
       async () => {
         await fc.assert(
-          fc.asyncProperty(observationArb, async (obs) => {
-            recordAdvisorSpy.mockClear();
+          fc.asyncProperty(
+            observationArb.filter((o) => o.sources !== undefined),
+            async (obs) => {
+              mockGaugeInc.mockClear();
 
-            await withAiObservability(
-              obs.route,
-              async () => null,
-              () => obs,
-            );
+              await withAiObservability(
+                obs.route,
+                async () => null,
+                () => obs,
+              );
 
-            const call = recordAdvisorSpy.mock.calls[0]?.[0];
-            expect(call).toBeDefined();
-            if (obs.sources !== undefined) {
-              expect(call!.retrievalSources).toEqual(obs.sources);
-            } else {
-              expect(call!.retrievalSources).toBeUndefined();
-            }
-          }),
+              const calls = retrievalCalls();
+              expect(calls).toHaveLength(obs.sources!.length);
+              for (let i = 0; i < obs.sources!.length; i++) {
+                expect(calls[i]![1].source).toBe(obs.sources![i]);
+              }
+            },
+          ),
+          { numRuns: 100 },
+        );
+      },
+    );
+
+    it(
+      "retrieval-source gauge is NOT called when observation.sources is absent",
+      async () => {
+        await fc.assert(
+          fc.asyncProperty(
+            observationArb.filter((o) => o.sources === undefined),
+            async (obs) => {
+              mockGaugeInc.mockClear();
+
+              await withAiObservability(
+                obs.route,
+                async () => null,
+                () => obs,
+              );
+
+              expect(retrievalCalls()).toHaveLength(0);
+            },
+          ),
           { numRuns: 100 },
         );
       },
@@ -248,7 +298,7 @@ describe(
 );
 
 // ---------------------------------------------------------------------------
-// Property 15: Requests emit a telemetry span with the required attributes
+// Property 15 — Requests emit a telemetry span with the required attributes
 //
 // @vercel/otel does not expose an in-memory span exporter in the unit-test
 // environment.  We verify the observable contract: the `observe` callback is
@@ -256,8 +306,9 @@ describe(
 // returns contains all required span-attribute fields (provider, fallback,
 // sources).
 //
-// Span emission from @vercel/otel is PENDING USER AUTHORIZATION for
-// browser/integration test validation.
+// Full span attribute assertion (that @vercel/otel emits a span named
+// "ai.catalog" / "ai.planner" carrying provider/fallback/source attributes)
+// is PENDING USER AUTHORIZATION for browser/integration test validation.
 // ---------------------------------------------------------------------------
 
 describe(
@@ -290,7 +341,7 @@ describe(
     );
 
     it(
-      "the observation shape has the required span-attribute fields: fallback (bool), durationMs > 0, optional provider (string), optional sources (array)",
+      "the observation shape satisfies the required span-attribute contract",
       async () => {
         await fc.assert(
           fc.asyncProperty(observationArb, async (obs) => {
@@ -302,20 +353,19 @@ describe(
               observeSpy,
             );
 
-            // The span attribute contract: fallback must be boolean
+            // fallback must be boolean (required span attribute)
             expect(typeof obs.fallback).toBe("boolean");
 
-            // durationMs must be positive (the spec says the observation carries duration)
+            // durationMs must be positive
             expect(obs.durationMs).toBeGreaterThan(0);
 
-            // provider is optional but must be a string when present
+            // provider is optional; when present it must be a short string (label safe)
             if (obs.provider !== undefined) {
               expect(typeof obs.provider).toBe("string");
-              // must never be a raw secret or long token (>31 chars)
               expect(obs.provider.length).toBeLessThanOrEqual(31);
             }
 
-            // sources is optional but must be an array of strings when present
+            // sources is optional; when present it must be an array of strings
             if (obs.sources !== undefined) {
               expect(Array.isArray(obs.sources)).toBe(true);
               for (const s of obs.sources) {
@@ -327,11 +377,6 @@ describe(
         );
       },
     );
-
-    // NOTE — asserting that @vercel/otel emits a span named "ai.catalog" /
-    // "ai.planner" with provider/fallback/source attributes requires an
-    // in-memory OTLP exporter in the test process.  That test is
-    // PENDING USER AUTHORIZATION (browser / integration test lane).
   },
 );
 
@@ -340,8 +385,7 @@ describe(
 // ---------------------------------------------------------------------------
 
 describe("withAiObservability – unit tests (Task 5.4)", () => {
-  it("records a positive latencyMs even for very fast functions", async () => {
-    // We supply a durationMs of 5 in the observation so the adapter uses it.
+  it("records a positive latencyMs to the histogram even for very fast functions", async () => {
     await withAiObservability(
       "catalog",
       async () => "fast",
@@ -352,9 +396,10 @@ describe("withAiObservability – unit tests (Task 5.4)", () => {
       }),
     );
 
-    const call = recordAdvisorSpy.mock.calls[0]?.[0];
-    expect(call).toBeDefined();
-    expect(call!.latencyMs).toBeGreaterThan(0);
+    const calls = latencyCalls();
+    expect(calls).toHaveLength(1);
+    // latency value (third arg to histogram.observe) must be > 0
+    expect(calls[0]![2]).toBeGreaterThan(0);
   });
 
   it("returns fn() result unchanged when observe() completes normally", async () => {
@@ -385,7 +430,7 @@ describe("withAiObservability – unit tests (Task 5.4)", () => {
       ).then((v) => {
         resolved = v;
       }),
-    ).resolves.toBeUndefined(); // .then() callback returns undefined — no rejection
+    ).resolves.toBeUndefined(); // .then() returns void — no rejection
 
     expect(resolved).toBe("the-value");
   });
@@ -403,8 +448,9 @@ describe("withAiObservability – unit tests (Task 5.4)", () => {
     expect(result).toBe(payload);
   });
 
-  it("does NOT call recordAdvisorRequest when observe() throws", async () => {
-    recordAdvisorSpy.mockClear();
+  it("does NOT call any metric when observe() throws (best-effort boundary)", async () => {
+    mockCounterInc.mockClear();
+    mockHistogramObserve.mockClear();
 
     await withAiObservability(
       "catalog",
@@ -414,11 +460,14 @@ describe("withAiObservability – unit tests (Task 5.4)", () => {
       },
     );
 
-    expect(recordAdvisorSpy).not.toHaveBeenCalled();
+    // The try/catch in withAiObservability swallows everything after fn() resolves
+    expect(requestCalls()).toHaveLength(0);
+    expect(latencyCalls()).toHaveLength(0);
   });
 
-  it("does NOT propagate a recordAdvisorRequest() internal exception", async () => {
-    recordAdvisorSpy.mockImplementationOnce(() => {
+  it("does NOT propagate a metric-layer (recordAdvisorRequest) exception", async () => {
+    // Force the Counter to throw to simulate a broken Prometheus registry.
+    mockCounterInc.mockImplementationOnce(() => {
       throw new Error("metrics store exploded");
     });
 
@@ -442,8 +491,6 @@ describe("withAiObservability – unit tests (Task 5.4)", () => {
         fc.anything(),
         fc.boolean(), // whether observe throws
         async (value, shouldThrow) => {
-          recordAdvisorSpy.mockClear();
-
           const result = await withAiObservability(
             "catalog",
             async () => value,

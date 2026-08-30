@@ -266,7 +266,7 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - _Requirements: 14.3-14.10, 18.4, 18.5, 19.5, 19.6_
 
 - [ ] 5. Workstream 5 — Implement observability, performance, and regression evidence
-  - [-] 5.1 Instrument API and persistence operations with bounded Planner metrics and structured events after Gate B
+  - [x] 5.1 Instrument API and persistence operations with bounded Planner metrics and structured events after Gate B
     - Reuse the existing observability registry for request/error counts, duration, rate limits, authorization denials, and persistence failures with bounded operation/method/result/status/persistence-mode labels.
     - Implement instrumentation hooks in workstream 5-owned modules and propagate one opaque correlation id through response, API, persistence, and client-visible server errors. Consume workstreams 2 and 4 contracts read-only; any required call-site edit is handed to that file's owner for serial integration.
     - _Requirements: 17.1-17.4_

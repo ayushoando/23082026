@@ -130,9 +130,34 @@ export function createPlannerOperationEvent(
 }
 
 /**
+ * Rebuild the event from the bounded allowlist before it reaches any exporter.
+ * Planner observability never accepts request bodies, URLs, errors, cookies,
+ * credentials, project data, or caller-supplied labels.
+ */
+export function redactPlannerOperationEvent(
+  event: PlannerOperationEvent,
+): PlannerOperationEvent {
+  if (
+    event.eventName !== PLANNER_OBSERVABILITY_EVENT_NAME ||
+    !isPlannerCorrelationId(event.correlationId)
+  ) {
+    throw new Error("Planner observability event failed privacy validation");
+  }
+  return createPlannerOperationEvent({
+    operation: event.operation,
+    method: event.method,
+    result: event.result,
+    status: event.status,
+    persistenceMode: event.persistenceMode,
+    durationMs: event.durationMs,
+    correlationId: event.correlationId,
+  });
+}
+
+/**
  * Export an allowlisted event. Exporter and fallback failures never escape into
- * the user or persistence workflow. The identical frozen event is offered to
- * the fallback sink when primary export fails.
+ * the user or persistence workflow. The same redacted frozen event is offered
+ * to the fallback sink when primary export fails.
  */
 export function exportPlannerOperationSafely(
   event: PlannerOperationEvent,
@@ -141,11 +166,17 @@ export function exportPlannerOperationSafely(
     "exporter" | "fallbackSink"
   >,
 ): void {
+  let redactedEvent: PlannerOperationEvent;
   try {
-    dependencies.exporter.export(event);
+    redactedEvent = redactPlannerOperationEvent(event);
+  } catch {
+    return;
+  }
+  try {
+    dependencies.exporter.export(redactedEvent);
   } catch {
     try {
-      dependencies.fallbackSink.write(event);
+      dependencies.fallbackSink.write(redactedEvent);
     } catch {
       // Observability is deliberately failure-isolated from product behavior.
     }

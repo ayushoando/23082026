@@ -132,13 +132,31 @@ export const plannerPrometheusExporter: PlannerObservabilityExporter = {
     if (event.result === "persistence-failure") {
       metrics.persistenceFailures.inc(labels);
     }
-    console.info("[observability] planner operation", event);
+    console.info("[observability] planner operation", {
+      eventName: event.eventName,
+      operation: event.operation,
+      method: event.method,
+      result: event.result,
+      status: event.status,
+      persistenceMode: event.persistenceMode,
+      durationMs: event.durationMs,
+      correlationId: event.correlationId,
+    });
   },
 };
 
 export const plannerFallbackSink: PlannerObservabilityFallbackSink = {
   write(event) {
-    console.error("[observability] planner export fallback", event);
+    console.error("[observability] planner export fallback", {
+      eventName: event.eventName,
+      operation: event.operation,
+      method: event.method,
+      result: event.result,
+      status: event.status,
+      persistenceMode: event.persistenceMode,
+      durationMs: event.durationMs,
+      correlationId: event.correlationId,
+    });
   },
 };
 
