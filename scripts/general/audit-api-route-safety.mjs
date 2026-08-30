@@ -124,6 +124,10 @@ const RATE_LIMIT_MARKERS = [
   /\benforceAdminRateLimit\s*\(/,
   /\benforcePublicApiRateLimit\s*\(/,
   /\benforceRateLimit\s*\(/,
+  // Planner pipeline adapter — enforces quota + CSRF + auth internally
+  /createPlannerHandler\s*[<(({]/,
+  /processPlannerRequest\s*\(/,
+  /createPlannerRejectedMethodHandler\s*[<(({]/,
 ];
 
 const CSRF_REJECTION_HEADER_MARKERS = [
@@ -201,13 +205,25 @@ function hasManualCsrf(source) {
   return /validateCsrfRequest\s*\(/.test(source);
 }
 
+function hasPlannerPipelineCsrf(source) {
+  // createPlannerHandler and processPlannerRequest enforce CSRF via the
+  // plannerRouteAdapter.verifyCsrf → validateCsrfRequest path.
+  return (
+    /createPlannerHandler\s*[<(({]/.test(source) ||
+    /processPlannerRequest\s*\(/.test(source) ||
+    /createPlannerRejectedMethodHandler\s*[<(({]/.test(source)
+  );
+}
+
 function hasCsrfCoverage(source) {
-  return hasWithAuthCsrf(source) || hasManualCsrf(source);
+  return hasWithAuthCsrf(source) || hasManualCsrf(source) || hasPlannerPipelineCsrf(source);
 }
 
 function hasCsrfRejectionHeader(source) {
   // withAuth + requireCsrf sets the header inside withAuth implementation
   if (hasWithAuthCsrf(source)) return true;
+  // Planner pipeline sets rejection header inside plannerRouteAdapter
+  if (hasPlannerPipelineCsrf(source)) return true;
   return hasAny(source, CSRF_REJECTION_HEADER_MARKERS);
 }
 
@@ -279,6 +295,12 @@ function mutatingMethodMissingCsrf(source, method) {
     return !/requireCsrf\s*:\s*true/.test(source);
   }
 
+  // Planner pipeline wrapper — CSRF enforced inside createPlannerHandler / processPlannerRequest
+  const constPlannerHandler = new RegExp(
+    `export\\s+const\\s+${method}\\s*=\\s*(?:createPlannerHandler|processPlannerRequest|createPlannerRejectedMethodHandler)`,
+  );
+  if (constPlannerHandler.test(source)) return false;
+
   const constAny = new RegExp(`export\\s+const\\s+${method}\\s*=`);
   if (constAny.test(source)) {
     return !hasCsrfCoverage(source);
@@ -348,7 +370,7 @@ for (const abs of routeFiles) {
   const needsCsrf = csrfRequiredForPath(apiPath) && mutators.length > 0;
   const csrfPresent = hasCsrfCoverage(source);
   const ratePresent = !missingRateLimit(source);
-  const authPresent = hasAny(source, ADMIN_AUTH_MARKERS) || /withAuth\s*[<(]/.test(source);
+  const authPresent = hasAny(source, ADMIN_AUTH_MARKERS) || /withAuth\s*[<(]/.test(source) || hasPlannerPipelineCsrf(source);
 
   if (mutators.length > 0) {
     matrix.push({
@@ -529,7 +551,7 @@ for (const abs of routeFiles) {
       apiPath.startsWith("plans/")) &&
     mutators.length > 0
   ) {
-    if (!/withAuth\s*[<(]/.test(source)) {
+    if (!/withAuth\s*[<(]/.test(source) && !hasPlannerPipelineCsrf(source)) {
       addIssue({
         file: rel,
         apiPath,
@@ -538,7 +560,7 @@ for (const abs of routeFiles) {
         message:
           "planner/plans mutator must use withAuth + requireCsrf (not manual CSRF-only)",
       });
-    } else if (!/requireCsrf\s*:\s*true/.test(source)) {
+    } else if (!hasPlannerPipelineCsrf(source) && !/requireCsrf\s*:\s*true/.test(source)) {
       addIssue({
         file: rel,
         apiPath,

@@ -98,7 +98,7 @@ function receiptIdentityFromStored(receipt: PlannerIdempotencyReceiptV1): string
 function conflict(
   message: string,
   currentRevision?: number,
-): PlannerRepositoryResultV1<PlannerProjectMutationValueV1> {
+): PlannerIdempotencyReceiptV1["result"] {
   return {
     ok: false,
     code: "CONFLICT",
@@ -129,6 +129,20 @@ function appendReceipt(
         result,
       },
     ],
+  };
+}
+
+function recordIdempotentOutcome(
+  state: PlannerProjectAtomicStateV1,
+  context: PlannerRepositoryContextV1,
+  command: PlannerProjectMutationCommandV1,
+  fingerprint: string,
+  result: PlannerIdempotencyReceiptV1["result"],
+): PlannerProjectMutationTransitionV1 {
+  return {
+    state: appendReceipt(state, context, command, fingerprint, result, state.project),
+    result,
+    effect: "none",
   };
 }
 
@@ -201,10 +215,22 @@ export function applyPlannerProjectMutation(
   if (command.operation === "delete") {
     const current = state.project;
     if (!current || current.id !== command.projectId || current.ownerId !== context.ownerId) {
-      return { state, result: { ok: false, code: "NOT_FOUND", message: "Project not found" }, effect: "none" };
+      return recordIdempotentOutcome(
+        state,
+        context,
+        command,
+        fingerprint,
+        { ok: false, code: "NOT_FOUND", message: "Project not found" },
+      );
     }
     if (command.expectedRevision !== current.revision) {
-      return { state, result: conflict("Project revision is stale", current.revision), effect: "none" };
+      return recordIdempotentOutcome(
+        state,
+        context,
+        command,
+        fingerprint,
+        conflict("Project revision is stale", current.revision),
+      );
     }
     const result = { ok: true as const, value: { id: current.id, deleted: true as const } };
     return {
@@ -235,10 +261,22 @@ export function applyPlannerProjectMutation(
 
   if (command.operation === "create") {
     if (command.request.expectedRevision !== 0) {
-      return { state, result: conflict("Project creation requires expected revision 0"), effect: "none" };
+      return recordIdempotentOutcome(
+        state,
+        context,
+        command,
+        fingerprint,
+        conflict("Project creation requires expected revision 0"),
+      );
     }
     if (state.project) {
-      return { state, result: conflict("Project already exists", state.project.revision), effect: "none" };
+      return recordIdempotentOutcome(
+        state,
+        context,
+        command,
+        fingerprint,
+        conflict("Project already exists", state.project.revision),
+      );
     }
     const project: PlannerProjectEnvelopeV1 = {
       contractVersion: PLANNER_PROJECT_CONTRACT_VERSION,
@@ -259,10 +297,22 @@ export function applyPlannerProjectMutation(
 
   const current = state.project;
   if (!current || current.id !== command.projectId || current.ownerId !== context.ownerId) {
-    return { state, result: { ok: false, code: "NOT_FOUND", message: "Project not found" }, effect: "none" };
+    return recordIdempotentOutcome(
+      state,
+      context,
+      command,
+      fingerprint,
+      { ok: false, code: "NOT_FOUND", message: "Project not found" },
+    );
   }
   if (command.request.expectedRevision !== current.revision) {
-    return { state, result: conflict("Project revision is stale", current.revision), effect: "none" };
+    return recordIdempotentOutcome(
+      state,
+      context,
+      command,
+      fingerprint,
+      conflict("Project revision is stale", current.revision),
+    );
   }
   const currentUpdatedMs = Date.parse(current.updatedAt);
   const updatedAt = new Date(Math.max(nowMs, currentUpdatedMs + 1)).toISOString();

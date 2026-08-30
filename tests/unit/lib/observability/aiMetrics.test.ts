@@ -52,8 +52,7 @@ vi.mock("server-only", () => ({}));
 
 // Force a fresh singleton for every test by clearing the globalThis cache key.
 beforeEach(() => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  delete (globalThis as any).__oandoAiAdvisorMetrics;
+  (globalThis as typeof globalThis & { __oandoAiAdvisorMetrics?: unknown }).__oandoAiAdvisorMetrics = undefined;
   mockCounterInc.mockClear();
   mockHistogramObserve.mockClear();
   mockGaugeInc.mockClear();

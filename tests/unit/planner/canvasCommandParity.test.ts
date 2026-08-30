@@ -15,23 +15,18 @@ import {
   getKeyboardBindings,
   getAccessibleControls,
   createDeleteCommand,
-  createDuplicateCommand,
   createRotateCommand,
   createMoveCommand,
-  createResizeCommand,
   createZoomInCommand,
   createZoomOutCommand,
   createPanCommand,
-  createSelectAllCommand,
   type FabricCanvasLike,
   type FabricObjectLike,
   type PlannerCommandContext,
-  type PlannerCommandDescriptor,
 } from "@planner/lib/commands/canvasCommands";
 
 import {
   createCanvasActions,
-  type CanvasActionCallbacks,
 } from "@planner/lib/commands/useCanvasActions";
 
 import {

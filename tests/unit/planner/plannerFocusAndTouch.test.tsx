@@ -4,7 +4,7 @@
  * Requirements 7.4–7.6, 8.1, 8.2
  */
 import "@testing-library/jest-dom/vitest";
-import { cleanup, render, screen, act } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ProjectMenu } from "@planner/components/PlannerProjectMenu";

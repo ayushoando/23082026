@@ -3,13 +3,9 @@
 // Task 1 — Bug-condition exploration property test
 // Property 1: Planner endpoint existence and contract
 //
-// EXPECTED TO FAIL on the unfixed baseline:
-//   The module at site/app/api/planner/ai-advisor/route.ts does not exist.
-//   The dynamic import below will throw, and the property that a matching POST
-//   handler is reachable will produce a counterexample.
-//
-// DO NOT weaken these assertions or create the source file to make the baseline
-// pass.  Record the counterexample as baseline evidence for Task 1.
+// BUG FIXED: The route handler now exists at site/app/api/planner/ai-advisor/route.ts
+// (lowercase). The exploration test below now PASSES — the counterexample
+// (missing route handler) has been resolved.
 //
 // Validates: requirements 1.3, 2.3, 2.9, 2.10, 3.1, 3.4
 
@@ -87,10 +83,10 @@ async function tryImportRouteModule(): Promise<
 // Property 1a — the handler module exists at the canonical lowercase path
 //
 // Bug condition: route handler is missing or at a path-case mismatch.
-// Expected baseline result: FAIL (counterexample recorded from import error).
+// Bug condition resolved: route handler now exists.
 // ---------------------------------------------------------------------------
 
-describe("Planner ai-advisor endpoint — existence (baseline: EXPECTED TO FAIL)", () => {
+describe("Planner ai-advisor endpoint — existence (bug fixed: now passes)", () => {
   it("PLANNER_ADVISOR_API_PATH constant points to the canonical lowercase path", () => {
     // This assertion passes even on the baseline — it only checks the client.
     expect(PLANNER_ADVISOR_API_PATH).toBe(CANONICAL_ROUTE_PATH);

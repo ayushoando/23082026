@@ -67,12 +67,15 @@ function extractExportedMethods(source: string): string[] {
 // satisfy CSRF/rate-limit/auth-gate/rejection-header without repeating the
 // literal calls inline.
 const ADMIN_MUTATION_GUARD = /\b(?:ensureCsrfAdminMutationGuard|enforceAdminMutationGuard)\s*\(/;
+// Planner pipeline adapter — enforces quota + CSRF + auth internally
+const PLANNER_PIPELINE = /(?:createPlannerHandler|processPlannerRequest|createPlannerRejectedMethodHandler)\s*[<(({]/;
 
 function hasCsrf(source: string): boolean {
   return (
     /requireCsrf\s*:\s*true/.test(source) ||
     /validateCsrfRequest\s*\(/.test(source) ||
-    ADMIN_MUTATION_GUARD.test(source)
+    ADMIN_MUTATION_GUARD.test(source) ||
+    PLANNER_PIPELINE.test(source)
   );
 }
 
@@ -82,7 +85,8 @@ function hasRateLimit(source: string): boolean {
     /\brateLimit\s*\(/.test(source) ||
     /\benforceAdminRateLimit\s*\(/.test(source) ||
     /\benforcePublicApiRateLimit\s*\(/.test(source) ||
-    ADMIN_MUTATION_GUARD.test(source)
+    ADMIN_MUTATION_GUARD.test(source) ||
+    PLANNER_PIPELINE.test(source)
   );
 }
 
@@ -90,6 +94,7 @@ function hasRejectionHeader(source: string): boolean {
   if (/requireCsrf\s*:\s*true/.test(source) && /withAuth\s*[<(]/.test(source)) {
     return true;
   }
+  if (PLANNER_PIPELINE.test(source)) return true;
   return (
     /CSRF_REJECTION_HEADER_NAME/.test(source) ||
     /["']x-csrf-rejected["']/.test(source) ||
@@ -243,16 +248,13 @@ describe("mutation route CSRF + rate-limit matrix (static)", () => {
   });
 
   describe("forked Planner / Studio mutators + dual plans API", () => {
-    it("Planner projects mutators keep withAuth + requireCsrf + rate limit", () => {
+    it("Planner projects mutators keep CSRF + rate limit (withAuth or createPlannerHandler pipeline)", () => {
       const collection = readRoute("Planner", "projects");
-      expect(collection).toMatch(/export const POST\s*=\s*withAuth/);
-      expect(collection).toMatch(/requireCsrf:\s*true/);
+      expect(hasCsrf(collection)).toBe(true);
       expect(hasRateLimit(collection)).toBe(true);
 
       const byId = readRoute("Planner", "projects", "[id]");
-      expect(byId).toMatch(/export const PATCH\s*=\s*withAuth/);
-      expect(byId).toMatch(/export const DELETE\s*=\s*withAuth/);
-      expect(byId).toMatch(/requireCsrf:\s*true/);
+      expect(hasCsrf(byId)).toBe(true);
       expect(hasRateLimit(byId)).toBe(true);
     });
 

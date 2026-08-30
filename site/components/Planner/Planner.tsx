@@ -342,7 +342,7 @@ const Planner = ({
     // Desktop: leave panels at their current state — don't force-collapse
     // or force-open on resize. This preserves user's panel configuration
     // across resize/orientation changes.
-  }, [viewport.viewportClass]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [viewport.viewportClass]);
   useEffect(() => {
     const updateOnlineState = () => {
       const nextOnline = navigator.onLine;
@@ -1184,7 +1184,6 @@ const Planner = ({
       }),
     // Refresh when canvas ready state changes — the fabricRef.current changes
     // from null to a Canvas once useFabric initialises.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [ready, showToast, refreshLayers],
   );
   const deleteSelected = canvasActions.deleteSelected;

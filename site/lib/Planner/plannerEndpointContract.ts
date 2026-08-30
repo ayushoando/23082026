@@ -9,8 +9,15 @@
 export const PLANNER_ENDPOINT_CONTRACT_VERSION = 1 as const;
 export const PLANNER_ENDPOINT_CONTRACT_HEADER = "x-planner-contract-version" as const;
 
+/**
+ * Canonical project-item policy: a foreign record and an absent record both
+ * receive the same non-disclosing not-found response.
+ */
+export const PLANNER_ITEM_ACCESS_POLICY = "non-disclosing-not-found" as const;
+
 export type PlannerEndpointContractVersion =
   typeof PLANNER_ENDPOINT_CONTRACT_VERSION;
+export type PlannerItemAccessPolicy = typeof PLANNER_ITEM_ACCESS_POLICY;
 export type PlannerHttpMethod = "GET" | "POST" | "PATCH" | "DELETE";
 export type PlannerAuthPolicy = "guest" | "member";
 export type PlannerOwnerPolicy =
@@ -90,6 +97,8 @@ export interface PlannerEndpointDescriptor {
   readonly security: {
     readonly auth: PlannerAuthPolicy;
     readonly owner: PlannerOwnerPolicy;
+    /** Present only for owner-scoped item endpoints. */
+    readonly itemAccess?: PlannerItemAccessPolicy;
     readonly csrf: PlannerCsrfPolicy;
     readonly origin: PlannerOriginPolicy;
   };
@@ -520,7 +529,7 @@ export const PLANNER_ENDPOINT_DESCRIPTORS = [
       success: [{ status: 200, envelope: "planner-v1", schema: projectSchema, description: "Owned project under the non-disclosing item policy" }],
       errors: standardErrors([401, 404, 405, 429, 500, 503]),
     },
-    security: { auth: "member", owner: "authenticated-owner-or-admin-item", csrf: "not-required", origin: "same-site-cookie" },
+    security: { auth: "member", owner: "authenticated-owner-or-admin-item", itemAccess: PLANNER_ITEM_ACCESS_POLICY, csrf: "not-required", origin: "same-site-cookie" },
     rateLimit: { ...baseRateLimit, scope: "planner-projects-id:get", requests: 60 },
     compatibility: baseCompatibility,
   },
@@ -534,7 +543,7 @@ export const PLANNER_ENDPOINT_DESCRIPTORS = [
       success: [{ status: 200, envelope: "planner-v1", schema: projectSchema, description: "Updated owned project" }],
       errors: standardErrors([400, 401, 403, 404, 405, 409, 429, 500, 503]),
     },
-    security: { auth: "member", owner: "authenticated-owner-or-admin-item", csrf: "double-submit-cookie", origin: "same-site-cookie-and-csrf" },
+    security: { auth: "member", owner: "authenticated-owner-or-admin-item", itemAccess: PLANNER_ITEM_ACCESS_POLICY, csrf: "double-submit-cookie", origin: "same-site-cookie-and-csrf" },
     rateLimit: { ...baseRateLimit, scope: "planner-projects-id:patch", requests: 30 },
     compatibility: baseCompatibility,
   },
@@ -548,7 +557,7 @@ export const PLANNER_ENDPOINT_DESCRIPTORS = [
       success: [{ status: 200, envelope: "planner-v1", schema: { type: "object", required: ["ok"], properties: { ok: { type: "boolean" } } }, description: "Deletion confirmation" }],
       errors: standardErrors([400, 401, 403, 404, 405, 409, 429, 500, 503]),
     },
-    security: { auth: "member", owner: "authenticated-owner-or-admin-item", csrf: "double-submit-cookie", origin: "same-site-cookie-and-csrf" },
+    security: { auth: "member", owner: "authenticated-owner-or-admin-item", itemAccess: PLANNER_ITEM_ACCESS_POLICY, csrf: "double-submit-cookie", origin: "same-site-cookie-and-csrf" },
     rateLimit: { ...baseRateLimit, scope: "planner-projects-id:delete", requests: 20 },
     compatibility: baseCompatibility,
   },

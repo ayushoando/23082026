@@ -82,13 +82,11 @@ export const VITEST_SETUP_FILE = path.resolve(VITEST_TESTS_DIR, "setup.ts");
 
 /**
  * Include globs relative to vitest `root` (= site package).
- * Ordinary tests and Kiro-contained tests live one level above `site/`.
+ * Ordinary tests live one level above `site/` under `tests/`.
  */
 export const VITEST_TEST_INCLUDE = [
   "../tests/**/*.test.ts",
   "../tests/**/*.test.tsx",
-  "../.kiro/kiro-repo-guidance-setup/tests/**/*.{test,spec}.{ts,tsx}",
-  "../.kiro/specs/**/tests/**/*.{test,spec}.{ts,tsx}",
 ] as const;
 
 export const VITEST_COMMON_EXCLUDE = [

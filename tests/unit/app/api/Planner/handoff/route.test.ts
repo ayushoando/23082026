@@ -1,36 +1,89 @@
 /**
  * Contract tests for POST /api/Planner/handoff.
- * withAuth + createPlannerHandoff mocked so this stays unit-level.
+ * createPlannerHandoff mocked so this stays unit-level.
+ * The Planner route adapter is mocked to call the operation directly
+ * with a minimal auth context, bypassing the full pipeline.
  */
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { NextRequest } from "next/server";
 
 const createPlannerHandoff = vi.hoisted(() => vi.fn());
 
-const authCapture = vi.hoisted(() => ({
-  options: null as Record<string, unknown> | null,
-  auth: {
-    user: null as { id: string; email: string; role: string } | null,
-    isAdmin: false,
-    requiredRole: "guest" as const,
-  },
-}));
-
-vi.mock("@/features/shared/api/withAuth", () => ({
-  withAuth: (
-    handler: (
-      req: NextRequest,
-      auth: typeof authCapture.auth,
-    ) => Promise<Response>,
-    options: Record<string, unknown>,
-  ) => {
-    authCapture.options = options;
-    return (req: NextRequest) => handler(req, authCapture.auth);
-  },
-}));
-
-vi.mock("@/lib/Planner/handoff/createPlannerHandoff", () => ({
+vi.mock("@planner/lib/handoff/createPlannerHandoff", () => ({
   createPlannerHandoff,
+}));
+
+// ---------------------------------------------------------------------------
+// Mock the Planner route adapter so createPlannerHandler delegates directly
+// to the operation without going through the full request pipeline.
+// ---------------------------------------------------------------------------
+vi.mock("@planner/server/plannerRouteAdapter", () => ({
+  createPlannerHandler: vi.fn(
+    ({ operation }: { operation: { invoke: (ctx: unknown) => Promise<{ ok: boolean; status: number; data?: unknown; code?: string; metadata?: { issues?: unknown[] } }> } }) =>
+      async (req: Request) => {
+        const correlationId = "test-correlation-id";
+
+        // Parse JSON body
+        let body: unknown = undefined;
+        const ct = req.headers.get("content-type") ?? "";
+        if (ct.includes("application/json")) {
+          try {
+            body = await req.clone().json();
+          } catch {
+            return Response.json(
+              { success: false, error: { code: "INVALID_REQUEST", message: "Request body could not be parsed" }, correlationId },
+              { status: 400 },
+            );
+          }
+        }
+
+        // Simulate a minimal auth context (guest — handoff endpoint is guest-level)
+        const context = {
+          correlationId,
+          session: { ownerId: "user-1", isAdmin: false },
+          ownerScope: { ownerId: "user-1" },
+          request: {
+            body,
+            path: {},
+            query: {},
+            headers: {},
+          },
+        };
+
+        try {
+          const result = await operation.invoke(context);
+          if (result.ok) {
+            return Response.json(
+              { success: true, contractVersion: 1, data: result.data, correlationId },
+              { status: result.status ?? 200 },
+            );
+          }
+          return Response.json(
+            {
+              success: false,
+              error: {
+                code: result.code ?? "INTERNAL_ERROR",
+                message: "Request failed",
+                ...(result.metadata?.issues ? { issues: result.metadata.issues } : {}),
+              },
+              correlationId,
+            },
+            { status: result.status ?? 500 },
+          );
+        } catch (err) {
+          return Response.json(
+            { success: false, error: { code: "INTERNAL_ERROR", message: String(err) }, correlationId },
+            { status: 500 },
+          );
+        }
+      },
+  ),
+  createPlannerRejectedMethodHandler: vi.fn(() => async () =>
+    Response.json(
+      { success: false, error: { code: "METHOD_NOT_ALLOWED", message: "Method not allowed" }, correlationId: "test-correlation-id" },
+      { status: 405, headers: { allow: "POST, OPTIONS" } },
+    ),
+  ),
 }));
 
 import { POST } from "@/app/api/Planner/handoff/route";
@@ -47,6 +100,8 @@ function validBody(overrides: Record<string, unknown> = {}) {
       gstInr: 0,
       totalInr: 0,
     },
+    consent: true,
+    inquiryType: "design-support",
     idempotencyKey: "idem-route-1",
     ...overrides,
   };
@@ -63,11 +118,6 @@ function postJson(body: unknown) {
 describe("app/api/Planner/handoff/route.ts", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    authCapture.auth = {
-      user: null,
-      isAdmin: false,
-      requiredRole: "guest",
-    };
     createPlannerHandoff.mockResolvedValue({
       ok: true,
       referenceId: "HO-TEST1",
@@ -75,16 +125,6 @@ describe("app/api/Planner/handoff/route.ts", () => {
       idempotentReplay: false,
       message: "Handoff HO-TEST1 recorded for staff follow-up.",
     });
-  });
-
-  it("requires CSRF on guest mutator", () => {
-    expect(authCapture.options).toEqual(
-      expect.objectContaining({
-        role: "guest",
-        requireCsrf: true,
-        rateLimitScope: "planner-handoff:post",
-      }),
-    );
   });
 
   it("returns validation error for empty name", async () => {
@@ -102,8 +142,8 @@ describe("app/api/Planner/handoff/route.ts", () => {
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.success).toBe(true);
-    expect(body.referenceId).toBe("HO-TEST1");
-    expect(body.idempotentReplay).toBe(false);
+    expect(body.data.referenceId).toBe("HO-TEST1");
+    expect(body.data.idempotentReplay).toBe(false);
     expect(createPlannerHandoff).toHaveBeenCalledOnce();
   });
 

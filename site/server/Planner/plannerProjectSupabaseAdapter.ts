@@ -5,9 +5,6 @@ import { createHash } from "node:crypto";
 import type { Json } from "@/platform/supabase/types";
 import { createSupabaseAuthAdminClient } from "@/platform/supabase/auth-admin";
 import {
-  PLANNER_PROJECT_CONTRACT_VERSION,
-  PLANNER_PROJECT_SCHEMA_VERSION,
-  PLANNER_REPOSITORY_CONTRACT_VERSION,
   fingerprintPlannerMutation,
   type PlannerProjectAtomicAdapterV1,
   type PlannerProjectAtomicStateV1,
@@ -16,6 +13,9 @@ import {
   type PlannerProjectMutationTransitionV1,
 } from "@planner/lib/plannerProjectOperations";
 import {
+  PLANNER_PROJECT_CONTRACT_VERSION,
+  PLANNER_PROJECT_SCHEMA_VERSION,
+  PLANNER_REPOSITORY_CONTRACT_VERSION,
   isValidPlannerIdempotencyKey,
   readPlannerProjectEnvelope,
   readPlannerProjectWrite,

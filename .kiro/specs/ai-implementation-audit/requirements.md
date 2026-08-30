@@ -22,7 +22,8 @@ Changes to providers, packages, model identifiers, prompts, route contracts, aut
 - **Catalog_Advisor_Route**: The existing endpoint `POST /api/ai-advisor` implemented in `site/app/api/ai-advisor/route.ts`.
 - **Planner_Advisor_Route**: The endpoint `POST /api/planner/ai-advisor` consumed by `plannerAdvisorClient.ts`, to be built by this feature.
 - **Planner_Advisor_Client**: The browser client `site/lib/ai/mastra/plannerAdvisorClient.ts` that calls the Planner_Advisor_Route.
-- **Heuristic_Fallback**: The deterministic, provider-independent result path that sets `fallbackUsed` to `true` when no provider returns a usable response.
+- **Planner_Advisor_Request**: A request body consumed by the Planner_Advisor_Route that includes an optional boolean `stream` field controlling the response transport.
+- **Heuristic_Fallback**: The deterministic, provider-independent result path used when no provider returns a usable response; Catalog_Advisor_Route results mark the fallback with `fallbackUsed` set to `true`, and Planner_Advisor_Route results mark the fallback with `degraded` set to `true`.
 - **Metrics_Registry**: The Prometheus registry exposed by `site/lib/observability/metrics.ts`.
 - **Telemetry**: The OpenTelemetry registration via `@vercel/otel` in `site/instrumentation.ts`.
 - **Approval_Gate**: The requirement that a change class be presented for explicit user approval before it is applied.
@@ -62,10 +63,10 @@ Changes to providers, packages, model identifiers, prompts, route contracts, aut
 
 1. THE Planner_Advisor_Route SHALL accept `POST` requests at the path `/api/planner/ai-advisor`.
 2. WHEN the Planner_Advisor_Route receives a request, THE Planner_Advisor_Route SHALL apply guest authentication, a rate limit of 5 requests per scope, and CSRF protection, mirroring the Catalog_Advisor_Route.
-3. WHEN a request sets streaming, THE Planner_Advisor_Route SHALL return a newline-delimited JSON stream.
-4. WHEN a request does not set streaming, THE Planner_Advisor_Route SHALL return a success-envelope JSON response.
+3. WHEN a Planner_Advisor_Request includes `stream` with the value `true`, THE Planner_Advisor_Route SHALL return a newline-delimited JSON stream.
+4. WHEN a Planner_Advisor_Request omits `stream` or includes `stream` with the value `false`, THE Planner_Advisor_Route SHALL return a success-envelope JSON response.
 5. WHEN the Planner_Advisor_Route returns a response, THE Planner_Advisor_Route SHALL return fields that satisfy the `PlannerAdvisorResponse` shape consumed by the Planner_Advisor_Client, including `content`.
-6. IF no provider in the Provider_Chain returns a usable response, THEN THE Planner_Advisor_Route SHALL return a Heuristic_Fallback result with `fallbackUsed` set to `true`.
+6. IF no provider in the Provider_Chain returns a usable response, THEN THE Planner_Advisor_Route SHALL return a Heuristic_Fallback result with `degraded` set to `true`.
 7. IF the request body fails validation, THEN THE Planner_Advisor_Route SHALL return a `400` validation error response.
 
 ### Requirement 4: Fixed-Order Provider Chain Resolution

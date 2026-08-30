@@ -8,13 +8,11 @@
 //
 // **Validates: Requirements 11.8, 11.9, 17.3**
 
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import {
   PLANNER_CORRELATION_HEADER,
-  PLANNER_CORRELATION_ID_MAX_LENGTH,
   PLANNER_STABLE_ERROR_CODES,
-  PROHIBITED_RESPONSE_PATTERNS,
   isPlannerResponseSafe,
   isValidPlannerCorrelationId,
   plannerApiFailure,

@@ -584,13 +584,13 @@ describe("Planner Property 10: Responsive context preservation", () => {
         fc.constantFrom<PlannerViewportClass>("phone", "tablet", "desktop"),
         (workflow, targetClass) => {
           // Simulate that we're at the target viewport class
-          const width =
+          const _width =
             targetClass === "phone"
               ? 375
               : targetClass === "tablet"
                 ? 768
                 : 1440;
-          const height = 900;
+          const _height = 900;
 
           // Panel collapse state is derived from viewport
           const panels = derivePanelLayout(targetClass);
@@ -601,12 +601,12 @@ describe("Planner Property 10: Responsive context preservation", () => {
           const rightDockBefore = workflow.activeRightDock;
 
           // Simulate collapse → expand cycle (reversible panel switching per Req 6.6)
-          const collapsedPanels: PanelLayoutState = {
+          const _collapsedPanels: PanelLayoutState = {
             leftCollapsed: true,
             rightCollapsed: true,
             toolsCollapsed: true,
           };
-          const expandedPanels: PanelLayoutState = {
+          const _expandedPanels: PanelLayoutState = {
             leftCollapsed: false,
             rightCollapsed: false,
             toolsCollapsed: false,

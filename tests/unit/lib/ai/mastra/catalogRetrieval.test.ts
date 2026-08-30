@@ -152,7 +152,7 @@ function makeProduct(
   };
 }
 
-const productFromSlugArb: fc.Arbitrary<RetrievableProduct> = slugArb.map(
+const _productFromSlugArb: fc.Arbitrary<RetrievableProduct> = slugArb.map(
   (slug) => makeProduct(slug),
 );
 

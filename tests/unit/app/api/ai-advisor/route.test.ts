@@ -238,7 +238,7 @@ describe("Preservation P2-A: catalog advisor response is advisory-only (PASS on 
         fc.array(productArb, { minLength: 1, maxLength: 5 }),
         validQueryArb,
         fc.option(validContextArb, { nil: undefined }),
-        (products, query, context) => {
+        (products, _query, _context) => {
           // Simulate the heuristic fallback response shape from the source.
           // The shape must only carry advisory-only fields.
           const fallbackShape = {

@@ -49,34 +49,22 @@ describe("vitest dual-lane (Phase 4 parallel contention)", () => {
     expect(techDocs).toContain("../tests/tech-docs-generator/**/*.test.{ts,tsx}");
   });
 
-  it("includes contained Kiro tests in the default lane and test typecheck", () => {
+  it("does not include .kiro tests in the site test lane (site tests are product-only)", () => {
     const shared = fs.readFileSync(
       path.join(workspaceRoot, "tests/vitest.shared.ts"),
       "utf8",
     );
-    const testTsconfig = JSON.parse(
-      fs.readFileSync(path.join(workspaceRoot, "tests/tsconfig.json"), "utf8"),
-    ) as { include: string[]; exclude: string[] };
 
-    expect(shared).toContain(
+    // .kiro test globs must not be present in VITEST_TEST_INCLUDE
+    expect(shared).not.toContain(
       "../.kiro/kiro-repo-guidance-setup/tests/**/*.{test,spec}.{ts,tsx}",
     );
-    expect(shared).toContain(
+    expect(shared).not.toContain(
       "../.kiro/specs/**/tests/**/*.{test,spec}.{ts,tsx}",
     );
-    expect(shared).not.toContain(
-      '"../.kiro/kiro-repo-guidance-setup/tests/**",',
-    );
-    expect(testTsconfig.include).toEqual(
-      expect.arrayContaining([
-        "../.kiro/kiro-repo-guidance-setup/**/*.ts",
-        "../.kiro/kiro-repo-guidance-setup/**/*.tsx",
-        "../.kiro/specs/**/tests/**/*.ts",
-        "../.kiro/specs/**/tests/**/*.tsx",
-      ]),
-    );
-    expect(testTsconfig.exclude).not.toContain(
-      "../.kiro/kiro-repo-guidance-setup/tests/**",
-    );
+
+    // Only the product tests/ directory should be included
+    expect(shared).toContain("../tests/**/*.test.ts");
+    expect(shared).toContain("../tests/**/*.test.tsx");
   });
 });

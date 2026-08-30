@@ -216,7 +216,7 @@ export const plannerProjectDiskAdapter: PlannerProjectAtomicAdapterV1 = {
         throw error;
       }
       const transition = applyPlannerProjectMutation(state, context, command, new Date().toISOString());
-      if (transition.effect !== "none") await writeAtomicState(command.projectId, transition.state);
+      if (transition.state !== state) await writeAtomicState(command.projectId, transition.state);
       return transition;
     });
   },

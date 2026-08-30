@@ -241,7 +241,7 @@ describe("reversible panel switching", () => {
     // 2. Sets active dock panel id
     // 3. Calls dockview API setActive
     // This is available at all viewport classes.
-    const collapsed = true;
+    const _collapsed = true;
     const afterToggle = false; // setLeftCollapsed(false)
     expect(afterToggle).toBe(false);
     // Re-collapse

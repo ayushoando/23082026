@@ -1,4 +1,13 @@
 {
   "version": 1,
-  "exceptions": []
+  "exceptions": [
+    {
+      "file": "tests/e2e/planner-performance-required.spec.ts",
+      "rule": "contains-skip",
+      "owner": "repository-owner",
+      "reason": "Conditional browser-profile guard: performance evidence is only collected on chromium-desktop. Skip fires on all other browsers and projects to prevent false negatives from unsupported environments.",
+      "expires": "2027-09-01",
+      "replacementTest": "tests/e2e/planner-performance-required.spec.ts — same file; skip is the guard, not a placeholder"
+    }
+  ]
 }

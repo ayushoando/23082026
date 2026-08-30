@@ -39,14 +39,13 @@ import { rateLimit } from "@/lib/rateLimit";
 import { normalizeClientIp } from "@/lib/clientIp";
 import {
   detectClientOwnerIdentifiers,
-  PLANNER_SESSION_EXPIRY_RECOVERY,
 } from "@planner/lib/plannerOwnerScope";
 import {
   isDevAuthBypassEnabled,
   DEV_BYPASS_USER,
 } from "@/lib/auth/devAuthBypass";
 import { createAuthServerClient } from "@/platform/supabase/server";
-import { isAppAdmin, readAppRole } from "@/lib/auth/roles";
+import { isAppAdmin } from "@/lib/auth/roles";
 
 // ---------------------------------------------------------------------------
 // Dependency implementations

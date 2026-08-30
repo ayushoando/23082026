@@ -115,6 +115,7 @@ function makeFixture(): Fixture {
     "polish.css",
     "workspace-shell.css",
     "workspace.css",
+    "responsive.css",
     "dock.css",
   ]) {
     write(`planner/${name}`, "\n");
@@ -133,6 +134,7 @@ function makeFixture(): Fixture {
       '@import "./polish.css";',
       '@import "./workspace-shell.css";',
       '@import "./workspace.css";',
+      '@import "./responsive.css";',
       '@import "./dock.css";',
       "",
     ].join("\n"),

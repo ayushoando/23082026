@@ -29,7 +29,6 @@ import type { PlannerEndpointDescriptor } from "@planner/lib/plannerEndpointCont
 import {
   processPlannerRequest,
   type PlannerRequestPipelineDependencies,
-  type PlannerValidatedRequest,
 } from "@planner/lib/plannerRequestPipeline";
 
 // ---------------------------------------------------------------------------

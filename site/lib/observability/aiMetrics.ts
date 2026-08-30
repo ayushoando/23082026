@@ -208,3 +208,77 @@ export function recordAdvisorRequest(input: RecordAdvisorRequestInput): void {
     metrics.schemaInvalid.inc({ surface: input.surface });
   }
 }
+
+// ---------------------------------------------------------------------------
+// AI Observability adapter — Task 5.1
+// ---------------------------------------------------------------------------
+
+/**
+ * Aggregate observation produced from a single AI advisor call.
+ *
+ * Privacy contract: only pre-approved label strings; never include prompt
+ * text, session IDs, model response bodies, raw query strings, or keys.
+ */
+export interface AiRequestObservation {
+  /** Which product surface handled this request. */
+  route: "catalog" | "planner";
+  /**
+   * Provider label (e.g. "bedrock") — must NOT be a secret or raw model id.
+   * Optional: may be absent when the chain is empty.
+   */
+  provider?: string;
+  /** Whether the request fell back to a degraded/heuristic response. */
+  fallback: boolean;
+  /**
+   * Retrieval layers that contributed results (e.g. ["vector", "lexical"]).
+   * Optional: absent when retrieval did not run.
+   */
+  sources?: string[];
+  /** End-to-end duration of `fn()` in milliseconds. */
+  durationMs: number;
+  /** True when the request ended with an error. */
+  error?: boolean;
+}
+
+/**
+ * Wraps an async AI advisor call with best-effort Prometheus metric recording.
+ *
+ * - Calls `fn()` and measures wall-clock duration.
+ * - Calls `observe(result)` to obtain the `AiRequestObservation`.
+ * - Feeds the observation into `recordAdvisorRequest`.
+ * - Metric recording is best-effort: any error thrown inside `observe()` or
+ *   `recordAdvisorRequest()` is swallowed — it never changes the result or
+ *   propagates to the caller.
+ * - Always returns the resolved value of `fn()` unchanged.
+ *
+ * @param route  The product surface ("catalog" | "planner").
+ * @param fn     The async work to wrap.
+ * @param observe Callback that maps the resolved result to an observation.
+ */
+export async function withAiObservability<T>(
+  route: "catalog" | "planner",
+  fn: () => Promise<T>,
+  observe: (result: T) => AiRequestObservation,
+): Promise<T> {
+  const start = Date.now();
+  const result = await fn();
+  const durationMs = Date.now() - start;
+
+  // Best-effort recording — never throws to the caller.
+  try {
+    const obs = observe(result);
+    recordAdvisorRequest({
+      surface: obs.route,
+      provider: obs.provider ?? "unknown",
+      fallbackUsed: obs.fallback,
+      degraded: obs.fallback,
+      latencyMs: obs.durationMs > 0 ? obs.durationMs : durationMs,
+      errorClass: obs.error ? "provider" : undefined,
+      retrievalSources: obs.sources as AiRetrievalSource[] | undefined,
+    });
+  } catch {
+    // intentionally swallowed — metric failure must not affect HTTP response
+  }
+
+  return result;
+}

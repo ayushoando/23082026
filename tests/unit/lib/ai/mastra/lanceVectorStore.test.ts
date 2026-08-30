@@ -168,7 +168,7 @@ function isRemoteUri(uri: string): boolean {
   return /^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(uri);
 }
 
-function isProductionEnv(env: {
+function _isProductionEnv(env: {
   DEV_AUTH_BYPASS?: string;
   NODE_ENV?: string;
 }): boolean {

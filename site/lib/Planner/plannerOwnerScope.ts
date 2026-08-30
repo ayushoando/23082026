@@ -1,4 +1,11 @@
-export const PLANNER_ITEM_OWNER_POLICY = "non-disclosing-not-found" as const;
+import { PLANNER_ITEM_ACCESS_POLICY } from "@planner/lib/plannerEndpointContract";
+
+/**
+ * Backwards-compatible alias for the endpoint descriptor's canonical item
+ * access policy. Project item routes deliberately make foreign and absent
+ * records indistinguishable.
+ */
+export { PLANNER_ITEM_ACCESS_POLICY as PLANNER_ITEM_OWNER_POLICY };
 
 /**
  * Keys that a client payload might use to supply an owner identifier.
