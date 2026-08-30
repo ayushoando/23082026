@@ -90,7 +90,7 @@ describe("Feature: planner-comprehensive-audit, Property 6: Valid project initia
 
           expect(project.id).toBe(projectId);
           expect(project.ownerId).toBe(ownerId);
-          expect(project.name).toBe(projectName);
+          expect(project.name).toBe(projectName.trim());
           expect(project.contractVersion).toBe(1);
           expect(project.schemaVersion).toBe(1);
           expect(project.revision).toBe(1);

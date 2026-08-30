@@ -107,7 +107,7 @@ describe("Feature: planner-comprehensive-audit, Property 23: Guest boundary inte
         expect(parsed.success).toBe(true);
         expect(request).toEqual(before);
         if (!parsed.success) return;
-        expect(parsed.data.contact.name).toBe(input.name);
+        expect(parsed.data.contact.name).toBe(input.name.trim());
         expect(parsed.data.boq.projectId).toBe(input.projectId);
         expect("ownerId" in parsed.data).toBe(false);
         expect("projectRecord" in parsed.data).toBe(false);

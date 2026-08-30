@@ -230,7 +230,7 @@ describe("Planner live coverage collector", () => {
     );
     expect(collected).toEqual(initialPlannerInventory);
     expect(
-      itemByPath(collected, "site/features/shared/api/withAuth.ts"),
+      itemByPath(collected, "site/lib/rateLimit.ts"),
     ).toEqual(
       expect.objectContaining({
         kind: "reachable-shared-source",

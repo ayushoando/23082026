@@ -8,25 +8,25 @@ All code is TypeScript with named exports. Tests live under `tests/`. Commands r
 
 ## Tasks
 
-- [~] 1. Audit model and severity/gating logic
-  - [~] 1.1 Implement the `Finding` audit model and sequencing/gating functions
+- [x] 1. Audit model and severity/gating logic
+  - [x] 1.1 Implement the `Finding` audit model and sequencing/gating functions
     - Create `site/lib/ai/audit/finding.ts` with named exports: `Severity`, `AuditDimension`, `ApprovalGatedClass`, `Finding` interface, `SEVERITY_RANK`, `sequenceBySeverity`, and `isApprovalGated`
     - `sequenceBySeverity` returns a descending-severity, band-stable ordering; `isApprovalGated` returns true iff `changeClass !== "safe"`
     - Keep this an internal documentation-level model with no HTTP coupling
     - _Requirements: 1.1, 1.2, 1.3, 1.4_
 
-  - [~] 1.2 Write property test for remediation ordering
+  - [x] 1.2 Write property test for remediation ordering
     - **Feature: ai-implementation-audit, Property 1: Remediation ordering is descending by severity**
     - Assert each element's severity rank ≥ the rank of every element after it, across arbitrary `Finding` lists (fast-check, ≥100 iterations)
     - **Validates: Requirements 1.3**
 
-  - [~] 1.3 Write property test for approval-gating classification
+  - [x] 1.3 Write property test for approval-gating classification
     - **Feature: ai-implementation-audit, Property 2: Approval-gated findings are flagged**
     - Assert `isApprovalGated` is true iff `changeClass` is a gated class (not `"safe"`)
     - **Validates: Requirements 1.4**
 
 - [~] 2. Record audit findings with evidence and classification
-  - [ ] 2.1 Produce the audit findings dataset across all seven dimensions
+  - [x] 2.1 Produce the audit findings dataset across all seven dimensions
     - Create `site/lib/ai/audit/findings.ts` exporting `AI_STACK_FINDINGS: readonly Finding[]`, one record per confirmed observation
     - Cover correctness, provider-routing, retrieval-quality, error-handling, observability, route-contract, and performance dimensions, each with `severity`, `location` (file + optional line), and `evidence`
     - Tag each finding's `changeClass` (`safe` vs an approval-gated class) so gated items are flagged for approval and deferred
@@ -57,25 +57,25 @@ All code is TypeScript with named exports. Tests live under `tests/`. Commands r
     - Assert remediated modules do not alter exports/behavior of modules unrelated to their findings
     - _Requirements: 2.4_
 
-- [ ] 5. Observability adapter (foundation for route wiring)
-  - [ ] 5.1 Implement the AI observability adapter reusing the existing registry and OTel tracer
+- [~] 5. Observability adapter (foundation for route wiring)
+  - [x] 5.1 Implement the AI observability adapter reusing the existing registry and OTel tracer
     - Create `site/lib/observability/aiMetrics.ts` exporting `withAiObservability` and an `AiRequestObservation` type
     - Reuse `getMetricsRegistry()` from `site/lib/observability/metrics.ts` and the tracer from the existing `@vercel/otel` registration; add no new infrastructure
     - Register (lazily, HMR/global-guarded) instruments: `oando_ai_requests_total{route,provider,fallback}`, `oando_ai_fallback_total{route}`, `oando_ai_retrieval_layer_total{route,layer}`, `oando_ai_request_errors_total{route}`, and `oando_ai_request_duration_seconds{route,provider}` histogram
     - Emit a span `ai.{route}` with `provider`, `fallback`, and retrieval-layer attributes; make recording best-effort so it never changes the HTTP outcome; expose provider labels only, never secrets or raw model ids
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.6_
 
-  - [ ] 5.2 Write property test for metric recording
+  - [x] 5.2 Write property test for metric recording
     - **Feature: ai-implementation-audit, Property 14: Requests record provider, fallback, and retrieval-layer metrics**
     - Using an inspectable registry, assert the provider counter increments once with the resolved label, the fallback counter increments exactly when fallback ran, and one retrieval-layer metric records per layer in `sources`
     - **Validates: Requirements 6.1, 6.2, 6.3**
 
-  - [ ] 5.3 Write property test for span attributes
+  - [x] 5.3 Write property test for span attributes
     - **Feature: ai-implementation-audit, Property 15: Requests emit a telemetry span with the required attributes**
     - Using an in-memory span exporter, assert every request emits a span carrying `provider`, `fallback`, and retrieval-layer attributes matching the outcome
     - **Validates: Requirements 6.5**
 
-  - [ ] 5.4 Write unit tests for latency/error recording and best-effort safety
+  - [x] 5.4 Write unit tests for latency/error recording and best-effort safety
     - Assert duration and error metrics record per request, and that an instrument error does not propagate to the caller
     - _Requirements: 6.4, 6.6_
 

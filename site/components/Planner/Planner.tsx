@@ -2685,7 +2685,8 @@ const Planner = ({
           ref={wrapperRef}
           className="canvas-stage__inner"
           role="application"
-          aria-label={`Floor planner canvas — ${projectName}. ${layers.length} object${layers.length === 1 ? "" : "s"}. Use keyboard shortcuts or the toolbar to interact.`}
+          tabIndex={0}
+          aria-label={`Floor planner canvas — ${projectName}. ${layers.length} object${layers.length === 1 ? "" : "s"}. Use keyboard shortcuts, the toolbar, or the Canvas objects list in Review to interact.`}
           aria-describedby="canvas-a11y-keyboard-hint"
         >
           <canvas ref={canvasElRef} data-testid="planner-canvas" />

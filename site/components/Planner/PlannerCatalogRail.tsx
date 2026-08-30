@@ -149,11 +149,10 @@ const CatalogRail = ({ onDragStart, onItemClick }: CatalogRailProps) => {
             const thumb = thumbUrl(item);
             const thumbSrc = thumb ? fileUrl(thumb) : null;
             return (
-              <div
+              <button
                 key={item.id}
+                type="button"
                 className="catalog-item"
-                role="button"
-                tabIndex={0}
                 draggable
                 onDragStart={(e) => {
                   e.dataTransfer.setData("application/furniture-id", item.id);
@@ -165,26 +164,19 @@ const CatalogRail = ({ onDragStart, onItemClick }: CatalogRailProps) => {
                   setSelectedItemId(item.id);
                   onItemClick?.(item);
                 }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    setSelectedItemId(item.id);
-                    onItemClick?.(item);
-                  }
-                }}
                 data-testid={`catalog-item-${item.id}`}
                 title={`${item.name} — ${formatDims(item.dimensions)}`}
-                aria-label={item.name}
+                aria-label={`Place ${item.name}, ${formatDims(item.dimensions)}`}
               >
                 <div className="catalog-item__thumb">
                   {thumbSrc
-                    ? <img src={thumbSrc} alt={item.name} loading="lazy" />
+                    ? <img src={thumbSrc} alt="" loading="lazy" />
                     : <PhIcon name="rect" size={32} aria-hidden="true" />
                   }
                 </div>
                 <div className="catalog-item__name">{item.name}</div>
                 <div className="catalog-item__dim">{item.dimensions.width_mm}×{item.dimensions.depth_mm}</div>
-              </div>
+              </button>
             );
           })}
           {filtered.length === 0 && (

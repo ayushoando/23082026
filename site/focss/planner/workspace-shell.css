@@ -137,6 +137,7 @@
 }
 .ooplanner-root .canvas-stage { container-type: inline-size; container-name: canvas-stage; }
 .ooplanner-root .canvas-stage__inner { position: absolute; inset: 0; }
+.ooplanner-root .canvas-stage__inner:focus-visible { outline: 3px solid var(--color-focus); outline-offset: -3px; }
 
 /* Restrict touch-action suppression to the active gesture region (the Fabric
    canvas) rather than the whole page. This prevents browser gestures (pull-to-

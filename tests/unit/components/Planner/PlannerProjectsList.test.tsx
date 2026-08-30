@@ -66,6 +66,10 @@ describe("PlannerProjectsList states and routing", () => {
     createProject.mockReset();
     deleteProject.mockReset();
     push.mockReset();
+    // happy-dom does not provide window.confirm; define it before spying.
+    if (typeof window.confirm !== "function") {
+      window.confirm = () => false;
+    }
     vi.spyOn(window, "confirm").mockReturnValue(false);
   });
 

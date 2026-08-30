@@ -733,9 +733,10 @@
 .ooplanner-root .catalog-categories { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
 
 .ooplanner-root .catalog-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 4px 0; }
-.ooplanner-root .catalog-item { border: 1px solid var(--border-soft); border-radius: 10px; padding: 8px 8px 6px; background: var(--surface-panel); cursor: grab; transition: all 150ms; position: relative; }
+.ooplanner-root .catalog-item { border: 1px solid var(--border-soft); border-radius: 10px; padding: 8px 8px 6px; background: var(--surface-panel); color: var(--text-strong); cursor: grab; font: inherit; text-align: left; transition: all 150ms; position: relative; }
 .ooplanner-root .catalog-item:hover { border-color: var(--border-accent); box-shadow: var(--shadow-soft); transform: translateY(-1px); }
 .ooplanner-root .catalog-item:active { cursor: grabbing; }
+.ooplanner-root .catalog-item:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
 .ooplanner-root .catalog-item__thumb { width: 100%; aspect-ratio: 1; display: grid; place-items: center; background: var(--surface-muted); border-radius: 6px; margin-bottom: 6px; overflow: hidden; }
 .ooplanner-root .catalog-item__thumb img,
 .ooplanner-root .catalog-item__thumb svg { width: 80%; height: 80%; object-fit: contain; }
@@ -767,3 +768,10 @@
   gap: 1px;
 }
 .ooplanner-root .align-toolbar[data-visible="true"] { display: inline-flex; }
+
+
+/* Requirement 9.5 — accessible overflow disclosure for long server-safe values. */
+.planner-disclosed-value {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}

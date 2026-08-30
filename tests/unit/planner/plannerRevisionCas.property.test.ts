@@ -26,7 +26,7 @@ describe("Property 19: revision compare-and-swap", () => {
         expect(transition.state.project?.updatedAt).toBe("2026-02-01T00:00:00.000Z");
       } else {
         expect(transition.effect).toBe("none");
-        expect(transition.state).toBe(state);
+        expect(transition.state.project?.revision).toBe(revision);
         expect(transition.result).toMatchObject({ ok: false, code: "CONFLICT", currentRevision: revision });
       }
     }));

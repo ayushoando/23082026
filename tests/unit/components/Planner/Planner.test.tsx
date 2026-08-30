@@ -125,6 +125,8 @@ const mockShowToast = vi.fn();
 vi.mock("@planner/store/plannerUiStore", () => ({
   usePlannerUIStore: (selector: (s: Record<string, unknown>) => unknown) => {
     const state: Record<string, unknown> = {
+      accessMode: "guest",
+      setAccessMode: vi.fn(),
       unit: "mm",
       setUnit: vi.fn(),
       showToast: mockShowToast,

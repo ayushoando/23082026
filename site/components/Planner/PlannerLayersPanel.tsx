@@ -34,48 +34,47 @@ export const LayersPanel = ({
     );
   }
   return (
-    <div
-      style={{ display: "flex", flexDirection: "column", gap: 2 }}
+    <ul
+      id="planner-canvas-object-list"
+      className="planner-layer-list"
       data-testid="layers-panel"
-      role="listbox"
-      aria-label="Layers"
+      aria-label="Canvas objects"
     >
       {objects.map((o) => (
-        <div
+        <li
           key={o.id}
           className="layer-item"
-          role="option"
-          tabIndex={0}
-          aria-selected={o.id === selectedId}
           data-selected={o.id === selectedId}
-          onClick={() => onSelect(o.id)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              onSelect(o.id);
-            }
-          }}
           data-testid={`layer-${o.id}`}
         >
-          <span style={{ flex: 1, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{o.label}</span>
-          <button type="button" className="layer-item__icon-btn" onClick={(e) => { e.stopPropagation(); onReorder(o.id, -1); }} title="Bring forward" aria-label={`Bring ${o.label} forward`}>
-            <PhIcon name="arrowUp" size={18} />
+          <button
+            type="button"
+            className="layer-item__select"
+            aria-pressed={o.id === selectedId}
+            onClick={() => onSelect(o.id)}
+          >
+            {o.label}
           </button>
-          <button type="button" className="layer-item__icon-btn" onClick={(e) => { e.stopPropagation(); onReorder(o.id, 1); }} title="Send backward" aria-label={`Send ${o.label} backward`}>
-            <PhIcon name="arrowDown" size={18} />
-          </button>
-          <button type="button" className="layer-item__icon-btn" onClick={(e) => { e.stopPropagation(); onToggleVisible(o.id); }} title="Toggle visibility" aria-label={`${o.visible ? "Hide" : "Show"} ${o.label}`}>
-            <PhIcon name={o.visible ? "eye" : "eyeOff"} size={18} />
-          </button>
-          <button type="button" className="layer-item__icon-btn" onClick={(e) => { e.stopPropagation(); onToggleLock(o.id); }} title="Toggle lock" aria-label={`${o.locked ? "Unlock" : "Lock"} ${o.label}`}>
-            <PhIcon name={o.locked ? "lock" : "unlock"} size={18} />
-          </button>
-          <button type="button" className="layer-item__icon-btn" onClick={(e) => { e.stopPropagation(); onDelete(o.id); }} title="Delete" aria-label={`Delete ${o.label}`}>
-            <PhIcon name="trash" size={18} />
-          </button>
-        </div>
+          <div className="layer-item__actions" aria-label={`${o.label} actions`}>
+            <button type="button" className="layer-item__icon-btn" onClick={() => onReorder(o.id, -1)} title="Bring forward" aria-label={`Bring ${o.label} forward`}>
+              <PhIcon name="arrowUp" size={18} />
+            </button>
+            <button type="button" className="layer-item__icon-btn" onClick={() => onReorder(o.id, 1)} title="Send backward" aria-label={`Send ${o.label} backward`}>
+              <PhIcon name="arrowDown" size={18} />
+            </button>
+            <button type="button" className="layer-item__icon-btn" onClick={() => onToggleVisible(o.id)} title="Toggle visibility" aria-label={`${o.visible ? "Hide" : "Show"} ${o.label}`} aria-pressed={o.visible}>
+              <PhIcon name={o.visible ? "eye" : "eyeOff"} size={18} />
+            </button>
+            <button type="button" className="layer-item__icon-btn" onClick={() => onToggleLock(o.id)} title="Toggle lock" aria-label={`${o.locked ? "Unlock" : "Lock"} ${o.label}`} aria-pressed={o.locked}>
+              <PhIcon name={o.locked ? "lock" : "unlock"} size={18} />
+            </button>
+            <button type="button" className="layer-item__icon-btn" onClick={() => onDelete(o.id)} title="Delete" aria-label={`Delete ${o.label}`}>
+              <PhIcon name="trash" size={18} />
+            </button>
+          </div>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 };
 

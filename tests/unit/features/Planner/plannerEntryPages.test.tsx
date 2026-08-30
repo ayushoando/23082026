@@ -63,7 +63,7 @@ describe("Planner route feature entries", () => {
   it("selects the guest bare-route entry from the verified server session", async () => {
     mocks.getOptionalPlannerUser.mockResolvedValue(null);
 
-    render(await PlannerPage());
+    render(await PlannerPage({}));
 
     expect(screen.getByTestId("planner-entry")).toHaveAttribute(
       "data-access-mode",

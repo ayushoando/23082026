@@ -161,7 +161,7 @@ export function PlannerHandoffDialog({ boq, onClose }: PlannerHandoffDialogProps
       data-testid="planner-handoff-dialog"
       role="dialog"
       aria-labelledby="planner-handoff-title"
-      aria-describedby="planner-handoff-description"
+      aria-describedby="planner-handoff-description planner-handoff-instructions"
     >
       <header className="planner-handoff__head">
         <strong id="planner-handoff-title">Request quote</strong>
@@ -171,6 +171,9 @@ export function PlannerHandoffDialog({ boq, onClose }: PlannerHandoffDialogProps
       </header>
       <p id="planner-handoff-description" className="planner-handoff__description">
         Share this BOQ with our team. This does not grant access to your plan.
+      </p>
+      <p id="planner-handoff-instructions" className="planner-handoff__description">
+        Enter your name, at least one contact method, and consent before submitting. Fields with an error are identified below and keep the values you entered.
       </p>
       {referenceId ? (
         <div className="planner-handoff__success" role="status" tabIndex={-1} data-testid="handoff-success">

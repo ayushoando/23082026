@@ -89,14 +89,19 @@ export function PlannerCommandPalette({ open, commands, onClose }: Props) {
         <h2 id="planner-command-palette-title" className="planner-command-palette__title">
           Command palette
         </h2>
+        <label className="sr-only" htmlFor="planner-command-query">
+          Search available Planner commands
+        </label>
         <input
           ref={inputRef}
+          id="planner-command-query"
           className="input"
           placeholder="Type a command…"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           data-testid="planner-command-query"
           aria-controls="planner-command-list"
+          aria-describedby="planner-command-result-count"
           onKeyDown={(e) => {
             if (e.key === "Enter" && filtered[0]) {
               e.preventDefault();
@@ -105,7 +110,10 @@ export function PlannerCommandPalette({ open, commands, onClose }: Props) {
             }
           }}
         />
-        <ul id="planner-command-list" data-testid="planner-command-list" aria-live="polite">
+        <p id="planner-command-result-count" className="sr-only" role="status" aria-live="polite">
+          {filtered.length === 0 ? "No matching commands" : `${filtered.length} command${filtered.length === 1 ? "" : "s"} available`}
+        </p>
+        <ul id="planner-command-list" data-testid="planner-command-list" aria-label="Available Planner commands">
           {filtered.map((cmd) => (
             <li key={cmd.id}>
               <button
