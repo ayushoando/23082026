@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
+import { useCallback, useRef, useState, useSyncExternalStore, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 
 type Offset = { x: number; y: number };
 
@@ -44,10 +44,7 @@ export function DraggableCanvasOverlay({
     setOffset(initial);
   }, [storageKey]);
 
-  const onPointerDown = useCallback((event: ReactPointerEvent<HTMLDivElement>) => {
-    const target = event.target;
-    if (!(target instanceof Element)) return;
-    if (!target.closest(".canvas-overlay__grip")) return;
+  const onPointerDown = useCallback((event: ReactPointerEvent<HTMLButtonElement>) => {
     const root = rootRef.current;
     if (!root) return;
     event.preventDefault();
@@ -98,17 +95,17 @@ export function DraggableCanvasOverlay({
       data-testid={testId}
       data-dragging={dragging ? "true" : "false"}
       style={{ transform: `translate(${offset.x}px, ${offset.y}px)` }}
-      onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={endDrag}
       onPointerCancel={endDrag}
     >
-      <span
+      <button
+        type="button"
         className="canvas-overlay__grip"
-        role="img"
         title="Drag toolbar"
         data-testid="canvas-overlay-grip"
         aria-label="Drag toolbar"
+        onPointerDown={onPointerDown}
       />
       {children}
     </div>

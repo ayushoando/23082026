@@ -113,6 +113,7 @@ export const ContextMenu = ({ x, y, items, onClose }: ContextMenuProps) => {
             }}
             disabled={item.disabled}
             data-testid={`ctx-${item.id}`}
+            aria-label={item.label}
             role="menuitem"
           >
             {item.icon ? <PhIcon name={item.icon} size={18} /> : null}

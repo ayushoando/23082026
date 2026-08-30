@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { PhIcon } from "@planner/components/ui/PlannerPhIcon";
 import { useCatalogStore } from "@planner/store/plannerCatalogStore";
 import { fileUrl } from "@planner/lib/plannerApi";
@@ -22,10 +22,14 @@ export const AutoArrangeDialog = ({ open, onClose, sheet, onArrange }: AutoArran
   const [margin, setMargin] = useState(500);
   const [category, setCategory] = useState("all");
   const [busy, setBusy] = useState(false);
+  const [wasOpen, setWasOpen] = useState(Boolean(open));
 
-  useEffect(() => {
-    if (!open) setSelected({});
-  }, [open]);
+  if (Boolean(open) !== wasOpen) {
+    setWasOpen(Boolean(open));
+    if (!open) {
+      setSelected({});
+    }
+  }
 
   const catList = useMemo(() => {
     const cats = new Set(items.map((i) => i.category).filter(Boolean));

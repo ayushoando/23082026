@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { HueSlider } from "@studio/components/ui/StudioHueSlider";
 import { OO, OO_SWATCHES, transparentChecker } from "@studio/lib/studioPalette";
 
@@ -13,10 +13,17 @@ type ColorPaletteProps = {
 };
 
 export const ColorPalette = ({ fill, stroke, onFillChange, onStrokeChange, preferredMode }: ColorPaletteProps) => {
-  const [mode, setMode] = useState<"fill" | "stroke">(preferredMode || "fill");
-  useEffect(() => {
-    if (preferredMode) setMode(preferredMode);
-  }, [preferredMode]);
+  const [mode, setMode] = useState<"fill" | "stroke">(
+    () => preferredMode ?? "fill",
+  );
+  const [previousPreferredMode, setPreviousPreferredMode] = useState(preferredMode);
+
+  if (preferredMode !== previousPreferredMode) {
+    setPreviousPreferredMode(preferredMode);
+    if (preferredMode) {
+      setMode(preferredMode);
+    }
+  }
   const current = mode === "fill" ? fill : stroke;
   const onPick = (c: string) => {
     if (mode === "fill") onFillChange?.(c);

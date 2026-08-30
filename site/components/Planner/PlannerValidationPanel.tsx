@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useSyncExternalStore } from "react";
 import { usePlanner } from "@planner/hooks/usePlannerDockBridge";
 import { buildValidationFloorFromCanvas } from "@planner/lib/buildValidationFloor";
 import { runFloorValidation } from "@planner/lib/validation/runValidation";
@@ -16,12 +16,16 @@ function severityClass(severity: ValidationIssue["severity"]): string {
 export function ValidationPanel() {
   const { fabricRef, scalePxPerMm, sheet, sceneVersion } = usePlanner();
 
+  const fabricCanvas = useSyncExternalStore(
+    () => () => {},
+    () => fabricRef.current,
+    () => null,
+  );
   const result = useMemo(() => {
     void sceneVersion;
-    const c = fabricRef.current;
-    const floor = buildValidationFloorFromCanvas(c, scalePxPerMm, sheet);
+    const floor = buildValidationFloorFromCanvas(fabricCanvas, scalePxPerMm, sheet);
     return runFloorValidation(floor);
-  }, [fabricRef, scalePxPerMm, sheet, sceneVersion]);
+  }, [fabricCanvas, scalePxPerMm, sheet, sceneVersion]);
 
   if (result.issues.length === 0) {
     return (

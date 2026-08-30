@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 import type {
   DockviewGroupLocation,
   IDockviewHeaderActionsProps,
@@ -92,20 +92,22 @@ function captureOrigin(props: IDockviewHeaderActionsProps): void {
  * - Re-docking snaps to the group's original grid position when it still exists
  */
 export function DockFloatHeaderActions(props: IDockviewHeaderActionsProps) {
-  const [floating, setFloating] = useState(
-    () => props.api.location.type === "floating" || props.location?.type === "floating",
+  const subscribe = useCallback(
+    (notify: () => void) => {
+      const disposable = props.api.onDidLocationChange(notify);
+      return () => disposable.dispose();
+    },
+    [props.api],
   );
-  const suppressClickRef = useRef(false);
-
-  useEffect(() => {
-    setFloating(props.api.location.type === "floating");
-    const disposable = props.api.onDidLocationChange((event: { location: DockviewGroupLocation }) => {
-      setFloating(event.location.type === "floating");
-    });
-    return () => {
-      disposable.dispose();
-    };
-  }, [props.api]);
+  const getFloating = useCallback(
+    () => props.api.location.type === "floating",
+    [props.api],
+  );
+  const floating = useSyncExternalStore(
+    subscribe,
+    getFloating,
+    () => props.location?.type === "floating",
+  );
 
   const popOutAt = (clientX: number, clientY: number, inDragMode: boolean) => {
     captureOrigin(props);

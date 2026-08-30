@@ -12,7 +12,14 @@ import {
   isTooSmallDrawnShape,
   restorePersistedLayerRows,
 } from "@planner/lib/plannerCanvasLayers";
-import React, { useEffect, useState, useCallback, useRef, useMemo } from "react";
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+  useMemo,
+  useSyncExternalStore,
+} from "react";
 import { createPortal } from "react-dom";
 import * as fabric from "fabric";
 import type { ModifiedEvent, TPointerEvent, TPointerEventInfo } from "fabric";
@@ -30,7 +37,10 @@ import { useHistory } from "@planner/hooks/usePlannerHistory";
 import { useKeyboardShortcuts } from "@planner/hooks/usePlannerKeyboardShortcuts";
 import { useCanvasCore } from "@planner/hooks/usePlannerCanvasCore";
 import { usePlannerTouchGestures } from "@planner/hooks/usePlannerTouchGestures";
-import { usePlannerUIStore } from "@planner/store/plannerUiStore";
+import {
+  confirmPlannerNavigation,
+  usePlannerUIStore,
+} from "@planner/store/plannerUiStore";
 import { useCatalogStore } from "@planner/store/plannerCatalogStore";
 import { PhIcon } from "@planner/components/ui/PlannerPhIcon";
 import { ContextMenu } from "@planner/components/PlannerContextMenu";
@@ -257,6 +267,11 @@ const Planner = ({
   const routeId = typeof params.id === "string" ? params.id : params.id?.[0];
   const router = useRouter();
   const { wrapperRef, canvasElRef, fabricRef, ready } = useFabric({ background: OO.canvasBg });
+  const fabricCanvas = useSyncExternalStore(
+    () => () => {},
+    () => fabricRef.current,
+    () => null,
+  );
   const viewport = usePlannerViewport();
   const showToast = usePlannerUIStore((s) => s.showToast);
   const setAccessMode = usePlannerUIStore((s) => s.setAccessMode);
@@ -282,9 +297,14 @@ const Planner = ({
   const [projectName, setProjectName] = useState("Untitled Plan");
   const [projectId, setProjectId] = useState<string | null>(null);
   const projectIdRef = useRef<string | null>(null);
-  projectIdRef.current = projectId;
+  useEffect(() => {
+    projectIdRef.current = projectId;
+  }, [projectId]);
   const [loadState, setLoadState] = useState<PlannerLoadState>(DRAFT);
   const requestKeyRef = useRef<string>("");
+  // A remote load may replace local work only after the user explicitly
+  // approves the replacement (for example, via "Use latest saved").
+  const allowRemoteReplacementRef = useRef(false);
   const hydratingOrResettingRef = useRef(false);
   const [retryCount, setRetryCount] = useState(0);
   const workspaceGated =
@@ -305,10 +325,12 @@ const Planner = ({
     typeof navigator === "undefined" ? true : navigator.onLine,
   );
   const [saveIssue, setSaveIssue] = useState<
-    "conflict" | "offline" | "recovery" | "reauth" | "server" | null
+    "conflict" | "offline" | "recovery" | "reauth" | "server" | "local-changed" | null
   >(null);
   const [conflictRevision, setConflictRevision] = useState<number | null>(null);
+  const [conflictProjectId, setConflictProjectId] = useState<string | null>(null);
   const saveIdempotencyRef = useRef<string | null>(null);
+  const documentEpochRef = useRef(0);
   const [sheet, setSheet] = useState<PlannerSheet>(DEFAULT_SHEET);
   const documentStateRef = useRef({
     projectId: null as string | null,
@@ -317,37 +339,31 @@ const Planner = ({
     sheet: DEFAULT_SHEET,
     hasUnsavedChanges: false,
   });
-  documentStateRef.current = {
-    projectId,
-    projectName,
-    projectRevision,
-    sheet,
-    hasUnsavedChanges,
-  };
-  const [plannerStep, setPlannerStep] = useState<PlannerStep>("draw");
-  const [leftCollapsed, setLeftCollapsed] = useState(false);
-  const [rightCollapsed, setRightCollapsed] = useState(true);
-  const [toolsCollapsed, setToolsCollapsed] = useState(false);
   useEffect(() => {
-    // Collapse panels on phone/tablet to keep the canvas usable.
-    // On desktop, panels remain open. The overlay dock-tab buttons reopen
-    // them on demand at any viewport class.
-    if (viewport.isPhone) {
-      setLeftCollapsed(true);
-      setRightCollapsed(true);
-      setToolsCollapsed(true);
-    } else if (viewport.isTablet) {
-      // Tablet: panels are overlays — collapse by default so they
-      // don't obscure the canvas on entry; user taps toggle buttons
-      // to open them as dismissible overlays.
-      setLeftCollapsed(true);
-      setRightCollapsed(true);
-      setToolsCollapsed(true);
-    }
-    // Desktop: leave panels at their current state — don't force-collapse
-    // or force-open on resize. This preserves user's panel configuration
-    // across resize/orientation changes.
-  }, [viewport.viewportClass]);
+    documentStateRef.current = {
+      projectId,
+      projectName,
+      projectRevision,
+      sheet,
+      hasUnsavedChanges,
+    };
+  }, [hasUnsavedChanges, projectId, projectName, projectRevision, sheet]);
+  const [plannerStep, setPlannerStep] = useState<PlannerStep>("draw");
+  const isNarrowViewport = viewport.isPhone || viewport.isTablet;
+  const [leftCollapsed, setLeftCollapsed] = useState(isNarrowViewport);
+  const [rightCollapsed, setRightCollapsed] = useState(true);
+  const [toolsCollapsed, setToolsCollapsed] = useState(isNarrowViewport);
+  const collapsePanelsForNarrowViewport = useCallback(() => {
+    setLeftCollapsed(true);
+    setRightCollapsed(true);
+    setToolsCollapsed(true);
+  }, []);
+  useEffect(() => {
+    // Queue the responsive transition so the viewport effect only subscribes
+    // to its external viewport state; the panel update remains in the same
+    // committed turn.
+    if (isNarrowViewport) queueMicrotask(collapsePanelsForNarrowViewport);
+  }, [collapsePanelsForNarrowViewport, isNarrowViewport]);
   useEffect(() => {
     const updateOnlineState = () => {
       const nextOnline = navigator.onLine;
@@ -380,7 +396,6 @@ const Planner = ({
         return state;
       });
     };
-    updateOnlineState();
     window.addEventListener("online", updateOnlineState);
     window.addEventListener("offline", updateOnlineState);
     return () => {
@@ -430,10 +445,26 @@ const Planner = ({
   const [fullscreen, setFullscreen] = useState(false);
   const [autoOpen, setAutoOpen] = useState(false);
   const [sceneVersion, setSceneVersion] = useState(0);
+  // Refs let an in-flight save detect edits made after its request snapshot.
+  // React closures otherwise retain the pre-request values and could clear a
+  // newer local edit when an older save resolves successfully.
+  const sceneVersionRef = useRef(sceneVersion);
+  const projectNameRef = useRef(projectName);
+  const sheetRef = useRef(sheet);
+  useEffect(() => {
+    sceneVersionRef.current = sceneVersion;
+    projectNameRef.current = projectName;
+    sheetRef.current = sheet;
+  }, [projectName, sceneVersion, sheet]);
   const clipRef = useRef<OoFabricObject | null>(null);
+  const [hasClipboard, setHasClipboard] = useState(false);
   /** Survives tool-effect rebinds — Measure is two mouse:downs across time. */
   const dimStartRef = useRef<Point2D | null>(null);
-  const [topbarSlot, setTopbarSlot] = useState<HTMLElement | null>(null);
+  const topbarSlot = useSyncExternalStore(
+    () => () => {},
+    () => document.getElementById("topbar-actions-slot"),
+    () => null,
+  );
   const { enabled: flag } = useRuntimeFeatureFlags();
 
   const leftPanelsForStep = useCallback((step: PlannerStep) => {
@@ -466,10 +497,6 @@ const Planner = ({
     }
     return panels;
   }, [flag]);
-
-  useEffect(() => {
-    setTopbarSlot(document.getElementById("topbar-actions-slot"));
-  }, []);
 
   // Dockview and canvas overlays need a layout pass when side panels resize.
   useEffect(() => {
@@ -579,7 +606,7 @@ const Planner = ({
 
   const planMetrics = useMemo(() => {
     void sceneVersion;
-    const objects = fabricRef.current?.getObjects() ?? [];
+    const objects = fabricCanvas?.getObjects() ?? [];
     let walls = 0;
     let furniture = 0;
     for (const obj of objects) {
@@ -588,7 +615,7 @@ const Planner = ({
       if (kind === "furniture") furniture += 1;
     }
     return { walls, furniture, boqReady: furniture > 0 };
-  }, [fabricRef, sceneVersion]);
+  }, [fabricCanvas, sceneVersion]);
 
   useEffect(() => {
     if (!autoFit || !ready) return;
@@ -1179,7 +1206,7 @@ const Planner = ({
   const canvasActions: CanvasActionCallbacks = useMemo(
     () =>
       createCanvasActions({
-        fabricCanvas: fabricRef.current as unknown as FabricCanvasLike | null,
+        fabricCanvas: fabricCanvas as unknown as FabricCanvasLike | null,
         showToast,
         refreshLayers,
         bumpSceneVersion: () => setSceneVersion((v) => v + 1),
@@ -1189,7 +1216,7 @@ const Planner = ({
       }),
     // Refresh when canvas ready state changes — the fabricRef.current changes
     // from null to a Canvas once useFabric initialises.
-    [ready, showToast, refreshLayers],
+    [fabricCanvas, showToast, refreshLayers, core.setZoom],
   );
   const deleteSelected = canvasActions.deleteSelected;
   const duplicateSelected = canvasActions.duplicateSelected;
@@ -1245,15 +1272,27 @@ const Planner = ({
     setSceneVersion((v) => v + 1);
     showToast(`Aligned ${activeObjects.length} objects`);
   }, [fabricRef, showToast]);
-  const copySel = async () => { const c = fabricRef.current; if (!c) return; const a = c.getActiveObject(); if (!a) return; clipRef.current = await a.clone(["data"]) as OoFabricObject; showToast("Copied"); };
-  const pasteSel = async () => {
-    if (!clipRef.current) return;
-    const c = fabricRef.current; if (!c) return;
-    const cl = await clipRef.current.clone(["data"]);
-    cl.set({ left: (cl.left || 0) + 20, top: (cl.top || 0) + 20 });
-    tag(cl, cl.data?.label as string | undefined, cl.data?.kind as string | undefined);
-    c.add(cl); c.setActiveObject(cl); c.requestRenderAll();
-  };
+  const copySel = useCallback(async () => {
+    const canvas = fabricRef.current;
+    if (!canvas) return;
+    const active = canvas.getActiveObject();
+    if (!active) return;
+    clipRef.current = await active.clone(["data"]) as OoFabricObject;
+    setHasClipboard(true);
+    showToast("Copied");
+  }, [fabricRef, showToast]);
+  const pasteSel = useCallback(async () => {
+    const clipboardObject = clipRef.current;
+    if (!clipboardObject) return;
+    const canvas = fabricRef.current;
+    if (!canvas) return;
+    const clone = await clipboardObject.clone(["data"]);
+    clone.set({ left: (clone.left || 0) + 20, top: (clone.top || 0) + 20 });
+    tag(clone, clone.data?.label as string | undefined, clone.data?.kind as string | undefined);
+    canvas.add(clone);
+    canvas.setActiveObject(clone);
+    canvas.requestRenderAll();
+  }, [fabricRef]);
   const applyFill = (color: string) => { const c = fabricRef.current; if (!c) return; const list = c.getActiveObjects(); list.forEach((o) => o.set({ fill: color })); c.requestRenderAll(); if (list.length) c.fire("object:modified", { target: list[0] }); };
   const applyStroke = (color: string) => { const c = fabricRef.current; if (!c) return; const list = c.getActiveObjects(); list.forEach((o) => o.set({ stroke: color })); c.requestRenderAll(); if (list.length) c.fire("object:modified", { target: list[0] }); };
   const setObjectProp = (patch: Record<string, unknown>) => {
@@ -1448,6 +1487,11 @@ const Planner = ({
       return;
     }
 
+    const saveSceneVersion = sceneVersionRef.current;
+    const saveProjectName = projectNameRef.current;
+    const saveSheet = sheetRef.current;
+    const saveProjectId = projectIdRef.current;
+    const saveDocumentEpoch = documentEpochRef.current;
     const mutationKind = projectId ? "save" : "create";
     const mutationIdentity = projectId ?? "draft";
     const idempotencyKey =
@@ -1479,7 +1523,7 @@ const Planner = ({
 
       const layerRows = collectUserLayerRows(c.getObjects()).reverse();
       const payload = {
-        name: projectName || "Untitled Plan",
+        name: saveProjectName || "Untitled Plan",
         status: "draft",
         geometry: {
           contractVersion: 1,
@@ -1489,7 +1533,7 @@ const Planner = ({
           geometry: collectSceneGeometry(c, SCALE_PX_PER_MM),
           canvasSnapshot: canvasJson,
         },
-        sheet,
+        sheet: saveSheet,
         layers: layerRows,
         thumbnail_png: thumbnail,
       };
@@ -1503,6 +1547,66 @@ const Planner = ({
             expectedRevision: 0,
             idempotencyKey,
           });
+
+      // The request can resolve after the user has continued editing. Only
+      // publish the saved response as the current document when the local
+      // canvas and metadata still match the request snapshot. Otherwise keep
+      // the newer local document dirty and defer route replacement; replacing
+      // it here would silently discard work made while the request was in
+      // flight.
+      if (documentEpochRef.current !== saveDocumentEpoch) {
+        // A destructive local replacement (for example, New plan) started
+        // while this request was in flight. Its document owns the current
+        // editor state; never attach the old response revision or id to it.
+        saveIdempotencyRef.current = null;
+        showToast(
+          "An earlier save finished after the document changed. Your current plan remains unsaved.",
+          "error",
+        );
+        return;
+      }
+      let canvasChangedDuringSave = sceneVersionRef.current !== saveSceneVersion;
+      if (!canvasChangedDuringSave) {
+        try {
+          const currentCanvasJson = serializeFabricCanvas(c, ["data"]) as FabricCanvasJson;
+          currentCanvasJson.objects = (currentCanvasJson.objects || []).filter(
+            (object) => !object.data?.isGridLine && !object.data?.isSheet,
+          );
+          canvasChangedDuringSave =
+            JSON.stringify(currentCanvasJson) !== JSON.stringify(canvasJson);
+        } catch {
+          // If the current canvas cannot be inspected safely, keep the local
+          // document rather than risk treating a newer edit as saved.
+          canvasChangedDuringSave = true;
+        }
+      }
+      const localDocumentChanged =
+        canvasChangedDuringSave ||
+        projectNameRef.current !== saveProjectName ||
+        JSON.stringify(sheetRef.current) !== JSON.stringify(saveSheet) ||
+        projectIdRef.current !== saveProjectId;
+
+      if (localDocumentChanged) {
+        if (saveProjectId === null) {
+          setProjectId(saved.id);
+          trackPlannerProjectStart(saved.id, "planner-save");
+        }
+        setProjectRevision(saved.revision);
+        saveIdempotencyRef.current = null;
+        setHasUnsavedChanges(true);
+        setSaveIssue("local-changed");
+        try {
+          localStorage.setItem(PLANNER_LAST_PROJECT_KEY, saved.id);
+        } catch {
+          // Storage is a convenience; the in-memory document remains primary.
+        }
+        showToast(
+          `Saved an earlier version of "${saved.name}". Your newer changes remain unsaved.`,
+          "error",
+        );
+        return;
+      }
+
       const savedSheet: PlannerSheet = {
         ...DEFAULT_SHEET,
         ...saved.sheet,
@@ -1527,6 +1631,7 @@ const Planner = ({
       setHasUnsavedChanges(false);
       setSaveIssue(null);
       setConflictRevision(null);
+      setConflictProjectId(null);
       saveIdempotencyRef.current = null;
       try {
         localStorage.setItem(PLANNER_LAST_PROJECT_KEY, saved.id);
@@ -1548,6 +1653,7 @@ const Planner = ({
       if (error instanceof PlannerApiError) {
         if (error.isConflict) {
           setConflictRevision(error.currentRevision ?? null);
+          setConflictProjectId(null);
           setSaveIssue("conflict");
           showToast(
             "This plan changed elsewhere. Your canvas is preserved; reload or save after reviewing the latest version.",
@@ -1577,12 +1683,10 @@ const Planner = ({
     fabricRef,
     online,
     projectId,
-    projectName,
     projectRevision,
     routeId,
     router,
     saving,
-    sheet,
     showToast,
   ]);
 
@@ -1650,6 +1754,7 @@ const Planner = ({
           setHasUnsavedChanges(reauthHandoff.hasUnsavedChanges);
           setSaveIssue(null);
           setConflictRevision(null);
+          setConflictProjectId(null);
           saveIdempotencyRef.current = null;
           setSelectedIds([]);
           setPropObj(null);
@@ -1735,17 +1840,35 @@ const Planner = ({
       try { effectiveId = localStorage.getItem(PLANNER_LAST_PROJECT_KEY) || undefined; } catch { /* noop */ }
     }
     if (!effectiveId) {
-      setLoadState(DRAFT);
+      allowRemoteReplacementRef.current = false;
+      queueMicrotask(() => setLoadState(DRAFT));
       return;
     }
 
     const c = fabricRef.current;
     if (!c) return;
 
+    const remoteReplacementApproved = allowRemoteReplacementRef.current;
+    allowRemoteReplacementRef.current = false;
+    if (documentStateRef.current.hasUnsavedChanges && !remoteReplacementApproved) {
+      // A route change, reconnect retry, or another load trigger must not
+      // replace a newer local document implicitly. Keep the current canvas
+      // mounted and require the existing explicit conflict action to approve
+      // the remote replacement.
+      setSaveIssue("conflict");
+      setConflictRevision(null);
+      setConflictProjectId(null);
+      showToast(
+        "Unsaved changes are still open. Choose Use latest saved to replace them, or keep working locally.",
+        "error",
+      );
+      return;
+    }
+
     // --- Generate a unique request key for this load ---
     const key = `${effectiveId}:${Date.now()}`;
     requestKeyRef.current = key;
-    setLoadState(loadingState(effectiveId, key));
+    queueMicrotask(() => setLoadState(loadingState(effectiveId, key)));
 
     // Do not spend a request while the browser already knows it is offline.
     // Keep the existing canvas mounted and expose a distinct reconnect state.
@@ -1757,6 +1880,9 @@ const Planner = ({
     const controller = new AbortController();
     let hydrationStarted = false;
     let preservedCanvasJson: FabricCanvasJson | null = null;
+    const loadStartSceneVersion = sceneVersionRef.current;
+    const loadStartProjectName = projectNameRef.current;
+    const loadStartSheet = sheetRef.current;
     const preservedDocument = documentStateRef.current;
     try {
       preservedCanvasJson = serializeFabricCanvas(c, ["data"]) as FabricCanvasJson;
@@ -1771,6 +1897,33 @@ const Planner = ({
 
         // Stale check: if a newer request replaced this one, discard silently.
         if (requestKeyRef.current !== key) return;
+
+        let changedWhileLoading =
+          sceneVersionRef.current !== loadStartSceneVersion ||
+          projectNameRef.current !== loadStartProjectName ||
+          JSON.stringify(sheetRef.current) !== JSON.stringify(loadStartSheet);
+        if (!changedWhileLoading && preservedCanvasJson) {
+          try {
+            const currentCanvasJson = serializeFabricCanvas(c, ["data"]) as FabricCanvasJson;
+            changedWhileLoading =
+              JSON.stringify(currentCanvasJson) !== JSON.stringify(preservedCanvasJson);
+          } catch {
+            changedWhileLoading = true;
+          }
+        }
+        if (changedWhileLoading) {
+          // A user edit landed while the remote load was in flight. Do not
+          // hydrate over it; make the replacement decision explicit instead.
+          setSaveIssue("conflict");
+          setConflictRevision(proj.revision);
+          setConflictProjectId(effectiveId!);
+          setLoadState(DRAFT);
+          showToast(
+            "Your newer local changes are preserved. Choose Use latest saved only if you want to replace them.",
+            "error",
+          );
+          return;
+        }
 
         hydrationStarted = true;
         hydratingOrResettingRef.current = true;
@@ -1913,11 +2066,16 @@ const Planner = ({
     if (!c) return;
     if (
       hasUnsavedChanges &&
-      !window.confirm("Discard current unsaved changes and start a new plan?")
+      !confirmPlannerNavigation(
+        "Discard current unsaved changes and start a new plan?",
+        hasUnsavedChanges,
+      )
     ) {
       return;
     }
 
+    // Invalidate any save response that belongs to the replaced document.
+    documentEpochRef.current += 1;
     requestKeyRef.current = `draft:${Date.now()}`;
     hydratingOrResettingRef.current = true;
     c.getObjects()
@@ -1935,6 +2093,7 @@ const Planner = ({
     setHasUnsavedChanges(false);
     setSaveIssue(null);
     setConflictRevision(null);
+    setConflictProjectId(null);
     saveIdempotencyRef.current = null;
     setSheet(DEFAULT_SHEET);
     setLayers([]);
@@ -1962,12 +2121,32 @@ const Planner = ({
       });
       return;
     }
+    if (
+      hasUnsavedChanges &&
+      !confirmPlannerNavigation(
+        "Retrying this load may replace your unsaved changes. Use the latest saved plan?",
+        hasUnsavedChanges,
+      )
+    ) {
+      return;
+    }
+    if (hasUnsavedChanges) {
+      allowRemoteReplacementRef.current = true;
+    }
     setRetryCount((c) => c + 1);
-  }, [online]);
+  }, [hasUnsavedChanges, online]);
 
   const handleBackToProjects = useCallback(() => {
+    if (
+      !confirmPlannerNavigation(
+        "You have unsaved changes. Leave this plan without saving?",
+        hasUnsavedChanges,
+      )
+    ) {
+      return;
+    }
     router.push("/ooplanner/projects");
-  }, [router]);
+  }, [hasUnsavedChanges, router]);
 
   // Sign-in carries a return path to the requested project — a Try-again
   // button on a 401 can never succeed, so unauthorized state offers this
@@ -2006,13 +2185,20 @@ const Planner = ({
   const handleReloadLatest = useCallback(() => {
     if (
       hasUnsavedChanges &&
-      !window.confirm("Replace the local canvas with the latest saved version?")
+      !confirmPlannerNavigation(
+        "Replace the local canvas with the latest saved version?",
+        hasUnsavedChanges,
+      )
     ) {
       return;
+    }
+    if (hasUnsavedChanges) {
+      allowRemoteReplacementRef.current = true;
     }
     saveIdempotencyRef.current = null;
     setSaveIssue(null);
     setConflictRevision(null);
+    setConflictProjectId(null);
     // Keep the dirty flag until the replacement load succeeds. If the retry
     // fails, the current in-memory canvas must still be treated as unsaved.
     setRetryCount((count) => count + 1);
@@ -2023,12 +2209,19 @@ const Planner = ({
       showToast("Reload the latest plan before retrying this save.", "error");
       return;
     }
+    // When a user edited before an initial load completed, the editor may not
+    // have a local project id yet. Keeping that local version must bind it to
+    // the explicitly chosen remote record before the next save.
+    if (conflictProjectId && projectIdRef.current !== conflictProjectId) {
+      setProjectId(conflictProjectId);
+    }
     setProjectRevision(conflictRevision);
     saveIdempotencyRef.current = null;
     setSaveIssue(null);
     setConflictRevision(null);
+    setConflictProjectId(null);
     showToast("Local canvas retained. Save again to create a new revision.");
-  }, [conflictRevision, showToast]);
+  }, [conflictProjectId, conflictRevision, showToast]);
 
   type PlannerShortcuts = {
     undo?: () => void;
@@ -2087,9 +2280,9 @@ const Planner = ({
     hasUnsavedChanges,
     onWarn: () => setSessionExpiring(true),
   });
-  // Expose via ref so the stable saveProject/load callbacks can call it
-  // without adding it to their dependency arrays.
-  resetSessionTimerRef.current = resetSessionTimer;
+  useEffect(() => {
+    resetSessionTimerRef.current = resetSessionTimer;
+  }, [resetSessionTimer]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -2201,24 +2394,44 @@ const Planner = ({
     [fabricRef],
   );
 
-  // Context menu
-  const buildContextMenu = () => {
-    const c = fabricRef.current;
-    const active = c?.getActiveObject() as OoFabricObject | undefined;
-    const hasActive = !!active;
+  const moveContextMenuSelection = useCallback(
+    (direction: "forward" | "backward") => {
+      const canvas = fabricRef.current;
+      const active = canvas?.getActiveObject();
+      if (!canvas || !active) return;
+      if (direction === "forward") canvas.bringObjectForward(active);
+      else canvas.sendObjectBackwards(active);
+      canvas.requestRenderAll();
+      refreshLayers();
+    },
+    [fabricRef, refreshLayers],
+  );
+
+  const contextMenuItems = useMemo(() => {
+    const hasActive = selectedIds.length > 0;
+
     return [
       { id: "copy", label: "Copy", icon: "copy", shortcut: "⌘C", onClick: copySel, disabled: !hasActive },
-      { id: "paste", label: "Paste", icon: "copy", shortcut: "⌘V", onClick: pasteSel, disabled: !clipRef.current },
+      { id: "paste", label: "Paste", icon: "copy", shortcut: "⌘V", onClick: pasteSel, disabled: !hasClipboard },
       { id: "duplicate", label: "Duplicate", icon: "copy", shortcut: "⌘D", onClick: duplicateSelected, disabled: !hasActive },
       { separator: true },
       { id: "rotate90", label: "Rotate 90°", icon: "redo", onClick: rotate90, disabled: !hasActive },
       { separator: true },
-      { id: "forward", label: "Bring forward", icon: "arrowUp", onClick: () => { if (active && c) { c.bringObjectForward(active); c.requestRenderAll(); refreshLayers(); } }, disabled: !hasActive },
-      { id: "backward", label: "Send backward", icon: "arrowDown", onClick: () => { if (active && c) { c.sendObjectBackwards(active); c.requestRenderAll(); refreshLayers(); } }, disabled: !hasActive },
+      { id: "forward", label: "Bring forward", icon: "arrowUp", onClick: () => moveContextMenuSelection("forward"), disabled: !hasActive },
+      { id: "backward", label: "Send backward", icon: "arrowDown", onClick: () => moveContextMenuSelection("backward"), disabled: !hasActive },
       { separator: true },
       { id: "delete", label: "Delete", icon: "trash", shortcut: "Del", onClick: deleteSelected, disabled: !hasActive },
     ];
-  };
+  }, [
+    copySel,
+    deleteSelected,
+    duplicateSelected,
+    hasClipboard,
+    moveContextMenuSelection,
+    pasteSel,
+    rotate90,
+    selectedIds.length,
+  ]);
 
   // Wires PlannerTopToolbar's 14 buttons to the handlers/state that already
   // exist on this component — the toolbar previously rendered every button
@@ -2293,7 +2506,7 @@ const Planner = ({
 
   const toolbarHandlers: Record<string, ToolbarItemHandler> = {
     new: { onClick: newProject },
-    open: { onClick: () => router.push("/ooplanner/projects") },
+    open: { onClick: handleBackToProjects },
     import: {
       content: (
         <button
@@ -2395,7 +2608,9 @@ const Planner = ({
           ? "Connection restored. Retry save to preserve your canvas."
           : saveIssue === "reauth"
             ? "Your session expired. Sign in again without discarding this canvas."
-            : saveIssue === "server"
+            : saveIssue === "local-changed"
+              ? "An earlier version was saved. Your newer local changes remain unsaved."
+              : saveIssue === "server"
               ? "The plan could not be saved. Your local canvas is unchanged."
               : null;
 
@@ -2719,7 +2934,6 @@ const Planner = ({
           ref={wrapperRef}
           className="canvas-stage__inner"
           role="application"
-          tabIndex={0}
           aria-label={`Floor planner canvas — ${projectName}. ${layers.length} object${layers.length === 1 ? "" : "s"}. Use keyboard shortcuts, the toolbar, or the Canvas objects list in Review to interact.`}
           aria-describedby="canvas-a11y-keyboard-hint"
         >
@@ -2973,7 +3187,7 @@ const Planner = ({
       </aside>
 
       {core.contextMenu && (
-        <ContextMenu x={core.contextMenu.x} y={core.contextMenu.y} items={buildContextMenu()} onClose={() => core.setContextMenu(null)} />
+        <ContextMenu x={core.contextMenu.x} y={core.contextMenu.y} items={contextMenuItems} onClose={() => core.setContextMenu(null)} />
       )}
 
       <AutoArrangeDialog open={autoOpen} onClose={() => setAutoOpen(false)} sheet={sheet} onArrange={doAutoArrange} />

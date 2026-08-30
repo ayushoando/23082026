@@ -153,7 +153,7 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - Distinguish default, loading, empty, success, validation, server, unauthenticated, forbidden, rate-limited, conflict, stale, offline, and recovery states where applicable.
     - Give each state an accessible status, focus target, memory-preservation rule, and deterministic next/recovery action; clear obsolete errors after successful retry.
     - _Requirements: 4.8, 5.1-5.8_
-  - [-] 3.4 Remediate failure-safe editing, unsaved navigation, offline, conflict, and reauthentication behavior
+  - [x] 3.4 Remediate failure-safe editing, unsaved navigation, offline, conflict, and reauthentication behavior
     - Retain the last valid in-memory document after failed edits/requests, gate destructive replacement behind explicit decisions, and never silently overwrite newer persisted data.
     - _Requirements: 4.6-4.8, 5.6-5.8, 10.8_
   - [x] 3.5 Write property-based test for valid project initialization
@@ -199,24 +199,24 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - Correct semantic tokens, contrast, spacing, typography, elevation, borders, radii, icon/label/status alignment, and disabled/selected/hover/focus/pressed/invalid/busy states.
     - Add a Planner-zone pattern only when no existing pattern fits; never import Studio FOCSS, use raw visual values where a semantic token exists, or introduce inline/Lucide icons.
     - _Requirements: 2.2, 8.3, 9.1-9.4, 9.6, 9.7_
-  - [~] 3.16 Remediate overflow, 200% reflow, reduced motion, and viewport accessibility
+  - [ ] 3.16 Remediate overflow, 200% reflow, reduced motion, and viewport accessibility
     - Preserve full values via wrapping, expansion, or accessible disclosure; preserve all chrome operations at 200% zoom except bounded canvas panning; suppress non-essential motion without hiding feedback.
     - _Requirements: 8.6, 8.7, 9.5_
-  - [~] 3.17 Write property-based test for accessible control completeness
+  - [ ] 3.17 Write property-based test for accessible control completeness
     - **Property 12: Accessible control completeness**
     - Generate interactive controls and declared states and verify semantic metadata and distinguishable semantic/visual mappings.
     - **Validates: Requirements 8.2, 9.6**
-  - [~] 3.18 Write property-based test for accessible overflow disclosure
+  - [ ] 3.18 Write property-based test for accessible overflow disclosure
     - **Property 13: Accessible overflow disclosure**
     - Generate values and constrained regions and verify the complete value remains available through wrapping, expansion, or accessible disclosure.
     - **Validates: Requirements 9.5**
-  - [~] 3.19 Remediate guest catalog browsing, selection continuity, and response minimization
+  - [ ] 3.19 Remediate guest catalog browsing, selection continuity, and response minimization
     - Expose only approved public furniture/product fields, preserve guest selection through guest-accessible planning context, and prevent project/owner data or project-operation capability from crossing the boundary.
     - _Requirements: 10.1, 10.3, 15.1, 15.2, 15.7_
-  - [~] 3.20 Remediate lead handoff validation, draft recovery, and stable confirmation
+  - [ ] 3.20 Remediate lead handoff validation, draft recovery, and stable confirmation
     - Validate contact, consent, and inquiry fields; preserve valid draft values on validation/server failure; provide retry and a stable non-secret handoff reference on success without granting project access.
     - _Requirements: 10.2, 15.3-15.7_
-  - [~] 3.21 Write property-based test for guest boundary integrity
+  - [ ] 3.21 Write property-based test for guest boundary integrity
     - **Property 23: Guest boundary integrity**
     - Generate guest catalog selections and handoff outcomes and verify public context/drafts/confirmation survive while restricted data and project capability never appear.
     - **Validates: Requirements 10.1, 10.2, 15.1, 15.2, 15.5, 15.6, 15.7**
@@ -286,7 +286,7 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - Cover room boundary, at least ten furniture objects, rotation, dimensions, labels, metadata, route LCP/CLS, non-canvas INP, canvas FPS, direct feedback, API latency, and 20-cycle listener/subscription cleanup.
     - Record viewport/orientation/input/browser/device/CPU/network fixture, warm/cold status, sample count, method, and evidence class without claiming unexecuted browser or integration results.
     - _Requirements: 16.1-16.7, 18.1, 19.4_
-  - [~] 5.6 Remediate every evidenced performance-budget or cleanup defect after required product remediation and capture comparable before/after definitions
+  - [ ] 5.6 Remediate every evidenced performance-budget or cleanup defect after required product remediation and capture comparable before/after definitions
     - At Gate D, return each measured bottleneck to the exclusive product-file owner, require the smallest serial remediation, preserve behavior, and accept the handback only after its measured value, profile, bottleneck evidence, remediation, and exact pending/observed verification are bound to the finding.
     - Defect remediation is required; if no authorized measurement exists, retain the candidate as validation-pending rather than asserting compliance.
     - _Requirements: 2.1, 2.6, 16.1-16.8_
@@ -294,35 +294,35 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - **Property 26: Performance finding completeness**
     - Generate missed-budget findings and verify measured value, complete supported profile, bottleneck evidence, and remediation status are mandatory.
     - **Validates: Requirements 16.8**
-  - [~] 5.8 Expand automated browser/device profiles beyond the required representative profiles
+  - [ ] 5.8 Expand automated browser/device profiles beyond the required representative profiles
     - Add non-duplicative cross-browser/device cases only after required profiles and remediations are covered; do not make these extra profiles a prerequisite for closing already proven findings.
     - _Requirements: 6.1, 7.1, 8.1, 16.1-16.7_
-  - [~] 5.9 Add targeted unit and integration regression tests for every remediated finding after Gate D
+  - [ ] 5.9 Add targeted unit and integration regression tests for every remediated finding after Gate D
     - Cover geometry, commands, state transitions, API middleware order, owner scope, adapters, revision/idempotency/schema behavior, guest handoff, observability, migration transformations when present, and all defect-specific edge cases.
     - Tag/link tests to finding ids, source paths, requirements, and evidence class. Use distinct concern-specific test files or wait for explicit serial file transfer; never edit a workstream-owned test file concurrently.
     - _Requirements: 2.6, 18.1, 18.5, 19.1-19.4_
-  - [~] 5.10 Add targeted browser specifications for rendered behavior that static tests cannot prove
+  - [ ] 5.10 Add targeted browser specifications for rendered behavior that static tests cannot prove
     - Cover representative desktop/tablet/phone layouts, resize/orientation context, touch/keyboard parity, focus movement/restoration, dialogs, 200% reflow, reduced motion, contrast/visual states, offline/conflict recovery, accessibility, and required performance profiles.
     - Author tests only; execution remains protected validation.
     - _Requirements: 5.1-5.8, 6.1-6.7, 7.1-7.7, 8.1-8.8, 9.2-9.6, 16.1-16.7, 18.5_
-  - [~] 5.11 Implement the change-derived validation manifest and evidence recorder
+  - [ ] 5.11 Implement the change-derived validation manifest and evidence recorder
     - Derive the narrowest applicable exact repository-root commands from the frozen changed paths/findings, including fork, FOCSS, UI lint/token, typecheck, targeted Vitest/Playwright/accessibility/performance, migration dry-run/types, and full gate only when applicable.
     - Exclude `typecheck:scripts`; store authorization, hook decision, exit status, output limitation, evidence class, and unverified behavior, and leave every unexecuted command without pass/fail.
     - _Requirements: 18.1-18.9, 19.4-19.6_
-  - [~] 5.12 Write property-based test for authorization-gated validation
+  - [ ] 5.12 Write property-based test for authorization-gated validation
     - **Property 27: Authorization-gated validation**
     - Generate protected/hosted actions and authorization/hook states and verify execution eligibility only when both permissions exist, otherwise exact pending action and no result claim.
     - **Validates: Requirements 14.10, 18.2, 18.3, 18.4, 18.9, 19.5, 19.6**
-  - [~] 5.13 Write property-based test for change-derived validation planning
+  - [ ] 5.13 Write property-based test for change-derived validation planning
     - **Property 28: Change-derived validation plan**
     - Generate finding categories and changed paths and verify all narrow triggered checks, fork/FOCSS/type rules, and exclusion of `typecheck:scripts`.
     - **Validates: Requirements 18.1, 18.5, 18.6, 18.7, 18.8**
-  - [~] 5.14 Write property-based test for evidence-class separation
+  - [ ] 5.14 Write property-based test for evidence-class separation
     - **Property 29: Evidence-class separation**
     - Generate evidence records and verify exactly one repository/browser/integration/hosted/deployment class with no promotion from static evidence.
     - **Validates: Requirements 17.7, 19.4**
 
-- [~] 6. Final checkpoint
+- [ ] 6. Final checkpoint
   - Reconcile observed results only for exact checks authorized in the current session and permitted by the enabled hook; list every unauthorized or unexecuted check as pending without a pass/fail claim.
   - Confirm every required task, property test, remediation handback, ownership transfer, and contract handoff is closed or carries the exact permitted pending/blocker classification before generating the final completion record.
   - Keep hosted operations separate from repository validation and leave them unexecuted unless the repository owner separately authorizes the exact action.

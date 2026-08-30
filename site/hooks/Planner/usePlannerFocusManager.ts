@@ -44,8 +44,6 @@ export function usePlannerFocusManager({
   onClose,
 }: UsePlannerFocusManagerOptions): UsePlannerFocusManagerReturn {
   const invokerRef = useRef<HTMLElement | null>(null);
-  const onCloseRef = useRef(onClose);
-  onCloseRef.current = onClose;
 
   // Capture invoker and move focus into the surface on open.
   useEffect(() => {
@@ -85,10 +83,10 @@ export function usePlannerFocusManager({
     if (!open || !modal) return;
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && onCloseRef.current) {
+      if (event.key === "Escape" && onClose) {
         event.preventDefault();
         event.stopPropagation();
-        onCloseRef.current();
+        onClose();
         return;
       }
 
@@ -125,7 +123,7 @@ export function usePlannerFocusManager({
 
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, [open, modal, containerRef]);
+  }, [open, modal, containerRef, onClose]);
 
   return { invokerRef };
 }

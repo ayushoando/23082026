@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { usePlannerUIStore } from "@planner/store/plannerUiStore";
 import { PhIcon } from "@planner/components/ui/PlannerPhIcon";
 

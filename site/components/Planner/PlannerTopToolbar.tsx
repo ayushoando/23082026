@@ -100,8 +100,9 @@ function ToolbarGroup({
     <div
       ref={groupRef}
       className="oo-toolbar__group"
-      role="group"
+      role="toolbar"
       aria-label={group.label}
+      tabIndex={0}
       onKeyDown={onKeyDown}
     >
       {group.items.map((item, itemIndex) => {

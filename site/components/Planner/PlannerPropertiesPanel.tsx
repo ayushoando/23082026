@@ -1,7 +1,7 @@
 "use client";
 import { PropertiesEmptyHint } from "@planner/components/ui/PlannerPropertiesEmptyHint";
 import { OO_DRAW } from "@planner/lib/plannerPalette";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { fromMm, toMm, formatDim } from "@planner/lib/plannerUnits";
 import { usePlannerUIStore } from "@planner/store/plannerUiStore";
 import type { OoFabricObject } from "@planner/lib/plannerTypes";
@@ -29,15 +29,17 @@ const NumRow = ({
   instructionId,
   min,
 }: NumRowProps) => {
-  const [invalid, setInvalid] = useState(false);
+  const [invalid, setInvalid] = useState(() => !Number.isFinite(value));
+  const [previousValue, setPreviousValue] = useState(value);
   const inputId = testId ? `${testId}-input` : undefined;
   const labelId = testId ? `${testId}-label` : undefined;
   const unitId = suffix && testId ? `${testId}-unit` : undefined;
   const errorId = testId ? `${testId}-error` : undefined;
 
-  useEffect(() => {
+  if (value !== previousValue) {
+    setPreviousValue(value);
     setInvalid(!Number.isFinite(value));
-  }, [value]);
+  }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const raw = event.target.value;

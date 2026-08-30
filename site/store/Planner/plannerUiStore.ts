@@ -69,12 +69,18 @@ export const usePlannerUIStore = create<PlannerUIStore>((set) => ({
  * work that has not been persisted. The caller remains responsible for
  * starting navigation after this returns true; a cancelled decision leaves
  * the document and its dirty marker untouched.
+ *
+ * The optional second argument lets an editor pass its local dirty state when
+ * the store is being synchronized asynchronously; the default still reads the
+ * store so callers outside React (including tests) can use the same guard.
  */
 export function confirmPlannerNavigation(
   message = "You have unsaved changes. Leave this plan without saving?",
+  hasUnsavedChangesOverride?: boolean,
 ): boolean {
   const { hasUnsavedChanges, setHasUnsavedChanges } = usePlannerUIStore.getState();
-  if (!hasUnsavedChanges || typeof window === "undefined") return true;
+  const isDirty = hasUnsavedChangesOverride ?? hasUnsavedChanges;
+  if (!isDirty || typeof window === "undefined") return true;
 
   const shouldLeave = window.confirm(message);
   if (shouldLeave) {

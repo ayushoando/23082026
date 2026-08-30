@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 import { usePlanner } from "@planner/hooks/usePlannerDockBridge";
 import { collectSceneGeometry, furnitureToCenterOrigin } from "@planner/lib/fabricGeometryBridge";
 import { buildBoqFromGeometry } from "@planner/lib/boq/buildBoqFromGeometry";
@@ -27,10 +27,14 @@ export function BoqPanel() {
   const exportEnabled = isFeatureEnabled("plannerExportBoq");
   const handoffEnabled = isFeatureEnabled("plannerHandoff");
 
+  const fabricCanvas = useSyncExternalStore(
+    () => () => {},
+    () => fabricRef.current,
+    () => null,
+  );
   const boq = useMemo(() => {
     void sceneVersion;
-    const c = fabricRef.current;
-    if (!c) {
+    if (!fabricCanvas) {
       return buildBoqFromGeometry({
         projectId: "local",
         projectName: "Untitled Plan",
@@ -38,7 +42,7 @@ export function BoqPanel() {
         pricingEnabled,
       });
     }
-    const scene = collectSceneGeometry(c, scalePxPerMm);
+    const scene = collectSceneGeometry(fabricCanvas, scalePxPerMm);
     return buildBoqFromGeometry({
       projectId: "local",
       projectName: "Untitled Plan",
@@ -54,7 +58,7 @@ export function BoqPanel() {
       }),
       pricingEnabled,
     });
-  }, [fabricRef, sceneVersion, scalePxPerMm, pricingEnabled]);
+  }, [fabricCanvas, sceneVersion, scalePxPerMm, pricingEnabled]);
 
   void sheet;
   const totalQty = boq.lines.reduce((s, l) => s + l.quantity, 0);
@@ -128,7 +132,11 @@ export function BoqPanel() {
         ) : null}
       </div>
       {handoffOpen ? (
-        <PlannerHandoffDialog boq={boq} onClose={() => setHandoffOpen(false)} />
+        <PlannerHandoffDialog
+          key={boq.calculationHash}
+          boq={boq}
+          onClose={() => setHandoffOpen(false)}
+        />
       ) : null}
     </div>
   );

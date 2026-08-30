@@ -50,18 +50,22 @@ function pruneRetiredPanels(api: DockviewApiLike, allowed: Set<string>) {
 }
 
 export const DockShell = ({ panels, onReadyApi, onEmpty, theme = "light", storageKey }: DockShellProps) => {
-  const componentsRef = useRef<Record<string, DockPanelDef["render"]>>({});
   const apiRef = useRef<DockviewApiLike | null>(null);
   const previousIdsRef = useRef<string[]>([]);
   const panelsRef = useRef(panels);
-  panelsRef.current = panels;
   const onEmptyRef = useRef(onEmpty);
-  onEmptyRef.current = onEmpty;
+
+  useEffect(() => {
+    panelsRef.current = panels;
+  }, [panels]);
+
+  useEffect(() => {
+    onEmptyRef.current = onEmpty;
+  }, [onEmpty]);
 
   const components = useMemo(() => {
     const map: Record<string, DockPanelDef["render"]> = {};
     for (const p of panels) map[p.id] = p.render;
-    componentsRef.current = map;
     return map;
   }, [panels]);
 

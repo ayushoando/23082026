@@ -11,6 +11,14 @@ type Props = {
 
 export function PlannerCommandPalette({ open, commands, onClose }: Props) {
   const [query, setQuery] = useState("");
+  const [wasOpen, setWasOpen] = useState(open);
+
+  if (open !== wasOpen) {
+    setWasOpen(open);
+    if (!open) {
+      setQuery("");
+    }
+  }
   const filtered = useMemo(() => filterCommands(commands, query), [commands, query]);
   const dialogRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -18,7 +26,6 @@ export function PlannerCommandPalette({ open, commands, onClose }: Props) {
 
   useEffect(() => {
     if (!open) {
-      setQuery("");
       invokerRef.current?.focus();
       invokerRef.current = null;
       return;
@@ -45,13 +52,37 @@ export function PlannerCommandPalette({ open, commands, onClose }: Props) {
     return () => document.removeEventListener("pointerdown", onPointerDown);
   }, [open, onClose]);
 
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onClose();
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const focusable = dialogRef.current?.querySelectorAll<HTMLElement>(
+        'input, button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      );
+      if (!focusable?.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [open, onClose]);
+
   if (!open) return null;
 
   return (
     <>
-      {/* Backdrop — blocks pointer events to canvas so aria-modal is visually
-          backed by a real inert surface. Clicking the scrim triggers the
-          pointer-down close handler above (Req 7.6, 8.1). */}
       <div
         className="planner-command-palette-scrim"
         aria-hidden="true"
@@ -64,27 +95,7 @@ export function PlannerCommandPalette({ open, commands, onClose }: Props) {
         role="dialog"
         aria-modal="true"
         aria-labelledby="planner-command-palette-title"
-        onKeyDown={(event) => {
-          if (event.key === "Escape") {
-            event.preventDefault();
-            onClose();
-            return;
-          }
-          if (event.key !== "Tab") return;
-          const focusable = dialogRef.current?.querySelectorAll<HTMLElement>(
-            'input, button:not([disabled]), [tabindex]:not([tabindex="-1"])',
-          );
-          if (!focusable?.length) return;
-          const first = focusable[0];
-          const last = focusable[focusable.length - 1];
-          if (event.shiftKey && document.activeElement === first) {
-            event.preventDefault();
-            last.focus();
-          } else if (!event.shiftKey && document.activeElement === last) {
-            event.preventDefault();
-            first.focus();
-          }
-        }}
+        tabIndex={-1}
       >
         <h2 id="planner-command-palette-title" className="planner-command-palette__title">
           Command palette

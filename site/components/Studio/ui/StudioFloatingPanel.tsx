@@ -39,15 +39,9 @@ export function FloatingPanel({
 }: FloatingPanelProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const dragRef = useRef<{ startX: number; startY: number; originX: number; originY: number } | null>(null);
-  const offsetRef = useRef<Offset>({ x: 0, y: 0 });
-  const [offset, setOffset] = useState<Offset>({ x: 0, y: 0 });
+  const [offset, setOffset] = useState<Offset>(() => readOffset(storageKey));
+  const offsetRef = useRef<Offset>(offset);
   const [dragging, setDragging] = useState(false);
-
-  useEffect(() => {
-    const initial = readOffset(storageKey);
-    offsetRef.current = initial;
-    setOffset(initial);
-  }, [storageKey]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {

@@ -3,7 +3,7 @@ import { collectUserLayerRows, isDragDrawTool, isTooSmallDrawnShape } from "@stu
 import { OO, SCALE_PX_PER_MM, ooFontSans, ooFontSansShort } from "@studio/lib/studioPalette";
 import { DEFAULT_FURNITURE_DIMS_MM } from "@studio/lib/studioTokens";
 import type { DockviewApiLike, FurnitureDimensions, OoFabricObject } from "@studio/lib/studioTypes";
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { useEffect, useRef, useState, useCallback, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import * as fabric from "fabric";
 import type { ModifiedEvent, TPointerEvent, TPointerEventInfo } from "fabric";
@@ -91,6 +91,18 @@ import {
 } from "@studio/lib/templates/furnitureTemplates";
 import { useRuntimeFeatureFlags } from "@/lib/hooks/useRuntimeFeatureFlags";
 
+type StudioExportKind = "svg" | "json" | "png" | "jpg" | "dxf";
+
+const STUDIO_EXPORT_EVENT = "oando:studio-export";
+
+function requestStudioExport(kind: StudioExportKind) {
+  window.dispatchEvent(new CustomEvent<StudioExportKind>(STUDIO_EXPORT_EVENT, { detail: kind }));
+}
+
+const getTopbarSlot = () => document.getElementById("topbar-actions-slot");
+const getServerTopbarSlot = () => null;
+const subscribeToTopbarSlot = () => () => undefined;
+
 // Types, constants, and panel/tool configs live in StudioConstants.ts
 const Studio = () => {
   const { wrapperRef, canvasElRef, fabricRef, ready } = useFabric({ background: OO.canvasBg });
@@ -102,7 +114,7 @@ const Studio = () => {
   const gridSize = useStudioUIStore((s) => s.gridSize);
   const refreshCatalog = useCatalogStore((s) => s.refresh);
   const addCatalogItem = useCatalogStore((s) => s.addItem);
-  const { enabled: flag } = useRuntimeFeatureFlags();
+  const { flags } = useRuntimeFeatureFlags();
 
   const [tool, setTool] = useState("select");
   const [drawColors, setDrawColors] = useState<DrawColorDefaults>({
@@ -110,7 +122,9 @@ const Studio = () => {
     stroke: DEFAULT_STROKE,
   });
   const drawColorsRef = useRef(drawColors);
-  drawColorsRef.current = drawColors;
+  useEffect(() => {
+    drawColorsRef.current = drawColors;
+  }, [drawColors]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [layers, setLayers] = useState<LayerItem[]>([]);
   const [propObj, setPropObj] = useState<PropObjState>(null);
@@ -160,7 +174,33 @@ const Studio = () => {
   const [aiSuggestion, setAiSuggestion] = useState<AiSuggestion | null>(null); // last AI meta suggestion
   const [templateMenuOpen, setTemplateMenuOpen] = useState(false);
   const clipRef = useRef<OoFabricObject | null>(null);
+  const [hasClipboard, setHasClipboard] = useState(false);
   const activeCountRef = useRef(0);
+
+  const handleLeftDockEmpty = useCallback(() => {
+    leftDockApiRef.current = null;
+    setLeftCollapsed(true);
+  }, []);
+  const handleLeftDockReady = useCallback((api: DockviewApiLike) => {
+    leftDockApiRef.current = api;
+    const pending = pendingLeftFocusRef.current;
+    if (pending) {
+      ensureAndActivateDockPanel(api, STUDIO_LEFT_PANELS, pending);
+      pendingLeftFocusRef.current = null;
+    }
+  }, []);
+  const handleRightDockEmpty = useCallback(() => {
+    rightDockApiRef.current = null;
+    setRightCollapsed(true);
+  }, []);
+  const handleRightDockReady = useCallback((api: DockviewApiLike) => {
+    rightDockApiRef.current = api;
+    const pending = pendingRightFocusRef.current;
+    if (pending) {
+      ensureAndActivateDockPanel(api, STUDIO_RIGHT_PANELS, pending);
+      pendingRightFocusRef.current = null;
+    }
+  }, []);
 
   const history = useHistory(fabricRef, ready);
   const core = useCanvasCore({ fabricRef, ready, scale: SCALE_PX_PER_MM, snapEnabled, gridSize, tool, wrapperRef, onCursorMm: setCursorMm });
@@ -663,6 +703,7 @@ const Studio = () => {
     const a = c.getActiveObject();
     if (!a) return;
     clipRef.current = asOo(await a.clone(["data"]));
+    setHasClipboard(true);
     showToast("Copied");
   };
   const pasteSel = async () => {
@@ -764,7 +805,7 @@ const Studio = () => {
   };
 
   // Exports
-  const withGridHidden = <T,>(fn: (c: fabric.Canvas) => T): T | undefined => {
+  const withGridHidden = useCallback(<T,>(fn: (c: fabric.Canvas) => T): T | undefined => {
     const c = fabricRef.current;
     if (!c) return undefined;
     const grid = c.getObjects().filter((o) => asOo(o).data?.isGridLine);
@@ -776,27 +817,27 @@ const Studio = () => {
       grid.forEach((g) => { g.visible = true; });
       c.requestRenderAll();
     }
-  };
+  }, [fabricRef]);
 
-  const doExportPNG = () => {
+  const doExportPNG = useCallback(() => {
     const url = withGridHidden((c) => exportTightPNG(c, 3) || exportPNG(c));
     if (!url) return;
     downloadDataUrl(url, "furniture.png");
     showToast("Exported PNG");
-  };
-  const doExportJPG = () => {
+  }, [showToast, withGridHidden]);
+  const doExportJPG = useCallback(() => {
     const url = withGridHidden((c) => exportTightJPEG(c, 3) || exportJPEG(c));
     if (!url) return;
     downloadDataUrl(url, "furniture.jpg");
     showToast("Exported JPG");
-  };
-  const doExportSVG = () => {
+  }, [showToast, withGridHidden]);
+  const doExportSVG = useCallback(() => {
     const result = withGridHidden((c) => exportSVG(c));
     if (!result) return;
     downloadDataUrl(result.dataUrl, "furniture.svg");
     showToast("Exported SVG");
-  };
-  const doExportJSON = () => {
+  }, [showToast, withGridHidden]);
+  const doExportJSON = useCallback(() => {
     const c = fabricRef.current;
     if (!c) return;
     // Strip grid lines from the dump so re-import does not duplicate chrome.
@@ -808,8 +849,8 @@ const Studio = () => {
     }
     downloadText(canvasJsonToDownloadText(json), "furniture.json", "application/json;charset=utf-8");
     showToast("Exported JSON");
-  };
-  const doExportDXF = () => {
+  }, [fabricRef, showToast]);
+  const doExportDXF = useCallback(() => {
     try {
       const c = fabricRef.current;
       if (!c || c.getObjects().filter((o) => !asOo(o).data?.isGridLine).length === 0) {
@@ -820,13 +861,25 @@ const Studio = () => {
     } catch (e) {
       showToast(`DXF failed: ${getErrorMessage(e)}`, "error");
     }
-  };
+  }, [fabricRef, showToast]);
+
+  useEffect(() => {
+    const onExport = (event: Event) => {
+      if (!(event instanceof CustomEvent)) return;
+      switch (event.detail as StudioExportKind) {
+        case "svg": doExportSVG(); break;
+        case "json": doExportJSON(); break;
+        case "png": doExportPNG(); break;
+        case "jpg": doExportJPG(); break;
+        case "dxf": doExportDXF(); break;
+      }
+    };
+    window.addEventListener(STUDIO_EXPORT_EVENT, onExport);
+    return () => window.removeEventListener(STUDIO_EXPORT_EVENT, onExport);
+  }, [doExportDXF, doExportJPG, doExportJSON, doExportPNG, doExportSVG]);
 
   const importFileRef = useRef<HTMLInputElement | null>(null);
-  const [topbarSlot, setTopbarSlot] = useState<HTMLElement | null>(null);
-  useEffect(() => {
-    setTopbarSlot(document.getElementById("topbar-actions-slot"));
-  }, []);
+  const topbarSlot = useSyncExternalStore(subscribeToTopbarSlot, getTopbarSlot, getServerTopbarSlot);
 
   const newDrawing = () => {
     const c = fabricRef.current; if (!c) return;
@@ -888,7 +941,7 @@ const Studio = () => {
       const item = await createFurniture(payload);
       addCatalogItem(item);
       let publishNote = "";
-      if (flag("studioPublishCatalog") && item?.id) {
+      if (flags.studioPublishCatalog && item?.id) {
         try {
           // Guest/member save always publishes as draft; live promotion is admin-only on the API.
           const published = await publishFurniture(String(item.id), { goLive: false });
@@ -1195,12 +1248,11 @@ const Studio = () => {
 
   // Context menu
   const buildContextMenu = () => {
-    const c = fabricRef.current;
-    const active = c?.getActiveObject();
-    const hasActive = !!active;
+    const active = propObj?.__obj;
+    const hasActive = Boolean(active);
     return [
       { id: "copy", label: "Copy", icon: "copy", shortcut: "⌘C", onClick: copySel, disabled: !hasActive },
-      { id: "paste", label: "Paste", icon: "copy", shortcut: "⌘V", onClick: pasteSel, disabled: !clipRef.current },
+      { id: "paste", label: "Paste", icon: "copy", shortcut: "⌘V", onClick: pasteSel, disabled: !hasClipboard },
       { id: "duplicate", label: "Duplicate", icon: "copy", shortcut: "⌘D", onClick: duplicateSelected, disabled: !hasActive },
       { separator: true },
       { id: "rotate90", label: "Rotate 90°", icon: "redo", onClick: rotate90, disabled: !hasActive },
@@ -1209,8 +1261,8 @@ const Studio = () => {
       { id: "group", label: "Group", icon: "group", shortcut: "⌘G", onClick: groupSelected, disabled: !(active && active.type === "activeselection") },
       { id: "ungroup", label: "Ungroup", icon: "group", onClick: ungroupSelected, disabled: !(active && active.type === "group") },
       { separator: true },
-      { id: "forward", label: "Bring forward", icon: "arrowUp", onClick: () => { if (active && c) { c.bringObjectForward(active); c.requestRenderAll(); refreshLayers(); } }, disabled: !hasActive },
-      { id: "backward", label: "Send backward", icon: "arrowDown", onClick: () => { if (active && c) { c.sendObjectBackwards(active); c.requestRenderAll(); refreshLayers(); } }, disabled: !hasActive },
+      { id: "forward", label: "Bring forward", icon: "arrowUp", onClick: () => { const c = fabricRef.current; const activeObject = c?.getActiveObject(); if (activeObject && c) { c.bringObjectForward(activeObject); c.requestRenderAll(); refreshLayers(); } }, disabled: !hasActive },
+      { id: "backward", label: "Send backward", icon: "arrowDown", onClick: () => { const c = fabricRef.current; const activeObject = c?.getActiveObject(); if (activeObject && c) { c.sendObjectBackwards(activeObject); c.requestRenderAll(); refreshLayers(); } }, disabled: !hasActive },
       { separator: true },
       { id: "delete", label: "Delete", icon: "trash", shortcut: "Del", onClick: deleteSelected, disabled: !hasActive },
     ];
@@ -1232,14 +1284,14 @@ const Studio = () => {
   const toolbarHandlers: Record<string, ToolbarItemHandler> = {
     new: { onClick: newDrawing },
     import: {
-      content: flag("studioImportFiles") ? (
+      content: flags.studioImportFiles ? (
         <button className="btn btn--sm" onClick={doImportFile} data-testid="btn-import-file" data-legacy-testid="btn-import-svg" type="button" title="Import SVG, JSON, PNG, JPG, WEBP, GIF, BMP, AVIF">
           <PhIcon name="upload" size={16} /> Import
         </button>
       ) : null,
     },
     save: {
-      content: flag("studioPublishCatalog") ? (
+      content: flags.studioPublishCatalog ? (
         <button
           className="btn btn--primary btn--sm"
           onClick={openSave}
@@ -1268,11 +1320,11 @@ const Studio = () => {
               id: "drawing",
               heading: "Drawing",
               items: [
-                flag("studioExportSvg") ? { id: "svg", label: "SVG", onSelect: doExportSVG, testId: "btn-export-svg" } : null,
-                flag("studioExportJson") ? { id: "json", label: "JSON", onSelect: doExportJSON, testId: "btn-export-json" } : null,
-                flag("studioExportPng") ? { id: "png", label: "PNG", onSelect: doExportPNG, testId: "btn-export-png" } : null,
-                flag("studioExportJpg") ? { id: "jpg", label: "JPG", onSelect: doExportJPG, testId: "btn-export-jpg" } : null,
-                flag("studioExportDxf") ? { id: "dxf", label: "DXF", onSelect: doExportDXF, testId: "btn-export-dxf" } : null,
+                flags.studioExportSvg ? { id: "svg", label: "SVG", onSelect: () => requestStudioExport("svg"), testId: "btn-export-svg" } : null,
+                flags.studioExportJson ? { id: "json", label: "JSON", onSelect: () => requestStudioExport("json"), testId: "btn-export-json" } : null,
+                flags.studioExportPng ? { id: "png", label: "PNG", onSelect: () => requestStudioExport("png"), testId: "btn-export-png" } : null,
+                flags.studioExportJpg ? { id: "jpg", label: "JPG", onSelect: () => requestStudioExport("jpg"), testId: "btn-export-jpg" } : null,
+                flags.studioExportDxf ? { id: "dxf", label: "DXF", onSelect: () => requestStudioExport("dxf"), testId: "btn-export-dxf" } : null,
               ].filter((item): item is NonNullable<typeof item> => item !== null),
             },
           ].filter((section) => section.items.length > 0)}
@@ -1300,18 +1352,8 @@ const Studio = () => {
           <DockShell
             panels={STUDIO_LEFT_PANELS}
             storageKey="studio.dock.left.v10"
-            onEmpty={() => {
-              leftDockApiRef.current = null;
-              setLeftCollapsed(true);
-            }}
-            onReadyApi={(api) => {
-              leftDockApiRef.current = api;
-              const pending = pendingLeftFocusRef.current;
-              if (pending) {
-                ensureAndActivateDockPanel(api, STUDIO_LEFT_PANELS, pending);
-                pendingLeftFocusRef.current = null;
-              }
-            }}
+            onEmpty={handleLeftDockEmpty}
+            onReadyApi={handleLeftDockReady}
           />
         )}
         <SidePanelResizeHandle edge="end" active={leftPanel.active} {...leftPanel.handleProps} />
@@ -1462,18 +1504,8 @@ const Studio = () => {
           <DockShell
             panels={STUDIO_RIGHT_PANELS}
             storageKey="studio.dock.right.v11"
-            onEmpty={() => {
-              rightDockApiRef.current = null;
-              setRightCollapsed(true);
-            }}
-            onReadyApi={(api) => {
-              rightDockApiRef.current = api;
-              const pending = pendingRightFocusRef.current;
-              if (pending) {
-                ensureAndActivateDockPanel(api, STUDIO_RIGHT_PANELS, pending);
-                pendingRightFocusRef.current = null;
-              }
-            }}
+            onEmpty={handleRightDockEmpty}
+            onReadyApi={handleRightDockReady}
           />
         )}
         <SidePanelResizeHandle edge="start" active={rightPanel.active} {...rightPanel.handleProps} />

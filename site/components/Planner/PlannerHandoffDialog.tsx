@@ -48,8 +48,20 @@ function makeIdempotencyKey(hash: string): string {
   return `handoff-${hash.slice(0, 16)}-${suffix}`.slice(0, 120);
 }
 
+function readDraft(hash: string): HandoffDraft {
+  if (typeof window === "undefined") return EMPTY_DRAFT;
+  try {
+    const stored = localStorage.getItem(draftKey(hash));
+    if (!stored) return EMPTY_DRAFT;
+    const parsed = JSON.parse(stored) as Partial<HandoffDraft>;
+    return { ...EMPTY_DRAFT, ...parsed, consent: false };
+  } catch {
+    return EMPTY_DRAFT;
+  }
+}
+
 export function PlannerHandoffDialog({ boq, onClose }: PlannerHandoffDialogProps) {
-  const [draft, setDraft] = useState<HandoffDraft>(EMPTY_DRAFT);
+  const [draft, setDraft] = useState<HandoffDraft>(() => readDraft(boq.calculationHash));
   const [busy, setBusy] = useState(false);
   const [errors, setErrors] = useState<HandoffErrors>({});
   const [referenceId, setReferenceId] = useState<string | null>(null);
@@ -70,18 +82,6 @@ export function PlannerHandoffDialog({ boq, onClose }: PlannerHandoffDialogProps
     initialFocusRef: firstFieldRef,
     onClose: closeDialog,
   });
-
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem(draftKey(boq.calculationHash));
-      if (stored) {
-        const parsed = JSON.parse(stored) as Partial<HandoffDraft>;
-        setDraft({ ...EMPTY_DRAFT, ...parsed, consent: false });
-      }
-    } catch {
-      // Invalid or unavailable storage must not block handoff.
-    }
-  }, [boq.calculationHash]);
 
   useEffect(() => {
     if (referenceId) return;
