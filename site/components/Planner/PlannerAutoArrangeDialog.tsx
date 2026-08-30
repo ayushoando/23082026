@@ -157,7 +157,7 @@ export const AutoArrangeDialog = ({ open, onClose, sheet, onArrange }: AutoArran
                     {thumbSrc ? (
                       <img src={thumbSrc} alt={it.name} />
                     ) : (
-                      <PhIcon name="rect" size={24} />
+                      <PhIcon name="rect" size={24} aria-hidden="true" />
                     )}
                   </div>
                   <div className="catalog-item__name">{it.name}</div>
@@ -170,6 +170,7 @@ export const AutoArrangeDialog = ({ open, onClose, sheet, onArrange }: AutoArran
                       onPress={() => bump(it.id, -1)}
                       isDisabled={!n}
                       data-testid={`aa-minus-${it.id}`}
+                      aria-label={`Remove one ${it.name}`}
                     >
                       –
                     </OoButton>
@@ -183,6 +184,10 @@ export const AutoArrangeDialog = ({ open, onClose, sheet, onArrange }: AutoArran
                         border: "1px solid var(--border-soft)",
                       }}
                       data-testid={`aa-count-${it.id}`}
+                      aria-label={`${it.name} quantity: ${n}`}
+                      role="status"
+                      aria-live="polite"
+                      aria-atomic="true"
                     >
                       {n}
                     </div>
@@ -190,6 +195,7 @@ export const AutoArrangeDialog = ({ open, onClose, sheet, onArrange }: AutoArran
                       variant={["sm", "ghost"]}
                       onPress={() => bump(it.id, +1)}
                       data-testid={`aa-plus-${it.id}`}
+                      aria-label={`Add one ${it.name}`}
                     >
                       +
                     </OoButton>

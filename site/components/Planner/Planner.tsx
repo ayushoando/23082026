@@ -129,6 +129,7 @@ import type { PlacementOp } from "@planner/lib/ai/applySuggestedLayout";
 import type { SketchRoomMm, SketchWallMm } from "@planner/lib/ai/sketchToPlanShared";
 import { usePlannerViewport } from "@planner/hooks/usePlannerViewport";
 import { PlannerTabletPanelScrim } from "@planner/components/PlannerTabletPanelScrim";
+import { usePlannerSessionWarning } from "@planner/hooks/usePlannerSessionWarning";
 
 // Types, constants, and panel configs live in PlannerConstants.ts
 
@@ -291,6 +292,8 @@ const Planner = ({
     loadState.kind === "transient-error";
   const firstPlacementRef = useRef(false);
   const [saving, setSaving] = useState(false);
+  const [sessionExpiring, setSessionExpiring] = useState(false);
+  const resetSessionTimerRef = useRef<(() => void) | null>(null);
   const [projectRevision, setProjectRevision] = useState(0);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [online, setOnline] = useState(() =>
@@ -1518,6 +1521,10 @@ const Planner = ({
         );
       }
       showToast(`Saved "${saved.name}"`);
+      // Reset session expiry warning — a successful save means the session
+      // is active and the user's work is now persisted (Req 8.8).
+      setSessionExpiring(false);
+      resetSessionTimerRef.current?.();
     } catch (error: unknown) {
       if (error instanceof PlannerApiError) {
         if (error.isConflict) {
@@ -1777,6 +1784,10 @@ const Planner = ({
         saveIdempotencyRef.current = null;
         showToast(`Loaded "${proj.name}"`);
         setLoadState(readyState(effectiveId!, proj));
+        // Reset session expiry warning — successful load proves an active
+        // authenticated session (Req 8.8).
+        setSessionExpiring(false);
+        resetSessionTimerRef.current?.();
       } catch (e) {
         // Aborted — silent cancellation, not a visible error.
         if (controller.signal.aborted || isAbortError(e)) return;
@@ -2041,6 +2052,17 @@ const Planner = ({
     // R key rotate: rotate selected object through semantic command
     rotate: rotate90,
   } as PlannerShortcuts);
+
+  // Req 8.8 — warn the user before session expiry so they can save or
+  // reauthenticate before unsaved Planner work is lost.
+  const { resetSessionTimer } = usePlannerSessionWarning({
+    enabled: accessMode === "authenticated",
+    hasUnsavedChanges,
+    onWarn: () => setSessionExpiring(true),
+  });
+  // Expose via ref so the stable saveProject/load callbacks can call it
+  // without adding it to their dependency arrays.
+  resetSessionTimerRef.current = resetSessionTimer;
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -2414,6 +2436,45 @@ const Planner = ({
           </div>
         </section>
       ) : null}
+      {/* Req 8.8 — Session expiry warning: surfaced before work could be lost
+          so the user can save or reauthenticate with the canvas intact. */}
+      {sessionExpiring && !saveIssue ? (
+        <section
+          className="planner-save-state"
+          role="alert"
+          data-save-issue="session-expiring"
+          data-testid="planner-session-expiry-warning"
+        >
+          <span>
+            Your session may be expiring soon. Save your plan now or sign in again to keep your work.
+          </span>
+          <div className="planner-save-state__actions">
+            <button
+              className="btn btn--primary btn--sm"
+              type="button"
+              onClick={() => { void saveProject(); }}
+              disabled={!online || saving}
+            >
+              Save now
+            </button>
+            <button
+              className="btn btn--sm"
+              type="button"
+              onClick={handleSignIn}
+            >
+              Sign in again
+            </button>
+            <button
+              className="btn btn--ghost btn--sm"
+              type="button"
+              onClick={() => setSessionExpiring(false)}
+              aria-label="Dismiss session expiry warning"
+            >
+              Dismiss
+            </button>
+          </div>
+        </section>
+      ) : null}
     <div
       className="workspace"
       data-testid="planner-workspace"
@@ -2588,7 +2649,46 @@ const Planner = ({
         <SidePanelResizeHandle edge="end" active={toolsPanel.active} {...toolsPanel.handleProps} />
       </aside>
       <div className="canvas-stage" data-testid="canvas-stage" data-rulers="true">
-        <div ref={wrapperRef} className="canvas-stage__inner">
+        {/* Accessible canvas region (Req 8.1, 8.2): The Fabric canvas is a
+            bitmap drawing surface with no native AT semantics. This sibling
+            region exposes the current tool, selection state, object count,
+            and available keyboard commands to screen readers. The canvas
+            wrapper itself carries role="application" with a descriptive label
+            so assistive technologies understand this is an interactive region
+            with its own keyboard model rather than a static figure.
+            Requirements: 8.1, 8.2 */}
+        <div
+          className="sr-only"
+          role="region"
+          aria-label="Canvas accessibility summary"
+          aria-live="polite"
+          aria-atomic="false"
+          data-testid="canvas-a11y-region"
+        >
+          <p>
+            Floor planner canvas.
+            {" "}Active tool: {tool}.
+            {selectedIds.length > 0
+              ? ` ${selectedIds.length} object${selectedIds.length === 1 ? "" : "s"} selected.`
+              : " No selection."}
+            {layers.length > 0
+              ? ` Plan contains ${layers.length} object${layers.length === 1 ? "" : "s"}.`
+              : " Canvas is empty."}
+          </p>
+          <p id="canvas-a11y-keyboard-hint">
+            Keyboard commands: Arrow keys move selected objects. Shift+Arrow resizes.
+            Delete removes selection. Ctrl+Z undoes. Ctrl+Y redoes.
+            Ctrl+D duplicates. Ctrl+A selects all.
+            Plus and Minus zoom in and out. R rotates 90°. Ctrl+K opens command palette.
+          </p>
+        </div>
+        <div
+          ref={wrapperRef}
+          className="canvas-stage__inner"
+          role="application"
+          aria-label={`Floor planner canvas — ${projectName}. ${layers.length} object${layers.length === 1 ? "" : "s"}. Use keyboard shortcuts or the toolbar to interact.`}
+          aria-describedby="canvas-a11y-keyboard-hint"
+        >
           <canvas ref={canvasElRef} data-testid="planner-canvas" />
         </div>
         <Rulers fabricRef={fabricRef} scale={SCALE_PX_PER_MM} zoom={core.zoom} cursorMm={cursorMm} offset={{ x: 0, y: 0 }} />
@@ -2788,7 +2888,7 @@ const Planner = ({
           </>,
           topbarSlot,
         )}
-        <div className="canvas-info" data-testid="canvas-info">
+        <div className="canvas-info" data-testid="canvas-info" aria-hidden="true">
           <div className="canvas-info__group"><span>x</span><strong>{cursorMm.x}</strong>mm</div>
           <div className="canvas-info__group"><span>y</span><strong>{cursorMm.y}</strong>mm</div>
           <div className="canvas-info__group"><span>grid</span><strong>{gridSize}</strong>mm</div>

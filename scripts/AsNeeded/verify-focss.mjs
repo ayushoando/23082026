@@ -110,6 +110,7 @@ const layoutEntryImports = new Map([
       "./polish.css",
       "./workspace-shell.css",
       "./workspace.css",
+      "./responsive.css",
       "./dock.css",
     ],
   ],

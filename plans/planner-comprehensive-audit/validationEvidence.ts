@@ -186,7 +186,7 @@ export function recordValidationEvidence(input: RecordValidationInput): Validati
         ? "Hosted action remains separately authorized and unexecuted; no result is claimed."
         : "Protected validation remains unexecuted; no pass or fail is claimed.",
       state: "pending",
-      exactCommand: input.action.exactCommand,
+      exactCommand: input.action.hosted ? null : input.action.exactCommand,
       pendingOwnerAction: input.action.hosted ? input.action.exactCommand : null,
       userAuthorization: input.userAuthorization,
       hookPermission: input.hookPermission,

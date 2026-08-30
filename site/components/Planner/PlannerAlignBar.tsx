@@ -58,6 +58,9 @@ export function PlannerAlignBar({ visible, onAction, count }: AlignBarProps) {
       data-visible={visible}
       data-testid="planner-align-toolbar"
       hidden={!visible}
+      role="toolbar"
+      aria-label="Align and distribute"
+      aria-orientation="horizontal"
     >
       {renderGroup(ALIGN_BUTTONS)}
       <div className="align-toolbar__sep" />

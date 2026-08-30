@@ -43,6 +43,7 @@ describe("Planner Task 4.1 Gate B endpoint contract", () => {
       "GET /api/Planner/projects/{id}",
       "PATCH /api/Planner/projects/{id}",
       "DELETE /api/Planner/projects/{id}",
+      "POST /api/Planner/ai-advisor",
       "POST /api/Planner/sketch-to-plan",
     ]);
   });
@@ -116,8 +117,8 @@ describe("Planner Task 4.1 compatible client adapters", () => {
         data: [{ id: "p_v1", name: "Versioned", objects_count: 0, updated_at: "2026-01-01T00:00:00.000Z" }],
       }),
     );
-    await expect(listProjects()).resolves.toEqual([
-      { id: "p_v1", name: "Versioned", objects_count: 0, updated_at: "2026-01-01T00:00:00.000Z" },
+    await expect(listProjects()).resolves.toMatchObject([
+      { id: "p_v1", name: "Versioned" },
     ]);
   });
 

@@ -48,12 +48,12 @@ All code is TypeScript with named exports. Tests live under `tests/`. Commands r
     - Defer any approval-gated change: surface it for approval, do not apply
     - _Requirements: 2.1, 2.2, 2.3, 2.4_
 
-  - [ ]* 4.2 Write property test for catalog contract retention
+  - [ ] 4.2 Write property test for catalog contract retention
     - **Feature: ai-implementation-audit, Property 3: Catalog advisor response retains all contract fields**
     - For arbitrary query/context/non-empty product set, assert every built response (provider-success, catalog-unavailable, fallback) contains all seven contract fields with expected types
     - **Validates: Requirements 2.3**
 
-  - [ ]* 4.3 Write unit tests for unrelated-module preservation
+  - [ ] 4.3 Write unit tests for unrelated-module preservation
     - Assert remediated modules do not alter exports/behavior of modules unrelated to their findings
     - _Requirements: 2.4_
 
@@ -65,17 +65,17 @@ All code is TypeScript with named exports. Tests live under `tests/`. Commands r
     - Emit a span `ai.{route}` with `provider`, `fallback`, and retrieval-layer attributes; make recording best-effort so it never changes the HTTP outcome; expose provider labels only, never secrets or raw model ids
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.6_
 
-  - [ ]* 5.2 Write property test for metric recording
+  - [ ] 5.2 Write property test for metric recording
     - **Feature: ai-implementation-audit, Property 14: Requests record provider, fallback, and retrieval-layer metrics**
     - Using an inspectable registry, assert the provider counter increments once with the resolved label, the fallback counter increments exactly when fallback ran, and one retrieval-layer metric records per layer in `sources`
     - **Validates: Requirements 6.1, 6.2, 6.3**
 
-  - [ ]* 5.3 Write property test for span attributes
+  - [ ] 5.3 Write property test for span attributes
     - **Feature: ai-implementation-audit, Property 15: Requests emit a telemetry span with the required attributes**
     - Using an in-memory span exporter, assert every request emits a span carrying `provider`, `fallback`, and retrieval-layer attributes matching the outcome
     - **Validates: Requirements 6.5**
 
-  - [ ]* 5.4 Write unit tests for latency/error recording and best-effort safety
+  - [ ] 5.4 Write unit tests for latency/error recording and best-effort safety
     - Assert duration and error metrics record per request, and that an instrument error does not propagate to the caller
     - _Requirements: 6.4, 6.6_
 
@@ -97,32 +97,32 @@ All code is TypeScript with named exports. Tests live under `tests/`. Commands r
     - Ensure wrapping does not alter the response body or status of either route
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5_
 
-  - [ ]* 6.4 Write property test for planner response shape
+  - [ ] 6.4 Write property test for planner response shape
     - **Feature: ai-implementation-audit, Property 4: Planner response conforms to PlannerAdvisorResponse shape**
     - For any outcome (streaming terminal `result` or non-streaming body), assert `content` is a string and each present optional field matches its declared type
     - **Validates: Requirements 3.4, 3.5**
 
-  - [ ]* 6.5 Write property test for NDJSON streaming transport
+  - [ ] 6.5 Write property test for NDJSON streaming transport
     - **Feature: ai-implementation-audit, Property 5: Streaming responses are newline-delimited JSON**
     - For valid streaming requests, assert every non-empty line parses as JSON and the stream ends with a terminal `result` event
     - **Validates: Requirements 3.3**
 
-  - [ ]* 6.6 Write property test for heuristic fallback on no usable provider
+  - [ ] 6.6 Write property test for heuristic fallback on no usable provider
     - **Feature: ai-implementation-audit, Property 6: Missing usable provider yields heuristic fallback**
     - For any request where no provider (or empty chain) returns usable text, assert the route returns the Heuristic_Fallback with its marker set to `true`
     - **Validates: Requirements 3.6**
 
-  - [ ]* 6.7 Write property test for 400 rejection of invalid bodies
+  - [ ] 6.7 Write property test for 400 rejection of invalid bodies
     - **Feature: ai-implementation-audit, Property 7: Invalid request bodies are rejected with 400**
     - For any body failing `PlannerAdvisorRequestSchema`, assert an HTTP 400 validation-error envelope
     - **Validates: Requirements 3.7**
 
-  - [ ]* 6.8 Write property test for secret/model-id non-disclosure
+  - [ ] 6.8 Write property test for secret/model-id non-disclosure
     - **Feature: ai-implementation-audit, Property 10: Secrets and model identifiers never leave the server**
     - For any response (envelope, stream event, span attribute), assert serialized output contains no configured secret and no raw model id — only provider labels
     - **Validates: Requirements 4.4**
 
-  - [ ]* 6.9 Write integration tests for route wiring and withAuth behavior
+  - [ ] 6.9 Write integration tests for route wiring and withAuth behavior
     - Assert guest allow, 6th-request 429 for scope `planner-ai-advisor`, and missing-CSRF 403; assert path `/api/planner/ai-advisor` accepts POST
     - Assert observability side effects fire via an inspectable registry and in-memory span exporter without changing status/body
     - _Requirements: 3.1, 3.2, 6.6_
@@ -131,27 +131,27 @@ All code is TypeScript with named exports. Tests live under `tests/`. Commands r
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 8. Provider chain and retrieval audit verification (tests only; changes gated)
-  - [ ]* 8.1 Write property test for credential-gated provider subsequence
+  - [ ] 8.1 Write property test for credential-gated provider subsequence
     - **Feature: ai-implementation-audit, Property 8: Provider chain is a credential-gated subsequence of the canonical order**
     - For arbitrary credential configs, assert `resolveAdvisorModelChain` output is a subsequence of [gemini, openrouter, openrouter-backup, openai, bedrock] and a target is present iff its credentials are configured
     - **Validates: Requirements 4.1, 4.2**
 
-  - [ ]* 8.2 Write property test for failover to first usable target
+  - [ ] 8.2 Write property test for failover to first usable target
     - **Feature: ai-implementation-audit, Property 9: Failover advances to the first usable target**
     - For arbitrary provider-outcome sequences, assert the stack returns the first usable target's result, skipping earlier errored/unusable targets, else the fallback
     - **Validates: Requirements 4.3**
 
-  - [ ]* 8.3 Write property test for ranked, deduplicated, capped retrieval
+  - [ ] 8.3 Write property test for ranked, deduplicated, capped retrieval
     - **Feature: ai-implementation-audit, Property 11: Retrieval output is ordered, deduplicated, and capped**
     - For queries of length ≥ 2 and limit N, assert unique slugs, at most N results, and `sources` is a subsequence of [vector, lexical, catalog-order]
     - **Validates: Requirements 5.1, 5.2, 5.3**
 
-  - [ ]* 8.4 Write property test for fail-open retrieval
+  - [ ] 8.4 Write property test for fail-open retrieval
     - **Feature: ai-implementation-audit, Property 12: Retrieval fails open to catalog order**
     - For inputs where one or more recall layers throw, assert `retrieveCatalogProducts` does not throw and returns catalog-order products up to the limit
     - **Validates: Requirements 5.4**
 
-  - [ ]* 8.5 Write property test for short-query catalog order
+  - [ ] 8.5 Write property test for short-query catalog order
     - **Feature: ai-implementation-audit, Property 13: Short queries return catalog order**
     - For any trimmed query of length < 2, assert the return equals `products.slice(0, limit)` with `sources` equal to `["catalog-order"]`
     - **Validates: Requirements 5.5**

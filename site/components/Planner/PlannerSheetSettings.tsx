@@ -61,8 +61,9 @@ export const SheetSettings = ({ sheet, onChange, onUnderlayImage }: SheetSetting
               onChange({ ...sheet, width_mm: parseFloat(e.target.value) || 100 })
             }
             data-testid="sheet-w"
+            aria-describedby="planner-sheet-unit-hint"
           />
-          <div style={{ fontSize: 11, color: "var(--text-subtle)", alignSelf: "center" }}>
+          <div style={{ fontSize: 11, color: "var(--text-subtle)", alignSelf: "center" }} aria-hidden="true">
             mm
           </div>
         </div>
@@ -85,8 +86,9 @@ export const SheetSettings = ({ sheet, onChange, onUnderlayImage }: SheetSetting
               })
             }
             data-testid="sheet-h"
+            aria-describedby="planner-sheet-unit-hint"
           />
-          <div style={{ fontSize: 11, color: "var(--text-subtle)", alignSelf: "center" }}>
+          <div style={{ fontSize: 11, color: "var(--text-subtle)", alignSelf: "center" }} aria-hidden="true">
             mm
           </div>
         </div>
@@ -106,12 +108,17 @@ export const SheetSettings = ({ sheet, onChange, onUnderlayImage }: SheetSetting
               setGridSize(Math.max(10, parseFloat(e.target.value) || 100))
             }
             data-testid="grid-step"
+            aria-describedby="planner-sheet-unit-hint"
           />
-          <div style={{ fontSize: 11, color: "var(--text-subtle)", alignSelf: "center" }}>
+          <div style={{ fontSize: 11, color: "var(--text-subtle)", alignSelf: "center" }} aria-hidden="true">
             mm
           </div>
         </div>
       </div>
+      {/* Shared unit hint referenced by aria-describedby on numeric inputs above */}
+      <span id="planner-sheet-unit-hint" className="sr-only">
+        Value in millimetres
+      </span>
       {underlayEnabled ? (
         <div className="prop-row" data-testid="sheet-underlay">
           <span className="prop-row__label">Floor plan</span>

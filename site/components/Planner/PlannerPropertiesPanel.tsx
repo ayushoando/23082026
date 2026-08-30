@@ -30,7 +30,7 @@ const NumRow = ({ label, value, onChange, step = 1, disabled, suffix, testId }: 
         onChange={(e) => onChange(parseFloat(e.target.value))}
         disabled={disabled}
         data-testid={testId}
-        aria-label={label}
+        aria-label={testId ? undefined : label}
         aria-labelledby={testId ? `${testId}-label` : undefined}
       />
       {suffix ? <div style={{ fontSize: 11, color: "var(--text-subtle)", alignSelf: "center", minWidth: 20 }}>{suffix}</div> : null}
@@ -110,7 +110,6 @@ export const PropertiesPanel = ({ selected, scalePxPerMm, onChange }: Properties
             value={px.stroke || OO_DRAW.stroke}
             onChange={(e) => onChange({ stroke: e.target.value })}
             data-testid="prop-stroke"
-            aria-label="Stroke"
             aria-labelledby="prop-stroke-label"
           />
         </div>
@@ -124,7 +123,6 @@ export const PropertiesPanel = ({ selected, scalePxPerMm, onChange }: Properties
             value={px.fill || OO_DRAW.fill}
             onChange={(e) => onChange({ fill: e.target.value })}
             data-testid="prop-fill"
-            aria-label="Fill"
             aria-labelledby="prop-fill-label"
           />
         </div>

@@ -208,10 +208,13 @@ describe("planner: PlannerTopToolbar roving tabindex", () => {
   // We need to import and render the toolbar. Since it uses PhIcon which
   // needs the icon map, we do a lightweight render test.
   it("toolbar renders with role=toolbar and group structure", () => {
-    // Dynamically import to avoid module resolution issues in unit tests.
-    // The toolbar uses PhIcon which needs an import alias. We verify
-    // the structural contract through the ExportMenu pattern instead.
     // The roving tabindex behavior is tested through hook unit tests.
-    expect(true).toBe(true);
+    // CSS structural contract: toolbar must use role=toolbar in the component.
+    // Verified statically — the structural contract is enforced in the component source.
+    const PlannerTopToolbarSource = require("fs").readFileSync(
+      require("path").join(process.cwd(), "components/Planner/PlannerTopToolbar.tsx"),
+      "utf8",
+    );
+    expect(PlannerTopToolbarSource).toMatch(/role=.toolbar/);
   });
 });

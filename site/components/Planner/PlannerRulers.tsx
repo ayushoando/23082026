@@ -128,9 +128,9 @@ export const Rulers = ({ fabricRef, scale, zoom, cursorMm, offset }: RulersProps
 
   return (
     <>
-      <div className="ruler-corner" ref={cornerRef} />
-      <canvas className="ruler ruler--h" ref={topRef} />
-      <canvas className="ruler ruler--v" ref={leftRef} />
+      <div className="ruler-corner" ref={cornerRef} aria-hidden="true" />
+      <canvas className="ruler ruler--h" ref={topRef} aria-hidden="true" />
+      <canvas className="ruler ruler--v" ref={leftRef} aria-hidden="true" />
     </>
   );
 };

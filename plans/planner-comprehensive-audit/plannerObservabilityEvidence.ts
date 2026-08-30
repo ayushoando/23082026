@@ -11,7 +11,7 @@ export interface PlannerObservabilitySerialHandoff {
   readonly adapterImport: string;
   readonly integration: string;
   readonly requiredAssertions: readonly string[];
-  readonly status: "pending-serial-owner-integration";
+  readonly status: "pending-serial-owner-integration" | "acknowledged";
 }
 
 export const PLANNER_OBSERVABILITY_SERIAL_HANDOFFS: readonly PlannerObservabilitySerialHandoff[] = [
@@ -20,26 +20,26 @@ export const PLANNER_OBSERVABILITY_SERIAL_HANDOFFS: readonly PlannerObservabilit
     owner: "workstream-4",
     path: "site/server/Planner/plannerRouteAdapter.ts",
     adapterImport: "import { observePlannerApiResponseAtCallSite } from '@/lib/observability/planner/plannerObservability.server';",
-    integration: "Capture startedAtMs immediately inside the generated handler, await processPlannerRequest once, and return observePlannerApiResponseAtCallSite({ operation: descriptor.id, method: descriptor.method, authorizationProtected: descriptor.security.auth === 'member' || descriptor.security.owner === 'authenticated-owner-or-admin-item', startedAtMs, response }). Apply the same adapter to plannerMethodNotAllowed using its response correlation header and a bounded descriptor-derived operation supplied by each route owner.",
+    integration: "createPlannerHandler observes the single processPlannerRequest response with descriptor-derived method/authorization labels and preserves the exact Response; unsupported-method helper coverage remains source-defined and runtime-unverified.",
     requiredAssertions: [
       "The exact Response object and body are preserved.",
       "No request body, URL, owner/project id, exception text, or arbitrary header enters observability.",
       "Rate-limit and authorization result classes are derived only from the bounded response status.",
     ],
-    status: "pending-serial-owner-integration",
+    status: "acknowledged",
   },
   {
     id: "handoff:w2:planner-persistence-observability",
     owner: "workstream-2",
     path: "site/lib/Planner/plannerProjectOperations.ts",
     adapterImport: "import { runObservedPlannerPersistenceAtCallSite } from '@/lib/observability/planner/plannerObservability.server';",
-    integration: "At the selected-adapter boundary, pass the explicit bounded persistence operation, getPlannerPersistenceMode(env), and context.correlationId to runObservedPlannerPersistenceAtCallSite; place the existing single runContextualPlannerPersistenceOperation call inside execute without adding retries or a second adapter call.",
+    integration: "createPlannerProjectRepository wraps each list/load/create/save/delete operation at the selected adapter boundary with its bounded operation, adapter mode, and unchanged context correlation id; no retry or fallback adapter call is added.",
     requiredAssertions: [
       "Exactly one selected disk or Supabase adapter executes.",
       "The exact repository result or thrown value is preserved.",
       "The API-derived correlation id reaches the persistence event unchanged.",
     ],
-    status: "pending-serial-owner-integration",
+    status: "acknowledged",
   },
 ];
 
@@ -54,7 +54,7 @@ export const TASK_5_1_5_4_REPOSITORY_EVIDENCE: EvidenceRecord = {
     "site/lib/observability/planner/plannerObservability.server.ts",
     "tests/unit/planner/plannerObservability.property.test.ts",
   ],
-  limitation: "W2/W4 owner call sites remain serial handoffs. Static source does not prove runtime event emission, metric scraping across deployment instances, hosted telemetry, or a test result.",
+  limitation: "Static source establishes both serial call-site integrations and the response/result-preservation contract; runtime event emission, metric scraping across deployment instances, hosted telemetry, and a test result remain unverified.",
   artifact: { authorship: "authored", path: "plans/planner-comprehensive-audit/plannerObservabilityEvidence.ts" },
 };
 

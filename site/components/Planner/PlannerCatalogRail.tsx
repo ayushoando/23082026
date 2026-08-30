@@ -179,7 +179,7 @@ const CatalogRail = ({ onDragStart, onItemClick }: CatalogRailProps) => {
                 <div className="catalog-item__thumb">
                   {thumbSrc
                     ? <img src={thumbSrc} alt={item.name} loading="lazy" />
-                    : <PhIcon name="rect" size={32} />
+                    : <PhIcon name="rect" size={32} aria-hidden="true" />
                   }
                 </div>
                 <div className="catalog-item__name">{item.name}</div>
@@ -239,8 +239,8 @@ const CatalogRail = ({ onDragStart, onItemClick }: CatalogRailProps) => {
               <input id="planner-upload-file" type="file" accept="image/png,image/svg+xml" onChange={(e) => setUpload({ ...upload, file: e.target.files?.[0] || null })} data-testid="upload-file" aria-label="Furniture image file" />
             </div>
             <div className="dialog__actions">
-              <button className="btn btn--ghost" onClick={() => setUploadOpen(false)}>Cancel</button>
-              <button className="btn btn--primary" onClick={doUpload} data-testid="upload-confirm">Upload</button>
+              <button type="button" className="btn btn--ghost" onClick={() => setUploadOpen(false)}>Cancel</button>
+              <button type="button" className="btn btn--primary" onClick={doUpload} data-testid="upload-confirm">Upload</button>
             </div>
           </div>
         </div>
