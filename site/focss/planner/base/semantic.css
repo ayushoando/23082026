@@ -34,4 +34,17 @@
   --shadow-context-menu: 0 20px 40px -18px color-mix(in srgb, var(--color-ink-900) 22%, transparent),
     0 2px 4px color-mix(in srgb, var(--color-ink-900) 6%, transparent);
   --focus-ring: 0 0 0 3px color-mix(in srgb, var(--color-focus) 25%, transparent);
+
+  /* Planner visual-state semantics — state styling never consumes raw palette values. */
+  --state-info: var(--color-midnight-500);
+  --state-info-soft: color-mix(in srgb, var(--state-info) 10%, var(--surface-panel));
+  --state-success: var(--color-sustain-500);
+  --state-success-soft: color-mix(in srgb, var(--state-success) 12%, var(--surface-panel));
+  --state-warning: var(--color-bronze-600);
+  --state-warning-soft: color-mix(in srgb, var(--state-warning) 12%, var(--surface-panel));
+  --state-danger: var(--color-error);
+  --state-danger-soft: color-mix(in srgb, var(--state-danger) 10%, var(--surface-panel));
+  --state-danger-ring: 0 0 0 3px color-mix(in srgb, var(--state-danger) 25%, transparent);
+  --state-neutral: var(--text-muted);
+  --state-neutral-soft: var(--surface-muted);
 }

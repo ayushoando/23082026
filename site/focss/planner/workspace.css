@@ -424,12 +424,26 @@
 
 .ooplanner-root .pw-step-bar__btn:hover {
   background: var(--surface-muted);
+  color: var(--text-strong);
 }
 
-.ooplanner-root .pw-step-bar__btn[data-active="true"] {
+.ooplanner-root .pw-step-bar__btn:active,
+.ooplanner-root .pw-step-bar__btn[data-pressed] {
+  background: var(--color-primary-soft);
+}
+
+.ooplanner-root .pw-step-bar__btn:focus-visible,
+.ooplanner-root .pw-step-bar__btn[data-focus-visible] {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 1px;
+}
+
+.ooplanner-root .pw-step-bar__btn[data-active="true"],
+.ooplanner-root .pw-step-bar__btn[aria-current="step"] {
   color: var(--text-strong);
-  background: color-mix(in srgb, var(--color-primary) 9%, var(--surface-panel));
-  border-color: color-mix(in srgb, var(--color-primary) 38%, var(--border-soft));
+  background: var(--color-primary-soft);
+  border-color: var(--border-accent);
+  box-shadow: var(--shadow-segment-active);
 }
 
 .ooplanner-root .pw-step-bar__num {

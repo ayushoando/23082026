@@ -30,6 +30,16 @@ export const ContextMenu = ({ x, y, items, onClose }: ContextMenuProps) => {
     queueMicrotask(() => invokerRef.current?.focus());
   }, [onClose]);
 
+  const setMenuRef = useCallback((element: HTMLDivElement | null) => {
+    ref.current = element;
+    if (!element) return;
+    const rect = element.getBoundingClientRect();
+    setPos({
+      x: Math.max(8, Math.min(x, window.innerWidth - rect.width - 8)),
+      y: Math.max(8, Math.min(y, window.innerHeight - rect.height - 8)),
+    });
+  }, [x, y]);
+
   useEffect(() => {
     const firstEnabled = itemRefs.current.find((item) => item && !item.disabled);
     firstEnabled?.focus();
@@ -41,15 +51,6 @@ export const ContextMenu = ({ x, y, items, onClose }: ContextMenuProps) => {
     document.addEventListener("pointerdown", onPointerDown);
     return () => document.removeEventListener("pointerdown", onPointerDown);
   }, [close]);
-
-  useEffect(() => {
-    if (!ref.current) return;
-    const rect = ref.current.getBoundingClientRect();
-    setPos({
-      x: Math.max(8, Math.min(x, window.innerWidth - rect.width - 8)),
-      y: Math.max(8, Math.min(y, window.innerHeight - rect.height - 8)),
-    });
-  }, [x, y, items]);
 
   const moveFocus = (current: number, delta: number) => {
     if (itemRefs.current.length === 0) return;
@@ -66,11 +67,12 @@ export const ContextMenu = ({ x, y, items, onClose }: ContextMenuProps) => {
 
   return (
     <div
-      ref={ref}
+      ref={setMenuRef}
       className="context-menu"
       style={{ left: pos.x, top: pos.y }}
       data-testid="context-menu"
       role="menu"
+      tabIndex={-1}
       aria-label="Canvas actions"
       onKeyDown={(event) => {
         if (event.key === "Escape" || event.key === "Tab") {
@@ -113,11 +115,10 @@ export const ContextMenu = ({ x, y, items, onClose }: ContextMenuProps) => {
             }}
             disabled={item.disabled}
             data-testid={`ctx-${item.id}`}
-            aria-label={item.label}
-            role="menuitem"
+            aria-label="Context menu action"
           >
             {item.icon ? <PhIcon name={item.icon} size={18} /> : null}
-            <span className="context-menu__label">{item.label}</span>
+            {item.label ?? "Context action"}
             {item.shortcut ? <span className="context-menu__shortcut">{item.shortcut}</span> : null}
           </button>
         );

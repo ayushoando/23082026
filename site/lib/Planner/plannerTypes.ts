@@ -184,7 +184,7 @@ export type DockviewApiLike = {
 
 /** Context value the Planner shell hands to its dock panels. */
 export type PlannerBridge = {
-  fabricRef: FabricRef;
+  getCanvas: () => Canvas | null;
   scalePxPerMm: number;
   sheet: PlannerSheet;
   setSheet: (s: PlannerSheet) => void;

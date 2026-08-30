@@ -23,6 +23,7 @@ type DockOrigin = {
 };
 
 const originByGroupId = new Map<string, DockOrigin>();
+const suppressClickByGroupId = new Set<string>();
 
 type GroupLike = {
   id: string;
@@ -177,7 +178,7 @@ export function DockFloatHeaderActions(props: IDockviewHeaderActionsProps) {
           if (dragging) return;
           if (Math.hypot(ev.clientX - startX, ev.clientY - startY) < DRAG_THRESHOLD_PX) return;
           dragging = true;
-          suppressClickRef.current = true;
+          suppressClickByGroupId.add(props.group.id);
           window.removeEventListener("pointermove", onMove);
           window.removeEventListener("pointerup", onUp);
           popOutAt(ev.clientX, ev.clientY, true);
@@ -192,8 +193,7 @@ export function DockFloatHeaderActions(props: IDockviewHeaderActionsProps) {
       onClick={(event) => {
         event.preventDefault();
         event.stopPropagation();
-        if (suppressClickRef.current) {
-          suppressClickRef.current = false;
+        if (suppressClickByGroupId.delete(props.group.id)) {
           return;
         }
         if (floating) {

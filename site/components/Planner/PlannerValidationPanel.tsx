@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useSyncExternalStore } from "react";
+import { useMemo } from "react";
+import { PhIcon } from "@planner/components/ui/PlannerPhIcon";
 import { usePlanner } from "@planner/hooks/usePlannerDockBridge";
 import { buildValidationFloorFromCanvas } from "@planner/lib/buildValidationFloor";
 import { runFloorValidation } from "@planner/lib/validation/runValidation";
@@ -14,28 +15,28 @@ function severityClass(severity: ValidationIssue["severity"]): string {
 
 /** Review-step validation list from live Fabric scene. */
 export function ValidationPanel() {
-  const { fabricRef, scalePxPerMm, sheet, sceneVersion } = usePlanner();
+  const { getCanvas, scalePxPerMm, sheet, sceneVersion } = usePlanner();
 
-  const fabricCanvas = useSyncExternalStore(
-    () => () => {},
-    () => fabricRef.current,
-    () => null,
-  );
   const result = useMemo(() => {
+    const fabricCanvas = getCanvas();
     void sceneVersion;
     const floor = buildValidationFloorFromCanvas(fabricCanvas, scalePxPerMm, sheet);
     return runFloorValidation(floor);
-  }, [fabricCanvas, scalePxPerMm, sheet, sceneVersion]);
+  }, [getCanvas, scalePxPerMm, sheet, sceneVersion]);
 
   if (result.issues.length === 0) {
     return (
       <section
-        className="planner-validation"
+        className="planner-validation planner-validation--success"
+        data-state="success"
         data-testid="planner-validation-empty"
         aria-labelledby="planner-validation-title"
         aria-live="polite"
       >
         <h3 id="planner-validation-title" className="sr-only">Layout validation</h3>
+        <div className="planner-validation__status" aria-hidden="true">
+          <PhIcon name="checkCircle" size={18} weight="duotone" />
+        </div>
         <p className="ai-hint" role="status">No layout issues detected.</p>
       </section>
     );
@@ -43,13 +44,15 @@ export function ValidationPanel() {
 
   return (
     <section
-      className="planner-validation"
+      className="planner-validation planner-validation--error"
+      data-state="validation-error"
       data-testid="planner-validation"
       aria-labelledby="planner-validation-title"
       aria-live="polite"
     >
       <h3 id="planner-validation-title" className="sr-only">Layout validation</h3>
       <div className="planner-validation__summary" data-testid="planner-validation-summary" role="status" aria-live="polite" aria-atomic="true">
+        <PhIcon name="warning" size={18} weight="duotone" />
         <span data-testid="planner-validation-errors">{result.errors} errors</span>
         <span data-testid="planner-validation-warnings">{result.warnings} warnings</span>
       </div>

@@ -8,10 +8,18 @@ type UseFabricOptions = {
   canvasOptions?: ConstructorParameters<typeof fabric.Canvas>[1];
 };
 
+const canvasByOwner = new Map<symbol, fabric.Canvas>();
+
+export function getFabricCanvas(owner: symbol): fabric.Canvas | null {
+  return canvasByOwner.get(owner) ?? null;
+}
+
 export const useFabric = (options: UseFabricOptions = {}) => {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const canvasElRef = useRef<HTMLCanvasElement | null>(null);
   const fabricRef = useRef<fabric.Canvas | null>(null);
+  const [canvasOwner] = useState(() => Symbol("planner-fabric"));
+  const [canvas, setCanvas] = useState<fabric.Canvas | null>(null);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -32,6 +40,8 @@ export const useFabric = (options: UseFabricOptions = {}) => {
       ...options.canvasOptions,
     });
     fabricRef.current = c;
+    canvasByOwner.set(canvasOwner, c);
+    setCanvas(c);
     // E2E probe: gate helpers read object counts / selection via this hook.
     // Keep the surface small — getObjects + selection + viewport only.
     (
@@ -53,6 +63,8 @@ export const useFabric = (options: UseFabricOptions = {}) => {
       ro.disconnect();
       const cur = fabricRef.current;
       fabricRef.current = null;
+      canvasByOwner.delete(canvasOwner);
+      setCanvas(null);
       const win = window as unknown as {
         __plannerFabricView?: fabric.Canvas | null;
       };
@@ -69,5 +81,5 @@ export const useFabric = (options: UseFabricOptions = {}) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return { wrapperRef, canvasElRef, fabricRef, ready };
+  return { wrapperRef, canvasElRef, fabricRef, canvasOwner, canvas, ready };
 };

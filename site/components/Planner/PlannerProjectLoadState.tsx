@@ -1,5 +1,7 @@
 "use client";
-import { useEffect, useRef } from "react";
+
+import { PlannerStateSurface } from "@planner/components/ui/PlannerStateSurface";
+import type { PlannerVisualStateKind } from "@planner/components/ui/PlannerStateSurface";
 import type { PlannerLoadState } from "./plannerLoadState";
 
 /* ------------------------------------------------------------------ */
@@ -36,65 +38,59 @@ export function PlannerProjectLoadState({
   onBackToProjects,
   onSignIn,
 }: PlannerProjectLoadStateProps) {
-  const headingRef = useRef<HTMLHeadingElement>(null);
-
-  /* Move focus into every visible load/recovery state. This keeps retrying
-     accessible: the old button may unmount when the state changes to loading,
-     so focus must not be left on a detached element. */
-  useEffect(() => {
-    if (state.kind !== "draft" && state.kind !== "ready") {
-      headingRef.current?.focus();
-    }
-  }, [state.kind]);
-
-  /* Draft and Ready are not rendered by this component */
+  /* Draft and Ready are not rendered by this component. */
   if (state.kind === "draft" || state.kind === "ready") {
     return null;
   }
 
+  const surfaceProps = {
+    as: "div" as const,
+    className: "planner-load-state",
+    headingClassName: "planner-load-state__heading",
+    messageClassName: "planner-load-state__message",
+    actionsClassName: "planner-load-state__actions",
+    focusOnRender: true,
+  };
+
   /* Loading state */
   if (state.kind === "loading") {
     return (
-      <div className="planner-load-state" role="status" aria-busy="true">
-        <h2
-          className="planner-load-state__heading"
-          data-planner-state-heading
-          ref={headingRef}
-          tabIndex={-1}
-        >
-          Loading plan…
-        </h2>
-      </div>
+      <PlannerStateSurface
+        {...surfaceProps}
+        kind="loading"
+        heading="Loading plan…"
+        message=""
+        role="status"
+        busy
+      />
     );
   }
 
   /* Unauthorized (401) — not retryable. Offer sign-in, not "Try again". */
   if (state.kind === "unauthorized") {
     return (
-      <div className="planner-load-state" role="alert">
-        <h2
-          className="planner-load-state__heading"
-          data-planner-state-heading
-          ref={headingRef}
-          tabIndex={-1}
-        >
-          Sign in required
-        </h2>
-        <p className="planner-load-state__message">{state.message}</p>
-        <div className="planner-load-state__actions">
-          <button
-            type="button"
-            className="btn"
-            data-planner-primary-action
-            onClick={onSignIn}
-          >
-            Sign in
-          </button>
-          <button type="button" className="btn" onClick={onBackToProjects}>
-            Back to projects
-          </button>
-        </div>
-      </div>
+      <PlannerStateSurface
+        {...surfaceProps}
+        kind="unauthenticated"
+        heading="Sign in required"
+        message={state.message}
+        role="alert"
+        actions={
+          <>
+            <button
+              type="button"
+              className="btn"
+              data-planner-primary-action
+              onClick={onSignIn}
+            >
+              Sign in
+            </button>
+            <button type="button" className="btn" onClick={onBackToProjects}>
+              Back to projects
+            </button>
+          </>
+        }
+      />
     );
   }
 
@@ -102,17 +98,13 @@ export function PlannerProjectLoadState({
      already signed in and lacks access, so only recovery is the list. */
   if (state.kind === "forbidden") {
     return (
-      <div className="planner-load-state" role="alert">
-        <h2
-          className="planner-load-state__heading"
-          data-planner-state-heading
-          ref={headingRef}
-          tabIndex={-1}
-        >
-          Access denied
-        </h2>
-        <p className="planner-load-state__message">{state.message}</p>
-        <div className="planner-load-state__actions">
+      <PlannerStateSurface
+        {...surfaceProps}
+        kind="forbidden"
+        heading="Access denied"
+        message={state.message}
+        role="alert"
+        actions={
           <button
             type="button"
             className="btn"
@@ -121,8 +113,8 @@ export function PlannerProjectLoadState({
           >
             Back to projects
           </button>
-        </div>
-      </div>
+        }
+      />
     );
   }
 
@@ -132,63 +124,68 @@ export function PlannerProjectLoadState({
   if (state.kind === "offline" || state.kind === "recovery") {
     const offline = state.kind === "offline";
     return (
-      <div className="planner-load-state" role="alert">
-        <h2
-          className="planner-load-state__heading"
-          data-planner-state-heading
-          ref={headingRef}
-          tabIndex={-1}
-        >
-          {offline ? "You are offline" : "Connection restored"}
-        </h2>
-        <p className="planner-load-state__message">{state.message}</p>
-        <div className="planner-load-state__actions">
+      <PlannerStateSurface
+        {...surfaceProps}
+        kind={state.kind}
+        heading={offline ? "You are offline" : "Connection restored"}
+        message={state.message}
+        role="alert"
+        actions={
+          <>
+            <button
+              type="button"
+              className="btn"
+              data-planner-primary-action
+              onClick={onRetry}
+            >
+              {offline ? "Retry connection" : "Retry load"}
+            </button>
+            <button type="button" className="btn" onClick={onBackToProjects}>
+              Back to projects
+            </button>
+          </>
+        }
+      />
+    );
+  }
+
+  /* Retryable persisted-data outcomes: not-found, rate-limited, and
+     transient server errors. */
+  const kind: PlannerVisualStateKind =
+    state.kind === "not-found"
+      ? "not-found"
+      : state.status === 429
+        ? "rate-limited"
+        : "server-error";
+  const heading =
+    state.kind === "not-found"
+      ? "Plan not found"
+      : state.status === 429
+        ? "Please wait before retrying"
+        : "Temporarily unavailable";
+
+  return (
+    <PlannerStateSurface
+      {...surfaceProps}
+      kind={kind}
+      heading={heading}
+      message={state.message}
+      role="alert"
+      actions={
+        <>
           <button
             type="button"
             className="btn"
             data-planner-primary-action
             onClick={onRetry}
           >
-            {offline ? "Retry connection" : "Retry load"}
+            Try again
           </button>
           <button type="button" className="btn" onClick={onBackToProjects}>
             Back to projects
           </button>
-        </div>
-      </div>
-    );
-  }
-
-  /* Retryable persisted-data outcomes: not-found and transient server errors. */
-  const heading =
-    state.kind === "not-found" ? "Plan not found" : "Temporarily unavailable";
-
-  return (
-    <div className="planner-load-state" role="alert">
-      <h2
-        className="planner-load-state__heading"
-        data-planner-state-heading
-        ref={headingRef}
-        tabIndex={-1}
-      >
-        {heading}
-      </h2>
-
-      <p className="planner-load-state__message">{state.message}</p>
-
-      <div className="planner-load-state__actions">
-        <button
-          type="button"
-          className="btn"
-          data-planner-primary-action
-          onClick={onRetry}
-        >
-          Try again
-        </button>
-        <button type="button" className="btn" onClick={onBackToProjects}>
-          Back to projects
-        </button>
-      </div>
-    </div>
+        </>
+      }
+    />
   );
 }

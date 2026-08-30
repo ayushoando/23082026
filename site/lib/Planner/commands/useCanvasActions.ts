@@ -48,7 +48,10 @@ export interface CanvasActionCallbacks {
 }
 
 export interface CanvasActionDeps {
-  fabricCanvas: FabricCanvasLike | null;
+  /** Current Fabric canvas for existing static callers and tests. */
+  fabricCanvas?: FabricCanvasLike | null;
+  /** Resolve the current Fabric canvas when a command executes. */
+  getCanvas?: () => FabricCanvasLike | null;
   showToast: (message: string, variant?: string) => void;
   refreshLayers: () => void;
   bumpSceneVersion: () => void;
@@ -64,7 +67,9 @@ export interface CanvasActionDeps {
  */
 export function createCanvasActions(deps: CanvasActionDeps): CanvasActionCallbacks {
   const ctx: PlannerCommandContext = {
-    fabricCanvas: deps.fabricCanvas,
+    get fabricCanvas() {
+      return deps.getCanvas?.() ?? deps.fabricCanvas ?? null;
+    },
     showToast: deps.showToast,
     refreshLayers: deps.refreshLayers,
     bumpSceneVersion: deps.bumpSceneVersion,

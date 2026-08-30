@@ -18,6 +18,7 @@ import React, {
   useCallback,
   useRef,
   useMemo,
+  useReducer,
   useSyncExternalStore,
 } from "react";
 import { createPortal } from "react-dom";
@@ -32,7 +33,7 @@ import type {
   PlannerProject,
   PlannerSheet,
 } from "@planner/lib/plannerTypes";
-import { useFabric } from "@planner/hooks/usePlannerFabric";
+import { getFabricCanvas, useFabric } from "@planner/hooks/usePlannerFabric";
 import { useHistory } from "@planner/hooks/usePlannerHistory";
 import { useKeyboardShortcuts } from "@planner/hooks/usePlannerKeyboardShortcuts";
 import { useCanvasCore } from "@planner/hooks/usePlannerCanvasCore";
@@ -168,6 +169,27 @@ type PlannerReauthHandoff = {
 const PLANNER_REAUTH_HANDOFF_KEY = "ooplanner.reauth-handoff.v1";
 const PLANNER_REAUTH_HANDOFF_TTL_MS = 15 * 60 * 1000;
 
+type PlannerLoadStateAction =
+  | PlannerLoadState
+  | ((state: PlannerLoadState) => PlannerLoadState);
+
+function plannerLoadStateReducer(
+  state: PlannerLoadState,
+  action: PlannerLoadStateAction,
+): PlannerLoadState {
+  return typeof action === "function" ? action(state) : action;
+}
+
+function subscribeToTopbarSlot(onStoreChange: () => void): () => void {
+  const observer = new MutationObserver(onStoreChange);
+  observer.observe(document.body, { childList: true, subtree: true });
+  return () => observer.disconnect();
+}
+
+function getTopbarSlot(): HTMLElement | null {
+  return document.getElementById("topbar-actions-slot");
+}
+
 function plannerReturnPath(routeId: string | undefined): string {
   return routeId ? `/ooplanner/projects/${routeId}` : "/ooplanner";
 }
@@ -266,12 +288,7 @@ const Planner = ({
   const params = useParams();
   const routeId = typeof params.id === "string" ? params.id : params.id?.[0];
   const router = useRouter();
-  const { wrapperRef, canvasElRef, fabricRef, ready } = useFabric({ background: OO.canvasBg });
-  const fabricCanvas = useSyncExternalStore(
-    () => () => {},
-    () => fabricRef.current,
-    () => null,
-  );
+  const { wrapperRef, canvasElRef, fabricRef, canvasOwner, canvas, ready } = useFabric({ background: OO.canvasBg });
   const viewport = usePlannerViewport();
   const showToast = usePlannerUIStore((s) => s.showToast);
   const setAccessMode = usePlannerUIStore((s) => s.setAccessMode);
@@ -300,7 +317,7 @@ const Planner = ({
   useEffect(() => {
     projectIdRef.current = projectId;
   }, [projectId]);
-  const [loadState, setLoadState] = useState<PlannerLoadState>(DRAFT);
+  const [loadState, dispatchLoadState] = useReducer(plannerLoadStateReducer, DRAFT);
   const requestKeyRef = useRef<string>("");
   // A remote load may replace local work only after the user explicitly
   // approves the replacement (for example, via "Use latest saved").
@@ -325,7 +342,7 @@ const Planner = ({
     typeof navigator === "undefined" ? true : navigator.onLine,
   );
   const [saveIssue, setSaveIssue] = useState<
-    "conflict" | "offline" | "recovery" | "reauth" | "server" | "local-changed" | null
+    "conflict" | "offline" | "recovery" | "reauth" | "rate-limited" | "server" | "local-changed" | null
   >(null);
   const [conflictRevision, setConflictRevision] = useState<number | null>(null);
   const [conflictProjectId, setConflictProjectId] = useState<string | null>(null);
@@ -381,7 +398,7 @@ const Planner = ({
       // A pending load gets a network-specific state. When the browser emits
       // `online`, promote it to an explicit recovery state rather than
       // auto-replacing the current in-memory document.
-      setLoadState((state) => {
+      dispatchLoadState((state) => {
         if (
           !nextOnline &&
           (state.kind === "loading" ||
@@ -461,8 +478,8 @@ const Planner = ({
   /** Survives tool-effect rebinds — Measure is two mouse:downs across time. */
   const dimStartRef = useRef<Point2D | null>(null);
   const topbarSlot = useSyncExternalStore(
-    () => () => {},
-    () => document.getElementById("topbar-actions-slot"),
+    subscribeToTopbarSlot,
+    getTopbarSlot,
     () => null,
   );
   const { enabled: flag } = useRuntimeFeatureFlags();
@@ -606,7 +623,7 @@ const Planner = ({
 
   const planMetrics = useMemo(() => {
     void sceneVersion;
-    const objects = fabricCanvas?.getObjects() ?? [];
+    const objects = canvas?.getObjects() ?? [];
     let walls = 0;
     let furniture = 0;
     for (const obj of objects) {
@@ -615,7 +632,7 @@ const Planner = ({
       if (kind === "furniture") furniture += 1;
     }
     return { walls, furniture, boqReady: furniture > 0 };
-  }, [fabricCanvas, sceneVersion]);
+  }, [canvas, sceneVersion]);
 
   useEffect(() => {
     if (!autoFit || !ready) return;
@@ -1206,7 +1223,7 @@ const Planner = ({
   const canvasActions: CanvasActionCallbacks = useMemo(
     () =>
       createCanvasActions({
-        fabricCanvas: fabricCanvas as unknown as FabricCanvasLike | null,
+        getCanvas: () => getFabricCanvas(canvasOwner) as unknown as FabricCanvasLike | null,
         showToast,
         refreshLayers,
         bumpSceneVersion: () => setSceneVersion((v) => v + 1),
@@ -1214,9 +1231,8 @@ const Planner = ({
         // Synchronise React zoom state when commands change the viewport.
         onViewportChanged: core.setZoom,
       }),
-    // Refresh when canvas ready state changes — the fabricRef.current changes
-    // from null to a Canvas once useFabric initialises.
-    [fabricCanvas, showToast, refreshLayers, core.setZoom],
+    // Refresh when the hook's reactive canvas snapshot changes.
+    [canvasOwner, showToast, refreshLayers, core.setZoom],
   );
   const deleteSelected = canvasActions.deleteSelected;
   const duplicateSelected = canvasActions.duplicateSelected;
@@ -1621,7 +1637,7 @@ const Planner = ({
       setProjectRevision(saved.revision);
       setSheet(savedSheet);
       setLayers(savedLayers);
-      setLoadState(
+      dispatchLoadState(
         readyState(saved.id, {
           ...saved,
           sheet: savedSheet,
@@ -1668,6 +1684,9 @@ const Planner = ({
         } else if (error.isOffline) {
           setSaveIssue("offline");
           showToast("You are offline. Reconnect and retry save.", "error");
+        } else if (error.status === 429) {
+          setSaveIssue("rate-limited");
+          showToast("Too many save requests. Wait a moment and retry.", "error");
         } else {
           setSaveIssue("server");
           showToast(`Save failed: ${error.detail || error.message}`, "error");
@@ -1723,7 +1742,7 @@ const Planner = ({
       const handoffProjectId = reauthHandoff.projectId ?? "draft";
       const key = `${PLANNER_REAUTH_HANDOFF_KEY}:${reauthHandoff.createdAt}:${Date.now()}`;
       requestKeyRef.current = key;
-      setLoadState(loadingState(handoffProjectId, key));
+      dispatchLoadState(loadingState(handoffProjectId, key));
 
       const controller = new AbortController();
       let preservedCanvasJson: FabricCanvasJson | null = null;
@@ -1780,9 +1799,9 @@ const Planner = ({
               canvas_json: reauthHandoff.canvasJson,
               sheet: reauthHandoff.sheet,
             };
-            setLoadState(readyState(reauthHandoff.projectId, restoredProject));
+            dispatchLoadState(readyState(reauthHandoff.projectId, restoredProject));
           } else {
-            setLoadState(DRAFT);
+            dispatchLoadState(DRAFT);
           }
           showToast(
             reauthHandoff.hasUnsavedChanges
@@ -1810,7 +1829,7 @@ const Planner = ({
             }
           }
           if (controller.signal.aborted || requestKeyRef.current !== key) return;
-          setLoadState(
+          dispatchLoadState(
             transientErrorState(
               handoffProjectId,
               undefined,
@@ -1841,7 +1860,7 @@ const Planner = ({
     }
     if (!effectiveId) {
       allowRemoteReplacementRef.current = false;
-      queueMicrotask(() => setLoadState(DRAFT));
+      dispatchLoadState(DRAFT);
       return;
     }
 
@@ -1868,12 +1887,12 @@ const Planner = ({
     // --- Generate a unique request key for this load ---
     const key = `${effectiveId}:${Date.now()}`;
     requestKeyRef.current = key;
-    queueMicrotask(() => setLoadState(loadingState(effectiveId, key)));
+    dispatchLoadState(loadingState(effectiveId, key));
 
     // Do not spend a request while the browser already knows it is offline.
     // Keep the existing canvas mounted and expose a distinct reconnect state.
     if (!navigator.onLine) {
-      setLoadState(offlineState(effectiveId));
+      dispatchLoadState(offlineState(effectiveId));
       return;
     }
 
@@ -1917,7 +1936,7 @@ const Planner = ({
           setSaveIssue("conflict");
           setConflictRevision(proj.revision);
           setConflictProjectId(effectiveId!);
-          setLoadState(DRAFT);
+          dispatchLoadState(DRAFT);
           showToast(
             "Your newer local changes are preserved. Choose Use latest saved only if you want to replace them.",
             "error",
@@ -1963,7 +1982,7 @@ const Planner = ({
         setSaveIssue(null);
         saveIdempotencyRef.current = null;
         showToast(`Loaded "${proj.name}"`);
-        setLoadState(readyState(effectiveId!, restoredProject));
+        dispatchLoadState(readyState(effectiveId!, restoredProject));
         // Reset session expiry warning — successful load proves an active
         // authenticated session (Req 8.8).
         setSessionExpiring(false);
@@ -2010,12 +2029,12 @@ const Planner = ({
           // recorded (plans/ref/remediation-unified/audit.md D7). Never
           // retryable and never a reason to clear the fallback key: being
           // signed out says nothing about whether the project exists.
-          setLoadState(unauthorizedState(effectiveId!, e.detail || e.message));
+          dispatchLoadState(unauthorizedState(effectiveId!, e.detail || e.message));
         } else if (e instanceof PlannerApiError && e.isForbidden) {
           // 403 — also not retryable. Retain the fallback key.
-          setLoadState(forbiddenState(effectiveId!, e.detail || e.message));
+          dispatchLoadState(forbiddenState(effectiveId!, e.detail || e.message));
         } else if (e instanceof PlannerApiError && e.isNotFound) {
-          setLoadState(notFoundState(effectiveId!, e.detail || e.message));
+          dispatchLoadState(notFoundState(effectiveId!, e.detail || e.message));
           // Clear stale localStorage fallback only — never clear when the
           // id came from the route (to avoid wiping an unrelated saved project).
           if (isLocalStorageFallback) {
@@ -2023,21 +2042,21 @@ const Planner = ({
           }
         } else if (e instanceof PlannerApiError && e.isOffline) {
           console.info("[Planner] load project paused while offline:", { effectiveId, routeId });
-          setLoadState(offlineState(effectiveId!, e.detail || e.message));
+          dispatchLoadState(offlineState(effectiveId!, e.detail || e.message));
         } else if (e instanceof PlannerApiError && e.isTransient) {
           console.error("[Planner] load project failed (transient):", e.message, { effectiveId, routeId });
-          setLoadState(transientErrorState(effectiveId!, e.status, e.detail || e.message));
+          dispatchLoadState(transientErrorState(effectiveId!, e.status, e.detail || e.message));
         } else if (!navigator.onLine) {
           // Browser connectivity can change without the fetch wrapper
           // producing its typed OFFLINE error. Keep that case explicit too.
           const msg = e instanceof Error ? e.message : String(e);
           console.info("[Planner] load project interrupted while offline:", { effectiveId, routeId, msg });
-          setLoadState(offlineState(effectiveId!));
+          dispatchLoadState(offlineState(effectiveId!));
         } else {
           // Network or unexpected failure
           const msg = e instanceof Error ? e.message : String(e);
           console.error("[Planner] load project failed:", msg, { effectiveId, routeId });
-          setLoadState(transientErrorState(effectiveId!, undefined, "Could not load the plan. Please try again."));
+          dispatchLoadState(transientErrorState(effectiveId!, undefined, "Could not load the plan. Please try again."));
         }
       } finally {
         if (requestKeyRef.current === key) {
@@ -2102,7 +2121,7 @@ const Planner = ({
     firstPlacementRef.current = false;
     setPlannerStep("draw");
     setTool("wall");
-    setLoadState(DRAFT);
+    dispatchLoadState(DRAFT);
     try {
       localStorage.removeItem(PLANNER_LAST_PROJECT_KEY);
     } catch {
@@ -2115,7 +2134,7 @@ const Planner = ({
 
   const handleRetry = useCallback(() => {
     if (!online || !navigator.onLine) {
-      setLoadState((state) => {
+      dispatchLoadState((state) => {
         if (state.kind === "draft" || state.kind === "ready") return state;
         return offlineState(state.projectId);
       });
@@ -2311,8 +2330,8 @@ const Planner = ({
 
   const applyAiPlacements = useCallback(
     (ops: PlacementOp[], room: { widthMm: number; depthMm: number }) => {
-      const c = fabricRef.current;
-      if (!c) return;
+      const activeCanvas = getFabricCanvas(canvasOwner);
+      if (!activeCanvas) return;
       setSheet((s) => ({ ...s, width_mm: room.widthMm, height_mm: room.depthMm }));
       for (const op of ops) {
         const wPx = op.widthMm * SCALE_PX_PER_MM;
@@ -2336,12 +2355,12 @@ const Planner = ({
           depth_mm: op.depthMm,
           height_mm: 750,
         };
-        c.add(rect);
+        activeCanvas.add(rect);
       }
-      c.requestRenderAll();
+      activeCanvas.requestRenderAll();
       setSceneVersion((v) => v + 1);
     },
-    [fabricRef],
+    [canvasOwner],
   );
 
   /** Apply sketch-to-plan walls/rooms (mm → canvas px). */
@@ -2580,7 +2599,7 @@ const Planner = ({
   };
 
   const plannerCtx = {
-    fabricRef,
+    getCanvas: () => getFabricCanvas(canvasOwner),
     scalePxPerMm: SCALE_PX_PER_MM,
     sheet,
     setSheet: (nextSheet: PlannerSheet) => {
@@ -2608,7 +2627,9 @@ const Planner = ({
           ? "Connection restored. Retry save to preserve your canvas."
           : saveIssue === "reauth"
             ? "Your session expired. Sign in again without discarding this canvas."
-            : saveIssue === "local-changed"
+            : saveIssue === "rate-limited"
+              ? "Too many save requests. Wait a moment before retrying."
+              : saveIssue === "local-changed"
               ? "An earlier version was saved. Your newer local changes remain unsaved."
               : saveIssue === "server"
               ? "The plan could not be saved. Your local canvas is unchanged."
@@ -2630,13 +2651,36 @@ const Planner = ({
           saving ? "saving" : saveIssue ?? (hasUnsavedChanges ? "dirty" : "saved")
         }
       >
-        {saving
-          ? "Saving plan…"
-          : saveIssue
-            ? "Save needs attention"
-            : hasUnsavedChanges
-              ? "Unsaved changes"
-              : "All changes saved"}
+        <PhIcon
+          name={
+            saving
+              ? "spinner"
+              : saveIssue === "conflict"
+                ? "arrowsRefresh"
+                : saveIssue === "offline"
+                  ? "wifiOff"
+                  : saveIssue === "recovery"
+                    ? "wifi"
+                    : saveIssue === "rate-limited"
+                      ? "clock"
+                      : saveIssue
+                        ? "warning"
+                        : hasUnsavedChanges
+                          ? "pencilLine"
+                          : "checkCircle"
+          }
+          size={14}
+          weight={saving ? "bold" : "regular"}
+        />
+        <span>
+          {saving
+            ? "Saving plan…"
+            : saveIssue
+              ? "Save needs attention"
+              : hasUnsavedChanges
+                ? "Unsaved changes"
+                : "All changes saved"}
+        </span>
       </p>
       {saveIssueMessage ? (
         <section
@@ -2645,7 +2689,28 @@ const Planner = ({
           data-save-issue={saveIssue}
           data-testid="planner-save-state"
         >
-          <span>{saveIssueMessage}</span>
+          <span className="planner-save-state__message">
+            <PhIcon
+              name={
+                saveIssue === "conflict"
+                  ? "arrowsRefresh"
+                  : saveIssue === "offline"
+                    ? "wifiOff"
+                    : saveIssue === "recovery"
+                      ? "wifi"
+                      : saveIssue === "reauth"
+                        ? "lockOpen"
+                        : saveIssue === "rate-limited"
+                          ? "clock"
+                          : saveIssue === "local-changed"
+                            ? "arrowClockwise"
+                            : "warning"
+              }
+              size={18}
+              weight="duotone"
+            />
+            <span>{saveIssueMessage}</span>
+          </span>
           <div className="planner-save-state__actions">
             {saveIssue === "conflict" ? (
               <>
@@ -2693,7 +2758,8 @@ const Planner = ({
         >
           <strong id="planner-session-expiry-title" className="sr-only">Session expiry warning</strong>
           <span id="planner-session-expiry-message">
-            Your session may be expiring soon. Save your plan now or sign in again to keep your work.
+            <PhIcon name="warning" size={18} weight="duotone" />
+            <span>Your session may be expiring soon. Save your plan now or sign in again to keep your work.</span>
           </span>
           <div className="planner-save-state__actions">
             <button

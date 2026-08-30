@@ -17,6 +17,39 @@ export interface RegressionEvidenceLink {
 
 export const TASK_5_6_PERFORMANCE_HANDOFFS = [] as const;
 
+export const TASK_5_8_EXTENDED_PROFILE_EVIDENCE: EvidenceRecord = {
+  id: "evidence:task-5.8-extended-browser-device-profiles",
+  class: "repository",
+  summary: "The rendered Planner regression matrix assigns non-duplicative Firefox tablet/keyboard and WebKit mobile/touch profiles in addition to the required Chromium profiles.",
+  sourceRefs: [
+    "config/build/playwright.config.ts",
+    "tests/fixtures/planner/browserAuditMatrix.ts",
+    "tests/e2e/planner-comprehensive-audit-regression.spec.ts",
+    "tests/unit/planner/plannerBrowserAuditMatrix.test.ts",
+  ],
+  limitation: "These extra profiles are authored optional browser coverage only. They do not establish rendered behavior or block closure of required-profile findings.",
+  artifact: { authorship: "authored", path: "plans/planner-comprehensive-audit/workstream5Evidence.ts" },
+};
+
+export const TASK_5_8_PENDING_VALIDATION: ValidationRecord = {
+  id: "validation:task-5.8-extended-browser-device-profiles",
+  findingIds: ["finding:workstream-5-authored-deliverables"],
+  kind: "browser",
+  target: "browser",
+  repositoryRoot: ".",
+  requirementRefs: ["6.1", "7.1", "8.1", "16.1", "16.2", "16.3", "16.4", "16.5", "16.6", "16.7"],
+  verifies: "Optional Firefox tablet/keyboard and WebKit mobile/touch rendered profiles without duplicating required Chromium coverage.",
+  limitation: "The optional browser specifications are authored but unexecuted; no rendered, accessibility, or performance result is claimed.",
+  state: "pending",
+  exactCommand: "pnpm exec playwright test -c config/build/playwright.config.ts tests/e2e/planner-comprehensive-audit-regression.spec.ts --project=firefox-tablet --project=webkit-mobile",
+  pendingOwnerAction: null,
+  userAuthorization: "not-authorized",
+  hookPermission: "not-observed",
+  exitStatus: null,
+  outcome: null,
+  evidenceRefs: [],
+};
+
 export const TASK_5_6_PENDING_VALIDATION: ValidationRecord = {
   id: "validation:task-5.6-required-performance-measurements",
   findingIds: [],
@@ -61,6 +94,7 @@ export const WORKSTREAM_5_VALIDATION_INPUT: PlannerValidationFindingInput = {
     "plans/planner-comprehensive-audit/workstream5Evidence.ts",
     "plans/planner-comprehensive-audit/workstream5ValidationManifest.ts",
     "tests/fixtures/planner/browserAuditMatrix.ts",
+    "tests/unit/planner/plannerBrowserAuditMatrix.test.ts",
     "tests/unit/planner/plannerObservability.property.test.ts",
     "tests/unit/planner/plannerValidationEvidence.property.test.ts",
     "tests/integration/planner/plannerWorkstream5Regression.test.ts",
@@ -68,6 +102,7 @@ export const WORKSTREAM_5_VALIDATION_INPUT: PlannerValidationFindingInput = {
   ],
   categories: ["unit", "integration", "browser", "accessibility", "performance", "type"],
   targetedTestPaths: [
+    "tests/unit/planner/plannerBrowserAuditMatrix.test.ts",
     "tests/unit/planner/plannerObservability.property.test.ts",
     "tests/unit/planner/plannerValidationEvidence.property.test.ts",
     "tests/unit/planner/plannerPerformanceMeasurement.test.ts",

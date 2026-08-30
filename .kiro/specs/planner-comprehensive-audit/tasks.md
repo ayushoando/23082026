@@ -195,7 +195,7 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - Add correct names, roles, values, states, relationships, alternatives, field instructions/errors, live-region behavior, canvas-accessible command/list representations, and timeout recovery.
     - Correct every verified keyboard, focus-order, focus-obscuring, or target-size defect.
     - _Requirements: 2.1, 2.2, 8.1, 8.2, 8.4, 8.5, 8.8_
-  - [~] 3.15 Remediate Planner visual states through Planner-local FOCSS and Phosphor abstractions
+  - [ ] 3.15 Remediate Planner visual states through Planner-local FOCSS and Phosphor abstractions
     - Correct semantic tokens, contrast, spacing, typography, elevation, borders, radii, icon/label/status alignment, and disabled/selected/hover/focus/pressed/invalid/busy states.
     - Add a Planner-zone pattern only when no existing pattern fits; never import Studio FOCSS, use raw visual values where a semantic token exists, or introduce inline/Lucide icons.
     - _Requirements: 2.2, 8.3, 9.1-9.4, 9.6, 9.7_

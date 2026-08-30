@@ -10,7 +10,7 @@ type PanelEmptyStateProps = {
 /** Centered dock-panel empty state — shared by Properties, Layers, etc. */
 export function PanelEmptyState({ icon, title, body, testId }: PanelEmptyStateProps) {
   return (
-    <div className="panel-empty-state" data-testid={testId}>
+    <div className="panel-empty-state" data-state="empty" data-testid={testId}>
       <div className="panel-empty-state__icon" aria-hidden="true">
         <PhIcon name={icon} size={18} />
       </div>

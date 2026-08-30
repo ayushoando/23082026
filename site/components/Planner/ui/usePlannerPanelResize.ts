@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState, useSyncExternalStore } from "react";
+import { useCallback, useRef, useState, useSyncExternalStore, type SetStateAction } from "react";
 
 export type PanelResizeEdge = "start" | "end";
 
@@ -32,25 +32,42 @@ export function usePanelResize({
   maxWidth = 560,
   edge,
 }: UsePanelResizeOptions) {
-  // Always start with defaultWidth so SSR HTML matches the client's first paint.
-  const [width, setWidth] = useState(defaultWidth);
-  const [ready, setReady] = useState(false);
   const [active, setActive] = useState(false);
   const dragRef = useRef<{ startX: number; startW: number } | null>(null);
-
-  useEffect(() => {
-    setWidth(readStoredWidth(storageKey, defaultWidth, minWidth, maxWidth));
-    setReady(true);
-  }, [storageKey, defaultWidth, minWidth, maxWidth]);
-
-  useEffect(() => {
-    if (!ready) return;
-    try {
-      localStorage.setItem(storageKey, String(width));
-    } catch {
-      /* noop */
-    }
-  }, [storageKey, width, ready]);
+  const storageEventName = `planner-panel-resize:${storageKey}`;
+  const subscribe = useCallback(
+    (onStoreChange: () => void) => {
+      window.addEventListener(storageEventName, onStoreChange);
+      window.addEventListener("storage", onStoreChange);
+      return () => {
+        window.removeEventListener(storageEventName, onStoreChange);
+        window.removeEventListener("storage", onStoreChange);
+      };
+    },
+    [storageEventName],
+  );
+  const getSnapshot = useCallback(
+    () => readStoredWidth(storageKey, defaultWidth, minWidth, maxWidth),
+    [storageKey, defaultWidth, minWidth, maxWidth],
+  );
+  const getServerSnapshot = useCallback(() => defaultWidth, [defaultWidth]);
+  const width = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const setWidth = useCallback(
+    (nextWidth: SetStateAction<number>) => {
+      const currentWidth = readStoredWidth(storageKey, defaultWidth, minWidth, maxWidth);
+      const resolvedWidth = typeof nextWidth === "function"
+        ? nextWidth(currentWidth)
+        : nextWidth;
+      const boundedWidth = Math.min(maxWidth, Math.max(minWidth, Math.round(resolvedWidth)));
+      try {
+        localStorage.setItem(storageKey, String(boundedWidth));
+      } catch {
+        /* noop */
+      }
+      window.dispatchEvent(new Event(storageEventName));
+    },
+    [defaultWidth, maxWidth, minWidth, storageEventName, storageKey],
+  );
 
   const onPointerDown = useCallback(
     (event: React.PointerEvent<HTMLDivElement>) => {
@@ -86,14 +103,14 @@ export function usePanelResize({
       window.addEventListener("pointerup", onUp);
       window.addEventListener("pointercancel", onUp);
     },
-    [edge, maxWidth, minWidth, width],
+    [edge, maxWidth, minWidth, setWidth, width],
   );
 
   const resizeBy = useCallback(
     (delta: number) => {
       setWidth((current) => Math.min(maxWidth, Math.max(minWidth, current + delta)));
     },
-    [maxWidth, minWidth],
+    [maxWidth, minWidth, setWidth],
   );
 
   const onKeyDown = useCallback(
@@ -114,7 +131,7 @@ export function usePanelResize({
         setWidth(maxWidth);
       }
     },
-    [edge, maxWidth, minWidth, resizeBy],
+    [edge, maxWidth, minWidth, resizeBy, setWidth],
   );
 
   return {

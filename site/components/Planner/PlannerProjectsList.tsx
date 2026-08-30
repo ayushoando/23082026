@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { trackPlannerProjectStart } from "@/lib/analytics/conversionContract";
 import { buildAccessRedirect } from "@/lib/auth/plannerRedirect";
 import { PhIcon } from "@planner/components/ui/PlannerPhIcon";
+import { PlannerStateSurface, type PlannerVisualStateKind } from "@planner/components/ui/PlannerStateSurface";
 import { OoButton } from "@planner/components/ui/PlannerOoButton";
 import {
   classifyPlannerProjectsListFailure,
@@ -151,50 +152,63 @@ export function ProjectsList() {
 
   if (loading) {
     content = (
-      <section
+      <PlannerStateSurface
+        kind="loading"
         className="planner-load-state"
+        headingClassName="planner-load-state__heading"
+        messageClassName="planner-load-state__message"
+        heading="Loading saved plans…"
+        message="Checking the plans available to your account."
         role="status"
-        aria-busy="true"
-        data-testid="projects-list-loading"
-      >
-        <h2 className="planner-load-state__heading">Loading saved plans…</h2>
-        <p className="planner-load-state__message">
-          Checking the plans available to your account.
-        </p>
-      </section>
+        busy
+        testId="projects-list-loading"
+      />
     );
   } else if (failure) {
     const needsSignIn = failure.kind === "unauthenticated";
+    const failureState: PlannerVisualStateKind =
+      failure.kind === "unauthenticated"
+        ? "unauthenticated"
+        : failure.kind === "forbidden"
+          ? "forbidden"
+          : failure.kind === "rate-limited"
+            ? "rate-limited"
+            : "server-error";
     content = (
-      <section
+      <PlannerStateSurface
+        kind={failureState}
         className="planner-load-state"
+        headingClassName="planner-load-state__heading"
+        messageClassName="planner-load-state__message"
+        actionsClassName="planner-load-state__actions"
+        heading={failure.heading}
+        message={failure.message}
         role="alert"
-        data-error-kind={failure.kind}
-        data-testid="projects-list-error"
-      >
-        <h2 className="planner-load-state__heading">{failure.heading}</h2>
-        <p className="planner-load-state__message">{failure.message}</p>
-        <div className="planner-load-state__actions">
-          {needsSignIn ? (
-            <Link
-              className="btn btn--primary"
-              href={buildAccessRedirect("/ooplanner/projects")}
-            >
-              Sign in
+        dataErrorKind={failure.kind}
+        testId="projects-list-error"
+        actions={
+          <>
+            {needsSignIn ? (
+              <Link
+                className="btn btn--primary"
+                href={buildAccessRedirect("/ooplanner/projects")}
+              >
+                Sign in
+              </Link>
+            ) : null}
+            {failure.retryable ? (
+              <OoButton onPress={handleRetry}>Try again</OoButton>
+            ) : null}
+            <Link className="btn" href="/ooplanner">
+              Open guest workspace
             </Link>
-          ) : null}
-          {failure.retryable ? (
-            <OoButton onPress={handleRetry}>Try again</OoButton>
-          ) : null}
-          <Link className="btn" href="/ooplanner">
-            Open guest workspace
-          </Link>
-        </div>
-      </section>
+          </>
+        }
+      />
     );
   } else if (projects.length === 0) {
     content = (
-      <section className="panel-empty-state" data-testid="projects-empty-state">
+      <section className="panel-empty-state" data-state="empty" data-testid="projects-empty-state">
         <div className="panel-empty-state__icon" aria-hidden="true">
           <PhIcon name="group" size={24} />
         </div>
@@ -213,6 +227,7 @@ export function ProjectsList() {
           <OoButton
             variant="ghost"
             isDisabled={creatingSample}
+            aria-busy={creatingSample}
             onPress={() => {
               void startFromSample();
             }}

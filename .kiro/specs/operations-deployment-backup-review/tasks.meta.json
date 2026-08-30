@@ -1,0 +1,41 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Create typed review models, source references, evidence states, surface enums, priorities, gaps, release decisions, restore drills, and protected-operation records under `scripts/operations-review/`.": [
+      {
+        "executionId": "c67d380d-0bdf-44ff-ad03-2491a855421c",
+        "chatSessionId": "sess_c05a5f2b-6b3b-4846-97af-2ced17a95edb",
+        "timestamp": 1788087375526
+      },
+      {
+        "executionId": "f342f231-bc4d-4d08-98c4-17185acadf50",
+        "chatSessionId": "sess_c05a5f2b-6b3b-4846-97af-2ced17a95edb",
+        "timestamp": 1788089022723
+      }
+    ],
+    "1.2 Implement `AuthorizationGuard` classification so protected actions produce exactly one non-executable pending record with target, explicit-authorization requirement, expected evidence, and `not-run` or `pending-authorization` status.": [
+      {
+        "executionId": "f342f231-bc4d-4d08-98c4-17185acadf50",
+        "chatSessionId": "sess_c05a5f2b-6b3b-4846-97af-2ced17a95edb",
+        "timestamp": 1788089031143
+      },
+      {
+        "executionId": "f342f231-bc4d-4d08-98c4-17185acadf50",
+        "chatSessionId": "sess_c05a5f2b-6b3b-4846-97af-2ced17a95edb",
+        "timestamp": 1788089190620
+      }
+    ],
+    "1.3 Write property test for repository-bound evidence admission.": [
+      {
+        "executionId": "f342f231-bc4d-4d08-98c4-17185acadf50",
+        "chatSessionId": "sess_c05a5f2b-6b3b-4846-97af-2ced17a95edb",
+        "timestamp": 1788089031530
+      },
+      {
+        "executionId": "f342f231-bc4d-4d08-98c4-17185acadf50",
+        "chatSessionId": "sess_c05a5f2b-6b3b-4846-97af-2ced17a95edb",
+        "timestamp": 1788089190849
+      }
+    ]
+  }
+}

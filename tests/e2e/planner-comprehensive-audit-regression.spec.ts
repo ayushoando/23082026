@@ -20,7 +20,11 @@ async function expectWorkspaceContext(page: import("@playwright/test").Page): Pr
 
 test.describe("Planner comprehensive rendered regression matrix", () => {
   for (const profile of PLANNER_BROWSER_AUDIT_PROFILES) {
-    test(`${profile.id} preserves workspace through resize and orientation changes`, async ({ page }) => {
+    test(`${profile.id} preserves workspace through resize and orientation changes`, async ({ page }, testInfo) => {
+      test.skip(
+        testInfo.project.name !== profile.project,
+        `Profile ${profile.id} is assigned to ${profile.project}.`,
+      );
       await page.setViewportSize(profile.viewport);
       await enterGuestPlannerWorkspace(page, { projectName: `W5 ${profile.id}` });
       await waitForPlannerCanvas(page, { timeoutMs: 60_000 });

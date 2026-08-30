@@ -34,7 +34,13 @@ export interface PlannerStateSurfaceProps {
   headingId?: string;
   headingLevel?: 1 | 2 | 3;
   className?: string;
+  headingClassName?: string;
+  messageClassName?: string;
+  detailClassName?: string;
+  actionsClassName?: string;
+  dataErrorKind?: string;
   testId?: string;
+  as?: "section" | "div";
 }
 
 const STATE_ICONS: Record<PlannerVisualStateKind, PhIconName> = {
@@ -43,11 +49,11 @@ const STATE_ICONS: Record<PlannerVisualStateKind, PhIconName> = {
   empty: "folder",
   "validation-error": "warning",
   "server-error": "x",
-  unauthenticated: "lockOpen",
+  unauthenticated: "unlock",
   forbidden: "lock",
   "rate-limited": "clock",
   conflict: "arrowsRefresh",
-  stale: "arrowClockwise",
+  stale: "redo",
   offline: "wifiOff",
   recovery: "wifi",
   success: "checkCircle",
@@ -70,6 +76,9 @@ const ALERT_STATES = new Set<PlannerVisualStateKind>([
  * Planner-local visual state primitive. It owns only presentation and
  * accessibility metadata; callers continue to own state transitions and
  * provide the existing links/buttons as actions.
+ *
+ * The optional class aliases keep established Planner selectors stable while
+ * the state modifier and Phosphor icon provide the distinct visual treatment.
  */
 export function PlannerStateSurface({
   kind,
@@ -86,7 +95,13 @@ export function PlannerStateSurface({
   headingId,
   headingLevel = 2,
   className,
+  headingClassName,
+  messageClassName,
+  detailClassName,
+  actionsClassName,
+  dataErrorKind,
   testId,
+  as = "section",
 }: PlannerStateSurfaceProps) {
   const generatedHeadingId = useId();
   const internalHeadingRef = useRef<HTMLHeadingElement>(null);
@@ -94,14 +109,14 @@ export function PlannerStateSurface({
   const resolvedRole = role ?? (ALERT_STATES.has(kind) ? "alert" : "status");
   const resolvedLive = live ?? (resolvedRole === "alert" ? "assertive" : "polite");
   const resolvedHeadingId = headingId ?? `planner-state-heading-${generatedHeadingId.replace(/:/g, "")}`;
-  const headingClassName = "planner-state-surface__heading";
   const headingProps = {
-    className: headingClassName,
+    className: ["planner-state-surface__heading", headingClassName].filter(Boolean).join(" "),
     id: resolvedHeadingId,
     ref: resolvedHeadingRef,
     tabIndex: focusOnRender ? -1 : undefined,
     "data-planner-state-heading": true,
   } as const;
+  const Surface = as;
 
   useEffect(() => {
     if (focusOnRender) resolvedHeadingRef.current?.focus();
@@ -117,7 +132,7 @@ export function PlannerStateSurface({
     );
 
   return (
-    <section
+    <Surface
       className={[
         "planner-state-surface",
         `planner-state-surface--${kind}`,
@@ -127,6 +142,7 @@ export function PlannerStateSurface({
         .join(" ")}
       data-state={kind}
       data-busy={busy ? "true" : "false"}
+      data-error-kind={dataErrorKind}
       data-testid={testId}
       role={resolvedRole}
       aria-live={resolvedLive}
@@ -138,10 +154,18 @@ export function PlannerStateSurface({
       </div>
       <div className="planner-state-surface__content">
         {headingNode}
-        <p className="planner-state-surface__message">{message}</p>
-        {detail ? <div className="planner-state-surface__detail">{detail}</div> : null}
+        <p className={["planner-state-surface__message", messageClassName].filter(Boolean).join(" ")}>{message}</p>
+        {detail ? (
+          <div className={["planner-state-surface__detail", detailClassName].filter(Boolean).join(" ")}>
+            {detail}
+          </div>
+        ) : null}
       </div>
-      {actions ? <div className="planner-state-surface__actions">{actions}</div> : null}
-    </section>
+      {actions ? (
+        <div className={["planner-state-surface__actions", actionsClassName].filter(Boolean).join(" ")}>
+          {actions}
+        </div>
+      ) : null}
+    </Surface>
   );
 }

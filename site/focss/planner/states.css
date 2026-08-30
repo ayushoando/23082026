@@ -1,0 +1,499 @@
+/* Planner visual-state surfaces — semantic tokens and Planner Phosphor slots. */
+
+.ooplanner-root .planner-state-surface {
+  --planner-state-accent: var(--state-info);
+  --planner-state-surface: var(--state-info-soft);
+  --planner-state-border: color-mix(in srgb, var(--planner-state-accent) 28%, var(--border-soft));
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--planner-state-border);
+  border-radius: var(--radius-md);
+  background: var(--planner-state-surface);
+  color: var(--text-body);
+  box-shadow: var(--shadow-soft);
+}
+
+.ooplanner-root .planner-state-surface--empty,
+.ooplanner-root .planner-state-surface--not-found {
+  --planner-state-accent: var(--state-neutral);
+  --planner-state-surface: var(--state-neutral-soft);
+}
+
+.ooplanner-root .planner-state-surface--loading,
+.ooplanner-root .planner-state-surface--unauthenticated {
+  --planner-state-accent: var(--state-info);
+  --planner-state-surface: var(--state-info-soft);
+}
+
+.ooplanner-root .planner-state-surface--validation-error,
+.ooplanner-root .planner-state-surface--server-error,
+.ooplanner-root .planner-state-surface--offline {
+  --planner-state-accent: var(--state-danger);
+  --planner-state-surface: var(--state-danger-soft);
+}
+
+.ooplanner-root .planner-state-surface--forbidden,
+.ooplanner-root .planner-state-surface--rate-limited,
+.ooplanner-root .planner-state-surface--conflict,
+.ooplanner-root .planner-state-surface--stale {
+  --planner-state-accent: var(--state-warning);
+  --planner-state-surface: var(--state-warning-soft);
+}
+
+.ooplanner-root .planner-state-surface--recovery,
+.ooplanner-root .planner-state-surface--success {
+  --planner-state-accent: var(--state-success);
+  --planner-state-surface: var(--state-success-soft);
+}
+
+.ooplanner-root .planner-state-surface__icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  border: 1px solid var(--planner-state-border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-panel);
+  color: var(--planner-state-accent);
+}
+
+.ooplanner-root .planner-state-surface[data-busy="true"] {
+  cursor: progress;
+}
+
+.ooplanner-root .planner-state-surface[data-busy="true"] .planner-state-surface__icon {
+  background: var(--planner-state-accent);
+  color: var(--text-inverse);
+  box-shadow: var(--shadow-segment-active);
+}
+
+.ooplanner-root .planner-state-surface__content {
+  min-width: 0;
+}
+
+.ooplanner-root .planner-state-surface__heading {
+  margin: 0;
+  color: var(--text-strong);
+  font-size: 15px;
+  font-weight: 650;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  outline: none;
+}
+
+.ooplanner-root .planner-state-surface__heading:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+  border-radius: var(--radius-xs);
+}
+
+.ooplanner-root .planner-state-surface__message,
+.ooplanner-root .planner-state-surface__detail {
+  margin: 5px 0 0;
+  max-width: 52rem;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.ooplanner-root .planner-state-surface__message:empty {
+  display: none;
+}
+
+.ooplanner-root .planner-state-surface__detail {
+  color: var(--text-subtle);
+  font-size: 12px;
+}
+
+.ooplanner-root .planner-state-surface__actions {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.ooplanner-root .planner-state-surface__actions .btn {
+  min-height: 40px;
+}
+
+/* Project load/access surfaces retain their established selectors and layout. */
+.ooplanner-root .planner-load-state.planner-state-surface {
+  min-height: 200px;
+  flex: 1;
+  align-content: center;
+  justify-items: stretch;
+}
+
+.ooplanner-root .planner-load-state.planner-state-surface .planner-load-state__actions {
+  justify-content: center;
+}
+
+/* Save feedback: the data attributes are the stable state contract for the editor. */
+.ooplanner-root .planner-save-indicator {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-end;
+  gap: 6px;
+  max-width: min(100%, 22rem);
+  margin: 0 12px 4px auto;
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+  color: var(--state-neutral);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.ooplanner-root .planner-save-indicator[data-save-state="saving"] {
+  color: var(--state-info);
+  background: var(--state-info-soft);
+}
+
+.ooplanner-root .planner-save-indicator[data-save-state="saved"] {
+  color: var(--state-success);
+  background: var(--state-success-soft);
+}
+
+.ooplanner-root .planner-save-indicator[data-save-state="dirty"],
+.ooplanner-root .planner-save-indicator[data-save-state="local-changed"] {
+  color: var(--state-warning);
+  background: var(--state-warning-soft);
+}
+
+.ooplanner-root .planner-save-indicator[data-save-state="offline"],
+.ooplanner-root .planner-save-indicator[data-save-state="server"],
+.ooplanner-root .planner-save-indicator[data-save-state="conflict"],
+.ooplanner-root .planner-save-indicator[data-save-state="reauth"],
+.ooplanner-root .planner-save-indicator[data-save-state="rate-limited"] {
+  color: var(--state-danger);
+  background: var(--state-danger-soft);
+}
+
+.ooplanner-root .planner-save-state {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 14px;
+  margin: 0 12px 8px;
+  padding: 9px 12px;
+  border: 1px solid var(--state-danger);
+  border-radius: var(--radius-sm);
+  background: var(--state-danger-soft);
+  color: var(--text-body);
+  font-size: 12px;
+  line-height: 1.45;
+  box-shadow: var(--shadow-soft);
+}
+
+.ooplanner-root .planner-save-state[data-save-issue="conflict"],
+.ooplanner-root .planner-save-state[data-save-issue="stale"],
+.ooplanner-root .planner-save-state[data-save-issue="local-changed"],
+.ooplanner-root .planner-save-state[data-save-issue="rate-limited"],
+.ooplanner-root .planner-save-state[data-save-issue="session-expiring"] {
+  border-color: var(--state-warning);
+  background: var(--state-warning-soft);
+}
+
+.ooplanner-root .planner-save-state[data-save-issue="recovery"] {
+  border-color: var(--state-success);
+  background: var(--state-success-soft);
+}
+
+.ooplanner-root .planner-save-state[data-save-issue="reauth"] {
+  border-color: var(--state-info);
+  background: var(--state-info-soft);
+}
+
+.ooplanner-root .planner-save-state__message {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+}
+
+.ooplanner-root .planner-save-state__message > svg {
+  flex: 0 0 auto;
+  margin-top: 1px;
+  color: currentColor;
+}
+
+.ooplanner-root .planner-save-state__message > span {
+  overflow-wrap: anywhere;
+}
+
+.ooplanner-root .planner-save-state__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-left: auto;
+}
+
+/* Validation and field-level invalid states. */
+.ooplanner-root .planner-validation {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  background: var(--surface-panel);
+  color: var(--text-body);
+}
+
+.ooplanner-root .planner-validation[data-state="success"] {
+  border-color: var(--state-success);
+  background: var(--state-success-soft);
+}
+
+.ooplanner-root .planner-validation[data-state="validation-error"] {
+  border-color: var(--state-danger);
+  background: var(--state-danger-soft);
+}
+
+.ooplanner-root .planner-validation__status {
+  display: grid;
+  place-items: center;
+  align-self: flex-start;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  color: var(--state-success);
+  background: var(--surface-panel);
+}
+
+.ooplanner-root .planner-validation__summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  color: var(--state-danger);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.ooplanner-root .planner-validation__summary > svg {
+  flex: 0 0 auto;
+}
+
+.ooplanner-root .planner-validation__list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ooplanner-root .planner-validation__item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 2px 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  background: var(--surface-soft);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.ooplanner-root .planner-validation__item strong {
+  color: var(--state-warning);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.ooplanner-root .planner-validation__item > .ai-hint {
+  grid-column: 2;
+}
+
+.ooplanner-root .planner-validation__item--error {
+  border-color: color-mix(in srgb, var(--state-danger) 35%, var(--border-soft));
+}
+
+.ooplanner-root .planner-validation__item--error strong {
+  color: var(--state-danger);
+}
+
+.ooplanner-root .planner-validation__item--warning strong {
+  color: var(--state-warning);
+}
+
+.ooplanner-root .planner-validation__item--advisory strong {
+  color: var(--state-info);
+}
+
+.ooplanner-root .planner-field-error {
+  display: block;
+  margin: 4px 0 0;
+  color: var(--state-danger);
+  font-size: 11px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.ooplanner-root .input[aria-invalid="true"],
+.ooplanner-root .select[aria-invalid="true"] {
+  border-color: var(--state-danger);
+  background: var(--state-danger-soft);
+}
+
+.ooplanner-root .input[aria-invalid="true"]:focus-visible,
+.ooplanner-root .select[aria-invalid="true"]:focus-visible {
+  border-color: var(--state-danger);
+  box-shadow: var(--state-danger-ring);
+}
+
+/* Catalog and panel empty states use the same semantic state vocabulary. */
+.ooplanner-root .empty-state {
+  display: grid;
+  place-items: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 32px 16px;
+  color: var(--state-neutral);
+  font-size: 13px;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.ooplanner-root .empty-state[data-state="loading"] {
+  color: var(--state-info);
+}
+
+.ooplanner-root .empty-state[data-state="empty"] {
+  color: var(--state-neutral);
+}
+
+.ooplanner-root .empty-state > svg {
+  color: currentColor;
+}
+
+.ooplanner-root .catalog-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 24px 16px;
+  border: 1px solid var(--state-danger);
+  border-radius: var(--radius-sm);
+  background: var(--state-danger-soft);
+  color: var(--text-body);
+  font-size: 12px;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.ooplanner-root .catalog-state__icon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  color: var(--state-danger);
+  background: var(--surface-panel);
+}
+
+.ooplanner-root .catalog-state p {
+  margin: 0;
+  max-width: 24rem;
+}
+
+.ooplanner-root .panel-empty-state[data-state="empty"] .panel-empty-state__icon {
+  color: var(--state-neutral);
+  background: var(--state-neutral-soft);
+}
+
+/* Handoff and toast outcomes share the same success/error contrast treatment. */
+.ooplanner-root .planner-handoff__success {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 12px;
+  border: 1px solid var(--state-success);
+  border-radius: var(--radius-sm);
+  background: var(--state-success-soft);
+  color: var(--text-body);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.ooplanner-root .planner-handoff__success strong {
+  color: var(--state-success);
+}
+
+.ooplanner-root .planner-handoff__error {
+  border-color: var(--state-danger);
+  background: var(--state-danger-soft);
+}
+
+.ooplanner-root .toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: min(280px, calc(100vw - 32px));
+}
+
+.ooplanner-root .toast__icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  margin-top: 1px;
+}
+
+.ooplanner-root .toast__message {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  line-height: 1.4;
+}
+
+.ooplanner-root .toast__dismiss {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  min-width: 28px;
+  min-height: 28px;
+  margin: -3px -6px -3px 0;
+  border: 1px solid transparent;
+  border-radius: var(--radius-xs);
+  background: transparent;
+  color: currentColor;
+  cursor: pointer;
+}
+
+.ooplanner-root .toast__dismiss:hover {
+  background: color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.ooplanner-root .toast__dismiss:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 1px;
+}
+
+@media (max-width: 639px) {
+  .ooplanner-root .planner-state-surface {
+    grid-template-columns: auto minmax(0, 1fr);
+    padding: 14px;
+  }
+
+  .ooplanner-root .planner-state-surface__actions,
+  .ooplanner-root .planner-save-state__actions {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .ooplanner-root .planner-state-surface__actions .btn,
+  .ooplanner-root .planner-save-state__actions .btn {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+}

@@ -204,9 +204,15 @@ const CatalogRail = ({ onDragStart, onItemClick }: CatalogRailProps) => {
 
       <div className="side-panel__section" style={{ flex: 1, overflow: "auto", padding: "10px 12px 20px" }}>
         {loading ? (
-          <div className="empty-state" role="status" aria-busy="true">Loading catalog…</div>
+          <div className="empty-state" data-state="loading" role="status" aria-busy="true">
+            <PhIcon name="spinner" size={20} weight="bold" />
+            <span>Loading catalog…</span>
+          </div>
         ) : catalogError ? (
-          <div className="catalog-state" role="alert">
+          <div className="catalog-state" data-state="server-error" role="alert">
+            <div className="catalog-state__icon" aria-hidden="true">
+              <PhIcon name="x" size={20} weight="duotone" />
+            </div>
             <p>Catalog unavailable. Your current selection is preserved.</p>
             <button type="button" className="btn btn--sm" onClick={() => void refresh()}>Try again</button>
           </div>
@@ -246,7 +252,10 @@ const CatalogRail = ({ onDragStart, onItemClick }: CatalogRailProps) => {
               );
             })}
             {filtered.length === 0 && (
-              <div className="empty-state" style={{ gridColumn: "1/-1" }} role="status">No items match</div>
+              <div className="empty-state" data-state="empty" style={{ gridColumn: "1/-1" }} role="status">
+                <PhIcon name="folder" size={20} />
+                <span>No items match</span>
+              </div>
             )}
           </div>
         )}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useMemo, useState } from "react";
 import { usePlanner } from "@planner/hooks/usePlannerDockBridge";
 import { collectSceneGeometry, furnitureToCenterOrigin } from "@planner/lib/fabricGeometryBridge";
 import { buildBoqFromGeometry } from "@planner/lib/boq/buildBoqFromGeometry";
@@ -21,18 +21,14 @@ function downloadText(text: string, filename: string, mime: string) {
 
 /** Furniture BOQ from placed catalog items (Port 02). */
 export function BoqPanel() {
-  const { fabricRef, sceneVersion, scalePxPerMm, sheet } = usePlanner();
+  const { getCanvas, sceneVersion, scalePxPerMm, sheet } = usePlanner();
   const [handoffOpen, setHandoffOpen] = useState(false);
   const pricingEnabled = isFeatureEnabled("boqPricingEnabled");
   const exportEnabled = isFeatureEnabled("plannerExportBoq");
   const handoffEnabled = isFeatureEnabled("plannerHandoff");
 
-  const fabricCanvas = useSyncExternalStore(
-    () => () => {},
-    () => fabricRef.current,
-    () => null,
-  );
   const boq = useMemo(() => {
+    const fabricCanvas = getCanvas();
     void sceneVersion;
     if (!fabricCanvas) {
       return buildBoqFromGeometry({
@@ -58,7 +54,7 @@ export function BoqPanel() {
       }),
       pricingEnabled,
     });
-  }, [fabricCanvas, sceneVersion, scalePxPerMm, pricingEnabled]);
+  }, [getCanvas, sceneVersion, scalePxPerMm, pricingEnabled]);
 
   void sheet;
   const totalQty = boq.lines.reduce((s, l) => s + l.quantity, 0);

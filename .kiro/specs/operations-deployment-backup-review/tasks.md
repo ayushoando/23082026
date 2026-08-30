@@ -19,21 +19,21 @@ Implement a repository-local TypeScript operations-review tool that reads an exp
 ## Tasks
 
 - [ ] 1. Establish the read-only review domain model and non-execution guardrails
-  - [ ] 1.1 Create typed review models, source references, evidence states, surface enums, priorities, gaps, release decisions, restore drills, and protected-operation records under `scripts/operations-review/`.
+  - [x] 1.1 Create typed review models, source references, evidence states, surface enums, priorities, gaps, release decisions, restore drills, and protected-operation records under `scripts/operations-review/`.
     - Encode Products (`erpweaiypimorcunaimz`) and Admin (`rxzpznmxbaoxpikowmfc`) as distinct database owners; do not add generic merged-database behavior.
     - Define a source allowlist and a repository-only adapter that captures path, locator, and digest metadata while rejecting network, environment-secret, provider-SDK, and unapproved-output access.
     - _Requirements: 1.1, 1.4, 4.1, 4.4, 9.4_
     - **Acceptance evidence:** Type definitions require provenance for observed facts and provide distinct Products/Admin, Vercel/Worker, and evidence-status representations.
-  - [ ] 1.2 Implement `AuthorizationGuard` classification so protected actions produce exactly one non-executable pending record with target, explicit-authorization requirement, expected evidence, and `not-run` or `pending-authorization` status.
+  - [x] 1.2 Implement `AuthorizationGuard` classification so protected actions produce exactly one non-executable pending record with target, explicit-authorization requirement, expected evidence, and `not-run` or `pending-authorization` status.
     - Cover Vercel/Worker deployment, provider inspection, Products/Admin backup, R2 write/retrieval, restore, migration, seed, local observability startup, and provider-log access.
     - _Requirements: 1.1, 1.2, 1.3, 6.3, 8.4_
     - **Acceptance evidence:** No API, process-spawn, provider-client, backup, restore, or deployment capability is imported or callable from review logic.
-  - [ ]* 1.3 Write property test for repository-bound evidence admission.
+  - [x] 1.3 Write property test for repository-bound evidence admission.
     - **Property 1: Evidence admission preserves the repository boundary.**
     - **Validates: Requirements 1.4**
     - Use generated candidates to prove unsupported evidence is rejected or represented only as an unverified gap.
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
-  - [ ]* 1.4 Write property test for protected-operation completeness and non-execution.
+  - [ ] 1.4 Write property test for protected-operation completeness and non-execution.
     - **Property 2: Protected operations are non-executable and complete.**
     - **Validates: Requirements 1.2, 6.3**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.

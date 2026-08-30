@@ -35,7 +35,7 @@ export interface PlannerCommandContext {
  * the full Fabric types so commands stay unit-testable.
  */
 export interface FabricCanvasLike {
-  getActiveObject(): FabricObjectLike | null;
+  getActiveObject(): FabricObjectLike | null | undefined;
   getActiveObjects(): FabricObjectLike[];
   setActiveObject(obj: FabricObjectLike): void;
   discardActiveObject(): void;
