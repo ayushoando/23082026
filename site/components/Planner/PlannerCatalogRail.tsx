@@ -33,9 +33,10 @@ const CatalogRail = ({ onDragStart, onItemClick }: CatalogRailProps) => {
   const loading = useCatalogStore((s) => s.loading);
   const catalogError = useCatalogStore((s) => s.error);
   const refresh = useCatalogStore((s) => s.refresh);
+  const selectedItem = useCatalogStore((s) => s.selectedItem);
+  const selectItem = useCatalogStore((s) => s.selectItem);
   const showToast = usePlannerUIStore((s) => s.showToast);
   const accessMode = usePlannerUIStore((s) => s.accessMode);
-  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
   const [q, setQ] = useState("");
   const [cat, setCat] = useState("all");
   const [uploadOpen, setUploadOpen] = useState(false);
@@ -231,10 +232,10 @@ const CatalogRail = ({ onDragStart, onItemClick }: CatalogRailProps) => {
                     e.dataTransfer.setData("application/furniture-id", item.id);
                     onDragStart?.(item);
                   }}
-                  data-selected={selectedItemId === item.id ? "true" : "false"}
-                  aria-pressed={selectedItemId === item.id}
+                  data-selected={selectedItem?.id === item.id ? "true" : "false"}
+                  aria-pressed={selectedItem?.id === item.id}
                   onClick={() => {
-                    setSelectedItemId(item.id);
+                    selectItem(item);
                     onItemClick?.(item);
                   }}
                   data-testid={`catalog-item-${item.id}`}

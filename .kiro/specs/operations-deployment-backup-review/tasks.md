@@ -18,7 +18,7 @@ Implement a repository-local TypeScript operations-review tool that reads an exp
 
 ## Tasks
 
-- [ ] 1. Establish the read-only review domain model and non-execution guardrails
+- [x] 1. Establish the read-only review domain model and non-execution guardrails
   - [x] 1.1 Create typed review models, source references, evidence states, surface enums, priorities, gaps, release decisions, restore drills, and protected-operation records under `scripts/operations-review/`.
     - Encode Products (`erpweaiypimorcunaimz`) and Admin (`rxzpznmxbaoxpikowmfc`) as distinct database owners; do not add generic merged-database behavior.
     - Define a source allowlist and a repository-only adapter that captures path, locator, and digest metadata while rejecting network, environment-secret, provider-SDK, and unapproved-output access.
@@ -33,37 +33,37 @@ Implement a repository-local TypeScript operations-review tool that reads an exp
     - **Validates: Requirements 1.4**
     - Use generated candidates to prove unsupported evidence is rejected or represented only as an unverified gap.
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
-  - [ ] 1.4 Write property test for protected-operation completeness and non-execution.
+  - [x] 1.4 Write property test for protected-operation completeness and non-execution.
     - **Property 2: Protected operations are non-executable and complete.**
     - **Validates: Requirements 1.2, 6.3**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
 
-- [ ] 2. Extract and assess independent Vercel and Cloudflare Worker release surfaces
-  - [ ] 2.1 Implement Vercel local-configuration extraction from `vercel.json`, root command routes, and runbook material.
+- [~] 2. Extract and assess independent Vercel and Cloudflare Worker release surfaces
+  - [x] 2.1 Implement Vercel local-configuration extraction from `vercel.json`, root command routes, and runbook material.
     - Emit configured build/deploy route, target assumptions, post-deployment evidence expectations, persisted-data release prerequisites, and P0/P1 gaps without asserting hosted deployment status.
     - Require owner, migration/seed impact, backup prerequisite, compatibility hazard, code-release order, and rollback path for persisted-data releases.
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 7.2_
     - **Acceptance evidence:** Every extracted Vercel assertion has a path/locator; missing prerequisites produce an attributable gap, and hosted state remains unverified without authorized evidence.
-  - [ ] 2.2 Implement separate Worker extraction from `workers/oando-worker-proxy/wrangler.toml`, Worker source, root command routes, and runbook material.
+  - [x] 2.2 Implement separate Worker extraction from `workers/oando-worker-proxy/wrangler.toml`, Worker source, root command routes, and runbook material.
     - Capture the deployment route, `ASSET_BUCKET` binding, `VERCEL_ORIGIN` dependency, and a four-case routing matrix for R2 hit, miss, error, and origin forwarding.
     - Produce a Worker-only release decision with approval point, rollback/recovery procedure, and expected verification evidence; never merge it into Vercel release state.
     - _Requirements: 3.1, 3.2, 3.3, 3.4_
     - **Acceptance evidence:** The matrix contains all four named cases and external edge behavior is classified unverified unless current authorized evidence is supplied.
-  - [ ]* 2.3 Write property test for unsupported external-claim classification.
+  - [~] 2.3 Write property test for unsupported external-claim classification.
     - **Property 3: Unsupported external claims remain unverified.**
     - **Validates: Requirements 1.3, 2.4, 3.3, 5.3, 8.2**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
-  - [ ]* 2.4 Write property test for persisted-data release and recovery completeness.
+  - [~] 2.4 Write property test for persisted-data release and recovery completeness.
     - **Property 4: Persisted-data release and recovery records are complete.**
     - **Validates: Requirements 2.2, 7.2, 7.3**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
-  - [ ]* 2.5 Write property test for independent Worker release decisions.
+  - [x] 2.5 Write property test for independent Worker release decisions.
     - **Property 5: Worker changes retain independent release decisions.**
     - **Validates: Requirements 3.2**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
 
-- [ ] 3. Model Products/Admin backup coverage and the R2 backup flow independently
-  - [ ] 3.1 Implement separate Products and Admin evidence extraction and coverage assessment.
+- [~] 3. Model Products/Admin backup coverage and the R2 backup flow independently
+  - [~] 3.1 Implement separate Products and Admin evidence extraction and coverage assessment.
     - Read only the approved database/runbook/migration sources to capture project reference, ownership scope, configured backup route, recovery documentation, and target coverage.
     - Represent schema rollback, provider recovery/PITR, and data restore as distinct recovery paths; do not access either database or run migration/backup/restore commands.
     - _Requirements: 4.1, 4.2, 4.4, 7.1, 7.3_

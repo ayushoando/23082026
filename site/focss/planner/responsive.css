@@ -220,19 +220,6 @@
   }
 }
 
-/* ── Reduced motion ─────────────────────────────────────────────────────── */
-
-@media (prefers-reduced-motion: reduce) {
-  .ooplanner-root .side-panel {
-    transition: none;
-  }
-
-  @keyframes tablet-scrim-in {
-    from { opacity: 1; }
-    to { opacity: 1; }
-  }
-}
-
 /* ── Panel open state on tablet: no page horizontal scroll ──────────────── */
 
 @media (min-width: 640px) and (max-width: 1023px) {
@@ -260,12 +247,21 @@
 
   .ooplanner-root .planner-stack {
     overflow-x: hidden;
-    max-width: 100vw;
+    max-width: 100%;
   }
 
   .ooplanner-root .workspace {
     overflow-x: hidden;
-    max-width: 100vw;
+    max-width: 100%;
+  }
+
+  .ooplanner-root .status-bar {
+    height: auto;
+    min-height: 28px;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    padding-block: 4px;
+    overflow-wrap: anywhere;
   }
 
   /* Canvas overlay becomes a compact floating bar */
@@ -310,5 +306,52 @@
 
   .ooplanner-root .pw-step-bar__copy strong {
     font-size: 11px;
+  }
+}
+
+/* ── Planner accessibility contracts ───────────────────────────────────── */
+
+/* Requirements 8.7 and 9.5 — user-authored and server-safe values remain fully available. */
+.ooplanner-root .planner-disclosed-value,
+.ooplanner-root .pw-step-bar__copy small,
+.ooplanner-root .boq-panel__name,
+.ooplanner-root .catalog-item__name,
+.ooplanner-root .project-card__name,
+.ooplanner-root .project-card__meta,
+.ooplanner-root .project-menu__trigger-label {
+  min-width: 0;
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.ooplanner-root .project-menu__trigger {
+  min-width: 0;
+}
+
+.ooplanner-root .project-menu__trigger-label {
+  max-width: min(20rem, 42vw);
+  text-align: left;
+}
+
+/* Requirement 8.6 — suppress decorative movement without hiding immediate
+   color, border, visibility, busy-state, or live-region feedback. */
+@media (prefers-reduced-motion: reduce) {
+  .ooplanner-root *,
+  .ooplanner-root *::before,
+  .ooplanner-root *::after {
+    animation-delay: 0s !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-delay: 0s !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .ooplanner-root .side-panel {
+    will-change: auto;
   }
 }

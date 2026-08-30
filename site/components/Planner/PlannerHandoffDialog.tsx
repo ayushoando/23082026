@@ -1,12 +1,19 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { PlannerFurnitureBoq } from "@planner/lib/boq/types";
 import { submitPlannerHandoff } from "@planner/lib/plannerApi";
 import {
   plannerHandoffRequestSchema,
   type PlannerHandoffRequest,
 } from "@planner/lib/handoff/handoffSchema";
+import {
+  EMPTY_PLANNER_HANDOFF_DRAFT,
+  parsePlannerHandoffRecoveryState,
+  serializePlannerHandoffRecoveryState,
+  type PlannerHandoffDraft,
+  type PlannerHandoffRecoveryState,
+} from "@planner/lib/handoff/handoffRecovery";
 import { usePlannerFocusManager } from "@planner/hooks/usePlannerFocusManager";
 
 interface PlannerHandoffDialogProps {
@@ -14,28 +21,8 @@ interface PlannerHandoffDialogProps {
   onClose: () => void;
 }
 
-interface HandoffDraft {
-  name: string;
-  email: string;
-  phone: string;
-  company: string;
-  notes: string;
-  inquiryType: PlannerHandoffRequest["inquiryType"];
-  consent: boolean;
-}
-
-type HandoffField = keyof HandoffDraft;
+type HandoffField = keyof PlannerHandoffDraft;
 type HandoffErrors = Partial<Record<HandoffField | "form", string>>;
-
-const EMPTY_DRAFT: HandoffDraft = {
-  name: "",
-  email: "",
-  phone: "",
-  company: "",
-  notes: "",
-  inquiryType: "quote",
-  consent: false,
-};
 
 function draftKey(hash: string): string {
   return `planner.handoff.draft.${hash.slice(0, 24)}`;
@@ -48,32 +35,34 @@ function makeIdempotencyKey(hash: string): string {
   return `handoff-${hash.slice(0, 16)}-${suffix}`.slice(0, 120);
 }
 
-function readDraft(hash: string): HandoffDraft {
-  if (typeof window === "undefined") return EMPTY_DRAFT;
+function readRecoveryState(hash: string): PlannerHandoffRecoveryState {
+  const createIdempotencyKey = () => makeIdempotencyKey(hash);
+  if (typeof window === "undefined") {
+    return parsePlannerHandoffRecoveryState(null, createIdempotencyKey);
+  }
   try {
-    const stored = localStorage.getItem(draftKey(hash));
-    if (!stored) return EMPTY_DRAFT;
-    const parsed = JSON.parse(stored) as Partial<HandoffDraft>;
-    return { ...EMPTY_DRAFT, ...parsed, consent: false };
+    return parsePlannerHandoffRecoveryState(
+      localStorage.getItem(draftKey(hash)),
+      createIdempotencyKey,
+    );
   } catch {
-    return EMPTY_DRAFT;
+    return parsePlannerHandoffRecoveryState(null, createIdempotencyKey);
   }
 }
 
 export function PlannerHandoffDialog({ boq, onClose }: PlannerHandoffDialogProps) {
-  const [draft, setDraft] = useState<HandoffDraft>(() => readDraft(boq.calculationHash));
+  const [recovery, setRecovery] = useState<PlannerHandoffRecoveryState>(() =>
+    readRecoveryState(boq.calculationHash));
+  const draft = recovery.draft;
+  const referenceId = recovery.confirmation?.referenceId ?? null;
   const [busy, setBusy] = useState(false);
   const [errors, setErrors] = useState<HandoffErrors>({});
-  const [referenceId, setReferenceId] = useState<string | null>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
   const firstFieldRef = useRef<HTMLInputElement>(null);
   const successRef = useRef<HTMLDivElement>(null);
   const formErrorRef = useRef<HTMLParagraphElement>(null);
   const closeDialog = useCallback(() => onClose(), [onClose]);
-  const idempotencyKey = useMemo(
-    () => makeIdempotencyKey(boq.calculationHash),
-    [boq.calculationHash],
-  );
+  const idempotencyKey = recovery.idempotencyKey;
 
   usePlannerFocusManager({
     open: true,
@@ -84,13 +73,15 @@ export function PlannerHandoffDialog({ boq, onClose }: PlannerHandoffDialogProps
   });
 
   useEffect(() => {
-    if (referenceId) return;
     try {
-      localStorage.setItem(draftKey(boq.calculationHash), JSON.stringify(draft));
+      localStorage.setItem(
+        draftKey(boq.calculationHash),
+        serializePlannerHandoffRecoveryState(recovery),
+      );
     } catch {
       // Draft recovery is best effort; the live form remains authoritative.
     }
-  }, [boq.calculationHash, draft, referenceId]);
+  }, [boq.calculationHash, recovery]);
 
   useEffect(() => {
     if (!referenceId) return;
@@ -102,8 +93,11 @@ export function PlannerHandoffDialog({ boq, onClose }: PlannerHandoffDialogProps
     queueMicrotask(() => formErrorRef.current?.focus());
   }, [errors.form]);
 
-  const update = <K extends HandoffField>(field: K, value: HandoffDraft[K]) => {
-    setDraft((current) => ({ ...current, [field]: value }));
+  const update = <K extends HandoffField>(field: K, value: PlannerHandoffDraft[K]) => {
+    setRecovery((current) => ({
+      ...current,
+      draft: { ...current.draft, [field]: value },
+    }));
     setErrors((current) => ({ ...current, [field]: undefined, form: undefined }));
   };
 
@@ -138,7 +132,7 @@ export function PlannerHandoffDialog({ boq, onClose }: PlannerHandoffDialogProps
         const field = path.startsWith("contact.")
           ? path.slice("contact.".length)
           : path;
-        if (field in EMPTY_DRAFT && !nextErrors[field as HandoffField]) {
+        if (field in EMPTY_PLANNER_HANDOFF_DRAFT && !nextErrors[field as HandoffField]) {
           nextErrors[field as HandoffField] = issue.message;
         }
       }
@@ -153,12 +147,13 @@ export function PlannerHandoffDialog({ boq, onClose }: PlannerHandoffDialogProps
     setErrors({});
     try {
       const result = await submitPlannerHandoff(parsed.data);
-      setReferenceId(result.referenceId);
-      try {
-        localStorage.removeItem(draftKey(boq.calculationHash));
-      } catch {
-        // The confirmed server reference is still authoritative.
-      }
+      setRecovery((current) => ({
+        ...current,
+        confirmation: {
+          referenceId: result.referenceId,
+          createdAt: result.createdAt,
+        },
+      }));
     } catch (error: unknown) {
       setErrors({
         form: error instanceof Error
@@ -277,8 +272,11 @@ export function PlannerHandoffDialog({ boq, onClose }: PlannerHandoffDialogProps
                 autoComplete="organization"
                 value={draft.company}
                 onChange={(event) => update("company", event.target.value)}
+                aria-invalid={Boolean(errors.company)}
+                aria-describedby={errors.company ? "planner-handoff-company-error" : undefined}
               />
             </label>
+            {errors.company ? <p id="planner-handoff-company-error" className="planner-field-error" role="alert">{errors.company}</p> : null}
 
             <label className="prop-row" htmlFor="planner-handoff-inquiry">
               <span className="prop-row__label">Inquiry</span>
@@ -286,7 +284,9 @@ export function PlannerHandoffDialog({ boq, onClose }: PlannerHandoffDialogProps
                 id="planner-handoff-inquiry"
                 className="select"
                 value={draft.inquiryType}
-                onChange={(event) => update("inquiryType", event.target.value as HandoffDraft["inquiryType"])}
+                onChange={(event) => update("inquiryType", event.target.value as PlannerHandoffDraft["inquiryType"])}
+                aria-invalid={Boolean(errors.inquiryType)}
+                aria-describedby={errors.inquiryType ? "planner-handoff-inquiry-error" : undefined}
                 data-testid="handoff-inquiry"
               >
                 <option value="quote">Request a quote</option>
@@ -294,6 +294,7 @@ export function PlannerHandoffDialog({ boq, onClose }: PlannerHandoffDialogProps
                 <option value="product-question">Ask a product question</option>
               </select>
             </label>
+            {errors.inquiryType ? <p id="planner-handoff-inquiry-error" className="planner-field-error" role="alert">{errors.inquiryType}</p> : null}
 
             <label className="prop-row" htmlFor="planner-handoff-notes">
               <span className="prop-row__label">Notes</span>
@@ -302,10 +303,13 @@ export function PlannerHandoffDialog({ boq, onClose }: PlannerHandoffDialogProps
                 className="input"
                 value={draft.notes}
                 onChange={(event) => update("notes", event.target.value)}
+                aria-invalid={Boolean(errors.notes)}
+                aria-describedby={errors.notes ? "planner-handoff-notes-error" : undefined}
                 data-testid="handoff-notes"
                 rows={3}
               />
             </label>
+            {errors.notes ? <p id="planner-handoff-notes-error" className="planner-field-error" role="alert">{errors.notes}</p> : null}
 
             <label className="planner-consent" htmlFor="planner-handoff-consent">
               <input

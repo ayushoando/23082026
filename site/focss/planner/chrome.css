@@ -62,11 +62,13 @@
   font-size: 12px;
   font-family: var(--font-numeric); font-variant-numeric: var(--numeric-figures);
   color: var(--text-muted);
+  min-width: 0;
   max-width: min(200px, 22vw);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  flex-shrink: 0;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+  white-space: normal;
+  flex-shrink: 1;
   padding-left: 8px;
   border-left: 1px solid var(--border-soft);
 }
@@ -287,15 +289,42 @@
   .ooplanner-root .topbar__brand-sub {
     display: none;
   }
+
+  /* Requirement 8.7 — reflow chrome instead of introducing a second page axis
+     when browser zoom reduces the CSS viewport to a phone-sized width. */
   .ooplanner-root .topbar {
-    gap: 8px;
-    padding: 0 10px;
-    overflow-x: auto;
+    height: auto;
+    min-height: var(--shell-topbar-h);
+    gap: 6px 8px;
+    padding: 6px 10px;
+    overflow: visible;
+    flex-wrap: wrap;
+  }
+  .ooplanner-root .topbar__start,
+  .ooplanner-root .topbar__end {
+    width: 100%;
+    flex: 1 1 100%;
+    flex-wrap: wrap;
   }
   .ooplanner-root .topbar__end {
     gap: 4px;
+    justify-content: flex-start;
+  }
+  .ooplanner-root .topbar__spacer {
+    display: none;
+  }
+  .ooplanner-root .topbar__actions {
+    justify-content: flex-start;
   }
   .ooplanner-root .topbar__project-input {
-    width: min(96px, 26vw);
+    width: min(100%, 16rem);
+  }
+  .ooplanner-root .toast-viewport {
+    right: 8px;
+    left: 8px;
+  }
+  .ooplanner-root .toast {
+    max-width: 100%;
+    overflow-wrap: anywhere;
   }
 }

@@ -38,7 +38,7 @@
 /* Requirement 7.5 — explicit visible focus indicator (supplements the global focus-ring). */
 .ooplanner-root .icon-btn:focus-visible,
 .ooplanner-root .icon-btn[data-focus-visible] { outline: 2px solid var(--color-focus); outline-offset: 2px; box-shadow: none; }
-.ooplanner-root .icon-btn__tip { position: absolute; left: calc(100% + 8px); top: 50%; transform: translateY(-50%); background: var(--surface-inverse); color: var(--text-inverse); padding: 4px 8px; font-size: 11px; border-radius: 6px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 120ms; z-index: 40; }
+.ooplanner-root .icon-btn__tip { position: absolute; left: calc(100% + 8px); top: 50%; transform: translateY(-50%); max-width: min(20rem, calc(100vw - 24px)); background: var(--surface-inverse); color: var(--text-inverse); padding: 4px 8px; font-size: 11px; border-radius: 6px; overflow-wrap: anywhere; white-space: normal; opacity: 0; pointer-events: none; transition: opacity 120ms; z-index: 40; }
 .ooplanner-root .icon-btn:hover .icon-btn__tip,
 .ooplanner-root .icon-btn:focus-visible .icon-btn__tip { opacity: 1; }
 

@@ -17,6 +17,25 @@ export interface RegressionEvidenceLink {
 
 export const TASK_5_6_PERFORMANCE_HANDOFFS = [] as const;
 
+export const TASK_5_6_REPOSITORY_EVIDENCE: EvidenceRecord = {
+  id: "evidence:task-5.6-performance-remediation-gate",
+  class: "repository",
+  summary:
+    "The required performance runner defines comparable supported profiles and budget assertions; because it has not been authorized or executed, no measured miss exists to dispatch to a product-file owner.",
+  sourceRefs: [
+    "plans/planner-comprehensive-audit/performanceMeasurement.ts",
+    "plans/planner-comprehensive-audit/performanceEvidence.ts",
+    "tests/e2e/planner-performance-required.spec.ts",
+    "tests/e2e/helpers/plannerPerformance.ts",
+  ],
+  limitation:
+    "Static inspection cannot establish a measured value, bottleneck, before/after comparison, cleanup defect, remediation need, or budget compliance. Product-owner handoffs remain empty until an authorized measurement records a miss.",
+  artifact: {
+    authorship: "authored",
+    path: "plans/planner-comprehensive-audit/workstream5Evidence.ts",
+  },
+};
+
 export const TASK_5_8_EXTENDED_PROFILE_EVIDENCE: EvidenceRecord = {
   id: "evidence:task-5.8-extended-browser-device-profiles",
   class: "repository",
@@ -52,7 +71,7 @@ export const TASK_5_8_PENDING_VALIDATION: ValidationRecord = {
 
 export const TASK_5_6_PENDING_VALIDATION: ValidationRecord = {
   id: "validation:task-5.6-required-performance-measurements",
-  findingIds: [],
+  findingIds: ["finding:workstream-5-authored-deliverables"],
   kind: "performance",
   target: "browser",
   repositoryRoot: ".",
@@ -120,4 +139,75 @@ export const TASK_5_9_5_10_REPOSITORY_EVIDENCE: EvidenceRecord = {
   sourceRefs: TASK_5_9_REGRESSION_LINKS.map((link) => link.testPath),
   limitation: "Authored tests are static repository evidence only; no regression, rendered, accessibility, performance, integration, hosted, or deployment result is claimed.",
   artifact: { authorship: "authored", path: "plans/planner-comprehensive-audit/workstream5Evidence.ts" },
+};
+
+export const TASK_5_11_REPOSITORY_EVIDENCE: EvidenceRecord = {
+  id: "evidence:task-5.11-change-derived-validation-manifest",
+  class: "repository",
+  summary:
+    "The Workstream 5 manifest derives narrow exact commands from finding categories and changed paths, records authorization and hook state, and leaves every unexecuted action pending without an outcome.",
+  sourceRefs: [
+    "plans/planner-comprehensive-audit/validationEvidence.ts",
+    "plans/planner-comprehensive-audit/workstream5ValidationManifest.ts",
+  ],
+  limitation:
+    "The manifest is authored static evidence. No protected command was authorized or executed, so it contains no validation result and proves no runtime behavior.",
+  artifact: {
+    authorship: "authored",
+    path: "plans/planner-comprehensive-audit/workstream5ValidationManifest.ts",
+  },
+};
+
+export const TASKS_5_12_TO_5_14_REPOSITORY_EVIDENCE: EvidenceRecord = {
+  id: "evidence:tasks-5.12-5.14-validation-properties",
+  class: "repository",
+  summary:
+    "Properties 27-29 are authored with deterministic 200-case generators for authorization gating, change-derived command selection, and evidence-class separation.",
+  sourceRefs: [
+    "plans/planner-comprehensive-audit/validationEvidence.ts",
+    "tests/unit/planner/plannerValidationEvidence.property.test.ts",
+  ],
+  limitation:
+    "The property tests are authored but unexecuted. Their presence is repository evidence only and is not a passing test result.",
+  artifact: {
+    authorship: "authored",
+    path: "tests/unit/planner/plannerValidationEvidence.property.test.ts",
+  },
+};
+
+export const TASKS_5_12_TO_5_14_PENDING_VALIDATION: ValidationRecord = {
+  id: "validation:tasks-5.12-5.14-validation-properties",
+  findingIds: ["finding:workstream-5-authored-deliverables"],
+  kind: "unit",
+  target: "repository",
+  repositoryRoot: ".",
+  requirementRefs: [
+    "14.10",
+    "17.7",
+    "18.1",
+    "18.2",
+    "18.3",
+    "18.4",
+    "18.5",
+    "18.6",
+    "18.7",
+    "18.8",
+    "18.9",
+    "19.4",
+    "19.5",
+    "19.6",
+  ],
+  verifies:
+    "Properties 27-29 enforce dual authorization, narrow change-derived validation without typecheck:scripts, and one non-promoted evidence class per record.",
+  limitation:
+    "The property test is authored but unexecuted; no pass, fail, browser, integration, hosted, or deployment result is claimed.",
+  state: "pending",
+  exactCommand:
+    "pnpm exec vitest run --config tests/vitest.config.ts tests/unit/planner/plannerValidationEvidence.property.test.ts",
+  pendingOwnerAction: null,
+  userAuthorization: "not-authorized",
+  hookPermission: "not-observed",
+  exitStatus: null,
+  outcome: null,
+  evidenceRefs: [],
 };

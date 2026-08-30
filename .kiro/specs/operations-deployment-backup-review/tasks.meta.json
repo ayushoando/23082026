@@ -36,6 +36,61 @@
         "chatSessionId": "sess_c05a5f2b-6b3b-4846-97af-2ced17a95edb",
         "timestamp": 1788089190849
       }
+    ],
+    "1.4 Write property test for protected-operation completeness and non-execution.": [
+      {
+        "executionId": "f342f231-bc4d-4d08-98c4-17185acadf50",
+        "chatSessionId": "sess_c05a5f2b-6b3b-4846-97af-2ced17a95edb",
+        "timestamp": 1788089198234
+      },
+      {
+        "executionId": "f342f231-bc4d-4d08-98c4-17185acadf50",
+        "chatSessionId": "sess_c05a5f2b-6b3b-4846-97af-2ced17a95edb",
+        "timestamp": 1788089281336
+      }
+    ],
+    "1. Establish the read-only review domain model and non-execution guardrails": [
+      {
+        "executionId": "f342f231-bc4d-4d08-98c4-17185acadf50",
+        "chatSessionId": "sess_c05a5f2b-6b3b-4846-97af-2ced17a95edb",
+        "timestamp": 1788089281390
+      }
+    ],
+    "2.1 Implement Vercel local-configuration extraction from `vercel.json`, root command routes, and runbook material.": [
+      {
+        "executionId": "4ce83755-be1d-4929-be1f-0830d7c36752",
+        "chatSessionId": "sess_ff8c4609-6bb6-4b95-bf1a-36acd5fcc424",
+        "timestamp": 1788089400546
+      },
+      {
+        "executionId": "4ce83755-be1d-4929-be1f-0830d7c36752",
+        "chatSessionId": "sess_ff8c4609-6bb6-4b95-bf1a-36acd5fcc424",
+        "timestamp": 1788089608684
+      }
+    ],
+    "2.2 Implement separate Worker extraction from `workers/oando-worker-proxy/wrangler.toml`, Worker source, root command routes, and runbook material.": [
+      {
+        "executionId": "4ce83755-be1d-4929-be1f-0830d7c36752",
+        "chatSessionId": "sess_ff8c4609-6bb6-4b95-bf1a-36acd5fcc424",
+        "timestamp": 1788089401058
+      },
+      {
+        "executionId": "4ce83755-be1d-4929-be1f-0830d7c36752",
+        "chatSessionId": "sess_ff8c4609-6bb6-4b95-bf1a-36acd5fcc424",
+        "timestamp": 1788089608939
+      }
+    ],
+    "2.5 Write property test for independent Worker release decisions.": [
+      {
+        "executionId": "85ac51ee-9de1-4bb0-a003-a6ef67222194",
+        "chatSessionId": "sess_defbbb65-0378-4c35-9177-03537e4d2320",
+        "timestamp": 1788090135481
+      },
+      {
+        "executionId": "85ac51ee-9de1-4bb0-a003-a6ef67222194",
+        "chatSessionId": "sess_defbbb65-0378-4c35-9177-03537e4d2320",
+        "timestamp": 1788090263856
+      }
     ]
   }
 }

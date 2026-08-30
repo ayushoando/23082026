@@ -11,13 +11,6 @@ type ProjectMenuProps = {
   panelTestId?: string;
 };
 
-function truncateLabel(name: string, max = 28): string {
-  const trimmed = name.trim();
-  if (!trimmed) return "Project";
-  if (trimmed.length <= max) return trimmed;
-  return `${trimmed.slice(0, max - 1)}…`;
-}
-
 /** Planner canvas overlay — project name + auto-arrange. */
 export function ProjectMenu({
   projectName,
@@ -83,7 +76,9 @@ export function ProjectMenu({
         onClick={() => setOpen((v) => !v)}
       >
         <PhIcon name="folder" size={18} />
-        <span className="project-menu__trigger-label">{truncateLabel(projectName)}</span>
+        <span className="project-menu__trigger-label planner-disclosed-value">
+          {projectName.trim() || "Project"}
+        </span>
         <PhIcon name="caretDown" size={18} />
       </button>
       <div

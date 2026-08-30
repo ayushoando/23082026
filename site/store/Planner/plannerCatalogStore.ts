@@ -8,8 +8,10 @@ type CatalogStore = {
   loading: boolean;
   error: string | null;
   categories: string[];
+  selectedItem: FurnitureItem | null;
   refresh: () => Promise<void>;
   addItem: (item: FurnitureItem) => void;
+  selectItem: (item: FurnitureItem) => void;
 };
 
 /** Keep guest catalog state limited to the fields required for browsing and placement. */
@@ -38,12 +40,20 @@ export const useCatalogStore = create<CatalogStore>((set) => ({
   loading: false,
   error: null,
   categories: ["all"],
+  selectedItem: null,
   refresh: async () => {
     set({ loading: true, error: null });
     try {
       const items = (await listFurniture()).map(toPublicPlannerFurniture);
       const cats = Array.from(new Set(items.map((i) => i.category).filter(Boolean)));
-      set({ items, categories: ["all", ...cats.sort()], loading: false });
+      set((state) => ({
+        items,
+        categories: ["all", ...cats.sort()],
+        loading: false,
+        selectedItem:
+          items.find((item) => item.id === state.selectedItem?.id) ??
+          state.selectedItem,
+      }));
     } catch (e) {
       set({
         error: e instanceof Error ? e.message : "Failed to load catalog",
@@ -51,5 +61,7 @@ export const useCatalogStore = create<CatalogStore>((set) => ({
       });
     }
   },
-  addItem: (item) => set((s) => ({ items: [item, ...s.items] })),
+  addItem: (item) =>
+    set((state) => ({ items: [toPublicPlannerFurniture(item), ...state.items] })),
+  selectItem: (item) => set({ selectedItem: toPublicPlannerFurniture(item) }),
 }));
