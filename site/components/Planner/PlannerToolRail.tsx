@@ -21,6 +21,7 @@ export const ToolRail = ({ tools, activeTool, onSelect, extras }: ToolRailProps)
       className="tool-rail"
       data-testid="tool-rail"
       role="toolbar"
+      tabIndex={0}
       aria-label="Canvas tools"
       aria-orientation="vertical"
       onKeyDown={onKeyDown}

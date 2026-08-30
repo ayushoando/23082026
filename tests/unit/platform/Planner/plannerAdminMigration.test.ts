@@ -1,42 +1,36 @@
 // @vitest-environment node
 //
 // Feature: planner-comprehensive-audit, Tasks 4.9-4.11
-// Repository-only evidence for the required Admin migration branch.
+// Repository-only evidence for the existing Admin migration and the
+// Task 4.10 no-migration branch.
 
-import { readFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 
-const MIGRATION_PATH = path.join(
+import {
+  TASK_4_10_BRANCH,
+  TASK_4_9_PENDING_ACTIONS,
+  TASK_4_9_SCHEMA_GAP_DECISION,
+} from "../../../../plans/planner-comprehensive-audit/schemaGapDecision";
+
+const ADMIN_MIGRATIONS_PATH = path.join(
   process.cwd(),
-  "platform/supabase/migrations.admin/20260823090000_planner_revision_idempotency.sql",
+  "platform/supabase/migrations.admin",
 );
+const MIGRATION_FILE_NAME = "20260823090000_planner_revision_idempotency.sql";
+const MIGRATION_PATH = path.join(ADMIN_MIGRATIONS_PATH, MIGRATION_FILE_NAME);
 
 const DRIZZLE_PATH = path.join(
   process.cwd(),
   "platform/drizzle/schema/planner.ts",
 );
 
-export const PLANNER_SCHEMA_GAP_DECISION = {
-  branch: "migration-required",
-  database: "Admin",
-  evidence: [
-    "site/platform/supabase/migrations.admin/20260628100000_planner_plans_and_audit.sql",
-    "site/platform/drizzle/schema/planner.ts",
-    "site/platform/types/database.admin.types.ts",
-    "site/server/Planner/plannerProjectSupabaseAdapter.ts",
-  ],
-  defects: [
-    "oando_plans revision and schema_version columns absent",
-    "owner-scoped idempotency relation and atomic mutation function absent",
-    "authenticated owner grants and RLS policies absent",
-  ],
-} as const;
+export const PLANNER_SCHEMA_GAP_DECISION = TASK_4_9_SCHEMA_GAP_DECISION;
 
-export const PENDING_PLANNER_ADMIN_COMMANDS = [
-  "pnpm run db:apply:admin -- --dry",
-  "pnpm run db:types:admin",
-] as const;
+export const PENDING_PLANNER_ADMIN_COMMANDS = TASK_4_9_PENDING_ACTIONS.map(
+  (action) => action.exactCommand,
+);
 
 async function migrationParts(): Promise<{ forward: string; rollback: string }> {
   const sql = await readFile(MIGRATION_PATH, "utf8");
@@ -50,18 +44,48 @@ async function migrationParts(): Promise<{ forward: string; rollback: string }> 
 }
 
 describe("Planner Admin schema-gap decision", () => {
-  it("binds the required migration branch to repository-local evidence", () => {
-    expect(PLANNER_SCHEMA_GAP_DECISION.branch).toBe("migration-required");
+  it("binds the no-migration branch to repository evidence and pending workflow", () => {
+    expect(PLANNER_SCHEMA_GAP_DECISION.branch).toBe(TASK_4_10_BRANCH);
+    expect(PLANNER_SCHEMA_GAP_DECISION.branch).toBe("no-migration");
+    expect(PLANNER_SCHEMA_GAP_DECISION.schemaDefectVerified).toBe(false);
+    expect(PLANNER_SCHEMA_GAP_DECISION.migrationNeededForTask4_10).toBe(false);
     expect(PLANNER_SCHEMA_GAP_DECISION.database).toBe("Admin");
-    expect(PLANNER_SCHEMA_GAP_DECISION.evidence).toHaveLength(4);
+    expect(PLANNER_SCHEMA_GAP_DECISION.evidenceRefs).toContain(
+      "evidence:task-4.9-admin-migration-contract",
+    );
+    expect(PLANNER_SCHEMA_GAP_DECISION.task4_10Control).toContain(
+      "do not create duplicate Admin SQL",
+    );
     expect(PENDING_PLANNER_ADMIN_COMMANDS).toEqual([
       "pnpm run db:apply:admin -- --dry",
+      "pnpm run db:apply:admin",
       "pnpm run db:types:admin",
     ]);
+    expect(TASK_4_9_PENDING_ACTIONS).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          exactCommand: "pnpm run db:apply:admin -- --dry",
+          status: "pending-separate-authorization",
+        }),
+        expect.objectContaining({
+          exactCommand: "pnpm run db:types:admin",
+          status: "pending-separate-authorization",
+        }),
+      ]),
+    );
   });
 });
 
-describe("Planner revision/idempotency Admin migration", () => {
+describe("Existing Planner revision/idempotency Admin migration evidence", () => {
+  it("keeps the existing schema evidence under the Admin migration path", async () => {
+    const migrationFiles = await readdir(ADMIN_MIGRATIONS_PATH);
+    expect(migrationFiles).toContain(MIGRATION_FILE_NAME);
+    expect(path.dirname(MIGRATION_PATH)).toBe(ADMIN_MIGRATIONS_PATH);
+    expect(path.dirname(MIGRATION_PATH)).not.toBe(
+      path.join(process.cwd(), "platform/supabase/migrations"),
+    );
+  });
+
   it("uses deterministic compatibility backfills and bounded constraints", async () => {
     const { forward } = await migrationParts();
     expect(forward).toContain("add column if not exists revision bigint");

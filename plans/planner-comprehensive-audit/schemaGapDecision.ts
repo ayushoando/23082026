@@ -416,7 +416,7 @@ export const TASK_4_9_SCHEMA_GAP_DECISION = {
   schemaDefectVerified: false,
   migrationNeededForTask4_10: false,
   task4_10Control:
-    "Select the no-new-migration branch for task 4.10. The existing 20260823090000_planner_revision_idempotency.sql is the repository-side schema implementation; carry hosted application and type-generation actions as separately authorized pending work. Reconcile the legacy direct adapter and stale records in their owning follow-up tasks without changing Products migrations or creating duplicate Admin SQL.",
+    "Select the no-new-migration branch for task 4.10. The existing 20260823090000_planner_revision_idempotency.sql is the repository-side schema implementation; carry hosted application and type-generation actions as separately authorized pending work. Reconcile the legacy direct adapter and stale records in their owning follow-up tasks without changing Products migrations or creating duplicate Admin SQL. Follow-up migrations that correct live function behaviour are distinct from new schema additions — do not create duplicate Admin SQL for changes already covered by the original migration.",
   findingIds: TASK_4_9_FINDING_IDS,
   requirementRefs: TASK_4_9_REQUIREMENTS,
   evidenceRefs: TASK_4_9_EVIDENCE_REFS,

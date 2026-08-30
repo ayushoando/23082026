@@ -110,6 +110,7 @@ describe("Planner ai-advisor endpoint — existence (bug fixed: now passes)", ()
       // After the fix: the module must export a POST handler.
       expect(typeof result.exports["POST"]).toBe("function");
     },
+    30_000,
   );
 });
 

@@ -21,6 +21,10 @@ export const ContextMenu = ({ x, y, items, onClose }: ContextMenuProps) => {
   );
   const [pos, setPos] = useState({ x, y });
 
+  if (pos.x !== x || pos.y !== y) {
+    setPos({ x, y });
+  }
+
   const close = useCallback(() => {
     onClose?.();
     queueMicrotask(() => invokerRef.current?.focus());

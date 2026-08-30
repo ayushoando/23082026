@@ -104,7 +104,7 @@ const consentPrimaryActionClass = "bg-primary text-inverse hover:bg-primary/90";
 
 export function CookieConsentBar() {
   const [dismissed, setDismissed] = useState(false);
-  const [visible, setVisible] = useState(false);
+  const [showDelayElapsed, setShowDelayElapsed] = useState(false);
   const consent = useSyncExternalStore(
     () => () => {},
     () => readCookie(CONSENT_COOKIE),
@@ -119,16 +119,17 @@ export function CookieConsentBar() {
 
   useEffect(() => {
     if (dismissed || consent) {
-      setVisible(false);
       return;
     }
 
     const showTimer = window.setTimeout(() => {
-      setVisible(true);
+      setShowDelayElapsed(true);
     }, 2500);
 
     return () => window.clearTimeout(showTimer);
   }, [consent, dismissed]);
+
+  const visible = !dismissed && !consent && showDelayElapsed;
 
   useEffect(() => {
     if (dismissed || consent || !visible) {return;}

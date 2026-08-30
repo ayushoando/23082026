@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useTranslations } from "next-intl";
 import { ArrowRight, SealCheck } from "@phosphor-icons/react";
 
@@ -40,11 +40,11 @@ export function HomepageHero() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [failedImageSrc, setFailedImageSrc] = useState<string | null>(null);
   const [bgVisible, setBgVisible] = useState(true);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
   const currentImage = HOMEPAGE_HERO_IMAGES[currentIndex] ?? POSTER;
   const resolvedImageSrc =
@@ -65,16 +65,14 @@ export function HomepageHero() {
     );
   }, []);
 
+  const shouldCrossfade =
+    carouselEnabled && currentIndex > 0 && !gsapReducedMotion();
+  const backgroundVisible = !shouldCrossfade || bgVisible;
+
   // Crossfade only when the active slide src changes after carousel is live.
   useEffect(() => {
-    if (!carouselEnabled || currentIndex === 0) {
-      setBgVisible(true);
-      return;
-    }
-    if (gsapReducedMotion()) {
-      setBgVisible(true);
-      return;
-    }
+    if (!shouldCrossfade) return;
+
     let innerId = 0;
     const outerId = requestAnimationFrame(() => {
       setBgVisible(false);
@@ -86,7 +84,7 @@ export function HomepageHero() {
       cancelAnimationFrame(outerId);
       cancelAnimationFrame(innerId);
     };
-  }, [carouselEnabled, resolvedImageSrc, currentIndex]);
+  }, [resolvedImageSrc, shouldCrossfade]);
 
   // Auto-advance only after carousel is enabled.
   useEffect(() => {
@@ -152,7 +150,7 @@ export function HomepageHero() {
       <div
         ref={bgRef}
         className="home-hero__media absolute inset-0 h-[115%] w-full -top-[7%] origin-center transition-opacity duration-500 ease-out"
-        style={{ opacity: bgVisible || gsapReducedMotion() ? 1 : 0 }}
+        style={{ opacity: backgroundVisible ? 1 : 0 }}
       >
         {/* Stable LCP poster — always mounted, never swapped off the tree. */}
         <Image

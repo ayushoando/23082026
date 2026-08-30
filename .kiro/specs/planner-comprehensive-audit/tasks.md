@@ -160,15 +160,15 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - **Property 6: Valid project initialization**
     - Generate valid owners and creation inputs and verify editable defaults, schema version, revision 1, coherent timestamps, and valid geometry.
     - **Validates: Requirements 4.2, 13.1, 13.2**
-  - [~] 3.6 Write property-based test for failure-safe UI state
+  - [x] 3.6 Write property-based test for failure-safe UI state
     - **Property 7: Failure-safe UI state**
     - Generate failed edit/save/offline/reauth/stale transitions and verify unsaved state survives, replacement is explicit, and later success clears obsolete errors.
     - **Validates: Requirements 4.6, 4.8, 5.6, 5.7, 5.8, 10.8**
-  - [~] 3.7 Write property-based test for required state completeness
+  - [x] 3.7 Write property-based test for required state completeness
     - **Property 8: Required state completeness**
     - Generate workflow/state applicability sets and verify distinct presentation, status, focus, and deterministic recovery mappings.
     - **Validates: Requirements 5.1, 5.5**
-  - [~] 3.8 Write property-based test for form value preservation
+  - [x] 3.8 Write property-based test for form value preservation
     - **Property 9: Form value preservation**
     - Generate mixed valid/invalid project and handoff forms and verify all invalid fields are associated while valid values remain unchanged and no submission occurs.
     - **Validates: Requirements 5.4, 8.5, 15.3, 15.4**
@@ -221,7 +221,7 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - Generate guest catalog selections and handoff outcomes and verify public context/drafts/confirmation survive while restricted data and project capability never appear.
     - **Validates: Requirements 10.1, 10.2, 15.1, 15.2, 15.5, 15.6, 15.7**
 
-- [ ] 4. Workstream 4 — Remediate API, security, authorization, and conditional Admin database contracts
+- [x] 4. Workstream 4 — Remediate API, security, authorization, and conditional Admin database contracts
   - [x] 4.1 Implement explicit typed endpoint descriptors and compatible client adapters
     - Cover methods, path/query/header/body schemas, success/error envelopes, statuses, auth/owner policy, CSRF/origin policy, and rate limits for catalog, upload, handoff, projects, project item, and sketch-to-plan endpoints found in inventory.
     - Use versioned adapters/dual-read parsing during transition, converge handlers and clients within each finding, and publish the endpoint contract at Gate B.
@@ -260,7 +260,7 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - Write under `site/platform/supabase/migrations.admin/`, target `oando_plans`/owner-scoped idempotency only, preserve/transform existing rows deterministically, and include dependency-safe `-- rollback`, least-privilege grants, indexes/constraints, and authenticated owner RLS.
     - Keep application-level owner checks and server-only service-role boundaries; do not touch Products migrations or apply the migration. If 4.9 proves no schema defect, record the evidenced no-migration branch instead of treating this task as optional.
     - _Requirements: 14.1-14.6_
-  - [~] 4.11 Add static/integration tests for any created migration and record its pending generated-type workflow
+  - [x] 4.11 Add static/integration tests for any created migration and record its pending generated-type workflow
     - Verify SQL placement, forward/rollback structure, deterministic transformation, policies, grants, and compatibility expectations in code when a migration exists; otherwise test/record the evidenced no-migration decision.
     - Record `pnpm run db:apply:admin -- --dry` before application and `pnpm run db:types:admin` after authorized application without claiming either ran.
     - _Requirements: 14.3-14.10, 18.4, 18.5, 19.5, 19.6_

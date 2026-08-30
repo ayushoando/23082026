@@ -14,16 +14,18 @@ import { getMemberSuiteNavLinks } from "@/features/shared/shell/memberSuiteRoute
 export function GlobalNavHeader() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [menuPathname, setMenuPathname] = useState(pathname);
   const mobileMenuId = useId();
+
+  if (pathname !== menuPathname) {
+    setMenuPathname(pathname);
+    setMenuOpen(false);
+  }
 
   const navLinks = getMemberSuiteNavLinks().map((link) => ({
     ...link,
     active: link.isActive(pathname),
   }));
-
-  useEffect(() => {
-    setMenuOpen(false);
-  }, [pathname]);
 
   useEffect(() => {
     if (!menuOpen) {

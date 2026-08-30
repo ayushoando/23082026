@@ -96,7 +96,7 @@ export function restorePersistedLayerRows(
     if (!row) continue;
 
     if (row.label) {
-      oo.data = { ...(oo.data ?? {}), label: row.label };
+      oo.data = { ...oo.data, label: row.label };
     }
     if (row.visible !== undefined) {
       object.visible = row.visible;

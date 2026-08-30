@@ -282,7 +282,7 @@ export function redactPlannerOperationEvent(
  * to the fallback sink when primary export fails.
  */
 export function exportPlannerOperationSafely(
-  event: PlannerOperationEvent,
+  event: unknown,
   dependencies: Pick<
     PlannerObservabilityDependencies,
     "exporter" | "fallbackSink"

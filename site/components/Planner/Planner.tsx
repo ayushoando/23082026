@@ -1505,7 +1505,7 @@ const Planner = ({
           });
       const savedSheet: PlannerSheet = {
         ...DEFAULT_SHEET,
-        ...(saved.sheet ?? {}),
+        ...saved.sheet,
       };
       const savedLayers = restorePersistedLayerRows(c.getObjects(), saved.layers);
 
@@ -1794,7 +1794,7 @@ const Planner = ({
         }
         const restoredSheet: PlannerSheet = {
           ...DEFAULT_SHEET,
-          ...(proj.sheet ?? {}),
+          ...proj.sheet,
         };
         const restoredLayers = restorePersistedLayerRows(c.getObjects(), proj.layers);
         const restoredProject: PlannerProject = {
