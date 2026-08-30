@@ -115,7 +115,7 @@ const routeContext: { params: Promise<Record<string, string>> } = {
   params: Promise.resolve({} as Record<string, string>),
 };
 
-const invokePost = (body: unknown) => POST(postJson(body), routeContext);
+const invokePost = (request: NextRequest) => POST(request, routeContext);
 
 function postJson(body: unknown) {
   return new NextRequest("http://localhost/api/Planner/sketch-to-plan", {
