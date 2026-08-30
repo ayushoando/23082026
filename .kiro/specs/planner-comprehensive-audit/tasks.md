@@ -301,7 +301,7 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - Cover geometry, commands, state transitions, API middleware order, owner scope, adapters, revision/idempotency/schema behavior, guest handoff, observability, migration transformations when present, and all defect-specific edge cases.
     - Tag/link tests to finding ids, source paths, requirements, and evidence class. Use distinct concern-specific test files or wait for explicit serial file transfer; never edit a workstream-owned test file concurrently.
     - _Requirements: 2.6, 18.1, 18.5, 19.1-19.4_
-  - [-] 5.10 Add targeted browser specifications for rendered behavior that static tests cannot prove
+  - [x] 5.10 Add targeted browser specifications for rendered behavior that static tests cannot prove
     - Cover representative desktop/tablet/phone layouts, resize/orientation context, touch/keyboard parity, focus movement/restoration, dialogs, 200% reflow, reduced motion, contrast/visual states, offline/conflict recovery, accessibility, and required performance profiles.
     - Author tests only; execution remains protected validation.
     - _Requirements: 5.1-5.8, 6.1-6.7, 7.1-7.7, 8.1-8.8, 9.2-9.6, 16.1-16.7, 18.5_

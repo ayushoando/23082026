@@ -80,7 +80,7 @@ All code is TypeScript with named exports. Tests live under `tests/`. Commands r
     - _Requirements: 6.4, 6.6_
 
 - [ ] 6. Planner Advisor Route
-  - [-] 6.1 Implement the planner advisor handler and route with withAuth guardrails
+  - [x] 6.1 Implement the planner advisor handler and route with withAuth guardrails
     - Create `site/app/api/planner/ai-advisor/route.ts` exporting `POST = withAuth(handlePlannerAdvisor, { role: "guest", rateLimitScope: "planner-ai-advisor", rateLimit: 5, requireCsrf: true })`
     - Mirror `handleCatalogAdvisor`: validate the body with the existing `PlannerAdvisorRequestSchema`, returning `validationError(parsed.error.issues)` → HTTP 400 on failure
     - Iterate `resolveAdvisorModelChain()` calling `requestAdvisorMessages(target, messages, { signal, stream, onDelta })` under an `AbortController` timeout, taking the first usable text; expose only `target.label`

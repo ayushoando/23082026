@@ -73,11 +73,11 @@ Implement a repository-local TypeScript operations-review tool that reads an exp
     - Redact secret-like values and create unverified findings independently for creation, retention, integrity, and retrievability when provider evidence is absent.
     - _Requirements: 5.1, 5.2, 5.3, 5.4_
     - **Acceptance evidence:** Rendered data contains no credential values and does not claim R2 object existence or retrievability from repository configuration.
-  - [-] 3.3 Write property test for attributable missing backup-coverage gaps.
+  - [x] 3.3 Write property test for attributable missing backup-coverage gaps.
     - **Property 6: Missing database-backup elements produce attributable gaps.**
     - **Validates: Requirements 4.3**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
-  - [-] 3.4 Write property test for scheduled-workflow credential redaction.
+  - [x] 3.4 Write property test for scheduled-workflow credential redaction.
     - **Property 7: Scheduled-workflow review redacts credentials while preserving structure.**
     - **Validates: Requirements 5.2**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
@@ -87,7 +87,7 @@ Implement a repository-local TypeScript operations-review tool that reads an exp
   - **Validation authorization:** No check is authorized by this plan. Any future `pnpm` test, typecheck, lint, build, or gate command requires exact current-session user authorization and enabled-hook permission. Deployments, provider operations, backups, restores, migrations, seeds, local observability services, and provider inspection remain separately protected.
 
 - [ ] 5. Assemble recovery readiness, monitoring gaps, and runbook/CI alignment
-  - [-] 5.1 Implement recovery planning for code rollback, Worker rollback, Products schema rollback, Admin schema rollback, and data recovery.
+  - [x] 5.1 Implement recovery planning for code rollback, Worker rollback, Products schema rollback, Admin schema rollback, and data recovery.
     - Emit one complete Restore Drill specification per applicable Products, Admin, catalog, and repository recovery path, with authorized operator, non-production target, source artifact category, objective, success evidence, data boundary, cleanup/rollback, and a protected execution record.
     - Model completed-drill evidence requirements without executing or simulating a drill.
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 7.1, 7.3, 7.4_

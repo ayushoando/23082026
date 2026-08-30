@@ -19,6 +19,11 @@ export type PlannerValidationCategory =
   | "integration"
   | "browser"
   | "accessibility"
+  | "responsive"
+  | "touch"
+  | "keyboard"
+  | "api"
+  | "persistence"
   | "performance"
   | "fork"
   | "focss"
@@ -49,6 +54,7 @@ export interface ValidationExecutionObservation {
   readonly outcome: "acceptable" | "unacceptable";
   readonly evidenceRefs: readonly string[];
   readonly outputLimitation: string;
+  readonly unverifiedBehavior?: string;
 }
 
 export interface RecordValidationInput {
@@ -62,6 +68,10 @@ export const FORBIDDEN_VALIDATION_COMMANDS = ["pnpm run typecheck:scripts"] as c
 
 function uniqueSorted(values: readonly string[]): string[] {
   return Array.from(new Set(values)).sort((left, right) => left.localeCompare(right));
+}
+
+function normalizeRepositoryPath(path: string): string {
+  return path.split("\\").join("/");
 }
 
 function quotePath(path: string): string {
@@ -90,78 +100,352 @@ function hasPath(paths: readonly string[], predicate: (path: string) => boolean)
   return paths.some(predicate);
 }
 
+function isTestFile(path: string): boolean {
+  return /\.(?:test|spec)\.tsx?$/.test(path);
+}
+
+function isBrowserTestPath(path: string): boolean {
+  return path.startsWith("tests/e2e/") && path.endsWith(".spec.ts") ||
+    path.startsWith("tests/e2e/") && path.endsWith(".spec.tsx");
+}
+
+function selectTestPaths(
+  paths: readonly string[],
+  predicate: (path: string) => boolean,
+  fallback: string,
+): string[] {
+  const selected = paths.filter(predicate);
+  return selected.length > 0 ? selected : [fallback];
+}
+
+function vitestCommand(paths: readonly string[]): string {
+  return `pnpm exec vitest run --config tests/vitest.config.ts ${paths.map(quotePath).join(" ")}`;
+}
+
+function playwrightCommand(
+  paths: readonly string[],
+  project: string,
+  grep?: string,
+): string {
+  const grepArgument = grep ? ` --grep="${grep}"` : "";
+  return `pnpm exec playwright test -c config/build/playwright.config.ts ${paths.map(quotePath).join(" ")}${grepArgument} --project=${project}`;
+}
+
+interface ActionDraft {
+  readonly baseId: string;
+  readonly findingIds: Set<string>;
+  readonly kind: ValidationKind;
+  readonly target: ValidationTarget;
+  readonly exactCommand: string;
+  readonly verifies: string;
+  readonly hosted: boolean;
+}
+
+function addAction(
+  drafts: Map<string, ActionDraft>,
+  findingId: string,
+  input: Omit<ActionDraft, "findingIds">,
+): void {
+  const key = [
+    input.baseId,
+    input.kind,
+    input.target,
+    input.exactCommand,
+    input.hosted ? "hosted" : "repository",
+  ].join("\u0000");
+  const existing = drafts.get(key);
+  if (existing) {
+    existing.findingIds.add(findingId);
+    return;
+  }
+  drafts.set(key, { ...input, findingIds: new Set([findingId]) });
+}
+
+function finalizeActions(drafts: Map<string, ActionDraft>): PlannedValidationAction[] {
+  const groups = Array.from(drafts.values()).sort((left, right) =>
+    left.baseId.localeCompare(right.baseId) || left.exactCommand.localeCompare(right.exactCommand),
+  );
+  const occurrences = new Map<string, number>();
+  return groups
+    .map((draft) => {
+      const occurrence = (occurrences.get(draft.baseId) ?? 0) + 1;
+      occurrences.set(draft.baseId, occurrence);
+      const id = occurrence === 1 ? draft.baseId : `${draft.baseId}-${occurrence}`;
+      return action(
+        id,
+        Array.from(draft.findingIds),
+        draft.kind,
+        draft.target,
+        draft.exactCommand,
+        draft.verifies,
+        draft.hosted,
+      );
+    })
+    .sort((left, right) => left.id.localeCompare(right.id));
+}
+
+const FORK_PATH_PATTERN = /^site\/(?:app\/(?:ooplanner|oostudio|api\/(?:Planner|Studio))|(?:features|components|lib|hooks|store|server|platform)\/(?:Planner|Studio)|focss\/(?:planner|studio))(?:\/|$)/;
+const FOCSS_PATH_PATTERN = /^site\/focss\/(?:planner|studio)(?:\/|$)/;
+const PLANNER_UI_STYLE_PATH_PATTERN = /^site\/(?:app\/ooplanner|features\/Planner|components\/Planner|focss\/planner|app\/oostudio|features\/Studio|components\/Studio|focss\/studio)(?:\/|$)/;
+
 export function derivePlannerValidationManifest(
   findings: readonly PlannerValidationFindingInput[],
 ): PlannedValidationAction[] {
-  const findingIds = uniqueSorted(findings.map((finding) => finding.id));
-  const paths = uniqueSorted(findings.flatMap((finding) => finding.changedPaths));
-  const categories = new Set(findings.flatMap((finding) => finding.categories));
-  const targetedTests = uniqueSorted(
-    findings.flatMap((finding) => finding.targetedTestPaths ?? []),
-  );
-  const actions: PlannedValidationAction[] = [];
+  const drafts = new Map<string, ActionDraft>();
 
-  const plannerForkChanged = hasPath(paths, (path) =>
-    /^site\/(?:app\/ooplanner|(?:components|lib|hooks|store|server)\/Planner)(?:\/|$)/.test(path),
-  );
-  const focssChanged = hasPath(paths, (path) => /^site\/focss\/planner(?:\/|$)/.test(path));
-  const implementationChanged = hasPath(paths, (path) =>
-    /^(?:site|plans)\/.*\.(?:ts|tsx)$/.test(path),
-  );
-  const testsChanged = hasPath(paths, (path) => /^tests\/.*\.(?:ts|tsx)$/.test(path));
-  const adminMigrationChanged = hasPath(paths, (path) =>
-    /^site\/platform\/supabase\/migrations\.admin\/.*\.sql$/.test(path),
-  );
+  for (const finding of findings) {
+    const findingId = finding.id;
+    const paths = uniqueSorted(finding.changedPaths.map(normalizeRepositoryPath));
+    const categories = new Set(finding.categories);
+    const targetedTests = uniqueSorted(
+      (finding.targetedTestPaths ?? []).map(normalizeRepositoryPath),
+    );
 
-  if (plannerForkChanged || categories.has("fork")) {
-    actions.push(action("validation:w5:fork-boundary", findingIds, "fork-boundary", "repository", "pnpm run scan:boundaries", "Planner and Studio fork imports remain isolated."));
-  }
-  if (focssChanged || categories.has("focss")) {
-    actions.push(action("validation:w5:focss", findingIds, "focss", "repository", "pnpm run verify:focss", "Planner FOCSS structure remains valid."));
-    actions.push(action("validation:w5:ui-lint", findingIds, "focss", "repository", "pnpm run lint:ui:strict", "Planner UI contract lint remains valid."));
-    actions.push(action("validation:w5:style-tokens", findingIds, "focss", "repository", "pnpm run check:style-tokens", "Planner styles use approved tokens."));
-  }
-  if (implementationChanged || categories.has("type")) {
-    actions.push(action("validation:w5:typecheck", findingIds, "type", "repository", "pnpm run typecheck", "Application TypeScript changes compile."));
-  }
-  if (testsChanged) {
-    actions.push(action("validation:w5:test-typecheck", findingIds, "type", "repository", "pnpm run typecheck:tests", "Authored test TypeScript changes compile."));
+    const plannerForkChanged = hasPath(paths, (path) => FORK_PATH_PATTERN.test(path));
+    const focssChanged = hasPath(paths, (path) => FOCSS_PATH_PATTERN.test(path));
+    const plannerUiStyleChanged = hasPath(paths, (path) => PLANNER_UI_STYLE_PATH_PATTERN.test(path));
+    const implementationChanged = hasPath(paths, (path) =>
+      /^(?:site|plans)\/.*\.(?:ts|tsx|mts|cts)$/.test(path),
+    );
+    const testsChanged = hasPath(paths, (path) =>
+      /^tests\/.*\.(?:ts|tsx|mts|cts)$/.test(path),
+    );
+    const apiChanged = hasPath(paths, (path) =>
+      /^site\/app\/api\/Planner(?:\/|$)/.test(path) ||
+      /^site\/server\/Planner\/.*(?:route|api|request)/i.test(path),
+    );
+    const persistenceChanged = hasPath(paths, (path) =>
+      /^site\/(?:lib|server)\/Planner\/.*(?:persistence|repository|adapter|project(?:Operations|Repository))/i.test(path),
+    );
+    const adminMigrationChanged = hasPath(paths, (path) =>
+      /^site\/platform\/supabase\/migrations\.admin\/.*\.sql$/.test(path),
+    );
+
+    const unitTests = selectTestPaths(
+      targetedTests,
+      (path) => path.includes("/unit/") && path.endsWith(".test.ts") ||
+        path.includes("/unit/") && path.endsWith(".test.tsx"),
+      "tests/unit/planner",
+    );
+    const integrationTests = selectTestPaths(
+      targetedTests,
+      (path) => path.includes("/integration/") && isTestFile(path),
+      "tests/integration/planner",
+    );
+    const browserTests = selectTestPaths(
+      targetedTests,
+      (path) => isBrowserTestPath(path) && !path.includes("performance"),
+      "tests/e2e/planner-comprehensive-audit-regression.spec.ts",
+    );
+    const accessibilityTests = selectTestPaths(
+      targetedTests,
+      (path) => isBrowserTestPath(path) && /accessibility|a11y/i.test(path),
+      browserTests[0] ?? "tests/e2e/accessibility.spec.ts",
+    );
+    const apiTests = selectTestPaths(
+      targetedTests,
+      (path) => isTestFile(path) && /(?:\/api\/|\/server\/Planner\/)/i.test(path),
+      integrationTests[0] ?? "tests/integration/planner",
+    );
+    const persistenceTests = selectTestPaths(
+      targetedTests,
+      (path) => isTestFile(path) && /(?:persistence|repository|adapter|plannerWorkstream5Regression)/i.test(path),
+      integrationTests[0] ?? "tests/integration/planner",
+    );
+
+    if (plannerForkChanged || categories.has("fork")) {
+      addAction(drafts, findingId, {
+        baseId: "validation:w5:fork-boundary",
+        kind: "fork-boundary",
+        target: "repository",
+        exactCommand: "pnpm run scan:boundaries",
+        verifies: "Planner and Studio fork imports remain isolated.",
+        hosted: false,
+      });
+    }
+    if (focssChanged || plannerUiStyleChanged || categories.has("focss")) {
+      addAction(drafts, findingId, {
+        baseId: "validation:w5:focss",
+        kind: "focss",
+        target: "repository",
+        exactCommand: "pnpm run verify:focss",
+        verifies: "Planner FOCSS structure remains valid.",
+        hosted: false,
+      });
+      addAction(drafts, findingId, {
+        baseId: "validation:w5:ui-lint",
+        kind: "focss",
+        target: "repository",
+        exactCommand: "pnpm run lint:ui:strict",
+        verifies: "Planner UI contract lint remains valid.",
+        hosted: false,
+      });
+      addAction(drafts, findingId, {
+        baseId: "validation:w5:style-tokens",
+        kind: "focss",
+        target: "repository",
+        exactCommand: "pnpm run check:style-tokens",
+        verifies: "Planner styles use approved tokens.",
+        hosted: false,
+      });
+    }
+    if (implementationChanged || categories.has("type")) {
+      addAction(drafts, findingId, {
+        baseId: "validation:w5:typecheck",
+        kind: "type",
+        target: "repository",
+        exactCommand: "pnpm run typecheck",
+        verifies: "Application TypeScript changes compile.",
+        hosted: false,
+      });
+    }
+    if (testsChanged) {
+      addAction(drafts, findingId, {
+        baseId: "validation:w5:test-typecheck",
+        kind: "type",
+        target: "repository",
+        exactCommand: "pnpm run typecheck:tests",
+        verifies: "Authored test TypeScript changes compile.",
+        hosted: false,
+      });
+    }
+
+    if (unitTests.length > 0 && (categories.has("unit") || targetedTests.some((path) => path.includes("/unit/")))) {
+      addAction(drafts, findingId, {
+        baseId: "validation:w5:unit",
+        kind: "unit",
+        target: "repository",
+        exactCommand: vitestCommand(unitTests),
+        verifies: "Targeted Workstream 5 unit regressions.",
+        hosted: false,
+      });
+    }
+    if (integrationTests.length > 0 && (categories.has("integration") || targetedTests.some((path) => path.includes("/integration/")))) {
+      addAction(drafts, findingId, {
+        baseId: "validation:w5:integration",
+        kind: "integration",
+        target: "integration",
+        exactCommand: vitestCommand(integrationTests),
+        verifies: "Targeted Planner integration regressions.",
+        hosted: false,
+      });
+    }
+    if (categories.has("browser")) {
+      addAction(drafts, findingId, {
+        baseId: "validation:w5:browser",
+        kind: "browser",
+        target: "browser",
+        exactCommand: playwrightCommand(browserTests, "chromium-desktop"),
+        verifies: "Targeted rendered Planner regressions.",
+        hosted: false,
+      });
+    }
+    if (categories.has("accessibility") || accessibilityTests.some((path) => /accessibility|a11y/i.test(path))) {
+      addAction(drafts, findingId, {
+        baseId: "validation:w5:accessibility",
+        kind: "accessibility",
+        target: "browser",
+        exactCommand: playwrightCommand(accessibilityTests, "chromium-desktop", "accessib|a11y|contrast|reflow|WCAG"),
+        verifies: "Targeted Planner accessibility and WCAG behavior.",
+        hosted: false,
+      });
+    }
+    if (categories.has("responsive")) {
+      addAction(drafts, findingId, {
+        baseId: "validation:w5:responsive",
+        kind: "responsive",
+        target: "browser",
+        exactCommand: playwrightCommand(browserTests, "chromium-desktop", "resize|orientation|reflow|reduced motion"),
+        verifies: "Planner desktop, tablet, and phone layout context survives resize and orientation changes.",
+        hosted: false,
+      });
+    }
+    if (categories.has("touch")) {
+      addAction(drafts, findingId, {
+        baseId: "validation:w5:touch",
+        kind: "touch",
+        target: "browser",
+        exactCommand: playwrightCommand(browserTests, "chromium-mobile", "touch"),
+        verifies: "Planner touch controls provide the required workflow outcome.",
+        hosted: false,
+      });
+    }
+    if (categories.has("keyboard")) {
+      addAction(drafts, findingId, {
+        baseId: "validation:w5:keyboard",
+        kind: "keyboard",
+        target: "browser",
+        exactCommand: playwrightCommand(browserTests, "chromium-tablet", "keyboard|focus"),
+        verifies: "Planner keyboard traversal, focus movement, and focus restoration remain operable.",
+        hosted: false,
+      });
+    }
+    if (categories.has("api") || apiChanged) {
+      addAction(drafts, findingId, {
+        baseId: "validation:w5:api",
+        kind: "api",
+        target: "integration",
+        exactCommand: vitestCommand(apiTests),
+        verifies: "Planner API contracts and request-processing behavior remain valid.",
+        hosted: false,
+      });
+    }
+    if (categories.has("persistence") || persistenceChanged) {
+      addAction(drafts, findingId, {
+        baseId: "validation:w5:persistence",
+        kind: "persistence",
+        target: "integration",
+        exactCommand: vitestCommand(persistenceTests),
+        verifies: "Planner persistence selection, revision, idempotency, and adapter behavior remain valid.",
+        hosted: false,
+      });
+    }
+    if (categories.has("performance")) {
+      const performanceTests = selectTestPaths(
+        targetedTests,
+        (path) => isBrowserTestPath(path) && path.includes("performance"),
+        "tests/e2e/planner-performance-required.spec.ts",
+      );
+      addAction(drafts, findingId, {
+        baseId: "validation:w5:performance",
+        kind: "performance",
+        target: "browser",
+        exactCommand: playwrightCommand(performanceTests, "chromium-desktop"),
+        verifies: "Required supported-profile Planner measurements.",
+        hosted: false,
+      });
+    }
+    if (adminMigrationChanged || categories.has("migration")) {
+      addAction(drafts, findingId, {
+        baseId: "validation:w5:migration-dry-run",
+        kind: "migration",
+        target: "hosted",
+        exactCommand: "pnpm run db:apply:admin -- --dry",
+        verifies: "Admin migration dry-run.",
+        hosted: true,
+      });
+      addAction(drafts, findingId, {
+        baseId: "validation:w5:admin-types",
+        kind: "migration",
+        target: "hosted",
+        exactCommand: "pnpm run db:types:admin",
+        verifies: "Admin generated types after separately authorized application.",
+        hosted: true,
+      });
+    }
+    if (finding.requiresFullGate || categories.has("full-gate")) {
+      addAction(drafts, findingId, {
+        baseId: "validation:w5:full-gate",
+        kind: "full-gate",
+        target: "repository",
+        exactCommand: "pnpm run gate",
+        verifies: "Final repository ship bar.",
+        hosted: false,
+      });
+    }
   }
 
-  const unitTests = targetedTests.filter((path) => path.includes("/unit/") && path.endsWith(".test.ts"));
-  const integrationTests = targetedTests.filter((path) => path.includes("/integration/") && path.endsWith(".test.ts"));
-  const browserTests = targetedTests.filter((path) =>
-    path.includes("/e2e/") &&
-    path.endsWith(".spec.ts") &&
-    !path.includes("performance"),
-  );
-  if (unitTests.length > 0 || categories.has("unit")) {
-    const selected = unitTests.length > 0 ? unitTests : ["tests/unit/planner"];
-    actions.push(action("validation:w5:unit", findingIds, "unit", "repository", `pnpm exec vitest run --config tests/vitest.config.ts ${selected.map(quotePath).join(" ")}`, "Targeted Workstream 5 unit regressions."));
-  }
-  if (integrationTests.length > 0 || categories.has("integration")) {
-    const selected = integrationTests.length > 0 ? integrationTests : ["tests/integration/planner"];
-    actions.push(action("validation:w5:integration", findingIds, "integration", "integration", `pnpm exec vitest run --config tests/vitest.config.ts ${selected.map(quotePath).join(" ")}`, "Targeted Planner integration regressions."));
-  }
-  if (browserTests.length > 0 || categories.has("browser")) {
-    const selected = browserTests.length > 0 ? browserTests : ["tests/e2e/planner-comprehensive-audit-regression.spec.ts"];
-    actions.push(action("validation:w5:browser", findingIds, "browser", "browser", `pnpm exec playwright test -c config/build/playwright.config.ts ${selected.map(quotePath).join(" ")} --project=chromium-desktop`, "Targeted rendered Planner regressions."));
-  }
-  if (categories.has("accessibility")) {
-    actions.push(action("validation:w5:accessibility", findingIds, "accessibility", "browser", "pnpm run test:a11y", "Planner accessibility behavior."));
-  }
-  if (categories.has("performance")) {
-    actions.push(action("validation:w5:performance", findingIds, "performance", "browser", "pnpm exec playwright test -c config/build/playwright.config.ts \"tests/e2e/planner-performance-required.spec.ts\" --project=chromium-desktop", "Required supported-profile Planner measurements."));
-  }
-  if (adminMigrationChanged || categories.has("migration")) {
-    actions.push(action("validation:w5:migration-dry-run", findingIds, "migration", "hosted", "pnpm run db:apply:admin -- --dry", "Admin migration dry-run.", true));
-    actions.push(action("validation:w5:admin-types", findingIds, "migration", "hosted", "pnpm run db:types:admin", "Admin generated types after separately authorized application.", true));
-  }
-  if (findings.some((finding) => finding.requiresFullGate) || categories.has("full-gate")) {
-    actions.push(action("validation:w5:full-gate", findingIds, "full-gate", "repository", "pnpm run gate", "Final repository ship bar."));
-  }
-
-  return actions.sort((left, right) => left.id.localeCompare(right.id));
+  return finalizeActions(drafts);
 }
 
 export function isValidationExecutionEligible(
@@ -169,6 +453,20 @@ export function isValidationExecutionEligible(
   hookPermission: HookPermissionState,
 ): boolean {
   return userAuthorization === "authorized" && hookPermission === "permitted";
+}
+
+function pendingLimitation(action: PlannedValidationAction): string {
+  const executionBoundary = action.hosted
+    ? "Hosted or separately authorized work remains unexecuted."
+    : "Protected validation remains unexecuted.";
+  return `${executionBoundary} Unverified behavior: ${action.verifies} No pass or fail is claimed.`;
+}
+
+function observedLimitation(observation: ValidationExecutionObservation): string {
+  const outputLimitation = observation.outputLimitation.trim() || "Command output was not retained beyond the execution record.";
+  const unverifiedBehavior = observation.unverifiedBehavior?.trim() ||
+    "Behavior outside the selected command and evidence scope remains unverified.";
+  return `${outputLimitation} Unverified behavior: ${unverifiedBehavior}`;
 }
 
 export function recordValidationEvidence(input: RecordValidationInput): ValidationRecord {
@@ -182,12 +480,12 @@ export function recordValidationEvidence(input: RecordValidationInput): Validati
       repositoryRoot: ".",
       requirementRefs: [...TASK_5_11_REQUIREMENTS],
       verifies: input.action.verifies,
-      limitation: input.action.hosted
-        ? "Hosted action remains separately authorized and unexecuted; no result is claimed."
-        : "Protected validation remains unexecuted; no pass or fail is claimed.",
+      limitation: pendingLimitation(input.action),
       state: "pending",
       exactCommand: input.action.hosted ? null : input.action.exactCommand,
-      pendingOwnerAction: input.action.hosted ? input.action.exactCommand : null,
+      pendingOwnerAction: input.action.hosted
+        ? `Separately authorize and execute: ${input.action.exactCommand}`
+        : null,
       userAuthorization: input.userAuthorization,
       hookPermission: input.hookPermission,
       exitStatus: null,
@@ -203,7 +501,7 @@ export function recordValidationEvidence(input: RecordValidationInput): Validati
     repositoryRoot: ".",
     requirementRefs: [...TASK_5_11_REQUIREMENTS],
     verifies: input.action.verifies,
-    limitation: input.observation.outputLimitation,
+    limitation: observedLimitation(input.observation),
     state: "observed",
     exactCommand: input.action.exactCommand,
     pendingOwnerAction: null,

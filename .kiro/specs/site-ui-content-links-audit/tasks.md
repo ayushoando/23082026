@@ -47,7 +47,7 @@ Implement and execute a read-only TypeScript audit program in six ordered waves 
     - **Validation criteria:** Every discovered candidate has exactly one canonical classification or explicit exclusion/gap/conflict; duplicate concrete URLs retain all sources and discovery times; Planner, Studio, admin, auth, offline, and Shared Shell records remain distinct.
     - _Requirements: 1.1-1.8, 2.1-2.6, 19.1-19.4, 24.1-24.7, 26.1_
 
-  - [-] 1.5 Implement profile registries, applicability, and exact occurrence expansion
+  - [x] 1.5 Implement profile registries, applicability, and exact occurrence expansion
     - Define versioned viewport, browser/OS/assistive-technology, access, English/Hindi, consent, and performance profile registries before evaluation.
     - Implement applicability decisions for all State Variants and audit dimensions, then generate the exact state × viewport × browser × access × language product for each route/instance/shell without representative substitution.
     - Generate stable occurrence/finding IDs, input fingerprints, wave ownership, and explicit non-applicability rationales.
