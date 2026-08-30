@@ -242,7 +242,8 @@ describe("Feature: ai-implementation-audit, Property 10: Secrets and model ident
           const json = JSON.parse(text) as Record<string, unknown>;
           if (
             json.success === true &&
-            json.data != null &&
+            json.data !== null &&
+            json.data !== undefined &&
             typeof json.data === "object"
           ) {
             const data = json.data as Record<string, unknown>;

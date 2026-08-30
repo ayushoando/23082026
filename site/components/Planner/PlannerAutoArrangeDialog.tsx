@@ -8,12 +8,12 @@ import { OoInput } from "@planner/components/ui/PlannerOoInput";
 import { OoDialog } from "@planner/components/ui/PlannerOoDialog";
 import type { FurnitureItem, PlannerSheet } from "@planner/lib/plannerTypes";
 
-type AutoArrangeDialogProps = {
+interface AutoArrangeDialogProps {
   open?: boolean;
   onClose?: () => void;
   sheet: PlannerSheet;
   onArrange: (opts: { items: FurnitureItem[]; gap_mm: number; margin_mm: number }) => void | Promise<void>;
-};
+}
 
 export const AutoArrangeDialog = ({ open, onClose, sheet, onArrange }: AutoArrangeDialogProps) => {
   const items = useCatalogStore((s) => s.items);
@@ -85,50 +85,59 @@ export const AutoArrangeDialog = ({ open, onClose, sheet, onArrange }: AutoArran
         if (!isOpen) onClose?.();
       }}
       title="Auto-arrange room"
+      descriptionId="aa-description"
       className="dialog"
     >
-      <div data-testid="auto-arrange-dialog" style={{ maxWidth: 720 }}>
-        <div className="dialog__sub">
+      <div data-testid="auto-arrange-dialog" aria-busy={busy}>
+        <div className="dialog__sub" id="aa-description">
           Pick items and quantities. They’ll be laid out in a non-overlapping grid inside your{" "}
           {Math.round((sheet.width_mm / 1000) * 10) / 10}×{Math.round((sheet.height_mm / 1000) * 10) / 10}m
           room.
         </div>
 
-        <div className="prop-row" style={{ gridTemplateColumns: "90px 1fr 1fr", gap: 8 }}>
+        <div className="prop-row" style={{ gridTemplateColumns: "90px 1fr 1fr", gap: 8 }} role="group" aria-labelledby="aa-spacing-label" aria-describedby="aa-spacing-help">
           <div className="prop-row__label" id="aa-spacing-label">Spacing</div>
           <div className="prop-row__inputs">
             <OoInput
+              id="aa-margin"
               type="number"
               value={String(margin)}
+              min={0}
               onChange={(e) => setMargin(parseFloat(e.target.value) || 0)}
               data-testid="aa-margin"
               aria-label="Spacing margin in millimeters"
+              aria-describedby="aa-spacing-help"
             />
-            <div style={{ fontSize: 11, color: "var(--text-subtle)", alignSelf: "center", minWidth: 42 }}>
+            <div style={{ fontSize: 11, color: "var(--text-subtle)", alignSelf: "center", minWidth: 42 }} aria-hidden="true">
               margin mm
             </div>
           </div>
           <div className="prop-row__inputs">
             <OoInput
+              id="aa-gap"
               type="number"
               value={String(gap)}
+              min={0}
               onChange={(e) => setGap(parseFloat(e.target.value) || 0)}
               data-testid="aa-gap"
               aria-label="Spacing gap in millimeters"
+              aria-describedby="aa-spacing-help"
             />
-            <div style={{ fontSize: 11, color: "var(--text-subtle)", alignSelf: "center", minWidth: 42 }}>
+            <div style={{ fontSize: 11, color: "var(--text-subtle)", alignSelf: "center", minWidth: 42 }} aria-hidden="true">
               gap mm
             </div>
           </div>
+          <p id="aa-spacing-help" className="sr-only">Spacing values are measured in millimetres and may be zero.</p>
         </div>
 
-        <div className="catalog-categories" style={{ margin: "12px 0 8px" }}>
+        <div className="catalog-categories" style={{ margin: "12px 0 8px" }} role="group" aria-label="Filter furniture by category">
           {catList.map((c) => (
             <OoButton
               key={c}
               plain
               className="chip"
               data-active={category === c}
+              aria-pressed={category === c}
               onPress={() => setCategory(c)}
               data-testid={`aa-cat-${c}`}
             >
@@ -138,6 +147,8 @@ export const AutoArrangeDialog = ({ open, onClose, sheet, onArrange }: AutoArran
         </div>
 
         <div
+          role="region"
+          aria-labelledby="aa-items-title"
           style={{
             maxHeight: 340,
             overflow: "auto",
@@ -146,6 +157,7 @@ export const AutoArrangeDialog = ({ open, onClose, sheet, onArrange }: AutoArran
             padding: 8,
           }}
         >
+          <h2 id="aa-items-title" className="sr-only">Available furniture</h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 8 }}>
             {visible.map((it) => {
               const n = selected[it.id] || 0;
@@ -164,7 +176,7 @@ export const AutoArrangeDialog = ({ open, onClose, sheet, onArrange }: AutoArran
                   <div className="catalog-item__dim">
                     {it.dimensions.width_mm}×{it.dimensions.depth_mm}
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 4, marginTop: 6 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 4, marginTop: 6 }} role="group" aria-label={`${it.name} quantity controls`}>
                     <OoButton
                       variant={["sm", "ghost"]}
                       onPress={() => bump(it.id, -1)}
@@ -216,12 +228,16 @@ export const AutoArrangeDialog = ({ open, onClose, sheet, onArrange }: AutoArran
             color: "var(--text-muted)",
             fontFamily: "var(--font-mono)",
           }}
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+          data-testid="aa-summary"
         >
           <div>
             {totalCount} items · rough coverage {(roughUsage * 100).toFixed(0)}%
           </div>
           {roughUsage > 1 && (
-            <div style={{ color: "var(--color-error)" }}>
+            <div style={{ color: "var(--color-error)" }} role="alert">
               Selection larger than room — excess will overflow.
             </div>
           )}
@@ -236,6 +252,7 @@ export const AutoArrangeDialog = ({ open, onClose, sheet, onArrange }: AutoArran
             onPress={doArrange}
             isDisabled={busy || totalCount === 0}
             data-testid="aa-arrange"
+            aria-busy={busy}
           >
             {busy ? "Arranging…" : `Arrange ${totalCount} item${totalCount === 1 ? "" : "s"}`}
           </OoButton>

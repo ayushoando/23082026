@@ -4,7 +4,7 @@ import { PanelEmptyState } from "@planner/components/ui/PlannerPanelEmptyState";
 import { PhIcon } from "@planner/components/ui/PlannerPhIcon";
 import type { LayerRow } from "@planner/lib/plannerTypes";
 
-type LayersPanelProps = {
+interface LayersPanelProps {
   objects: LayerRow[];
   selectedId?: string;
   onSelect: (id: string) => void;
@@ -12,7 +12,7 @@ type LayersPanelProps = {
   onToggleLock: (id: string) => void;
   onDelete: (id: string) => void;
   onReorder: (id: string, delta: number) => void;
-};
+}
 
 export const LayersPanel = ({
   objects,
@@ -50,12 +50,13 @@ export const LayersPanel = ({
           <button
             type="button"
             className="layer-item__select"
+            aria-label={`Select ${o.label}`}
             aria-pressed={o.id === selectedId}
             onClick={() => onSelect(o.id)}
           >
             {o.label}
           </button>
-          <div className="layer-item__actions" aria-label={`${o.label} actions`}>
+          <div className="layer-item__actions" role="group" aria-label={`${o.label} actions`}>
             <button type="button" className="layer-item__icon-btn" onClick={() => onReorder(o.id, -1)} title="Bring forward" aria-label={`Bring ${o.label} forward`}>
               <PhIcon name="arrowUp" size={18} />
             </button>

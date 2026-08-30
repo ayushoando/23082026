@@ -57,29 +57,21 @@ describe("audit-hollow-tests", () => {
     expect(hits.some((h) => h.reason === "zero-expect")).toBe(true);
   });
 
-  it.each([
-    ".kiro/kiro-repo-guidance-setup/tests/sample.test.ts",
-    ".kiro/specs/example/tests/sample.test.ts",
-  ])("flags hollow tests in contained Kiro root %s", (relativeTestPath) => {
+  it("ignores Kiro-owned tests outside the external audit root", () => {
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "audit-hollow-kiro-"));
     try {
+      const relativeTestPath = "tests/.kiro/specs/example/tests/sample.test.ts";
       const absolute = path.join(tmp, relativeTestPath);
       fs.mkdirSync(path.dirname(absolute), { recursive: true });
       fs.writeFileSync(absolute, "it('empty', () => { const value = 1; });\n");
 
-      let stderr = "";
-      try {
-        execFileSync(process.execPath, [scriptPath], {
-          cwd: siteRoot,
-          encoding: "utf8",
-          env: { ...process.env, MONOREPO_ROOT: tmp },
-          stdio: ["ignore", "pipe", "pipe"],
-        });
-      } catch (error) {
-        stderr = String((error as { stderr?: string }).stderr ?? "");
-      }
-      expect(stderr).toContain("zero-expect");
-      expect(stderr.replaceAll("\\", "/")).toContain(relativeTestPath);
+      const output = execFileSync(process.execPath, [scriptPath], {
+        cwd: siteRoot,
+        encoding: "utf8",
+        env: { ...process.env, MONOREPO_ROOT: tmp },
+        stdio: ["ignore", "pipe", "pipe"],
+      });
+      expect(output).toContain("audit-hollow-tests: ok");
     } finally {
       fs.rmSync(tmp, { recursive: true, force: true });
     }

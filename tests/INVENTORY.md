@@ -2,66 +2,22 @@
 
 Generated executable-test and support-file inventory. Layout rules: `tests/CONTENTS.md`.
 
-*Updated: 2026-08-29 — regenerate through the repository docs workflow.*
+*Updated: 2026-08-30 — regenerate through the repository docs workflow.*
 
 ## Counts
 
 | Kind | Count |
 |---|---:|
-| Vitest executable files | 706 |
-| Playwright executable specs | 80 |
-| Helpers | 37 |
-| Fixtures | 13 |
+| Vitest executable files | 724 |
+| Playwright executable specs | 82 |
+| Helpers | 38 |
+| Fixtures | 15 |
 | Snapshots | 12 |
 | Other assets | 10 |
-| **Total files** | **858** |
+| **Total files** | **881** |
 
 ## vitest
 
-- `.kiro/kiro-repo-guidance-setup/tests/integration/enablement.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/integration/integration-gate.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/integration/local-surface-e2e.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/integration/reviewer-contract.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-a/authority-resolution-preserves-evidence.property.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-a/coverage.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-a/discovery.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-a/examples-and-edge-cases.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-a/inventory-and-record-schemas-are-total.property.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-a/inventory.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-a/provenance.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-b/approval-boundaries.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-b/compatibility.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-b/evidence-isolated-by-surface-and-freshness.property.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-b/examples-and-edge-cases.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-b/fixed-candidate-and-decision-sets.property.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-b/policy.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-b/scope-and-permission-records-do-not-broaden-access.property.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-b/scope-precedence.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-c/approved-hooks-satisfy-schema-and-safety-bounds.property.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-c/capabilities.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-c/continuity-evidence-does-not-cross-data-boundaries.property.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-c/continuity.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-c/examples-and-edge-cases.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-c/extension-routing-and-execution-plans-are-bounded.property.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-c/hooks.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-c/incompatible-crew-behavior-is-blocked.property.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-c/skill-authority-unique-and-prerequisites-explicit.property.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-c/skills.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-d/contract-freeze.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-d/contracts-validation.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-d/controlled-rollback.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-d/enablement-property6.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-d/handover-property14.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-d/handover.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-d/owner-decisions-property13.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-d/policy-property15.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-d/projections-review.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-d/reservations-wave-guard.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-d/reviewers.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-d/rollback.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-d/validation.test.ts`
-- `.kiro/kiro-repo-guidance-setup/tests/lane-d/wave-property16.test.ts`
-- `.kiro/specs/oando-master/tests/oando-master-properties.test.ts`
 - `tests/integration/app/sitemap-catalog-emit.test.ts`
 - `tests/integration/components/pwa/ServiceWorkerRegister.test.tsx`
 - `tests/integration/features/ops/CustomerQueriesOpsPageView.test.tsx`
@@ -91,6 +47,7 @@ Generated executable-test and support-file inventory. Layout rules: `tests/CONTE
 - `tests/integration/lib/catalog/site/imageMetadata.integration.test.ts`
 - `tests/integration/lib/catalog/site/specSchema.test.ts`
 - `tests/integration/lib/catalog/sources.test.ts`
+- `tests/integration/planner/plannerWorkstream5Regression.test.ts`
 - `tests/tech-docs-generator/app-overlay.test.tsx`
 - `tests/tech-docs-generator/auth-gate.test.tsx`
 - `tests/tech-docs-generator/auth-provider.test.tsx`
@@ -191,6 +148,7 @@ Generated executable-test and support-file inventory. Layout rules: `tests/CONTE
 - `tests/unit/app/api/admin/catalogs/[type]/route.test.ts`
 - `tests/unit/app/api/admin/features/route.test.ts`
 - `tests/unit/app/api/admin/price-books/route.test.ts`
+- `tests/unit/app/api/ai-advisor/catalogContract.property.test.ts`
 - `tests/unit/app/api/ai-advisor/route.test.ts`
 - `tests/unit/app/api/audit/route.test.ts`
 - `tests/unit/app/api/business-stats/route.test.ts`
@@ -212,13 +170,55 @@ Generated executable-test and support-file inventory. Layout rules: `tests/CONTE
 - `tests/unit/app/api/mutation-route-safety.matrix.test.ts`
 - `tests/unit/app/api/nav-categories/route.test.ts`
 - `tests/unit/app/api/nav-search/route.test.ts`
+- `tests/unit/app/api/Planner/ai-advisor/plannerAdvisorFallback.property.test.ts`
+- `tests/unit/app/api/Planner/ai-advisor/plannerAdvisorSecrets.property.test.ts`
+- `tests/unit/app/api/Planner/ai-advisor/plannerAdvisorShape.property.test.ts`
+- `tests/unit/app/api/Planner/ai-advisor/plannerAdvisorStreaming.property.test.ts`
+- `tests/unit/app/api/Planner/ai-advisor/plannerAdvisorValidation.property.test.ts`
+- `tests/unit/app/api/Planner/ai-advisor/plannerAdvisorWiring.test.ts`
+- `tests/unit/app/api/Planner/ai-advisor/route.test.ts`
 - `tests/unit/app/api/Planner/handoff/route.test.ts`
 - `tests/unit/app/api/Planner/projects/[id]/route.test.ts`
 - `tests/unit/app/api/Planner/projects/route.test.ts`
 - `tests/unit/app/api/Planner/sketch-to-plan/route.test.ts`
 - `tests/unit/app/api/plans/[id]/route.test.ts`
 - `tests/unit/app/api/plans/route.test.ts`
-- … +506 more
+- `tests/unit/app/api/products/filter/route.test.ts`
+- `tests/unit/app/api/products/route.test.ts`
+- `tests/unit/app/api/Studio/furniture/[id]/publish/route.test.ts`
+- `tests/unit/app/api/Studio/furniture/[id]/route.test.ts`
+- `tests/unit/app/api/Studio/furniture/route.test.ts`
+- `tests/unit/app/api/theme/route.test.ts`
+- `tests/unit/app/api/tracking/route.test.ts`
+- `tests/unit/app/css/site/components/missing-components.test.ts`
+- `tests/unit/app/global-error.test.tsx`
+- `tests/unit/app/layout.test.tsx`
+- `tests/unit/app/not-found.test.tsx`
+- `tests/unit/app/offline/layout.test.tsx`
+- `tests/unit/app/offline/page.test.tsx`
+- `tests/unit/app/offline/ReloadButton.test.tsx`
+- `tests/unit/app/plannerRootViewportLock.test.ts`
+- `tests/unit/app/robots.test.ts`
+- `tests/unit/app/sitemap.test.ts`
+- `tests/unit/components/analytics/KpiIntegrityMonitor.test.tsx`
+- `tests/unit/components/career/CareerPageView.test.tsx`
+- `tests/unit/components/career/JobCard.test.tsx`
+- `tests/unit/components/ClientBadge.test.tsx`
+- `tests/unit/components/contact/ContactPageView.test.tsx`
+- `tests/unit/components/contact/CustomerQueryForm.test.tsx`
+- `tests/unit/components/home/CategoryGrid.test.tsx`
+- `tests/unit/components/home/CollectionsSectionHeading.test.tsx`
+- `tests/unit/components/home/Hero.test.tsx`
+- `tests/unit/components/home/HomepageHero.test.tsx`
+- `tests/unit/components/home/InteractiveTools.test.tsx`
+- `tests/unit/components/home/KpiCounter.test.tsx`
+- `tests/unit/components/home/layout/HomeCatalogLayout.test.tsx`
+- `tests/unit/components/home/layout/HomeMarketingLayout.test.tsx`
+- `tests/unit/components/home/layout/HomeSection.test.tsx`
+- `tests/unit/components/home/layout/HomeSectionInner.test.tsx`
+- `tests/unit/components/home/layout/index.test.ts`
+- `tests/unit/components/home/layout/SiteWorkspaceShell.test.tsx`
+- … +524 more
 
 ## playwright
 
@@ -270,6 +270,7 @@ Generated executable-test and support-file inventory. Layout rules: `tests/CONTE
 - `tests/e2e/planner-canvas-trust.spec.ts`
 - `tests/e2e/planner-catalog.spec.ts`
 - `tests/e2e/planner-chrome.spec.ts`
+- `tests/e2e/planner-comprehensive-audit-regression.spec.ts`
 - `tests/e2e/planner-custom-tools.spec.ts`
 - `tests/e2e/planner-entry-states.spec.ts`
 - `tests/e2e/planner-guest-smoke.spec.ts`
@@ -283,6 +284,7 @@ Generated executable-test and support-file inventory. Layout rules: `tests/CONTE
 - `tests/e2e/planner-marketing-a11y.spec.ts`
 - `tests/e2e/planner-offline-sync.spec.ts`
 - `tests/e2e/planner-onboarding-ws2.spec.ts`
+- `tests/e2e/planner-performance-required.spec.ts`
 - `tests/e2e/planner-pf-browser-matrix.spec.ts`
 - `tests/e2e/planner-phone-chrome.spec.ts`
 - `tests/e2e/planner-responsiveness.spec.ts`
@@ -310,6 +312,7 @@ Generated executable-test and support-file inventory. Layout rules: `tests/CONTE
 - `tests/e2e/guestProjectSetup.ts`
 - `tests/e2e/helpers/isolatedAdminSvgPublish.ts`
 - `tests/e2e/helpers/isolatedAdminSvgPublishWorker.ts`
+- `tests/e2e/helpers/plannerPerformance.ts`
 - `tests/e2e/helpers/planSymbolPngFixture.ts`
 - `tests/e2e/helpers/warmDevRoute.ts`
 - `tests/e2e/plannerCanvasHelpers.ts`
@@ -347,6 +350,8 @@ Generated executable-test and support-file inventory. Layout rules: `tests/CONTE
 
 - `tests/fixtures/planner-3d-parity.json`
 - `tests/fixtures/planner-guest-wall.json`
+- `tests/fixtures/planner/browserAuditMatrix.ts`
+- `tests/fixtures/planner/representativeProject.ts`
 - `tests/fixtures/plannerTestUuids.ts`
 - `tests/fixtures/svg-editor-v2/full-safe.svg`
 - `tests/fixtures/svg-editor-v2/hostile/css-url.svg`

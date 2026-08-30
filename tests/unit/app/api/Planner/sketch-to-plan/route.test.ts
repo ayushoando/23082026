@@ -16,7 +16,8 @@ vi.mock("@planner/server/sketchToPlan.server", () => ({
       // Replicate the shared classifySketchConversionError logic:
       // if the error has a .reason string property it's a SketchConversionError.
       if (
-        err != null &&
+        err !== null &&
+        err !== undefined &&
         typeof (err as Record<string, unknown>).reason === "string"
       ) {
         return {

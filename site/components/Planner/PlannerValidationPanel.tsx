@@ -25,19 +25,31 @@ export function ValidationPanel() {
 
   if (result.issues.length === 0) {
     return (
-      <div className="planner-validation" data-testid="planner-validation-empty">
-        <p className="ai-hint">No layout issues detected.</p>
-      </div>
+      <section
+        className="planner-validation"
+        data-testid="planner-validation-empty"
+        aria-labelledby="planner-validation-title"
+        aria-live="polite"
+      >
+        <h3 id="planner-validation-title" className="sr-only">Layout validation</h3>
+        <p className="ai-hint" role="status">No layout issues detected.</p>
+      </section>
     );
   }
 
   return (
-    <div className="planner-validation" data-testid="planner-validation">
-      <div className="planner-validation__summary" data-testid="planner-validation-summary">
+    <section
+      className="planner-validation"
+      data-testid="planner-validation"
+      aria-labelledby="planner-validation-title"
+      aria-live="polite"
+    >
+      <h3 id="planner-validation-title" className="sr-only">Layout validation</h3>
+      <div className="planner-validation__summary" data-testid="planner-validation-summary" role="status" aria-live="polite" aria-atomic="true">
         <span data-testid="planner-validation-errors">{result.errors} errors</span>
         <span data-testid="planner-validation-warnings">{result.warnings} warnings</span>
       </div>
-      <ul className="planner-validation__list">
+      <ul className="planner-validation__list" aria-label="Layout validation issues">
         {result.issues.map((issue) => (
           <li
             key={issue.id}
@@ -52,7 +64,7 @@ export function ValidationPanel() {
           </li>
         ))}
       </ul>
-    </div>
+    </section>
   );
 }
 

@@ -12,6 +12,8 @@ type OoDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   title?: string;
+  /** Stable id for the dialog's supporting description. */
+  descriptionId?: string;
   children: ReactNode;
   /** FOCSS dialog panel class extras */
   className?: string;
@@ -22,6 +24,7 @@ export function OoDialog({
   open,
   onOpenChange,
   title,
+  descriptionId,
   children,
   className,
 }: OoDialogProps) {
@@ -33,7 +36,7 @@ export function OoDialog({
       className="dialog-scrim"
     >
       <AriaModal className={className ? `dialog ${className}` : "dialog"}>
-        <AriaDialog>
+        <AriaDialog aria-describedby={descriptionId}>
           {title ? <Heading slot="title" className="dialog__title">{title}</Heading> : null}
           {children}
         </AriaDialog>

@@ -5,11 +5,7 @@ import { fileURLToPath } from "node:url";
 import { REPO_ROOT } from "../lib/repoRoot.mjs";
 
 const TESTS_DIR = path.join(REPO_ROOT, "tests");
-const CANONICAL_TEST_ROOTS = [
-  "tests",
-  ".kiro/kiro-repo-guidance-setup/tests",
-  ".kiro/specs/*/tests",
-];
+const CANONICAL_TEST_ROOTS = ["tests"];
 const RESULTS_DIR = path.join(REPO_ROOT, "results");
 const INVENTORY_JSON = path.join(RESULTS_DIR, "test-inventory.json");
 const MIGRATION_JSON = path.join(RESULTS_DIR, "test-migration-map.json");
@@ -23,7 +19,7 @@ function posix(value) {
 function walk(directory, files = []) {
   if (!fs.existsSync(directory)) return files;
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
-    if (["node_modules", ".git"].includes(entry.name)) continue;
+    if (["node_modules", ".git", ".kiro"].includes(entry.name)) continue;
     const absolute = path.join(directory, entry.name);
     if (entry.isDirectory()) walk(absolute, files);
     else files.push(absolute);
@@ -33,9 +29,6 @@ function walk(directory, files = []) {
 
 export function classifyTestInventoryPath(relative) {
   const base = path.posix.basename(relative);
-  if (relative.startsWith(".kiro/") && /\.(?:test|spec)\.(?:ts|tsx|js|mjs)$/.test(base)) {
-    return { kind: "vitest", runner: "vitest" };
-  }
   if (/\.spec\.(?:ts|tsx|js|mjs)$/.test(base)) return { kind: "playwright", runner: "playwright" };
   if (/\.test\.(?:ts|tsx|js|mjs)$/.test(base)) return { kind: "vitest", runner: "vitest" };
   if (relative.includes("-snapshots/") || /\.(?:png|webp)$/.test(base)) return { kind: "snapshot", runner: "support" };
@@ -49,26 +42,10 @@ export function classifyTestInventoryPath(relative) {
   return { kind: "asset", runner: "support" };
 }
 
-function findSpecTestRoots(directory, roots = []) {
-  if (!fs.existsSync(directory)) return roots;
-  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
-    if (!entry.isDirectory()) continue;
-    const absolute = path.join(directory, entry.name);
-    if (entry.name === "tests") roots.push(absolute);
-    else findSpecTestRoots(absolute, roots);
-  }
-  return roots;
-}
-
 export function collectTestInventoryFiles(repoRoot = REPO_ROOT) {
-  const testRoots = [
-    path.join(repoRoot, "tests"),
-    path.join(repoRoot, ".kiro", "kiro-repo-guidance-setup", "tests"),
-    ...findSpecTestRoots(path.join(repoRoot, ".kiro", "specs")),
-  ];
+  const testRoot = path.join(repoRoot, "tests");
 
-  return testRoots
-    .flatMap((testRoot) => walk(testRoot))
+  return walk(testRoot)
     .map((absolute) => {
       const relative = posix(path.relative(repoRoot, absolute));
       const classification = classifyTestInventoryPath(relative);

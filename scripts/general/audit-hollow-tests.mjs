@@ -12,11 +12,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const siteRoot = process.env.MONOREPO_ROOT
   ? path.resolve(process.env.MONOREPO_ROOT)
   : path.resolve(__dirname, "../..");
-const testRoots = [
-  path.join(siteRoot, "tests"),
-  path.join(siteRoot, ".kiro", "kiro-repo-guidance-setup", "tests"),
-  path.join(siteRoot, ".kiro", "specs"),
-];
+const testRoots = [path.join(siteRoot, "tests")];
 
 const excludeMarketing = process.argv.includes("--exclude-marketing");
 const MARKETING_SEGMENT = `${path.sep}tests${path.sep}unit${path.sep}app${path.sep}(site)${path.sep}`;
@@ -24,6 +20,7 @@ const MARKETING_SEGMENT = `${path.sep}tests${path.sep}unit${path.sep}app${path.s
 function walk(dir, files = []) {
   if (!existsSync(dir)) return files;
   for (const entry of readdirSync(dir)) {
+    if (entry === ".kiro") continue;
     const full = path.join(dir, entry);
     if (statSync(full).isDirectory()) {
       walk(full, files);

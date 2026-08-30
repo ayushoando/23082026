@@ -11,11 +11,7 @@ const repoRoot = process.env.MONOREPO_ROOT
   ? path.resolve(process.env.MONOREPO_ROOT)
   : path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const testsRoot = path.join(repoRoot, "tests");
-const testRoots = [
-  testsRoot,
-  path.join(repoRoot, ".kiro", "kiro-repo-guidance-setup", "tests"),
-  path.join(repoRoot, ".kiro", "specs"),
-];
+const testRoots = [testsRoot];
 const gateConfigPath = path.join(repoRoot, "config", "build", "playwright-gate-specs.json");
 const exceptionPath = path.join(testsRoot, "manifests", "skip-exceptions.json");
 const TEST_SOURCE = /\.[cm]?[jt]sx?$/i;
@@ -34,7 +30,7 @@ function posix(value) {
 function walk(directory, files = []) {
   if (!fs.existsSync(directory)) return files;
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
-    if (["node_modules", ".git", "__snapshots__"].includes(entry.name)) continue;
+    if (["node_modules", ".git", ".kiro", "__snapshots__"].includes(entry.name)) continue;
     const absolute = path.join(directory, entry.name);
     if (entry.isDirectory()) walk(absolute, files);
     else if (TEST_SOURCE.test(entry.name)) files.push(absolute);

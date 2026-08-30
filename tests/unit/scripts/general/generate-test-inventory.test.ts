@@ -17,34 +17,26 @@ describe("generate-test-inventory classification", () => {
     ["tests/e2e/example.spec.ts-snapshots/example-chromium.png", "snapshot", "support"],
     ["tests/support/page-objects/planner.helper.ts", "helper", "support"],
     ["tests/support/README.md", "asset", "support"],
-    [".kiro/kiro-repo-guidance-setup/tests/rule.test.ts", "vitest", "vitest"],
-    [".kiro/specs/example/tests/contract.spec.ts", "vitest", "vitest"],
   ])("classifies %s as one %s category", (file, kind, runner) => {
     expect(classifyTestInventoryPath(file)).toEqual({ kind, runner });
   });
 
-  it("discovers ordinary and both contained Kiro test roots", () => {
+  it("discovers ordinary tests while ignoring Kiro-owned roots", () => {
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "test-inventory-"));
     try {
-      const expectedPaths = [
-        "tests/unit/site/lib/ordinary.test.ts",
-        ".kiro/kiro-repo-guidance-setup/tests/governance.test.ts",
-        ".kiro/specs/example/tests/spec-owned.test.ts",
-      ];
-      for (const relative of expectedPaths) {
+      const ordinaryPath = "tests/unit/site/lib/ordinary.test.ts";
+      const nestedKiroPath = "tests/.kiro/specs/example/tests/spec-owned.test.ts";
+      const externalKiroPath = ".kiro/specs/example/tests/spec-owned.test.ts";
+
+      for (const relative of [ordinaryPath, nestedKiroPath, externalKiroPath]) {
         const absolute = path.join(tmp, relative);
         fs.mkdirSync(path.dirname(absolute), { recursive: true });
         fs.writeFileSync(absolute, "export {};\n");
       }
-      fs.mkdirSync(path.join(tmp, ".kiro/specs/example/evidence"), { recursive: true });
-      fs.writeFileSync(
-        path.join(tmp, ".kiro/specs/example/evidence/not-a-test.ts"),
-        "export {};\n",
-      );
 
       const paths = collectTestInventoryFiles(tmp).map((file) => file.path);
-      expect(paths).toEqual(expectedPaths.slice().sort((a, b) => a.localeCompare(b)));
-      expect(paths).not.toContain(".kiro/specs/example/evidence/not-a-test.ts");
+      expect(paths).toEqual([ordinaryPath]);
+      expect(paths.some((file) => file.startsWith(".kiro/"))).toBe(false);
     } finally {
       fs.rmSync(tmp, { recursive: true, force: true });
     }

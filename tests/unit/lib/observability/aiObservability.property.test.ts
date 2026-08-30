@@ -90,13 +90,6 @@ function latencyCalls() {
   );
 }
 
-/** Pull fallback counter calls. */
-function fallbackCalls() {
-  return mockCounterInc.mock.calls.filter(
-    ([name]) => name === "oando_ai_advisor_fallback_total",
-  );
-}
-
 /** Pull retrieval-source gauge calls. */
 function retrievalCalls() {
   return mockGaugeInc.mock.calls.filter(

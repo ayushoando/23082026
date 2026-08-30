@@ -79,7 +79,7 @@ All code is TypeScript with named exports. Tests live under `tests/`. Commands r
     - Assert duration and error metrics record per request, and that an instrument error does not propagate to the caller
     - _Requirements: 6.4, 6.6_
 
-- [ ] 6. Planner Advisor Route
+- [~] 6. Planner Advisor Route
   - [ ] 6.1 Implement the planner advisor handler and route with withAuth guardrails
     - Create `site/app/api/planner/ai-advisor/route.ts` exporting `POST = withAuth(handlePlannerAdvisor, { role: "guest", rateLimitScope: "planner-ai-advisor", rateLimit: 5, requireCsrf: true })`
     - Mirror `handleCatalogAdvisor`: validate the body with the existing `PlannerAdvisorRequestSchema`, returning `validationError(parsed.error.issues)` → HTTP 400 on failure
@@ -97,32 +97,32 @@ All code is TypeScript with named exports. Tests live under `tests/`. Commands r
     - Ensure wrapping does not alter the response body or status of either route
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5_
 
-  - [ ] 6.4 Write property test for planner response shape
+  - [x] 6.4 Write property test for planner response shape
     - **Feature: ai-implementation-audit, Property 4: Planner response conforms to PlannerAdvisorResponse shape**
     - For any outcome (streaming terminal `result` or non-streaming body), assert `content` is a string and each present optional field matches its declared type
     - **Validates: Requirements 3.4, 3.5**
 
-  - [ ] 6.5 Write property test for NDJSON streaming transport
+  - [x] 6.5 Write property test for NDJSON streaming transport
     - **Feature: ai-implementation-audit, Property 5: Streaming responses are newline-delimited JSON**
     - For valid streaming requests, assert every non-empty line parses as JSON and the stream ends with a terminal `result` event
     - **Validates: Requirements 3.3**
 
-  - [ ] 6.6 Write property test for heuristic fallback on no usable provider
+  - [x] 6.6 Write property test for heuristic fallback on no usable provider
     - **Feature: ai-implementation-audit, Property 6: Missing usable provider yields heuristic fallback**
     - For any request where no provider (or empty chain) returns usable text, assert the route returns the Heuristic_Fallback with its marker set to `true`
     - **Validates: Requirements 3.6**
 
-  - [ ] 6.7 Write property test for 400 rejection of invalid bodies
+  - [x] 6.7 Write property test for 400 rejection of invalid bodies
     - **Feature: ai-implementation-audit, Property 7: Invalid request bodies are rejected with 400**
     - For any body failing `PlannerAdvisorRequestSchema`, assert an HTTP 400 validation-error envelope
     - **Validates: Requirements 3.7**
 
-  - [ ] 6.8 Write property test for secret/model-id non-disclosure
+  - [x] 6.8 Write property test for secret/model-id non-disclosure
     - **Feature: ai-implementation-audit, Property 10: Secrets and model identifiers never leave the server**
     - For any response (envelope, stream event, span attribute), assert serialized output contains no configured secret and no raw model id — only provider labels
     - **Validates: Requirements 4.4**
 
-  - [ ] 6.9 Write integration tests for route wiring and withAuth behavior
+  - [x] 6.9 Write integration tests for route wiring and withAuth behavior
     - Assert guest allow, 6th-request 429 for scope `planner-ai-advisor`, and missing-CSRF 403; assert path `/api/planner/ai-advisor` accepts POST
     - Assert observability side effects fire via an inspectable registry and in-memory span exporter without changing status/body
     - _Requirements: 3.1, 3.2, 6.6_

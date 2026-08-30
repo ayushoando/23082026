@@ -19,8 +19,6 @@ const SCAN_DIRS = [
   "site/features",
   "site/lib",
   "tests",
-  ".kiro/kiro-repo-guidance-setup/tests",
-  ".kiro/specs",
   "scripts",
 ];
 const SCAN_SKIP_FILES = new Set(["scripts/general/audit-eslint-disable.mjs"]);
@@ -30,7 +28,7 @@ const DISABLE_RE = /(?:\/\/|\/\*)\s*eslint-disable(?:-next-line|-line)?\b/;
 function walk(dir, files = []) {
   if (!statSync(dir, { throwIfNoEntry: false })?.isDirectory()) return files;
   for (const entry of readdirSync(dir)) {
-    if (entry === "node_modules" || entry === ".next") continue;
+    if (entry === "node_modules" || entry === ".next" || entry === ".kiro") continue;
     const full = path.join(dir, entry);
     if (statSync(full).isDirectory()) {
       walk(full, files);

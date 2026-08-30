@@ -112,7 +112,7 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
   - [x] 2.8 Implement atomic revision compare-and-swap behavior
     - Require `expectedRevision`, increment once on success, preserve `createdAt`, update `updatedAt`, and return safe conflict metadata without changing a newer record.
     - _Requirements: 4.4, 5.8, 13.2, 13.4_
-  - [~] 2.9 Implement owner-scoped idempotent create/save/delete behavior
+  - [-] 2.9 Implement owner-scoped idempotent create/save/delete behavior
     - Scope opaque bounded keys by owner/operation/project, store a request fingerprint and result, replay identical outcomes once, and conflict on different-fingerprint reuse.
     - Use atomic disk sidecar/write-rename behavior and transaction-safe Supabase behavior supported by repository evidence.
     - _Requirements: 13.3_
@@ -141,11 +141,11 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - Generate current, known-old, and unsupported versions and verify validation/migration or unchanged source with explicit unsupported result.
     - **Validates: Requirements 13.1, 13.7, 14.6**
 
-- [ ] 3. Workstream 3 — Remediate UI/UX, responsive, input, and accessibility behavior
+- [~] 3. Workstream 3 — Remediate UI/UX, responsive, input, and accessibility behavior
   - [x] 3.1 Remediate `/ooplanner` and project-route entry, list, and routing behavior
     - Produce deterministic guest/authenticated entry states, project-list loading/empty/error states, reachable next actions, and thin App Router entries with business logic in Planner-owned modules.
     - _Requirements: 2.1, 4.1, 5.1-5.3, 10.1-10.3_
-  - [~] 3.2 Remediate create, load, edit, save, and delete workflows against the Gate B contracts
+  - [-] 3.2 Remediate create, load, edit, save, and delete workflows against the Gate B contracts
     - Initialize valid defaults, restore all view-independent content, save one coherent revision, require delete confirmation, and return deterministic post-delete state.
     - Fix every verified dead end, stale selection, incorrect metadata, or data-loss path discovered by the traces without rewriting geometry/persistence or API contract owner files.
     - _Requirements: 2.1, 4.2-4.5, 13.1, 13.2, 13.6_
@@ -191,7 +191,7 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - **Property 11: Input-command parity**
     - Generate state-changing actions and bindings and verify pointer, touch, keyboard, and accessible controls invoke the same semantic command with equivalent state.
     - **Validates: Requirements 7.1, 7.2, 7.3, 7.7**
-  - [-] 3.14 Remediate semantic and assistive-technology behavior
+  - [x] 3.14 Remediate semantic and assistive-technology behavior
     - Add correct names, roles, values, states, relationships, alternatives, field instructions/errors, live-region behavior, canvas-accessible command/list representations, and timeout recovery.
     - Correct every verified keyboard, focus-order, focus-obscuring, or target-size defect.
     - _Requirements: 2.1, 2.2, 8.1, 8.2, 8.4, 8.5, 8.8_
@@ -252,7 +252,7 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - **Property 17: Safe structured errors**
     - Generate internal exceptions and sensitive payload fragments and verify stable safe errors, correlation ids, and prohibited-data exclusion.
     - **Validates: Requirements 11.8, 11.9**
-  - [~] 4.9 Implement the schema-gap decision record from live Admin migration, type, and adapter evidence
+  - [-] 4.9 Implement the schema-gap decision record from live Admin migration, type, and adapter evidence
     - Determine whether revision, schema version, idempotency, constraints, RLS, grants, or indexes already satisfy the contract; bind the decision and exact evidence to findings.
     - Do not inspect hosted schema or claim remote state in this repository-edit lane. This task is required and controls, but does not make optional, task 4.10.
     - _Requirements: 14.1, 14.2, 14.6, 14.10, 19.4_
@@ -265,12 +265,12 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - Record `pnpm run db:apply:admin -- --dry` before application and `pnpm run db:types:admin` after authorized application without claiming either ran.
     - _Requirements: 14.3-14.10, 18.4, 18.5, 19.5, 19.6_
 
-- [ ] 5. Workstream 5 — Implement observability, performance, and regression evidence
+- [~] 5. Workstream 5 — Implement observability, performance, and regression evidence
   - [x] 5.1 Instrument API and persistence operations with bounded Planner metrics and structured events after Gate B
     - Reuse the existing observability registry for request/error counts, duration, rate limits, authorization denials, and persistence failures with bounded operation/method/result/status/persistence-mode labels.
     - Implement instrumentation hooks in workstream 5-owned modules and propagate one opaque correlation id through response, API, persistence, and client-visible server errors. Consume workstreams 2 and 4 contracts read-only; any required call-site edit is handed to that file's owner for serial integration.
     - _Requirements: 17.1-17.4_
-  - [~] 5.2 Implement redaction and exporter-failure isolation
+  - [-] 5.2 Implement redaction and exporter-failure isolation
     - Exclude contact data, owner/project identifiers and content, geometry, bodies, tokens, cookies, credentials, secrets, free-form errors, and identifier-bearing URLs from logs/labels.
     - Make export failure preserve the user and persistence result while sending the same redacted event to the approved fallback sink.
     - _Requirements: 17.5-17.7_

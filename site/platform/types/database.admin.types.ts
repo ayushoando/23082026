@@ -71,6 +71,39 @@ export type Database = {
           }
         ]
       }
+      analytics_events: {
+        Row: {
+          id: string
+          name: string
+          payload: Json
+          pathname: string | null
+          locale: string
+          source: string | null
+          session_id: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          payload?: Json
+          pathname?: string | null
+          locale?: string
+          source?: string | null
+          session_id?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          payload?: Json
+          pathname?: string | null
+          locale?: string
+          source?: string | null
+          session_id?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
       audit_events: {
         Row: {
           id: string
@@ -342,6 +375,8 @@ export type Database = {
           status: string
           created_at: string
           updated_at: string
+          revision: number
+          schema_version: number
         }
         Insert: {
           id?: string
@@ -353,6 +388,8 @@ export type Database = {
           status?: string
           created_at?: string
           updated_at?: string
+          revision?: number
+          schema_version?: number
         }
         Update: {
           id?: string
@@ -364,6 +401,8 @@ export type Database = {
           status?: string
           created_at?: string
           updated_at?: string
+          revision?: number
+          schema_version?: number
         }
         Relationships: [
           {
@@ -475,6 +514,65 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      planner_operation_idempotency: {
+        Row: {
+          owner_id: string
+          operation: string
+          project_id: string
+          idempotency_key: string
+          request_fingerprint: string
+          response_status: string
+          response_revision: number | null
+          response_payload: Json | null
+          response_name: string | null
+          response_thumbnail_url: string | null
+          response_plan_status: string | null
+          response_created_at: string | null
+          response_updated_at: string | null
+          created_at: string
+        }
+        Insert: {
+          owner_id: string
+          operation: string
+          project_id: string
+          idempotency_key: string
+          request_fingerprint: string
+          response_status: string
+          response_revision?: number | null
+          response_payload?: Json | null
+          response_name?: string | null
+          response_thumbnail_url?: string | null
+          response_plan_status?: string | null
+          response_created_at?: string | null
+          response_updated_at?: string | null
+          created_at?: string
+        }
+        Update: {
+          owner_id?: string
+          operation?: string
+          project_id?: string
+          idempotency_key?: string
+          request_fingerprint?: string
+          response_status?: string
+          response_revision?: number | null
+          response_payload?: Json | null
+          response_name?: string | null
+          response_thumbnail_url?: string | null
+          response_plan_status?: string | null
+          response_created_at?: string | null
+          response_updated_at?: string | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "planner_operation_idempotency_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       planner_settings: {
         Row: {

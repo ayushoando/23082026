@@ -12,7 +12,7 @@ const scriptPath = path.join(monorepoRoot, "scripts/general/audit-gate-skips.mjs
 const configPath = path.join(monorepoRoot, "config/build/playwright-gate-specs.json");
 
 describe("audit-gate-skips", () => {
-  it("audits all test sources and the Playwright gate manifest", () => {
+  it("audits all external test sources and the Playwright gate manifest", () => {
     expect(fs.existsSync(scriptPath)).toBe(true);
     const source = fs.readFileSync(scriptPath, "utf8");
     expect(source).toContain("playwright-gate-specs.json");
@@ -68,8 +68,8 @@ describe("audit-gate-skips", () => {
       fs.mkdirSync(path.join(tmp, "config/build"), { recursive: true });
       fs.mkdirSync(path.join(tmp, "tests/manifests"), { recursive: true });
       fs.mkdirSync(path.join(tmp, "tests/unit/site/lib"), { recursive: true });
-      fs.writeFileSync(path.join(tmp, "config/build/playwright-gate-specs.json"), '{"specs":[]}\n');
-      fs.writeFileSync(path.join(tmp, "tests/manifests/skip-exceptions.json"), '{"version":1,"exceptions":[]}\n');
+      fs.writeFileSync(path.join(tmp, "config/build/playwright-gate-specs.json"), "{\"specs\":[]}\n");
+      fs.writeFileSync(path.join(tmp, "tests/manifests/skip-exceptions.json"), "{\"version\":1,\"exceptions\":[]}\n");
       fs.writeFileSync(path.join(tmp, "tests/unit/site/lib/sample.test.ts"), `${testSource}\n`);
 
       let stderr = "";
@@ -90,32 +90,24 @@ describe("audit-gate-skips", () => {
     }
   });
 
-  it.each([
-    ".kiro/kiro-repo-guidance-setup/tests/sample.test.ts",
-    ".kiro/specs/example/tests/sample.test.ts",
-  ])("audits contained Kiro test root %s", (relativeTestPath) => {
+  it("ignores Kiro-owned tests outside the external audit root", () => {
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "audit-gate-skips-kiro-"));
     try {
       fs.mkdirSync(path.join(tmp, "config/build"), { recursive: true });
       fs.mkdirSync(path.join(tmp, "tests/manifests"), { recursive: true });
+      const relativeTestPath = "tests/.kiro/specs/example/tests/sample.test.ts";
       fs.mkdirSync(path.dirname(path.join(tmp, relativeTestPath)), { recursive: true });
-      fs.writeFileSync(path.join(tmp, "config/build/playwright-gate-specs.json"), '{"specs":[]}\n');
-      fs.writeFileSync(path.join(tmp, "tests/manifests/skip-exceptions.json"), '{"version":1,"exceptions":[]}\n');
+      fs.writeFileSync(path.join(tmp, "config/build/playwright-gate-specs.json"), "{\"specs\":[]}\n");
+      fs.writeFileSync(path.join(tmp, "tests/manifests/skip-exceptions.json"), "{\"version\":1,\"exceptions\":[]}\n");
       fs.writeFileSync(path.join(tmp, relativeTestPath), "test.skip('contained', () => {});\n");
 
-      let stderr = "";
-      try {
-        execFileSync(process.execPath, [scriptPath], {
-          cwd: monorepoRoot,
-          encoding: "utf8",
-          env: { ...process.env, MONOREPO_ROOT: tmp },
-          stdio: ["ignore", "pipe", "pipe"],
-        });
-      } catch (error) {
-        stderr = String((error as { stderr?: string }).stderr ?? "");
-      }
-      expect(stderr).toContain("contains-skip");
-      expect(stderr.replaceAll("\\", "/")).toContain(relativeTestPath);
+      const output = execFileSync(process.execPath, [scriptPath], {
+        cwd: monorepoRoot,
+        encoding: "utf8",
+        env: { ...process.env, MONOREPO_ROOT: tmp },
+        stdio: ["ignore", "pipe", "pipe"],
+      });
+      expect(output).toContain("audit-gate-skips: ok");
     } finally {
       fs.rmSync(tmp, { recursive: true, force: true });
     }

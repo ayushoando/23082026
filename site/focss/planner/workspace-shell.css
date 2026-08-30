@@ -328,7 +328,7 @@
   box-shadow: var(--shadow-segment-active);
 }
 
-.ooplanner-root .stroke-swatch { width: 20px; height: 20px; border-radius: 6px; border: 2px solid var(--border-soft); cursor: pointer; }
+.ooplanner-root .stroke-swatch { width: 24px; height: 24px; border-radius: 6px; border: 2px solid var(--border-soft); cursor: pointer; }
 .ooplanner-root .stroke-swatch[data-active="true"] { border-color: var(--color-primary); box-shadow: var(--focus-ring); }
 
 /* Layers list (both apps) */
@@ -345,8 +345,8 @@
 .ooplanner-root .layer-item:hover { background: var(--surface-muted); }
 .ooplanner-root .layer-item[data-selected="true"] { background: var(--color-primary-soft); color: var(--color-primary); }
 .ooplanner-root .layer-item__icon-btn {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   display: grid;
   place-items: center;
   border-radius: 6px;

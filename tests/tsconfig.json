@@ -27,15 +27,12 @@
     "types": ["node", "react", "react-dom", "vitest", "@testing-library/jest-dom"]
   },
   "include": [
-    "../.kiro/kiro-repo-guidance-setup/**/*.ts",
-    "../.kiro/kiro-repo-guidance-setup/**/*.tsx",
-    "../.kiro/specs/**/tests/**/*.ts",
-    "../.kiro/specs/**/tests/**/*.tsx",
     "**/*.ts",
     "**/*.tsx",
     "../site/types/webmcp.d.ts"
   ],
   "exclude": [
+    "../.kiro/**",
     "archive/**",
     "e2e/**",
     "tech-docs-generator/**",

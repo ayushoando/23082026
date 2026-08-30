@@ -4,6 +4,12 @@ import { Button as AriaButton } from "react-aria-components";
 import { usePlannerUIStore, type PlannerUnit } from "@planner/store/plannerUiStore";
 
 const UNITS: PlannerUnit[] = ["mm", "cm", "m", "in"];
+const UNIT_LABELS: Record<PlannerUnit, string> = {
+  mm: "millimetres",
+  cm: "centimetres",
+  m: "metres",
+  in: "inches",
+};
 
 /** Planner canvas overlay unit switcher — not shared with Studio. */
 export function PlannerUnitPill() {
@@ -15,6 +21,8 @@ export function PlannerUnitPill() {
         <AriaButton
           key={u}
           data-active={unit === u ? "true" : "false"}
+          aria-pressed={unit === u}
+          aria-label={`Use ${UNIT_LABELS[u]}`}
           onPress={() => setUnit(u)}
           data-testid={`top-unit-${u}`}
         >

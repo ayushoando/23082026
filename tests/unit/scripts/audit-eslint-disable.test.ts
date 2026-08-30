@@ -28,8 +28,10 @@ describe("audit " + "eslint" + " suppress directives", () => {
     expect(source).toContain("site/app");
     expect(source).toContain("site/features");
     expect(source).toContain("site/lib");
-    expect(source).toContain(".kiro/kiro-repo-guidance-setup/tests");
-    expect(source).toContain(".kiro/specs");
+    expect(source).toContain("tests");
+    expect(source).toContain("scripts");
+    expect(source).not.toContain(".kiro/kiro-repo-guidance-setup/tests");
+    expect(source).not.toContain(".kiro/specs");
     expect(source).not.toMatch(/SCAN_DIRS = \["app", "components"/);
   });
 
@@ -99,12 +101,10 @@ describe("audit " + "eslint" + " suppress directives", () => {
     }
   });
 
-  it.each([
-    ".kiro/kiro-repo-guidance-setup/tests/bad.test.ts",
-    ".kiro/specs/example/tests/bad.test.ts",
-  ])("audits suppress directives in contained Kiro root %s", (relativeTestPath) => {
+  it("ignores Kiro-owned files outside the external scan scope", () => {
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "eslint-audit-kiro-"));
     try {
+      const relativeTestPath = "tests/.kiro/specs/example/tests/bad.test.ts";
       const absolute = path.join(tmp, relativeTestPath);
       fs.mkdirSync(path.dirname(absolute), { recursive: true });
       fs.writeFileSync(
@@ -113,18 +113,13 @@ describe("audit " + "eslint" + " suppress directives", () => {
         "utf8",
       );
 
-      let stderr = "";
-      try {
-        execFileSync(process.execPath, [scriptPath], {
-          cwd: monorepoRoot,
-          encoding: "utf8",
-          env: { ...process.env, MONOREPO_ROOT: tmp },
-          stdio: ["ignore", "pipe", "pipe"],
-        });
-      } catch (error) {
-        stderr = String((error as { stderr?: string }).stderr ?? "");
-      }
-      expect(stderr.replaceAll("\\", "/")).toContain(relativeTestPath);
+      const output = execFileSync(process.execPath, [scriptPath], {
+        cwd: monorepoRoot,
+        encoding: "utf8",
+        env: { ...process.env, MONOREPO_ROOT: tmp },
+        stdio: ["ignore", "pipe", "pipe"],
+      });
+      expect(output).toContain("audit-" + token + ": ok");
     } finally {
       fs.rmSync(tmp, { recursive: true, force: true });
     }

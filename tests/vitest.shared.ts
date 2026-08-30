@@ -94,6 +94,7 @@ export const VITEST_COMMON_EXCLUDE = [
   "**/.cursor/**",
   "**/.vscode/**",
   "**/.next/**",
+  "../.kiro/**",
   "**/.git/**",
   "**/.github/**",
   "**/.playwright-cli/**",

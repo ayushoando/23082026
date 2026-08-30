@@ -2441,10 +2441,15 @@ const Planner = ({
         <section
           className="planner-save-state"
           role="alert"
+          aria-live="assertive"
+          aria-atomic="true"
+          aria-labelledby="planner-session-expiry-title"
+          aria-describedby="planner-session-expiry-message"
           data-save-issue="session-expiring"
           data-testid="planner-session-expiry-warning"
         >
-          <span>
+          <strong id="planner-session-expiry-title" className="sr-only">Session expiry warning</strong>
+          <span id="planner-session-expiry-message">
             Your session may be expiring soon. Save your plan now or sign in again to keep your work.
           </span>
           <div className="planner-save-state__actions">
@@ -2453,8 +2458,9 @@ const Planner = ({
               type="button"
               onClick={() => { void saveProject(); }}
               disabled={!online || saving}
+              aria-busy={saving}
             >
-              Save now
+              {saving ? "Saving…" : "Save now"}
             </button>
             <button
               className="btn btn--sm"

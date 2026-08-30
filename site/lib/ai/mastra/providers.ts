@@ -159,7 +159,7 @@ export function toMastraModel(target: AdvisorModelTarget | undefined) {
 export function resolveAdvisorModelChain(): AdvisorModelTarget[] {
   const chain: AdvisorModelTarget[] = [];
 
-  const geminiKey = env.GEMINI_API_KEY?.trim() || process.env.GEMINI_API_KEY?.trim();
+  const geminiKey = env.GEMINI_API_KEY?.trim();
   if (geminiKey) {
     const candidate: AdvisorModelTarget = {
       provider: "gemini",

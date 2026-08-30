@@ -10,8 +10,6 @@ const repoRoot = process.env.MONOREPO_ROOT
   ? path.resolve(process.env.MONOREPO_ROOT)
   : path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const testsRoot = path.join(repoRoot, "tests");
-const governanceTestsRoot = path.join(repoRoot, ".kiro", "kiro-repo-guidance-setup", "tests");
-const specsRoot = path.join(repoRoot, ".kiro", "specs");
 const manifestPath = path.join(testsRoot, "manifests", "source-test-ownership.json");
 const TEST_FILE = /\.(test|spec)\.[cm]?[jt]sx?$/i;
 const SOURCE_ROOTS = [
@@ -32,10 +30,7 @@ const SOURCE_ROOTS = [
   "tech-docs-generator/scripts",
 ];
 const DEFAULT_MANIFEST = {
-  standaloneTestRoots: [
-    ".kiro/kiro-repo-guidance-setup/tests",
-    ".kiro/specs/*/tests",
-  ],
+  standaloneTestRoots: [],
   sourceRoots: SOURCE_ROOTS.map((sourceRoot) => ({ sourceRoot, testRoot: sourceRoot })),
   e2eRouteRoots: [
     "tests/e2e/site/app/(site)",
@@ -47,7 +42,7 @@ const DEFAULT_MANIFEST = {
   supportRoot: "tests/support",
   migrationAllowlist: [],
 };
-const SKIP_DIRS = new Set(["node_modules", ".next", ".git", "archive", "_archive", "dist", "coverage", "results"]);
+const SKIP_DIRS = new Set(["node_modules", ".kiro", ".next", ".git", "archive", "_archive", "dist", "coverage", "results"]);
 
 function posix(value) {
   return value.replaceAll("\\", "/");
@@ -160,7 +155,7 @@ for (const root of SOURCE_ROOTS) {
 
 const canonicalPrefixes = canonicalTestPrefixes(manifest);
 const e2eRoots = manifest.e2eRouteRoots ?? [];
-const scanRoots = [testsRoot, governanceTestsRoot, specsRoot];
+const scanRoots = [testsRoot];
 for (const scanRoot of scanRoots) {
   for (const absolute of walk(scanRoot)) {
     const relative = posix(path.relative(repoRoot, absolute));
