@@ -1,4 +1,5 @@
 /** Gate B project-envelope and repository contracts for Planner consumers. */
+/** Gate B project-envelope and repository contracts for Planner consumers. */
 
 import { collectSceneGeometryAtScale, type FabricLikeCanvas } from "@planner/lib/fabricGeometryBridge";
 import {
@@ -216,13 +217,100 @@ function legacyGeometryInput(
   };
 }
 
+/**
+ * Allowlisted response fields for a full project load response (Req 13.5).
+ *
+ * This list is the single source of truth for what fields may cross the
+ * persistence boundary into an API response. `ownerId` is always excluded
+ * (server-derived, never returned to clients). Any new internal envelope
+ * fields added in the future are automatically excluded until explicitly
+ * added here.
+ */
+export const PLANNER_PROJECT_RESPONSE_FIELDS = [
+  "contractVersion",
+  "schemaVersion",
+  "id",
+  "name",
+  "revision",
+  "status",
+  "geometry",
+  "sheet",
+  "layers",
+  "thumbnailUrl",
+  "createdAt",
+  "updatedAt",
+] as const satisfies ReadonlyArray<keyof PlannerProjectResponseV1>;
+
+/**
+ * Allowlisted summary fields returned in list responses (Req 13.5).
+ * Excludes geometry, sheet, layers, and canvas content.
+ */
+export const PLANNER_PROJECT_SUMMARY_FIELDS = [
+  "id",
+  "name",
+  "revision",
+  "status",
+  "thumbnailUrl",
+  "updatedAt",
+] as const satisfies ReadonlyArray<keyof PlannerProjectSummaryV1>;
+
+/**
+ * Normalise project timestamps at the persistence boundary.
+ *
+ * Rules (Req 13.2):
+ * - `createdAt` is always preserved from the existing record on save;
+ *   set to `now` on create.
+ * - `updatedAt` is always `now` on a new mutation, or the stored value on
+ *   a replayed idempotent operation.
+ * - `updatedAt` must never be earlier than `createdAt`.
+ */
+export function normalizeProjectTimestamps(opts: {
+  createdAt: string;
+  updatedAt: string;
+}): { createdAt: string; updatedAt: string } {
+  const createdAtMs = Date.parse(opts.createdAt);
+  const updatedAtMs = Date.parse(opts.updatedAt);
+  // If updatedAt precedes createdAt (e.g. clock skew or replayed receipt),
+  // advance updatedAt to equal createdAt so the invariant always holds.
+  const resolvedUpdatedAt =
+    updatedAtMs >= createdAtMs
+      ? opts.updatedAt
+      : new Date(createdAtMs).toISOString();
+  return { createdAt: opts.createdAt, updatedAt: resolvedUpdatedAt };
+}
+
+/**
+ * Project the full internal envelope to the API response shape.
+ *
+ * Uses an explicit allowlist (PLANNER_PROJECT_RESPONSE_FIELDS) rather than
+ * exclusion so that new internal fields cannot accidentally leak to clients.
+ * (Req 13.5)
+ */
 export function toPlannerProjectResponse(
   envelope: PlannerProjectEnvelopeV1,
 ): PlannerProjectResponseV1 {
-  const { ownerId: _ownerId, ...response } = envelope;
-  return response;
+  return {
+    contractVersion: envelope.contractVersion,
+    schemaVersion: envelope.schemaVersion,
+    id: envelope.id,
+    name: envelope.name,
+    revision: envelope.revision,
+    status: envelope.status,
+    geometry: envelope.geometry,
+    sheet: envelope.sheet,
+    layers: envelope.layers,
+    thumbnailUrl: envelope.thumbnailUrl,
+    createdAt: envelope.createdAt,
+    updatedAt: envelope.updatedAt,
+  };
 }
 
+/**
+ * Project the full internal envelope to a list-summary shape.
+ *
+ * Uses an explicit allowlist (PLANNER_PROJECT_SUMMARY_FIELDS).
+ * (Req 13.5)
+ */
 export function toPlannerProjectSummary(
   envelope: PlannerProjectEnvelopeV1,
 ): PlannerProjectSummaryV1 {
@@ -424,6 +512,17 @@ export function isValidPlannerIdempotencyKey(value: unknown): value is string {
   );
 }
 
+/**
+ * Gate B repository contract — published for read-only consumption by
+ * workstreams 3 (UI/UX) and 4 (API/security).
+ *
+ * - Workstream 3: reference `allowedResponseFields` and `allowedSummaryFields`
+ *   when building client-side type expectations.
+ * - Workstream 4: reference `ownerSource`, `serializationPolicy`, and version
+ *   constants when wiring request-processing and serialization.
+ * - No workstream may modify this contract unilaterally; contract changes
+ *   require serial reconciliation at Gate B/C per the task spec.
+ */
 export const PLANNER_GATE_B_CONTRACT = {
   geometryContractVersion: PLANNER_GEOMETRY_CONTRACT_VERSION,
   geometrySchemaVersion: PLANNER_GEOMETRY_SCHEMA_VERSION,
@@ -432,14 +531,38 @@ export const PLANNER_GATE_B_CONTRACT = {
   projectContractVersion: PLANNER_PROJECT_CONTRACT_VERSION,
   projectSchemaVersion: PLANNER_PROJECT_SCHEMA_VERSION,
   repositoryContractVersion: PLANNER_REPOSITORY_CONTRACT_VERSION,
-  ownerSource: "verified-server-session",
-  /** Known legacy scales that are deterministically adapted on deserialization. */
+  /**
+   * Owner identity is always derived from the verified server session.
+   * Client-supplied owner identifiers are rejected before persistence.
+   * (Req 13.1, 13.5)
+   */
+  ownerSource: "verified-server-session" as const,
+  /**
+   * Known legacy scales that are deterministically adapted on deserialization.
+   * Studio scale (0.2 px/mm) is the only recognised legacy scale.
+   */
   knownLegacyScales: [0.2] as readonly number[],
   /**
    * Serialization contract: persisted geometry uses millimetres as the
    * canonical unit with explicit scale metadata. Known legacy snapshots
    * (Studio 0.2 px/mm) are adapted deterministically; unknown scales
-   * produce an explicit UNSUPPORTED_PLANNER_SCALE error.
+   * produce an explicit UNSUPPORTED_PLANNER_SCALE error. (Req 13.8)
    */
   serializationPolicy: "normalize-mm-validate-scale-adapt-known-legacy" as const,
+  /**
+   * Fields returned in a full project load response. Workstream 4 API
+   * handlers must not include `ownerId` or any unlisted field. (Req 13.5)
+   */
+  allowedResponseFields: PLANNER_PROJECT_RESPONSE_FIELDS,
+  /**
+   * Fields returned in a project list summary. Workstream 4 list handlers
+   * must not include geometry, sheet, layers, or canvas content. (Req 13.5)
+   */
+  allowedSummaryFields: PLANNER_PROJECT_SUMMARY_FIELDS,
+  /**
+   * Timestamp invariants enforced at the persistence boundary. (Req 13.2)
+   * - createdAt: always preserved from the existing record on save.
+   * - updatedAt: always the operation time; never earlier than createdAt.
+   */
+  timestampPolicy: "preserve-created-at-advance-updated-at" as const,
 } as const;

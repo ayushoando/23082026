@@ -47,6 +47,12 @@ create table if not exists public.planner_operation_idempotency (
   request_fingerprint text not null,
   response_status text not null,
   response_revision bigint,
+  response_payload jsonb,
+  response_name text,
+  response_thumbnail_url text,
+  response_plan_status text,
+  response_created_at timestamptz,
+  response_updated_at timestamptz,
   created_at timestamptz not null default now(),
   constraint planner_operation_idempotency_identity_key
     unique (owner_id, operation, project_id, idempotency_key),
@@ -64,6 +70,14 @@ create table if not exists public.planner_operation_idempotency (
   constraint planner_operation_idempotency_revision_check
     check (response_revision is null or response_revision >= 1)
 );
+
+alter table public.planner_operation_idempotency
+  add column if not exists response_payload jsonb,
+  add column if not exists response_name text,
+  add column if not exists response_thumbnail_url text,
+  add column if not exists response_plan_status text,
+  add column if not exists response_created_at timestamptz,
+  add column if not exists response_updated_at timestamptz;
 
 create index if not exists planner_operation_idempotency_created_at_idx
   on public.planner_operation_idempotency (created_at);
@@ -122,6 +136,10 @@ create policy planner_operation_idempotency_authenticated_delete_own
   on public.planner_operation_idempotency for delete to authenticated
   using (auth.uid() = owner_id);
 
+drop function if exists public.planner_mutate_plan_v1(
+  uuid, text, uuid, bigint, text, text, text, jsonb, text, text, integer
+);
+
 create or replace function public.planner_mutate_plan_v1(
   p_owner_id uuid,
   p_operation text,
@@ -138,6 +156,12 @@ create or replace function public.planner_mutate_plan_v1(
 returns table (
   response_status text,
   response_revision bigint,
+  response_payload jsonb,
+  response_name text,
+  response_thumbnail_url text,
+  response_plan_status text,
+  response_created_at timestamptz,
+  response_updated_at timestamptz,
   replayed boolean
 )
 language plpgsql
@@ -150,6 +174,12 @@ declare
   v_stored_fingerprint text;
   v_stored_status text;
   v_stored_revision bigint;
+  v_stored_payload jsonb;
+  v_stored_name text;
+  v_stored_thumbnail_url text;
+  v_stored_plan_status text;
+  v_stored_created_at timestamptz;
+  v_stored_updated_at timestamptz;
   v_current_revision bigint;
 begin
   if v_role not in ('authenticated', 'service_role') then
@@ -177,8 +207,24 @@ begin
   returning true into v_claimed;
 
   if not v_claimed then
-    select receipt.request_fingerprint, receipt.response_status, receipt.response_revision
-      into v_stored_fingerprint, v_stored_status, v_stored_revision
+    select receipt.request_fingerprint,
+           receipt.response_status,
+           receipt.response_revision,
+           receipt.response_payload,
+           receipt.response_name,
+           receipt.response_thumbnail_url,
+           receipt.response_plan_status,
+           receipt.response_created_at,
+           receipt.response_updated_at
+      into v_stored_fingerprint,
+           v_stored_status,
+           v_stored_revision,
+           v_stored_payload,
+           v_stored_name,
+           v_stored_thumbnail_url,
+           v_stored_plan_status,
+           v_stored_created_at,
+           v_stored_updated_at
     from public.planner_operation_idempotency as receipt
     where receipt.owner_id = p_owner_id
       and receipt.operation = p_operation
@@ -188,9 +234,27 @@ begin
 
     if v_stored_fingerprint is distinct from p_request_fingerprint
       or v_stored_status = 'processing' then
-      return query select 'conflict'::text, v_stored_revision, false;
+      return query select
+        'conflict'::text,
+        v_stored_revision,
+        null::jsonb,
+        null::text,
+        null::text,
+        null::text,
+        null::timestamptz,
+        null::timestamptz,
+        false;
     else
-      return query select v_stored_status, v_stored_revision, true;
+      return query select
+        v_stored_status,
+        v_stored_revision,
+        v_stored_payload,
+        v_stored_name,
+        v_stored_thumbnail_url,
+        v_stored_plan_status,
+        v_stored_created_at,
+        v_stored_updated_at,
+        true;
     end if;
     return;
   end if;
@@ -208,7 +272,10 @@ begin
         coalesce(p_status, 'draft'), 1, p_schema_version
       )
       on conflict (id) do nothing
-      returning revision into v_stored_revision;
+      returning revision, payload, name, thumbnail_url, status, created_at, updated_at
+        into v_stored_revision, v_stored_payload, v_stored_name,
+             v_stored_thumbnail_url, v_stored_plan_status,
+             v_stored_created_at, v_stored_updated_at;
       v_stored_status := case when v_stored_revision is null then 'conflict' else 'success' end;
     end if;
   elsif p_operation = 'save' then
@@ -223,7 +290,11 @@ begin
     where plan.id = p_project_id
       and plan.user_id = p_owner_id
       and plan.revision = p_expected_revision
-    returning plan.revision into v_stored_revision;
+    returning plan.revision, plan.payload, plan.name, plan.thumbnail_url,
+              plan.status, plan.created_at, plan.updated_at
+      into v_stored_revision, v_stored_payload, v_stored_name,
+           v_stored_thumbnail_url, v_stored_plan_status,
+           v_stored_created_at, v_stored_updated_at;
     if v_stored_revision is not null then
       v_stored_status := 'success';
     else
@@ -252,13 +323,52 @@ begin
 
   update public.planner_operation_idempotency as receipt
   set response_status = v_stored_status,
-      response_revision = v_stored_revision
+      response_revision = v_stored_revision,
+      response_payload = case
+        when p_operation in ('create', 'save') and v_stored_status = 'success'
+          then v_stored_payload
+        else null
+      end,
+      response_name = case
+        when p_operation in ('create', 'save') and v_stored_status = 'success'
+          then v_stored_name
+        else null
+      end,
+      response_thumbnail_url = case
+        when p_operation in ('create', 'save') and v_stored_status = 'success'
+          then v_stored_thumbnail_url
+        else null
+      end,
+      response_plan_status = case
+        when p_operation in ('create', 'save') and v_stored_status = 'success'
+          then v_stored_plan_status
+        else null
+      end,
+      response_created_at = case
+        when p_operation in ('create', 'save') and v_stored_status = 'success'
+          then v_stored_created_at
+        else null
+      end,
+      response_updated_at = case
+        when p_operation in ('create', 'save') and v_stored_status = 'success'
+          then v_stored_updated_at
+        else null
+      end
   where receipt.owner_id = p_owner_id
     and receipt.operation = p_operation
     and receipt.project_id = p_project_id
     and receipt.idempotency_key = p_idempotency_key;
 
-  return query select v_stored_status, v_stored_revision, false;
+  return query select
+    v_stored_status,
+    v_stored_revision,
+    v_stored_payload,
+    v_stored_name,
+    v_stored_thumbnail_url,
+    v_stored_plan_status,
+    v_stored_created_at,
+    v_stored_updated_at,
+    false;
 end;
 $$;
 

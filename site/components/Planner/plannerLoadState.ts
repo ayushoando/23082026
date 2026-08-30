@@ -1,15 +1,16 @@
 /**
  * Discriminated load-state model for the Planner editor.
  *
- * Represents the seven user-visible project-load outcomes: draft, loading,
- * ready, unauthorized (401), forbidden (403), not-found (404), and
- * transient-error (429/5xx/network). Cancelled/Stale is an internal
- * control-flow concept (checked via request-key currency) and is
+ * Represents the user-visible project-load outcomes: draft, loading, ready,
+ * unauthorized (401), forbidden (403), not-found (404), offline, connection
+ * recovery, and transient server errors (429/5xx). Cancelled/Stale is an
+ * internal control-flow concept (checked via request-key currency) and is
  * intentionally excluded from the rendered union.
  *
- * unauthorized and forbidden are NOT retryable — see
- * plans/ref/remediation-unified/audit.md D8 for why a single retryable
- * TransientError bucket is wrong for a signed-out user.
+ * Offline and transient server failures remain separate so the UI can offer a
+ * reconnect/retry action without presenting a network outage as a generic
+ * server problem. Unauthorized and forbidden are not retryable until the
+ * user's access changes.
  */
 import type { PlannerProject } from "@planner/lib/plannerTypes";
 
@@ -21,17 +22,24 @@ export type PlannerLoadState =
   | { kind: "draft"; reason: "no-effective-project" }
   | { kind: "loading"; projectId: string; requestKey: string }
   | { kind: "ready"; projectId: string; project: PlannerProject }
-  // Only failure state a persisted audit artifact actually recorded (401 on
-  // /api/Planner/projects/demo-plan/ — plans/ref/remediation-unified/audit.md
-  // D7). Not retryable: the session is missing entirely, so the recovery
-  // action is sign-in with a return path, never "Try again".
+  // Not retryable until the user signs in; the recovery action is a return
+  // path to authentication, never a request retry.
   | { kind: "unauthorized"; projectId: string; status: 401; message: string }
-  // Session exists but lacks permission. Also not retryable — the same
-  // request will not succeed later. The [id] route currently masks a
-  // foreign project as 404 rather than 403, so this is reachable only via
-  // other withAuth role checks.
+  // The session exists but does not grant access to this project.
   | { kind: "forbidden"; projectId: string; status: 403; message: string }
   | { kind: "not-found"; projectId: string; status: 404; message: string }
+  | {
+      kind: "offline";
+      projectId: string;
+      message: string;
+      retryable: true;
+    }
+  | {
+      kind: "recovery";
+      projectId: string;
+      message: string;
+      retryable: true;
+    }
   | {
       kind: "transient-error";
       projectId: string;
@@ -86,6 +94,18 @@ export function isTransientError(
   return state.kind === "transient-error";
 }
 
+export function isOffline(
+  state: PlannerLoadState,
+): state is Extract<PlannerLoadState, { kind: "offline" }> {
+  return state.kind === "offline";
+}
+
+export function isRecovery(
+  state: PlannerLoadState,
+): state is Extract<PlannerLoadState, { kind: "recovery" }> {
+  return state.kind === "recovery";
+}
+
 /* ------------------------------------------------------------------ */
 /* Factory helpers                                                     */
 /* ------------------------------------------------------------------ */
@@ -129,6 +149,20 @@ export function notFoundState(
   message = "The requested plan was not found.",
 ): PlannerLoadState {
   return { kind: "not-found", projectId, status: 404, message };
+}
+
+export function offlineState(
+  projectId: string,
+  message = "You are offline. Your current plan remains available. Reconnect and try loading again.",
+): PlannerLoadState {
+  return { kind: "offline", projectId, message, retryable: true };
+}
+
+export function recoveryState(
+  projectId: string,
+  message = "Connection restored. Retry loading the plan to review the latest saved version.",
+): PlannerLoadState {
+  return { kind: "recovery", projectId, message, retryable: true };
 }
 
 export function transientErrorState(

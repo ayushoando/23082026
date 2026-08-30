@@ -59,7 +59,8 @@ describe("@planner/lib/plannerApi path contract", () => {
       "/api/Planner/projects",
       { signal: undefined },
     );
-    expect(data).toEqual([{ id: "p_1" }]);
+    // normalizePlannerProject maps the raw object to the full PlannerProject shape
+    expect(data[0]).toMatchObject({ id: "p_1" });
   });
 
   /**
@@ -94,38 +95,45 @@ describe("@planner/lib/plannerApi path contract", () => {
 
   it("creates a project at POST /api/Planner/projects with JSON body", async () => {
     const payload = { name: "A", canvas_json: {} };
+    const opts = { expectedRevision: 0, idempotencyKey: "test-key-create" };
     browserApiMocks.browserApiFetch.mockResolvedValueOnce(
       jsonResponse({ id: "p_a_x" }, 201),
     );
-    await createProject(payload);
+    await createProject(payload, opts);
     expect(browserApiMocks.browserApiFetch).toHaveBeenCalledWith(
       "/api/Planner/projects",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ ...payload, ...opts }),
       },
     );
   });
 
   it("updates a project at PATCH /api/Planner/projects/:id", async () => {
     const payload = { name: "B" };
-    await updateProject("p_1", payload);
+    const opts = { expectedRevision: 1, idempotencyKey: "test-key-update" };
+    await updateProject("p_1", payload, opts);
     expect(browserApiMocks.browserApiFetch).toHaveBeenCalledWith(
       "/api/Planner/projects/p_1",
       {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ ...payload, ...opts }),
       },
     );
   });
 
   it("deletes a project at DELETE /api/Planner/projects/:id", async () => {
-    await deleteProject("p_1");
+    const opts = { expectedRevision: 1, idempotencyKey: "test-key-delete" };
+    await deleteProject("p_1", opts);
     expect(browserApiMocks.browserApiFetch).toHaveBeenCalledWith(
       "/api/Planner/projects/p_1",
-      { method: "DELETE" },
+      {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(opts),
+      },
     );
   });
 
@@ -133,6 +141,7 @@ describe("@planner/lib/plannerApi path contract", () => {
     await listFurniture({ category: "desks" });
     expect(browserApiMocks.browserApiFetch).toHaveBeenCalledWith(
       "/api/Planner/catalog?category=desks",
+      undefined,
     );
     const path = String(browserApiMocks.browserApiFetch.mock.calls[0]?.[0] ?? "");
     expect(path).not.toMatch(/Studio/i);
@@ -298,7 +307,7 @@ describe("@planner/lib/plannerApi typed error classification and signal forwardi
         expect(err).toBeInstanceOf(PlannerApiError);
         const apiErr = err as PlannerApiError;
         expect(apiErr.status).toBe(429);
-        expect(apiErr.code).toBe("RATE_LIMIT_EXCEEDED");
+        expect(apiErr.code).toBe("RATE_LIMITED");
         expect(apiErr.isTransient).toBe(true);
         expect(apiErr.isNotFound).toBe(false);
       }
@@ -383,7 +392,9 @@ describe("@planner/lib/plannerApi typed error classification and signal forwardi
         jsonResponse(project),
       );
       const result = await getProject("p_1");
-      expect(result).toEqual(project);
+      // normalizePlannerProject preserves the original fields but may add extra ones
+      expect(result).toMatchObject({ id: "p_1", name: "My Plan" });
+      expect(result.canvas_json).toEqual({ objects: [] });
     });
   });
 });

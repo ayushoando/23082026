@@ -56,6 +56,11 @@
   background: var(--surface-panel);
   color: var(--text-strong);
 }
+/* Requirement 7.5 — focus indicator for panel close buttons. */
+.ooplanner-root .draw-side-card__close:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 1px;
+}
 
 .ooplanner-root .draw-side-card__body {
   padding: 10px 12px 12px;
@@ -186,6 +191,18 @@
    it previously only rendered inside .planner-ai-anchor, so it never
    appeared unless the AI panel was open). Fixed-position modal so it
    still reads as an intentional overlay rather than bare unstyled text. */
+
+/* Scrim behind command palette — blocks pointer events to canvas so the
+   aria-modal semantic is backed by a real inert backdrop (Req 7.6, 8.1). */
+.ooplanner-root .planner-command-palette-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 149;
+  background: color-mix(in srgb, var(--color-midnight-900) 28%, transparent);
+  /* Allow pointer events only on the scrim itself so clicking it closes the
+     palette; the palette panel above (z-index: 150) receives its own events. */
+}
+
 .ooplanner-root .planner-command-palette {
   position: fixed;
   top: 15vh;
@@ -699,6 +716,12 @@
 .ooplanner-root .project-menu__item:hover {
   background: var(--surface-muted);
   color: var(--text-strong);
+}
+/* Requirement 7.5 — focus indicator for project menu items. */
+.ooplanner-root .project-menu__item:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -2px;
+  background: var(--surface-muted);
 }
 
 /* Catalog rail */

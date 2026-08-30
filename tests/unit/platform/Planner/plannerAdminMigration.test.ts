@@ -9,12 +9,12 @@ import { describe, expect, it } from "vitest";
 
 const MIGRATION_PATH = path.join(
   process.cwd(),
-  "site/platform/supabase/migrations.admin/20260823090000_planner_revision_idempotency.sql",
+  "platform/supabase/migrations.admin/20260823090000_planner_revision_idempotency.sql",
 );
 
 const DRIZZLE_PATH = path.join(
   process.cwd(),
-  "site/platform/drizzle/schema/planner.ts",
+  "platform/drizzle/schema/planner.ts",
 );
 
 export const PLANNER_SCHEMA_GAP_DECISION = {
@@ -81,6 +81,40 @@ describe("Planner revision/idempotency Admin migration", () => {
     expect(forward).toContain("unique (owner_id, operation, project_id, idempotency_key)");
     expect(forward).toContain("planner_operation_idempotency_created_at_idx");
     expect(forward).not.toMatch(/project_id uuid[^\n]*references public\.oando_plans/);
+  });
+
+  it("adds nullable response-envelope columns idempotently", async () => {
+    const { forward } = await migrationParts();
+    expect(forward).toMatch(
+      /alter table public\.planner_operation_idempotency\s+add column if not exists response_payload jsonb,\s+add column if not exists response_name text,\s+add column if not exists response_thumbnail_url text,\s+add column if not exists response_plan_status text,\s+add column if not exists response_created_at timestamptz,\s+add column if not exists response_updated_at timestamptz;/,
+    );
+  });
+
+  it("returns and persists committed create/save envelopes while keeping delete receipts nullable", async () => {
+    const { forward } = await migrationParts();
+    expect(forward).toMatch(
+      /returns table \(\s*response_status text,\s*response_revision bigint,\s*response_payload jsonb,\s*response_name text,\s*response_thumbnail_url text,\s*response_plan_status text,\s*response_created_at timestamptz,\s*response_updated_at timestamptz,\s*replayed boolean\s*\)/,
+    );
+    expect(forward).toContain(
+      "returning revision, payload, name, thumbnail_url, status, created_at, updated_at",
+    );
+    expect(forward).toContain(
+      "returning plan.revision, plan.payload, plan.name, plan.thumbnail_url,\n              plan.status, plan.created_at, plan.updated_at",
+    );
+    expect(forward).toMatch(
+      /select receipt\.request_fingerprint,\s+receipt\.response_status,\s+receipt\.response_revision,\s+receipt\.response_payload,\s+receipt\.response_name,\s+receipt\.response_thumbnail_url,\s+receipt\.response_plan_status,\s+receipt\.response_created_at,\s+receipt\.response_updated_at/,
+    );
+    expect(forward).toMatch(
+      /response_payload = case\s+when p_operation in \('create', 'save'\) and v_stored_status = 'success'\s+then v_stored_payload\s+else null\s+end/,
+    );
+    expect(forward).toMatch(
+      /return query select\s+v_stored_status,\s+v_stored_revision,\s+v_stored_payload,\s+v_stored_name,\s+v_stored_thumbnail_url,\s+v_stored_plan_status,\s+v_stored_created_at,\s+v_stored_updated_at,\s+false;/,
+    );
+    expect(forward).toMatch(
+      /return query select\s+v_stored_status,\s+v_stored_revision,\s+v_stored_payload,\s+v_stored_name,\s+v_stored_thumbnail_url,\s+v_stored_plan_status,\s+v_stored_created_at,\s+v_stored_updated_at,\s+true;/,
+    );
+    expect(forward).toContain("null::jsonb");
+    expect(forward).toContain("null::timestamptz");
   });
 
   it("provides one guarded transaction-safe mutation function", async () => {

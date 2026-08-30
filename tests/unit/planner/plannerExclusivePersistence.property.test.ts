@@ -4,6 +4,10 @@ import {
   PlannerPersistenceConfigurationError,
   runContextualPlannerPersistenceOperation,
 } from "@planner/lib/plannerPersistenceMode";
+import {
+  createPlannerProjectRepository,
+  type PlannerProjectAtomicAdapterV1,
+} from "@planner/lib/plannerProjectOperations";
 
 // Property 18: Exclusive persistence selection. Authored only; execution is owner-controlled.
 describe("Property 18: exclusive persistence selection", () => {
@@ -48,5 +52,41 @@ describe("Property 18: exclusive persistence selection", () => {
     ).rejects.toBeInstanceOf(PlannerPersistenceConfigurationError);
     expect(disk).not.toHaveBeenCalled();
     expect(supabase).not.toHaveBeenCalled();
+  });
+
+  // Requirement 12.5/12.6: the adapter placed in each slot must declare the
+  // matching mode. createPlannerProjectRepository validates this at construction
+  // time and withSelectedAdapter repeats the check per-operation.
+  it("rejects adapter set where disk slot holds a supabase adapter (Req 12.5, 12.6)", () => {
+    const makeAdapter = (mode: "disk" | "supabase"): PlannerProjectAtomicAdapterV1 => ({
+      mode,
+      async list() { return []; },
+      async load() { return null; },
+      async mutate() { throw new Error("should not be called"); },
+    });
+
+    // disk slot receives supabase adapter → should throw at construction
+    expect(() =>
+      createPlannerProjectRepository(
+        { disk: makeAdapter("supabase"), supabase: makeAdapter("supabase") },
+        { NODE_ENV: "development", DEV_AUTH_BYPASS: "1" } as NodeJS.ProcessEnv,
+      ),
+    ).toThrow(PlannerPersistenceConfigurationError);
+
+    // supabase slot receives disk adapter → should throw at construction
+    expect(() =>
+      createPlannerProjectRepository(
+        { disk: makeAdapter("disk"), supabase: makeAdapter("disk") },
+        { NODE_ENV: "development", DEV_AUTH_BYPASS: "1" } as NodeJS.ProcessEnv,
+      ),
+    ).toThrow(PlannerPersistenceConfigurationError);
+
+    // correct positions → no throw
+    expect(() =>
+      createPlannerProjectRepository(
+        { disk: makeAdapter("disk"), supabase: makeAdapter("supabase") },
+        { NODE_ENV: "development", DEV_AUTH_BYPASS: "1" } as NodeJS.ProcessEnv,
+      ),
+    ).not.toThrow();
   });
 });

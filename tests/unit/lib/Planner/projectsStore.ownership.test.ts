@@ -19,6 +19,10 @@ import {
 vi.mock("@planner/lib/plannerPersistenceMode", () => ({
   getPlannerPersistenceMode: vi.fn(() => "disk"),
   isPlannerPersistenceConfigured: vi.fn(() => true),
+  runPlannerPersistenceOperation: vi.fn((ops: { disk: () => unknown }) => ops.disk()),
+  runContextualPlannerPersistenceOperation: vi.fn(
+    (context: unknown, ops: { disk: (ctx: unknown) => unknown }) => ops.disk(context),
+  ),
 }));
 
 vi.mock("@planner/server/plannerStore", () => ({

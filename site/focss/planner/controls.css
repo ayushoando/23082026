@@ -3,6 +3,8 @@
 .ooplanner-root .btn:hover { border-color: var(--border-accent); box-shadow: var(--shadow-soft); }
 .ooplanner-root .btn:active:not(:disabled) { transform: scale(0.97); }
 .ooplanner-root .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+/* Requirement 7.5 — visible focus indicator for all action buttons. */
+.ooplanner-root .btn:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; box-shadow: none; }
 .ooplanner-root .btn--primary { background: var(--color-primary); border-color: var(--color-primary); color: var(--text-inverse); }
 .ooplanner-root .btn--primary:hover { background: var(--color-primary-hover); border-color: var(--color-primary-hover); box-shadow: var(--shadow-lift); }
 .ooplanner-root .btn--ghost { background: transparent; border-color: transparent; color: var(--text-muted); }
@@ -16,6 +18,8 @@
 .ooplanner-root .icon-btn:hover { background: var(--surface-muted); color: var(--text-strong); }
 .ooplanner-root .icon-btn:active:not(:disabled) { transform: scale(0.92); }
 .ooplanner-root .icon-btn[data-active="true"] { background: var(--color-primary-soft); color: var(--color-primary); border-color: color-mix(in srgb, var(--color-primary) 25%, transparent); }
+/* Requirement 7.5 — explicit visible focus indicator (supplements the global focus-ring). */
+.ooplanner-root .icon-btn:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; box-shadow: none; }
 .ooplanner-root .icon-btn__tip { position: absolute; left: calc(100% + 8px); top: 50%; transform: translateY(-50%); background: var(--color-midnight-900); color: var(--text-inverse); padding: 4px 8px; font-size: 11px; border-radius: 6px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 120ms; z-index: 40; }
 .ooplanner-root .icon-btn:hover .icon-btn__tip { opacity: 1; }
 
@@ -29,10 +33,14 @@
 .ooplanner-root .segmented { display: inline-flex; padding: 2px; background: var(--surface-muted); border: 1px solid var(--border-soft); border-radius: 8px; gap: 2px; }
 .ooplanner-root .segmented button { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 500; font-family: var(--font-sans); color: var(--text-muted); background: transparent; border: none; cursor: pointer; letter-spacing: 0.02em; }
 .ooplanner-root .segmented button[data-active="true"] { background: var(--surface-panel); color: var(--text-strong); box-shadow: var(--shadow-segment-active); }
+/* Requirement 7.5 — focus indicator for segmented control buttons. */
+.ooplanner-root .segmented button:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 1px; }
 
 .ooplanner-root .chip { padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 500; font-family: var(--font-sans); color: var(--text-muted); background: transparent; border: 1px solid var(--border-soft); cursor: pointer; letter-spacing: 0.01em; }
 .ooplanner-root .chip:hover { color: var(--text-strong); border-color: var(--border-muted); }
 .ooplanner-root .chip[data-active="true"] { background: var(--color-primary); border-color: var(--color-primary); color: var(--text-inverse); }
+/* Requirement 7.5 — focus indicator for chip/filter buttons. */
+.ooplanner-root .chip:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
 
 .ooplanner-root .empty-state { display: grid; place-items: center; padding: 40px 20px; text-align: center; color: var(--text-subtle); font-size: 13px; }
 

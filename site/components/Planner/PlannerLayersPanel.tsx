@@ -34,13 +34,19 @@ export const LayersPanel = ({
     );
   }
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 2 }} data-testid="layers-panel">
+    <div
+      style={{ display: "flex", flexDirection: "column", gap: 2 }}
+      data-testid="layers-panel"
+      role="listbox"
+      aria-label="Layers"
+    >
       {objects.map((o) => (
         <div
           key={o.id}
           className="layer-item"
-          role="button"
+          role="option"
           tabIndex={0}
+          aria-selected={o.id === selectedId}
           data-selected={o.id === selectedId}
           onClick={() => onSelect(o.id)}
           onKeyDown={(e) => {

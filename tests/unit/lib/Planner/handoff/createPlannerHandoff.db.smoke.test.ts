@@ -34,6 +34,8 @@ describe.runIf(hasAdmin)("createPlannerHandoff → planner_handoffs (live)", () 
         totalInr: 0,
       },
       idempotencyKey: key,
+      consent: true,
+      inquiryType: "design-support",
     });
 
     const first = await createPlannerHandoff(req);

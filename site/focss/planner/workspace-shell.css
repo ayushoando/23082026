@@ -355,6 +355,10 @@
   cursor: pointer;
 }
 .ooplanner-root .layer-item__icon-btn:hover { background: var(--surface-panel); color: var(--text-strong); }
+/* Requirement 7.5 — focus indicator for layer-item action buttons. */
+.ooplanner-root .layer-item__icon-btn:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 1px; }
+/* Requirement 7.5 — focus indicator for layer-item row (role="button"). */
+.ooplanner-root .layer-item:focus-visible { outline: 2px solid var(--color-focus); outline-offset: -2px; }
 
 /* Dock inspector panels */
 .ooplanner-root .dock-panel { padding: 12px; height: 100%; overflow: auto; min-width: 0; }

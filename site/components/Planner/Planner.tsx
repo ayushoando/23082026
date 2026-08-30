@@ -12,7 +12,14 @@ import { createPortal } from "react-dom";
 import * as fabric from "fabric";
 import type { ModifiedEvent, TPointerEvent, TPointerEventInfo } from "fabric";
 import { useRouter, useParams } from "next/navigation";
-import type { DockviewApiLike, FurnitureItem, LayerRow, OoFabricObject, PlannerSheet } from "@planner/lib/plannerTypes";
+import type {
+  DockviewApiLike,
+  FurnitureItem,
+  LayerRow,
+  OoFabricObject,
+  PlannerProject,
+  PlannerSheet,
+} from "@planner/lib/plannerTypes";
 import { useFabric } from "@planner/hooks/usePlannerFabric";
 import { useHistory } from "@planner/hooks/usePlannerHistory";
 import { useKeyboardShortcuts } from "@planner/hooks/usePlannerKeyboardShortcuts";
@@ -106,6 +113,8 @@ import {
   unauthorizedState,
   forbiddenState,
   notFoundState,
+  offlineState,
+  recoveryState,
   transientErrorState,
 } from "./plannerLoadState";
 import { buildAccessRedirect } from "@/lib/auth/plannerRedirect";
@@ -126,6 +135,112 @@ import { PlannerTabletPanelScrim } from "@planner/components/PlannerTabletPanelS
 export interface PlannerProps {
   accessMode?: "authenticated" | "guest";
   projectStartIntent?: "new" | "resume";
+}
+
+type PlannerReauthHandoff = {
+  version: 1;
+  createdAt: number;
+  returnPath: string;
+  projectId: string | null;
+  projectName: string;
+  projectRevision: number;
+  sheet: PlannerSheet;
+  hasUnsavedChanges: boolean;
+  canvasJson: FabricCanvasJson;
+};
+
+const PLANNER_REAUTH_HANDOFF_KEY = "ooplanner.reauth-handoff.v1";
+const PLANNER_REAUTH_HANDOFF_TTL_MS = 15 * 60 * 1000;
+
+function plannerReturnPath(routeId: string | undefined): string {
+  return routeId ? `/ooplanner/projects/${routeId}` : "/ooplanner";
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function isFabricCanvasJson(value: unknown): value is FabricCanvasJson {
+  return (
+    isRecord(value) &&
+    Array.isArray(value.objects) &&
+    value.objects.every((object) => isRecord(object))
+  );
+}
+
+function parsePlannerReauthHandoff(value: unknown): PlannerReauthHandoff | null {
+  if (!isRecord(value) || value.version !== 1) return null;
+  if (
+    typeof value.createdAt !== "number" ||
+    !Number.isFinite(value.createdAt) ||
+    typeof value.returnPath !== "string" ||
+    (typeof value.projectId !== "string" && value.projectId !== null) ||
+    typeof value.projectName !== "string" ||
+    typeof value.projectRevision !== "number" ||
+    !Number.isFinite(value.projectRevision) ||
+    typeof value.hasUnsavedChanges !== "boolean" ||
+    !isFabricCanvasJson(value.canvasJson)
+  ) {
+    return null;
+  }
+
+  const sheet = value.sheet;
+  if (
+    !isRecord(sheet) ||
+    typeof sheet.width_mm !== "number" ||
+    !Number.isFinite(sheet.width_mm) ||
+    typeof sheet.height_mm !== "number" ||
+    !Number.isFinite(sheet.height_mm) ||
+    typeof sheet.unit !== "string" ||
+    typeof sheet.scale_px_per_mm !== "number" ||
+    !Number.isFinite(sheet.scale_px_per_mm)
+  ) {
+    return null;
+  }
+
+  return {
+    version: 1,
+    createdAt: value.createdAt,
+    returnPath: value.returnPath,
+    projectId: value.projectId,
+    projectName: value.projectName,
+    projectRevision: value.projectRevision,
+    sheet: {
+      width_mm: sheet.width_mm,
+      height_mm: sheet.height_mm,
+      unit: sheet.unit,
+      scale_px_per_mm: sheet.scale_px_per_mm,
+    },
+    hasUnsavedChanges: value.hasUnsavedChanges,
+    canvasJson: value.canvasJson,
+  };
+}
+
+function readPlannerReauthHandoff(
+  returnPath: string,
+  routeId: string | undefined,
+): PlannerReauthHandoff | null {
+  if (typeof window === "undefined") return null;
+
+  let raw: string | null;
+  try {
+    raw = window.sessionStorage.getItem(PLANNER_REAUTH_HANDOFF_KEY);
+  } catch {
+    return null;
+  }
+  if (!raw) return null;
+
+  let handoff: PlannerReauthHandoff | null;
+  try {
+    handoff = parsePlannerReauthHandoff(JSON.parse(raw) as unknown);
+  } catch {
+    return null;
+  }
+  if (!handoff) return null;
+  if (handoff.returnPath !== returnPath) return null;
+  if (routeId && handoff.projectId !== routeId) return null;
+  if (Date.now() - handoff.createdAt > PLANNER_REAUTH_HANDOFF_TTL_MS) return null;
+  return handoff;
 }
 
 const Planner = ({
@@ -171,16 +286,36 @@ const Planner = ({
     loadState.kind === "unauthorized" ||
     loadState.kind === "forbidden" ||
     loadState.kind === "not-found" ||
+    loadState.kind === "offline" ||
+    loadState.kind === "recovery" ||
     loadState.kind === "transient-error";
   const firstPlacementRef = useRef(false);
   const [saving, setSaving] = useState(false);
   const [projectRevision, setProjectRevision] = useState(0);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const [online, setOnline] = useState(true);
-  const [saveIssue, setSaveIssue] = useState<"conflict" | "offline" | "reauth" | "server" | null>(null);
+  const [online, setOnline] = useState(() =>
+    typeof navigator === "undefined" ? true : navigator.onLine,
+  );
+  const [saveIssue, setSaveIssue] = useState<
+    "conflict" | "offline" | "recovery" | "reauth" | "server" | null
+  >(null);
   const [conflictRevision, setConflictRevision] = useState<number | null>(null);
   const saveIdempotencyRef = useRef<string | null>(null);
   const [sheet, setSheet] = useState<PlannerSheet>(DEFAULT_SHEET);
+  const documentStateRef = useRef({
+    projectId: null as string | null,
+    projectName: "Untitled Plan",
+    projectRevision: 0,
+    sheet: DEFAULT_SHEET,
+    hasUnsavedChanges: false,
+  });
+  documentStateRef.current = {
+    projectId,
+    projectName,
+    projectRevision,
+    sheet,
+    hasUnsavedChanges,
+  };
   const [plannerStep, setPlannerStep] = useState<PlannerStep>("draw");
   const [leftCollapsed, setLeftCollapsed] = useState(false);
   const [rightCollapsed, setRightCollapsed] = useState(true);
@@ -209,9 +344,33 @@ const Planner = ({
     const updateOnlineState = () => {
       const nextOnline = navigator.onLine;
       setOnline(nextOnline);
-      if (nextOnline) {
-        setSaveIssue((issue) => (issue === "offline" ? null : issue));
-      }
+
+      // Keep a save failure visible until the user explicitly retries. The
+      // recovery label changes when connectivity returns instead of silently
+      // clearing the only action that can persist the retained canvas.
+      setSaveIssue((issue) => {
+        if (!nextOnline && issue === "recovery") return "offline";
+        if (nextOnline && issue === "offline") return "recovery";
+        return issue;
+      });
+
+      // A pending load gets a network-specific state. When the browser emits
+      // `online`, promote it to an explicit recovery state rather than
+      // auto-replacing the current in-memory document.
+      setLoadState((state) => {
+        if (
+          !nextOnline &&
+          (state.kind === "loading" ||
+            state.kind === "transient-error" ||
+            state.kind === "recovery")
+        ) {
+          return offlineState(state.projectId);
+        }
+        if (nextOnline && state.kind === "offline") {
+          return recoveryState(state.projectId);
+        }
+        return state;
+      });
     };
     updateOnlineState();
     window.addEventListener("online", updateOnlineState);
@@ -1418,6 +1577,127 @@ const Planner = ({
   useEffect(() => {
     if (!ready) return;
 
+    const currentReturnPath = plannerReturnPath(routeId);
+    const reauthHandoff =
+      accessMode === "authenticated"
+        ? readPlannerReauthHandoff(currentReturnPath, routeId)
+        : null;
+
+    // Reauthentication returns through a fresh Planner mount. Restore the
+    // tab-local handoff before consulting localStorage or fetching a project;
+    // otherwise the saved project could replace the user's unsaved canvas.
+    if (reauthHandoff) {
+      const c = fabricRef.current;
+      if (!c) return;
+
+      const handoffProjectId = reauthHandoff.projectId ?? "draft";
+      const key = `${PLANNER_REAUTH_HANDOFF_KEY}:${reauthHandoff.createdAt}:${Date.now()}`;
+      requestKeyRef.current = key;
+      setLoadState(loadingState(handoffProjectId, key));
+
+      const controller = new AbortController();
+      let preservedCanvasJson: FabricCanvasJson | null = null;
+      try {
+        preservedCanvasJson = serializeFabricCanvas(c, ["data"]) as FabricCanvasJson;
+      } catch {
+        // The handoff remains available in sessionStorage if restoration fails.
+      }
+
+      (async () => {
+        try {
+          if (controller.signal.aborted || requestKeyRef.current !== key) return;
+          hydratingOrResettingRef.current = true;
+          await c.loadFromJSON(
+            reauthHandoff.canvasJson,
+            undefined,
+            { signal: controller.signal },
+          );
+
+          // A route change or superseding retry must never publish a stale
+          // handoff or clear the handoff belonging to another request.
+          if (controller.signal.aborted || requestKeyRef.current !== key) return;
+
+          setProjectId(reauthHandoff.projectId);
+          setProjectName(reauthHandoff.projectName);
+          setProjectRevision(reauthHandoff.projectRevision);
+          setSheet(reauthHandoff.sheet);
+          setHasUnsavedChanges(reauthHandoff.hasUnsavedChanges);
+          setSaveIssue(null);
+          setConflictRevision(null);
+          saveIdempotencyRef.current = null;
+          setSelectedIds([]);
+          setPropObj(null);
+          c.requestRenderAll();
+          refreshLayers();
+          setSceneVersion((version) => version + 1);
+
+          // Only a guarded, successful Fabric restore consumes the handoff.
+          try {
+            window.sessionStorage.removeItem(PLANNER_REAUTH_HANDOFF_KEY);
+          } catch {
+            // A storage failure must not invalidate the restored canvas.
+          }
+
+          if (reauthHandoff.projectId) {
+            const restoredProject: PlannerProject = {
+              id: reauthHandoff.projectId,
+              name: reauthHandoff.projectName,
+              objects_count: reauthHandoff.canvasJson.objects.length,
+              revision: reauthHandoff.projectRevision,
+              status: "draft",
+              updated_at: new Date(reauthHandoff.createdAt).toISOString(),
+              canvas_json: reauthHandoff.canvasJson,
+              sheet: reauthHandoff.sheet,
+            };
+            setLoadState(readyState(reauthHandoff.projectId, restoredProject));
+          } else {
+            setLoadState(DRAFT);
+          }
+          showToast(
+            reauthHandoff.hasUnsavedChanges
+              ? "Restored your unsaved plan after sign-in."
+              : "Restored your plan after sign-in.",
+          );
+        } catch {
+          if (controller.signal.aborted || requestKeyRef.current !== key) return;
+
+          // Keep the pre-restore canvas intact when Fabric partially mutates
+          // it before rejecting the handoff. The handoff itself stays staged
+          // so the explicit retry can attempt restoration again.
+          if (preservedCanvasJson) {
+            try {
+              hydratingOrResettingRef.current = true;
+              await c.loadFromJSON(
+                preservedCanvasJson,
+                undefined,
+                { signal: controller.signal },
+              );
+              c.requestRenderAll();
+              refreshLayers();
+            } catch {
+              // The original restoration error remains the visible state.
+            }
+          }
+          if (controller.signal.aborted || requestKeyRef.current !== key) return;
+          setLoadState(
+            transientErrorState(
+              handoffProjectId,
+              undefined,
+              "We could not restore the plan after sign-in. Try again; your staged canvas is retained.",
+            ),
+          );
+        } finally {
+          if (requestKeyRef.current === key) {
+            hydratingOrResettingRef.current = false;
+          }
+        }
+      })();
+
+      return () => {
+        controller.abort();
+      };
+    }
+
     // --- Compute effective id with strict precedence ---
     let effectiveId: string | undefined = routeId;
     const shouldResumeLastProject =
@@ -1441,7 +1721,23 @@ const Planner = ({
     requestKeyRef.current = key;
     setLoadState(loadingState(effectiveId, key));
 
+    // Do not spend a request while the browser already knows it is offline.
+    // Keep the existing canvas mounted and expose a distinct reconnect state.
+    if (!navigator.onLine) {
+      setLoadState(offlineState(effectiveId));
+      return;
+    }
+
     const controller = new AbortController();
+    let hydrationStarted = false;
+    let preservedCanvasJson: FabricCanvasJson | null = null;
+    const preservedDocument = documentStateRef.current;
+    try {
+      preservedCanvasJson = serializeFabricCanvas(c, ["data"]) as FabricCanvasJson;
+    } catch {
+      // A best-effort snapshot is enough to protect normal Fabric hydration
+      // failures; the fetched project remains the source of truth on success.
+    }
 
     (async () => {
       try {
@@ -1450,6 +1746,7 @@ const Planner = ({
         // Stale check: if a newer request replaced this one, discard silently.
         if (requestKeyRef.current !== key) return;
 
+        hydrationStarted = true;
         hydratingOrResettingRef.current = true;
         await c.loadFromJSON(
           proj.canvas_json ?? {},
@@ -1485,6 +1782,37 @@ const Planner = ({
         if (controller.signal.aborted || isAbortError(e)) return;
         // Stale — a newer request superseded this one.
         if (requestKeyRef.current !== key) return;
+        // A failed Fabric hydration may have cleared or partially replaced
+        // the canvas. Restore the last valid snapshot before presenting the
+        // error so failed loads cannot destroy unsaved in-memory work.
+        if (hydrationStarted && preservedCanvasJson) {
+          try {
+            hydratingOrResettingRef.current = true;
+            await c.loadFromJSON(
+              preservedCanvasJson,
+              undefined,
+              { signal: controller.signal },
+            );
+            c.requestRenderAll();
+            refreshLayers();
+          } catch {
+            // Keep the original load failure visible; restoration is best
+            // effort because Fabric can reject malformed legacy snapshots.
+          }
+        }
+
+        if (controller.signal.aborted || requestKeyRef.current !== key) return;
+
+        if (hydrationStarted) {
+          // Keep the non-canvas document metadata aligned with the restored
+          // canvas when a later hydration step fails after fetched values were
+          // staged.
+          setProjectId(preservedDocument.projectId);
+          setProjectName(preservedDocument.projectName);
+          setProjectRevision(preservedDocument.projectRevision);
+          setSheet(preservedDocument.sheet);
+          setHasUnsavedChanges(preservedDocument.hasUnsavedChanges);
+        }
 
         if (e instanceof PlannerApiError && e.isUnauthorized) {
           // 401 — the one failure mode a persisted audit artifact actually
@@ -1502,9 +1830,18 @@ const Planner = ({
           if (isLocalStorageFallback) {
             try { localStorage.removeItem(PLANNER_LAST_PROJECT_KEY); } catch { /* noop */ }
           }
+        } else if (e instanceof PlannerApiError && e.isOffline) {
+          console.info("[Planner] load project paused while offline:", { effectiveId, routeId });
+          setLoadState(offlineState(effectiveId!, e.detail || e.message));
         } else if (e instanceof PlannerApiError && e.isTransient) {
           console.error("[Planner] load project failed (transient):", e.message, { effectiveId, routeId });
           setLoadState(transientErrorState(effectiveId!, e.status, e.detail || e.message));
+        } else if (!navigator.onLine) {
+          // Browser connectivity can change without the fetch wrapper
+          // producing its typed OFFLINE error. Keep that case explicit too.
+          const msg = e instanceof Error ? e.message : String(e);
+          console.info("[Planner] load project interrupted while offline:", { effectiveId, routeId, msg });
+          setLoadState(offlineState(effectiveId!));
         } else {
           // Network or unexpected failure
           const msg = e instanceof Error ? e.message : String(e);
@@ -1580,8 +1917,15 @@ const Planner = ({
   };
 
   const handleRetry = useCallback(() => {
+    if (!online || !navigator.onLine) {
+      setLoadState((state) => {
+        if (state.kind === "draft" || state.kind === "ready") return state;
+        return offlineState(state.projectId);
+      });
+      return;
+    }
     setRetryCount((c) => c + 1);
-  }, []);
+  }, [online]);
 
   const handleBackToProjects = useCallback(() => {
     router.push("/ooplanner/projects");
@@ -1591,11 +1935,35 @@ const Planner = ({
   // button on a 401 can never succeed, so unauthorized state offers this
   // instead of retry. See plans/ref/remediation-unified/design.md §3.1.
   const handleSignIn = useCallback(() => {
-    const returnPath = routeId
-      ? `/ooplanner/projects/${routeId}`
-      : "/ooplanner";
+    const returnPath = plannerReturnPath(routeId);
+    const c = fabricRef.current;
+    if (c) {
+      try {
+        const documentState = documentStateRef.current;
+        const handoff: PlannerReauthHandoff = {
+          version: 1,
+          createdAt: Date.now(),
+          returnPath,
+          projectId: routeId ?? documentState.projectId,
+          projectName: documentState.projectName,
+          projectRevision: documentState.projectRevision,
+          sheet: documentState.sheet,
+          hasUnsavedChanges: documentState.hasUnsavedChanges,
+          canvasJson: serializeFabricCanvas(c, ["data"]) as FabricCanvasJson,
+        };
+        window.sessionStorage.setItem(
+          PLANNER_REAUTH_HANDOFF_KEY,
+          JSON.stringify(handoff),
+        );
+      } catch {
+        // Do not navigate when the tab cannot stage the current document.
+        // Otherwise reauthentication could unmount the only in-memory copy.
+        showToast("Could not preserve this canvas for sign-in. Try again.", "error");
+        return;
+      }
+    }
     router.push(buildAccessRedirect(returnPath));
-  }, [router, routeId]);
+  }, [fabricRef, routeId, router, showToast]);
 
   const handleReloadLatest = useCallback(() => {
     if (
@@ -1607,7 +1975,8 @@ const Planner = ({
     saveIdempotencyRef.current = null;
     setSaveIssue(null);
     setConflictRevision(null);
-    setHasUnsavedChanges(false);
+    // Keep the dirty flag until the replacement load succeeds. If the retry
+    // fails, the current in-memory canvas must still be treated as unsaved.
     setRetryCount((count) => count + 1);
   }, [hasUnsavedChanges]);
 
@@ -1973,11 +2342,13 @@ const Planner = ({
       ? "This plan changed elsewhere. Choose which version to continue with."
       : saveIssue === "offline"
         ? "You are offline. Your canvas is preserved; reconnect before retrying."
-        : saveIssue === "reauth"
-          ? "Your session expired. Sign in again without discarding this canvas."
-          : saveIssue === "server"
-            ? "The plan could not be saved. Your local canvas is unchanged."
-            : null;
+        : saveIssue === "recovery"
+          ? "Connection restored. Retry save to preserve your canvas."
+          : saveIssue === "reauth"
+            ? "Your session expired. Sign in again without discarding this canvas."
+            : saveIssue === "server"
+              ? "The plan could not be saved. Your local canvas is unchanged."
+              : null;
 
   return (
     <PlannerContext.Provider value={plannerCtx}>

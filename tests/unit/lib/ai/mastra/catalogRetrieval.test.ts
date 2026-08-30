@@ -473,6 +473,8 @@ describe("Preservation P2-R5: retrieval is fail-open across all layers (PASS on 
   });
 
   it("very short query (<2 chars) returns catalog-order slice without running Orama or vector", async () => {
+    // Clear any mock call history from previous property-based tests
+    searchCatalogVectors.mockReset();
     const products: RetrievableProduct[] = [
       makeProduct("chair-a"),
       makeProduct("desk-b"),

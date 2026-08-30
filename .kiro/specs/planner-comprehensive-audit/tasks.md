@@ -101,11 +101,11 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - **Property 5: Geometry persistence round trip**
     - Generate valid geometry and verify serialize-save-load-deserialize preserves physical state and never applies `0.2 px/mm` or lossy conversion.
     - **Validates: Requirements 3.5, 4.3, 13.8**
-  - [~] 2.6 Enforce exclusive persistence selection at the operation facade
+  - [x] 2.6 Enforce exclusive persistence selection at the operation facade
     - Select disk only for non-production `DEV_AUTH_BYPASS=1`, Admin `oando_plans` otherwise and always in production; reject ambiguous configuration and never fallback-write after adapter failure.
     - Keep production filesystem writes behind approved guards and pass owner/correlation context through one selected adapter.
     - _Requirements: 12.1-12.8, 17.4_
-  - [~] 2.7 Normalize the project envelope and repository adapters
+  - [-] 2.7 Normalize the project envelope and repository adapters
     - Validate identity, server-derived owner, schema version, metadata, geometry, allowed response fields, and coherent timestamps at the persistence boundary; adapt legacy payload forms there rather than in UI code.
     - Publish the resulting repository contract at Gate B; API and UI workstreams consume it read-only.
     - _Requirements: 13.1, 13.2, 13.5, 13.8_
@@ -180,14 +180,14 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - Make select, move, rotate, resize, duplicate, delete, zoom, and pan invoke common Planner-owned command logic from pointer, touch, keyboard, and visible accessible controls.
     - Provide explicit alternatives for multi-pointer gestures.
     - _Requirements: 7.1-7.4, 7.7_
-  - [-] 3.11 Remediate touch scope, keyboard traversal, menus, panels, and dialogs
+  - [x] 3.11 Remediate touch scope, keyboard traversal, menus, panels, and dialogs
     - Restrict `touch-action` suppression to active gesture regions, provide logical visible focus, move focus into opened surfaces, trap only modal focus, and restore the invoker on close.
     - _Requirements: 7.4-7.6, 8.1, 8.2_
-  - [~] 3.12 Write property-based test for responsive context preservation
+  - [x] 3.12 Write property-based test for responsive context preservation
     - **Property 10: Responsive context preservation**
     - Generate supported viewport/orientation transitions and verify equivalent content, unsaved state, active context, and reachable commands.
     - **Validates: Requirements 6.1, 6.2, 6.6**
-  - [~] 3.13 Write property-based test for input-command parity
+  - [-] 3.13 Write property-based test for input-command parity
     - **Property 11: Input-command parity**
     - Generate state-changing actions and bindings and verify pointer, touch, keyboard, and accessible controls invoke the same semantic command with equivalent state.
     - **Validates: Requirements 7.1, 7.2, 7.3, 7.7**

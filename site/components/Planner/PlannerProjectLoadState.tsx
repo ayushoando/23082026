@@ -38,14 +38,11 @@ export function PlannerProjectLoadState({
 }: PlannerProjectLoadStateProps) {
   const headingRef = useRef<HTMLHeadingElement>(null);
 
-  /* Move focus to the heading when transitioning to an error state */
+  /* Move focus into every visible load/recovery state. This keeps retrying
+     accessible: the old button may unmount when the state changes to loading,
+     so focus must not be left on a detached element. */
   useEffect(() => {
-    if (
-      state.kind === "unauthorized" ||
-      state.kind === "forbidden" ||
-      state.kind === "not-found" ||
-      state.kind === "transient-error"
-    ) {
+    if (state.kind !== "draft" && state.kind !== "ready") {
       headingRef.current?.focus();
     }
   }, [state.kind]);
@@ -61,6 +58,7 @@ export function PlannerProjectLoadState({
       <div className="planner-load-state" role="status" aria-busy="true">
         <h2
           className="planner-load-state__heading"
+          data-planner-state-heading
           ref={headingRef}
           tabIndex={-1}
         >
@@ -76,6 +74,7 @@ export function PlannerProjectLoadState({
       <div className="planner-load-state" role="alert">
         <h2
           className="planner-load-state__heading"
+          data-planner-state-heading
           ref={headingRef}
           tabIndex={-1}
         >
@@ -83,7 +82,12 @@ export function PlannerProjectLoadState({
         </h2>
         <p className="planner-load-state__message">{state.message}</p>
         <div className="planner-load-state__actions">
-          <button type="button" className="btn" onClick={onSignIn}>
+          <button
+            type="button"
+            className="btn"
+            data-planner-primary-action
+            onClick={onSignIn}
+          >
             Sign in
           </button>
           <button type="button" className="btn" onClick={onBackToProjects}>
@@ -101,6 +105,7 @@ export function PlannerProjectLoadState({
       <div className="planner-load-state" role="alert">
         <h2
           className="planner-load-state__heading"
+          data-planner-state-heading
           ref={headingRef}
           tabIndex={-1}
         >
@@ -108,6 +113,44 @@ export function PlannerProjectLoadState({
         </h2>
         <p className="planner-load-state__message">{state.message}</p>
         <div className="planner-load-state__actions">
+          <button
+            type="button"
+            className="btn"
+            data-planner-primary-action
+            onClick={onBackToProjects}
+          >
+            Back to projects
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  /* Offline and connection-restored states remain distinct from a generic
+     server error. The retry stays explicit so reconnecting never replaces
+     the current in-memory document without a user action. */
+  if (state.kind === "offline" || state.kind === "recovery") {
+    const offline = state.kind === "offline";
+    return (
+      <div className="planner-load-state" role="alert">
+        <h2
+          className="planner-load-state__heading"
+          data-planner-state-heading
+          ref={headingRef}
+          tabIndex={-1}
+        >
+          {offline ? "You are offline" : "Connection restored"}
+        </h2>
+        <p className="planner-load-state__message">{state.message}</p>
+        <div className="planner-load-state__actions">
+          <button
+            type="button"
+            className="btn"
+            data-planner-primary-action
+            onClick={onRetry}
+          >
+            {offline ? "Retry connection" : "Retry load"}
+          </button>
           <button type="button" className="btn" onClick={onBackToProjects}>
             Back to projects
           </button>
@@ -116,7 +159,7 @@ export function PlannerProjectLoadState({
     );
   }
 
-  /* Retryable error states: not-found and transient-error */
+  /* Retryable persisted-data outcomes: not-found and transient server errors. */
   const heading =
     state.kind === "not-found" ? "Plan not found" : "Temporarily unavailable";
 
@@ -124,6 +167,7 @@ export function PlannerProjectLoadState({
     <div className="planner-load-state" role="alert">
       <h2
         className="planner-load-state__heading"
+        data-planner-state-heading
         ref={headingRef}
         tabIndex={-1}
       >
@@ -133,7 +177,12 @@ export function PlannerProjectLoadState({
       <p className="planner-load-state__message">{state.message}</p>
 
       <div className="planner-load-state__actions">
-        <button type="button" className="btn" onClick={onRetry}>
+        <button
+          type="button"
+          className="btn"
+          data-planner-primary-action
+          onClick={onRetry}
+        >
           Try again
         </button>
         <button type="button" className="btn" onClick={onBackToProjects}>
@@ -143,5 +192,3 @@ export function PlannerProjectLoadState({
     </div>
   );
 }
-
-export default PlannerProjectLoadState;

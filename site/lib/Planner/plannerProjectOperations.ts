@@ -18,6 +18,10 @@ import {
   type SavePlannerProjectRequestV1,
 } from "@planner/lib/plannerProjectRepository";
 import {
+  runObservedPlannerPersistenceAtCallSite,
+} from "@/lib/observability/planner/plannerObservability.server";
+import type { PlannerPersistenceOperation } from "@/lib/observability/planner/plannerObservability";
+import {
   PlannerPersistenceConfigurationError,
   runContextualPlannerPersistenceOperation,
 } from "@planner/lib/plannerPersistenceMode";
@@ -306,17 +310,64 @@ function repositoryFailure(error: unknown): PlannerRepositoryResultV1<never> {
   };
 }
 
+/**
+ * Assert that the adapter registered under `slot` declares the same mode.
+ * This is a defence-in-depth check: the `runContextualPlannerPersistenceOperation`
+ * caller guarantees only one slot runs per operation, but a misconfigured adapter
+ * set (e.g. supabase adapter placed in disk slot) would silently write to the
+ * wrong backend. Throwing here converts misconfiguration into a loud
+ * CONFIGURATION_ERROR before any adapter call. (Requirements 12.5, 12.6)
+ */
+function assertAdapterSlotMode(
+  adapter: PlannerProjectAtomicAdapterV1,
+  expectedMode: "disk" | "supabase",
+): void {
+  if (adapter.mode !== expectedMode) {
+    throw new PlannerPersistenceConfigurationError(
+      `Planner adapter slot '${expectedMode}' received an adapter that declares mode '${adapter.mode}'. ` +
+        "Adapter positions must match their declared modes to enforce exclusive persistence selection.",
+    );
+  }
+}
+
+/**
+ * Validate the adapter set at construction time. Catches slot/mode mismatches
+ * before the first operation is attempted. (Requirements 12.4, 12.5, 12.6)
+ */
+function assertAdapterSetValid(adapters: PlannerProjectAdapterSetV1): void {
+  assertAdapterSlotMode(adapters.disk, "disk");
+  assertAdapterSlotMode(adapters.supabase, "supabase");
+}
+
 async function withSelectedAdapter<TResult>(
   context: PlannerRepositoryContextV1,
   adapters: PlannerProjectAdapterSetV1,
+  persistenceOperation: PlannerPersistenceOperation,
   operation: (adapter: PlannerProjectAtomicAdapterV1) => Promise<TResult>,
   env: NodeJS.ProcessEnv,
 ): Promise<TResult> {
+  const runSelected = (
+    selectedContext: PlannerRepositoryContextV1,
+    adapter: PlannerProjectAtomicAdapterV1,
+    expectedMode: "disk" | "supabase",
+  ): Promise<TResult> => {
+    // Defence-in-depth per-operation check: the resolved persistence mode must
+    // match the adapter being called. Selected-adapter failures are reported
+    // without consulting the other backend. (Requirements 12.5, 12.6, 12.8)
+    assertAdapterSlotMode(adapter, expectedMode);
+    return runObservedPlannerPersistenceAtCallSite({
+      operation: persistenceOperation,
+      mode: adapter.mode,
+      correlationId: selectedContext.correlationId,
+      execute: () => operation(adapter),
+    });
+  };
+
   return runContextualPlannerPersistenceOperation(
     context,
     {
-      disk: () => operation(adapters.disk),
-      supabase: () => operation(adapters.supabase),
+      disk: (selectedContext) => runSelected(selectedContext, adapters.disk, "disk"),
+      supabase: (selectedContext) => runSelected(selectedContext, adapters.supabase, "supabase"),
     },
     env,
   );
@@ -349,6 +400,10 @@ export function createPlannerProjectRepository(
   adapters: PlannerProjectAdapterSetV1,
   env: NodeJS.ProcessEnv = process.env,
 ): PlannerProjectRepositoryV1 {
+  // Validate adapter slots once at construction. A mismatch throws
+  // PlannerPersistenceConfigurationError so the caller receives CONFIGURATION_ERROR
+  // rather than a silent write to the wrong backend. (Requirements 12.4–12.6)
+  assertAdapterSetValid(adapters);
   return {
     contractVersion: PLANNER_REPOSITORY_CONTRACT_VERSION,
     async list(context) {
@@ -356,6 +411,7 @@ export function createPlannerProjectRepository(
         const sources = await withSelectedAdapter(
           context,
           adapters,
+          "planner.persistence.list",
           (adapter) => adapter.list(context.ownerId),
           env,
         );
@@ -378,6 +434,7 @@ export function createPlannerProjectRepository(
         const source = await withSelectedAdapter(
           context,
           adapters,
+          "planner.persistence.load",
           (adapter) => adapter.load(context.ownerId, id),
           env,
         );
@@ -394,6 +451,7 @@ export function createPlannerProjectRepository(
         const transition = await withSelectedAdapter(
           context,
           adapters,
+          "planner.persistence.create",
           (adapter) =>
             adapter.mutate(context, {
               operation: "create",
@@ -412,6 +470,7 @@ export function createPlannerProjectRepository(
         const transition = await withSelectedAdapter(
           context,
           adapters,
+          "planner.persistence.save",
           (adapter) => adapter.mutate(context, { operation: "save", projectId: id, request }),
           env,
         );
@@ -425,6 +484,7 @@ export function createPlannerProjectRepository(
         const transition = await withSelectedAdapter(
           context,
           adapters,
+          "planner.persistence.delete",
           (adapter) =>
             adapter.mutate(context, {
               operation: "delete",

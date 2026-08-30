@@ -82,7 +82,9 @@ export class LanceCatalogVectorStore extends MastraVector {
    */
   private isProductionNonRemote(): boolean {
     const env = process.env;
-    const isProduction = env.NODE_ENV !== "development";
+    // Block local filesystem writes only in production. Allow in development
+    // and test environments so that disk-mode tests and local dev work correctly.
+    const isProduction = env.NODE_ENV === "production";
     const isBypass = env.DEV_AUTH_BYPASS === "1";
     return isProduction && !isBypass && !this.isRemoteUri(this.uri);
   }

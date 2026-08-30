@@ -234,8 +234,10 @@ describe("LanceCatalogVectorStore — production non-remote write guard (baselin
       // Simulate production environment: no LANCE_DB_URI, no DEV_AUTH_BYPASS.
       const savedLanceDbUri = process.env["LANCE_DB_URI"];
       const savedDevAuthBypass = process.env["DEV_AUTH_BYPASS"];
+      const savedNodeEnv = process.env["NODE_ENV"];
       delete process.env["LANCE_DB_URI"];
       delete process.env["DEV_AUTH_BYPASS"];
+      process.env["NODE_ENV"] = "production";
 
       mkdirSync.mockReset();
       assertDevDiskWritable.mockReset();
@@ -257,6 +259,11 @@ describe("LanceCatalogVectorStore — production non-remote write guard (baselin
         }
         if (savedDevAuthBypass !== undefined) {
           process.env["DEV_AUTH_BYPASS"] = savedDevAuthBypass;
+        }
+        if (savedNodeEnv !== undefined) {
+          process.env["NODE_ENV"] = savedNodeEnv;
+        } else {
+          delete process.env["NODE_ENV"];
         }
       }
 
@@ -299,6 +306,8 @@ describe("LanceCatalogVectorStore — production non-remote write guard (baselin
             } else {
               delete process.env["DEV_AUTH_BYPASS"];
             }
+            // Explicitly set production NODE_ENV so the guard fires
+            process.env["NODE_ENV"] = env.NODE_ENV;
 
             mkdirSync.mockReset();
             assertDevDiskWritable.mockReset();

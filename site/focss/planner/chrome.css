@@ -147,6 +147,12 @@
   background: var(--surface-muted);
   color: var(--text-strong);
 }
+/* Requirement 7.5 — focus indicator for export menu items. */
+.ooplanner-root .export-menu__item:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -2px;
+  background: var(--surface-muted);
+}
 
 .ooplanner-root .export-menu__heading {
   padding: 6px 10px 4px;

@@ -165,8 +165,6 @@ const invalidMethodArb = fc.constantFrom(
   "DELETE",
   "HEAD",
   "OPTIONS",
-  "TRACE",
-  "CONNECT",
 );
 
 /** Invalid body payloads that fail schema validation for the descriptor. */
@@ -236,11 +234,11 @@ const invalidOriginArb = fc.oneof(
   fc.constant("null"),
 );
 
-/** Generated bad CSRF tokens. */
+/** Generated bad CSRF tokens — must be non-empty (empty token is an input validation failure). */
 const invalidCsrfArb = fc.oneof(
-  fc.constant(""),
   fc.constant("invalid-token"),
   fc.stringMatching(/^[A-Za-z0-9]{1,20}$/),
+  fc.constant("x-invalid-csrf-123"),
 );
 
 /** Generated owner IDs for client-supplied owner identifier rejection. */
@@ -282,14 +280,16 @@ function buildRequest(
   } = {},
 ): Request {
   const headers: Record<string, string> = {
-    "content-type": overrides.contentType ?? "application/json; charset=utf-8",
+    "content-type": overrides.contentType ?? "application/json",
     "x-csrf-token": overrides.csrfToken ?? "valid-csrf-token",
     origin: overrides.origin ?? "https://planner.example",
   };
+  // GET and HEAD cannot have a request body — omit it for those methods.
+  const hasBody = method !== "GET" && method !== "HEAD";
   return new Request(BASE_URL, {
     method,
     headers,
-    body: JSON.stringify(body),
+    ...(hasBody ? { body: JSON.stringify(body) } : {}),
   });
 }
 

@@ -19,6 +19,8 @@ describe("plannerHandoffRequestSchema", () => {
         gstInr: 0,
         totalInr: 0,
       },
+      consent: true,
+      inquiryType: "design-support",
       idempotencyKey: "idem-1",
     });
     expect(parsed.success).toBe(true);
@@ -42,13 +44,15 @@ describe("createPlannerHandoff", () => {
   it("stores handoff and replays idempotently", async () => {
     const store = createMemoryHandoffStore();
     const req = plannerHandoffRequestSchema.parse({
-      contact: { name: "Ada" },
+      contact: { name: "Ada", email: "ada@example.com" },
       boq: {
         projectId: "p1",
         projectName: "Office",
         calculationHash: "b".repeat(64),
         lines: [],
       },
+      consent: true,
+      inquiryType: "design-support",
       idempotencyKey: "idem-2",
     });
     const first = await createPlannerHandoff(req, { store });
@@ -69,13 +73,15 @@ describe("createPlannerHandoff", () => {
     delete process.env.SUPABASE_ADMIN_SERVICE_ROLE_KEY;
     try {
       const req = plannerHandoffRequestSchema.parse({
-        contact: { name: "Ada" },
+        contact: { name: "Ada", email: "ada@example.com" },
         boq: {
           projectId: "p1",
           projectName: "Office",
           calculationHash: "c".repeat(64),
           lines: [],
         },
+        consent: true,
+        inquiryType: "design-support",
         idempotencyKey: "idem-missing-env",
       });
       const result = await createPlannerHandoff(req);
