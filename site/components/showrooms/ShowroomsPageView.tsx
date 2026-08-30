@@ -57,7 +57,7 @@ export interface ShowroomsPageViewProps {
   ctaTitleAccent: string;
   ctaDescription: string;
   ctaPrimary: string;
-  ctaSecondary: string;
+  mapHeading: string;
 }
 
 export function ShowroomsPageView({
@@ -80,6 +80,7 @@ export function ShowroomsPageView({
   ctaDescription,
   ctaPrimary,
   ctaSecondary,
+  mapHeading,
 }: ShowroomsPageViewProps) {
   const heroRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLElement>(null);
@@ -246,7 +247,7 @@ export function ShowroomsPageView({
                 </MarketingCtaLink>
               </div>
               <div data-showrooms-reveal className="mt-8">
-                <OfficeMap heading="Find the showroom" />
+                <OfficeMap heading={mapHeading} />
               </div>
             </div>
 

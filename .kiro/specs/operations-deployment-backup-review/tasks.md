@@ -63,21 +63,21 @@ Implement a repository-local TypeScript operations-review tool that reads an exp
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
 
 - [~] 3. Model Products/Admin backup coverage and the R2 backup flow independently
-  - [~] 3.1 Implement separate Products and Admin evidence extraction and coverage assessment.
+  - [x] 3.1 Implement separate Products and Admin evidence extraction and coverage assessment.
     - Read only the approved database/runbook/migration sources to capture project reference, ownership scope, configured backup route, recovery documentation, and target coverage.
     - Represent schema rollback, provider recovery/PITR, and data restore as distinct recovery paths; do not access either database or run migration/backup/restore commands.
     - _Requirements: 4.1, 4.2, 4.4, 7.1, 7.3_
     - **Acceptance evidence:** Each database record cites its own project reference and source paths; database action proposals remain protected and pending.
-  - [ ] 3.2 Implement R2 workflow extraction and artifact categorization from the backup workflow, command routes, and operations documentation.
+  - [x] 3.2 Implement R2 workflow extraction and artifact categorization from the backup workflow, command routes, and operations documentation.
     - Record schedule, trigger modes, timeout, command route, and secret *names* only; classify database dumps, catalog snapshots, repository backups, and delivery assets separately.
     - Redact secret-like values and create unverified findings independently for creation, retention, integrity, and retrievability when provider evidence is absent.
     - _Requirements: 5.1, 5.2, 5.3, 5.4_
     - **Acceptance evidence:** Rendered data contains no credential values and does not claim R2 object existence or retrievability from repository configuration.
-  - [ ]* 3.3 Write property test for attributable missing backup-coverage gaps.
+  - [~] 3.3 Write property test for attributable missing backup-coverage gaps.
     - **Property 6: Missing database-backup elements produce attributable gaps.**
     - **Validates: Requirements 4.3**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
-  - [ ]* 3.4 Write property test for scheduled-workflow credential redaction.
+  - [~] 3.4 Write property test for scheduled-workflow credential redaction.
     - **Property 7: Scheduled-workflow review redacts credentials while preserving structure.**
     - **Validates: Requirements 5.2**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.

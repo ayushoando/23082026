@@ -141,7 +141,7 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - Generate current, known-old, and unsupported versions and verify validation/migration or unchanged source with explicit unsupported result.
     - **Validates: Requirements 13.1, 13.7, 14.6**
 
-- [ ] 3. Workstream 3 — Remediate UI/UX, responsive, input, and accessibility behavior
+- [x] 3. Workstream 3 — Remediate UI/UX, responsive, input, and accessibility behavior
   - [x] 3.1 Remediate `/ooplanner` and project-route entry, list, and routing behavior
     - Produce deterministic guest/authenticated entry states, project-list loading/empty/error states, reachable next actions, and thin App Router entries with business logic in Planner-owned modules.
     - _Requirements: 2.1, 4.1, 5.1-5.3, 10.1-10.3_
@@ -216,7 +216,7 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
   - [x] 3.20 Remediate lead handoff validation, draft recovery, and stable confirmation
     - Validate contact, consent, and inquiry fields; preserve valid draft values on validation/server failure; provide retry and a stable non-secret handoff reference on success without granting project access.
     - _Requirements: 10.2, 15.3-15.7_
-  - [-] 3.21 Write property-based test for guest boundary integrity
+  - [x] 3.21 Write property-based test for guest boundary integrity
     - **Property 23: Guest boundary integrity**
     - Generate guest catalog selections and handoff outcomes and verify public context/drafts/confirmation survive while restricted data and project capability never appear.
     - **Validates: Requirements 10.1, 10.2, 15.1, 15.2, 15.5, 15.6, 15.7**
@@ -286,7 +286,7 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - Cover room boundary, at least ten furniture objects, rotation, dimensions, labels, metadata, route LCP/CLS, non-canvas INP, canvas FPS, direct feedback, API latency, and 20-cycle listener/subscription cleanup.
     - Record viewport/orientation/input/browser/device/CPU/network fixture, warm/cold status, sample count, method, and evidence class without claiming unexecuted browser or integration results.
     - _Requirements: 16.1-16.7, 18.1, 19.4_
-  - [~] 5.6 Remediate every evidenced performance-budget or cleanup defect after required product remediation and capture comparable before/after definitions
+  - [x] 5.6 Remediate every evidenced performance-budget or cleanup defect after required product remediation and capture comparable before/after definitions
     - At Gate D, return each measured bottleneck to the exclusive product-file owner, require the smallest serial remediation, preserve behavior, and accept the handback only after its measured value, profile, bottleneck evidence, remediation, and exact pending/observed verification are bound to the finding.
     - Defect remediation is required; if no authorized measurement exists, retain the candidate as validation-pending rather than asserting compliance.
     - _Requirements: 2.1, 2.6, 16.1-16.8_
@@ -294,10 +294,10 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - **Property 26: Performance finding completeness**
     - Generate missed-budget findings and verify measured value, complete supported profile, bottleneck evidence, and remediation status are mandatory.
     - **Validates: Requirements 16.8**
-  - [~] 5.8 Expand automated browser/device profiles beyond the required representative profiles
+  - [x] 5.8 Expand automated browser/device profiles beyond the required representative profiles
     - Add non-duplicative cross-browser/device cases only after required profiles and remediations are covered; do not make these extra profiles a prerequisite for closing already proven findings.
     - _Requirements: 6.1, 7.1, 8.1, 16.1-16.7_
-  - [~] 5.9 Add targeted unit and integration regression tests for every remediated finding after Gate D
+  - [-] 5.9 Add targeted unit and integration regression tests for every remediated finding after Gate D
     - Cover geometry, commands, state transitions, API middleware order, owner scope, adapters, revision/idempotency/schema behavior, guest handoff, observability, migration transformations when present, and all defect-specific edge cases.
     - Tag/link tests to finding ids, source paths, requirements, and evidence class. Use distinct concern-specific test files or wait for explicit serial file transfer; never edit a workstream-owned test file concurrently.
     - _Requirements: 2.6, 18.1, 18.5, 19.1-19.4_

@@ -2,6 +2,16 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { LanguageSwitcher } from '@/components/site/LanguageSwitcher';
 
+vi.mock("next-intl", () => ({
+  useTranslations: () => (key: string) =>
+    ({
+      label: "Select Language",
+      english: "English",
+      hindi: "हिन्दी",
+      hindiFull: "हिन्दी (Hindi)",
+    })[key] ?? key,
+}));
+
 describe('LanguageSwitcher Component', () => {
   let mockCookieStore: Record<string, string> = {};
   const originalCookie = Object.getOwnPropertyDescriptor(document, 'cookie');

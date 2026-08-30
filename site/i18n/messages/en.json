@@ -1083,5 +1083,238 @@
     "backToHome": "Back to Home",
     "accessPanelTitle": "Precision in Planning",
     "accessPanelDescription": "Experience the Oando Suite. Our architectural tools are designed for accuracy, performance, and clear collaboration across teams."
+  },
+  "marketing": {
+    "chrome": {
+      "navigation": {
+        "products": "Products",
+        "solutions": "Solutions",
+        "clients": "Clients",
+        "planner": "Planner",
+        "about": "About",
+        "contact": "Contact",
+        "signIn": "Sign in",
+        "more": "More",
+        "allProducts": "All Products",
+        "trustedBy": "Trusted By",
+        "sustainability": "Sustainability",
+        "showrooms": "Showrooms",
+        "careers": "Careers",
+        "afterSales": "After Sales",
+        "downloads": "Downloads",
+        "plannerHelp": "Planner help",
+        "memberDashboard": "Member dashboard"
+      },
+      "search": {
+        "formLabel": "Site product search",
+        "inputLabel": "Search products",
+        "placeholder": "Search products...",
+        "submit": "Submit search",
+        "quickLinks": "Quick links",
+        "searching": "Searching",
+        "results": "Results",
+        "noResults": "No results",
+        "searchingProducts": "Searching products.",
+        "noSearchResults": "No search results.",
+        "typeAtLeastTwo": "Type at least two characters to search.",
+        "allProducts": "All Products",
+        "solutions": "Solutions",
+        "portfolio": "Portfolio",
+        "aiRanked": "AI ranked",
+        "staticFallback": "Static fallback",
+        "localSearch": "Local search"
+      },
+      "language": {
+        "label": "Select language",
+        "english": "English",
+        "hindi": "Hindi",
+        "hindiFull": "Hindi (हिन्दी)"
+      },
+      "header": {
+        "homeLabel": "One and Only — home",
+        "openMenu": "Open menu",
+        "closeNavigation": "Close navigation",
+        "primaryNavigation": "Primary navigation",
+        "morePages": "More site pages",
+        "otherCategories": "Other categories",
+        "allProductsLink": "All Products"
+      },
+      "mobile": {
+        "openSearch": "Open search",
+        "primaryNavigation": "Mobile primary navigation",
+        "searchForm": "Mobile product search",
+        "savedPlans": "Saved plans",
+        "newArrivals": "New arrivals",
+        "bestSellers": "Best sellers",
+        "submitSearch": "Submit mobile search",
+        "searchProducts": "Search products"
+      },
+      "footer": {
+        "products": "Products",
+        "company": "Company",
+        "services": "Services",
+        "refundPolicy": "Refund Policy",
+        "privacyPolicy": "Privacy Policy",
+        "terms": "Terms",
+        "sitemap": "Sitemap",
+        "rightsReserved": "All rights reserved."
+      },
+      "cookie": {
+        "title": "Cookie preferences",
+        "compact": "Essential cookies only unless you accept optional analytics.",
+        "description": "We use essential cookies and optional analytics and attribution cookies to improve discoverability and user journeys.",
+        "privacyNotice": "privacy notice",
+        "reject": "Reject",
+        "rejectNonEssential": "Reject non-essential cookies",
+        "accept": "Accept all",
+        "acceptAll": "Accept all cookies"
+      },
+      "quickContact": {
+        "open": "Open WhatsApp quick contact",
+        "close": "Close WhatsApp quick contact",
+        "dialog": "Quick contact",
+        "title": "Quick contact",
+        "subtitle": "Reach the team directly.",
+        "whatsapp": "WhatsApp now",
+        "whatsappDetail": "Fastest response",
+        "call": "Call team",
+        "callDetail": "Talk to support",
+        "email": "Email us",
+        "emailDetail": "Send the brief",
+        "fullContact": "Open full contact page"
+      }
+    },
+    "planning": {
+      "heroKicker": "Workspace planning",
+      "heroTitleLead": "From intent",
+      "heroTitleAccent": "to install-ready.",
+      "craftQuote": "Good planning removes guesswork — layout, categories, and BOQ aligned before procurement starts.",
+      "craftAttribution": "Planning desk · One and Only",
+      "plannerCta": "Open Oando Planner",
+      "steps": [
+        { "title": "Discovery and brief alignment", "detail": "We map team structure, workflow patterns, budget constraints, and approval checkpoints before design begins." },
+        { "title": "Layout and specification", "detail": "Our team develops 2D/3D concepts and furniture specifications tailored to headcount, zoning, and performance targets." },
+        { "title": "Execution readiness", "detail": "You receive BOQ-ready documentation, phased implementation options, and a clear handover plan for procurement and fit-out teams." }
+      ],
+      "deliverables": ["Workplace planning workshop", "Space zoning and furniture layout", "Category-wise furniture recommendations", "Budget-aligned BOQ draft", "Implementation roadmap"]
+    },
+    "service": {
+      "heroKicker": "After install",
+      "heroTitleLead": "Service",
+      "heroTitleAccent": "& support.",
+      "craftQuote": "Support that starts at install and stays through warranty — clear routing, accountable follow-through.",
+      "craftAttribution": "Service desk · One and Only",
+      "pillars": [
+        { "title": "Installation", "detail": "On-site assembly, placement, and functional checks." },
+        { "title": "Warranty", "detail": "Claims, replacements, and corrective service with clear tracking." },
+        { "title": "Care", "detail": "Inspection and maintenance guidance for long-term performance." }
+      ],
+      "channels": [
+        { "label": "Phone support", "kind": "supportPhone" },
+        { "label": "Email support", "kind": "salesEmail" },
+        { "label": "WhatsApp support", "kind": "whatsapp", "value": "Start chat", "href": "https://wa.me/919031022875?text=Hi%2C%20I%20need%20support%20for%20an%20installed%20workspace%20project." }
+      ],
+      "ctaKicker": "Next step",
+      "ctaTitleLead": "Talk to",
+      "ctaTitleAccent": "support.",
+      "ctaDescription": "Request help, track an order, or open Resource Desk for documentation."
+    },
+    "downloads": {
+      "heroTitleLead": "Documentation routed to",
+      "heroTitleAccent": "your brief",
+      "craftQuote": "Send the brief. We curate the latest pack — not a stale public PDF shelf.",
+      "craftAttribution": "Resource Desk · One and Only",
+      "resources": [
+        { "title": "Product catalogs", "detail": "Collection overviews, category snapshots, and recommended product mixes.", "cta": "Request catalog pack", "href": "/contact" },
+        { "title": "Technical sheets", "detail": "Material specifications, dimensions, warranty terms, and usage guidance.", "cta": "Request technical sheets", "href": "/contact" },
+        { "title": "Planning references", "detail": "Layout examples, workstation densities, and execution best practices.", "cta": "Request planning references", "href": "/planning" }
+      ],
+      "ctaKicker": "Documentation follow-through",
+      "ctaTitleLead": "Ready for the",
+      "ctaTitleAccent": "right pack",
+      "ctaDescription": "Share categories, seat count, and city — we reply with current catalogs, sheets, and the next planning contact.",
+      "planningSupport": "Planning support",
+      "openPlanning": "Open planning"
+    },
+    "showrooms": {
+      "heroKicker": "Showroom · Patna",
+      "heroTitleLead": "Visit",
+      "heroTitleAccent": "us.",
+      "craftQuote": "See seating, finishes, and systems in context — then brief the planning team with clarity.",
+      "craftAttribution": "One and Only · Jagat Trade Centre · Frazer Road, Patna",
+      "visitKicker": "Plan your visit",
+      "visitTitle": "Showroom details",
+      "visitCta": "Plan a visit",
+      "visitRows": [
+        { "kind": "address", "title": "401, Jagat Trade Centre", "detail": "Frazer Road, Patna, Bihar 800001" },
+        { "kind": "hours", "title": "Monday – Saturday", "detail": "Contact the team before your visit" },
+        { "kind": "phone", "title": "+91 90310 22875", "detail": "Support and showroom enquiries" }
+      ],
+      "highlightsTitle": "Recent deliveries",
+      "highlights": [
+        { "title": "DMRC Offices", "detail": "Workspace systems delivered with phase-wise planning and installation handover." },
+        { "title": "Titan Patna HQ", "detail": "Ergonomic seating and workstation deployment aligned to team-level needs." },
+        { "title": "Enterprise Fit-outs", "detail": "Turnkey planning, supply, and execution for large office and institutional spaces." }
+      ],
+      "ctaKicker": "Next step",
+      "ctaTitleLead": "Visit or",
+      "ctaTitleAccent": "plan ahead.",
+      "ctaDescription": "Book a showroom conversation or start a planning call when layout still needs alignment.",
+      "ctaPrimary": "Contact the team",
+      "ctaSecondary": "Request planning call",
+      "mapHeading": "Find the showroom"
+    },
+    "sustainability": {
+      "heroKicker": "Sustainability",
+      "heroTitleLead": "Built for",
+      "heroTitleAccent": "long life.",
+      "heroCta": "Browse products",
+      "craftQuote": "Long-life workspaces start with honest material choices — maintainable, repairable, and specified for real use.",
+      "craftAttribution": "Specification perspective, One and Only planning",
+      "introTitleLeadShort": "Long-life",
+      "introTitleAccent": "systems",
+      "ctaKicker": "Next step",
+      "ctaTitleLead": "Plan with",
+      "ctaTitleAccent": "long-life intent.",
+      "ctaDescription": "Browse the catalog, open Resource Desk, or request a planning call for material guidance on a live brief.",
+      "ctaPrimary": "Browse products",
+      "ctaSecondary": "Contact the team",
+      "ecoScoreKicker": "Eco-Score"
+    },
+    "trustedBy": {
+      "quotes": [
+        { "quote": "They installed on the dates we agreed, and the workstations matched the drawings.", "attribution": "Facilities team, Patna office" },
+        { "quote": "Two floors went in without stopping the rest of the building.", "attribution": "Project coordinator, bank programme" }
+      ],
+      "deliveryQuotesLabel": "Delivery quotes"
+    },
+    "clients": {
+      "heroTitleLead": "Trusted",
+      "heroTitleAccent": "clients.",
+      "heroSubtitle": "Executed workplace deliveries across government, finance, energy, and manufacturing.",
+      "heroSubtitleTemplate": "{clients} organisations across government, finance, energy, and manufacturing.",
+      "eyebrow": "Case studies",
+      "emptyTitle": "Gallery updating",
+      "emptyDescription": "Installation photos are being prepared. Browse trusted clients or contact the team.",
+      "contactCta": "Contact us",
+      "trustedCta": "Trusted by",
+      "planningCta": "Request planning call",
+      "pullQuotes": [
+        { "quote": "The team translated our brief into a practical layout with finishes we could approve quickly — and the installed result matched what we signed off.", "attribution": "Facilities lead, corporate fit-out" },
+        { "quote": "Delivery stayed coordinated from desking through meeting rooms. Scope, timelines, and handover were clear throughout the programme.", "attribution": "Project coordinator, institutional workspace" }
+      ],
+      "ctaKicker": "Next step",
+      "ctaTitleLead": "Brief the",
+      "ctaTitleAccent": "planning team.",
+      "ctaDescription": "Share headcount, space type, and timing — we will align category mix, finishes, and a practical delivery path.",
+      "deliveryQuotesLabel": "Client delivery quotes"
+    },
+    "sitemap": {
+      "metadataTitle": "Sitemap | One&Only office furniture routes",
+      "metadataDescription": "HTML sitemap of public One&Only pages — products, solutions, planning, service, planner, and company routes.",
+      "kicker": "Site index",
+      "title": "Sitemap",
+      "subtitle": "Public routes for products, planning, planner, company, legal, and admin pages."
+    }
   }
 }

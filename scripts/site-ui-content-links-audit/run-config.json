@@ -1,0 +1,97 @@
+{
+  "auditId": "site-ui-content-links-audit",
+  "schemaVersion": "1.0.0",
+  "specId": "a1d0ec75-82d5-42af-907f-c43024cb4a1e",
+  "specConfigPath": ".kiro/specs/site-ui-content-links-audit/.config.kiro",
+  "artifactPaths": {
+    "toolingRoot": "scripts/site-ui-content-links-audit",
+    "generatedRoot": "results/site-ui-content-links-audit",
+    "authoredRoot": "agents-work/site-ui-content-links-audit",
+    "generatedPurposes": [
+      "manifests",
+      "registries",
+      "inventories",
+      "profiles",
+      "matrices",
+      "evidence",
+      "findings",
+      "handoff-indexes",
+      "completion-proof",
+      "quarantine"
+    ],
+    "authoredReportTypes": [
+      "decisions",
+      "copy-review",
+      "gap-analysis",
+      "remediation-handoffs"
+    ]
+  },
+  "surfacePartitions": {
+    "marketing": "marketing",
+    "catalogConfigurator": "catalog-configurator",
+    "portalDashboard": "portal-dashboard",
+    "authentication": "authentication",
+    "legal": "legal",
+    "administration": "administration",
+    "planner": "planner",
+    "studio": "studio",
+    "offline": "offline",
+    "sharedShell": "shared-shell"
+  },
+  "waves": [
+    {
+      "id": 0,
+      "name": "inventory-and-matrix",
+      "dependencies": [],
+      "entryCriteria": ["repository revision recorded", "source roots available"],
+      "exitCriteria": ["all discovered items classified", "profiles frozen", "schemas valid", "initial matrix generated"],
+      "ownedOutputs": ["manifests", "registries", "inventories", "profiles", "matrices"],
+      "authorization": "static-inspection-only"
+    },
+    {
+      "id": 1,
+      "name": "shared-foundations",
+      "dependencies": [0],
+      "entryCriteria": ["Wave 0 closed"],
+      "exitCriteria": ["all Wave 1 items have terminal static conclusions, gaps, or pending operations"],
+      "ownedOutputs": ["inventories", "evidence", "findings"],
+      "authorization": "protected-portions-require-exact-authorization"
+    },
+    {
+      "id": 2,
+      "name": "marketing-and-primary-journeys",
+      "dependencies": [1],
+      "entryCriteria": ["Wave 1 dependencies resolved or recorded"],
+      "exitCriteria": ["all scoped journeys and occurrences are terminal or gapped"],
+      "ownedOutputs": ["inventories", "evidence", "findings"],
+      "authorization": "protected-portions-require-exact-authorization"
+    },
+    {
+      "id": 3,
+      "name": "administration-planner-studio",
+      "dependencies": [2],
+      "entryCriteria": ["required fixtures and ownership recorded"],
+      "exitCriteria": ["all rows terminal", "Planner and Studio ownership separation proven"],
+      "ownedOutputs": ["inventories", "evidence", "findings"],
+      "authorization": "protected-access-requires-exact-authorization"
+    },
+    {
+      "id": 4,
+      "name": "protected-runtime-evidence",
+      "dependencies": [3],
+      "entryCriteria": ["profiles and budgets frozen", "operations registered"],
+      "exitCriteria": ["every selected operation has authorization evidence and a result or an exact blocked/not-run record"],
+      "ownedOutputs": ["evidence", "findings", "manifests"],
+      "authorization": "exact-current-session-authorization-and-hook-permission"
+    },
+    {
+      "id": 5,
+      "name": "reconciliation-and-handoff",
+      "dependencies": [4],
+      "entryCriteria": ["Waves 0 through 4 terminal", "latest inventory generation propagated"],
+      "exitCriteria": ["all closure invariants pass", "every defect or group has a handoff", "all gaps classified"],
+      "ownedOutputs": ["findings", "handoff-indexes", "completion-proof", "manifests"],
+      "authorization": "static-reconciliation-only"
+    }
+  ]
+}

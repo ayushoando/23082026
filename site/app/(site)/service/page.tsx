@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+
 import { HomeMarketingLayout } from "@/components/home/layout";
 import { ContactTeaser } from "@/components/shared/ContactTeaser";
 import { ServicePageView } from "@/components/service/ServicePageView";
@@ -6,16 +8,33 @@ import {
   SERVICE_PAGE_COPY,
   SERVICE_PAGE_PILLARS,
 } from "@/features/site/data/routeCopy";
-import { SERVICE_PAGE_METADATA } from "@/features/site/data/routeMetadata";
-import { buildBreadcrumbJsonLd, buildPageJsonLd } from "@/features/site/data/seo";
+import { buildBreadcrumbJsonLd, buildPageJsonLd, buildPageMetadata } from "@/features/site/data/seo";
 import { withLocaleCopy } from "@/lib/i18n/withLocaleCopy";
 import { SITE_URL } from "@/lib/siteUrl";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
-export const metadata = SERVICE_PAGE_METADATA;
+async function loadServiceCopy() {
+  return withLocaleCopy(
+    {
+      ...SERVICE_PAGE_COPY,
+      pillars: SERVICE_PAGE_PILLARS,
+      channels: SERVICE_PAGE_CHANNELS,
+    },
+    "service",
+  );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const copy = await loadServiceCopy();
+  return buildPageMetadata(SITE_URL, {
+    title: `${copy.heroTitle} | One&Only`,
+    description: copy.heroSubtitle,
+    path: "/service",
+  });
+}
 
 export default async function ServicePage() {
-  const copy = await withLocaleCopy({ ...SERVICE_PAGE_COPY }, "service");
+  const copy = await loadServiceCopy();
   const serviceJsonLd = buildPageJsonLd(SITE_URL, {
     path: "/service",
     title: `${copy.heroTitle} | One&Only`,
@@ -24,7 +43,7 @@ export default async function ServicePage() {
   });
   const breadcrumbJsonLd = buildBreadcrumbJsonLd(SITE_URL, [
     { name: "Home", path: "/" },
-    { name: "Service", path: "/service" },
+    { name: copy.heroTitle, path: "/service" },
   ]);
 
   return (
@@ -46,10 +65,10 @@ export default async function ServicePage() {
         craftAttribution={copy.craftAttribution}
         frameworkKicker={copy.frameworkKicker}
         frameworkTitle={copy.frameworkTitle}
-        pillars={SERVICE_PAGE_PILLARS}
+        pillars={copy.pillars}
         channelsKicker={copy.channelsKicker}
         channelsTitle={copy.channelsTitle}
-        channels={SERVICE_PAGE_CHANNELS}
+        channels={copy.channels}
         supportKicker={copy.supportKicker}
         supportDescription={copy.supportDescription}
         primaryCta={copy.primaryCta}

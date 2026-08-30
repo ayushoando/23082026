@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { useEffect, useState, useSyncExternalStore } from "react";
 
 const CONSENT_COOKIE = "oando_cookie_consent";
@@ -103,6 +104,7 @@ const consentSecondaryActionClass =
 const consentPrimaryActionClass = "bg-primary text-inverse hover:bg-primary/90";
 
 export function CookieConsentBar() {
+  const t = useTranslations("marketing.chrome.cookie");
   const [dismissed, setDismissed] = useState(false);
   const [showDelayElapsed, setShowDelayElapsed] = useState(false);
   const consent = useSyncExternalStore(
@@ -185,17 +187,16 @@ export function CookieConsentBar() {
       <div className="shell-container px-4 py-2.5 sm:px-6 sm:py-3 md:py-4 2xl:px-0">
         <div className="mx-auto flex max-w-6xl min-w-0 flex-col gap-2.5 sm:gap-3 md:flex-row md:items-center md:justify-between md:gap-4">
           <p id="cookie-dialog-desc" className={`${consentCopyClass} min-w-0 text-pretty sm:text-balance`}>
-            <span id="cookie-dialog-title" className="sr-only">Cookie preferences</span>
+            <span id="cookie-dialog-title" className="sr-only">{t("title")}</span>
             <span className="sm:hidden">
-              Essential cookies only unless you accept optional analytics.{" "}
+              {t("compact")}{" "}
             </span>
             <span className="hidden sm:inline">
-              We use essential cookies and optional analytics & attribution cookies to improve
-              discoverability and user journeys.{" "}
+              {t("description")}{" "}
             </span>
-            See our{" "}
+            
           <Link href="/privacy" prefetch={false} className="font-semibold text-primary hover:underline">
-            privacy notice
+            {t("privacyNotice")}
           </Link>
             .
           </p>
@@ -203,19 +204,19 @@ export function CookieConsentBar() {
             <button
               type="button"
               onClick={rejectOptional}
-              aria-label="Reject non-essential cookies"
+              aria-label={t("rejectNonEssential")}
               className={`${consentActionBaseClass} ${consentSecondaryActionClass} px-2 sm:px-3`}
             >
-              <span className="sm:hidden">Reject</span>
-              <span className="hidden sm:inline">Reject Non-Essential</span>
+              <span className="sm:hidden">{t("reject")}</span>
+              <span className="hidden sm:inline">{t("rejectNonEssential")}</span>
             </button>
             <button
               type="button"
               onClick={acceptAll}
-              aria-label="Accept all cookies"
+              aria-label={t("acceptAll")}
               className={`${consentActionBaseClass} ${consentPrimaryActionClass} px-2 sm:px-3`}
             >
-              Accept All
+              {t("accept")}
             </button>
           </div>
         </div>

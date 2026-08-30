@@ -1,17 +1,43 @@
+import type { Metadata } from "next";
+
 import { HomeMarketingLayout } from "@/components/home/layout";
 import { ContactTeaser } from "@/components/shared/ContactTeaser";
 import { DownloadsPageView } from "@/components/downloads/DownloadsPageView";
-import { DOWNLOADS_PAGE_COPY, DOWNLOADS_RESOURCE_CATEGORIES } from "@/features/site/data/routeCopy";
-import { DOWNLOADS_PAGE_METADATA } from "@/features/site/data/routeMetadata";
-import { buildBreadcrumbJsonLd, buildPageJsonLd } from "@/features/site/data/seo";
+import { DOWNLOADS_CRAFT } from "@/features/site/data/downloadsPage";
+import {
+  DOWNLOADS_PAGE_COPY,
+  DOWNLOADS_RESOURCE_CATEGORIES,
+} from "@/features/site/data/routeCopy";
+import { buildBreadcrumbJsonLd, buildPageJsonLd, buildPageMetadata } from "@/features/site/data/seo";
 import { withLocaleCopy } from "@/lib/i18n/withLocaleCopy";
 import { SITE_URL } from "@/lib/siteUrl";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
-export const metadata = DOWNLOADS_PAGE_METADATA;
+async function loadDownloadsCopy() {
+  return withLocaleCopy(
+    {
+      ...DOWNLOADS_PAGE_COPY,
+      resources: DOWNLOADS_RESOURCE_CATEGORIES,
+      craftQuote: DOWNLOADS_CRAFT.quote,
+      craftAttribution: DOWNLOADS_CRAFT.attribution,
+      planningSupport: "Planning support",
+      openPlanning: "Open planning",
+    },
+    "downloads",
+  );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const copy = await loadDownloadsCopy();
+  return buildPageMetadata(SITE_URL, {
+    title: copy.metadataTitle,
+    description: copy.metadataDescription,
+    path: "/downloads",
+  });
+}
 
 export default async function DownloadsPage() {
-  const copy = await withLocaleCopy({ ...DOWNLOADS_PAGE_COPY }, "downloads");
+  const copy = await loadDownloadsCopy();
   const downloadsJsonLd = buildPageJsonLd(SITE_URL, {
     path: "/downloads",
     title: `${copy.heroTitle} | One&Only`,
@@ -20,7 +46,7 @@ export default async function DownloadsPage() {
   });
   const breadcrumbJsonLd = buildBreadcrumbJsonLd(SITE_URL, [
     { name: "Home", path: "/" },
-    { name: "Downloads", path: "/downloads" },
+    { name: copy.heroTitle, path: "/downloads" },
   ]);
 
   return (
@@ -42,7 +68,7 @@ export default async function DownloadsPage() {
         resourceKicker={copy.resourceKicker}
         resourceTitle={copy.resourceTitle}
         resourceDescription={copy.resourceDescription}
-        resources={DOWNLOADS_RESOURCE_CATEGORIES}
+        resources={copy.resources}
         processKicker={copy.processKicker}
         processTitle={copy.processTitle}
         processSteps={copy.processSteps}
@@ -58,6 +84,10 @@ export default async function DownloadsPage() {
         ctaTitleLead={copy.ctaTitleLead}
         ctaTitleAccent={copy.ctaTitleAccent}
         ctaDescription={copy.ctaDescription}
+        planningSupport={copy.planningSupport}
+        openPlanning={copy.openPlanning}
+        craftQuote={copy.craftQuote}
+        craftAttribution={copy.craftAttribution}
       />
       <ContactTeaser />
     </HomeMarketingLayout>

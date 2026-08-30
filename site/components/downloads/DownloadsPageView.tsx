@@ -10,11 +10,7 @@ import { RouteCtaBand } from "@/components/shared/RouteCtaBand";
 import { EditorialHeroMedia } from "@/components/site/EditorialHeroMedia";
 import { MarketingCtaLink } from "@/components/ui/MarketingCtaLink";
 import { SITE_CONTACT, buildWhatsAppHref } from "@/features/site/data/contact";
-import {
-  DOWNLOADS_CRAFT,
-  DOWNLOADS_HERO_IMAGE,
-  DOWNLOADS_HERO_MEDIA,
-} from "@/features/site/data/downloadsPage";
+import { DOWNLOADS_HERO_IMAGE, DOWNLOADS_HERO_MEDIA } from "@/features/site/data/downloadsPage";
 import {
   gsapReducedMotion,
   GSAP_EASE_OUT,
@@ -59,6 +55,10 @@ export interface DownloadsPageViewProps {
   ctaTitleLead: string;
   ctaTitleAccent: string;
   ctaDescription: string;
+  planningSupport: string;
+  openPlanning: string;
+  craftQuote: string;
+  craftAttribution: string;
 }
 
 export function DownloadsPageView({
@@ -86,6 +86,10 @@ export function DownloadsPageView({
   ctaTitleLead,
   ctaTitleAccent,
   ctaDescription,
+  planningSupport,
+  openPlanning,
+  craftQuote,
+  craftAttribution,
 }: DownloadsPageViewProps) {
   const heroRef = useRef<HTMLElement>(null);
   const craftRef = useRef<HTMLElement>(null);
@@ -256,12 +260,12 @@ export function DownloadsPageView({
               </MarketingCtaLink>
               <MarketingCtaLink
                 href="/planning"
-                label="Planning support"
+                label={planningSupport}
                 surface="downloads-hero"
                 variant="outline-light"
                 context="hero"
               >
-                Planning support
+                {planningSupport}
               </MarketingCtaLink>
             </div>
           </div>
@@ -280,10 +284,10 @@ export function DownloadsPageView({
               data-downloads-craft-reveal
               className="about-craft-quote__text home-heading text-balance"
             >
-              {DOWNLOADS_CRAFT.quote}
+              {craftQuote}
             </blockquote>
             <figcaption data-downloads-craft-reveal className="about-craft-quote__attribution">
-              {DOWNLOADS_CRAFT.attribution}
+              {craftAttribution}
             </figcaption>
           </figure>
         </div>
@@ -396,7 +400,7 @@ export function DownloadsPageView({
             description={ctaDescription}
             actions={[
               { href: "/contact", label: primaryCta, variant: "primary" },
-              { href: "/planning", label: "Open planning", variant: "outline-light" },
+              { href: "/planning", label: openPlanning, variant: "outline-light" },
             ]}
           />
         </HomeSectionInner>

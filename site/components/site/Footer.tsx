@@ -1,6 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { OneAndOnlyLogo } from "@/components/ui/Logo";
 import { LanguageSwitcher } from "@/components/site/LanguageSwitcher";
@@ -45,7 +46,35 @@ const footerTextLinkClass = `site-footer__link ${footerInteractiveClass} inline-
 /** Social targets — ≥44×44; inverse-muted icons (see `.site-footer__social` in FOCSS). */
 const footerSocialClass = `site-footer__social ${footerInteractiveClass} inline-flex min-h-11 min-w-11 items-center justify-center`;
 
+const FOOTER_LABEL_KEYS: Record<string, string> = {
+  "All Products": "navigation.allProducts",
+  Solutions: "navigation.solutions",
+  Clients: "navigation.clients",
+  Planner: "navigation.planner",
+  "Planner help": "navigation.plannerHelp",
+  "Member dashboard": "navigation.memberDashboard",
+  "About Us": "navigation.about",
+  "Trusted By": "navigation.trustedBy",
+  Sustainability: "navigation.sustainability",
+  Showrooms: "navigation.showrooms",
+  Careers: "navigation.careers",
+  Contact: "navigation.contact",
+  "After Sales": "navigation.afterSales",
+  Downloads: "navigation.downloads",
+};
+
+const FOOTER_HEADING_KEYS: Record<string, string> = {
+  Products: "products",
+  Company: "company",
+  Services: "services",
+};
+
 export function SiteFooter() {
+  const t = useTranslations("marketing.chrome");
+  const footerLabel = (label: string) =>
+    t(FOOTER_LABEL_KEYS[label] ?? label);
+  const footerHeading = (heading: string) =>
+    t(`footer.${FOOTER_HEADING_KEYS[heading] ?? heading}`);
   // useSyncExternalStore guarantees the same snapshot is used for SSR and
   // hydration, eliminating the classic new Date() hydration mismatch that
   // occurs when server and client clocks disagree (year boundary, timezone).
@@ -64,7 +93,7 @@ export function SiteFooter() {
             <Link
               href="/"
               prefetch={false}
-              aria-label="One and Only - home"
+              aria-label={t("header.homeLabel")}
               className={`${footerTextLinkClass}`}
             >
               <OneAndOnlyLogo variant="orange" className="h-9" />
@@ -121,7 +150,7 @@ export function SiteFooter() {
               }`.trim()}
             >
               <p className="site-footer__heading site-footer__nav-heading typ-overline mb-2 md:mb-3">
-                {col.heading}
+                {footerHeading(col.heading)}
               </p>
               <ul className="flex flex-col gap-0.5">
                 {col.links.map(({ href, label }) => (
@@ -131,7 +160,7 @@ export function SiteFooter() {
                       prefetch={false}
                       className={`${footerTextLinkClass} typ-body-sm`}
                     >
-                      {label}
+                      {footerLabel(label)}
                     </Link>
                   </li>
                 ))}
@@ -149,32 +178,32 @@ export function SiteFooter() {
               prefetch={false}
               className={`site-footer__legal ${footerInteractiveClass} inline-flex min-h-11 items-center`}
             >
-              Refund Policy
+              {t("footer.refundPolicy")}
             </Link>
             <Link
               href="/privacy"
               prefetch={false}
               className={`site-footer__legal ${footerInteractiveClass} inline-flex min-h-11 items-center`}
             >
-              Privacy Policy
+              {t("footer.privacyPolicy")}
             </Link>
             <Link
               href="/terms"
               prefetch={false}
               className={`site-footer__legal ${footerInteractiveClass} inline-flex min-h-11 items-center`}
             >
-              Terms
+              {t("footer.terms")}
             </Link>
             <Link
               href="/sitemap"
               prefetch={false}
               className={`site-footer__legal ${footerInteractiveClass} inline-flex min-h-11 items-center`}
             >
-              Sitemap
+              {t("footer.sitemap")}
             </Link>
           </div>
           <p className="site-footer__legal-copy mt-3">
-            &copy; <span suppressHydrationWarning>{currentYear}</span> One and Only. All rights reserved.
+            &copy; <span suppressHydrationWarning>{currentYear}</span> One and Only. {t("footer.rightsReserved")}
           </p>
         </div>
       </div>

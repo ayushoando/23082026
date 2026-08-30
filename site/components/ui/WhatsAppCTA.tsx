@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import { useState, useSyncExternalStore } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -12,6 +13,7 @@ import { routeSuppressesFloatingQuickContact } from '@/features/crm/contactSurfa
 import { MOTION_TOKENS } from "@/lib/helpers/motion";
 
 export function WhatsAppCTA() {
+  const t = useTranslations("marketing.chrome.quickContact");
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const isHydrated = useSyncExternalStore(
@@ -42,22 +44,22 @@ export function WhatsAppCTA() {
   const quickActions = [
     {
       href: whatsappHref,
-      label: "WhatsApp now",
-      detail: "Fastest response",
+      label: t("whatsapp"),
+      detail: t("whatsappDetail"),
       icon: MessageCircle,
       external: true,
     },
     {
       href: toTelHref(SITE_CONTACT.supportPhone),
-      label: "Call team",
-      detail: "Talk to support",
+      label: t("call"),
+      detail: t("callDetail"),
       icon: Phone,
       external: false,
     },
     {
       href: buildMailtoHref("Workspace enquiry"),
-      label: "Email us",
-      detail: "Send the brief",
+      label: t("email"),
+      detail: t("emailDetail"),
       icon: Mail,
       external: false,
     },
@@ -67,7 +69,7 @@ export function WhatsAppCTA() {
     <>
       <motion.button
         type="button"
-        aria-label={open ? "Close WhatsApp quick contact" : "Open WhatsApp quick contact"}
+        aria-label={open ? t("close") : t("open")}
         aria-expanded={open}
         aria-controls="quick-contact-panel"
         onClick={() => setOpen((prev) => !prev)}
@@ -83,7 +85,7 @@ export function WhatsAppCTA() {
           <motion.div
             id="quick-contact-panel"
             role="dialog"
-            aria-label="Quick contact"
+            aria-label={t("dialog")}
             initial={{ opacity: 0, y: 12, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 12, scale: 0.96 }}
@@ -92,13 +94,13 @@ export function WhatsAppCTA() {
           >
             <div className="quick-contact-panel__header">
               <div>
-                <p className="quick-contact-panel__title">Quick contact</p>
-                <p className="quick-contact-panel__meta">Reach the team directly.</p>
+                <p className="quick-contact-panel__title">{t("title")}</p>
+                <p className="quick-contact-panel__meta">{t("subtitle")}</p>
               </div>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                aria-label="Close quick contact panel"
+                aria-label={t("close")}
                 className="shell-icon-button rounded-full p-1.5 text-body"
               >
                 <X className="h-3.5 w-3.5" aria-hidden="true" />
@@ -142,14 +144,14 @@ export function WhatsAppCTA() {
                 onClick={() => {
                   trackSiteCtaClick({
                     href: "/contact",
-                    label: "Open full contact page",
+                    label: t("fullContact"),
                     pathname: pathname || "",
                     surface: "quick-contact-panel",
                   });
                   setOpen(false);
                 }}
               >
-                Open full contact page
+                {t("fullContact")}
               </Link>
             </div>
           </motion.div>

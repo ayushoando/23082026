@@ -1,0 +1,244 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Create the non-product audit-program entry points and run configuration": [
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788091860769
+      },
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788091877201
+      },
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788093699473
+      }
+    ],
+    "1.2 Implement typed schemas and conditional runtime validation": [
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788091860853
+      },
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788093711878
+      }
+    ],
+    "1.3 Build source, existing-tool, and evidence adapters": [
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788091860964
+      }
+    ],
+    "1.4 Implement canonical route, shell, and dynamic-instance discovery": [
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788091861027
+      }
+    ],
+    "1.5 Implement profile registries, applicability, and exact occurrence expansion": [
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788091861106
+      }
+    ],
+    "1.6 Implement artifact manifests, partitioning, resumability, and wave control": [
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788091861174
+      }
+    ],
+    "1.12 Execute and checkpoint the Wave 0 static batch": [
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788091861241
+      }
+    ],
+    "2.1 Implement static inventories for shared shells, links, navigation, states, and journeys": [
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788091861317
+      }
+    ],
+    "2.2 Implement auth, legal, consent, privacy, security, error, and offline foundation inventories": [
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788091861387
+      }
+    ],
+    "2.3 Implement per-occurrence evidence ingestion and finding generation": [
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788091861455
+      }
+    ],
+    "2.6 Execute and checkpoint the Wave 1 static batch": [
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788091861512
+      }
+    ],
+    "3.1 Implement surface-specific journey, form, asset, copy/IA, and metadata inventories": [
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788091861579
+      }
+    ],
+    "3.2 Implement static dimension evaluators and proposal capture": [
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788091861646
+      }
+    ],
+    "3.6 Execute and checkpoint the Wave 2 static batch": [
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788091861749
+      }
+    ],
+    "4.1 Implement administration and protected-context static inventory": [
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788091861797
+      }
+    ],
+    "4.2 Implement the Planner-only static audit partition": [
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788091861852
+      }
+    ],
+    "4.3 Implement the Studio-only static audit partition": [
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788091861905
+      }
+    ],
+    "4.4 Reconcile specialized states and access-context evidence": [
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788091862003
+      }
+    ],
+    "4.6 Execute and checkpoint the Wave 3 static batch": [
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788091862099
+      }
+    ],
+    "5.1 Implement the protected-operation registry and authorization gate": [
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788091862205
+      }
+    ],
+    "5.2 Run responsive and cross-browser occurrence batches": [
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788091862344
+      }
+    ],
+    "5.3 Run accessibility and assistive-technology occurrence batches": [
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788091862441
+      }
+    ],
+    "5.4 Run state, form, journey, protected-route, error, offline, and recovery batches": [
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788091862537
+      }
+    ],
+    "5.5 Run assets, analytics/consent, security/privacy, metadata/hosted, and external-link batches": [
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788091862632
+      }
+    ],
+    "5.6 Run performance and perceived-performance batches": [
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788091862725
+      }
+    ],
+    "5.8 Ingest runtime outputs and checkpoint Wave 4": [
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788091862850
+      }
+    ],
+    "6.1 Reconcile final occurrence findings, severity, and duplicate groups": [
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788091862929
+      }
+    ],
+    "6.2 Finalize replacement-ready copy, IA, metadata, and Hindi review queues": [
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788091863020
+      }
+    ],
+    "6.3 Build implementation-ready remediation handoffs without remediation": [
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788091863164
+      }
+    ],
+    "6.4 Reconcile exclusions, coverage gaps, conflicts, owner decisions, and pending operations": [
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788091863326
+      }
+    ],
+    "6.5 Generate final artifact manifests and machine-checkable completion proof": [
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788091863425
+      }
+    ],
+    "6.14 Perform final artifact review and close Wave 5": [
+      {
+        "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
+        "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
+        "timestamp": 1788091863515
+      }
+    ]
+  }
+}

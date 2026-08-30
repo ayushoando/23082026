@@ -6,7 +6,7 @@
 // Authored browser coverage only. No execution or rendered result is claimed.
 
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test } from "@playwright/test";
+import { devices, expect, test } from "@playwright/test";
 
 import { PLANNER_BROWSER_AUDIT_PROFILES } from "../fixtures/planner/browserAuditMatrix";
 import { enterGuestPlannerWorkspace } from "./guestProjectSetup";
@@ -18,9 +18,16 @@ async function expectWorkspaceContext(page: import("@playwright/test").Page): Pr
   await expect(page.locator("body")).not.toHaveCSS("overflow-x", "scroll");
 }
 
+const OPTIONAL_BROWSER_PROFILE_TAG = "@optional-browser-profile";
+
 test.describe("Planner comprehensive rendered regression matrix", () => {
   for (const profile of PLANNER_BROWSER_AUDIT_PROFILES) {
-    test(`${profile.id} preserves workspace through resize and orientation changes`, async ({ page }, testInfo) => {
+    const profileLabel =
+      profile.coverage === "extended"
+        ? `${OPTIONAL_BROWSER_PROFILE_TAG} ${profile.id}`
+        : profile.id;
+
+    test(`${profileLabel} preserves workspace through resize and orientation changes`, async ({ page }, testInfo) => {
       test.skip(
         testInfo.project.name !== profile.project,
         `Profile ${profile.id} is assigned to ${profile.project}.`,
@@ -31,17 +38,20 @@ test.describe("Planner comprehensive rendered regression matrix", () => {
       await expectWorkspaceContext(page);
 
       const beforeUrl = page.url();
-      await page.setViewportSize(
-        profile.orientation === "portrait"
-          ? { width: profile.viewport.height, height: profile.viewport.width }
-          : { width: profile.viewport.height, height: profile.viewport.width },
-      );
+      await page.setViewportSize({
+        width: profile.viewport.height,
+        height: profile.viewport.width,
+      });
       await expectWorkspaceContext(page);
       expect(page.url()).toBe(beforeUrl);
     });
   }
 
-  test("keyboard entry, menu dismissal, and focus restoration do not require a pointer", async ({ page }) => {
+  test("Chromium tablet keyboard entry, menu dismissal, and focus restoration do not require a pointer", async ({ page }, testInfo) => {
+    test.skip(
+      testInfo.project.name !== "chromium-tablet",
+      "Required keyboard interaction is represented by the Chromium tablet profile.",
+    );
     await page.setViewportSize({ width: 768, height: 1_024 });
     await enterGuestPlannerWorkspace(page, { projectName: "W5 keyboard" });
     await waitForPlannerCanvas(page);
@@ -56,7 +66,11 @@ test.describe("Planner comprehensive rendered regression matrix", () => {
     await expect(trigger).toBeFocused();
   });
 
-  test("touch controls expose the same inventory workflow as keyboard controls", async ({ browser }, testInfo) => {
+  test("Chromium mobile touch controls expose the same inventory workflow as keyboard controls", async ({ browser }, testInfo) => {
+    test.skip(
+      testInfo.project.name !== "chromium-mobile",
+      "Required touch interaction is represented by the Chromium mobile profile.",
+    );
     const baseURL = testInfo.project.use.baseURL;
     if (typeof baseURL !== "string") throw new Error("The touch profile requires the configured Playwright baseURL.");
     const context = await browser.newContext({
@@ -68,6 +82,54 @@ test.describe("Planner comprehensive rendered regression matrix", () => {
     const page = await context.newPage();
     try {
       await enterGuestPlannerWorkspace(page, { projectName: "W5 touch parity" });
+      await waitForPlannerCanvas(page);
+
+      const inventory = page.getByTestId("planner-toggle-inventory");
+      await expect(inventory).toBeVisible();
+      await inventory.tap();
+      await expect(inventory).toHaveAttribute("aria-pressed", "true");
+      await expect(page.getByTestId("catalog-search")).toBeVisible();
+      await inventory.focus();
+      await page.keyboard.press("Enter");
+      await expect(inventory).toHaveAttribute("aria-pressed", "false");
+    } finally {
+      await context.close();
+    }
+  });
+
+  test(`${OPTIONAL_BROWSER_PROFILE_TAG} Firefox tablet keyboard interaction has an explicit optional profile`, async ({ page }, testInfo) => {
+    test.skip(
+      testInfo.project.name !== "firefox-tablet",
+      "Optional Firefox keyboard interaction is isolated to the firefox-tablet profile.",
+    );
+    await page.setViewportSize({ width: 768, height: 1_024 });
+    await enterGuestPlannerWorkspace(page, { projectName: "W5 firefox keyboard" });
+    await waitForPlannerCanvas(page);
+
+    const trigger = page.getByTestId("planner-more-actions");
+    await trigger.focus();
+    await page.keyboard.press("Enter");
+    await expect(page.getByTestId("planner-more-menu")).toBeVisible();
+    await expect(page.getByRole("menuitem").first()).toBeFocused();
+    await page.keyboard.press("Escape");
+    await expect(page.getByTestId("planner-more-menu")).toBeHidden();
+    await expect(trigger).toBeFocused();
+  });
+
+  test(`${OPTIONAL_BROWSER_PROFILE_TAG} WebKit mobile touch interaction has an explicit optional profile`, async ({ browser }, testInfo) => {
+    test.skip(
+      testInfo.project.name !== "webkit-mobile",
+      "Optional WebKit touch interaction is isolated to the webkit-mobile profile.",
+    );
+    const baseURL = testInfo.project.use.baseURL;
+    if (typeof baseURL !== "string") throw new Error("The touch profile requires the configured Playwright baseURL.");
+    const context = await browser.newContext({
+      ...devices["iPhone 13"],
+      baseURL,
+    });
+    const page = await context.newPage();
+    try {
+      await enterGuestPlannerWorkspace(page, { projectName: "W5 webkit touch" });
       await waitForPlannerCanvas(page);
 
       const inventory = page.getByTestId("planner-toggle-inventory");

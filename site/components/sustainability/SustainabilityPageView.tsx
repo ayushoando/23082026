@@ -43,6 +43,7 @@ export interface SustainabilityPageViewProps {
   introTitleAccent: string;
   introDescription: string;
   introPoints: readonly string[];
+  ecoScoreKicker: string;
   ecoScoreTitle: string;
   ecoScoreDescription: string;
   ecoScoreItems: readonly SustainabilityEcoItem[];
@@ -70,6 +71,7 @@ export function SustainabilityPageView({
   introTitleAccent,
   introDescription,
   introPoints,
+  ecoScoreKicker,
   ecoScoreTitle,
   ecoScoreDescription,
   ecoScoreItems,
@@ -344,7 +346,7 @@ export function SustainabilityPageView({
           <section ref={ecoRef} className="sustainability-eco" data-testid="sustainability-eco">
             <div>
               <p data-sustainability-reveal className="home-kicker">
-                Eco-Score
+                {ecoScoreKicker}
               </p>
               <h2 data-sustainability-reveal className="home-heading mt-3">
                 {ecoScoreTitle}

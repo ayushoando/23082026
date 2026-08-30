@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { CaretDown, List } from "@phosphor-icons/react";
@@ -34,6 +35,15 @@ import { cn } from "@/lib/utils";
 /** Frozen at module load so SSR and client hydration always see the same nav order. */
 const HEADER_PRIMARY_LINKS = [...SITE_HEADER_PRIMARY_LINKS];
 const HEADER_MORE_LINKS = [...SITE_HEADER_MORE_LINKS];
+
+const NAVIGATION_LABEL_KEYS: Record<string, string> = {
+  Products: "products",
+  Solutions: "solutions",
+  Clients: "clients",
+  Planner: "planner",
+  About: "about",
+  Contact: "contact",
+};
 
 interface NavCategoriesPayload {
   groups?: GroupedCategory[];
@@ -86,6 +96,9 @@ const siteHeaderBaseClass =
 const siteHeaderScrolledClass = "[box-shadow:var(--shadow-panel)]";
 
 export function SiteHeader() {
+  const t = useTranslations("marketing.chrome");
+  const navigationLabel = (label: string) =>
+    t(`navigation.${NAVIGATION_LABEL_KEYS[label] ?? label}`);
   const pathname = usePathname();
   const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
@@ -267,20 +280,20 @@ export function SiteHeader() {
   }, [searchQuery]);
 
   const searchSectionTitle = !searchQuery.trim()
-    ? "Quick links"
+    ? t("search.quickLinks")
     : searchLoading
-      ? "Searching"
+      ? t("search.searching")
       : searchResults.length > 0
-        ? "Results"
-        : "No results";
+        ? t("search.results")
+        : t("search.noResults");
 
   const searchStatusAnnouncement = !searchQuery.trim()
-    ? "Search products. Type at least two characters."
+    ? t("search.typeAtLeastTwo")
     : searchLoading
-      ? "Searching products."
+      ? t("search.searchingProducts")
       : searchResults.length > 0
-        ? `${searchResults.length} search result${searchResults.length === 1 ? "" : "s"} available.`
-        : "No search results.";
+        ? t("search.results")
+        : t("search.noSearchResults");
 
   const onSearchResultClick = () => {
     setShowSearchPanel(false);
@@ -321,7 +334,7 @@ export function SiteHeader() {
             {/* Logo */}
             <Link
               href="/"
-              aria-label="One and Only - home"
+              aria-label={t("header.homeLabel")}
               className="inline-flex h-full min-w-0 shrink-0 items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
             >
               <OneAndOnlyLogo className="h-7.5 max-w-[9.5rem] md:h-8.5 md:max-w-none xl:h-9" variant="orange" />
@@ -337,7 +350,7 @@ export function SiteHeader() {
             */}
             <button
               type="button"
-              aria-label="Open menu"
+              aria-label={t("header.openMenu")}
               aria-expanded={navDrawerOpen}
               aria-controls="mobile-nav-drawer"
               aria-haspopup="dialog"
@@ -350,12 +363,13 @@ export function SiteHeader() {
             {/* Center nav — desktop only */}
             <nav
               className="site-header__desktop-nav"
-              aria-label="Primary navigation"
+              aria-label={t("header.primaryNavigation")}
               suppressHydrationWarning
             >
               {HEADER_PRIMARY_LINKS.map((link) => {
                 const isActive = pathname === link.href || pathname.startsWith(`${link.href  }/`);
                 const hasMega = "hasMega" in link && link.hasMega;
+                const label = navigationLabel(link.label);
 
                 if (hasMega) {
                   return (
@@ -388,7 +402,7 @@ export function SiteHeader() {
                               : "",
                         )}
                       >
-                        {link.label}
+                        {label}
                         <CaretDown
                           size={16}
                           weight="bold"
@@ -414,7 +428,7 @@ export function SiteHeader() {
                       key={link.label}
                       href={link.href}
                       surface="header-nav"
-                      label={link.label}
+                      label={label}
                       onMouseEnter={closeMegaMenu}
                       className={navClassName}
                     >
@@ -463,7 +477,7 @@ export function SiteHeader() {
                         : "",
                     )}
                   >
-                    More
+                    {t("navigation.more")}
                     <CaretDown
                       size={16}
                       weight="bold"
@@ -480,7 +494,7 @@ export function SiteHeader() {
                       id="header-more-menu"
                       role="menu"
                       tabIndex={0}
-                      aria-label="More site pages"
+                      aria-label={t("header.morePages")}
                       className="absolute left-0 top-full z-50 mt-0 min-w-[12rem] rounded-b-xl border border-soft bg-panel py-2 shadow-theme-soft animate-in fade-in slide-in-from-top-1 duration-200"
                       onMouseEnter={openMoreMenu}
                       onMouseLeave={(event) => {
@@ -502,7 +516,7 @@ export function SiteHeader() {
                               isActive ? "shell-nav-link-current text-primary" : "text-strong",
                             )}
                           >
-                            {link.label}
+                            {label}
                           </Link>
                         );
                       })}
@@ -536,11 +550,11 @@ export function SiteHeader() {
               <div className="site-header__utilities hidden min-w-0 items-center gap-2 lg:flex">
                 <TrackedLink
                   href={SITE_AUTH_LINK.href}
-                  label={SITE_AUTH_LINK.label}
+                  label={t("navigation.signIn")}
                   surface="header-nav"
                   className="typ-nav shell-nav-link shell-nav-link--desktop whitespace-nowrap px-2 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 >
-                  {SITE_AUTH_LINK.label}
+                  {t("navigation.signIn")}
                 </TrackedLink>
               </div>
               <LanguageSwitcher variant="header" className="hidden min-w-0 lg:block" />

@@ -1,29 +1,42 @@
-import { HomeMarketingLayout } from "@/components/home/layout";
+import type { Metadata } from "next";
+
 import { ContactTeaser } from "@/components/shared/ContactTeaser";
 import { SustainabilityPageView } from "@/components/sustainability/SustainabilityPageView";
+import { HomeMarketingLayout } from "@/components/home/layout";
 import { SUSTAINABILITY_PAGE_COPY } from "@/features/site/data/routeCopy";
 import { withLocaleCopy } from "@/lib/i18n/withLocaleCopy";
-import { SUSTAINABILITY_PAGE_METADATA } from "@/features/site/data/routeMetadata";
-import { buildBreadcrumbJsonLd, buildPageJsonLd } from "@/features/site/data/seo";
+import { buildBreadcrumbJsonLd, buildPageJsonLd, buildPageMetadata } from "@/features/site/data/seo";
 import { SITE_URL } from "@/lib/siteUrl";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
-export const metadata = SUSTAINABILITY_PAGE_METADATA;
+async function loadSustainabilityCopy() {
+  return withLocaleCopy(
+    { ...SUSTAINABILITY_PAGE_COPY, ecoScoreKicker: "Eco-Score" },
+    "sustainability",
+  );
+}
 
-/**
- * Editorial sustainability — photography-forward hero, bronze punctuation, pillar rows.
- */
+export async function generateMetadata(): Promise<Metadata> {
+  const copy = await loadSustainabilityCopy();
+  return buildPageMetadata(SITE_URL, {
+    title: `${copy.heroTitle} | One&Only`,
+    description: copy.heroSubtitle,
+    path: "/sustainability",
+  });
+}
+
+/** Editorial sustainability — photography-forward hero, bronze punctuation, pillar rows. */
 export default async function SustainabilityPage() {
-  const copy = await withLocaleCopy({ ...SUSTAINABILITY_PAGE_COPY }, "sustainability");
+  const copy = await loadSustainabilityCopy();
   const sustainabilityJsonLd = buildPageJsonLd(SITE_URL, {
     path: "/sustainability",
-    title: "Sustainable office furniture | One&Only",
+    title: `${copy.heroTitle} | One&Only`,
     description: copy.heroSubtitle,
     pageType: "WebPage",
   });
   const breadcrumbJsonLd = buildBreadcrumbJsonLd(SITE_URL, [
     { name: "Home", path: "/" },
-    { name: "Sustainability", path: "/sustainability" },
+    { name: copy.heroTitle, path: "/sustainability" },
   ]);
 
   return (
@@ -52,6 +65,7 @@ export default async function SustainabilityPage() {
         introTitleAccent={copy.introTitleAccent}
         introDescription={copy.introDescription}
         introPoints={copy.introPoints}
+        ecoScoreKicker={copy.ecoScoreKicker}
         ecoScoreTitle={copy.ecoScoreTitle}
         ecoScoreDescription={copy.ecoScoreDescription}
         ecoScoreItems={copy.ecoScoreItems}

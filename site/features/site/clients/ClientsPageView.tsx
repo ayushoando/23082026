@@ -14,30 +14,34 @@ import { formatKpiValuePlus } from "@/lib/kpiFormat";
 import { SITE_URL } from "@/lib/siteUrl";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
-const CLIENTS_JSON_LD = buildPageJsonLd(SITE_URL, {
-  path: "/clients",
-  title:
-    "Trusted clients | Office furniture delivery India | One&Only",
-  description: CLIENTS_PAGE_COPY.heroSubtitle,
-  pageType: "CollectionPage",
-});
-
-const CLIENTS_BREADCRUMB_JSON_LD = buildBreadcrumbJsonLd(SITE_URL, [
-  { name: "Home", path: "/" },
-  { name: "Clients", path: "/clients" },
-]);
+async function loadClientsCopy() {
+  return withLocaleCopy(
+    { ...CLIENTS_PAGE_COPY, deliveryQuotesLabel: "Client delivery quotes" },
+    "clients",
+  );
+}
 
 /**
- * Hero â†’ editorial proof strip â†’ case studies â†’ bronze pull quotes â†’ CTA â†’ ContactTeaser.
- * Photography-forward proof â€” no client logo wall, no centered KPI grid.
+ * Hero → editorial proof strip → case studies → bronze pull quotes → CTA → ContactTeaser.
+ * Photography-forward proof — no client logo wall, no centered KPI grid.
  */
 export async function ClientsPageView() {
-  const [{ stats, source }, clientWork] = await Promise.all([
+  const [{ stats, source }, clientWork, copy] = await Promise.all([
     getBusinessStats(),
     buildClientWorkWithPhotos(CLIENTS_WORK),
+    loadClientsCopy(),
   ]);
-  const copy = await withLocaleCopy({ ...CLIENTS_PAGE_COPY }, "clients");
   const clientsValue = formatKpiValuePlus(stats.clientOrganisations);
+  const clientsJsonLd = buildPageJsonLd(SITE_URL, {
+    path: "/clients",
+    title: `${copy.heroTitle} | One&Only`,
+    description: copy.heroSubtitle,
+    pageType: "CollectionPage",
+  });
+  const clientsBreadcrumbJsonLd = buildBreadcrumbJsonLd(SITE_URL, [
+    { name: "Home", path: "/" },
+    { name: copy.heroTitle, path: "/clients" },
+  ]);
 
   return (
     <HomeMarketingLayout>
@@ -45,13 +49,13 @@ export async function ClientsPageView() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: sanitizeJsonForScript(CLIENTS_JSON_LD),
+          __html: sanitizeJsonForScript(clientsJsonLd),
         }}
       />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: sanitizeJsonForScript(CLIENTS_BREADCRUMB_JSON_LD),
+          __html: sanitizeJsonForScript(clientsBreadcrumbJsonLd),
         }}
       />
       <ClientsHero
@@ -101,7 +105,7 @@ export async function ClientsPageView() {
 
       <section
         className="clients-trust-strip about-craft-strip scheme-accent-wash"
-        aria-label="Client delivery quotes"
+        aria-label={copy.deliveryQuotesLabel}
       >
         <div className="home-shell-xl clients-pull-quotes">
           {copy.pullQuotes.map((item) => (

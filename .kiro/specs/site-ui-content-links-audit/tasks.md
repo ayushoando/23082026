@@ -18,7 +18,7 @@ Implement and execute a read-only TypeScript audit program in six ordered waves 
 ## Tasks
 
 - [ ] 1. Wave 0 — Establish prerequisites, canonical inventory, schemas, profiles, and matrix
-  - [ ] 1.1 Create the non-product audit-program entry points and run configuration
+  - [x] 1.1 Create the non-product audit-program entry points and run configuration
     - Add TypeScript command modules under `scripts/site-ui-content-links-audit/**` for wave execution, configuration loading, stable run IDs, repository revision/configuration hashing, and approved artifact-path enforcement.
     - Reject writes under `site/**`, unpartitioned `results/`, root report files, databases, and production destinations; preserve Planner and Studio as separate ownership partitions.
     - **Prerequisites:** Completed requirements/design and existing `.config.kiro`; no runtime authorization required.
@@ -274,7 +274,7 @@ Implement and execute a read-only TypeScript audit program in six ordered waves 
     - **Validation criteria:** Every measurement records value, budget, profile, run count, percentile, authorization, and affected occurrence; unauthorized rows have no pass/fail measurement conclusion.
     - _Requirements: 15.1-15.7, 22.5_
 
-  - [ ]* 5.7 Write authorization-gate unit and adapter integration tests
+  - [ ] 5.7 Write authorization-gate unit and adapter integration tests
     - Cover permit, deny, not-observed, stale authorization, selector mismatch, partial output, tool crash, redaction, and retry isolation using fixtures only.
     - **[SEPARATE EXPLICIT AUTHORIZATION REQUIRED]** Authorize the exact targeted Vitest `--run` command; these tests do not authorize any browser, protected route, hosted operation, or performance command.
     - **Prerequisites:** 5.1 and runtime adapters.

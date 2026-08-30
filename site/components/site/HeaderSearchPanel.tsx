@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { MagnifyingGlass, Sparkle } from "@phosphor-icons/react";
 import type { RefObject } from "react";
 
@@ -45,6 +46,8 @@ export function HeaderSearchPanel({
   onSubmitSearch,
   onMouseEnter,
 }: HeaderSearchPanelProps) {
+  const t = useTranslations("marketing.chrome.search");
+
   return (
     <div
       ref={searchPanelRef}
@@ -54,7 +57,7 @@ export function HeaderSearchPanel({
       <form
         className={headerSearchShellClass}
         role="search"
-        aria-label="Site product search"
+        aria-label={t("formLabel")}
         suppressHydrationWarning
         toolname="searchProducts"
         tooldescription="Search the One&Only product catalog by keyword (chairs, workstations, tables, storage)."
@@ -65,7 +68,7 @@ export function HeaderSearchPanel({
         }}
       >
         <label htmlFor="site-header-search" className="sr-only">
-          Search products
+          {t("inputLabel")}
         </label>
         <MagnifyingGlass size={16} weight="bold" className="text-muted" aria-hidden="true" />
         <input
@@ -75,11 +78,11 @@ export function HeaderSearchPanel({
           value={searchQuery}
           onChange={(event) => onSearchQueryChange(event.target.value)}
           onFocus={() => onShowSearchPanel(true)}
-          placeholder="Search products..."
+          placeholder={t("placeholder")}
           data-caret={showSearchPanel ? "visible" : "hidden"}
           className={`site-header-search-input min-w-0 flex-1 w-40 bg-transparent typ-body outline-none placeholder:text-subtle sm:w-48 lg:w-56 xl:w-64 ${showSearchPanel ? "caret-visible" : "caret-transparent"}`}
           autoComplete="off"
-          aria-label="Search products"
+          aria-label={t("inputLabel")}
           aria-describedby="site-header-search-status"
           aria-controls={showSearchPanel ? "site-header-search-panel" : undefined}
           suppressHydrationWarning
@@ -87,7 +90,7 @@ export function HeaderSearchPanel({
         />
         <Sparkle size={16} weight="duotone" className="text-contrast-accent" aria-hidden="true" />
         <button type="submit" className="sr-only">
-          Submit header search
+          {t("submit")}
         </button>
       </form>
       <p id="site-header-search-status" className="sr-only" role="status" aria-live="polite">
@@ -104,15 +107,15 @@ export function HeaderSearchPanel({
             {searchSource ? (
               <span className={headerSearchBadgeClass}>
                 {searchSource === "ai"
-                  ? "AI ranked"
+                  ? t("aiRanked")
                   : searchSource === "static-fallback"
-                    ? "Static fallback"
-                    : "Local search"}
+                    ? t("staticFallback")
+                    : t("localSearch")}
               </span>
             ) : null}
           </div>
           {searchLoading ? (
-            <p className="py-6 typ-body text-muted">Searching...</p>
+            <p className="py-6 typ-body text-muted">{t("searching")}</p>
           ) : searchResults.length > 0 ? (
             <ul className="space-y-1">
               {searchResults.map((result) => (
@@ -135,21 +138,21 @@ export function HeaderSearchPanel({
                 onClick={onSearchResultClick}
                 className="shell-list-link flex items-center justify-between rounded-xl px-3 py-2 typ-body"
               >
-                All Products
+                {t("allProducts")}
               </Link>
               <Link
                 href="/solutions"
                 onClick={onSearchResultClick}
                 className="shell-list-link flex items-center justify-between rounded-xl px-3 py-2 typ-body"
               >
-                Solutions
+                {t("solutions")}
               </Link>
               <Link
                 href="/clients"
                 onClick={onSearchResultClick}
                 className="shell-list-link flex items-center justify-between rounded-xl px-3 py-2 typ-body"
               >
-                Portfolio
+                {t("portfolio")}
               </Link>
             </div>
           )}

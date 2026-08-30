@@ -8,16 +8,33 @@ import {
   PLANNING_PAGE_DELIVERABLES,
   PLANNING_PAGE_STEPS,
 } from "@/features/site/data/routeCopy";
-import { PLANNING_PAGE_METADATA } from "@/features/site/data/routeMetadata";
-import { buildBreadcrumbJsonLd, buildPageJsonLd } from "@/features/site/data/seo";
+import { buildBreadcrumbJsonLd, buildPageJsonLd, buildPageMetadata } from "@/features/site/data/seo";
 import { withLocaleCopy } from "@/lib/i18n/withLocaleCopy";
 import { SITE_URL } from "@/lib/siteUrl";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
-export const metadata: Metadata = PLANNING_PAGE_METADATA;
+async function loadPlanningCopy() {
+  return withLocaleCopy(
+    {
+      ...PLANNING_PAGE_COPY,
+      steps: PLANNING_PAGE_STEPS,
+      deliverables: PLANNING_PAGE_DELIVERABLES,
+    },
+    "planning",
+  );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const copy = await loadPlanningCopy();
+  return buildPageMetadata(SITE_URL, {
+    title: `${copy.heroTitle} | One&Only`,
+    description: copy.heroSubtitle,
+    path: "/planning",
+  });
+}
 
 export default async function PlanningPage() {
-  const copy = await withLocaleCopy({ ...PLANNING_PAGE_COPY }, "planning");
+  const copy = await loadPlanningCopy();
   const planningJsonLd = buildPageJsonLd(SITE_URL, {
     path: "/planning",
     title: `${copy.heroTitle} | One&Only`,
@@ -26,7 +43,7 @@ export default async function PlanningPage() {
   });
   const breadcrumbJsonLd = buildBreadcrumbJsonLd(SITE_URL, [
     { name: "Home", path: "/" },
-    { name: "Planning", path: "/planning" },
+    { name: copy.heroTitle, path: "/planning" },
   ]);
 
   return (
@@ -51,10 +68,10 @@ export default async function PlanningPage() {
         tertiaryCta={copy.tertiaryCta}
         workflowKicker={copy.workflowKicker}
         workflowTitle={copy.workflowTitle}
-        steps={PLANNING_PAGE_STEPS}
+        steps={copy.steps}
         deliverablesKicker={copy.deliverablesKicker}
         deliverablesTitle={copy.deliverablesTitle}
-        deliverables={PLANNING_PAGE_DELIVERABLES}
+        deliverables={copy.deliverables}
         bestForKicker={copy.bestForKicker}
         bestForDescription={copy.bestForDescription}
         deskKicker={copy.deskKicker}

@@ -25,6 +25,11 @@ describe("Planner Task 5.8 extended browser/device profiles", () => {
       "firefox-tablet",
       "webkit-mobile",
     ]);
+    expect(extended.map((profile) => profile.input)).toEqual(["keyboard", "touch"]);
+    expect(extended.map((profile) => profile.viewport)).toEqual([
+      { width: 768, height: 1_024 },
+      { width: 390, height: 844 },
+    ]);
     expect(
       new Set(PLANNER_BROWSER_AUDIT_PROFILES.map((profile) => profile.id)).size,
     ).toBe(PLANNER_BROWSER_AUDIT_PROFILES.length);

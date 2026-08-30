@@ -46,7 +46,7 @@ export interface TrustedByPageViewProps {
   ctaTitleAccent: string;
   ctaDescription: string;
   ctaPrimary: string;
-  ctaSecondary: string;
+  deliveryQuotesLabel: string;
 }
 
 export function TrustedByPageView({
@@ -72,6 +72,7 @@ export function TrustedByPageView({
   ctaDescription,
   ctaPrimary,
   ctaSecondary,
+  deliveryQuotesLabel,
 }: TrustedByPageViewProps) {
   const heroRef = useRef<HTMLElement>(null);
   const storyRef = useRef<HTMLElement>(null);
@@ -336,7 +337,7 @@ export function TrustedByPageView({
       <section
         ref={quotesRef}
         className="clients-trust-strip scheme-accent-wash"
-        aria-label="Delivery quotes"
+        aria-label={deliveryQuotesLabel}
         data-testid="trusted-by-quotes"
       >
         <div className="home-shell-xl">

@@ -7,6 +7,12 @@
 import fc from "fast-check";
 import { describe, expect, it } from "vitest";
 import { plannerHandoffRequestSchema } from "@planner/lib/handoff/handoffSchema";
+import {
+  parsePlannerHandoffRecoveryState,
+  serializePlannerHandoffRecoveryState,
+  type PlannerHandoffDraft,
+  type PlannerHandoffRecoveryState,
+} from "@planner/lib/handoff/handoffRecovery";
 import { PLANNER_ENDPOINT_DESCRIPTORS } from "@planner/lib/plannerEndpointContract";
 import type { FurnitureItem } from "@planner/lib/plannerTypes";
 import { toPublicPlannerFurniture } from "@planner/store/plannerCatalogStore";
@@ -42,6 +48,46 @@ const validGuestHandoffArbitrary = fc.record({
   idempotencyKey: fc.stringMatching(/^handoff-[a-z0-9]{8,36}$/),
   ownerId: fc.stringMatching(/^owner-[a-z0-9]{4,16}$/),
 });
+
+const handoffDraftArbitrary: fc.Arbitrary<PlannerHandoffDraft> = fc.record({
+  name: fc.string({ maxLength: 120 }),
+  email: fc.string({ maxLength: 120 }),
+  phone: fc.string({ maxLength: 40 }),
+  company: fc.string({ maxLength: 120 }),
+  notes: fc.string({ maxLength: 2_000 }),
+  inquiryType: fc.constantFrom("quote", "design-support", "product-question"),
+  consent: fc.boolean(),
+});
+
+type HandoffOutcome =
+  | { kind: "success"; referenceId: string; createdAt: string }
+  | { kind: "failure"; message: string };
+
+const handoffOutcomeArbitrary: fc.Arbitrary<HandoffOutcome> = fc.oneof(
+  fc.record({
+    kind: fc.constant("success" as const),
+    referenceId: fc.stringMatching(/^HANDOFF-[A-Z0-9]{8,24}$/),
+    createdAt: fc.date({ min: new Date("2020-01-01T00:00:00.000Z"), max: new Date("2035-12-31T23:59:59.999Z") }).map((date) => date.toISOString()),
+  }),
+  fc.record({
+    kind: fc.constant("failure" as const),
+    message: fc.string({ minLength: 1, maxLength: 160 }),
+  }),
+);
+
+function applyHandoffOutcome(
+  state: PlannerHandoffRecoveryState,
+  outcome: HandoffOutcome,
+): PlannerHandoffRecoveryState {
+  if (outcome.kind === "failure") return state;
+  return {
+    ...state,
+    confirmation: {
+      referenceId: outcome.referenceId,
+      createdAt: outcome.createdAt,
+    },
+  };
+}
 
 describe("Feature: planner-comprehensive-audit, Property 23: Guest boundary integrity", () => {
   it("projects every generated catalog selection to approved public fields only", () => {
@@ -117,6 +163,45 @@ describe("Feature: planner-comprehensive-audit, Property 23: Guest boundary inte
     );
   });
 
+  it("preserves generated guest drafts on failure and stable confirmations on success without granting project capability", () => {
+    fc.assert(
+      fc.property(
+        handoffDraftArbitrary,
+        fc.stringMatching(/^handoff-[a-z0-9]{8,36}$/),
+        handoffOutcomeArbitrary,
+        (draft, idempotencyKey, outcome) => {
+          const initial: PlannerHandoffRecoveryState = {
+            version: 1,
+            draft,
+            idempotencyKey,
+            confirmation: null,
+          };
+          const resolved = applyHandoffOutcome(initial, outcome);
+          const recovered = parsePlannerHandoffRecoveryState(
+            serializePlannerHandoffRecoveryState(resolved),
+            () => "unexpected-replacement-key",
+          );
+
+          expect(recovered.draft).toEqual(draft);
+          expect(recovered.idempotencyKey).toBe(idempotencyKey);
+          expect("ownerId" in recovered).toBe(false);
+          expect("projectRecord" in recovered).toBe(false);
+          expect("projectOperationCapability" in recovered).toBe(false);
+
+          if (outcome.kind === "success") {
+            expect(recovered.confirmation).toEqual({
+              referenceId: outcome.referenceId,
+              createdAt: outcome.createdAt,
+            });
+          } else {
+            expect(recovered.confirmation).toBeNull();
+          }
+        },
+      ),
+      { numRuns: PROPERTY_RUNS, seed: 23_202_610, endOnFailure: true },
+    );
+  });
+
   it("never declares a project-record endpoint as guest accessible", () => {
     fc.assert(
       fc.property(fc.constantFrom(...PLANNER_ENDPOINT_DESCRIPTORS), (endpoint) => {
@@ -125,7 +210,7 @@ describe("Feature: planner-comprehensive-audit, Property 23: Guest boundary inte
         expect(endpoint.security.owner).not.toBe("authenticated-owner-list");
         expect(endpoint.security.owner).not.toBe("authenticated-owner-or-admin-item");
       }),
-      { numRuns: PROPERTY_RUNS, seed: 23_202_610, endOnFailure: true },
+      { numRuns: PROPERTY_RUNS, seed: 23_202_611, endOnFailure: true },
     );
   });
 });

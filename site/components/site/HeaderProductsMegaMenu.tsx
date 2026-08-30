@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import type { GroupedCategory } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 
@@ -85,6 +86,8 @@ export function HeaderProductsMegaMenu({
   onClose,
   isMegaPointerTarget,
 }: HeaderProductsMegaMenuProps) {
+  const t = useTranslations("marketing.chrome");
+
   if (!open) {
     return null;
   }
@@ -165,7 +168,7 @@ export function HeaderProductsMegaMenu({
                 onClick={onClose}
                 className="typ-overline inline-flex mb-2 text-strong transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               >
-                Others
+                {t("header.otherCategories")}
               </Link>
               <ul className="space-y-1">
                 {megaMenuOthers.map((subcategory) => (
@@ -189,7 +192,7 @@ export function HeaderProductsMegaMenu({
             onClick={onClose}
             className="inline-flex items-center rounded-lg px-3 py-2 typ-body font-semibold text-primary hover:bg-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
-            All Products &gt;
+            {t("header.allProductsLink")} &gt;
           </Link>
         </div>
       </div>

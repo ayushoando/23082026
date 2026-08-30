@@ -1,6 +1,5 @@
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { defineConfig, devices } from "@playwright/test";
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { loadEnvLocal } = require("../../scripts/general/loadEnvLocal.cjs");
@@ -19,7 +18,7 @@ interface VisualBaselineManifest {
   readonly viewportTiers: Record<string, { readonly width: number; readonly height: number }>;
 }
 
-const configDirectory = path.dirname(fileURLToPath(import.meta.url));
+const configDirectory = __dirname;
 const visualManifest = JSON.parse(
   fs.readFileSync(path.resolve(configDirectory, "../../tests/manifests/visual-baselines.json"), "utf8"),
 ) as VisualBaselineManifest;
