@@ -195,10 +195,7 @@ describe("AI_STACK_FINDINGS dataset", () => {
       const others = AI_STACK_FINDINGS.filter((f) => f.id !== "routing-001");
       expect(others.length).toBeGreaterThan(0);
       for (const finding of others) {
-        expect(isApprovalGated(finding)).toBe(
-          false,
-          `Expected finding '${finding.id}' to be safe (non-gated) but got changeClass='${finding.changeClass}'`,
-        );
+        expect(isApprovalGated(finding)).toBe(false);
       }
     });
 

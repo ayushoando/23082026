@@ -197,6 +197,12 @@ const wrongTypeArb = fc.oneof(
 // Helpers
 // ---------------------------------------------------------------------------
 
+const routeContext: { params: Promise<Record<string, string>> } = {
+  params: Promise.resolve({} as Record<string, string>),
+};
+
+const invokePost = (body: unknown) => POST(postJson(body), routeContext);
+
 function postJson(body: unknown): NextRequest {
   return new NextRequest("http://localhost/api/planner/ai-advisor", {
     method: "POST",
@@ -220,7 +226,7 @@ describe("Feature: ai-implementation-audit, Property 7: Invalid request bodies a
   it("missing messages field returns 400", async () => {
     await fc.assert(
       fc.asyncProperty(missingMessagesArb, async (body) => {
-        const res = await POST(postJson(body));
+        const res = await invokePost(postJson(body));
         expect(res.status).toBe(400);
 
         const json = await res.json();
@@ -234,7 +240,7 @@ describe("Feature: ai-implementation-audit, Property 7: Invalid request bodies a
   it("empty messages array returns 400", async () => {
     await fc.assert(
       fc.asyncProperty(emptyMessagesArb, async (body) => {
-        const res = await POST(postJson(body));
+        const res = await invokePost(postJson(body));
         expect(res.status).toBe(400);
 
         const json = await res.json();
@@ -248,7 +254,7 @@ describe("Feature: ai-implementation-audit, Property 7: Invalid request bodies a
   it("messages array exceeding max 20 items returns 400", async () => {
     await fc.assert(
       fc.asyncProperty(tooManyMessagesArb, async (body) => {
-        const res = await POST(postJson(body));
+        const res = await invokePost(postJson(body));
         expect(res.status).toBe(400);
 
         const json = await res.json();
@@ -262,7 +268,7 @@ describe("Feature: ai-implementation-audit, Property 7: Invalid request bodies a
   it("message with empty content returns 400", async () => {
     await fc.assert(
       fc.asyncProperty(emptyContentMessageArb, async (body) => {
-        const res = await POST(postJson(body));
+        const res = await invokePost(postJson(body));
         expect(res.status).toBe(400);
 
         const json = await res.json();
@@ -276,7 +282,7 @@ describe("Feature: ai-implementation-audit, Property 7: Invalid request bodies a
   it("message with content exceeding 2000 chars returns 400", async () => {
     await fc.assert(
       fc.asyncProperty(overMaxContentArb, async (body) => {
-        const res = await POST(postJson(body));
+        const res = await invokePost(postJson(body));
         expect(res.status).toBe(400);
 
         const json = await res.json();
@@ -290,7 +296,7 @@ describe("Feature: ai-implementation-audit, Property 7: Invalid request bodies a
   it("message with invalid role returns 400", async () => {
     await fc.assert(
       fc.asyncProperty(invalidRoleArb, async (body) => {
-        const res = await POST(postJson(body));
+        const res = await invokePost(postJson(body));
         expect(res.status).toBe(400);
 
         const json = await res.json();
@@ -304,7 +310,7 @@ describe("Feature: ai-implementation-audit, Property 7: Invalid request bodies a
   it("completely wrong body types return 400", async () => {
     await fc.assert(
       fc.asyncProperty(wrongTypeArb, async (body) => {
-        const res = await POST(postJson(body));
+        const res = await invokePost(postJson(body));
         // null/number/boolean JSON body is valid to parse but fails Zod
         expect(res.status).toBe(400);
 
@@ -320,7 +326,7 @@ describe("Feature: ai-implementation-audit, Property 7: Invalid request bodies a
     await fc.assert(
       fc.asyncProperty(missingMessagesArb, async (body) => {
         requestAdvisorMessages.mockClear();
-        await POST(postJson(body));
+        await invokePost(postJson(body));
         expect(requestAdvisorMessages).not.toHaveBeenCalled();
       }),
       { numRuns: 100, seed: 20260843 },

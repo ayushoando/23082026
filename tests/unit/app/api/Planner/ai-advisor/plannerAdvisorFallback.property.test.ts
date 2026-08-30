@@ -152,6 +152,12 @@ const providerEntryArb = fc.record({
 // Helpers
 // ---------------------------------------------------------------------------
 
+const routeContext: { params: Promise<Record<string, string>> } = {
+  params: Promise.resolve({} as Record<string, string>),
+};
+
+const invokePost = (body: unknown) => POST(postJson(body), routeContext);
+
 function postJson(body: unknown): NextRequest {
   return new NextRequest("http://localhost/api/planner/ai-advisor", {
     method: "POST",
@@ -174,7 +180,7 @@ describe("Feature: ai-implementation-audit, Property 6: Missing usable provider 
     it("returns HTTP 200 with success:true and non-empty content (empty chain)", async () => {
       await fc.assert(
         fc.asyncProperty(validBodyArb, async (body) => {
-          const res = await POST(postJson(body));
+          const res = await invokePost(postJson(body));
 
           expect(res.status).toBe(200);
           const json = await res.json();
@@ -189,7 +195,7 @@ describe("Feature: ai-implementation-audit, Property 6: Missing usable provider 
     it("sets degraded:true when chain is empty", async () => {
       await fc.assert(
         fc.asyncProperty(validBodyArb, async (body) => {
-          const res = await POST(postJson(body));
+          const res = await invokePost(postJson(body));
           const json = await res.json();
           expect(json.data.degraded).toBe(true);
         }),
@@ -212,7 +218,7 @@ describe("Feature: ai-implementation-audit, Property 6: Missing usable provider 
             resolveAdvisorModelChain.mockReturnValue(providers);
             requestAdvisorMessages.mockRejectedValue(new Error("provider error"));
 
-            const res = await POST(postJson(body));
+            const res = await invokePost(postJson(body));
 
             expect(res.status).toBe(200);
             const json = await res.json();
@@ -234,7 +240,7 @@ describe("Feature: ai-implementation-audit, Property 6: Missing usable provider 
             resolveAdvisorModelChain.mockReturnValue(providers);
             requestAdvisorMessages.mockRejectedValue(new Error("provider error"));
 
-            const res = await POST(postJson(body));
+            const res = await invokePost(postJson(body));
             const json = await res.json();
             expect(json.data.degraded).toBe(true);
           },
@@ -259,7 +265,7 @@ describe("Feature: ai-implementation-audit, Property 6: Missing usable provider 
             resolveAdvisorModelChain.mockReturnValue(providers);
             requestAdvisorMessages.mockResolvedValue(emptyContent);
 
-            const res = await POST(postJson(body));
+            const res = await invokePost(postJson(body));
 
             expect(res.status).toBe(200);
             const json = await res.json();

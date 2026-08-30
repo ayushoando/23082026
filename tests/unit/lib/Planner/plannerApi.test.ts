@@ -209,7 +209,10 @@ describe("@planner/lib/plannerApi path contract", () => {
     browserApiMocks.browserApiFetch.mockResolvedValueOnce(
       new Response(null, { status: 204 }),
     );
-    const result = await deleteProject("p_1");
+    const result = await deleteProject("p_1", {
+      expectedRevision: 1,
+      idempotencyKey: "delete-p-1",
+    });
     expect(result).toBeUndefined();
   });
 

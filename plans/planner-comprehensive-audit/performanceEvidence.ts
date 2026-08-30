@@ -89,6 +89,10 @@ const ALLOWED_FINDING_STATES = [
   "blocked-with-evidence",
 ] as const satisfies readonly FindingState[];
 
+const ALLOWED_FINDING_STATE_SET: ReadonlySet<FindingState> = new Set(
+  ALLOWED_FINDING_STATES,
+);
+
 function addIssue(
   issues: ValidationIssue[],
   code: ValidationIssue["code"],
@@ -233,7 +237,7 @@ export function validatePerformanceFindingCompleteness(
       "A missed performance budget requires a recognized remediation status.",
     );
   }
-  if (!ALLOWED_FINDING_STATES.includes(candidate.state)) {
+  if (!ALLOWED_FINDING_STATE_SET.has(candidate.state)) {
     addIssue(
       issues,
       "invalid-finding-state",

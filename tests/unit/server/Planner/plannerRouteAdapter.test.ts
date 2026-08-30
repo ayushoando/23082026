@@ -110,6 +110,18 @@ function memberGetRequest(
 
 const PROJECT_URL = "https://example.com/api/Planner/projects";
 
+type PlannerRouteContext = { params: Promise<Record<string, string>> };
+const routeContext: PlannerRouteContext = {
+  params: Promise.resolve({} as Record<string, string>),
+};
+
+async function invokeHandler(
+  handler: (request: NextRequest, context: PlannerRouteContext) => Promise<Response>,
+  request: NextRequest,
+): Promise<Response> {
+  return handler(request, routeContext);
+}
+
 afterEach(() => {
   vi.restoreAllMocks();
 });
@@ -133,7 +145,7 @@ describe("plannerRouteAdapter — request-processing order enforcement", () => {
         endpointId: "planner.projects.list",
         operation: { invoke },
       });
-      const response = await handler(memberGetRequest(PROJECT_URL));
+      const response = await invokeHandler(handler,memberGetRequest(PROJECT_URL));
       const body = await response.json();
 
       expect(response.status).toBe(429);
@@ -153,7 +165,7 @@ describe("plannerRouteAdapter — request-processing order enforcement", () => {
         operation: { invoke },
       });
       // Send a POST to a GET-only descriptor
-      const response = await handler(
+      const response = await invokeHandler(handler,
         jsonRequest(PROJECT_URL, "POST", { name: "test" }),
       );
       const body = await response.json();
@@ -175,7 +187,7 @@ describe("plannerRouteAdapter — request-processing order enforcement", () => {
         operation: { invoke },
       });
       // Missing required 'name' field (empty body)
-      const response = await handler(
+      const response = await invokeHandler(handler,
         jsonRequest(PROJECT_URL, "POST", {}),
       );
       const body = await response.json();
@@ -199,7 +211,7 @@ describe("plannerRouteAdapter — request-processing order enforcement", () => {
         operation: { invoke },
       });
       // Pass a valid JSON body with all required fields, but from a bad origin
-      const response = await handler(
+      const response = await invokeHandler(handler,
         jsonRequest(
           "https://example.com/api/Planner/handoff",
           "POST",
@@ -234,7 +246,7 @@ describe("plannerRouteAdapter — request-processing order enforcement", () => {
         endpointId: "planner.handoff.create",
         operation: { invoke },
       });
-      const response = await handler(
+      const response = await invokeHandler(handler,
         jsonRequest(
           "https://example.com/api/Planner/handoff",
           "POST",
@@ -275,7 +287,7 @@ describe("plannerRouteAdapter — request-processing order enforcement", () => {
         endpointId: "planner.projects.list",
         operation: { invoke },
       });
-      const response = await handler(memberGetRequest(PROJECT_URL));
+      const response = await invokeHandler(handler,memberGetRequest(PROJECT_URL));
       const body = await response.json();
 
       expect(response.status).toBe(401);
@@ -297,7 +309,7 @@ describe("plannerRouteAdapter — request-processing order enforcement", () => {
         endpointId: "planner.projects.list",
         operation: { invoke },
       });
-      const response = await handler(memberGetRequest(PROJECT_URL));
+      const response = await invokeHandler(handler,memberGetRequest(PROJECT_URL));
       const body = await response.json();
 
       expect(response.status).toBe(200);
@@ -340,7 +352,7 @@ describe("plannerRouteAdapter — request-processing order enforcement", () => {
         endpointId: "planner.projects.list",
         operation: { invoke },
       });
-      const response = await handler(memberGetRequest(PROJECT_URL));
+      const response = await invokeHandler(handler,memberGetRequest(PROJECT_URL));
       const body = await response.json();
 
       expect(response.headers.get("x-correlation-id")).toBeTruthy();
@@ -360,7 +372,7 @@ describe("plannerRouteAdapter — request-processing order enforcement", () => {
         endpointId: "planner.projects.list",
         operation: { invoke },
       });
-      const response = await handler(
+      const response = await invokeHandler(handler,
         memberGetRequest(PROJECT_URL, {
           "x-correlation-id": "client-req-0001",
         }),
@@ -397,7 +409,7 @@ describe("plannerRouteAdapter — request-processing order enforcement", () => {
         endpointId: "planner.projects.list",
         operation: { invoke },
       });
-      const response = await handler(memberGetRequest(PROJECT_URL));
+      const response = await invokeHandler(handler,memberGetRequest(PROJECT_URL));
 
       expect(response.status).toBe(429);
       expect(invoke).not.toHaveBeenCalled();
@@ -413,7 +425,7 @@ describe("plannerRouteAdapter — request-processing order enforcement", () => {
         operation: { invoke },
       });
       // Send invalid body (missing name)
-      const response = await handler(
+      const response = await invokeHandler(handler,
         jsonRequest(PROJECT_URL, "POST", {}),
       );
 
@@ -443,7 +455,7 @@ describe("plannerRouteAdapter — request-processing order enforcement", () => {
         endpointId: "planner.catalog.list",
         operation: { invoke },
       });
-      const response = await handler(
+      const response = await invokeHandler(handler,
         makeRequest("https://example.com/api/Planner/catalog", {
           method: "GET",
         }),

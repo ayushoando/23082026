@@ -111,6 +111,12 @@ vi.mock("@planner/server/plannerRouteAdapter", () => ({
 import { POST } from "@/app/api/Planner/sketch-to-plan/route";
 import { SketchConversionError } from "@/lib/Planner/ai/sketchToPlanShared";
 
+const routeContext: { params: Promise<Record<string, string>> } = {
+  params: Promise.resolve({} as Record<string, string>),
+};
+
+const invokePost = (body: unknown) => POST(postJson(body), routeContext);
+
 function postJson(body: unknown) {
   return new NextRequest("http://localhost/api/Planner/sketch-to-plan", {
     method: "POST",
@@ -138,20 +144,20 @@ describe("app/api/Planner/sketch-to-plan/route.ts", () => {
 
   it("returns 403 when feature flag off", async () => {
     isFeatureEnabled.mockReturnValue(false);
-    const res = await POST(postJson(validBody));
+    const res = await invokePost(postJson(validBody));
     expect(res.status).toBe(403);
     expect(requestSketchToPlan).not.toHaveBeenCalled();
   });
 
   it("returns validation error for bad image", async () => {
-    const res = await POST(
+    const res = await invokePost(
       postJson({ ...validBody, imageDataUrl: "not-a-data-url" }),
     );
     expect(res.status).toBe(400);
   });
 
   it("returns preview success", async () => {
-    const res = await POST(postJson(validBody));
+    const res = await invokePost(postJson(validBody));
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.success).toBe(true);
@@ -167,7 +173,7 @@ describe("app/api/Planner/sketch-to-plan/route.ts", () => {
         "AI conversion is unavailable",
       ),
     );
-    const res = await POST(postJson(validBody));
+    const res = await invokePost(postJson(validBody));
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.success).toBe(true);

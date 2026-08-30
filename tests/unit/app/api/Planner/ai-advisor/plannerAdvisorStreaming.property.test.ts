@@ -150,6 +150,12 @@ const validBodyArb = fc.record({
 // Helpers
 // ---------------------------------------------------------------------------
 
+const routeContext: { params: Promise<Record<string, string>> } = {
+  params: Promise.resolve({} as Record<string, string>),
+};
+
+const invokePost = (body: unknown) => POST(postJson(body), routeContext);
+
 function postJson(body: unknown): NextRequest {
   return new NextRequest("http://localhost/api/planner/ai-advisor", {
     method: "POST",
@@ -175,7 +181,7 @@ describe("Feature: ai-implementation-audit, Property 5: Streaming responses are 
     it("Content-Type is application/json (not application/x-ndjson)", async () => {
       await fc.assert(
         fc.asyncProperty(validBodyArb, async (body) => {
-          const res = await POST(postJson(body));
+          const res = await invokePost(postJson(body));
 
           const ct = res.headers.get("content-type") ?? "";
           // Must be JSON — NDJSON would be application/x-ndjson or text/plain
@@ -190,7 +196,7 @@ describe("Feature: ai-implementation-audit, Property 5: Streaming responses are 
     it("response body parses as a single valid JSON object (not line-by-line)", async () => {
       await fc.assert(
         fc.asyncProperty(validBodyArb, async (body) => {
-          const res = await POST(postJson(body));
+          const res = await invokePost(postJson(body));
           const text = await res.text();
 
           // Must parse as a single JSON document (no NDJSON multi-line output)
@@ -212,7 +218,7 @@ describe("Feature: ai-implementation-audit, Property 5: Streaming responses are 
     it("parsed body has the success envelope shape", async () => {
       await fc.assert(
         fc.asyncProperty(validBodyArb, async (body) => {
-          const res = await POST(postJson(body));
+          const res = await invokePost(postJson(body));
           const json = await res.json();
 
           // Top-level envelope
@@ -235,7 +241,7 @@ describe("Feature: ai-implementation-audit, Property 5: Streaming responses are 
     it("body does not contain raw NDJSON event keywords (status/delta/result stream events)", async () => {
       await fc.assert(
         fc.asyncProperty(validBodyArb, async (body) => {
-          const res = await POST(postJson(body));
+          const res = await invokePost(postJson(body));
           const json = await res.json();
 
           // Non-streaming responses MUST NOT carry NDJSON stream event types
@@ -263,7 +269,7 @@ describe("Feature: ai-implementation-audit, Property 5: Streaming responses are 
     it("fallback response is also a single JSON object (not NDJSON)", async () => {
       await fc.assert(
         fc.asyncProperty(validBodyArb, async (body) => {
-          const res = await POST(postJson(body));
+          const res = await invokePost(postJson(body));
           const text = await res.text();
 
           // Single parsable JSON document

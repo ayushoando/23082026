@@ -1,9 +1,10 @@
 import fc from "fast-check";
 import { describe, expect, it } from "vitest";
 import { applyPlannerProjectMutation, type PlannerProjectAtomicStateV1 } from "@planner/lib/plannerProjectOperations";
+import type { PlannerGeometrySnapshotV1 } from "@planner/lib/plannerGeometryContract";
 import { PLANNER_REPOSITORY_CONTRACT_VERSION, type PlannerProjectEnvelopeV1, type SavePlannerProjectRequestV1 } from "@planner/lib/plannerProjectRepository";
 
-const geometry = { contractVersion: 1, schemaVersion: 1, unit: "mm", scalePxPerMm: 0.05, geometry: { furniture: [], walls: [], doors: [], windows: [] } } as const;
+const geometry: PlannerGeometrySnapshotV1 = { contractVersion: 1, schemaVersion: 1, unit: "mm", scalePxPerMm: 0.05, geometry: { furniture: [], walls: [], doors: [], windows: [] } };
 const context = { ownerId: "owner-a", correlationId: "correlation-a" };
 function project(revision: number): PlannerProjectEnvelopeV1 {
   return { contractVersion: 1, schemaVersion: 1, id: "project-a", ownerId: context.ownerId, name: "Plan", revision, status: "active", geometry, sheet: {}, layers: [], thumbnailUrl: null, createdAt: "2026-01-01T00:00:00.000Z", updatedAt: "2026-01-01T00:00:00.000Z" };

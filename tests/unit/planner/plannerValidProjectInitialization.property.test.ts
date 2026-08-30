@@ -9,10 +9,10 @@ import { describe, expect, it } from "vitest";
 import { applyPlannerProjectMutation, type PlannerProjectAtomicStateV1 } from "@planner/lib/plannerProjectOperations";
 import {
   PLANNER_REPOSITORY_CONTRACT_VERSION,
-  type PlannerGeometrySnapshotV1,
   type PlannerRepositoryContextV1,
   type SavePlannerProjectRequestV1,
 } from "@planner/lib/plannerProjectRepository";
+import type { PlannerGeometrySnapshotV1 } from "@planner/lib/plannerGeometryContract";
 import { readPlannerGeometry } from "@planner/lib/plannerGeometryContract";
 
 const PROPERTY_RUNS = 120;

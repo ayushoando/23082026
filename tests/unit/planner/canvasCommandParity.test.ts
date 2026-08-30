@@ -78,7 +78,7 @@ function makeFakeCanvas(objects: FabricObjectLike[] = []): FabricCanvasLike {
   };
 }
 
-function makeContext(canvas?: FabricCanvasLike): PlannerCommandContext {
+function makeContext(canvas?: FabricCanvasLike | null): PlannerCommandContext {
   return {
     fabricCanvas: canvas ?? null,
     showToast: () => {},

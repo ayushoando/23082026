@@ -6,18 +6,19 @@ import {
   type PlannerProjectAtomicAdapterV1,
   type PlannerProjectAtomicStateV1,
 } from "@planner/lib/plannerProjectOperations";
+import type { PlannerGeometrySnapshotV1 } from "@planner/lib/plannerGeometryContract";
 import {
   PLANNER_REPOSITORY_CONTRACT_VERSION,
   type SavePlannerProjectRequestV1,
 } from "@planner/lib/plannerProjectRepository";
 
-const geometry = {
+const geometry: PlannerGeometrySnapshotV1 = {
   contractVersion: 1,
   schemaVersion: 1,
   unit: "mm",
   scalePxPerMm: 0.05,
   geometry: { furniture: [], walls: [], doors: [], windows: [] },
-} as const;
+} satisfies PlannerGeometrySnapshotV1;
 
 function request(key: string): SavePlannerProjectRequestV1 {
   return {

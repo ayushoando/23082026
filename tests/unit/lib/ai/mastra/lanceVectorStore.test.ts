@@ -1,4 +1,5 @@
 import fc from "fast-check";
+import { setNodeEnv } from "@/tests/helpers/setNodeEnv";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mkdirSync = vi.fn();
@@ -237,7 +238,7 @@ describe("LanceCatalogVectorStore — production non-remote write guard (baselin
       const savedNodeEnv = process.env["NODE_ENV"];
       delete process.env["LANCE_DB_URI"];
       delete process.env["DEV_AUTH_BYPASS"];
-      process.env["NODE_ENV"] = "production";
+      setNodeEnv("production");
 
       mkdirSync.mockReset();
       assertDevDiskWritable.mockReset();
@@ -260,11 +261,7 @@ describe("LanceCatalogVectorStore — production non-remote write guard (baselin
         if (savedDevAuthBypass !== undefined) {
           process.env["DEV_AUTH_BYPASS"] = savedDevAuthBypass;
         }
-        if (savedNodeEnv !== undefined) {
-          process.env["NODE_ENV"] = savedNodeEnv;
-        } else {
-          delete process.env["NODE_ENV"];
-        }
+        setNodeEnv(savedNodeEnv);
       }
 
       // BUG CONDITION: mkdirSync was called (local path attempt).
@@ -307,7 +304,7 @@ describe("LanceCatalogVectorStore — production non-remote write guard (baselin
               delete process.env["DEV_AUTH_BYPASS"];
             }
             // Explicitly set production NODE_ENV so the guard fires
-            process.env["NODE_ENV"] = env.NODE_ENV;
+            setNodeEnv(env.NODE_ENV);
 
             mkdirSync.mockReset();
             assertDevDiskWritable.mockReset();
@@ -329,6 +326,7 @@ describe("LanceCatalogVectorStore — production non-remote write guard (baselin
               } else {
                 delete process.env["DEV_AUTH_BYPASS"];
               }
+              setNodeEnv(saved.NODE_ENV);
             }
 
             // BUG CONDITION counterexample: mkdirSync was called.

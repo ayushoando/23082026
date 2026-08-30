@@ -244,7 +244,10 @@ describe("Property 26: Performance finding completeness", () => {
     fc.assert(
       fc.property(completeFindingArbitrary, (complete) => {
         const nonFinite = structuredClone(complete);
-        if (nonFinite.measuredValue?.metric !== "listener-subscription-cleanup") {
+        if (
+          nonFinite.measuredValue &&
+          nonFinite.measuredValue.metric !== "listener-subscription-cleanup"
+        ) {
           nonFinite.measuredValue.value = Number.NaN;
           expect(validatePerformanceFindingCompleteness(nonFinite).valid).toBe(false);
         }

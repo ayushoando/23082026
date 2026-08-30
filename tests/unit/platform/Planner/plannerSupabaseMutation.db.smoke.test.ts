@@ -16,10 +16,10 @@ import postgres from "postgres";
 import { createSupabaseAuthAdminClient } from "@/platform/supabase/auth-admin";
 import {
   PLANNER_REPOSITORY_CONTRACT_VERSION,
-  type PlannerGeometrySnapshotV1,
   type PlannerProjectWriteV1,
   type SavePlannerProjectRequestV1,
 } from "@planner/lib/plannerProjectRepository";
+import type { PlannerGeometrySnapshotV1 } from "@planner/lib/plannerGeometryContract";
 import { plannerProjectSupabaseAdapter } from "@planner/server/plannerProjectSupabaseAdapter";
 import { fingerprintPlannerMutation } from "@planner/lib/plannerProjectOperations";
 
@@ -33,6 +33,16 @@ const TEST_OWNER_ID = crypto.randomUUID();
 const TEST_PROJECT_ID = crypto.randomUUID();
 const TEST_KEY_PREFIX = `smoke-${crypto.randomUUID().replaceAll("-", "").slice(0, 12)}`;
 const TEST_CORRELATION_ID = `${TEST_KEY_PREFIX}-correlation`;
+
+interface PlannerMutationProbeClient {
+  rpc(
+    functionName: "planner_mutate_plan_v1",
+    args: Record<string, unknown>,
+  ): PromiseLike<{
+    data: unknown;
+    error: { message: string } | null;
+  }>;
+}
 
 function idempotencyKey(operation: string): string {
   return `${TEST_KEY_PREFIX}-${operation}`;
@@ -163,32 +173,33 @@ describe.runIf(hasAdminCredentials)("Planner Supabase atomic mutation (live Admi
         { response_status: "success", response_revision: 1, fingerprint_matches: true },
       ]);
 
-      const rpcReplay = await receiptSql<Array<{
-        response_status: string;
-        replayed: boolean;
-      }>>`
-        select response_status, replayed
-        from public.planner_mutate_plan_v1(
-          ${TEST_OWNER_ID}::uuid,
-          'create'::text,
-          ${TEST_PROJECT_ID}::uuid,
-          0::bigint,
-          ${idempotencyKey("create")}::text,
-          ${boundedFingerprint(createCommand)}::text,
-          ${baseProject.name}::text,
-          ${JSON.stringify({
+      const probeClient = createSupabaseAuthAdminClient() as unknown as PlannerMutationProbeClient;
+      const { data: rpcData, error: rpcError } = await probeClient.rpc(
+        "planner_mutate_plan_v1",
+        {
+          p_owner_id: TEST_OWNER_ID,
+          p_operation: "create",
+          p_project_id: TEST_PROJECT_ID,
+          p_expected_revision: 0,
+          p_idempotency_key: idempotencyKey("create"),
+          p_request_fingerprint: boundedFingerprint(createCommand),
+          p_name: baseProject.name,
+          p_payload: {
             contractVersion: 1,
             schemaVersion: 1,
             geometry: baseProject.geometry,
             sheet: baseProject.sheet,
             layers: baseProject.layers,
-          })}::jsonb,
-          null::text,
-          ${baseProject.status}::text,
-          1::integer
-        )
-      `;
-      expect(rpcReplay).toEqual([{ response_status: "success", replayed: true }]);
+          },
+          p_thumbnail_url: null,
+          p_status: baseProject.status,
+          p_schema_version: 1,
+        },
+      );
+      expect(rpcError).toBeNull();
+      expect(rpcData).toMatchObject([
+        { response_status: "success", replayed: true },
+      ]);
     } finally {
       await receiptSql.end({ timeout: 5 });
     }

@@ -145,6 +145,12 @@ const validBodyArb = fc.record({
 // Helpers
 // ---------------------------------------------------------------------------
 
+const routeContext: { params: Promise<Record<string, string>> } = {
+  params: Promise.resolve({} as Record<string, string>),
+};
+
+const invokePost = (body: unknown) => POST(postJson(body), routeContext);
+
 function postJson(body: unknown): NextRequest {
   return new NextRequest("http://localhost/api/planner/ai-advisor", {
     method: "POST",
@@ -170,7 +176,7 @@ describe("Feature: ai-implementation-audit, Property 4: Planner response conform
     it("response always has success:true and data.content as a string (provider success)", async () => {
       await fc.assert(
         fc.asyncProperty(validBodyArb, async (body) => {
-          const res = await POST(postJson(body));
+          const res = await invokePost(postJson(body));
           expect(res.status).toBe(200);
 
           const json = await res.json();
@@ -185,7 +191,7 @@ describe("Feature: ai-implementation-audit, Property 4: Planner response conform
     it("provider field is a string when present", async () => {
       await fc.assert(
         fc.asyncProperty(validBodyArb, async (body) => {
-          const res = await POST(postJson(body));
+          const res = await invokePost(postJson(body));
           const json = await res.json();
 
           if (json.data.provider !== undefined) {
@@ -199,7 +205,7 @@ describe("Feature: ai-implementation-audit, Property 4: Planner response conform
     it("degraded field is boolean when present", async () => {
       await fc.assert(
         fc.asyncProperty(validBodyArb, async (body) => {
-          const res = await POST(postJson(body));
+          const res = await invokePost(postJson(body));
           const json = await res.json();
 
           if (json.data.degraded !== undefined) {
@@ -220,7 +226,7 @@ describe("Feature: ai-implementation-audit, Property 4: Planner response conform
     it("response always has success:true and data.content as a string (fallback)", async () => {
       await fc.assert(
         fc.asyncProperty(validBodyArb, async (body) => {
-          const res = await POST(postJson(body));
+          const res = await invokePost(postJson(body));
           expect(res.status).toBe(200);
 
           const json = await res.json();

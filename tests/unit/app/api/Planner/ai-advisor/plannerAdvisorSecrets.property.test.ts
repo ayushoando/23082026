@@ -180,6 +180,12 @@ const providerArb = fc.constantFrom("gemini", "openrouter", "openai", "bedrock")
 // Helpers
 // ---------------------------------------------------------------------------
 
+const routeContext: { params: Promise<Record<string, string>> } = {
+  params: Promise.resolve({} as Record<string, string>),
+};
+
+const invokePost = (body: unknown) => POST(postJson(body), routeContext);
+
 function postJson(body: unknown): NextRequest {
   return new NextRequest("http://localhost/api/planner/ai-advisor", {
     method: "POST",
@@ -220,7 +226,7 @@ describe("Feature: ai-implementation-audit, Property 10: Secrets and model ident
           resolveAdvisorModelChain.mockReturnValue([{ provider, label: provider }]);
           requestAdvisorMessages.mockResolvedValue("Here is the advisory text.");
 
-          const res = await POST(postJson(body));
+          const res = await invokePost(postJson(body));
           const text = await res.text();
 
           assertNoSecretLeak(text);
@@ -235,7 +241,7 @@ describe("Feature: ai-implementation-audit, Property 10: Secrets and model ident
           resolveAdvisorModelChain.mockReturnValue([{ provider, label: provider }]);
           requestAdvisorMessages.mockResolvedValue("Advisory content without model ids.");
 
-          const res = await POST(postJson(body));
+          const res = await invokePost(postJson(body));
           const text = await res.text();
 
           // The provider label in data.provider must be a short label, not a model id
@@ -271,7 +277,7 @@ describe("Feature: ai-implementation-audit, Property 10: Secrets and model ident
         fc.asyncProperty(validBodyArb, async (body) => {
           resolveAdvisorModelChain.mockReturnValue([]);
 
-          const res = await POST(postJson(body));
+          const res = await invokePost(postJson(body));
           const text = await res.text();
 
           assertNoSecretLeak(text);
@@ -289,7 +295,7 @@ describe("Feature: ai-implementation-audit, Property 10: Secrets and model ident
             new Error("API call failed: GEMINI_API_KEY=sk-test-key-not-real"),
           );
 
-          const res = await POST(postJson(body));
+          const res = await invokePost(postJson(body));
           const text = await res.text();
 
           // The raw error message with the fake key must not appear in the response
@@ -315,7 +321,7 @@ describe("Feature: ai-implementation-audit, Property 10: Secrets and model ident
           // Bodies missing messages
           fc.constant({}),
           async (body) => {
-            const res = await POST(postJson(body));
+            const res = await invokePost(postJson(body));
             const text = await res.text();
             assertNoSecretLeak(text);
           },

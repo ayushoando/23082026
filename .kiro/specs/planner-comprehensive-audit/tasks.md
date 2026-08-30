@@ -112,11 +112,11 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
   - [x] 2.8 Implement atomic revision compare-and-swap behavior
     - Require `expectedRevision`, increment once on success, preserve `createdAt`, update `updatedAt`, and return safe conflict metadata without changing a newer record.
     - _Requirements: 4.4, 5.8, 13.2, 13.4_
-  - [-] 2.9 Implement owner-scoped idempotent create/save/delete behavior
+  - [ ] 2.9 Implement owner-scoped idempotent create/save/delete behavior
     - Scope opaque bounded keys by owner/operation/project, store a request fingerprint and result, replay identical outcomes once, and conflict on different-fingerprint reuse.
     - Use atomic disk sidecar/write-rename behavior and transaction-safe Supabase behavior supported by repository evidence.
     - _Requirements: 13.3_
-  - [~] 2.10 Implement schema compatibility and deterministic deletion semantics
+  - [ ] 2.10 Implement schema compatibility and deterministic deletion semantics
     - Validate current versions, purely migrate known older versions in memory, preserve unsupported source records, and exclude successfully deleted records from subsequent owner list/load results.
     - Reconcile the final persistence contract with workstream 4 at Gate C before regression integration.
     - _Requirements: 4.5, 13.6, 13.7, 14.6_
@@ -141,11 +141,11 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - Generate current, known-old, and unsupported versions and verify validation/migration or unchanged source with explicit unsupported result.
     - **Validates: Requirements 13.1, 13.7, 14.6**
 
-- [~] 3. Workstream 3 — Remediate UI/UX, responsive, input, and accessibility behavior
+- [ ] 3. Workstream 3 — Remediate UI/UX, responsive, input, and accessibility behavior
   - [x] 3.1 Remediate `/ooplanner` and project-route entry, list, and routing behavior
     - Produce deterministic guest/authenticated entry states, project-list loading/empty/error states, reachable next actions, and thin App Router entries with business logic in Planner-owned modules.
     - _Requirements: 2.1, 4.1, 5.1-5.3, 10.1-10.3_
-  - [-] 3.2 Remediate create, load, edit, save, and delete workflows against the Gate B contracts
+  - [ ] 3.2 Remediate create, load, edit, save, and delete workflows against the Gate B contracts
     - Initialize valid defaults, restore all view-independent content, save one coherent revision, require delete confirmation, and return deterministic post-delete state.
     - Fix every verified dead end, stale selection, incorrect metadata, or data-loss path discovered by the traces without rewriting geometry/persistence or API contract owner files.
     - _Requirements: 2.1, 4.2-4.5, 13.1, 13.2, 13.6_
@@ -153,22 +153,22 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - Distinguish default, loading, empty, success, validation, server, unauthenticated, forbidden, rate-limited, conflict, stale, offline, and recovery states where applicable.
     - Give each state an accessible status, focus target, memory-preservation rule, and deterministic next/recovery action; clear obsolete errors after successful retry.
     - _Requirements: 4.8, 5.1-5.8_
-  - [~] 3.4 Remediate failure-safe editing, unsaved navigation, offline, conflict, and reauthentication behavior
+  - [ ] 3.4 Remediate failure-safe editing, unsaved navigation, offline, conflict, and reauthentication behavior
     - Retain the last valid in-memory document after failed edits/requests, gate destructive replacement behind explicit decisions, and never silently overwrite newer persisted data.
     - _Requirements: 4.6-4.8, 5.6-5.8, 10.8_
-  - [~] 3.5 Write property-based test for valid project initialization
+  - [ ] 3.5 Write property-based test for valid project initialization
     - **Property 6: Valid project initialization**
     - Generate valid owners and creation inputs and verify editable defaults, schema version, revision 1, coherent timestamps, and valid geometry.
     - **Validates: Requirements 4.2, 13.1, 13.2**
-  - [~] 3.6 Write property-based test for failure-safe UI state
+  - [ ] 3.6 Write property-based test for failure-safe UI state
     - **Property 7: Failure-safe UI state**
     - Generate failed edit/save/offline/reauth/stale transitions and verify unsaved state survives, replacement is explicit, and later success clears obsolete errors.
     - **Validates: Requirements 4.6, 4.8, 5.6, 5.7, 5.8, 10.8**
-  - [~] 3.7 Write property-based test for required state completeness
+  - [ ] 3.7 Write property-based test for required state completeness
     - **Property 8: Required state completeness**
     - Generate workflow/state applicability sets and verify distinct presentation, status, focus, and deterministic recovery mappings.
     - **Validates: Requirements 5.1, 5.5**
-  - [~] 3.8 Write property-based test for form value preservation
+  - [ ] 3.8 Write property-based test for form value preservation
     - **Property 9: Form value preservation**
     - Generate mixed valid/invalid project and handoff forms and verify all invalid fields are associated while valid values remain unchanged and no submission occurs.
     - **Validates: Requirements 5.4, 8.5, 15.3, 15.4**
@@ -195,28 +195,28 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - Add correct names, roles, values, states, relationships, alternatives, field instructions/errors, live-region behavior, canvas-accessible command/list representations, and timeout recovery.
     - Correct every verified keyboard, focus-order, focus-obscuring, or target-size defect.
     - _Requirements: 2.1, 2.2, 8.1, 8.2, 8.4, 8.5, 8.8_
-  - [~] 3.15 Remediate Planner visual states through Planner-local FOCSS and Phosphor abstractions
+  - [ ] 3.15 Remediate Planner visual states through Planner-local FOCSS and Phosphor abstractions
     - Correct semantic tokens, contrast, spacing, typography, elevation, borders, radii, icon/label/status alignment, and disabled/selected/hover/focus/pressed/invalid/busy states.
     - Add a Planner-zone pattern only when no existing pattern fits; never import Studio FOCSS, use raw visual values where a semantic token exists, or introduce inline/Lucide icons.
     - _Requirements: 2.2, 8.3, 9.1-9.4, 9.6, 9.7_
-  - [~] 3.16 Remediate overflow, 200% reflow, reduced motion, and viewport accessibility
+  - [ ] 3.16 Remediate overflow, 200% reflow, reduced motion, and viewport accessibility
     - Preserve full values via wrapping, expansion, or accessible disclosure; preserve all chrome operations at 200% zoom except bounded canvas panning; suppress non-essential motion without hiding feedback.
     - _Requirements: 8.6, 8.7, 9.5_
-  - [~] 3.17 Write property-based test for accessible control completeness
+  - [ ] 3.17 Write property-based test for accessible control completeness
     - **Property 12: Accessible control completeness**
     - Generate interactive controls and declared states and verify semantic metadata and distinguishable semantic/visual mappings.
     - **Validates: Requirements 8.2, 9.6**
-  - [~] 3.18 Write property-based test for accessible overflow disclosure
+  - [ ] 3.18 Write property-based test for accessible overflow disclosure
     - **Property 13: Accessible overflow disclosure**
     - Generate values and constrained regions and verify the complete value remains available through wrapping, expansion, or accessible disclosure.
     - **Validates: Requirements 9.5**
-  - [~] 3.19 Remediate guest catalog browsing, selection continuity, and response minimization
+  - [ ] 3.19 Remediate guest catalog browsing, selection continuity, and response minimization
     - Expose only approved public furniture/product fields, preserve guest selection through guest-accessible planning context, and prevent project/owner data or project-operation capability from crossing the boundary.
     - _Requirements: 10.1, 10.3, 15.1, 15.2, 15.7_
-  - [~] 3.20 Remediate lead handoff validation, draft recovery, and stable confirmation
+  - [ ] 3.20 Remediate lead handoff validation, draft recovery, and stable confirmation
     - Validate contact, consent, and inquiry fields; preserve valid draft values on validation/server failure; provide retry and a stable non-secret handoff reference on success without granting project access.
     - _Requirements: 10.2, 15.3-15.7_
-  - [~] 3.21 Write property-based test for guest boundary integrity
+  - [ ] 3.21 Write property-based test for guest boundary integrity
     - **Property 23: Guest boundary integrity**
     - Generate guest catalog selections and handoff outcomes and verify public context/drafts/confirmation survive while restricted data and project capability never appear.
     - **Validates: Requirements 10.1, 10.2, 15.1, 15.2, 15.5, 15.6, 15.7**
@@ -252,33 +252,33 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - **Property 17: Safe structured errors**
     - Generate internal exceptions and sensitive payload fragments and verify stable safe errors, correlation ids, and prohibited-data exclusion.
     - **Validates: Requirements 11.8, 11.9**
-  - [-] 4.9 Implement the schema-gap decision record from live Admin migration, type, and adapter evidence
+  - [ ] 4.9 Implement the schema-gap decision record from live Admin migration, type, and adapter evidence
     - Determine whether revision, schema version, idempotency, constraints, RLS, grants, or indexes already satisfy the contract; bind the decision and exact evidence to findings.
     - Do not inspect hosted schema or claim remote state in this repository-edit lane. This task is required and controls, but does not make optional, task 4.10.
     - _Requirements: 14.1, 14.2, 14.6, 14.10, 19.4_
-  - [~] 4.10 If and only if task 4.9 verifies a schema defect, create the reversible Admin migration and repository-side contract changes
+  - [ ] 4.10 If and only if task 4.9 verifies a schema defect, create the reversible Admin migration and repository-side contract changes
     - Write under `site/platform/supabase/migrations.admin/`, target `oando_plans`/owner-scoped idempotency only, preserve/transform existing rows deterministically, and include dependency-safe `-- rollback`, least-privilege grants, indexes/constraints, and authenticated owner RLS.
     - Keep application-level owner checks and server-only service-role boundaries; do not touch Products migrations or apply the migration. If 4.9 proves no schema defect, record the evidenced no-migration branch instead of treating this task as optional.
     - _Requirements: 14.1-14.6_
-  - [~] 4.11 Add static/integration tests for any created migration and record its pending generated-type workflow
+  - [ ] 4.11 Add static/integration tests for any created migration and record its pending generated-type workflow
     - Verify SQL placement, forward/rollback structure, deterministic transformation, policies, grants, and compatibility expectations in code when a migration exists; otherwise test/record the evidenced no-migration decision.
     - Record `pnpm run db:apply:admin -- --dry` before application and `pnpm run db:types:admin` after authorized application without claiming either ran.
     - _Requirements: 14.3-14.10, 18.4, 18.5, 19.5, 19.6_
 
-- [~] 5. Workstream 5 — Implement observability, performance, and regression evidence
+- [ ] 5. Workstream 5 — Implement observability, performance, and regression evidence
   - [x] 5.1 Instrument API and persistence operations with bounded Planner metrics and structured events after Gate B
     - Reuse the existing observability registry for request/error counts, duration, rate limits, authorization denials, and persistence failures with bounded operation/method/result/status/persistence-mode labels.
     - Implement instrumentation hooks in workstream 5-owned modules and propagate one opaque correlation id through response, API, persistence, and client-visible server errors. Consume workstreams 2 and 4 contracts read-only; any required call-site edit is handed to that file's owner for serial integration.
     - _Requirements: 17.1-17.4_
-  - [-] 5.2 Implement redaction and exporter-failure isolation
+  - [ ] 5.2 Implement redaction and exporter-failure isolation
     - Exclude contact data, owner/project identifiers and content, geometry, bodies, tokens, cookies, credentials, secrets, free-form errors, and identifier-bearing URLs from logs/labels.
     - Make export failure preserve the user and persistence result while sending the same redacted event to the approved fallback sink.
     - _Requirements: 17.5-17.7_
-  - [~] 5.3 Write property-based test for correlation and privacy preservation
+  - [ ] 5.3 Write property-based test for correlation and privacy preservation
     - **Property 24: Correlation and privacy preservation**
     - Generate operations and prohibited values and verify one correlation id propagates unchanged while all sensitive/high-cardinality values are absent.
     - **Validates: Requirements 17.1, 17.3, 17.4, 17.5**
-  - [~] 5.4 Write property-based test for observability failure isolation
+  - [ ] 5.4 Write property-based test for observability failure isolation
     - **Property 25: Observability failure isolation**
     - Generate exporter failures and operation outcomes and verify user/persistence results remain unchanged and the redacted fallback event is emitted.
     - **Validates: Requirements 17.6**
@@ -286,7 +286,7 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - Cover room boundary, at least ten furniture objects, rotation, dimensions, labels, metadata, route LCP/CLS, non-canvas INP, canvas FPS, direct feedback, API latency, and 20-cycle listener/subscription cleanup.
     - Record viewport/orientation/input/browser/device/CPU/network fixture, warm/cold status, sample count, method, and evidence class without claiming unexecuted browser or integration results.
     - _Requirements: 16.1-16.7, 18.1, 19.4_
-  - [~] 5.6 Remediate every evidenced performance-budget or cleanup defect after required product remediation and capture comparable before/after definitions
+  - [ ] 5.6 Remediate every evidenced performance-budget or cleanup defect after required product remediation and capture comparable before/after definitions
     - At Gate D, return each measured bottleneck to the exclusive product-file owner, require the smallest serial remediation, preserve behavior, and accept the handback only after its measured value, profile, bottleneck evidence, remediation, and exact pending/observed verification are bound to the finding.
     - Defect remediation is required; if no authorized measurement exists, retain the candidate as validation-pending rather than asserting compliance.
     - _Requirements: 2.1, 2.6, 16.1-16.8_
@@ -294,35 +294,35 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - **Property 26: Performance finding completeness**
     - Generate missed-budget findings and verify measured value, complete supported profile, bottleneck evidence, and remediation status are mandatory.
     - **Validates: Requirements 16.8**
-  - [~] 5.8 Expand automated browser/device profiles beyond the required representative profiles
+  - [ ] 5.8 Expand automated browser/device profiles beyond the required representative profiles
     - Add non-duplicative cross-browser/device cases only after required profiles and remediations are covered; do not make these extra profiles a prerequisite for closing already proven findings.
     - _Requirements: 6.1, 7.1, 8.1, 16.1-16.7_
-  - [~] 5.9 Add targeted unit and integration regression tests for every remediated finding after Gate D
+  - [ ] 5.9 Add targeted unit and integration regression tests for every remediated finding after Gate D
     - Cover geometry, commands, state transitions, API middleware order, owner scope, adapters, revision/idempotency/schema behavior, guest handoff, observability, migration transformations when present, and all defect-specific edge cases.
     - Tag/link tests to finding ids, source paths, requirements, and evidence class. Use distinct concern-specific test files or wait for explicit serial file transfer; never edit a workstream-owned test file concurrently.
     - _Requirements: 2.6, 18.1, 18.5, 19.1-19.4_
-  - [~] 5.10 Add targeted browser specifications for rendered behavior that static tests cannot prove
+  - [ ] 5.10 Add targeted browser specifications for rendered behavior that static tests cannot prove
     - Cover representative desktop/tablet/phone layouts, resize/orientation context, touch/keyboard parity, focus movement/restoration, dialogs, 200% reflow, reduced motion, contrast/visual states, offline/conflict recovery, accessibility, and required performance profiles.
     - Author tests only; execution remains protected validation.
     - _Requirements: 5.1-5.8, 6.1-6.7, 7.1-7.7, 8.1-8.8, 9.2-9.6, 16.1-16.7, 18.5_
-  - [~] 5.11 Implement the change-derived validation manifest and evidence recorder
+  - [ ] 5.11 Implement the change-derived validation manifest and evidence recorder
     - Derive the narrowest applicable exact repository-root commands from the frozen changed paths/findings, including fork, FOCSS, UI lint/token, typecheck, targeted Vitest/Playwright/accessibility/performance, migration dry-run/types, and full gate only when applicable.
     - Exclude `typecheck:scripts`; store authorization, hook decision, exit status, output limitation, evidence class, and unverified behavior, and leave every unexecuted command without pass/fail.
     - _Requirements: 18.1-18.9, 19.4-19.6_
-  - [~] 5.12 Write property-based test for authorization-gated validation
+  - [ ] 5.12 Write property-based test for authorization-gated validation
     - **Property 27: Authorization-gated validation**
     - Generate protected/hosted actions and authorization/hook states and verify execution eligibility only when both permissions exist, otherwise exact pending action and no result claim.
     - **Validates: Requirements 14.10, 18.2, 18.3, 18.4, 18.9, 19.5, 19.6**
-  - [~] 5.13 Write property-based test for change-derived validation planning
+  - [ ] 5.13 Write property-based test for change-derived validation planning
     - **Property 28: Change-derived validation plan**
     - Generate finding categories and changed paths and verify all narrow triggered checks, fork/FOCSS/type rules, and exclusion of `typecheck:scripts`.
     - **Validates: Requirements 18.1, 18.5, 18.6, 18.7, 18.8**
-  - [~] 5.14 Write property-based test for evidence-class separation
+  - [ ] 5.14 Write property-based test for evidence-class separation
     - **Property 29: Evidence-class separation**
     - Generate evidence records and verify exactly one repository/browser/integration/hosted/deployment class with no promotion from static evidence.
     - **Validates: Requirements 17.7, 19.4**
 
-- [~] 6. Final checkpoint
+- [ ] 6. Final checkpoint
   - Reconcile observed results only for exact checks authorized in the current session and permitted by the enabled hook; list every unauthorized or unexecuted check as pending without a pass/fail claim.
   - Confirm every required task, property test, remediation handback, ownership transfer, and contract handoff is closed or carries the exact permitted pending/blocker classification before generating the final completion record.
   - Keep hosted operations separate from repository validation and leave them unexecuted unless the repository owner separately authorizes the exact action.

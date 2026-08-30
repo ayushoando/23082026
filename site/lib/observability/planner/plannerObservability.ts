@@ -1,9 +1,38 @@
-import type { PlannerEndpointId, PlannerHttpMethod } from "@planner/lib/plannerEndpointContract";
+import {
+  PLANNER_ENDPOINT_DESCRIPTORS,
+  type PlannerEndpointId,
+  type PlannerHttpMethod,
+} from "@planner/lib/plannerEndpointContract";
 import type { PlannerPersistenceMode } from "@planner/lib/plannerPersistenceMode";
 
 export const PLANNER_OBSERVABILITY_EVENT_NAME = "planner.operation.completed" as const;
 export const PLANNER_CORRELATION_HEADER = "x-correlation-id" as const;
 export const PLANNER_OBSERVABILITY_MAX_DURATION_MS = 300_000;
+
+/**
+ * These are the only fields permitted in a Planner operation event. Keep this
+ * list separate from the TypeScript interface because event values can cross a
+ * runtime boundary before they reach an exporter.
+ */
+export const PLANNER_OBSERVABILITY_ALLOWED_FIELDS = [
+  "eventName",
+  "operation",
+  "method",
+  "result",
+  "status",
+  "persistenceMode",
+  "durationMs",
+  "correlationId",
+] as const;
+
+/** Bounded metric labels; correlation ids intentionally never become labels. */
+export const PLANNER_OBSERVABILITY_METRIC_LABEL_NAMES = [
+  "operation",
+  "method",
+  "result",
+  "status",
+  "persistence_mode",
+] as const;
 
 export const PLANNER_PERSISTENCE_OPERATIONS = [
   "planner.persistence.list",
@@ -72,10 +101,77 @@ export interface PlannerObservabilityDependencies {
   readonly now?: () => number;
 }
 
+const PLANNER_ENDPOINT_OPERATION_SET = new Set<string>(
+  PLANNER_ENDPOINT_DESCRIPTORS.map(({ id }) => id),
+);
+const PLANNER_PERSISTENCE_OPERATION_SET = new Set<string>(
+  PLANNER_PERSISTENCE_OPERATIONS,
+);
+const PLANNER_METHOD_SET = new Set<string>([
+  "GET",
+  "POST",
+  "PATCH",
+  "DELETE",
+  "INTERNAL",
+]);
+const PLANNER_RESULT_SET = new Set<string>([
+  "success",
+  "rejected",
+  "rate-limited",
+  "authorization-denied",
+  "persistence-failure",
+  "error",
+]);
+const PLANNER_STATUS_SET = new Set<string>([
+  "2xx",
+  "4xx",
+  "5xx",
+  "other",
+  "not-applicable",
+]);
+const PLANNER_PERSISTENCE_MODE_SET = new Set<string>([
+  "disk",
+  "supabase",
+  "not-applicable",
+]);
 const CORRELATION_ID_PATTERN = /^[A-Za-z0-9._~-]{8,64}$/;
 
-export function isPlannerCorrelationId(value: string): boolean {
-  return CORRELATION_ID_PATTERN.test(value);
+function isApprovedEnumValue(
+  value: unknown,
+  approvedValues: ReadonlySet<string>,
+): value is string {
+  return typeof value === "string" && approvedValues.has(value);
+}
+
+function isPlannerObservedOperation(
+  value: unknown,
+): value is PlannerObservedOperation {
+  return (
+    isApprovedEnumValue(value, PLANNER_ENDPOINT_OPERATION_SET) ||
+    isApprovedEnumValue(value, PLANNER_PERSISTENCE_OPERATION_SET)
+  );
+}
+
+function isPlannerObservedMethod(value: unknown): value is PlannerObservedMethod {
+  return isApprovedEnumValue(value, PLANNER_METHOD_SET);
+}
+
+function isPlannerObservedResult(value: unknown): value is PlannerObservedResult {
+  return isApprovedEnumValue(value, PLANNER_RESULT_SET);
+}
+
+function isPlannerObservedStatus(value: unknown): value is PlannerObservedStatus {
+  return isApprovedEnumValue(value, PLANNER_STATUS_SET);
+}
+
+function isPlannerObservedPersistenceMode(
+  value: unknown,
+): value is PlannerObservedPersistenceMode {
+  return isApprovedEnumValue(value, PLANNER_PERSISTENCE_MODE_SET);
+}
+
+export function isPlannerCorrelationId(value: unknown): value is string {
+  return typeof value === "string" && CORRELATION_ID_PATTERN.test(value);
 }
 
 export function clampPlannerDuration(durationMs: number): number {
@@ -114,8 +210,15 @@ export function plannerResultFromHttpStatus(
 export function createPlannerOperationEvent(
   input: PlannerOperationEventInput,
 ): PlannerOperationEvent {
-  if (!isPlannerCorrelationId(input.correlationId)) {
-    throw new Error("Planner observability requires a bounded opaque correlation id");
+  if (
+    !isPlannerObservedOperation(input.operation) ||
+    !isPlannerObservedMethod(input.method) ||
+    !isPlannerObservedResult(input.result) ||
+    !isPlannerObservedStatus(input.status) ||
+    !isPlannerObservedPersistenceMode(input.persistenceMode) ||
+    !isPlannerCorrelationId(input.correlationId)
+  ) {
+    throw new Error("Planner observability event contains an unapproved value");
   }
   return Object.freeze({
     eventName: PLANNER_OBSERVABILITY_EVENT_NAME,
@@ -130,17 +233,36 @@ export function createPlannerOperationEvent(
 }
 
 /**
+ * Runtime shape check for events crossing an instrumentation/export boundary.
+ * Extra properties are deliberately ignored and removed by the redactor.
+ */
+export function isPlannerOperationEvent(
+  value: unknown,
+): value is PlannerOperationEvent {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const candidate = value as Record<string, unknown>;
+  return (
+    candidate.eventName === PLANNER_OBSERVABILITY_EVENT_NAME &&
+    isPlannerObservedOperation(candidate.operation) &&
+    isPlannerObservedMethod(candidate.method) &&
+    isPlannerObservedResult(candidate.result) &&
+    isPlannerObservedStatus(candidate.status) &&
+    isPlannerObservedPersistenceMode(candidate.persistenceMode) &&
+    typeof candidate.durationMs === "number" &&
+    isPlannerCorrelationId(candidate.correlationId)
+  );
+}
+
+/**
  * Rebuild the event from the bounded allowlist before it reaches any exporter.
  * Planner observability never accepts request bodies, URLs, errors, cookies,
- * credentials, project data, or caller-supplied labels.
+ * credentials, project data, geometry, contact values, or caller-supplied
+ * labels.
  */
 export function redactPlannerOperationEvent(
-  event: PlannerOperationEvent,
+  event: unknown,
 ): PlannerOperationEvent {
-  if (
-    event.eventName !== PLANNER_OBSERVABILITY_EVENT_NAME ||
-    !isPlannerCorrelationId(event.correlationId)
-  ) {
+  if (!isPlannerOperationEvent(event)) {
     throw new Error("Planner observability event failed privacy validation");
   }
   return createPlannerOperationEvent({

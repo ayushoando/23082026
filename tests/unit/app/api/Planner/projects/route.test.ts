@@ -178,6 +178,12 @@ const sampleProject = {
   updatedAt: "2026-07-31T12:00:00.000Z",
 };
 
+const routeContext: { params: Promise<Record<string, string>> } = {
+  params: Promise.resolve({} as Record<string, string>),
+};
+const invokeGet = (request: NextRequest) => GET(request, routeContext);
+const invokePost = (request: NextRequest) => POST(request, routeContext);
+
 describe("app/api/Planner/projects/route.ts", () => {
   const originalBypass = process.env.DEV_AUTH_BYPASS;
   const originalNodeEnv = process.env.NODE_ENV;
@@ -215,7 +221,7 @@ describe("app/api/Planner/projects/route.ts", () => {
     it("returns 200 with the project list (wrapped in data envelope)", async () => {
       mockListPlannerProjects.mockResolvedValue({ ok: true, status: 200, data: [sampleProject] });
 
-      const res = await GET(getReq());
+      const res = await invokeGet(getReq());
       expect(res.status).toBe(200);
       const body = await res.json();
       expect(body.success).toBe(true);
@@ -226,7 +232,7 @@ describe("app/api/Planner/projects/route.ts", () => {
     it("returns 200 with an empty array when no projects exist", async () => {
       mockListPlannerProjects.mockResolvedValue({ ok: true, status: 200, data: [] });
 
-      const res = await GET(getReq());
+      const res = await invokeGet(getReq());
       expect(res.status).toBe(200);
       const body = await res.json();
       expect(body.success).toBe(true);
@@ -242,7 +248,7 @@ describe("app/api/Planner/projects/route.ts", () => {
         },
       } as never);
 
-      const res = await GET(getReq());
+      const res = await invokeGet(getReq());
       expect(res.status).toBe(401);
       expect(mockListPlannerProjects).not.toHaveBeenCalled();
     });
@@ -261,7 +267,7 @@ describe("app/api/Planner/projects/route.ts", () => {
       } as never);
       mockListPlannerProjects.mockResolvedValue({ ok: true, status: 200, data: [sampleProject] });
 
-      const res = await GET(getReq());
+      const res = await invokeGet(getReq());
       expect(res.status).toBe(200);
       const body = await res.json();
       expect(body.success).toBe(true);
@@ -277,7 +283,7 @@ describe("app/api/Planner/projects/route.ts", () => {
 
     it("returns 429 when rate limited", async () => {
       vi.mocked(rateLimit).mockResolvedValue(rateLimitResult({ success: false, reset: 99 }));
-      const res = await GET(getReq());
+      const res = await invokeGet(getReq());
       expect(res.status).toBe(429);
       const body = await res.json();
       expect(body.error?.code ?? body.success).toBeDefined();
@@ -297,7 +303,7 @@ describe("app/api/Planner/projects/route.ts", () => {
       const newProject = { ...sampleProject, id: "p_open-plan_abc123", name: "Open Plan" };
       mockCreatePlannerProject.mockResolvedValue({ ok: true, status: 201, data: newProject });
 
-      const res = await POST(
+      const res = await invokePost(
         postJson({
           name: "Open Plan",
           canvas_json: { objects: [{ id: 1 }, { id: 2 }] },
@@ -317,7 +323,7 @@ describe("app/api/Planner/projects/route.ts", () => {
 
     it("returns 403 when CSRF validation fails", async () => {
       vi.mocked(validateCsrfRequest).mockResolvedValue(false);
-      const res = await POST(postJson({ name: "No CSRF", expectedRevision: 0, idempotencyKey: "idem-csrf-test" }));
+      const res = await invokePost(postJson({ name: "No CSRF", expectedRevision: 0, idempotencyKey: "idem-csrf-test" }));
       expect(res.status).toBe(403);
       const body = await res.json();
       expect(body.error?.code).toBe("CSRF_FAILED");
@@ -325,7 +331,7 @@ describe("app/api/Planner/projects/route.ts", () => {
     });
 
     it("returns 400 for malformed JSON body", async () => {
-      const res = await POST(
+      const res = await invokePost(
         new NextRequest("http://localhost/api/Planner/projects", {
           method: "POST",
           headers: { "content-type": "application/json" },

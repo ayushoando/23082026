@@ -143,6 +143,10 @@ const metadataWithSensitiveIssuesArb = fc.record({
 });
 
 /** Metadata with extra properties that must be dropped. */
+const asAdversarialPlannerSafeErrorMetadata = (
+  metadata: unknown,
+): PlannerSafeErrorMetadata => metadata as PlannerSafeErrorMetadata;
+
 const metadataWithExtraFieldsArb = fc.record({
   issues: fc.constant(undefined),
   retryAfterSeconds: fc.option(fc.integer({ min: 0, max: 60 }), { nil: undefined }),
@@ -293,7 +297,9 @@ describe("Property 17: Safe structured errors", () => {
   it("safeMetadata strips extra properties and sanitizes issue strings", () => {
     fc.assert(
       fc.property(metadataWithExtraFieldsArb, (rawMetadata) => {
-        const sanitized = safeMetadata(rawMetadata);
+        const sanitized = safeMetadata(
+          asAdversarialPlannerSafeErrorMetadata(rawMetadata),
+        );
         const keys = Object.keys(sanitized);
         const allowedKeys = new Set([
           "issues",
@@ -319,7 +325,9 @@ describe("Property 17: Safe structured errors", () => {
   it("sanitizes issue strings to remove file paths, stack trace lines, and JWT tokens", () => {
     fc.assert(
       fc.property(metadataWithSensitiveIssuesArb, (rawMetadata) => {
-        const sanitized = safeMetadata(rawMetadata);
+        const sanitized = safeMetadata(
+          asAdversarialPlannerSafeErrorMetadata(rawMetadata),
+        );
         if (sanitized.issues) {
           for (const issue of sanitized.issues) {
             // Absolute file paths must be replaced with [path]
@@ -371,7 +379,12 @@ describe("Property 17: Safe structured errors", () => {
         correlationIdArb,
         metadataWithSensitiveIssuesArb,
         async (code, correlationId, rawMetadata) => {
-          const response = plannerApiFailure(code, correlationId, 500, rawMetadata);
+          const response = plannerApiFailure(
+            code,
+            correlationId,
+            500,
+            asAdversarialPlannerSafeErrorMetadata(rawMetadata),
+          );
           const payload = (await response.json()) as PlannerApiFailure;
 
           // Code is always a known stable code
@@ -429,7 +442,10 @@ describe("Property 17: Safe structured errors", () => {
         fc.oneof(stableCodeArb, unknownCodeArb),
         metadataWithSensitiveIssuesArb,
         (code, rawMetadata) => {
-          const result = sanitizeOperationFailure({ code, metadata: rawMetadata });
+          const result = sanitizeOperationFailure({
+            code,
+            metadata: asAdversarialPlannerSafeErrorMetadata(rawMetadata),
+          });
 
           // Code is always stable
           expect(PLANNER_STABLE_ERROR_CODES.has(result.code)).toBe(true);

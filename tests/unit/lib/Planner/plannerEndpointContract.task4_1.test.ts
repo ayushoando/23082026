@@ -143,6 +143,8 @@ describe("Planner Task 4.1 compatible client adapters", () => {
         gstInr: 0,
         totalInr: 0,
       },
+      consent: true as const,
+      inquiryType: "quote" as const,
       idempotencyKey: "handoff-1",
     };
     await expect(submitPlannerHandoff(payload)).resolves.toMatchObject({

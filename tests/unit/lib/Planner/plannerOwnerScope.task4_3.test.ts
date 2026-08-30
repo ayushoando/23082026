@@ -447,7 +447,6 @@ describe("Task 4.3: Server-derived owner scope and session-expiry handling", () 
       expect(isPlannerSessionExpiryResponse({
         code: payload.error.code,
         recovery: payload.error.recovery,
-        correlationId: payload.correlationId,
       })).toBe(true);
       expect(operation.invoke).not.toHaveBeenCalled();
     });
@@ -481,7 +480,13 @@ describe("Task 4.3: Server-derived owner scope and session-expiry handling", () 
       });
 
       expect(operation.invoke).toHaveBeenCalledOnce();
-      expect(capturedContext?.ownerScope).toEqual({
+      const receivedContext = capturedContext as {
+        ownerScope: { ownerId: string; source: string } | null;
+      } | null;
+      if (receivedContext === null) {
+        throw new Error("The operation did not receive a Planner request context.");
+      }
+      expect(receivedContext.ownerScope).toEqual({
         ownerId: "server-owner-123",
         source: "verified-server-session",
       });

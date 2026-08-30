@@ -107,6 +107,12 @@ function validBody(overrides: Record<string, unknown> = {}) {
   };
 }
 
+const routeContext: { params: Promise<Record<string, string>> } = {
+  params: Promise.resolve({} as Record<string, string>),
+};
+
+const invokePost = (body: unknown) => POST(postJson(body), routeContext);
+
 function postJson(body: unknown) {
   return new NextRequest("http://localhost/api/Planner/handoff", {
     method: "POST",
@@ -128,7 +134,7 @@ describe("app/api/Planner/handoff/route.ts", () => {
   });
 
   it("returns validation error for empty name", async () => {
-    const res = await POST(
+    const res = await invokePost(
       postJson(validBody({ contact: { name: "", email: "x@y.com" } })),
     );
     expect(res.status).toBe(400);
@@ -138,7 +144,7 @@ describe("app/api/Planner/handoff/route.ts", () => {
   });
 
   it("returns 200 with referenceId on success", async () => {
-    const res = await POST(postJson(validBody()));
+    const res = await invokePost(postJson(validBody()));
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.success).toBe(true);
@@ -154,7 +160,7 @@ describe("app/api/Planner/handoff/route.ts", () => {
       code: "handoff_not_configured",
       message: "not configured",
     });
-    const res = await POST(postJson(validBody({ idempotencyKey: "idem-503" })));
+    const res = await invokePost(postJson(validBody({ idempotencyKey: "idem-503" })));
     expect(res.status).toBe(503);
     const body = await res.json();
     expect(body.success).toBe(false);
@@ -167,7 +173,7 @@ describe("app/api/Planner/handoff/route.ts", () => {
       code: "handoff_persist_failed",
       message: "db down",
     });
-    const res = await POST(postJson(validBody({ idempotencyKey: "idem-500" })));
+    const res = await invokePost(postJson(validBody({ idempotencyKey: "idem-500" })));
     expect(res.status).toBe(500);
   });
 });

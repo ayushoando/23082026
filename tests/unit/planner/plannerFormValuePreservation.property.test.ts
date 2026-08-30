@@ -96,7 +96,12 @@ describe("Feature: planner-comprehensive-audit, Property 9: Form value preservat
           "idempotencyKey",
         ),
         (validHandoff, invalidField) => {
-          const input = structuredClone(validHandoff);
+          const input = structuredClone(validHandoff) as {
+            contact: { name: string; email: string };
+            boq: { projectName: string };
+            consent: boolean;
+            idempotencyKey: string;
+          };
           switch (invalidField) {
             case "contact.name":
               input.contact.name = "";

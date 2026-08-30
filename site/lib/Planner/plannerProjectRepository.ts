@@ -17,6 +17,7 @@ export const PLANNER_PROJECT_SCHEMA_VERSION = 1 as const;
 export const PLANNER_PROJECT_KNOWN_OLD_SCHEMA_VERSION = 0 as const;
 export const PLANNER_REPOSITORY_CONTRACT_VERSION = 1 as const;
 export const PLANNER_IDEMPOTENCY_KEY_MAX_LENGTH = 120 as const;
+export const PLANNER_REQUEST_FINGERPRINT_MAX_LENGTH = 256 as const;
 
 export type PlannerProjectStatusV1 = "draft" | "active" | "archived";
 
@@ -84,6 +85,7 @@ export type PlannerRepositoryResultV1<T> =
       code: PlannerRepositoryErrorCodeV1;
       message: string;
       currentRevision?: number;
+      replayed?: boolean;
     };
 
 export interface PlannerProjectRepositoryV1 {

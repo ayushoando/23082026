@@ -49,12 +49,33 @@ vi.mock("@planner/lib/plannerApi", () => ({
   fileUrl: (path: string | null) => path,
   PlannerApiError: class PlannerApiError extends Error {
     readonly status: number;
+    readonly code: string;
     readonly detail: string | undefined;
-    constructor(status: number, message: string, detail?: string) {
+    readonly correlationId: string | undefined;
+    readonly currentRevision: number | undefined;
+    readonly retryAfterSeconds: number | undefined;
+    readonly recovery: "reauthenticate-preserve-unsaved" | undefined;
+    constructor(
+      status: number,
+      code: string,
+      message: string,
+      options: {
+        detail?: string;
+        correlationId?: string;
+        currentRevision?: number;
+        retryAfterSeconds?: number;
+        recovery?: "reauthenticate-preserve-unsaved";
+      } = {},
+    ) {
       super(message);
       this.name = "PlannerApiError";
       this.status = status;
-      this.detail = detail;
+      this.code = code;
+      this.detail = options.detail;
+      this.correlationId = options.correlationId;
+      this.currentRevision = options.currentRevision;
+      this.retryAfterSeconds = options.retryAfterSeconds;
+      this.recovery = options.recovery;
     }
     get isUnauthorized() { return this.status === 401; }
     get isForbidden() { return this.status === 403; }
@@ -359,7 +380,9 @@ describe("Planner editor load-state integration", () => {
     mockParams.current = { id: "p_invalid" };
     const { PlannerApiError } = await import("@planner/lib/plannerApi");
     mockGetProject.mockRejectedValue(
-      new PlannerApiError(404, "RESOURCE_NOT_FOUND", "Project not found", "Project not found"),
+      new PlannerApiError(404, "RESOURCE_NOT_FOUND", "Project not found", {
+        detail: "Project not found",
+      }),
     );
 
     render(<Planner />);
@@ -380,7 +403,9 @@ describe("Planner editor load-state integration", () => {
     mockParams.current = { id: "demo-plan" };
     const { PlannerApiError } = await import("@planner/lib/plannerApi");
     mockGetProject.mockRejectedValue(
-      new PlannerApiError(401, "AUTH_REQUIRED", "Authentication required", "Authentication required"),
+      new PlannerApiError(401, "AUTH_REQUIRED", "Authentication required", {
+        detail: "Authentication required",
+      }),
     );
 
     render(<Planner />);
@@ -404,7 +429,9 @@ describe("Planner editor load-state integration", () => {
     mockParams.current = { id: "p_forbidden" };
     const { PlannerApiError } = await import("@planner/lib/plannerApi");
     mockGetProject.mockRejectedValue(
-      new PlannerApiError(403, "INSUFFICIENT_PERMISSIONS", "Insufficient permissions", "Insufficient permissions"),
+      new PlannerApiError(403, "INSUFFICIENT_PERMISSIONS", "Insufficient permissions", {
+        detail: "Insufficient permissions",
+      }),
     );
 
     render(<Planner />);
@@ -421,7 +448,9 @@ describe("Planner editor load-state integration", () => {
     mockParams.current = { id: "p_transient" };
     const { PlannerApiError } = await import("@planner/lib/plannerApi");
     mockGetProject.mockRejectedValue(
-      new PlannerApiError(503, "SERVICE_UNAVAILABLE", "Service unavailable", "Service unavailable"),
+      new PlannerApiError(503, "SERVICE_UNAVAILABLE", "Service unavailable", {
+        detail: "Service unavailable",
+      }),
     );
 
     render(<Planner />);
@@ -435,7 +464,9 @@ describe("Planner editor load-state integration", () => {
     // Retry: clicking Try again should re-invoke getProject
     mockGetProject.mockClear();
     mockGetProject.mockRejectedValue(
-      new PlannerApiError(503, "SERVICE_UNAVAILABLE", "Service unavailable", "Service unavailable"),
+      new PlannerApiError(503, "SERVICE_UNAVAILABLE", "Service unavailable", {
+        detail: "Service unavailable",
+      }),
     );
 
     await act(async () => {
@@ -467,7 +498,9 @@ describe("Planner editor load-state integration", () => {
     mockParams.current = { id: "p_missing" };
     const { PlannerApiError } = await import("@planner/lib/plannerApi");
     mockGetProject.mockRejectedValue(
-      new PlannerApiError(404, "RESOURCE_NOT_FOUND", "Not found", "Not found"),
+      new PlannerApiError(404, "RESOURCE_NOT_FOUND", "Not found", {
+        detail: "Not found",
+      }),
     );
 
     render(<Planner />);
