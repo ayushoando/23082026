@@ -5,6 +5,10 @@ import {
 } from "./artifactPaths";
 import { loadAuditConfiguration } from "./config";
 import {
+  discoverCanonicalInventory,
+  discoveryToAuditRecords,
+} from "./discovery";
+import {
   createImmutableRunInputs,
   readRepositoryRevision,
 } from "./runIdentity";
@@ -87,6 +91,29 @@ export async function runAuditCommand(
       loaded.config,
       immutableRunInputs,
     );
+  }
+
+  if (command === "discover") {
+    const result = await discoverCanonicalInventory({
+      repositoryRoot,
+      discoveredAt: new Date().toISOString(),
+    });
+    const records = discoveryToAuditRecords(result);
+    return {
+      mode: "canonical-discovery",
+      immutableRunInputs,
+      summary: {
+        routes: result.routes.length,
+        dynamicInstances: result.dynamicInstances.length,
+        shells: result.shells.length,
+        conflicts: result.conflicts.length,
+        coverageGaps: result.coverageGaps.length,
+        exclusions: result.exclusions.length,
+        totalRecords: records.length,
+      },
+      discoveredAt: result.discoveredAt,
+      writesPerformed: 0,
+    };
   }
 
   throw new Error(`Unknown audit command: ${command}`);

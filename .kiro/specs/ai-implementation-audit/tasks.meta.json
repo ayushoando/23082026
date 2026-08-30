@@ -14,6 +14,18 @@
         "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
         "timestamp": 1788103321795
       }
+    ],
+    "6.1 Implement the planner advisor handler and route with withAuth guardrails": [
+      {
+        "executionId": "40bcdc06-9f4a-4587-9908-4a9df3ebcdd4",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103508982
+      },
+      {
+        "executionId": "acc18fd9-5ebf-4324-a5ff-0228fcaee7b9",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788104360701
+      }
     ]
   }
 }

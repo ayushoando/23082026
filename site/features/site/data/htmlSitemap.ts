@@ -27,7 +27,14 @@ export type SitemapConceptualOverlap = {
   solutionSection: string;
 };
 
-/** Admin portal routes for the HTML sitemap only — not emitted in public XML sitemap. */
+/**
+ * Admin portal routes for internal tracking only — never emitted on the public
+ * HTML sitemap or in the XML sitemap. The HTML sitemap is a public page; listing
+ * staff-only surfaces there advertises routes that should stay undiscoverable
+ * (Google's sitemap guidance: a sitemap should contain only canonical URLs you
+ * want indexed). Admin routes are already `noindex` + auth-guarded; the CSV
+ * export keeps them visible to ops without a public link.
+ */
 export const ADMIN_HTML_SITEMAP_PATHS = [
   "/admin",
   "/admin/analytics",
@@ -236,15 +243,15 @@ export function buildSitemapSections(): SitemapSection[] {
     { href: "/sitemap.xml", label: "XML sitemap" },
   ];
 
-  const adminLinks: SitemapLink[] = ADMIN_HTML_SITEMAP_PATHS.map((path) => linkForPath(path));
-
+  // Public HTML sitemap — indexable marketing/planner/product routes only.
+  // Admin routes stay in ADMIN_HTML_SITEMAP_PATHS for the ops CSV export, but
+  // are never linked from the public page (they are noindex + auth-guarded).
   return [
     { heading: "Products & catalog", links: productsLinks },
     { heading: "Solutions", links: solutionLinks },
     { heading: "Planner", links: plannerLinks },
     { heading: "Company & service", links: companyLinks },
     { heading: "Legal & policies", links: legalLinks },
-    { heading: "Admin", links: adminLinks },
   ];
 }
 
@@ -283,17 +290,29 @@ function conceptualPairSlugForPath(path: string): string {
 export function buildSitemapCsvRows(sections?: readonly SitemapSection[]): SitemapCsvRow[] {
   const resolvedSections = sections ?? buildSitemapSections();
 
-  return resolvedSections.flatMap((section) =>
+  const publicRows = resolvedSections.flatMap((section) =>
     section.links.map((link) => ({
       section: section.heading,
       path: link.href,
       label: link.label,
-      audience: section.heading === "Admin" ? "admin" : "public",
-      inXmlSitemap:
-        section.heading === "Admin" || link.href === "/sitemap.xml" ? "no" : "yes",
+      audience: "public",
+      inXmlSitemap: link.href === "/sitemap.xml" ? "no" : "yes",
       conceptualPairSlug: conceptualPairSlugForPath(link.href),
     })),
   );
+
+  // Admin routes are tracked in the ops CSV only — never linked from the
+  // public HTML sitemap (they are noindex + auth-guarded).
+  const adminRows: SitemapCsvRow[] = ADMIN_HTML_SITEMAP_PATHS.map((path) => ({
+    section: "Admin",
+    path,
+    label: ADMIN_PATH_LABELS[path] ?? labelForPath(path),
+    audience: "admin",
+    inXmlSitemap: "no",
+    conceptualPairSlug: conceptualPairSlugForPath(path),
+  }));
+
+  return [...publicRows, ...adminRows];
 }
 
 export function buildSitemapCsv(sections?: readonly SitemapSection[]): string {

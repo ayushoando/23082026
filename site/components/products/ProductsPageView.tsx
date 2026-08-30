@@ -391,6 +391,7 @@ export function ProductsPageView({
                     key={category.id}
                     href={category.href}
                     data-products-category-reveal
+                    aria-label={`${category.name}, ${category.productCount} products`}
                     className="products-category-tile group"
                   >
                     <div className="products-category-tile__media">

@@ -25,7 +25,7 @@ All code is TypeScript with named exports. Tests live under `tests/`. Commands r
     - Assert `isApprovalGated` is true iff `changeClass` is a gated class (not `"safe"`)
     - **Validates: Requirements 1.4**
 
-- [~] 2. Record audit findings with evidence and classification
+- [ ] 2. Record audit findings with evidence and classification
   - [x] 2.1 Produce the audit findings dataset across all seven dimensions
     - Create `site/lib/ai/audit/findings.ts` exporting `AI_STACK_FINDINGS: readonly Finding[]`, one record per confirmed observation
     - Cover correctness, provider-routing, retrieval-quality, error-handling, observability, route-contract, and performance dimensions, each with `severity`, `location` (file + optional line), and `evidence`
@@ -40,7 +40,7 @@ All code is TypeScript with named exports. Tests live under `tests/`. Commands r
 - [x] 3. Checkpoint - audit recorded and sequenced
   - Ensure all tests pass, ask the user if questions arise.
 
-- [~] 4. Safe remediation of non-gated findings
+- [ ] 4. Safe remediation of non-gated findings
   - [x] 4.1 Apply non-gated fixes to the catalog advisor path while preserving its contract
     - Remediate only findings classed `safe` in `site/app/api/ai-advisor/route.ts` and any non-gated helpers, leaving provider ids, prompts, retrieval ranking, auth rules, LanceDB, and db writes untouched
     - Preserve the exact Catalog_Advisor_Route response fields: `recommendations`, `summary`, `totalBudget`, `nextActions`, `warnings`, `pricingMode`, `fallbackUsed`
@@ -57,7 +57,7 @@ All code is TypeScript with named exports. Tests live under `tests/`. Commands r
     - Assert remediated modules do not alter exports/behavior of modules unrelated to their findings
     - _Requirements: 2.4_
 
-- [~] 5. Observability adapter (foundation for route wiring)
+- [ ] 5. Observability adapter (foundation for route wiring)
   - [x] 5.1 Implement the AI observability adapter reusing the existing registry and OTel tracer
     - Create `site/lib/observability/aiMetrics.ts` exporting `withAiObservability` and an `AiRequestObservation` type
     - Reuse `getMetricsRegistry()` from `site/lib/observability/metrics.ts` and the tracer from the existing `@vercel/otel` registration; add no new infrastructure
@@ -79,20 +79,20 @@ All code is TypeScript with named exports. Tests live under `tests/`. Commands r
     - Assert duration and error metrics record per request, and that an instrument error does not propagate to the caller
     - _Requirements: 6.4, 6.6_
 
-- [~] 6. Planner Advisor Route
-  - [~] 6.1 Implement the planner advisor handler and route with withAuth guardrails
+- [ ] 6. Planner Advisor Route
+  - [-] 6.1 Implement the planner advisor handler and route with withAuth guardrails
     - Create `site/app/api/planner/ai-advisor/route.ts` exporting `POST = withAuth(handlePlannerAdvisor, { role: "guest", rateLimitScope: "planner-ai-advisor", rateLimit: 5, requireCsrf: true })`
     - Mirror `handleCatalogAdvisor`: validate the body with the existing `PlannerAdvisorRequestSchema`, returning `validationError(parsed.error.issues)` → HTTP 400 on failure
     - Iterate `resolveAdvisorModelChain()` calling `requestAdvisorMessages(target, messages, { signal, stream, onDelta })` under an `AbortController` timeout, taking the first usable text; expose only `target.label`
     - _Requirements: 3.1, 3.2, 3.7, 4.1, 4.2, 4.3, 4.4_
 
-  - [~] 6.2 Implement response shaping (streaming and non-streaming) and heuristic fallback
+  - [ ] 6.2 Implement response shaping (streaming and non-streaming) and heuristic fallback
     - Non-streaming: return the `success()` envelope carrying a `PlannerAdvisorResponse` body (`content` string plus optional `suggestion`, `degraded`, `provider`, `layout`)
     - Streaming: return an `application/x-ndjson` `Response` using the same `ReadableStream` + `JEST_WORKER_ID` buffering pattern as the catalog route, emitting `status`/`delta`/`result`/`error` events and ending with a terminal `result` event whose payload is the `PlannerAdvisorResponse`
     - When no provider yields a usable response (including empty chain), return the deterministic Heuristic_Fallback with the fallback marker (`degraded`/`fallbackUsed`) set to `true`
     - _Requirements: 3.3, 3.4, 3.5, 3.6_
 
-  - [~] 6.3 Wire the planner and catalog handlers through the observability adapter
+  - [ ] 6.3 Wire the planner and catalog handlers through the observability adapter
     - Wrap each handler's core logic in `withAiObservability("planner" | "catalog", ...)`, reporting resolved provider label, whether fallback ran, and the retrieval `sources` array
     - Ensure wrapping does not alter the response body or status of either route
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5_
@@ -127,7 +127,7 @@ All code is TypeScript with named exports. Tests live under `tests/`. Commands r
     - Assert observability side effects fire via an inspectable registry and in-memory span exporter without changing status/body
     - _Requirements: 3.1, 3.2, 6.6_
 
-- [~] 7. Checkpoint - planner route and observability wired
+- [ ] 7. Checkpoint - planner route and observability wired
   - Ensure all tests pass, ask the user if questions arise.
 
 - [x] 8. Provider chain and retrieval audit verification (tests only; changes gated)
@@ -156,7 +156,7 @@ All code is TypeScript with named exports. Tests live under `tests/`. Commands r
     - For any trimmed query of length < 2, assert the return equals `products.slice(0, limit)` with `sources` equal to `["catalog-order"]`
     - **Validates: Requirements 5.5**
 
-- [~] 9. Final checkpoint - full validation
+- [ ] 9. Final checkpoint - full validation
   - Ensure all tests pass, ask the user if questions arise.
 
 ## Notes

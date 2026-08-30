@@ -1245,7 +1245,8 @@
         "newArrivals": "नए उत्पाद",
         "bestSellers": "लोकप्रिय उत्पाद",
         "submitSearch": "मोबाइल खोज सबमिट करें",
-        "searchProducts": "उत्पाद खोजें"
+        "searchProducts": "उत्पाद खोजें",
+        "getQuote": "कोटेशन लें"
       },
       "footer": {
         "products": "उत्पाद",

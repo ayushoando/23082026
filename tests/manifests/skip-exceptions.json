@@ -8,6 +8,14 @@
       "reason": "Conditional browser-profile guard: performance evidence is only collected on chromium-desktop. Skip fires on all other browsers and projects to prevent false negatives from unsupported environments.",
       "expires": "2027-09-01",
       "replacementTest": "tests/e2e/planner-performance-required.spec.ts — same file; skip is the guard, not a placeholder"
+    },
+    {
+      "file": "tests/e2e/planner-comprehensive-audit-regression.spec.ts",
+      "rule": "contains-skip",
+      "owner": "repository-owner",
+      "reason": "Conditional profile/env guards: each rendered regression journey is assigned to a specific Playwright project (profile.project) so tests skip on non-matching browsers; the authenticated conflict journey skips unless PLANNER_CONFLICT_PROJECT_ID is set. Skips fire only on unsupported environments, never as placeholders.",
+      "expires": "2027-09-01",
+      "replacementTest": "tests/e2e/planner-comprehensive-audit-regression.spec.ts — same file; skips are the guards, not placeholders"
     }
   ]
 }

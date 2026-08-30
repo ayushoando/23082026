@@ -741,34 +741,6 @@
   background: var(--surface-muted);
 }
 
-/* Catalog rail */
-.ooplanner-root .catalog-search { width: 100%; padding: 8px 12px; padding-left: 34px; border: 1px solid var(--border-soft); border-radius: 10px; font-size: 13px; background: var(--surface-muted); }
-.ooplanner-root .catalog-search:focus { background: var(--surface-panel); border-color: var(--color-focus); }
-.ooplanner-root .catalog-search-wrap { position: relative; }
-.ooplanner-root .catalog-search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-subtle); pointer-events: none; }
-
-.ooplanner-root .catalog-categories { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
-
-.ooplanner-root .catalog-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 4px 0; }
-.ooplanner-root .catalog-item { border: 1px solid var(--border-soft); border-radius: 10px; padding: 8px 8px 6px; background: var(--surface-panel); color: var(--text-strong); cursor: grab; font: inherit; text-align: left; transition: all 150ms; position: relative; }
-.ooplanner-root .catalog-item:hover { border-color: var(--border-accent); box-shadow: var(--shadow-soft); transform: translateY(-1px); }
-.ooplanner-root .catalog-item:active { cursor: grabbing; }
-.ooplanner-root .catalog-item:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
-.ooplanner-root .catalog-item__thumb { width: 100%; aspect-ratio: 1; display: grid; place-items: center; background: var(--surface-muted); border-radius: 6px; margin-bottom: 6px; overflow: hidden; }
-.ooplanner-root .catalog-item__thumb img,
-.ooplanner-root .catalog-item__thumb svg { width: 80%; height: 80%; object-fit: contain; }
-.ooplanner-root .catalog-item__name { font-size: 11px; font-weight: 500; color: var(--text-strong); line-height: 1.25; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.ooplanner-root .catalog-item__dim { font-size: 10px; color: var(--text-subtle); font-family: var(--font-numeric); font-variant-numeric: var(--numeric-figures); margin-top: 2px; }
-
-/* Projects list */
-.ooplanner-root .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; padding: 24px; }
-.ooplanner-root .project-card { border: 1px solid var(--border-soft); border-radius: 14px; padding: 14px; background: var(--surface-panel); cursor: pointer; transition: all 200ms; }
-.ooplanner-root .project-card:hover { border-color: var(--border-accent); box-shadow: var(--shadow-panel); transform: translateY(-2px); }
-.ooplanner-root .project-card__thumb { aspect-ratio: 4/3; background: var(--surface-muted); border-radius: 10px; margin-bottom: 12px; display: grid; place-items: center; overflow: hidden; }
-.ooplanner-root .project-card__thumb img { width: 100%; height: 100%; object-fit: cover; }
-.ooplanner-root .project-card__name { font-size: 14px; font-weight: 500; color: var(--text-strong); }
-.ooplanner-root .project-card__meta { font-size: 11px; color: var(--text-subtle); margin-top: 4px; font-family: var(--font-numeric); font-variant-numeric: var(--numeric-figures); }
-
 /* Alignment mini toolbar */
 .ooplanner-root .align-toolbar {
   position: absolute;
@@ -786,42 +758,5 @@
 }
 .ooplanner-root .align-toolbar[data-visible="true"] { display: inline-flex; }
 
-
-/* Requirement 9.5 — accessible overflow disclosure for long server-safe values. */
-.planner-disclosed-value {
-  overflow-wrap: anywhere;
-  word-break: break-word;
-}
-
-/* Planner access and projects-list surfaces. Keep visual tokens in the Planner zone. */
-.ooplanner-root .planner-access-status {
-  border-bottom: 1px solid var(--border-soft);
-  background: var(--surface-panel);
-  color: var(--text-muted);
-}
-
-.ooplanner-root .planner-access-status__label,
-.ooplanner-root .planner-projects-page__heading {
-  color: var(--text-strong);
-}
-
-.ooplanner-root .planner-projects-page {
-  background: var(--surface-soft);
-}
-
-.ooplanner-root .planner-projects-page__summary {
-  color: var(--text-muted);
-}
-
-.ooplanner-root .project-card__link {
-  display: block;
-  border-radius: inherit;
-  color: inherit;
-  text-decoration: none;
-  outline: none;
-}
-
-.ooplanner-root .project-card__link:focus-visible {
-  outline: 2px solid var(--color-focus);
-  outline-offset: 2px;
-}
+/* Catalog rail, projects list, and access/projects surfaces moved to
+   workspace-lists.css (FOCSS 800-line cap). */

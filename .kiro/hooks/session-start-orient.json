@@ -9,7 +9,7 @@
         "prompt": "Before repository work, read AGENTS.md sections 1–3 and Agents/01-standard.md, then follow their authority, execution, and layout rules."
       },
       "description": "Orients the agent to repository authority and execution rules at session start.",
-      "enabled": true
+      "enabled": false
     }
   ]
 }

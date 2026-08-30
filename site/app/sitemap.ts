@@ -52,38 +52,16 @@ function isPublicProductSitemapPath(path: string): boolean {
   );
 }
 
-/** Higher priority = stronger crawl signal for commercial / conversion URLs. */
-function staticPathPriority(path: string): number {
-  if (path === "/") return 1;
-  if (path === "/products" || path.startsWith("/products/")) return 0.95;
-  if (path === "/solutions" || path.startsWith("/solutions/")) return 0.9;
-  if (path === "/planning" || path === "/planner" || path.startsWith("/planner/")) {
-    return 0.85;
-  }
-  if (path === "/contact" || path === "/showrooms" || path === "/downloads") {
-    return 0.85;
-  }
-  if (path === "/clients" || path === "/trusted-by" || path === "/about") return 0.75;
-  if (path === "/privacy" || path === "/terms" || path === "/refund-and-return-policy") {
-    return 0.3;
-  }
-  return 0.65;
-}
-
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const catalogLastMod = await buildCatalogLastModifiedByPath();
+  // Google ignores <priority> and <changefreq> (per Search Central), so only
+  // emit <loc> + <lastmod>. lastmod is included only when we have a real
+  // catalog change date — never a guessed value.
   const entries: MetadataRoute.Sitemap = STATIC_SITEMAP_PATHS.map((path) => {
     const lastModified = catalogLastMod.get(path);
     return {
       url: sitemapUrl(path),
       ...(lastModified ? { lastModified } : {}),
-      changeFrequency:
-        path === "/" || path === "/products"
-          ? "daily"
-          : path.startsWith("/products/")
-            ? "weekly"
-            : "weekly",
-      priority: staticPathPriority(path),
     };
   });
 
@@ -103,8 +81,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       entries.push({
         url: sitemapUrl(productPath),
         ...(productLastMod ? { lastModified: productLastMod } : {}),
-        changeFrequency: "monthly",
-        priority: 0.6,
       });
     }
     for (const category of categoryIds) {
@@ -116,8 +92,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       entries.push({
         url: sitemapUrl(categoryPath),
         ...(categoryLastMod ? { lastModified: categoryLastMod } : {}),
-        changeFrequency: "weekly",
-        priority: 0.8,
       });
     }
   } catch {

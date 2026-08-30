@@ -40,10 +40,16 @@ describe("htmlSitemap buildSitemapSections", () => {
     }
   });
 
-  it("includes the XML sitemap link and all admin HTML routes", () => {
+  it("includes the XML sitemap link", () => {
     expect(hrefs).toContain("/sitemap.xml");
+  });
+
+  it("never exposes admin/staff routes on the public HTML sitemap", () => {
+    // Google's sitemap guidance: a sitemap should contain only canonical URLs
+    // you want indexed. Admin routes are noindex + auth-guarded and must not be
+    // advertised on a public page.
     for (const path of ADMIN_HTML_SITEMAP_PATHS) {
-      expect(hrefs).toContain(path);
+      expect(hrefs.some((href) => href === path || href.startsWith(`${path}/`))).toBe(false);
     }
   });
 
@@ -65,14 +71,13 @@ describe("htmlSitemap buildSitemapSections", () => {
     }
   });
 
-  it("organizes links into six sections including admin", () => {
+  it("organizes links into five public sections (no admin)", () => {
     expect(sections.map((section) => section.heading)).toEqual([
       "Products & catalog",
       "Solutions",
       "Planner",
       "Company & service",
       "Legal & policies",
-      "Admin",
     ]);
     expect(sections.every((section) => section.links.length > 0)).toBe(true);
   });
@@ -87,9 +92,9 @@ describe("htmlSitemap buildSitemapSections", () => {
     expect(overlaps.map((overlap) => overlap.slug)).toEqual([...SOLUTION_CATEGORY_IDS]);
   });
 
-  it("exports CSV rows for every HTML sitemap link", () => {
+  it("exports CSV rows for public links plus admin routes (ops tracking only)", () => {
     const rows = buildSitemapCsvRows(sections);
-    expect(rows).toHaveLength(hrefs.length);
+    expect(rows).toHaveLength(hrefs.length + ADMIN_HTML_SITEMAP_PATHS.length);
     expect(rows.some((row) => row.section === "Admin" && row.inXmlSitemap === "no")).toBe(true);
     expect(buildSitemapCsv(sections).split("\n")[0]).toBe(
       "section,path,label,audience,in_xml_sitemap,conceptual_pair_slug",
@@ -149,7 +154,9 @@ describe("htmlSitemap branch coverage", () => {
     );
 
     const rows = buildSitemapCsvRows();
-    expect(rows.length).toBe(getHtmlSitemapHrefs(buildSitemapSections()).length);
+    expect(rows.length).toBe(
+      getHtmlSitemapHrefs(buildSitemapSections()).length + ADMIN_HTML_SITEMAP_PATHS.length,
+    );
     expect(rows.some((row) => row.path === "/sitemap.xml" && row.inXmlSitemap === "no")).toBe(
       true,
     );

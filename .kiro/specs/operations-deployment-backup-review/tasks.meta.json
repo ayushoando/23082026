@@ -1,5 +1,14 @@
 {
-  "pbtResults": {},
+  "pbtResults": {
+    "2.4 Write property test for persisted-data release and recovery completeness.": {
+      "status": "passed",
+      "lastRunTimestamp": 1788103663482
+    },
+    "2.3 Write property test for unsupported external-claim classification.": {
+      "status": "not_run",
+      "lastRunTimestamp": 1788103729715
+    }
+  },
   "executionHistory": {
     "1.1 Create typed review models, source references, evidence states, surface enums, priorities, gaps, release decisions, restore drills, and protected-operation records under `scripts/operations-review/`.": [
       {
@@ -138,6 +147,11 @@
         "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
         "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
         "timestamp": 1788103321803
+      },
+      {
+        "executionId": "acc18fd9-5ebf-4324-a5ff-0228fcaee7b9",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788104359500
       }
     ],
     "5.2 Implement monitoring extraction and gap assessment from OpenTelemetry, metrics, local Prometheus/Grafana configuration, root command routes, and runbook evidence.": [
@@ -215,6 +229,16 @@
         "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
         "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
         "timestamp": 1788103320839
+      },
+      {
+        "executionId": "40bcdc06-9f4a-4587-9908-4a9df3ebcdd4",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103507464
+      },
+      {
+        "executionId": "acc18fd9-5ebf-4324-a5ff-0228fcaee7b9",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788104344819
       }
     ],
     "2.4 Write property test for persisted-data release and recovery completeness.": [
@@ -227,6 +251,16 @@
         "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
         "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
         "timestamp": 1788103321050
+      },
+      {
+        "executionId": "40bcdc06-9f4a-4587-9908-4a9df3ebcdd4",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103508464
+      },
+      {
+        "executionId": "acc18fd9-5ebf-4324-a5ff-0228fcaee7b9",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788104345440
       }
     ],
     "3.3 Write property test for attributable missing backup-coverage gaps.": [
@@ -239,6 +273,11 @@
         "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
         "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
         "timestamp": 1788103321246
+      },
+      {
+        "executionId": "acc18fd9-5ebf-4324-a5ff-0228fcaee7b9",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788104358338
       }
     ],
     "3.4 Write property test for scheduled-workflow credential redaction.": [
@@ -251,6 +290,18 @@
         "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
         "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
         "timestamp": 1788103321386
+      },
+      {
+        "executionId": "acc18fd9-5ebf-4324-a5ff-0228fcaee7b9",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788104358825
+      }
+    ],
+    "2. Extract and assess independent Vercel and Cloudflare Worker release surfaces": [
+      {
+        "executionId": "acc18fd9-5ebf-4324-a5ff-0228fcaee7b9",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788104345545
       }
     ]
   }

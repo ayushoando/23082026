@@ -38,7 +38,7 @@ Implement a repository-local TypeScript operations-review tool that reads an exp
     - **Validates: Requirements 1.2, 6.3**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
 
-- [ ] 2. Extract and assess independent Vercel and Cloudflare Worker release surfaces
+- [x] 2. Extract and assess independent Vercel and Cloudflare Worker release surfaces
   - [x] 2.1 Implement Vercel local-configuration extraction from `vercel.json`, root command routes, and runbook material.
     - Emit configured build/deploy route, target assumptions, post-deployment evidence expectations, persisted-data release prerequisites, and P0/P1 gaps without asserting hosted deployment status.
     - Require owner, migration/seed impact, backup prerequisite, compatibility hazard, code-release order, and rollback path for persisted-data releases.
@@ -49,11 +49,11 @@ Implement a repository-local TypeScript operations-review tool that reads an exp
     - Produce a Worker-only release decision with approval point, rollback/recovery procedure, and expected verification evidence; never merge it into Vercel release state.
     - _Requirements: 3.1, 3.2, 3.3, 3.4_
     - **Acceptance evidence:** The matrix contains all four named cases and external edge behavior is classified unverified unless current authorized evidence is supplied.
-  - [-] 2.3 Write property test for unsupported external-claim classification.
+  - [x] 2.3 Write property test for unsupported external-claim classification.
     - **Property 3: Unsupported external claims remain unverified.**
     - **Validates: Requirements 1.3, 2.4, 3.3, 5.3, 8.2**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
-  - [~] 2.4 Write property test for persisted-data release and recovery completeness.
+  - [x] 2.4 Write property test for persisted-data release and recovery completeness.
     - **Property 4: Persisted-data release and recovery records are complete.**
     - **Validates: Requirements 2.2, 7.2, 7.3**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
@@ -73,30 +73,30 @@ Implement a repository-local TypeScript operations-review tool that reads an exp
     - Redact secret-like values and create unverified findings independently for creation, retention, integrity, and retrievability when provider evidence is absent.
     - _Requirements: 5.1, 5.2, 5.3, 5.4_
     - **Acceptance evidence:** Rendered data contains no credential values and does not claim R2 object existence or retrievability from repository configuration.
-  - [~] 3.3 Write property test for attributable missing backup-coverage gaps.
+  - [-] 3.3 Write property test for attributable missing backup-coverage gaps.
     - **Property 6: Missing database-backup elements produce attributable gaps.**
     - **Validates: Requirements 4.3**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
-  - [~] 3.4 Write property test for scheduled-workflow credential redaction.
+  - [-] 3.4 Write property test for scheduled-workflow credential redaction.
     - **Property 7: Scheduled-workflow review redacts credentials while preserving structure.**
     - **Validates: Requirements 5.2**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
 
-- [~] 4. Checkpoint - Ensure all tests pass
+- [ ] 4. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
   - **Validation authorization:** No check is authorized by this plan. Any future `pnpm` test, typecheck, lint, build, or gate command requires exact current-session user authorization and enabled-hook permission. Deployments, provider operations, backups, restores, migrations, seeds, local observability services, and provider inspection remain separately protected.
 
 - [ ] 5. Assemble recovery readiness, monitoring gaps, and runbook/CI alignment
-  - [~] 5.1 Implement recovery planning for code rollback, Worker rollback, Products schema rollback, Admin schema rollback, and data recovery.
+  - [-] 5.1 Implement recovery planning for code rollback, Worker rollback, Products schema rollback, Admin schema rollback, and data recovery.
     - Emit one complete Restore Drill specification per applicable Products, Admin, catalog, and repository recovery path, with authorized operator, non-production target, source artifact category, objective, success evidence, data boundary, cleanup/rollback, and a protected execution record.
     - Model completed-drill evidence requirements without executing or simulating a drill.
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 7.1, 7.3, 7.4_
     - **Acceptance evidence:** Each applicable recovery path maps to one source-linked drill; all drill executions and artifact retrieval remain pending protected operations.
-  - [~] 5.2 Implement monitoring extraction and gap assessment from OpenTelemetry, metrics, local Prometheus/Grafana configuration, root command routes, and runbook evidence.
+  - [ ] 5.2 Implement monitoring extraction and gap assessment from OpenTelemetry, metrics, local Prometheus/Grafana configuration, root command routes, and runbook evidence.
     - Separate source wiring from unverified collection, export, retention, queryability, and alerting; require signals, expected conditions, owner, and escalation path for release/recovery procedures.
     - _Requirements: 8.1, 8.2, 8.3, 8.4_
     - **Acceptance evidence:** Missing monitoring fields emit surface/procedure-specific gaps; no telemetry, log, or local-service call is performed.
-  - [~] 5.3 Implement deterministic runbook/CI/configuration alignment comparison and priority assignment.
+  - [ ] 5.3 Implement deterministic runbook/CI/configuration alignment comparison and priority assignment.
     - Compare command route, owner, environment, order, approval boundary, and recovery reference; retain both source paths, exact difference, affected surface, and recommended resolution for every mismatch.
     - Assign P0–P3 without downgrading independent data-loss, ownership, reversibility, or evidence gaps due to similar coverage elsewhere.
     - _Requirements: 2.3, 7.4, 9.1, 9.2, 9.3_
@@ -123,13 +123,13 @@ Implement a repository-local TypeScript operations-review tool that reads an exp
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
 
 - [ ] 6. Render safe evidence records and wire the review entry point
-  - [~] 6.1 Implement review assembly, partitioned JSON/Markdown rendering, secret redaction, and output-path enforcement.
+  - [ ] 6.1 Implement review assembly, partitioned JSON/Markdown rendering, secret redaction, and output-path enforcement.
     - Output may be written only after an implementation owner explicitly selects either `agents-work/operations-deployment-backup-review/reviews/` for authored decisions or `results/operations-deployment-backup-review/` for generated evidence; reject `site/`, `results/` root, and provider-backed paths.
     - Include timestamp, locally available revision metadata, source list, observations, unverified external state, protected operations, recommendations/gaps, owner decisions, release decisions, restore drills, and alignment differences.
     - State explicitly that no protected operation was executed.
     - _Requirements: 1.2, 1.3, 5.3, 9.4_
     - **Acceptance evidence:** Each finding occupies exactly one appropriate output section; rendered outputs have no secret values and no operational-success claim without authorized evidence.
-  - [~] 6.2 Wire a thin root command entry point only after separate owner approval for the exact `package.json` and script changes.
+  - [ ] 6.2 Wire a thin root command entry point only after separate owner approval for the exact `package.json` and script changes.
     - The command must invoke the local review tool without arguments that cause deployments, provider inspection, backups, restores, migrations, seeds, or services.
     - If approval is not granted, retain the library-only implementation and document the command integration as a P1 owner decision in the generated record.
     - _Requirements: 1.1, 1.2, 9.1, 9.4_
@@ -143,7 +143,7 @@ Implement a repository-local TypeScript operations-review tool that reads an exp
     - _Requirements: 2.1, 2.3, 3.1, 3.4, 4.1, 4.2, 4.4, 5.1, 5.4, 7.1, 8.1, 9.3_
     - **Execution authorization:** The exact targeted Vitest command remains pending exact user authorization and enabled-hook permission.
 
-- [~] 7. Final checkpoint - Ensure all tests pass
+- [ ] 7. Final checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
   - **Required completion evidence:** static review of changed paths; observed outcomes from only explicitly authorized and hook-permitted commands; source-linked review output proving protected actions stayed pending; a separate owner decision for any generated-output location or `package.json` integration.
   - **Pending authorization:** `pnpm run check:layout`, `pnpm run typecheck`, targeted Vitest, `pnpm run lint`, build/gate commands, deployment, Worker commands, database commands, R2 backup/retrieval, restores, provider inspections, provider logs, and local monitoring services. None are authorized by this task plan.

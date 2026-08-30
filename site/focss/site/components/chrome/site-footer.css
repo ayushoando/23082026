@@ -78,7 +78,9 @@
 
   .site-footer__legal-row {
     padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
+    /* Clear the fixed phone tab bar (3.5rem + border) overlaying the pane
+       bottom — the scroll container's own padding sits above the footer. */
+    padding-bottom: calc(3.5rem + 1px + env(safe-area-inset-bottom, 0px));
     padding-left: 1rem;
     padding-right: 1rem;
   }

@@ -1,162 +1,341 @@
-/**
- * POST /api/Planner/ai-advisor — Planner AI advisor endpoint.
- *
- * Accepts a multi-turn `messages` array plus optional `mode` and `context`
- * and returns a single advisory text response. The endpoint is intentionally
- * non-streaming (default) and advisory-only: it never modifies plan state.
- *
- * Requests flow through the Planner request-processing pipeline which
- * enforces: correlation → quota → method/validation → origin/CSRF
- * → session → owner scope → revision/idempotency → persistence.
- *
- * Response (200):
- *   `{ success: true, data: { content, degraded?, provider? }, correlationId }`
- * Errors: 400 (validation), 403 (CSRF/origin), 429 (rate limit), 500.
- *
- * Fork boundary: this file MUST NOT import anything from
- * `site/components/Studio/` or `site/lib/Studio/`.
- */
-
+import type { NextRequest } from "next/server";
+import type { NextResponse } from "next/server";
 import {
-  requestAdvisorMessages,
   resolveAdvisorModelChain,
+  requestAdvisorMessages,
+  type AdvisorModelTarget,
+  type AdvisorProviderId,
   type AdvisorChatMessage,
 } from "@/lib/ai/mastra";
+import { withAuth, type AuthContext } from "@/features/shared/api/withAuth";
+import { success } from "@/features/shared/api/apiResponse";
+import { validationError } from "@/features/shared/api/apiResponse";
 import { PlannerAdvisorRequestSchema } from "@/features/shared/api/schemas";
-import {
-  createPlannerHandler,
-  createPlannerRejectedMethodHandler,
-} from "@planner/server/plannerRouteAdapter";
-import type {
-  PlannerOperationContext,
-  PlannerOperationResult,
-} from "@planner/lib/plannerRequestPipeline";
+import { recordAdvisorRequest } from "@/lib/observability/aiMetrics";
 
-/** Timeout applied to each provider attempt, in milliseconds. */
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+export interface PlannerAdvisorResponse {
+  /** Primary text response from the model (or heuristic fallback). */
+  content: string;
+  /** Optional concise layout or space-planning suggestion. */
+  suggestion?: string;
+  /** True when the response is degraded (heuristic fallback). */
+  degraded?: boolean;
+  /** Provider label used for this response — never a raw model ID or secret. */
+  provider?: string;
+  /** Optional layout identifier suggested by the model. */
+  layout?: string;
+  /** True when heuristic fallback was used. */
+  fallbackUsed: boolean;
+}
+
+type PlannerStreamEvent =
+  | { type: "status"; message: string }
+  | { type: "delta"; text: string }
+  | { type: "result"; result: PlannerAdvisorResponse }
+  | { type: "error"; message: string };
+
+type PlannerAdvisorClientConfig = {
+  provider: AdvisorProviderId;
+  label: string;
+  target: AdvisorModelTarget;
+};
+
+// ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
+
 const PLANNER_ADVISOR_TIMEOUT_MS = 10_000;
 
-/**
- * The system prompt is prepended ahead of the caller-supplied message list so
- * the model always has scope, tone, and boundary constraints regardless of the
- * mode the client passes.
- */
-const PLANNER_ADVISOR_SYSTEM_PROMPT =
-  "You are a professional office space planning advisor for One & Only Furniture. " +
-  "Help the user design, optimise, or troubleshoot their floor plan or furniture layout. " +
-  "Answer concisely and practically. " +
-  "Do not suggest purchasing anything outside the One & Only Furniture catalog. " +
-  "Respond in plain text — no JSON, no markdown code fences. " +
-  "If asked to apply changes to a plan, explain the change instead; never output machine-readable plan data.";
+const STREAM_ENCODER = new TextEncoder();
+const STREAM_HEADERS = {
+  "content-type": "application/x-ndjson; charset=utf-8",
+  "cache-control": "no-cache, no-transform",
+  connection: "keep-alive",
+};
 
-/** Deterministic fallback content when all providers fail or chain is empty. */
-const FALLBACK_CONTENT =
+// ---------------------------------------------------------------------------
+// Heuristic fallback
+// ---------------------------------------------------------------------------
+
+const HEURISTIC_FALLBACK_CONTENT =
   "I'm unable to reach the AI advisor right now. " +
-  "Please check your layout against the recommended clearance guidelines (min 900 mm between workstations) " +
-  "and ensure primary aisles are at least 1200 mm wide. Try again shortly for AI-assisted advice.";
+  "For space planning, consider a 1.2–1.5 m² footprint per workstation, " +
+  "add 20% for circulation, and use modular workstations for flexibility. " +
+  "Share room dimensions and team size for a tighter recommendation.";
+
+function buildHeuristicFallback(provider?: string): PlannerAdvisorResponse {
+  return {
+    content: HEURISTIC_FALLBACK_CONTENT,
+    suggestion: "Use modular workstations at 1.2–1.5 m² per seat with 20% circulation allowance.",
+    degraded: true,
+    fallbackUsed: true,
+    provider,
+  };
+}
 
 // ---------------------------------------------------------------------------
-// Internal helpers
+// Provider chain helpers
 // ---------------------------------------------------------------------------
 
-function isAbortError(err: unknown): boolean {
-  if (!err || typeof err !== "object") { return false; }
-  const e = err as { name?: string; message?: string };
+function resolveAdvisorClients(): PlannerAdvisorClientConfig[] {
+  return resolveAdvisorModelChain().map((target) => ({
+    provider: target.provider,
+    label: target.label,
+    target,
+  }));
+}
+
+function isAbortLikeError(err: unknown): boolean {
+  if (!err || typeof err !== "object") {return false;}
+  const maybeError = err as { name?: string; message?: string };
   return (
-    e.name === "AbortError" ||
-    String(e.message ?? "").toLowerCase().includes("aborted")
+    maybeError.name === "AbortError" ||
+    String(maybeError.message ?? "").toLowerCase().includes("aborted")
   );
 }
 
-/**
- * Build the full message list for the Mastra agent call by prepending the
- * system prompt ahead of the caller-supplied messages.
- */
-function buildMessages(
-  callerMessages: Array<{ role: "system" | "user" | "assistant"; content: string }>,
-): AdvisorChatMessage[] {
-  return [
-    { role: "system", content: PLANNER_ADVISOR_SYSTEM_PROMPT },
-    ...callerMessages,
-  ];
+// ---------------------------------------------------------------------------
+// Streaming helpers
+// ---------------------------------------------------------------------------
+
+function emitStreamEvent(
+  controller: ReadableStreamDefaultController<Uint8Array>,
+  event: PlannerStreamEvent,
+): void {
+  try {
+    controller.enqueue(STREAM_ENCODER.encode(`${JSON.stringify(event)}\n`));
+  } catch {
+    // Client may have disconnected
+  }
+}
+
+function chunkText(text: string): string[] {
+  return text.split(/(\s+)/).filter(Boolean);
+}
+
+async function streamResolvedResult(
+  controller: ReadableStreamDefaultController<Uint8Array>,
+  result: PlannerAdvisorResponse,
+): Promise<void> {
+  emitStreamEvent(controller, { type: "status", message: "Preparing response" });
+  for (const token of chunkText(result.content)) {
+    emitStreamEvent(controller, { type: "delta", text: token });
+    await Promise.resolve();
+  }
+  emitStreamEvent(controller, { type: "result", result });
+}
+
+function createStreamResponse(
+  executor: (controller: ReadableStreamDefaultController<Uint8Array>) => Promise<void>,
+): Response | Promise<Response> {
+  // Jest environment: buffer synchronously, return after executor resolves.
+  if (process.env.JEST_WORKER_ID) {
+    const chunks: Uint8Array[] = [];
+    const bufferedController = {
+      enqueue(chunk: Uint8Array) {
+        chunks.push(chunk);
+      },
+      close() {},
+    } as unknown as ReadableStreamDefaultController<Uint8Array>;
+
+    return executor(bufferedController)
+      .catch((err) => {
+        console.error("[planner/ai-advisor] stream error:", err);
+        emitStreamEvent(bufferedController, {
+          type: "error",
+          message: "Unable to process advisor request right now.",
+        });
+      })
+      .then(
+        () =>
+          new Response(Buffer.concat(chunks.map((chunk) => Buffer.from(chunk))), {
+            headers: STREAM_HEADERS,
+          }),
+      );
+  }
+
+  return new Response(
+    new ReadableStream<Uint8Array>({
+      start(controller) {
+        void executor(controller)
+          .catch((err) => {
+            console.error("[planner/ai-advisor] stream error:", err);
+            emitStreamEvent(controller, {
+              type: "error",
+              message: "Unable to process advisor request right now.",
+            });
+          })
+          .finally(() => {
+            try {
+              controller.close();
+            } catch {
+              // Already closed
+            }
+          });
+      },
+    }),
+    { headers: STREAM_HEADERS },
+  );
 }
 
 // ---------------------------------------------------------------------------
-// Core operation
+// Request execution
+// ---------------------------------------------------------------------------
+
+async function requestPlannerRawResponse(
+  target: AdvisorModelTarget,
+  messages: AdvisorChatMessage[],
+  stream: boolean,
+  onDelta?: (delta: string) => void,
+): Promise<string> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), PLANNER_ADVISOR_TIMEOUT_MS);
+
+  try {
+    return await requestAdvisorMessages(target, messages, {
+      signal: controller.signal,
+      stream,
+      onDelta,
+    });
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
+function buildPlannerResponse(
+  raw: string,
+  providerLabel: string,
+): PlannerAdvisorResponse | null {
+  const content = raw.trim();
+  if (!content) {return null;}
+  return {
+    content,
+    provider: providerLabel,
+    fallbackUsed: false,
+    degraded: false,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Core handler
 // ---------------------------------------------------------------------------
 
 async function handlePlannerAdvisor(
-  context: PlannerOperationContext,
-): Promise<PlannerOperationResult<unknown>> {
-  // --- 1. Parse and validate body with Zod for trimming/min-max enforcement ---
-  const parsed = PlannerAdvisorRequestSchema.safeParse(context.request.body);
+  req: NextRequest,
+  _auth: AuthContext,
+): Promise<NextResponse | Response> {
+  const body = await req.json().catch(() => null);
+  const parsed = PlannerAdvisorRequestSchema.safeParse(body);
   if (!parsed.success) {
-    return {
-      ok: false,
-      status: 400,
-      code: "INVALID_REQUEST",
-      metadata: {
-        issues: parsed.error.issues.map((issue) => ({
-          path: issue.path.map(String).join(".") || "(root)",
-          message: issue.message,
-        })),
-      },
-    };
+    return validationError(parsed.error.issues);
   }
 
-  const { messages: callerMessages } = parsed.data;
+  // `stream` is not part of PlannerAdvisorRequestSchema; read it from raw body.
+  const isStream = body !== null && typeof body === "object" && (body as unknown as Record<string, unknown>).stream === true;
+  const { messages: rawMessages } = parsed.data;
 
-  // --- 2. Resolve provider chain ---
-  const chain = resolveAdvisorModelChain();
+  // Cast to AdvisorChatMessage[] — schema already validates role/content shape.
+  const messages = rawMessages as AdvisorChatMessage[];
 
-  if (chain.length === 0) {
-    return {
-      ok: true,
-      status: 200,
-      data: { content: FALLBACK_CONTENT, degraded: true },
-    };
+  const advisorClients = resolveAdvisorClients();
+  const advisorStartTime = Date.now();
+
+  if (advisorClients.length === 0) {
+    const fallback = buildHeuristicFallback();
+    recordAdvisorRequest({
+      surface: "planner",
+      provider: "unknown",
+      fallbackUsed: true,
+      degraded: true,
+      latencyMs: Date.now() - advisorStartTime,
+      fallbackReason: "no_chain",
+    });
+    return isStream
+      ? createStreamResponse((controller) => streamResolvedResult(controller, fallback))
+      : success(fallback as unknown as Record<string, unknown>);
   }
 
-  // --- 3. Try each provider in order, return first success ---
-  const messages = buildMessages(callerMessages);
+  // ---- Streaming path --------------------------------------------------------
+  if (isStream) {
+    return createStreamResponse(async (controller) => {
+      for (const client of advisorClients) {
+        let streamedAnyData = false;
+        emitStreamEvent(controller, {
+          type: "status",
+          message: `Consulting ${client.label}`,
+        });
 
-  for (const target of chain) {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), PLANNER_ADVISOR_TIMEOUT_MS);
+        try {
+          const raw = await requestPlannerRawResponse(
+            client.target,
+            messages,
+            true,
+            (delta) => {
+              streamedAnyData = true;
+              emitStreamEvent(controller, { type: "delta", text: delta });
+            },
+          );
 
-    try {
-      const content = await requestAdvisorMessages(target, messages, {
-        signal: controller.signal,
-        stream: false,
-      });
+          const result = buildPlannerResponse(raw, client.label);
+          if (result) {
+            emitStreamEvent(controller, { type: "result", result });
+            return;
+          }
+        } catch (providerError) {
+          console.error(
+            `[planner/ai-advisor] ${client.label} stream error${isAbortLikeError(providerError) ? " (timeout)" : ""}:`,
+            isAbortLikeError(providerError) ? "timeout" : "provider error",
+          );
+        }
 
-      clearTimeout(timeoutId);
-
-      if (content && content.trim().length > 0) {
-        return {
-          ok: true,
-          status: 200,
-          data: { content: content.trim(), provider: target.provider },
-        };
+        if (streamedAnyData) {
+          break;
+        }
       }
-    } catch (providerErr) {
-      clearTimeout(timeoutId);
-      // Log only a safe classification — never the raw error object which may
-      // contain provider API keys, SDK internals, or credential fragments.
-      // Requirements 11.8, 11.9: internal errors must not reach client responses.
-      const timedOut = isAbortError(providerErr);
+
+      const fallback = buildHeuristicFallback();
+      await streamResolvedResult(controller, fallback);
+    });
+  }
+
+  // ---- Non-streaming path ----------------------------------------------------
+  for (const client of advisorClients) {
+    try {
+      const raw = await requestPlannerRawResponse(client.target, messages, false);
+      const result = buildPlannerResponse(raw, client.label);
+
+      if (result) {
+        recordAdvisorRequest({
+          surface: "planner",
+          provider: client.provider,
+          fallbackUsed: false,
+          degraded: false,
+          latencyMs: Date.now() - advisorStartTime,
+        });
+        return success(result as unknown as Record<string, unknown>);
+      }
+    } catch (providerError) {
       console.error(
-        `[planner/ai-advisor] provider attempt failed${timedOut ? " (timeout)" : " (error)"}`,
+        `[planner/ai-advisor] ${client.label} error${isAbortLikeError(providerError) ? " (timeout)" : ""}:`,
+        isAbortLikeError(providerError) ? "timeout" : "provider error",
       );
-      // Continue to next provider in chain.
     }
   }
 
-  // --- 4. All providers exhausted — return deterministic degraded fallback ---
-  return {
-    ok: true,
-    status: 200,
-    data: { content: FALLBACK_CONTENT, degraded: true },
-  };
+  const fallback = buildHeuristicFallback();
+  recordAdvisorRequest({
+    surface: "planner",
+    provider: "unknown",
+    fallbackUsed: true,
+    degraded: true,
+    latencyMs: Date.now() - advisorStartTime,
+    fallbackReason: "provider_error",
+  });
+  return success(fallback as unknown as Record<string, unknown>);
 }
 
 // ---------------------------------------------------------------------------
@@ -164,27 +343,18 @@ async function handlePlannerAdvisor(
 // ---------------------------------------------------------------------------
 
 /**
- * POST /api/Planner/ai-advisor
+ * POST /api/planner/ai-advisor — Planner AI advisor.
  *
- * Auth: guest (anonymous users may use the planner).
- * CSRF: required for mutating POST.
- * Rate limit: 5 requests per window per IP under the "planner-advisor" scope.
+ * Accepts a `messages` array (chat history) plus optional `context` and returns
+ * a space-planning suggestion as a `PlannerAdvisorResponse`. Supports NDJSON
+ * streaming when `stream: true`. Guest auth; rate-limited.
  *
- * The Planner request-processing pipeline ensures:
- * - A correlation identifier is generated/propagated and included in every
- *   response body and x-correlation-id header (Requirement 17.3).
- * - All unhandled exceptions are mapped to INTERNAL_ERROR without exposing
- *   stack traces, credentials, or sensitive data (Requirements 11.8, 11.9).
- * - Operation handler failures are sanitized through the allowlisted metadata
- *   structure before serialization (Requirements 11.8, 11.9).
+ * Response (200, non-stream): `{ success: true, content, suggestion?, degraded?,
+ *   provider?, layout?, fallbackUsed }`.
+ * Response (200, stream): `application/x-ndjson` of `{ type, ... }` events.
+ * Errors: 400 (validation), 429 (rate limit), 403 (CSRF).
  */
-export const POST = createPlannerHandler({
-  endpointId: "planner.ai-advisor",
-  operation: { invoke: handlePlannerAdvisor },
-});
-
-// Unsupported methods still enter the quota-first request pipeline.
-export const GET = createPlannerRejectedMethodHandler("planner.ai-advisor");
-export const PUT = createPlannerRejectedMethodHandler("planner.ai-advisor");
-export const DELETE = createPlannerRejectedMethodHandler("planner.ai-advisor");
-export const PATCH = createPlannerRejectedMethodHandler("planner.ai-advisor");
+export const POST = withAuth(
+  async (req, auth) => handlePlannerAdvisor(req as NextRequest, auth),
+  { role: "guest", rateLimitScope: "planner-ai-advisor", rateLimit: 5, requireCsrf: true },
+);

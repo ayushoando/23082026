@@ -39,7 +39,7 @@ Implement and execute a read-only TypeScript audit program in six ordered waves 
     - **Validation criteria:** Every adapter emits validated candidate records with provenance; unsupported fields become explicit gaps, sampled output cannot close uncovered rows, and higher-authority conflicts remain traceable.
     - _Requirements: 1.6, 2.1, 2.4, 2.5, 25.1-25.7_
 
-  - [-] 1.4 Implement canonical route, shell, and dynamic-instance discovery
+  - [x] 1.4 Implement canonical route, shell, and dynamic-instance discovery
     - Collect every static/dynamic page, route group ownership, redirect-only route, layout, template, visible provider, loading/error/not-found boundary, consent/offline shell, and other user-visible Shared Shell.
     - Resolve dynamic instances by provenance-preserving union across declarations, repository data, contracts, links, sitemap candidates, prior revisioned inventories, and separately supplied authorized runtime discoveries; never invent placeholder instances.
     - Normalize URLs deterministically, preserve conflicting claims, classify surface/status, and create explicit exclusions or unresolved-instance Coverage Gaps.
@@ -47,7 +47,7 @@ Implement and execute a read-only TypeScript audit program in six ordered waves 
     - **Validation criteria:** Every discovered candidate has exactly one canonical classification or explicit exclusion/gap/conflict; duplicate concrete URLs retain all sources and discovery times; Planner, Studio, admin, auth, offline, and Shared Shell records remain distinct.
     - _Requirements: 1.1-1.8, 2.1-2.6, 19.1-19.4, 24.1-24.7, 26.1_
 
-  - [ ] 1.5 Implement profile registries, applicability, and exact occurrence expansion
+  - [-] 1.5 Implement profile registries, applicability, and exact occurrence expansion
     - Define versioned viewport, browser/OS/assistive-technology, access, English/Hindi, consent, and performance profile registries before evaluation.
     - Implement applicability decisions for all State Variants and audit dimensions, then generate the exact state × viewport × browser × access × language product for each route/instance/shell without representative substitution.
     - Generate stable occurrence/finding IDs, input fingerprints, wave ownership, and explicit non-applicability rationales.

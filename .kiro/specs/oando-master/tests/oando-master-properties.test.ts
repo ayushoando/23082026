@@ -1481,3 +1481,168 @@ describe("Property 5: Complete safe Prompt Cookbook", () => {
     expect(emergencyBody.match(/[.!?](?:\s|$)/g) ?? []).toHaveLength(1);
   });
 });
+
+
+const existingSkillNames = [
+  "db-migrations",
+  "focss-css",
+  "fork-boundaries",
+  "graph-impact",
+  "oando-master",
+  "planner-studio",
+  "powers-skills-model",
+  "repo-map",
+  "verify-and-gate",
+] as const;
+
+const property6SkillArbitrary = fc.constantFrom(...existingSkillNames);
+
+const property6McpStates = [
+  "schema",
+  "configuration",
+  "connection",
+] as const;
+
+// **Validates: Requirements 3.7, 5.1, 5.2, 5.4, 5.5, 5.6, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 8.8, 9.3, 9.4, 9.5, 9.6, 13.1, 13.2, 13.3, 13.4**
+describe("Property 6: Conditional skill routing and local-first capability selection", () => {
+  it("requires every matching skill to be selected and every non-matching skill rejected with a reason", () => {
+    fc.assert(
+      fc.property(property6SkillArbitrary, (skillName) => {
+        // Router documents that every matching skill is selected additively
+        expect(property6RouterRouting).toContain("Route additively when evidence matches");
+
+        // Guide routing section documents conditional selection with rejection
+        expect(property6GuideRouting).toContain("every matching");
+        expect(property6GuideRouting).toContain("rejected");
+        expect(property6GuideRouting).toContain("reason");
+
+        // Router Begin Here requires rejection with reasons
+        expect(router).toContain("reject every non-matching");
+        expect(router).toContain("plain-language reason");
+
+        // Each existing skill name appears in the router routing section or the guide routing section
+        const skillInRouter = property6RouterRouting.includes(`\`${skillName}\``);
+        const skillInGuide = property6GuideRouting.includes(`\`${skillName}\``);
+        expect(
+          skillInRouter || skillInGuide,
+          `Skill ${skillName} must appear in router or guide routing section`,
+        ).toBe(true);
+      }),
+      { numRuns: 100 },
+    );
+  });
+
+  it("enforces Local Evidence before Powers or MCP", () => {
+    // Router: "Use Local Evidence before any Power"
+    expect(property6RouterRouting).toContain(
+      "Use Local Evidence before any Power",
+    );
+    expect(property6RouterRouting).toContain("MCP");
+
+    // Guide capability evidence section enforces local-first with distinct power/mcp states
+    expect(property6GuideCapabilityEvidence).toContain("Power");
+    expect(property6GuideCapabilityEvidence).toContain("MCP");
+
+    // The router requires local evidence before power/mcp
+    expect(router).toContain(
+      "Local Evidence before",
+    );
+  });
+
+  it("requires Installed-Power Registry confirmation before presenting a Power as available", () => {
+    // Router routing section requires registry consultation
+    expect(property6RouterRouting).toContain("Installed-Power Registry");
+    expect(property6RouterRouting).toContain("Consult");
+
+    // An unconfirmed candidate is not represented as available
+    expect(property6RouterRouting).toContain(
+      "do not represent the proposal as an available skill",
+    );
+
+    // Guide capability evidence section also requires registry confirmation
+    expect(property6GuideCapabilityEvidence).toContain("Installed-Power Registry");
+    expect(property6GuideCapabilityEvidence).toContain("Confirm");
+  });
+
+  it("blocks requested activation without confirmation", () => {
+    // Never activate automatically
+    expect(property6RouterRouting).toContain("never activate automatically");
+
+    // No runtime activation claim from prose alone
+    expect(router).toContain(
+      "without claiming runtime loading",
+    );
+    expect(property6GuideCapabilityEvidence).toContain(
+      "prose is not runtime enforcement",
+    );
+  });
+
+  it("treats MCP schema, configuration, and connection as distinct states", () => {
+    // All three MCP states are mentioned distinctly
+    for (const state of property6McpStates) {
+      expect(
+        property6RouterRouting.toLowerCase().includes(state) ||
+          property6GuideCapabilityEvidence.toLowerCase().includes(state),
+        `MCP state "${state}" must appear in router routing or guide capability evidence`,
+      ).toBe(true);
+    }
+
+    // The guide capability evidence section distinguishes the three states
+    expect(property6GuideCapabilityEvidence).toContain("schema");
+    expect(property6GuideCapabilityEvidence).toContain("Configuration");
+    expect(property6GuideCapabilityEvidence).toContain("connection");
+  });
+
+  it("confirms ai-retrieval skill is conditional on file existence", () => {
+    // The router documents ai-retrieval as conditional
+    expect(property6RouterRouting).toContain("ai-retrieval");
+    expect(property6RouterRouting).toMatch(
+      /ai-retrieval.*guidance-only|ai-retrieval.*remains|not proof.*automatic activation/i,
+    );
+
+    // The guide routing section also documents the conditional nature
+    expect(property6GuideRouting).toContain("ai-retrieval");
+
+    // The design fact: ai-retrieval is selected only after the file exists
+    if (!aiRetrievalSkillPresent) {
+      // When absent, the route record should admit the gap
+      expect(property6RouterRouting).toMatch(
+        /absent|gap|not.*exist|does not exist|optional/i,
+      );
+    }
+  });
+
+  it("lists the current skill inventory in the routing section", () => {
+    fc.assert(
+      fc.property(property6SkillArbitrary, (skillName) => {
+        // Every existing skill must be inventoried somewhere in the routing guidance
+        const inRouter = property6RouterRouting.includes(skillName);
+        const inGuide = property6GuideRouting.includes(skillName);
+        const inCapability = property6GuideCapabilityEvidence.includes(skillName);
+        expect(
+          inRouter || inGuide || inCapability,
+          `Skill ${skillName} must be inventoried in routing guidance`,
+        ).toBe(true);
+      }),
+      { numRuns: 100 },
+    );
+  });
+
+  it("does not claim runtime activation, loading, or discovery from prose", () => {
+    // No runtime discovery claim in the routing section
+    for (const runtimeClaim of [
+      "runtime discovery engine",
+    ]) {
+      expect(property6RouterRouting).not.toContain(runtimeClaim);
+    }
+
+    // The routing section negates automatic activation — it says "not proof of... automatic activation"
+    expect(property6RouterRouting).toContain("not proof of");
+    expect(property6RouterRouting).toContain("automatic activation");
+
+    // Guide capability evidence section enforces the same
+    expect(property6GuideCapabilityEvidence).toMatch(
+      /does not prove|not.*claim|not.*runtime/i,
+    );
+  });
+});
