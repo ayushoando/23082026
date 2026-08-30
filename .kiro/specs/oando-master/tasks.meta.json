@@ -622,6 +622,11 @@
         "executionId": "d046c313-88de-4d2a-b00a-5f62c081634f",
         "chatSessionId": "sess_21faa332-6951-41f6-bba8-4e17bf8ef7ef",
         "timestamp": 1788002790228
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103320584
       }
     ],
     "10.7 Property 7: UI, fork, and AI evidence boundaries": [
@@ -629,6 +634,11 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987625172
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103320811
       }
     ],
     "10.8 Property 8: Evidence-labelled technical and data ownership": [
@@ -636,6 +646,11 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987625262
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103321021
       }
     ],
     "10.9 Property 9: Typed artifact placement and producer ownership": [
@@ -643,6 +658,11 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987625353
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103321296
       }
     ],
     "10.10 Property 10: Protected Command permission and honest validation": [
@@ -650,6 +670,11 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987625455
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103321520
       }
     ],
     "10.11 Property 11: Failure Triage preserves controls": [
@@ -657,6 +682,11 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987625567
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103321802
       }
     ],
     "10.12 Property 12: Exactly four roles and conflict-safe Standing Multi-Agent integration": [
@@ -664,6 +694,11 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987625641
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103322061
       }
     ],
     "10.13 Property 13: Surface Status and Coverage-Gap no-overclaim": [
@@ -671,6 +706,11 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987625734
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103322306
       }
     ],
     "10.14 Property 14: Minimal scope, approval separation, and task-state honesty": [
@@ -678,6 +718,11 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987625826
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103322490
       }
     ],
     "10.15 Property 15: Exact workspace boundaries and Site Write Gate": [
@@ -685,6 +730,11 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987625920
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103322731
       }
     ],
     "10.16 Property 16: Canonical Kiro inventory and contract-form integrity": [
@@ -692,6 +742,11 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987626009
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103322921
       }
     ],
     "10.17 Property 17: Four-slot controlled-task records remain complete and serial": [
@@ -699,6 +754,11 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987626106
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103323541
       }
     ],
     "10.18 Property 18: Fail-closed action and protected-path boundary": [
@@ -706,6 +766,11 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987626201
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103323812
       }
     ],
     "10.19 Property 19: Evidence-honest handoffs and Completion Records": [
@@ -713,6 +778,11 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987626306
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103324056
       }
     ],
     "10.20 Property 20: Exact-Line Rule rollout is owner-authorized and idempotent": [
@@ -720,6 +790,11 @@
         "executionId": "efca7a93-96b7-438c-8ec3-b41cfc00d137",
         "chatSessionId": "sess_85f68c76-5760-47d3-9182-77ba46f39fef",
         "timestamp": 1787987626423
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103324559
       }
     ],
     "8. Keep separate approval tracks explicit; do not execute them in this phase": [

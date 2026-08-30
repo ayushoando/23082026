@@ -25,18 +25,34 @@ import { trackSiteTabSelected } from "@/lib/analytics/siteEvents";
 
 const ICONS = { House, SquaresFour, PencilSimple, Buildings, UserCircle } as const;
 
+/**
+ * Marketing pages carry a single primary conversion — "Get Quote". On routes
+ * that already own an app action (planner/canvas, account), no extra top-bar
+ * CTA is shown; the tab bar + route chrome already cover it.
+ */
+function mobilePrimaryAction(
+  pathname: string,
+  t: ReturnType<typeof useTranslations<"marketing.chrome">>,
+): { label: string; href: string } | null {
+  const p = (pathname || "/").replace(/\/+$/, "") || "/";
+  if (p.startsWith("/ooplanner") || p.startsWith("/planner")) return null;
+  if (p.startsWith("/access") || p.startsWith("/dashboard") || p.startsWith("/portal")) {
+    return null;
+  }
+  return { label: t("mobile.getQuote"), href: "/contact" };
+}
+
 export function MobileAppShell({
   children,
-  primaryAction,
 }: {
   children: ReactNode;
-  primaryAction?: { label: string; href: string };
 }) {
   const t = useTranslations("marketing.chrome");
   const pathname = usePathname() || "/";
   const active = activeTabFor(pathname);
   const [navOpen, setNavOpen] = useState(false);
   const showSiteFooter = resolveRouteChromeMode(pathname).footer === "full";
+  const primaryAction = mobilePrimaryAction(pathname, t);
 
   return (
     <div className="mobile-app-shell">

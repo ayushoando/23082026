@@ -67,6 +67,16 @@
         "executionId": "005e29bb-78e8-4630-8509-9e7356b3bfa3",
         "chatSessionId": "sess_f1298c32-af0a-4602-b1ec-c8d02788b34b",
         "timestamp": 1788101646707
+      },
+      {
+        "executionId": "7d165a83-8349-4458-8f2e-df4e07faae8c",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103394294
+      },
+      {
+        "executionId": "40bcdc06-9f4a-4587-9908-4a9df3ebcdd4",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103506070
       }
     ],
     "1.5 Implement profile registries, applicability, and exact occurrence expansion": [
@@ -74,6 +84,16 @@
         "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
         "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
         "timestamp": 1788091861106
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103307681
+      },
+      {
+        "executionId": "be7672c9-1b65-4ab3-9122-a3bfabef8ba7",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103353223
       }
     ],
     "1.6 Implement artifact manifests, partitioning, resumability, and wave control": [
@@ -81,6 +101,11 @@
         "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
         "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
         "timestamp": 1788091861174
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103307844
       }
     ],
     "1.12 Execute and checkpoint the Wave 0 static batch": [
@@ -88,6 +113,11 @@
         "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
         "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
         "timestamp": 1788091861241
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103309093
       }
     ],
     "2.1 Implement static inventories for shared shells, links, navigation, states, and journeys": [
@@ -95,6 +125,11 @@
         "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
         "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
         "timestamp": 1788091861317
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103309247
       }
     ],
     "2.2 Implement auth, legal, consent, privacy, security, error, and offline foundation inventories": [
@@ -102,6 +137,11 @@
         "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
         "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
         "timestamp": 1788091861387
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103309481
       }
     ],
     "2.3 Implement per-occurrence evidence ingestion and finding generation": [
@@ -109,6 +149,11 @@
         "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
         "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
         "timestamp": 1788091861455
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103309757
       }
     ],
     "2.6 Execute and checkpoint the Wave 1 static batch": [
@@ -116,6 +161,11 @@
         "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
         "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
         "timestamp": 1788091861512
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103310194
       }
     ],
     "3.1 Implement surface-specific journey, form, asset, copy/IA, and metadata inventories": [
@@ -123,6 +173,11 @@
         "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
         "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
         "timestamp": 1788091861579
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103310304
       }
     ],
     "3.2 Implement static dimension evaluators and proposal capture": [
@@ -130,6 +185,11 @@
         "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
         "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
         "timestamp": 1788091861646
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103310406
       }
     ],
     "3.6 Execute and checkpoint the Wave 2 static batch": [
@@ -137,6 +197,11 @@
         "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
         "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
         "timestamp": 1788091861749
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103310925
       }
     ],
     "4.1 Implement administration and protected-context static inventory": [
@@ -144,6 +209,11 @@
         "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
         "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
         "timestamp": 1788091861797
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103311007
       }
     ],
     "4.2 Implement the Planner-only static audit partition": [
@@ -151,6 +221,11 @@
         "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
         "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
         "timestamp": 1788091861852
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103311104
       }
     ],
     "4.3 Implement the Studio-only static audit partition": [
@@ -158,6 +233,11 @@
         "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
         "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
         "timestamp": 1788091861905
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103311211
       }
     ],
     "4.4 Reconcile specialized states and access-context evidence": [
@@ -165,6 +245,11 @@
         "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
         "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
         "timestamp": 1788091862003
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103311300
       }
     ],
     "4.6 Execute and checkpoint the Wave 3 static batch": [
@@ -172,6 +257,11 @@
         "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
         "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
         "timestamp": 1788091862099
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103311519
       }
     ],
     "5.1 Implement the protected-operation registry and authorization gate": [
@@ -179,6 +269,11 @@
         "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
         "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
         "timestamp": 1788091862205
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103311632
       }
     ],
     "5.2 Run responsive and cross-browser occurrence batches": [
@@ -186,6 +281,11 @@
         "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
         "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
         "timestamp": 1788091862344
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103311729
       }
     ],
     "5.3 Run accessibility and assistive-technology occurrence batches": [
@@ -193,6 +293,11 @@
         "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
         "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
         "timestamp": 1788091862441
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103311810
       }
     ],
     "5.4 Run state, form, journey, protected-route, error, offline, and recovery batches": [
@@ -200,6 +305,11 @@
         "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
         "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
         "timestamp": 1788091862537
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103312051
       }
     ],
     "5.5 Run assets, analytics/consent, security/privacy, metadata/hosted, and external-link batches": [
@@ -207,6 +317,11 @@
         "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
         "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
         "timestamp": 1788091862632
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103312188
       }
     ],
     "5.6 Run performance and perceived-performance batches": [
@@ -214,6 +329,11 @@
         "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
         "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
         "timestamp": 1788091862725
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103312332
       }
     ],
     "5.8 Ingest runtime outputs and checkpoint Wave 4": [
@@ -221,6 +341,11 @@
         "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
         "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
         "timestamp": 1788091862850
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103312581
       }
     ],
     "6.1 Reconcile final occurrence findings, severity, and duplicate groups": [
@@ -228,6 +353,11 @@
         "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
         "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
         "timestamp": 1788091862929
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103312680
       }
     ],
     "6.2 Finalize replacement-ready copy, IA, metadata, and Hindi review queues": [
@@ -235,6 +365,11 @@
         "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
         "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
         "timestamp": 1788091863020
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103312799
       }
     ],
     "6.3 Build implementation-ready remediation handoffs without remediation": [
@@ -242,6 +377,11 @@
         "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
         "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
         "timestamp": 1788091863164
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103312929
       }
     ],
     "6.4 Reconcile exclusions, coverage gaps, conflicts, owner decisions, and pending operations": [
@@ -249,6 +389,11 @@
         "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
         "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
         "timestamp": 1788091863326
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103313066
       }
     ],
     "6.5 Generate final artifact manifests and machine-checkable completion proof": [
@@ -256,6 +401,11 @@
         "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
         "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
         "timestamp": 1788091863425
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103313174
       }
     ],
     "6.14 Perform final artifact review and close Wave 5": [
@@ -263,6 +413,151 @@
         "executionId": "d263c3dd-0ac4-432e-9974-86d63f3dcd39",
         "chatSessionId": "sess_368fa410-8c90-4dc0-a82c-05324b1502f9",
         "timestamp": 1788091863515
+      },
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103314375
+      }
+    ],
+    "1.7 Write the property test for canonical inventory closure": [
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103308009
+      }
+    ],
+    "1.8 Write the property test for dynamic-instance deduplication": [
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103308123
+      }
+    ],
+    "1.9 Write the property test for occurrence expansion and finding bijection": [
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103308226
+      }
+    ],
+    "1.10 Write the property test for authorization-lane non-escalation": [
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103308329
+      }
+    ],
+    "1.11 Write the property test for zero product-code mutation": [
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103308971
+      }
+    ],
+    "2.4 Write the property test for inventory-to-occurrence traceability": [
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103309899
+      }
+    ],
+    "2.5 Write the property test for link normalization and defects": [
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103310031
+      }
+    ],
+    "3.3 Write the property test for journey terminality and boundary contracts": [
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103310539
+      }
+    ],
+    "3.4 Write the property test for replacement-ready content completeness": [
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103310660
+      }
+    ],
+    "3.5 Write the property test for metadata route consistency": [
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103310783
+      }
+    ],
+    "4.5 Write the property test for duplicate grouping and fork ownership": [
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103311412
+      }
+    ],
+    "5.7 Write authorization-gate unit and adapter integration tests": [
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103312476
+      }
+    ],
+    "6.6 Write the property test for complete conditional evidence schemas": [
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103313293
+      }
+    ],
+    "6.7 Write the property test for severity monotonicity and ordering": [
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103313477
+      }
+    ],
+    "6.8 Write the property test for wave closure and downstream invalidation": [
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103313613
+      }
+    ],
+    "6.9 Write the property test for remediation handoff completeness": [
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103313749
+      }
+    ],
+    "6.10 Write the property test for explicit exclusions and coverage gaps": [
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103313904
+      }
+    ],
+    "6.11 Write the property test for partial existing-tool evidence": [
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103313984
+      }
+    ],
+    "6.12 Write the property test for completion-proof reconciliation": [
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103314106
+      }
+    ],
+    "6.13 Write golden-fixture and end-to-end audit-program integration tests": [
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103314239
       }
     ]
   }

@@ -44,6 +44,10 @@ This structure combines central and state government into **Government & Public 
 - **CSS Pixel**: A CSS layout unit used to define viewport width and target size.
 - **WCAG 2.2 Level AA**: The Web Content Accessibility Guidelines version 2.2 conformance level AA.
 - **en-IN Collation**: A deterministic, case-insensitive English (India) alphabetical comparison used for ordering Normalized Display Names.
+- **Wide Viewport**: A viewport width of 1440 CSS Pixels or wider, including 1920 CSS Pixels.
+- **Content Max-Width**: The maximum CSS width applied to the Client Showcase container so that content does not stretch across the full wide-viewport width.
+- **Auto-sizing Grid**: A CSS grid whose column count and column width adapt to the available container width without explicit breakpoint-specific column counts, implemented with Tailwind CSS v4 responsive utilities.
+- **Overflow Containment**: The guarantee that no child element causes a horizontal scrollbar or horizontal bleed beyond the Client Showcase container boundary at any viewport width.
 
 ## Requirements
 
@@ -158,6 +162,19 @@ The following cues are review work, not corrections. The supplied names must rem
 4. WHEN a Content Reviewer adds or updates a Published Client Record, THE Client Content Registry SHALL determine the public Sector Tab, Logo Fallback eligibility, and Client Card ordering from the approved fields of that Client Content Record.
 5. WHEN a Content Reviewer merges Submitted Client Names under one Canonical Client ID, THE Client Content Registry SHALL retain links from the Canonical Client ID to every contributing Submitted Client Name.
 
+### Requirement 8: Contain layout at wide viewports and enforce auto-sizing
+
+**User Story:** As a prospective client viewing the showcase on a wide monitor, I want content to stay visually aligned and readable at 1920 CSS Pixels and larger, so that the layout does not stretch uncomfortably across the full screen width and no content bleeds outside its container.
+
+#### Acceptance Criteria
+
+1. THE Client Showcase container SHALL apply a Content Max-Width that prevents the tab row, Tab Panel, and Client Card grid from stretching beyond a defined maximum width at Wide Viewport widths.
+2. WHILE the viewport width equals or exceeds the Content Max-Width, THE Client Showcase container SHALL be horizontally centered in the viewport with equal left and right margins.
+3. THE Client Showcase SHALL implement the Client Card grid as an Auto-sizing Grid using Tailwind CSS v4 responsive utilities, without hard-coded per-breakpoint column counts in the component markup.
+4. AT every viewport width from 320 CSS Pixels through 1920 CSS Pixels and wider, THE Client Showcase SHALL maintain Overflow Containment so that no horizontal scrollbar appears on the page and no Client Card or tab element bleeds outside the Client Showcase container boundary.
+5. WHILE the viewport width is 1440 CSS Pixels or wider, THE Client Showcase container SHALL remain horizontally centered and no Client Card or Sector Tab label SHALL be truncated due to container overflow.
+6. THE Client Showcase SHALL use only Tailwind CSS v4 utility classes for all sizing, spacing, and grid layout; no custom pixel widths SHALL be hard-coded in component styles outside the design-token and FOCSS layer.
+
 ## Correctness Properties
 
 The following are implementation-agnostic, executable test contracts. The properties are targets for automated property, model, component, or browser checks; no current tests or runtime results are implied by this document.
@@ -177,6 +194,7 @@ The following are implementation-agnostic, executable test contracts. The proper
 | P11 | Property-based | For every valid Sector Tab with zero Published Client Records, selecting that tab produces its Empty-sector State and leaves all four Sector Tabs selectable. |
 | P12 | Example-based browser check | At 320, 768, and 1024 CSS Pixel viewport widths, a browser check confirms that a keyboard user can focus and select every Sector Tab, each full tab label and Client Card Normalized Display Name is available, the selected tab has a visible focus treatment, and horizontal page overflow is absent other than the 320 CSS Pixel mobile tab row. |
 | P13 | Example | The initial Content Review Queue includes every Initial Review Cue row before any associated record becomes public. |
+| P14 | Example-based browser check | At viewport widths 320, 768, 1280, 1440, and 1920 CSS Pixels, a browser check confirms that the Client Showcase container is horizontally centered, no horizontal scrollbar is present on the page, no Client Card or tab element overflows the container boundary, and the Auto-sizing Grid column count adjusts without empty trailing columns wider than one card. |
 
 ## Supplied Source Inventory (verbatim)
 

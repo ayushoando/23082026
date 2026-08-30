@@ -303,16 +303,35 @@ export const useCanvasCore = ({
       return;
     }
 
+    // Use scene-space object bounds (not getBoundingRect which returns
+    // viewport-space and changes with the current transform).
     let minX = Infinity;
     let minY = Infinity;
     let maxX = -Infinity;
     let maxY = -Infinity;
     objs.forEach((object) => {
-      const bounds = object.getBoundingRect();
-      minX = Math.min(minX, bounds.left);
-      minY = Math.min(minY, bounds.top);
-      maxX = Math.max(maxX, bounds.left + bounds.width);
-      maxY = Math.max(maxY, bounds.top + bounds.height);
+      // aCoords gives the four corners in scene space after applying the
+      // object's own transform (scale/rotation/skew) but before the canvas
+      // viewport transform — exactly what we need for a stable fit.
+      const coords = object.aCoords;
+      if (coords) {
+        const xs = [coords.tl.x, coords.tr.x, coords.br.x, coords.bl.x];
+        const ys = [coords.tl.y, coords.tr.y, coords.br.y, coords.bl.y];
+        minX = Math.min(minX, ...xs);
+        minY = Math.min(minY, ...ys);
+        maxX = Math.max(maxX, ...xs);
+        maxY = Math.max(maxY, ...ys);
+      } else {
+        // Fallback for objects that have not yet calculated aCoords.
+        const l = object.left ?? 0;
+        const t = object.top ?? 0;
+        const w = object.getScaledWidth?.() ?? (object.width ?? 0);
+        const h = object.getScaledHeight?.() ?? (object.height ?? 0);
+        minX = Math.min(minX, l);
+        minY = Math.min(minY, t);
+        maxX = Math.max(maxX, l + w);
+        maxY = Math.max(maxY, t + h);
+      }
     });
 
     const canvasWidth = c.getWidth();

@@ -2844,63 +2844,63 @@ Check the 13 fields in order, specialized-term explanation, missing-proof state,
 
 Check exactly 25 categories, complete safety preamble, placeholders, scope, evidence starts, stop conditions, additive skills, command/authorization classification, exact proof/pending state, and Emergency shape.
 
-  - [ ] 10.6 Property 6: Conditional skill routing and local-first capability selection
+  - [~] 10.6 Property 6: Conditional skill routing and local-first capability selection
 
 Check every matching skill, rejection reasons, Local Evidence before Powers/MCP, registry confirmation, distinct MCP states, and no runtime activation claim.
 
-  - [ ] 10.7 Property 7: UI, fork, and AI evidence boundaries
+  - [~] 10.7 Property 7: UI, fork, and AI evidence boundaries
 
 Check route-to-source guidance, Visual Detail Checklist, asset/motion safeguards, Planner/Studio no-cross-import, Site Write Gate, and advisory-only AI.
 
-  - [ ] 10.8 Property 8: Evidence-labelled technical and data ownership
+  - [~] 10.8 Property 8: Evidence-labelled technical and data ownership
 
 Check package/framework/command/route/database/asset/persistence evidence, Products/Admin ownership, migrations, mode-aware persistence, live-evidence precedence, and workspace classification.
 
-  - [ ] 10.9 Property 9: Typed artifact placement and producer ownership
+  - [~] 10.9 Property 9: Typed artifact placement and producer ownership
 
 Check workstream/purpose subfolder, filename, producer, authored/generated state, rejected placements, Completion repetition, root legacy handling, sibling boundaries, and Site Write fields.
 
-  - [ ] 10.10 Property 10: Protected Command permission and honest validation
+  - [~] 10.10 Property 10: Protected Command permission and honest validation
 
 Check dual authorization, pending state without either permission, eligible-check classification, inline-marker rejection, exact observation fields, and no command implication from a plan.
 
-  - [ ] 10.11 Property 11: Failure Triage preserves controls
+  - [~] 10.11 Property 11: Failure Triage preserves controls
 
 Check read-only triage, exact failure fields, unobserved cause without current output, smallest authorized diagnostic, preserved controls, and canonical blocker handling.
 
-  - [ ] 10.12 Property 12: Exactly four roles and conflict-safe Standing Multi-Agent integration
+  - [~] 10.12 Property 12: Exactly four roles and conflict-safe Standing Multi-Agent integration
 
 Check four role names, coordinator attached to a slot, minimum pair, maximum four, availability, disjoint/read-only parallelism, ownership before writes, complete records, owner status, Completion after verification, no fallback, and Conflict Stop.
 
-  - [ ] 10.13 Property 13: Surface Status and Coverage-Gap no-overclaim
+  - [~] 10.13 Property 13: Surface Status and Coverage-Gap no-overclaim
 
 Check allowed statuses, sources, limitations, next evidence, owner action, scope, decision, response/Completion propagation, and no wired/complete claim without end-to-end evidence.
 
-  - [ ] 10.14 Property 14: Minimal scope, approval separation, and task-state honesty
+  - [~] 10.14 Property 14: Minimal scope, approval separation, and task-state honesty
 
 Check smallest sound change, narrowest proof, Separate Approval Work, open/pending downstream state, plan placement, no runtime spawning, locked-path separation, and unimplemented separate work.
 
-  - [ ] 10.15 Property 15: Exact workspace boundaries and Site Write Gate
+  - [~] 10.15 Property 15: Exact workspace boundaries and Site Write Gate
 
 Check exact directory forms, sibling/output separation, Core Product Write versus Non-Core Artifact, redirect/stop, required artifact fields, Locked Path Gate, exact-file authorization, and no relocation claim.
 
-  - [ ] 10.16 Property 16: Canonical Kiro inventory and contract-form integrity
+  - [~] 10.16 Property 16: Canonical Kiro inventory and contract-form integrity
 
 Check every 36 active path individually, 11 reference/history paths, four package paths, negative inventory, exact contract forms only, separate 12 guide paths, and static-only limitation. Validates Requirements 33.1–33.9.
 
-  - [ ] 10.17 Property 17: Four-slot controlled-task records remain complete and serial
+  - [~] 10.17 Property 17: Four-slot controlled-task records remain complete and serial
 
 Check exactly four Active Agent entries, unique role set, exactly one coordinator designation, pre-action records, ownership, serial handoffs, Conflict Stop, five-file distinction, and no promotion of missing evidence. Validates Requirements 34.1–34.10 and 37.1–37.11.
 
-  - [ ] 10.18 Property 18: Fail-closed action and protected-path boundary
+  - [~] 10.18 Property 18: Fail-closed action and protected-path boundary
 
 Check all six action kinds, required gate inputs, explicit allow/deny reason, denial on unavailable/indeterminate state, protected read/write separation, exact authorization, and no substitute-copy proof. Requirement 35.1 requires a separate executable/host smoke or integration observation; static text cannot satisfy it. Validates Requirements 35.2–35.11 and 36.1–36.6.
 
-  - [ ] 10.19 Property 19: Evidence-honest handoffs and Completion Records
+  - [~] 10.19 Property 19: Evidence-honest handoffs and Completion Records
 
 Check changed-file reasons, observed versus not-run validation, inaccessible/unobserved labels, command-hook scope, five-file/four-slot distinction, static/runtime separation, and honest Requirements 40 handoff. Validates Requirements 38.1–38.6 and 40.1–40.6.
 
-  - [ ] 10.20 Property 20: Exact-Line Rule rollout is owner-authorized and idempotent
+  - [~] 10.20 Property 20: Exact-Line Rule rollout is owner-authorized and idempotent
 
 Check exact line, one occurrence, retention of an existing single occurrence, exact target authorization, insertion failure stop, pending/blocker state, and no protected-file claim. Validates Requirements 39.1–39.7.
 

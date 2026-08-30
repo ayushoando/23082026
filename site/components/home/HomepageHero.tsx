@@ -55,6 +55,17 @@ export function HomepageHero() {
 
   const showSlideImage = carouselEnabled && currentIndex > 0;
 
+  // Preload the next hero image so the crossfade never reveals an empty slot.
+  // Keeping the poster mounted (opacity-0) means a slow preload degrades to a
+  // stable poster instead of a blank frame.
+  useEffect(() => {
+    if (!carouselEnabled) return;
+    const next = HOMEPAGE_HERO_IMAGES[(currentIndex + 1) % HOMEPAGE_HERO_IMAGES.length];
+    if (!next) return;
+    const img = new window.Image();
+    img.src = String(next.src);
+  }, [carouselEnabled, currentIndex]);
+
   // Defer carousel + motion until idle or first interaction (protect LCP).
   useEffect(() => {
     return runAfterIdleOrInteraction(
@@ -86,14 +97,16 @@ export function HomepageHero() {
     };
   }, [resolvedImageSrc, shouldCrossfade]);
 
-  // Auto-advance only after carousel is enabled.
+  // Auto-advance only after carousel is enabled. The interval is armed once
+  // and never re-armed on slide change, so a manual dot click does not reset
+  // the countdown and the timer does not fight the click.
   useEffect(() => {
     if (!carouselEnabled || HOMEPAGE_HERO_IMAGES.length < 2) return;
     const timer = window.setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % HOMEPAGE_HERO_IMAGES.length);
     }, SLIDE_MS);
     return () => window.clearInterval(timer);
-  }, [carouselEnabled, currentIndex]);
+  }, [carouselEnabled]);
 
   // Dynamic GSAP after LCP — parallax only. Do not animate copy from opacity 0
   // (text already painted for LCP/a11y; late from() would flash and shift layout).
@@ -261,6 +274,8 @@ export function HomepageHero() {
             key={i}
             type="button"
             onClick={() => {
+              // A manual choice always engages the carousel immediately, so
+              // the dots work even before the idle/interaction enable.
               setCarouselEnabled(true);
               setCurrentIndex(i);
             }}

@@ -127,7 +127,7 @@ All code is TypeScript with named exports. Tests live under `tests/`. Commands r
     - Assert observability side effects fire via an inspectable registry and in-memory span exporter without changing status/body
     - _Requirements: 3.1, 3.2, 6.6_
 
-- [ ] 7. Checkpoint - planner route and observability wired
+- [~] 7. Checkpoint - planner route and observability wired
   - Ensure all tests pass, ask the user if questions arise.
 
 - [x] 8. Provider chain and retrieval audit verification (tests only; changes gated)
@@ -156,7 +156,7 @@ All code is TypeScript with named exports. Tests live under `tests/`. Commands r
     - For any trimmed query of length < 2, assert the return equals `products.slice(0, limit)` with `sources` equal to `["catalog-order"]`
     - **Validates: Requirements 5.5**
 
-- [ ] 9. Final checkpoint - full validation
+- [~] 9. Final checkpoint - full validation
   - Ensure all tests pass, ask the user if questions arise.
 
 ## Notes

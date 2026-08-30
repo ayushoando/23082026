@@ -1,0 +1,19 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "7. Checkpoint - planner route and observability wired": [
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103321573
+      }
+    ],
+    "9. Final checkpoint - full validation": [
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103321795
+      }
+    ]
+  }
+}
