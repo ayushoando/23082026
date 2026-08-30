@@ -80,7 +80,7 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - Declare repository remediation and full validation as separate completion states.
     - _Requirements: 14.8-14.10, 17.7, 18.1-18.9, 19.2, 19.4-19.8_
 
-- [ ] 2. Workstream 2 — Remediate fork, geometry, and persistence integrity
+- [x] 2. Workstream 2 — Remediate fork, geometry, and persistence integrity
   - [x] 2.1 Audit every inventoried Planner/Studio dependency and remediate all fork-boundary violations
     - Remove Planner-to-Studio, Studio-to-Planner, and cross-zone FOCSS imports; create independent Planner-owned equivalents where needed and extend findings to all affected workflows.
     - Preserve Planner API casing and approved shared-infrastructure boundaries.
@@ -112,11 +112,11 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
   - [x] 2.8 Implement atomic revision compare-and-swap behavior
     - Require `expectedRevision`, increment once on success, preserve `createdAt`, update `updatedAt`, and return safe conflict metadata without changing a newer record.
     - _Requirements: 4.4, 5.8, 13.2, 13.4_
-  - [-] 2.9 Implement owner-scoped idempotent create/save/delete behavior
+  - [x] 2.9 Implement owner-scoped idempotent create/save/delete behavior
     - Scope opaque bounded keys by owner/operation/project, store a request fingerprint and result, replay identical outcomes once, and conflict on different-fingerprint reuse.
     - Use atomic disk sidecar/write-rename behavior and transaction-safe Supabase behavior supported by repository evidence.
     - _Requirements: 13.3_
-  - [~] 2.10 Implement schema compatibility and deterministic deletion semantics
+  - [x] 2.10 Implement schema compatibility and deterministic deletion semantics
     - Validate current versions, purely migrate known older versions in memory, preserve unsupported source records, and exclude successfully deleted records from subsequent owner list/load results.
     - Reconcile the final persistence contract with workstream 4 at Gate C before regression integration.
     - _Requirements: 4.5, 13.6, 13.7, 14.6_
@@ -145,7 +145,7 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
   - [x] 3.1 Remediate `/ooplanner` and project-route entry, list, and routing behavior
     - Produce deterministic guest/authenticated entry states, project-list loading/empty/error states, reachable next actions, and thin App Router entries with business logic in Planner-owned modules.
     - _Requirements: 2.1, 4.1, 5.1-5.3, 10.1-10.3_
-  - [-] 3.2 Remediate create, load, edit, save, and delete workflows against the Gate B contracts
+  - [x] 3.2 Remediate create, load, edit, save, and delete workflows against the Gate B contracts
     - Initialize valid defaults, restore all view-independent content, save one coherent revision, require delete confirmation, and return deterministic post-delete state.
     - Fix every verified dead end, stale selection, incorrect metadata, or data-loss path discovered by the traces without rewriting geometry/persistence or API contract owner files.
     - _Requirements: 2.1, 4.2-4.5, 13.1, 13.2, 13.6_
@@ -153,10 +153,10 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - Distinguish default, loading, empty, success, validation, server, unauthenticated, forbidden, rate-limited, conflict, stale, offline, and recovery states where applicable.
     - Give each state an accessible status, focus target, memory-preservation rule, and deterministic next/recovery action; clear obsolete errors after successful retry.
     - _Requirements: 4.8, 5.1-5.8_
-  - [~] 3.4 Remediate failure-safe editing, unsaved navigation, offline, conflict, and reauthentication behavior
+  - [-] 3.4 Remediate failure-safe editing, unsaved navigation, offline, conflict, and reauthentication behavior
     - Retain the last valid in-memory document after failed edits/requests, gate destructive replacement behind explicit decisions, and never silently overwrite newer persisted data.
     - _Requirements: 4.6-4.8, 5.6-5.8, 10.8_
-  - [~] 3.5 Write property-based test for valid project initialization
+  - [x] 3.5 Write property-based test for valid project initialization
     - **Property 6: Valid project initialization**
     - Generate valid owners and creation inputs and verify editable defaults, schema version, revision 1, coherent timestamps, and valid geometry.
     - **Validates: Requirements 4.2, 13.1, 13.2**
@@ -252,11 +252,11 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - **Property 17: Safe structured errors**
     - Generate internal exceptions and sensitive payload fragments and verify stable safe errors, correlation ids, and prohibited-data exclusion.
     - **Validates: Requirements 11.8, 11.9**
-  - [-] 4.9 Implement the schema-gap decision record from live Admin migration, type, and adapter evidence
+  - [x] 4.9 Implement the schema-gap decision record from live Admin migration, type, and adapter evidence
     - Determine whether revision, schema version, idempotency, constraints, RLS, grants, or indexes already satisfy the contract; bind the decision and exact evidence to findings.
     - Do not inspect hosted schema or claim remote state in this repository-edit lane. This task is required and controls, but does not make optional, task 4.10.
     - _Requirements: 14.1, 14.2, 14.6, 14.10, 19.4_
-  - [~] 4.10 If and only if task 4.9 verifies a schema defect, create the reversible Admin migration and repository-side contract changes
+  - [x] 4.10 If and only if task 4.9 verifies a schema defect, create the reversible Admin migration and repository-side contract changes
     - Write under `site/platform/supabase/migrations.admin/`, target `oando_plans`/owner-scoped idempotency only, preserve/transform existing rows deterministically, and include dependency-safe `-- rollback`, least-privilege grants, indexes/constraints, and authenticated owner RLS.
     - Keep application-level owner checks and server-only service-role boundaries; do not touch Products migrations or apply the migration. If 4.9 proves no schema defect, record the evidenced no-migration branch instead of treating this task as optional.
     - _Requirements: 14.1-14.6_
@@ -270,15 +270,15 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - Reuse the existing observability registry for request/error counts, duration, rate limits, authorization denials, and persistence failures with bounded operation/method/result/status/persistence-mode labels.
     - Implement instrumentation hooks in workstream 5-owned modules and propagate one opaque correlation id through response, API, persistence, and client-visible server errors. Consume workstreams 2 and 4 contracts read-only; any required call-site edit is handed to that file's owner for serial integration.
     - _Requirements: 17.1-17.4_
-  - [-] 5.2 Implement redaction and exporter-failure isolation
+  - [x] 5.2 Implement redaction and exporter-failure isolation
     - Exclude contact data, owner/project identifiers and content, geometry, bodies, tokens, cookies, credentials, secrets, free-form errors, and identifier-bearing URLs from logs/labels.
     - Make export failure preserve the user and persistence result while sending the same redacted event to the approved fallback sink.
     - _Requirements: 17.5-17.7_
-  - [~] 5.3 Write property-based test for correlation and privacy preservation
+  - [x] 5.3 Write property-based test for correlation and privacy preservation
     - **Property 24: Correlation and privacy preservation**
     - Generate operations and prohibited values and verify one correlation id propagates unchanged while all sensitive/high-cardinality values are absent.
     - **Validates: Requirements 17.1, 17.3, 17.4, 17.5**
-  - [~] 5.4 Write property-based test for observability failure isolation
+  - [x] 5.4 Write property-based test for observability failure isolation
     - **Property 25: Observability failure isolation**
     - Generate exporter failures and operation outcomes and verify user/persistence results remain unchanged and the redacted fallback event is emitted.
     - **Validates: Requirements 17.6**

@@ -6,7 +6,12 @@ import {
   ooFontSans,
   ooFontSansShort,
 } from "@planner/lib/plannerPalette";
-import { collectUserLayerRows, isDragDrawTool, isTooSmallDrawnShape } from "@planner/lib/plannerCanvasLayers";
+import {
+  collectUserLayerRows,
+  isDragDrawTool,
+  isTooSmallDrawnShape,
+  restorePersistedLayerRows,
+} from "@planner/lib/plannerCanvasLayers";
 import React, { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { createPortal } from "react-dom";
 import * as fabric from "fabric";
@@ -1261,10 +1266,10 @@ const Planner = ({
     c.fire("object:modified", { target: active }); c.requestRenderAll();
   };
   const findById = (id: string): OoFabricObject | undefined => fabricRef.current?.getObjects().find((o) => asOo(o).data?.id === id) as OoFabricObject | undefined;
-  const layerToggleVisible = (id: string) => { const c = fabricRef.current; if (!c) return; const o = findById(id); if (!o) return; o.visible = !o.visible; c.requestRenderAll(); refreshLayers(); };
-  const layerToggleLock = (id: string) => { const c = fabricRef.current; if (!c) return; const o = findById(id); if (!o) return; const l = !o.lockMovementX; o.set({ lockMovementX: l, lockMovementY: l, lockScalingX: l, lockScalingY: l, lockRotation: l, selectable: !l }); c.requestRenderAll(); refreshLayers(); };
+  const layerToggleVisible = (id: string) => { const c = fabricRef.current; if (!c) return; const o = findById(id); if (!o) return; o.visible = !o.visible; c.requestRenderAll(); refreshLayers(); setHasUnsavedChanges(true); };
+  const layerToggleLock = (id: string) => { const c = fabricRef.current; if (!c) return; const o = findById(id); if (!o) return; const l = !o.lockMovementX; o.set({ lockMovementX: l, lockMovementY: l, lockScalingX: l, lockScalingY: l, lockRotation: l, selectable: !l }); c.requestRenderAll(); refreshLayers(); setHasUnsavedChanges(true); };
   const layerDelete = (id: string) => { const c = fabricRef.current; if (!c) return; const o = findById(id); if (!o) return; c.remove(o); c.requestRenderAll(); };
-  const layerReorder = (id: string, dir: number) => { const c = fabricRef.current; if (!c) return; const o = findById(id); if (!o) return; if (dir < 0) c.bringObjectForward(o); else c.sendObjectBackwards(o); c.requestRenderAll(); refreshLayers(); };
+  const layerReorder = (id: string, dir: number) => { const c = fabricRef.current; if (!c) return; const o = findById(id); if (!o) return; if (dir < 0) c.bringObjectForward(o); else c.sendObjectBackwards(o); c.requestRenderAll(); refreshLayers(); setHasUnsavedChanges(true); };
   const layerSelect = (id: string) => { const c = fabricRef.current; if (!c) return; const o = findById(id); if (!o) return; c.setActiveObject(o); c.requestRenderAll(); };
 
   // Auto-arrange — lay out selected furniture inside the sheet non-overlapping.
@@ -1472,6 +1477,7 @@ const Planner = ({
       hiddenGrid.forEach((object) => (object.visible = true));
       c.requestRenderAll();
 
+      const layerRows = collectUserLayerRows(c.getObjects()).reverse();
       const payload = {
         name: projectName || "Untitled Plan",
         status: "draft",
@@ -1484,7 +1490,7 @@ const Planner = ({
           canvasSnapshot: canvasJson,
         },
         sheet,
-        layers: [],
+        layers: layerRows,
         thumbnail_png: thumbnail,
       };
 
@@ -1497,6 +1503,11 @@ const Planner = ({
             expectedRevision: 0,
             idempotencyKey,
           });
+      const savedSheet: PlannerSheet = {
+        ...DEFAULT_SHEET,
+        ...(saved.sheet ?? {}),
+      };
+      const savedLayers = restorePersistedLayerRows(c.getObjects(), saved.layers);
 
       if (!projectId) {
         setProjectId(saved.id);
@@ -1504,6 +1515,15 @@ const Planner = ({
       }
       setProjectName(saved.name || payload.name);
       setProjectRevision(saved.revision);
+      setSheet(savedSheet);
+      setLayers(savedLayers);
+      setLoadState(
+        readyState(saved.id, {
+          ...saved,
+          sheet: savedSheet,
+          layers: savedLayers,
+        }),
+      );
       setHasUnsavedChanges(false);
       setSaveIssue(null);
       setConflictRevision(null);
@@ -1772,17 +1792,25 @@ const Planner = ({
         } catch {
           // The route remains authoritative when storage is unavailable.
         }
-        if (proj.sheet?.width_mm) {
-          setSheet({ ...DEFAULT_SHEET, ...proj.sheet });
-        }
+        const restoredSheet: PlannerSheet = {
+          ...DEFAULT_SHEET,
+          ...(proj.sheet ?? {}),
+        };
+        const restoredLayers = restorePersistedLayerRows(c.getObjects(), proj.layers);
+        const restoredProject: PlannerProject = {
+          ...proj,
+          sheet: restoredSheet,
+          layers: restoredLayers,
+        };
+        setSheet(restoredSheet);
         drawGridAndSheet();
         c.requestRenderAll();
-        refreshLayers();
+        setLayers(restoredLayers);
         setHasUnsavedChanges(false);
         setSaveIssue(null);
         saveIdempotencyRef.current = null;
         showToast(`Loaded "${proj.name}"`);
-        setLoadState(readyState(effectiveId!, proj));
+        setLoadState(readyState(effectiveId!, restoredProject));
         // Reset session expiry warning — successful load proves an active
         // authenticated session (Req 8.8).
         setSessionExpiring(false);

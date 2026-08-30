@@ -34,6 +34,12 @@ interface PersistedPlannerAtomicStateV1 {
   receipts: readonly PlannerIdempotencyReceiptV1[];
 }
 
+interface PersistedPlannerAtomicSourceV1 {
+  stateVersion: 1;
+  project: unknown | null;
+  receipts: readonly PlannerIdempotencyReceiptV1[];
+}
+
 class PlannerDiskCompatibilityError extends Error {
   readonly code: "INVALID_PROJECT" | "UNSUPPORTED_SCHEMA_VERSION" | "UNSUPPORTED_GEOMETRY";
 
@@ -80,26 +86,38 @@ function readReceipts(value: unknown): readonly PlannerIdempotencyReceiptV1[] {
   return value as PlannerIdempotencyReceiptV1[];
 }
 
-async function readPersistedState(
+async function readPersistedStateSource(
   projectId: string,
-  ownerId: string,
-): Promise<PlannerProjectAtomicStateV1 | undefined> {
+): Promise<PersistedPlannerAtomicSourceV1 | undefined> {
   try {
     const source: unknown = JSON.parse(await fs.readFile(statePath(projectId), "utf8"));
     if (!isRecord(source) || source.stateVersion !== 1) {
       throw new Error("Unsupported Planner disk state version");
     }
-    let project: PlannerProjectAtomicStateV1["project"] = null;
-    if (source.project !== null) {
-      const read = readPlannerProjectEnvelope(source.project, { ownerId });
-      if (!read.ok) throw new PlannerDiskCompatibilityError(read.code, read.message);
-      project = read.value;
-    }
-    return { project, receipts: readReceipts(source.receipts) };
+    return {
+      stateVersion: 1,
+      project: source.project === null ? null : source.project,
+      receipts: readReceipts(source.receipts),
+    };
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === "ENOENT") return undefined;
     throw error;
   }
+}
+
+async function readPersistedState(
+  projectId: string,
+  ownerId: string,
+): Promise<PlannerProjectAtomicStateV1 | undefined> {
+  const persisted = await readPersistedStateSource(projectId);
+  if (!persisted) return undefined;
+  let project: PlannerProjectAtomicStateV1["project"] = null;
+  if (persisted.project !== null) {
+    const read = readPlannerProjectEnvelope(persisted.project, { ownerId });
+    if (!read.ok) throw new PlannerDiskCompatibilityError(read.code, read.message);
+    project = read.value;
+  }
+  return { project, receipts: persisted.receipts };
 }
 
 async function readInitialState(
@@ -177,28 +195,58 @@ async function stateProjectIds(): Promise<Set<string>> {
   );
 }
 
+function persistedOwnerId(source: unknown): string | undefined {
+  if (!isRecord(source)) return undefined;
+  const owner = source.ownerId ?? source.owner_id ?? source.user_id;
+  return typeof owner === "string" && owner.trim() ? owner.trim() : undefined;
+}
+
+/**
+ * Normalize supported/known-old disk records before returning them. An
+ * unsupported version is returned unchanged so the repository facade can
+ * produce an explicit compatibility result; no adapter write is attempted.
+ * Records belonging to another owner remain non-disclosing in list/load.
+ */
+function diskProjectForRead(source: unknown, ownerId: string): unknown | null {
+  const persistedOwner = persistedOwnerId(source);
+  if (persistedOwner && persistedOwner !== ownerId) return null;
+  const read = readPlannerProjectEnvelope(source, { ownerId });
+  if (read.ok) return read.value;
+  if (read.code === "UNSUPPORTED_SCHEMA_VERSION" || read.code === "UNSUPPORTED_GEOMETRY") {
+    return source;
+  }
+  return null;
+}
+
 export const plannerProjectDiskAdapter: PlannerProjectAtomicAdapterV1 = {
   mode: "disk",
   async list(ownerId) {
     const stateIds = await stateProjectIds();
     const projects: unknown[] = [];
     for (const projectId of stateIds) {
-      const state = await readPersistedState(projectId, ownerId);
-      if (state?.project?.ownerId === ownerId) projects.push(state.project);
+      const persisted = await readPersistedStateSource(projectId);
+      if (!persisted || persisted.project === null) continue;
+      const project = diskProjectForRead(persisted.project, ownerId);
+      if (project !== null) projects.push(project);
     }
     const legacy = await listProjectsFromDisk({ ignoreAtomicState: true });
     for (const source of legacy) {
       const id = typeof source.id === "string" ? source.id : "";
       if (stateIds.has(id)) continue;
-      const read = readPlannerProjectEnvelope(source, { ownerId });
-      if (read.ok) projects.push(read.value);
+      const project = diskProjectForRead(source, ownerId);
+      if (project !== null) projects.push(project);
     }
     return projects;
   },
   async load(ownerId, projectId) {
-    const persisted = await readPersistedState(projectId, ownerId);
-    if (persisted) return persisted.project;
-    return loadProject(projectId, { ignoreAtomicState: true });
+    const persisted = await readPersistedStateSource(projectId);
+    if (persisted) {
+      return persisted.project === null
+        ? null
+        : diskProjectForRead(persisted.project, ownerId);
+    }
+    const legacy = await loadProject(projectId, { ignoreAtomicState: true });
+    return legacy ? diskProjectForRead(legacy, ownerId) : null;
   },
   async mutate(context, command) {
     return withProjectLock(command.projectId, async (): Promise<PlannerProjectMutationTransitionV1> => {

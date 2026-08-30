@@ -32,6 +32,7 @@ import { plannerProjectSupabaseAdapter } from "@planner/server/plannerProjectSup
 export {
   createPlannerProjectRepository,
   applyPlannerProjectMutation,
+  boundedPlannerMutationFingerprint,
   fingerprintPlannerMutation,
 } from "@planner/lib/plannerProjectOperations";
 export {

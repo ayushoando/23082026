@@ -2,6 +2,7 @@
 import React, { type ReactNode } from "react";
 import Link from "next/link";
 import { OneAndOnlyLogo } from "@/components/ui/Logo";
+import { confirmPlannerNavigation } from "@planner/store/plannerUiStore";
 
 type TopBarShellProps = {
   productLabel: string;
@@ -18,6 +19,9 @@ export function TopBarShell({ productLabel, unitPill }: TopBarShellProps) {
             href="/"
             className="topbar__brand-logo"
             aria-label="One and Only - home"
+            onClick={(event) => {
+              if (!confirmPlannerNavigation()) event.preventDefault();
+            }}
           >
             <OneAndOnlyLogo
               variant="orange"

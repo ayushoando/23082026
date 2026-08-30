@@ -1,11 +1,9 @@
 import "server-only";
 
-import { createHash } from "node:crypto";
-
 import type { Json } from "@/platform/supabase/types";
 import { createSupabaseAuthAdminClient } from "@/platform/supabase/auth-admin";
 import {
-  fingerprintPlannerMutation,
+  boundedPlannerMutationFingerprint,
   type PlannerProjectAtomicAdapterV1,
   type PlannerProjectAtomicStateV1,
   type PlannerProjectMutationCommandV1,
@@ -117,13 +115,23 @@ function projectWithDedicatedVersions(
   row: OandoPlanRow,
 ): Record<string, unknown> {
   const {
+    id: _payloadId,
+    ownerId: _payloadOwnerId,
+    owner_id: _payloadOwnerIdSnake,
+    user_id: _payloadUserId,
     revision: _payloadRevision,
     schemaVersion: _payloadSchemaVersion,
     schema_version: _payloadSchemaVersionSnake,
-    ...withoutPayloadVersions
+    createdAt: _payloadCreatedAt,
+    created_at: _payloadCreatedAtSnake,
+    updatedAt: _payloadUpdatedAt,
+    updated_at: _payloadUpdatedAtSnake,
+    thumbnailUrl: _payloadThumbnailUrl,
+    thumbnail_url: _payloadThumbnailUrlSnake,
+    ...withoutServerFields
   } = source;
   return {
-    ...withoutPayloadVersions,
+    ...withoutServerFields,
     revision: row.revision,
     schema_version: row.schema_version,
   };
@@ -134,6 +142,7 @@ function rowAsLegacyProject(row: OandoPlanRow): Record<string, unknown> {
   return {
     ...projectWithDedicatedVersions(payload, row),
     id: row.id,
+    ownerId: row.user_id,
     user_id: row.user_id,
     name: row.name,
     status: row.status,
@@ -157,6 +166,7 @@ function projectSourceFromRow(row: OandoPlanRow): unknown | null {
       return {
         ...projectWithDedicatedVersions(container.project, row),
         id: row.id,
+        ownerId: row.user_id,
         user_id: row.user_id,
         name: row.name,
         status: row.status,
@@ -167,6 +177,17 @@ function projectSourceFromRow(row: OandoPlanRow): unknown | null {
     }
   }
   return rowAsLegacyProject(row);
+}
+
+/**
+ * Return normalized current/known-old records at the adapter boundary while
+ * leaving unsupported source rows untouched for the repository facade to
+ * reject explicitly. No compatibility result causes a write here.
+ */
+function projectForRead(ownerId: string, source: unknown | null): unknown | null {
+  if (source === null) return null;
+  const read = readPlannerProjectEnvelope(source, { ownerId });
+  return read.ok ? read.value : source;
 }
 
 function payloadFromWrite(project: PlannerProjectWriteV1): Json {
@@ -189,14 +210,6 @@ async function loadOwnedRow(ownerId: string, projectId: string): Promise<OandoPl
     .maybeSingle();
   if (error) throw new Error("Planner project read failed");
   return (data as OandoPlanRow | null) ?? null;
-}
-
-function boundedRequestFingerprint(command: PlannerProjectMutationCommandV1): string {
-  const fingerprint = fingerprintPlannerMutation(command);
-  // The Admin migration caps request_fingerprint at 256 characters. Hash only
-  // oversized canonical requests so normal small requests remain inspectable.
-  if (Array.from(fingerprint).length <= 256) return fingerprint;
-  return createHash("sha256").update(fingerprint).digest("hex");
 }
 
 function emptyState(): PlannerProjectAtomicStateV1 {
@@ -413,7 +426,7 @@ async function callPlannerMutation(
   const client = createSupabaseAuthAdminClient() as unknown as PlannerMutationRpcClientV1;
   const { data, error } = await client.rpc(
     "planner_mutate_plan_v1",
-    mutationRpcArguments(ownerId, command, boundedRequestFingerprint(command)),
+    mutationRpcArguments(ownerId, command, boundedPlannerMutationFingerprint(command)),
   );
   if (error) throw new Error("Planner mutation RPC failed");
   return readMutationRpcResult(data);
@@ -512,7 +525,12 @@ function transitionFromMutationRpc(
   if (rpcResult.response_status === "not_found") {
     return {
       state: emptyState(),
-      result: { ok: false, code: "NOT_FOUND", message: "Project not found" },
+      result: {
+        ok: false,
+        code: "NOT_FOUND",
+        message: "Project not found",
+        ...(rpcResult.replayed ? { replayed: true } : {}),
+      },
       effect: "none",
     };
   }
@@ -531,6 +549,7 @@ function transitionFromMutationRpc(
       code: "CONFLICT",
       message,
       ...(currentRevision === undefined ? {} : { currentRevision }),
+      ...(rpcResult.replayed ? { replayed: true } : {}),
     },
     effect: "none",
   };
@@ -548,21 +567,29 @@ export const plannerProjectSupabaseAdapter: PlannerProjectAtomicAdapterV1 = {
     if (error) throw new Error("Planner project list failed");
     const projects: unknown[] = [];
     for (const row of (data as OandoPlanRow[] | null) ?? []) {
-      const source = projectSourceFromRow(row);
-      if (source) projects.push(source);
+      const project = projectForRead(ownerId, projectSourceFromRow(row));
+      if (project !== null) projects.push(project);
     }
     return projects;
   },
   async load(ownerId, projectId) {
     const row = await loadOwnedRow(ownerId, projectId);
     if (!row) return null;
-    return projectSourceFromRow(row);
+    return projectForRead(ownerId, projectSourceFromRow(row));
   },
   async mutate(context, command) {
     const rejected = validateMutationCommand(context, command);
     if (rejected) return rejected;
 
     const row = await loadOwnedRow(context.ownerId, command.projectId);
+    const logicalTombstone = row !== null && projectSourceFromRow(row) === null;
+    if (logicalTombstone && command.operation !== "create") {
+      return {
+        state: emptyState(),
+        result: { ok: false, code: "NOT_FOUND", message: "Project not found" },
+        effect: "none",
+      };
+    }
     const compatibilityFailure = persistedProjectCompatibilityFailure(
       context.ownerId,
       row,

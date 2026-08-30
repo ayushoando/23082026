@@ -166,18 +166,43 @@ function legacyGeometryInput(
   input: Record<string, unknown>,
   payload: Record<string, unknown> | undefined,
 ): unknown {
+  const payloadSheet = parseRecord(payload?.sheet);
+  const sheet = parseRecord(input.sheet) ?? payloadSheet;
+  const outerScale =
+    input.scalePxPerMm ??
+    input.scale_px_per_mm ??
+    payload?.scalePxPerMm ??
+    payload?.scale_px_per_mm ??
+    sheet?.scalePxPerMm ??
+    sheet?.scale_px_per_mm;
   const explicit =
     input.geometry ?? input.geometrySnapshot ?? payload?.geometry ?? payload?.geometrySnapshot;
-  if (explicit !== undefined) return explicit;
+
+  // Legacy records sometimes keep normalized geometry in `geometry` while
+  // storing the extraction scale beside it on the project or sheet. Carry
+  // that metadata into the geometry boundary so a known legacy scale is
+  // adapted, and malformed scale metadata is rejected instead of silently
+  // defaulting to Planner scale. An explicit scale on the geometry itself is
+  // authoritative and is left untouched.
+  if (explicit !== undefined) {
+    const explicitRecord = parseRecord(explicit);
+    if (
+      explicitRecord &&
+      outerScale !== undefined &&
+      !("scalePxPerMm" in explicitRecord) &&
+      !("scale_px_per_mm" in explicitRecord)
+    ) {
+      return { ...explicitRecord, scalePxPerMm: outerScale };
+    }
+    return explicit;
+  }
 
   const canvas = parseRecord(input.canvas_json ?? input.scene_json ?? payload?.canvas_json ?? payload?.scene);
   if (!canvas) return undefined;
-  const sheet = parseRecord(input.sheet ?? payload?.sheet);
   const scale =
     canvas.scalePxPerMm ??
     canvas.scale_px_per_mm ??
-    sheet?.scalePxPerMm ??
-    sheet?.scale_px_per_mm ??
+    outerScale ??
     PLANNER_SCALE_PX_PER_MM;
 
   // Determine the extraction scale. When the persisted canvas carries a
@@ -567,4 +592,18 @@ export const PLANNER_GATE_B_CONTRACT = {
    * - updatedAt: always the operation time; never earlier than createdAt.
    */
   timestampPolicy: "preserve-created-at-advance-updated-at" as const,
+  /**
+   * Schema compatibility is read-only for current/known-old records. Known
+   * old versions are normalized in memory and only become durable on an
+   * explicit successful save; unsupported versions are returned unchanged
+   * with an explicit UNSUPPORTED_SCHEMA_VERSION result.
+   */
+  schemaCompatibilityPolicy:
+    "validate-current-migrate-known-old-in-memory-preserve-unsupported" as const,
+  /**
+   * A successful delete commits a tombstone/row removal. Subsequent list/load
+   * calls exclude the project; a missing delete is NOT_FOUND and an identical
+   * retry replays the original outcome without a second effect.
+   */
+  deletionPolicy: "delete-unavailable-missing-not-found-identical-replay" as const,
 } as const;

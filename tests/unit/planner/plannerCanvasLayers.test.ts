@@ -4,6 +4,7 @@ import * as fabric from "fabric";
 import {
   collectUserLayerRows,
   isTooSmallDrawnShape,
+  restorePersistedLayerRows,
 } from "@planner/lib/plannerCanvasLayers";
 
 describe("planner: canvasLayers", () => {
@@ -42,6 +43,47 @@ describe("planner: canvasLayers", () => {
 
     const rows = collectUserLayerRows([grid, sheet, preview, rect]);
     expect(rows).toHaveLength(1);
+  });
+
+  it("restores persisted layer metadata and keeps persisted top-first order", () => {
+    const first = new fabric.Rect({ left: 10, top: 10, width: 100, height: 50, fill: "red" });
+    (first as fabric.FabricObject & { data?: Record<string, unknown> }).data = {
+      id: "first",
+      label: "First",
+    };
+    const second = new fabric.Rect({ left: 20, top: 20, width: 100, height: 50, fill: "blue" });
+    (second as fabric.FabricObject & { data?: Record<string, unknown> }).data = {
+      id: "second",
+      label: "Second",
+    };
+
+    const rows = restorePersistedLayerRows([first, second], [
+      { id: "second", label: "Renamed second", visible: false, locked: true },
+      { id: "first", label: "Renamed first", visible: true, locked: false },
+    ]);
+
+    expect(rows).toEqual([
+      { id: "second", label: "Renamed second", visible: false, locked: true },
+      { id: "first", label: "Renamed first", visible: true, locked: false },
+    ]);
+    expect(second.visible).toBe(false);
+    expect(second.lockMovementX).toBe(true);
+    expect(second.selectable).toBe(false);
+    expect((first as fabric.FabricObject & { data?: Record<string, unknown> }).data?.label).toBe(
+      "Renamed first",
+    );
+  });
+
+  it("falls back to hydrated object metadata when persisted layers are absent", () => {
+    const rect = new fabric.Rect({ left: 10, top: 10, width: 100, height: 50, fill: "red" });
+    (rect as fabric.FabricObject & { data?: Record<string, unknown> }).data = {
+      id: "r1",
+      label: "Hydrated rectangle",
+    };
+
+    expect(restorePersistedLayerRows([rect], undefined)).toEqual([
+      { id: "r1", label: "Hydrated rectangle", visible: true, locked: false },
+    ]);
   });
 
   it("treats tiny click rectangles as discardable", () => {

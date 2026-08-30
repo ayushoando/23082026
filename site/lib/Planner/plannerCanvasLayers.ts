@@ -43,6 +43,90 @@ export function collectUserLayerRows(objects: FabricObject[]): LayerRow[] {
     });
 }
 
+type PersistedLayerRow = {
+  id: string;
+  label?: string;
+  visible?: boolean;
+  locked?: boolean;
+};
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+function readPersistedLayerRows(value: unknown): PersistedLayerRow[] {
+  if (!Array.isArray(value)) return [];
+  const rows: PersistedLayerRow[] = [];
+  for (const entry of value) {
+    if (!isRecord(entry) || typeof entry.id !== "string" || !entry.id.trim()) {
+      continue;
+    }
+    rows.push({
+      id: entry.id,
+      ...(typeof entry.label === "string" && entry.label.trim()
+        ? { label: entry.label.trim() }
+        : {}),
+      ...(typeof entry.visible === "boolean" ? { visible: entry.visible } : {}),
+      ...(typeof entry.locked === "boolean" ? { locked: entry.locked } : {}),
+    });
+  }
+  return rows;
+}
+
+/**
+ * Reconcile the opaque Gate B layer payload with the Fabric snapshot.
+ *
+ * The canvas snapshot remains the source of geometry and object identity. The
+ * known UI layer fields are applied only when present, while missing/legacy
+ * rows fall back to the hydrated object metadata. The returned order matches
+ * the Planner panel's top-first convention used by save requests.
+ */
+export function restorePersistedLayerRows(
+  objects: FabricObject[],
+  persisted: unknown,
+): LayerRow[] {
+  const persistedRows = readPersistedLayerRows(persisted);
+  const byId = new Map(persistedRows.map((row) => [row.id, row]));
+
+  for (const object of objects) {
+    if (!isUserLayerObject(object)) continue;
+    const oo = object as OoFabricObject;
+    const id = String(oo.data?.id);
+    const row = byId.get(id);
+    if (!row) continue;
+
+    if (row.label) {
+      oo.data = { ...(oo.data ?? {}), label: row.label };
+    }
+    if (row.visible !== undefined) {
+      object.visible = row.visible;
+    }
+    if (row.locked !== undefined) {
+      object.set({
+        lockMovementX: row.locked,
+        lockMovementY: row.locked,
+        lockScalingX: row.locked,
+        lockScalingY: row.locked,
+        lockRotation: row.locked,
+        selectable: !row.locked,
+      });
+    }
+  }
+
+  const rows = collectUserLayerRows(objects).reverse();
+  const persistedOrder = new Map(
+    persistedRows.map((row, index) => [row.id, index]),
+  );
+  return rows.sort((left, right) => {
+    const leftOrder = persistedOrder.get(left.id);
+    const rightOrder = persistedOrder.get(right.id);
+    if (leftOrder === undefined && rightOrder === undefined) return 0;
+    if (leftOrder === undefined) return 1;
+    if (rightOrder === undefined) return -1;
+    return leftOrder - rightOrder;
+  });
+}
+
 export function isTooSmallDrawnShape(o: FabricObject, tool: string): boolean {
   const min = MIN_DRAW_SIZE_PX;
   if (tool === "rect" || tool === "roundedRect" || tool === "triangle" || tool === "star" || tool === "ellipse") {

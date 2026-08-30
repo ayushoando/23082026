@@ -1,9 +1,12 @@
 /** Pure Gate B mutation transitions. Adapters must commit one transition atomically. */
 
+import { createHash } from "node:crypto";
+
 import {
   PLANNER_PROJECT_CONTRACT_VERSION,
   PLANNER_PROJECT_SCHEMA_VERSION,
   PLANNER_REPOSITORY_CONTRACT_VERSION,
+  PLANNER_REQUEST_FINGERPRINT_MAX_LENGTH,
   isValidPlannerIdempotencyKey,
   readPlannerProjectEnvelope,
   readPlannerProjectWrite,
@@ -81,6 +84,21 @@ function canonical(value: unknown): string {
 
 export function fingerprintPlannerMutation(command: PlannerProjectMutationCommandV1): string {
   return canonical(command);
+}
+
+/**
+ * Keep the persisted receipt fingerprint within the Admin schema bound while
+ * retaining the canonical representation for normal-sized requests. Both
+ * adapters use this helper so disk and Supabase replay the same identity.
+ */
+export function boundedPlannerMutationFingerprint(
+  command: PlannerProjectMutationCommandV1,
+): string {
+  const fingerprint = fingerprintPlannerMutation(command);
+  if (Array.from(fingerprint).length <= PLANNER_REQUEST_FINGERPRINT_MAX_LENGTH) {
+    return fingerprint;
+  }
+  return createHash("sha256").update(fingerprint, "utf8").digest("hex");
 }
 
 function receiptIdentity(
@@ -190,7 +208,7 @@ export function applyPlannerProjectMutation(
     };
   }
 
-  const fingerprint = fingerprintPlannerMutation(command);
+  const fingerprint = boundedPlannerMutationFingerprint(command);
   const identity = receiptIdentity(context, command);
   const receipt = state.receipts.find(
     (candidate) => receiptIdentityFromStored(candidate) === identity,
@@ -205,9 +223,7 @@ export function applyPlannerProjectMutation(
     }
     return {
       state,
-      result: receipt.result.ok
-        ? { ...receipt.result, replayed: true }
-        : receipt.result,
+      result: { ...receipt.result, replayed: true },
       effect: "none",
     };
   }

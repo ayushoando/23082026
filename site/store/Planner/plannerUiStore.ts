@@ -15,6 +15,8 @@ type ToastState = {
 type PlannerUIStore = {
   accessMode: "authenticated" | "guest";
   setAccessMode: (mode: "authenticated" | "guest") => void;
+  hasUnsavedChanges: boolean;
+  setHasUnsavedChanges: (hasUnsavedChanges: boolean) => void;
   unit: PlannerUnit;
   setUnit: (unit: PlannerUnit) => void;
   snapEnabled: boolean;
@@ -31,6 +33,9 @@ type PlannerUIStore = {
 export const usePlannerUIStore = create<PlannerUIStore>((set) => ({
   accessMode: "guest",
   setAccessMode: (accessMode) => set({ accessMode }),
+
+  hasUnsavedChanges: false,
+  setHasUnsavedChanges: (hasUnsavedChanges) => set({ hasUnsavedChanges }),
 
   unit: "mm",
   setUnit: (unit) => set({ unit }),
@@ -58,3 +63,24 @@ export const usePlannerUIStore = create<PlannerUIStore>((set) => ({
     );
   },
 }));
+
+/**
+ * Guard Planner-owned links and imperative navigation while the editor holds
+ * work that has not been persisted. The caller remains responsible for
+ * starting navigation after this returns true; a cancelled decision leaves
+ * the document and its dirty marker untouched.
+ */
+export function confirmPlannerNavigation(
+  message = "You have unsaved changes. Leave this plan without saving?",
+): boolean {
+  const { hasUnsavedChanges, setHasUnsavedChanges } = usePlannerUIStore.getState();
+  if (!hasUnsavedChanges || typeof window === "undefined") return true;
+
+  const shouldLeave = window.confirm(message);
+  if (shouldLeave) {
+    // The destination owns a fresh workflow. Clear the cross-route marker only
+    // after the user explicitly accepts the destructive navigation.
+    setHasUnsavedChanges(false);
+  }
+  return shouldLeave;
+}
