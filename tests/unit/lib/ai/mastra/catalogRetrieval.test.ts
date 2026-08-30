@@ -651,7 +651,6 @@ describe("Task 1 C1-R2: vector attribution — sources contains 'vector' when re
     await fc.assert(
       fc.asyncProperty(
         smallCatalogArb,
-        catalogQueryArb,
         async (catalog) => {
           // Pick the first catalog product and return it as a vector hit.
           const firstProduct = catalog[0]!;

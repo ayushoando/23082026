@@ -8,31 +8,31 @@ All code is TypeScript with named exports. Tests live under `tests/`. Commands r
 
 ## Tasks
 
-- [ ] 1. Audit model and severity/gating logic
-  - [ ] 1.1 Implement the `Finding` audit model and sequencing/gating functions
+- [~] 1. Audit model and severity/gating logic
+  - [~] 1.1 Implement the `Finding` audit model and sequencing/gating functions
     - Create `site/lib/ai/audit/finding.ts` with named exports: `Severity`, `AuditDimension`, `ApprovalGatedClass`, `Finding` interface, `SEVERITY_RANK`, `sequenceBySeverity`, and `isApprovalGated`
     - `sequenceBySeverity` returns a descending-severity, band-stable ordering; `isApprovalGated` returns true iff `changeClass !== "safe"`
     - Keep this an internal documentation-level model with no HTTP coupling
     - _Requirements: 1.1, 1.2, 1.3, 1.4_
 
-  - [ ]* 1.2 Write property test for remediation ordering
+  - [~] 1.2 Write property test for remediation ordering
     - **Feature: ai-implementation-audit, Property 1: Remediation ordering is descending by severity**
     - Assert each element's severity rank ≥ the rank of every element after it, across arbitrary `Finding` lists (fast-check, ≥100 iterations)
     - **Validates: Requirements 1.3**
 
-  - [ ]* 1.3 Write property test for approval-gating classification
+  - [~] 1.3 Write property test for approval-gating classification
     - **Feature: ai-implementation-audit, Property 2: Approval-gated findings are flagged**
     - Assert `isApprovalGated` is true iff `changeClass` is a gated class (not `"safe"`)
     - **Validates: Requirements 1.4**
 
-- [ ] 2. Record audit findings with evidence and classification
+- [~] 2. Record audit findings with evidence and classification
   - [ ] 2.1 Produce the audit findings dataset across all seven dimensions
     - Create `site/lib/ai/audit/findings.ts` exporting `AI_STACK_FINDINGS: readonly Finding[]`, one record per confirmed observation
     - Cover correctness, provider-routing, retrieval-quality, error-handling, observability, route-contract, and performance dimensions, each with `severity`, `location` (file + optional line), and `evidence`
     - Tag each finding's `changeClass` (`safe` vs an approval-gated class) so gated items are flagged for approval and deferred
     - _Requirements: 1.1, 1.2, 1.4, 2.2_
 
-  - [ ]* 2.2 Write unit tests for the findings dataset invariants
+  - [~] 2.2 Write unit tests for the findings dataset invariants
     - Assert every finding has a non-empty `location` and `evidence`, a valid `severity`, and a valid `changeClass`
     - Assert `sequenceBySeverity(AI_STACK_FINDINGS)` groups gated vs non-gated correctly via `isApprovalGated`
     - _Requirements: 1.2, 1.4_

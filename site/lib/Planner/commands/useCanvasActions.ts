@@ -53,6 +53,8 @@ export interface CanvasActionDeps {
   refreshLayers: () => void;
   bumpSceneVersion: () => void;
   markUnsaved: () => void;
+  /** Synchronise React zoom state after a viewport command (optional). */
+  onViewportChanged?: (zoom: number) => void;
 }
 
 /**
@@ -67,6 +69,7 @@ export function createCanvasActions(deps: CanvasActionDeps): CanvasActionCallbac
     refreshLayers: deps.refreshLayers,
     bumpSceneVersion: deps.bumpSceneVersion,
     markUnsaved: deps.markUnsaved,
+    onViewportChanged: deps.onViewportChanged,
   };
 
   const commands = buildCanvasCommands();

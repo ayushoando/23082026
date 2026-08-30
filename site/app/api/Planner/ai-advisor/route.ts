@@ -1,30 +1,36 @@
 /**
- * POST /api/planner/ai-advisor — Planner AI advisor endpoint.
+ * POST /api/Planner/ai-advisor — Planner AI advisor endpoint.
  *
  * Accepts a multi-turn `messages` array plus optional `mode` and `context`
  * and returns a single advisory text response. The endpoint is intentionally
  * non-streaming (default) and advisory-only: it never modifies plan state.
  *
+ * Requests flow through the Planner request-processing pipeline which
+ * enforces: correlation → quota → method/validation → origin/CSRF
+ * → session → owner scope → revision/idempotency → persistence.
+ *
  * Response (200):
- *   `{ success: true, content, degraded?, provider?, suggestion? }`
- * Errors: 400 (validation), 403 (CSRF), 429 (rate limit), 500.
+ *   `{ success: true, data: { content, degraded?, provider? }, correlationId }`
+ * Errors: 400 (validation), 403 (CSRF/origin), 429 (rate limit), 500.
  *
  * Fork boundary: this file MUST NOT import anything from
  * `site/components/Studio/` or `site/lib/Studio/`.
  */
-
-import type { NextRequest } from "next/server";
-import type { NextResponse } from "next/server";
 
 import {
   requestAdvisorMessages,
   resolveAdvisorModelChain,
   type AdvisorChatMessage,
 } from "@/lib/ai/mastra";
-import { withAuth, type AuthContext } from "@/features/shared/api/withAuth";
-import { ApiError, API_ERROR_CODES } from "@/features/shared/api/ApiError";
-import { success, error, validationError } from "@/features/shared/api/apiResponse";
 import { PlannerAdvisorRequestSchema } from "@/features/shared/api/schemas";
+import {
+  createPlannerHandler,
+  createPlannerRejectedMethodHandler,
+} from "@planner/server/plannerRouteAdapter";
+import type {
+  PlannerOperationContext,
+  PlannerOperationResult,
+} from "@planner/lib/plannerRequestPipeline";
 
 /** Timeout applied to each provider attempt, in milliseconds. */
 const PLANNER_ADVISOR_TIMEOUT_MS = 10_000;
@@ -75,26 +81,26 @@ function buildMessages(
 }
 
 // ---------------------------------------------------------------------------
-// Core handler
+// Core operation
 // ---------------------------------------------------------------------------
 
 async function handlePlannerAdvisor(
-  req: NextRequest,
-  _auth: AuthContext,
-): Promise<NextResponse | Response> {
-  // --- 1. Parse and validate body ---
-  let rawBody: unknown;
-  try {
-    rawBody = await req.json();
-  } catch {
-    return error(
-      new ApiError(400, API_ERROR_CODES.VALIDATION_ERROR, "Request body must be valid JSON"),
-    );
-  }
-
-  const parsed = PlannerAdvisorRequestSchema.safeParse(rawBody);
+  context: PlannerOperationContext,
+): Promise<PlannerOperationResult<unknown>> {
+  // --- 1. Parse and validate body with Zod for trimming/min-max enforcement ---
+  const parsed = PlannerAdvisorRequestSchema.safeParse(context.request.body);
   if (!parsed.success) {
-    return validationError(parsed.error.issues);
+    return {
+      ok: false,
+      status: 400,
+      code: "INVALID_REQUEST",
+      metadata: {
+        issues: parsed.error.issues.map((issue) => ({
+          path: issue.path.map(String).join(".") || "(root)",
+          message: issue.message,
+        })),
+      },
+    };
   }
 
   const { messages: callerMessages } = parsed.data;
@@ -103,10 +109,11 @@ async function handlePlannerAdvisor(
   const chain = resolveAdvisorModelChain();
 
   if (chain.length === 0) {
-    return success<{ content: string; degraded: true }>({
-      content: FALLBACK_CONTENT,
-      degraded: true,
-    });
+    return {
+      ok: true,
+      status: 200,
+      data: { content: FALLBACK_CONTENT, degraded: true },
+    };
   }
 
   // --- 3. Try each provider in order, return first success ---
@@ -125,27 +132,31 @@ async function handlePlannerAdvisor(
       clearTimeout(timeoutId);
 
       if (content && content.trim().length > 0) {
-        return success({
-          content: content.trim(),
-          provider: target.provider,
-        });
+        return {
+          ok: true,
+          status: 200,
+          data: { content: content.trim(), provider: target.provider },
+        };
       }
     } catch (providerErr) {
       clearTimeout(timeoutId);
+      // Log only a safe classification — never the raw error object which may
+      // contain provider API keys, SDK internals, or credential fragments.
+      // Requirements 11.8, 11.9: internal errors must not reach client responses.
       const timedOut = isAbortError(providerErr);
       console.error(
-        `[planner/ai-advisor] ${target.provider} failed${timedOut ? " (timeout)" : ""}:`,
-        providerErr,
+        `[planner/ai-advisor] provider attempt failed${timedOut ? " (timeout)" : " (error)"}`,
       );
       // Continue to next provider in chain.
     }
   }
 
   // --- 4. All providers exhausted — return deterministic degraded fallback ---
-  return success<{ content: string; degraded: true }>({
-    content: FALLBACK_CONTENT,
-    degraded: true,
-  });
+  return {
+    ok: true,
+    status: 200,
+    data: { content: FALLBACK_CONTENT, degraded: true },
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -153,18 +164,27 @@ async function handlePlannerAdvisor(
 // ---------------------------------------------------------------------------
 
 /**
- * POST /api/planner/ai-advisor
+ * POST /api/Planner/ai-advisor
  *
  * Auth: guest (anonymous users may use the planner).
  * CSRF: required for mutating POST.
  * Rate limit: 5 requests per window per IP under the "planner-advisor" scope.
+ *
+ * The Planner request-processing pipeline ensures:
+ * - A correlation identifier is generated/propagated and included in every
+ *   response body and x-correlation-id header (Requirement 17.3).
+ * - All unhandled exceptions are mapped to INTERNAL_ERROR without exposing
+ *   stack traces, credentials, or sensitive data (Requirements 11.8, 11.9).
+ * - Operation handler failures are sanitized through the allowlisted metadata
+ *   structure before serialization (Requirements 11.8, 11.9).
  */
-export const POST = withAuth(
-  async (req, auth) => handlePlannerAdvisor(req as NextRequest, auth),
-  {
-    role: "guest",
-    requireCsrf: true,
-    rateLimitScope: "planner-advisor",
-    rateLimit: 5,
-  },
-);
+export const POST = createPlannerHandler({
+  endpointId: "planner.ai-advisor",
+  operation: { invoke: handlePlannerAdvisor },
+});
+
+// Unsupported methods still enter the quota-first request pipeline.
+export const GET = createPlannerRejectedMethodHandler("planner.ai-advisor");
+export const PUT = createPlannerRejectedMethodHandler("planner.ai-advisor");
+export const DELETE = createPlannerRejectedMethodHandler("planner.ai-advisor");
+export const PATCH = createPlannerRejectedMethodHandler("planner.ai-advisor");

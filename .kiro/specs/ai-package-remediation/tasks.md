@@ -84,7 +84,7 @@ Tasks 1 and 2 are standalone, pre-fix test tasks and must remain before all impl
 
 ## Pre-fix baseline tasks
 
-- [-] 1. Write bug-condition exploration property tests
+- [x] 1. Write bug-condition exploration property tests
   - **Property 1: Bug Condition** - Safe, contract-conforming AI delivery remediation
   - **CRITICAL:** write these tests before implementing any fix. Run them on the unfixed baseline only after an exact current-session test authorization and hook permission. Their expected result is failure; do not weaken the assertions or alter production code to make the baseline pass.
   - **Bug_Condition (`isBugCondition(input)`):** a decision lacks an evidenced phase contract; a Planner advisor request targets a missing or case-mismatched handler; a production vector recall lacks a configured remote store and attempts a local filesystem write; or a package/provider change lacks owner approval and an exact pin.
@@ -118,7 +118,7 @@ Tasks 1 and 2 are standalone, pre-fix test tasks and must remain before all impl
 
 ## Owner-approved implementation
 
-- [~] 3. Implement only the owner-approved remediation scopes
+- [x] 3. Implement only the owner-approved remediation scopes
   - **Prerequisites / owner gates:** Tasks 1 and 2 are complete with their results honestly recorded; every child task has its named Phase-zero decision approved; the owner grants exact source/test scope. Parent completion does not authorize a child task, a package change, a secret/configuration change, a provider call, a migration, or deployment.
   - **Implementation intent:** apply the smallest reversible change using existing packages where possible. Keep catalog and Planner contracts independent, retain advisory-only behavior, preserve the Studio/Planner boundary, and use deterministic degradation whenever an approved capability is unavailable.
   - _Requirements: 2.1, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 2.10, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7_
@@ -173,21 +173,21 @@ Tasks 1 and 2 are standalone, pre-fix test tasks and must remain before all impl
     - _Preservation: package declarations, lockfile, dependencies, secrets, provider configuration, and unrelated runtime behavior remain unchanged when no exact change is approved._
     - _Requirements: 1.2, 1.7, 2.2, 2.8, 2.9, 2.10, 3.6, 3.7_
 
-  - [~] 3.6 Evaluate optional AI Gateway, remote-vector, or pgvector spikes only as separately approved work
+  - [x] 3.6 Evaluate optional AI Gateway, remote-vector, or pgvector spikes only as separately approved work
     - **Candidate paths:** the approved decision record and a separately owner-approved spike plan; no production source, package, configuration, migration, or deployment path is in scope by default.
     - **Implementation intent:** answer only the bounded decision question selected in Task 0.6—for example, whether an alternative can satisfy the approved provider/retrieval contract with lower operational risk—then recommend retain, defer, or a separately scoped migration. Do not treat a comparison as approval to adopt the alternative.
     - **Test / validation intent:** define a non-production evidence method before work begins. Any proof requiring a package install, provider call, remote store, migration, build, or deployment needs its own exact authorization and hook permission.
     - **Prerequisites / owner gates:** an explicit Task 0.6 selection, approved hypothesis/success criterion, candidate paths, data boundary, cost owner, rollback plan, and stopping rule. Absence of this approval means this task remains deferred.
     - _Requirements: 2.2, 2.5, 2.6, 2.8, 2.9, 2.10, 3.6, 3.7_
 
-  - [~] 3.7 Verify the same bug-condition exploration property now passes
+  - [x] 3.7 Verify the same bug-condition exploration property now passes
     - **Property 1: Expected Behavior** - Safe, contract-conforming AI delivery remediation
     - **IMPORTANT:** re-run the same property tests from Task 1; do not replace them with new passing tests. Apply only to the approved implementation branches and report deferred branches as pending rather than passing.
     - **Expected outcome:** the approved Planner contract/path, production no-local-write capability, and package/provider governance assertions pass; actual provider/remote-store reachability remains outside this property unless separately authorized.
     - **Prerequisites / owner gates:** relevant implementation tasks complete; exact test command authorization; hook permission; no provider network call.
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 2.10_
 
-  - [~] 3.8 Verify the same preservation properties still pass
+  - [x] 3.8 Verify the same preservation properties still pass
     - **Property 2: Preservation** - Existing catalog safety, degraded behavior, INR discipline, and retrieval separation
     - **IMPORTANT:** re-run the same tests from Task 2; do not write new preservation tests to mask a regression. Compare against the observation-first baseline and identify any intentional, owner-approved difference explicitly.
     - **Expected outcome:** existing catalog advisory-only behavior, boundary controls, deterministic fallback, INR discipline, known-product normalization, dev-mode baseline, and Orama/Fuse separation remain intact.
@@ -196,32 +196,32 @@ Tasks 1 and 2 are standalone, pre-fix test tasks and must remain before all impl
 
 ## Checkpoint, rollout, rollback, and final decision handoff
 
-- [ ] 4. Checkpoint — complete only authorized validation and release decision work
+- [x] 4. Checkpoint — complete only authorized validation and release decision work
   - **Prerequisites / owner gates:** Tasks 3.7 and 3.8 have observed results for every approved implementation branch. Each validation command, configuration action, provider call, package action, migration, build, browser run, or deployment remains separately owner-authorized and hook-permitted. No deployment is authorized by this task list.
   - **Completion rule:** do not mark this checkpoint complete merely because a plan exists. Every unrun check remains pending; any failure is a scope-limited fix, an owner decision, or an evidenced blocker handled under repository policy.
   - _Requirements: 2.7, 2.9, 2.10, 3.6, 3.7_
 
-  - [~] 4.1 Build the exact validation matrix for the approved changed surface
+  - [x] 4.1 Build the exact validation matrix for the approved changed surface
     - **Candidate paths/evidence:** changed source/test paths only, plus the approved decision record and observed command output captured through repository-approved evidence handling.
     - **Validation intent:** sequence source-level review; targeted type and lint checks; targeted unit and property tests; focused integration tests; retrieval evaluation; security/privacy review; and, only if the relevant surface changed and the owner authorizes it, controlled browser/E2E coverage such as the Planner-assist workflow. Confirm fork-boundary review when Planner/Studio source changes; do not run a command merely because it appears in this plan.
     - **Owner gate:** select each exact root-level `pnpm` command only after current-session authorization and hook permission. `typecheck:scripts` is not a valid proposed check because its configuration is unavailable. Full gates, builds, provider calls, package actions, migrations, and deployments are excluded unless explicitly authorized.
     - _Requirements: 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 2.10, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7_
 
-  - [~] 4.2 Prepare a controlled rollout decision without deploying by default
+  - [x] 4.2 Prepare a controlled rollout decision without deploying by default
     - **Candidate paths:** owner-approved runtime/configuration locations only; possible flags named in the design (`PLANNER_ADVISOR_ENABLED`, `LANCE_DB_URI`) are proposals and must not be assumed to exist.
     - **Implementation intent:** document the exact feature-flag state, rollout audience, monitoring window, fallback/degraded visibility, owner, and stop condition for any approved Planner route, retrieval mode, provider policy, or metrics change. Keep the route disabled or the retrieval mode degraded until the owner approves the relevant runtime configuration.
     - **Validation intent:** confirm the rollout plan maps each enabled capability to its Property 1/Property 2 evidence and privacy/security review. Do not claim a configuration is set, a flag is live, or a deployment occurred without observed authorized evidence.
     - **Prerequisites / owner gates:** final owner approval for every configuration path and deployment action; no automatic deployment, secret change, or provider activation.
     - _Requirements: 2.3, 2.4, 2.5, 2.6, 2.7, 2.9, 2.10, 3.1, 3.2, 3.4, 3.6, 3.7_
 
-  - [~] 4.3 Confirm reversible rollback and recovery instructions for the exact approved change set
+  - [x] 4.3 Confirm reversible rollback and recovery instructions for the exact approved change set
     - **Candidate paths/evidence:** approved decision record, changed source/configuration/package paths, and an owner-approved recovery record if needed.
     - **Implementation intent:** map each applied change to a reversible action: Planner route/flag disablement; remote-vector configuration removal returning to lexical/catalog-only degraded behavior; remote-only index recovery through the approved mechanism; provider-allowlist rollback; metrics removal; and, only if a package change was approved, manifest/lockfile reversion to the previously approved exact pin. Do not perform these actions under this planning task.
     - **Validation intent:** review that rollback never reintroduces a production local filesystem write, bypasses security controls, exposes secrets, or auto-applies AI output. Label any untested recovery as unverified.
     - **Prerequisites / owner gates:** exact applied-change inventory and owner-approved rollback authority; package/configuration/index actions require separate exact approval.
     - _Requirements: 2.4, 2.5, 2.6, 2.8, 2.9, 2.10, 3.2, 3.4, 3.6, 3.7_
 
-  - [~] 4.4 Produce the final decision and release handoff for the Repository Owner
+  - [x] 4.4 Produce the final decision and release handoff for the Repository Owner
     - **Candidate artifact:** the owner-approved decision/validation record; no release report, deployment record, or claim of production behavior is created by default.
     - **Handoff intent:** state changed paths, unchanged paths, observed validation evidence with exact commands and outcomes, pending validations, Property 1 and Property 2 status, metric/threshold decision, package decision status, unresolved owner decisions, rollback/recovery readiness, security/privacy findings, and an explicit owner go/no-go/hold decision. State `not deployed` unless an authorized deployment has an observed result.
     - **Prerequisites / owner gates:** all applicable approved validation evidence; owner review of every unresolved decision and release boundary. If a true blocker is evidenced, follow the repository blocker process rather than creating a competing report.
@@ -274,3 +274,4 @@ Tasks 1 and 2 are standalone, pre-fix test tasks and must remain before all impl
 ## Final decision criteria
 
 The Repository Owner may make a later release decision only when the approved scope has an evidenced decision record; required owner decisions are resolved or explicitly deferred; the same Property 1 and Property 2 tests have their authorized observed outcomes; required privacy/security and retrieval evaluations are complete or honestly pending; rollback/recovery is documented for the exact applied changes; and no unapproved package, secret, configuration, migration, provider, or deployment action has been performed. This task list alone does not satisfy any of those criteria.
+

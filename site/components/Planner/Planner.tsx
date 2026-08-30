@@ -17,6 +17,7 @@ import { useFabric } from "@planner/hooks/usePlannerFabric";
 import { useHistory } from "@planner/hooks/usePlannerHistory";
 import { useKeyboardShortcuts } from "@planner/hooks/usePlannerKeyboardShortcuts";
 import { useCanvasCore } from "@planner/hooks/usePlannerCanvasCore";
+import { usePlannerTouchGestures } from "@planner/hooks/usePlannerTouchGestures";
 import { usePlannerUIStore } from "@planner/store/plannerUiStore";
 import { useCatalogStore } from "@planner/store/plannerCatalogStore";
 import { PhIcon } from "@planner/components/ui/PlannerPhIcon";
@@ -316,6 +317,16 @@ const Planner = ({
     onHistoryRestoreRef.current();
   }, []));
   const core = useCanvasCore({ fabricRef, ready, scale: SCALE_PX_PER_MM, snapEnabled, gridSize, tool, wrapperRef, onCursorMm: setCursorMm });
+
+  // Route two-finger pinch-zoom and two-finger pan through the canonical
+  // viewport command layer so touch gestures are equivalent to keyboard
+  // and button alternatives (Requirements 7.1, 7.4, 7.7).
+  usePlannerTouchGestures({
+    fabricRef,
+    ready,
+    wrapperRef,
+    onViewportChanged: core.setZoom,
+  });
 
   const toggleDrawPanel = useCallback((id: "sheet" | "color") => {
     const nextSheet = id === "sheet" ? !drawSheetOpen : drawSheetOpen;
@@ -1006,6 +1017,8 @@ const Planner = ({
         refreshLayers,
         bumpSceneVersion: () => setSceneVersion((v) => v + 1),
         markUnsaved: () => setHasUnsavedChanges(true),
+        // Synchronise React zoom state when commands change the viewport.
+        onViewportChanged: core.setZoom,
       }),
     // Refresh when canvas ready state changes — the fabricRef.current changes
     // from null to a Canvas once useFabric initialises.

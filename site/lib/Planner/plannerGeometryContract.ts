@@ -71,9 +71,13 @@ function isPlannerSceneGeometry(value: unknown): value is PlannerSceneGeometry {
   const doors = value.doors;
   const windows = value.windows;
   if (![furniture, walls, doors, windows].every(Array.isArray)) return false;
+  const fList = furniture as unknown[];
+  const wList = walls as unknown[];
+  const dList = doors as unknown[];
+  const winList = windows as unknown[];
 
   return (
-    furniture.every(
+    fList.every(
       (item) =>
         isRecord(item) &&
         validId(item.id) &&
@@ -85,7 +89,7 @@ function isPlannerSceneGeometry(value: unknown): value is PlannerSceneGeometry {
         item.depthMm >= 0 &&
         finite(item.rotationDeg),
     ) &&
-    walls.every(
+    wList.every(
       (wall) =>
         isRecord(wall) &&
         validId(wall.id) &&
@@ -96,7 +100,7 @@ function isPlannerSceneGeometry(value: unknown): value is PlannerSceneGeometry {
         finite(wall.thicknessMm) &&
         wall.thicknessMm > 0,
     ) &&
-    [...doors, ...windows].every(
+    [...dList, ...winList].every(
       (opening) =>
         isRecord(opening) &&
         validId(opening.id) &&

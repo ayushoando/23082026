@@ -553,6 +553,75 @@ export const PLANNER_ENDPOINT_DESCRIPTORS = [
     compatibility: baseCompatibility,
   },
   {
+    id: "planner.ai-advisor",
+    contractVersion: PLANNER_ENDPOINT_CONTRACT_VERSION,
+    method: "POST",
+    path: "/api/Planner/ai-advisor",
+    request: {
+      path: [],
+      query: [],
+      headers: jsonHeaders,
+      body: {
+        type: "object",
+        required: ["messages"],
+        properties: {
+          mode: {
+            type: "string",
+            enum: ["chat", "space-suggest"],
+          },
+          messages: {
+            type: "array",
+            items: {
+              type: "object",
+              required: ["role", "content"],
+              properties: {
+                role: { type: "string", enum: ["system", "user", "assistant"] },
+                content: { type: "string", minLength: 1, maxLength: 2000 },
+              },
+              additionalProperties: false,
+            },
+          },
+          context: unknownSchema,
+        },
+        additionalProperties: false,
+      },
+      contentType: "application/json",
+    },
+    responses: {
+      success: [
+        {
+          status: 200,
+          envelope: "legacy-success-spread",
+          schema: {
+            type: "object",
+            required: ["success", "content"],
+            properties: {
+              success: { type: "boolean" },
+              content: nonEmptyStringSchema,
+              degraded: { type: "boolean" },
+              provider: stringSchema,
+            },
+            additionalProperties: false,
+          },
+          description: "Advisory text response or deterministic degraded fallback",
+        },
+      ],
+      errors: standardErrors([400, 403, 405, 429, 500]),
+    },
+    security: {
+      auth: "guest",
+      owner: "not-applicable",
+      csrf: "double-submit-cookie",
+      origin: "same-site-cookie-and-csrf",
+    },
+    rateLimit: {
+      ...baseRateLimit,
+      scope: "planner-advisor",
+      requests: 5,
+    },
+    compatibility: baseCompatibility,
+  },
+  {
     id: "planner.sketch-to-plan.convert",
     contractVersion: PLANNER_ENDPOINT_CONTRACT_VERSION,
     method: "POST",

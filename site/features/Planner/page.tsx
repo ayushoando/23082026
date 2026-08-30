@@ -13,7 +13,7 @@ function projectStartIntent(
 
 export async function PlannerPage({
   searchParams = Promise.resolve({}),
-}: PlannerPageProps = {}) {
+}: PlannerPageProps) {
   const [user, resolvedSearchParams] = await Promise.all([
     getOptionalPlannerUser(),
     searchParams,

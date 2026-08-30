@@ -76,7 +76,7 @@ function stateFromRow(row: OandoPlanRow): PlannerProjectAtomicStateV1 {
   const container = payload.plannerRepositoryState;
   if (isRecord(container) && container.stateVersion === 1) {
     const receipts = Array.isArray(container.receipts)
-      ? (container.receipts as PlannerIdempotencyReceiptV1[])
+      ? (container.receipts as unknown as PlannerIdempotencyReceiptV1[])
       : [];
     if (container.project === null) return { project: null, receipts };
     const read = readPlannerProjectEnvelope(container.project, { ownerId: row.user_id });

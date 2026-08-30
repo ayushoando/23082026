@@ -96,16 +96,20 @@ export async function createSupabaseHandoffStore(): Promise<HandoffStore> {
         throw new Error(error.message);
       }
       if (!data) return null;
+      // consent and inquiry_type are not stored as separate columns; reconstruct
+      // with safe defaults for idempotency replay purposes only.
       return {
         referenceId: data.reference_id,
         createdAt: data.created_at,
         request: {
           contact: data.contact as PlannerHandoffRequest["contact"],
           boq: data.boq as PlannerHandoffRequest["boq"],
+          consent: true as const,
+          inquiryType: "design-support" as const,
           idempotencyKey: data.idempotency_key,
           projectNotes: data.project_notes ?? undefined,
-        },
-      };
+        } satisfies PlannerHandoffRequest,
+      } satisfies StoredHandoff;
     },
     async insert(row) {
       const { error } = await client.from("planner_handoffs").insert({

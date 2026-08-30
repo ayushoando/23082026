@@ -35,7 +35,7 @@ export const useCanvasCore = ({
   ready,
   scale,
   snapEnabled,
-  gridSize,
+  gridSize: _gridSize, // kept for API stability; callers still pass it
   tool,
   wrapperRef,
   onCursorMm,
@@ -306,7 +306,11 @@ export const useCanvasCore = ({
     setZoom(clampZ);
   }, [fabricRef]);
 
-  // Keyboard nudge (arrows) when object selected
+  // Viewport-only keyboard shortcuts (no selection required).
+  // State-changing canvas actions (move/resize/zoom/rotate/delete/duplicate)
+  // are routed through PlannerCommandDescriptor in the caller via
+  // useKeyboardShortcuts + createCanvasActions (Requirements 7.1–7.3).
+  // Only non-state-changing view controls (zoom-to-fit, zoom-100) remain here.
   useEffect(() => {
     if (!ready) return;
     const c = fabricRef.current;
@@ -317,49 +321,28 @@ export const useCanvasCore = ({
         target instanceof HTMLElement &&
         (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable);
       if (inField) return;
-      const active = c.getActiveObject() as OoFabricObject | undefined;
-      if (!active) {
-        // viewport shortcuts without selection
-        if (e.key === "0") {
-          e.preventDefault();
-          zoom100();
-          return;
-        }
-        if (e.key.toLowerCase() === "f" && !e.ctrlKey && !e.metaKey) {
-          e.preventDefault();
-          fitToContent();
-          return;
-        }
-        if (e.key === "+" || e.key === "=") {
-          e.preventDefault();
-          zoomIn();
-          return;
-        }
-        if (e.key === "-") {
-          e.preventDefault();
-          zoomOut();
-          return;
-        }
+      // Only handle viewport-only keys when there is no active selection.
+      // Arrow keys, +/-, and R are handled by useKeyboardShortcuts → canvasActions
+      // when a selection exists; the view-only shortcuts below are safe because
+      // they never occur during canvas drag operations.
+      if (e.key === "0" && !e.ctrlKey && !e.metaKey) {
+        e.preventDefault();
+        zoom100();
         return;
       }
-      const gridPx = (gridSize || 100) * scale;
-      const step = e.shiftKey ? gridPx : 1;
-      let handled = true;
-      if (e.key === "ArrowLeft") active.set({ left: (active.left ?? 0) - step });
-      else if (e.key === "ArrowRight") active.set({ left: (active.left ?? 0) + step });
-      else if (e.key === "ArrowUp") active.set({ top: (active.top ?? 0) - step });
-      else if (e.key === "ArrowDown") active.set({ top: (active.top ?? 0) + step });
-      else handled = false;
-      if (handled) {
-        e.preventDefault();
-        active.setCoords();
-        c.fire("object:modified", { target: active });
-        c.requestRenderAll();
+      if (e.key.toLowerCase() === "f" && !e.ctrlKey && !e.metaKey) {
+        // Only fire fit-to-content when no object is actively being edited.
+        const active = c.getActiveObject();
+        if (!active) {
+          e.preventDefault();
+          fitToContent();
+        }
+        return;
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [ready, fabricRef, gridSize, scale, zoomIn, zoomOut, zoom100, fitToContent]);
+  }, [ready, fabricRef, zoom100, fitToContent]);
 
   return { zoom, setZoom, zoomIn, zoomOut, zoom100, resetView, fitToContent, contextMenu, setContextMenu };
 };

@@ -329,7 +329,8 @@ function projectMutationResult(
   if ("deleted" in result.value) {
     return { ok: false, code: "PERSISTENCE_FAILURE", message: "Adapter returned an invalid mutation result" };
   }
-  return result;
+  // value is PlannerProjectResponseV1 after narrowing "deleted" away
+  return result as PlannerRepositoryResultV1<PlannerProjectResponseV1>;
 }
 
 function deleteMutationResult(
@@ -339,7 +340,8 @@ function deleteMutationResult(
   if (!("deleted" in result.value)) {
     return { ok: false, code: "PERSISTENCE_FAILURE", message: "Adapter returned an invalid delete result" };
   }
-  return result;
+  // value is { id: string; deleted: true } after narrowing
+  return result as PlannerRepositoryResultV1<{ id: string; deleted: true }>;
 }
 
 /** Compose the Gate B repository over exactly one runtime-selected atomic adapter. */

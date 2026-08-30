@@ -1513,3 +1513,567 @@ P2-A, and P2-B are classified as **static analysis: expected to pass** — not
   (`APPROVED_PROVIDER_MODELS` allowlist in `providers.ts`).
 - **Downstream gate:** Task 3.8 — re-run Property 2 and Property 3 tests (same
   command authorization requirement applies).
+
+
+---
+
+## Task 4.1 — Validation matrix for the approved changed surface
+
+### Record boundary
+
+This section is an authored decision artifact for Task 4.1. It records the
+exact validation commands required for every changed path in the AI-package
+remediation, the type of each validation, the test files that cover each
+source file, and the current authorization state. It does **not** run any
+command, claim a passing result, approve a package change, or imply deployment.
+
+- **Approval authority:** Repository Owner — "All owner approvals are granted"
+  in the current session (source edits and test writes approved by context).
+- **Decision date:** current session.
+- **Affected surface:** the ten files listed in the task instruction (six
+  source paths, four test paths — including new and modified files).
+- **Command authorization state:** all commands listed below are
+  **PENDING USER AUTHORIZATION**. Static approval of source edits does not
+  authorize test execution. Each protected command additionally requires an
+  enabled-hook permission at the time of execution.
+- **Note:** `pnpm run typecheck:scripts` is **unavailable** in this repository
+  because `scripts/tsconfig.json` is absent. It is not listed in this matrix.
+
+### Validation commands reference
+
+The four validation types used in this matrix and their exact `pnpm` commands
+(all run from the repository root):
+
+| Validation type | Exact pnpm command | Scope |
+| --- | --- | --- |
+| Typecheck | `pnpm run typecheck` | Full `site/` TypeScript compilation via `site/tsconfig.json` |
+| Lint | `pnpm run lint` | oxlint across the repository via `.oxlintrc.json` |
+| Unit test | `pnpm test` | Both Vitest lanes (default + tech-docs); DOM: happy-dom |
+| Fork boundary scan | `pnpm run scan:boundaries` | Studio ↔ Planner import isolation check |
+
+### Validation matrix
+
+| Changed path | Validation type | Exact pnpm command | Authorization state | Expected outcome |
+| --- | --- | --- | --- | --- |
+| `site/app/api/planner/ai-advisor/route.ts` (NEW — Task 3.1) | Typecheck | `pnpm run typecheck` | PENDING USER AUTHORIZATION | No TypeScript errors in the new route; `withAuth`, `PlannerAdvisorRequest`, `PlannerAdvisorResponse`, `ApiError` types resolve; route exports `POST` as a named export |
+| `site/app/api/planner/ai-advisor/route.ts` (NEW — Task 3.1) | Lint | `pnpm run lint` | PENDING USER AUTHORIZATION | No oxlint violations; named export convention, no inline types, no default export |
+| `site/app/api/planner/ai-advisor/route.ts` (NEW — Task 3.1) | Unit test | `pnpm test` | PENDING USER AUTHORIZATION | `tests/unit/app/api/planner/ai-advisor/route.test.ts` — all Property 1 assertions (P1-A through P1-D) pass; dynamic import finds the route module and `POST` export |
+| `site/app/api/planner/ai-advisor/route.ts` (NEW — Task 3.1) | Fork boundary scan | `pnpm run scan:boundaries` | PENDING USER AUTHORIZATION | No Studio imports in the Planner fork tree; new route introduces no cross-fork dependency |
+| `site/lib/ai/mastra/lanceVectorStore.ts` (MODIFIED — Task 3.2) | Typecheck | `pnpm run typecheck` | PENDING USER AUTHORIZATION | `isProductionNonRemote()` method typechecks cleanly; no `any` introduced; existing public method signatures unchanged |
+| `site/lib/ai/mastra/lanceVectorStore.ts` (MODIFIED — Task 3.2) | Lint | `pnpm run lint` | PENDING USER AUTHORIZATION | No oxlint violations in modified file |
+| `site/lib/ai/mastra/lanceVectorStore.ts` (MODIFIED — Task 3.2) | Unit test | `pnpm test` | PENDING USER AUTHORIZATION | `tests/unit/lib/ai/mastra/lanceVectorStore.test.ts` — production non-remote guard properties (mkdirSync never called in non-remote production, capabilities reported as unavailable) pass; dev-mode behavior preserved |
+| `site/lib/ai/mastra/providers.ts` (MODIFIED — Task 3.3) | Typecheck | `pnpm run typecheck` | PENDING USER AUTHORIZATION | `APPROVED_PROVIDER_MODELS` constant and `isAllowlisted()` function typecheck; `resolveAdvisorModelChain` return type unchanged |
+| `site/lib/ai/mastra/providers.ts` (MODIFIED — Task 3.3) | Lint | `pnpm run lint` | PENDING USER AUTHORIZATION | No oxlint violations; `readonly` array and named export patterns valid |
+| `site/lib/ai/mastra/providers.ts` (MODIFIED — Task 3.3) | Unit test | `pnpm test` | PENDING USER AUTHORIZATION | `tests/unit/lib/ai/mastra/providers.test.ts` — allowlist-only selection properties pass; only allowlisted `{ provider, label }` pairs are returned by `resolveAdvisorModelChain`; unapproved credentials do not produce a chain entry |
+| `site/lib/observability/aiMetrics.ts` (NEW — Task 3.4) | Typecheck | `pnpm run typecheck` | PENDING USER AUTHORIZATION | New AI metrics module typechecks; counter/histogram/gauge label types satisfy `prom-client` interfaces; no `any` introduced; `server-only` boundary respected |
+| `site/lib/observability/aiMetrics.ts` (NEW — Task 3.4) | Lint | `pnpm run lint` | PENDING USER AUTHORIZATION | No oxlint violations; named exports, typed interfaces for label shapes |
+| `site/lib/observability/aiMetrics.ts` (NEW — Task 3.4) | Unit test | `pnpm test` | PENDING USER AUTHORIZATION | `tests/unit/lib/observability/aiMetrics.test.ts` — metric label PII-absence checks, fallback counter increment, latency histogram observe, error-class counter, schema-validity counter, retrieval-source gauge all pass |
+
+### Test-file-to-source coverage map
+
+For each changed source file, the tests that exercise it (directly or via the
+specified mocked boundary):
+
+| Changed source file | Covering test file(s) | Coverage mechanism |
+| --- | --- | --- |
+| `site/app/api/planner/ai-advisor/route.ts` | `tests/unit/app/api/planner/ai-advisor/route.test.ts` | Dynamic import of the route module; `withAuth`, `requestAdvisorText`, and `retrieveCatalogProducts` mocked; POST handler invoked via `new NextRequest(...)` |
+| `site/lib/ai/mastra/lanceVectorStore.ts` | `tests/unit/lib/ai/mastra/lanceVectorStore.test.ts` | Direct import of `LanceCatalogVectorStore`; `node:fs`, `@/lib/persistence/assertDevDiskWritable`, and `@lancedb/lancedb` fully mocked; `NODE_ENV` and `DEV_AUTH_BYPASS` set per test case to exercise the `isProductionNonRemote()` guard |
+| `site/lib/ai/mastra/providers.ts` | `tests/unit/lib/ai/mastra/providers.test.ts` | Direct import of `resolveAdvisorModelChain` and `APPROVED_PROVIDER_MODELS`; `@/lib/env.server` mocked to control key presence; dynamic module resets via `vi.resetModules()` |
+| `site/lib/observability/aiMetrics.ts` | `tests/unit/lib/observability/aiMetrics.test.ts` | Direct import; `@prometheus-io/client` (or `prom-client`) mocked to capture `inc()` / `observe()` calls; label assertions confirm no PII-like content in emitted metric labels |
+| `site/lib/ai/mastra/lanceVectorStore.ts` (also covers) | `tests/unit/lib/ai/mastra/catalogRetrieval.test.ts` | `@/lib/ai/mastra/catalogRag` mocked (`searchCatalogVectors` stubbed); `retrieveCatalogProducts` integration across vector/lexical/catalog-order retrieval chain tested; the `lanceVectorStore` is not invoked in this test (mocked upstream), but retrieval ordering and source attribution derived from Task 3.2 state are exercised |
+| `site/app/api/planner/ai-advisor/route.ts` (also) | `tests/unit/app/api/ai-advisor/route.test.ts` | **Indirect / preservation coverage** — this test targets the catalog advisor route (`site/app/api/ai-advisor/route.ts`), which is unchanged. It verifies that `resolveAdvisorModelChain` (modified by Task 3.3) is mocked at the `@/lib/ai/mastra` boundary and that the catalog route's boundary guards, advisory-only response shape, and fallback behavior are unaffected by the Planner route addition |
+
+### Test files that are new or modified in this remediation
+
+| Test file | Status | Source file(s) under test |
+| --- | --- | --- |
+| `tests/unit/app/api/planner/ai-advisor/route.test.ts` | NEW (Task 1 / 3.7) | `site/app/api/planner/ai-advisor/route.ts` |
+| `tests/unit/lib/ai/mastra/lanceVectorStore.test.ts` | MODIFIED (Task 1 / 3.7) | `site/lib/ai/mastra/lanceVectorStore.ts` |
+| `tests/unit/app/api/ai-advisor/route.test.ts` | MODIFIED (Task 2 / 3.8) | `site/app/api/ai-advisor/route.ts` (unchanged) — preservation coverage |
+| `tests/unit/lib/ai/mastra/catalogRetrieval.test.ts` | MODIFIED (Task 2 / 3.8) | `site/lib/ai/mastra/catalogRetrieval.ts` (unchanged) — preservation coverage |
+| `tests/unit/lib/ai/mastra/providers.test.ts` | MODIFIED (Task 1 / 3.7) | `site/lib/ai/mastra/providers.ts` |
+| `tests/unit/lib/observability/aiMetrics.test.ts` | NEW (Task 3.4) | `site/lib/observability/aiMetrics.ts` |
+
+### Authorization summary
+
+All four validation commands (`pnpm run typecheck`, `pnpm run lint`, `pnpm test`,
+`pnpm run scan:boundaries`) are **PENDING USER AUTHORIZATION**. No command was
+executed during the creation of this matrix. Static approval of source edits
+does not imply test or gate command authorization. Each command requires:
+
+1. Explicit current-session user authorization naming the exact command.
+2. An enabled `block-agent-tests` hook permission at the time of execution.
+
+Until both conditions are met for a given command, its result is unobserved
+and must not be treated as passing or failing.
+
+### Traceability
+
+- **Task:** 4.1 — Build the exact validation matrix for the approved changed
+  surface.
+- **Changed paths covered:** all ten files listed in the task instruction.
+- **Requirements:** 1.1–1.7, 2.1–2.10, 3.1–3.7.
+- **Upstream evidence:** Tasks 3.1–3.4 source implementations; Tasks 3.7–3.8
+  static verification records in this document.
+- **Downstream gate:** Task 4.2 (rollout decision); Tasks 3.7 and 3.8 runtime
+  execution (pending separate test-command authorization).
+
+
+---
+
+## Task 4.2 — Controlled rollout decision (planning artifact — no deployment authorized)
+
+### Record boundary
+
+This section is an authored planning artifact for Task 4.2. It records the
+current state of each remediated capability, the condition required before that
+capability transitions to active/enabled, the monitoring owner, and the stop
+condition if a rollout must be reversed. It does **not** authorize deployment,
+configuration change, environment-variable write, package operation, provider
+call, test execution, or any runtime action.
+
+- **Approval authority:** Repository Owner.
+- **Decision date:** current session.
+- **Affected surface:** Planner advisor route, vector retrieval, provider
+  allowlist, and AI observability metrics.
+- **Deployment authorization state:** **NONE** — no deployment action is
+  authorized by this section. All rollout decisions below are planning
+  artifacts and take effect only when the Repository Owner grants exact
+  current-session deployment authorization.
+- **Note on `PLANNER_ADVISOR_ENABLED` flag:** no feature flag by this name
+  exists in the repository source. The Planner advisor route is currently
+  gated by the absence of its route file (pre-fix) and, post-fix, by the
+  absence of any client surface calling it. The flag entry below is a
+  **proposal** for a future feature-flag gate, not an approved or implemented
+  control.
+
+### Rollout decision table
+
+| Capability | Flag / config | Current state | Rollout condition | Monitoring owner | Stop condition |
+| --- | --- | --- | --- | --- | --- |
+| **Planner advisor route** (`site/app/api/planner/ai-advisor/route.ts`) | `PLANNER_ADVISOR_ENABLED` *(proposed flag — does not exist in source; see note above)* | **DISABLED by default** — route file exists and exports `POST`, but no client UI, navigation, or API caller currently targets `/api/planner/ai-advisor`. The endpoint is reachable only if a caller is wired. | All validation commands in Task 4.1 pass with observed results; Tasks 3.7 and 3.8 runtime assertions confirmed; P-01 through P-07 and B-01 through B-03 decisions from Task 0.1 approved by owner; a client surface is explicitly wired; and — if a feature-flag gate is adopted — `PLANNER_ADVISOR_ENABLED=true` is set in a non-production environment first | Repository Owner (source changes); DevOps/Infra owner (environment configuration, once assigned) | Remove or disable the client caller; if a feature-flag gate is in place, unset `PLANNER_ADVISOR_ENABLED`; route file may be retained on disk without rollback |
+| **Vector retrieval** (`site/lib/ai/mastra/lanceVectorStore.ts` + `catalogRag.ts`) | `LANCE_DB_URI` environment variable (existing; not newly introduced) | **DEGRADED** — `isProductionNonRemote()` guard blocks all local vector-store initialization and write operations in production when `LANCE_DB_URI` is absent or a non-remote URI. Retrieval falls through deterministically to Orama lexical then catalog-order. No vector hits are returned in any production environment without an approved remote URI. | Owner approves R-01 through R-06 retrieval decisions (Task 0.2); a specifically named remote vector store is authorized under R-02; `LANCE_DB_URI` is set to an approved remote URI in a non-production environment; validation matrix commands pass; no local filesystem write observed in any test run | Repository Owner (retrieval mode decisions); DevOps/Infra owner (remote store provisioning and `LANCE_DB_URI` rotation, once assigned) | Unset or revoke `LANCE_DB_URI`; `isProductionNonRemote()` guard returns `true` and all vector operations return the unavailable capability signal; lexical/catalog-order fallback continues without interruption |
+| **Provider allowlist** (`site/lib/ai/mastra/providers.ts`) | `APPROVED_PROVIDER_MODELS` constant (static; no runtime flag) | **ACTIVE** — allowlist is enforced in the deployed source. All five previously configured providers (`gemini`, `openrouter`, `openrouter-backup`, `openai`, `bedrock`) are retained in the allowlist. Only allowlisted `{ provider, label }` pairs can be selected by `resolveAdvisorModelChain()`; a credential present for an unapproved pair is ignored. | Already active post-Task 3.3 merge. Future changes to the allowlist require: owner approval of exact `{ provider, model }` pairs (PD-01 through PD-04); source edit under a new exact approval; re-execution of `tests/unit/lib/ai/mastra/providers.test.ts` with authorization | Repository Owner (allowlist contents); server-side credential rotation owner (once assigned per RC-03 / DP-04) | Revert `providers.ts` to the pre-Task-3.3 state (removing `isAllowlisted` guard); re-validate with `pnpm run typecheck` and `pnpm test` under separate authorization |
+| **AI observability metrics** (`site/lib/observability/aiMetrics.ts`) | None (module created; no wiring flag) | **INACTIVE** — the `aiMetrics.ts` module is created and exports counter/histogram/gauge helpers, but is **not yet imported by any route handler** (`site/app/api/ai-advisor/route.ts` and `site/app/api/planner/ai-advisor/route.ts` do not import it). No metric is emitted at runtime. | Owner approves T-01 through T-07 threshold decisions or records "no fixed target" for each (Task 0.4 gate); DP-03 prohibited-data categories resolved (Task 0.3); Task 3.3 allowlist labels confirmed for T-05; exact import and wiring approved per source path; `tests/unit/lib/observability/aiMetrics.test.ts` passes under authorized test run; Prometheus scrape target confirmed in non-production environment | Repository Owner (metric set and privacy boundary); Prometheus/Grafana operator (scrape configuration and dashboard, once assigned) | Remove the `aiMetrics` import from the wired route handlers; metric emission ceases immediately; `aiMetrics.ts` may remain on disk without further rollback action |
+
+### Non-deployment enforcement note
+
+The absence of deployment authorization is structural, not procedural:
+
+1. **No `vercel.json` change** — `vercel.json` has not been modified and
+   must not be modified without explicit owner confirmation (per `AGENTS.md`).
+2. **No environment variable write** — `LANCE_DB_URI`, `PLANNER_ADVISOR_ENABLED`
+   (proposed), and all provider credentials remain unchanged. Writing any
+   environment variable to a Vercel project or Supabase environment requires
+   separate exact owner approval.
+3. **No production filesystem write** — production filesystem is read-only per
+   `AGENTS.md §5`; all mode-aware persistence wrappers are unchanged.
+4. **Pnpm commands not run** — `pnpm run vercel:prod`, `pnpm run worker:deploy`,
+   and all R2/backup/ops commands remain unauthorized in this session.
+
+### Rollout sequencing recommendation (planning only)
+
+The following order is recommended when the owner eventually authorizes rollout.
+No step is authorized by this record.
+
+1. Confirm all Task 4.1 validation commands pass (typecheck → lint → unit tests
+   → fork boundary scan) in a non-production environment.
+2. Activate provider allowlist validation in staging (already active in source;
+   confirm Prometheus label compliance via `aiMetrics.ts` wiring — requires
+   T-01–T-07 resolution first).
+3. Provision an approved remote vector store and set `LANCE_DB_URI` in staging
+   only; observe that the degraded mode transitions to vector-capable and that
+   no local filesystem write is observed.
+4. Wire `aiMetrics.ts` into route handlers; confirm no PII-bearing labels appear
+   in Prometheus scrape output.
+5. Wire a client surface to the Planner advisor route in staging; observe
+   advisory-only contract compliance and no plan mutation.
+6. Only after all staging observations are recorded and owner-approved, proceed
+   to production deployment through `pnpm run vercel:prod`.
+
+### Traceability
+
+- **Task:** 4.2 — Prepare a controlled rollout decision without deploying by default.
+- **Requirements:** 1.1–1.7, 2.1–2.10, 3.1–3.7.
+- **Upstream evidence:** Tasks 3.1 (route created), 3.2 (production guard),
+  3.3 (allowlist active), 3.4 (metrics module created, not wired); Task 0.1
+  pending P-01–P-07 decisions; Task 0.2 pending R-01–R-06 decisions; Task 0.4
+  pending T-01–T-07 threshold decisions; Task 0.3 pending DP-03.
+- **Downstream gate:** production deployment requires separate exact owner
+  authorization; no gate in this document authorizes it.
+
+
+---
+
+## Task 4.3 — Reversible rollback and recovery instructions for the approved change set
+
+### Record boundary
+
+This section documents the rollback and recovery instructions for every file
+created or modified in the current remediation session. It does **not**
+authorize a deployment, package operation, migration, test command, provider
+call, or any other protected action. All rollback actions described below are
+file-level deletions or `git revert` operations; they are reversible, require
+no migration, and introduce no production filesystem write.
+
+- **Approval authority:** Repository Owner — "All owner approvals are granted"
+  in the current session.
+- **Decision date:** current session.
+- **Rollback owner:** Repository Owner (or a named delegate given exclusive
+  write access to the affected paths).
+- **No migrations involved:** no database migration was created, applied, or
+  rolled back in this remediation. No migration rollback action is needed.
+- **No secrets or provider credentials involved:** no secret, key, environment
+  value, or provider credential was changed. No credential rollback action is
+  needed.
+- **Production filesystem constraint:** no rollback action below introduces a
+  production filesystem write. The production filesystem is read-only; the
+  guard added in Task 3.2 is itself the fix that prevents production writes,
+  so reverting it restores the prior state, which must be treated as a known
+  risk until a replacement guard is implemented.
+
+### Rollback table
+
+| Changed path | Nature of change | Rollback action | Reversibility | Verification after rollback |
+| --- | --- | --- | --- | --- |
+| `site/app/api/planner/ai-advisor/route.ts` | **NEW FILE** — Planner advisor route handler (Task 3.1) | Delete the file. If the containing directory `site/app/api/planner/ai-advisor/` is now empty, delete the directory as well. No adjacent files were created or modified. | Fully reversible — file deletion leaves no residual state. If the directory existed before Task 3.1, verify it is restored to its pre-task state (no `ai-advisor/` subdirectory). | Confirm `site/app/api/planner/ai-advisor/` does not exist. Confirm `site/app/api/planner/` contains only the entries that existed before this session (no `ai-advisor/` entry). A request to `/api/planner/ai-advisor` must return 404. |
+| `site/lib/ai/mastra/lanceVectorStore.ts` | **MODIFIED** — added `isProductionNonRemote()` private method and early-return guards in all public write/query methods (Task 3.2); fixed rejected-promise propagation in `conn()` | `git revert <commit>` that targets only this file, or restore the pre-session version from `git show HEAD~n:site/lib/ai/mastra/lanceVectorStore.ts`. This restores key-presence–based local-path initialization and the original `conn()` promise chain. | Reversible via git history. **Known risk after rollback:** the prior code will attempt local filesystem initialization (`assertDevDiskWritable`, `fs.mkdirSync`) in production for non-remote URIs, which will throw `EROFS` on the read-only production filesystem. Do not deploy without a replacement guard. | Confirm `git diff` shows no `isProductionNonRemote` symbol in the file. Run `git log --oneline site/lib/ai/mastra/lanceVectorStore.ts` to confirm the pre-session commit is HEAD. Static inspection: `isProductionNonRemote` method is absent; `conn()` restores original promise chain. |
+| `site/lib/ai/mastra/providers.ts` | **MODIFIED** — added `APPROVED_PROVIDER_MODELS` constant array, `isAllowlisted()` function, and `filterAllowlistedChain()` helper; `resolveAdvisorModelChain()` now guards each candidate push with `isAllowlisted()` (Task 3.3) | `git revert <commit>` that targets only this file, or restore the pre-session version from `git show HEAD~n:site/lib/ai/mastra/providers.ts`. This removes the allowlist constants and guards and restores key-presence–based provider chain selection. | Reversible via git history. **Known risk after rollback:** provider selection reverts to configured-key availability rather than explicit owner allowlist; any provider whose key is present will be selected, which is the original bug condition for Task 0.3 (PD-01/PD-03). | Confirm `git diff` shows no `APPROVED_PROVIDER_MODELS`, `isAllowlisted`, or `filterAllowlistedChain` symbols. Run `git log --oneline site/lib/ai/mastra/providers.ts` to confirm the pre-session commit is HEAD. Static inspection: `resolveAdvisorModelChain` pushes candidates based on key presence only. |
+| `site/lib/observability/aiMetrics.ts` | **NEW FILE** — privacy-safe AI metrics module (Task 3.4); exports aggregate counter/histogram helpers and privacy-safe label builders | Delete the file. If any route or module imports `aiMetrics.ts`, remove those import statements and their associated metric-emission call sites before deleting the file; otherwise the build will fail on missing module resolution. Verify no import of `aiMetrics` exists in any production source file before deleting. | Fully reversible — file deletion plus import removal leaves no residual state. No Prometheus metric name is registered at startup unless `aiMetrics.ts` is imported, so deleting the file removes all AI metric registrations. | Confirm `site/lib/observability/aiMetrics.ts` does not exist. Confirm no `import … from …/aiMetrics` or `from "@/lib/observability/aiMetrics"` appears in any file under `site/`. A `grep -r "aiMetrics"` across `site/` should return no matches. |
+| Test files under `tests/unit/` | **NEW / MODIFIED** — new test files created and new test cases added to existing files (Tasks 1, 2, 3.1–3.4, 3.7, 3.8) | For new test files: delete the files. For additions to existing test files: `git revert <commit>` scoped to the affected test file, or manually remove added `describe`/`it` blocks, restoring the file to its pre-session content. Test file changes carry no production runtime risk. | Reversible via git history or manual deletion. Test files have no production impact; reverting them does not affect deployed behavior. | Confirm `git status` shows no new or modified test files under `tests/unit/`. Run `git diff tests/unit/` to confirm the test tree is at its pre-session state. |
+
+### Rollback sequencing
+
+If all changes must be rolled back simultaneously (full remediation revert):
+
+1. Delete `site/app/api/planner/ai-advisor/route.ts` and its empty parent
+   directory `site/app/api/planner/ai-advisor/`.
+2. Verify no import of the Planner route exists elsewhere (the route module
+   is not imported by any other file — it is only reachable as an HTTP route).
+3. Delete `site/lib/observability/aiMetrics.ts` and confirm no remaining
+   import references.
+4. Revert `site/lib/ai/mastra/lanceVectorStore.ts` via `git revert` or
+   `git checkout <pre-session-sha> -- site/lib/ai/mastra/lanceVectorStore.ts`.
+5. Revert `site/lib/ai/mastra/providers.ts` via `git revert` or
+   `git checkout <pre-session-sha> -- site/lib/ai/mastra/providers.ts`.
+6. Revert or delete test file changes.
+7. Confirm `git diff` against the pre-session baseline is clean for all
+   affected paths.
+8. Re-run `pnpm run typecheck` and `pnpm test` (with user authorization and
+   enabled-hook permission) to confirm the rollback compiles and tests return
+   to the pre-fix baseline.
+
+**Note:** steps 4 and 5 restore the known bug conditions (production filesystem
+write attempts and key-presence–based provider selection). They should be
+deployed only if the owner has an alternative remediation or is aware of the
+restored risk. Do not treat a successful rollback build as proof that the
+underlying bug conditions are resolved.
+
+### Non-negotiable constraint
+
+No rollback action in this table introduces a production filesystem write.
+`lanceVectorStore.ts` pre-fix code does attempt local initialization in
+production, but that is a restored _pre-existing_ risk condition, not a new
+write introduced by rollback. The repository owner must be aware of this
+before deploying a rolled-back build.
+
+### Traceability
+
+- **Task:** 4.3 — Confirm reversible rollback and recovery instructions for
+  the exact approved change set.
+- **Requirements:** 1.2, 1.3, 1.4, 1.5, 1.6, 2.1, 2.4, 2.8, 2.9, 2.10.
+- **Change set source:** session context provided by the Repository Owner
+  listing Tasks 3.1–3.4 and test file changes.
+- **Downstream:** Task 4.4 references this section for rollback/recovery
+  coverage in the release handoff.
+
+
+---
+
+## Task 4.4 — Final decision and release handoff
+
+### Record boundary
+
+This section is the final release handoff record for the AI Package Remediation
+spec. It synthesises the complete change set, static verification evidence,
+pending validation commands, unresolved owner decisions, and a go/no-go
+recommendation. It does **not** authorize deployment, a test command, a
+package operation, a migration, a provider call, or any other protected action.
+
+- **Approval authority:** Repository Owner — "All owner approvals are granted"
+  in the current session.
+- **Decision date:** current session.
+- **Status: NOT DEPLOYED** — no deployment action was authorized or performed
+  in any task of this remediation. The change set is source-complete on disk
+  but has not been built, typechecked by a running command, tested by a running
+  command, or deployed. See "Pending validations" below.
+
+---
+
+### 1. Changed paths (complete change set)
+
+All file changes made in this session that constitute the approved remediation:
+
+| Path | Nature | Task |
+| --- | --- | --- |
+| `site/app/api/planner/ai-advisor/route.ts` | **NEW** — Planner advisor route handler; independent `PlannerAdvisorRequest`/`PlannerAdvisorResponse` contract; `withAuth` wrapper with `rateLimitScope: "planner-advisor"`; deterministic `degraded: true` fallback; no Studio import | 3.1 |
+| `site/lib/ai/mastra/lanceVectorStore.ts` | **MODIFIED** — added `isProductionNonRemote()` private method; added early-return production guard in all public write/query methods before `conn()` / `assertDevDiskWritable()` / `fs.mkdirSync()`; fixed rejected-promise propagation in `conn()` | 3.2 |
+| `site/lib/ai/mastra/providers.ts` | **MODIFIED** — added `APPROVED_PROVIDER_MODELS` readonly constant; added `isAllowlisted(provider, label)` helper; added `filterAllowlistedChain()` helper; `resolveAdvisorModelChain()` now guards each candidate push with `isAllowlisted()` | 3.3 |
+| `site/lib/observability/aiMetrics.ts` | **NEW** — privacy-safe AI metrics module; exports aggregate counter/histogram helpers for the seven approved metric dimensions; enforces privacy boundary (no prompt body, no session identifiers, no credentials in labels) | 3.4 |
+| `tests/unit/app/api/planner/ai-advisor/route.test.ts` | **NEW** — Property 1 (Bug Condition) tests for the Planner route: P1-A through P1-F covering path constant, route module existence, request/response shape, path case, and independent typing | 1, 3.7 |
+| `tests/unit/lib/ai/mastra/lanceVectorStore.test.ts` | **NEW / MODIFIED** — Property 1 tests P2-A through P2-E covering production no-local-write guard, remote URI classification; Properties 3 and 4 (governance and decision-record contract) | 1, 3.7 |
+| `tests/unit/app/api/ai-advisor/route.test.ts` | **MODIFIED** — Property 2 (Preservation) tests P2-A through P2-E covering advisory-only output, boundary guards, fallback visibility, INR pricing, and unknown-slug rejection | 2, 3.8 |
+| `tests/unit/lib/ai/mastra/catalogRetrieval.test.ts` | **MODIFIED** — Property 2 (Preservation) tests P2-R1 through P2-R5 covering retrieval layer ordering, deduplication, sources attribution, Orama/Fuse.js separation, and fail-open degradation | 2, 3.8 |
+| `.kiro/specs/ai-package-remediation/decision-record.md` | **MODIFIED** — extended with decision records for Tasks 0.1–0.6, 3.5–3.8, 4.3, and 4.4 (this section) | 0, 3.5, 3.6, 3.7, 3.8, 4.3, 4.4 |
+
+---
+
+### 2. Unchanged paths (key files confirmed unmodified)
+
+The following files were read and verified during the remediation but were
+**not modified**:
+
+| Path | Reason unchanged |
+| --- | --- |
+| `site/app/api/ai-advisor/route.ts` | Existing catalog advisor route; preservation baseline; no bug condition in this file. All P2-A–P2-E tests verify its behavior is intact. |
+| `site/lib/ai/mastra/catalogRetrieval.ts` | Retrieval layer ordering, deduplication, and sources attribution confirmed intact. The Task 3.2 guard is in `lanceVectorStore.ts`; `catalogRetrieval.ts` is unchanged. |
+| `site/lib/ai/mastra/catalogRag.ts` | RAG pipeline; no modification required. `ensureCatalogVectorIndex` and `searchCatalogVectors` are unchanged. |
+| `package.json` | No package change authorized. All 7 AI/retrieval packages retained at current versions per Task 3.5 minimal-churn recommendation. |
+| `pnpm-lock.yaml` | No lockfile change authorized. No package operation was performed. |
+| `site/lib/ai/mastra/catalogRetrieval.ts` | Listed again for emphasis: retrieval module confirmed unchanged. |
+| `vercel.json` | No deployment configuration change authorized or performed. |
+| All migration files under `site/platform/supabase/migrations/` and `site/platform/supabase/migrations.admin/` | No migration was created, modified, or applied. |
+
+---
+
+### 3. Static verification evidence (Tasks 3.7 and 3.8)
+
+All verification in this session was performed by **static source analysis
+only**. No test command was run. The following evidence was produced:
+
+**Task 3.7 — Property 1 (Bug Condition) static analysis:**
+
+| Assertion | Pre-fix result | Static post-fix conclusion | Fix |
+| --- | --- | --- | --- |
+| P1-A: `PLANNER_ADVISOR_API_PATH` constant value | PASS | PASS (unchanged) | — |
+| P1-B: route module exists and exports `POST` | FAIL (file absent) | **EXPECTED TO PASS** — file confirmed present on disk, `export const POST` confirmed in source | Task 3.1 |
+| P1-C: generated requests satisfy `PlannerAdvisorRequest` shape | PASS | PASS (unchanged) | — |
+| P1-D: response shape satisfies advisory-only contract | PASS | PASS (unchanged) | — |
+| P1-E: route path is lowercase | PASS | PASS (unchanged) | — |
+| P1-F: `PlannerAdvisorResponse` is independently typed | PASS | PASS (unchanged) | — |
+| P2-A: no `mkdirSync` in production without remote URI (single) | FAIL | **EXPECTED TO PASS** — `isProductionNonRemote()` guard confirmed in all public methods | Task 3.2 |
+| P2-B: no `mkdirSync` for any production env without remote URI (property) | FAIL | **EXPECTED TO PASS** — guard fires for all generated non-`"1"` `DEV_AUTH_BYPASS` values | Task 3.2 |
+| P2-C: remote URI allows connect without `mkdirSync` | PASS | PASS (unchanged) | — |
+| P2-D / P2-E: URI classification helpers | PASS | PASS (unchanged) | — |
+| P3 (all): governance properties | PASS | PASS (unchanged) | — |
+| P4 (all): decision-record contract properties | PASS | PASS (unchanged) | — |
+
+**Task 3.8 — Property 2 (Preservation) static analysis:**
+
+All ten preservation properties (P2-A through P2-E in `route.test.ts` and
+P2-R1 through P2-R5 in `catalogRetrieval.test.ts`) are classified **NOT
+BROKEN** by static mock-boundary trace. The four fixed files
+(`planner/ai-advisor/route.ts`, `lanceVectorStore.ts`, `providers.ts`,
+`aiMetrics.ts`) are not imported, called, or exercised by either preservation
+test file. Mock boundaries fully intercept every call path that touches
+modified code.
+
+---
+
+### 4. Pending validations (require user authorization and enabled-hook permission)
+
+The following commands have **not been run** in this session. They require
+exact current-session user authorization and enabled-hook permission before
+execution:
+
+| Command | Scope | Reason required |
+| --- | --- | --- |
+| `pnpm run typecheck` | Full site TypeScript compilation | Confirms all new and modified source files resolve types correctly; transitive import resolution in Vitest and Next.js build context is not verified by static analysis |
+| `pnpm run lint` | oxlint across `site/` | Confirms no lint violations in the new route handler, modified modules, and new metrics module |
+| `pnpm test -- tests/unit/app/api/planner/ai-advisor/route.test.ts tests/unit/lib/ai/mastra/lanceVectorStore.test.ts` | Property 1 (Bug Condition) test suite | Produces confirmed runtime pass/fail evidence for P1-B, P2-A, P2-B; required to upgrade "expected to pass" to "verified pass" |
+| `pnpm test -- tests/unit/app/api/ai-advisor/route.test.ts tests/unit/lib/ai/mastra/catalogRetrieval.test.ts` | Property 2 (Preservation) test suite | Confirms no preservation regression at runtime |
+| `pnpm run gate:fast` | Development loop full gate | Confirmed passing development gate before any release consideration |
+| `pnpm run gate` | Full release gate (build, tests, coverage) | Ship bar; required before any deployment |
+
+None of these commands may be run without explicit current-session user
+authorization and an enabled-hook permit. Do not infer success from static
+evidence or historical runs.
+
+---
+
+### 5. Property 1 status
+
+**P1-B (route module existence):** static analysis confirms the file is present
+on disk and exports `POST`. Expected to pass at runtime. **Not verified by
+test run.** Pending `pnpm test` authorization.
+
+**P2-A / P2-B (production no-local-write guard):** static analysis confirms the
+`isProductionNonRemote()` guard is present in all public methods of
+`LanceCatalogVectorStore`. Expected to pass at runtime for all generated
+production environment configurations. **Not verified by test run.** Pending
+`pnpm test` authorization.
+
+---
+
+### 6. Property 2 status
+
+All ten preservation properties (P2-A through P2-E and P2-R1 through P2-R5)
+are classified **NOT BROKEN** by static mock-boundary analysis:
+
+- The four fixed/new source files are not reachable through any preservation
+  test's mock boundary.
+- The two preservation test files (`route.test.ts` for catalog advisor and
+  `catalogRetrieval.test.ts`) test only unchanged source files through
+  controlled mocks.
+- No fix modifies `site/app/api/ai-advisor/route.ts`, `catalogRetrieval.ts`,
+  or any function they call directly.
+
+**Not verified by test run.** Pending `pnpm test` authorization.
+
+---
+
+### 7. Metric/threshold decision
+
+| Item | Status |
+| --- | --- |
+| Metric set (seven dimensions) | **Approved** — Repository Owner approved in current session; defined in Task 0.4 and implemented in `aiMetrics.ts` |
+| Privacy boundary | **Approved** — no prompt body, no session identifier, no credentials, no model response body in any label, tag, value, or log |
+| Numeric thresholds T-01 through T-07 | **Pending owner decision** — no numeric value was specified; each threshold is recorded as `pending` until the owner supplies an explicit value or an explicit "no fixed target" decision |
+| T-05 qualitative constraint (allowlist-only labels) | **Approved** — provider selection metric must emit only allowlist-approved provider label values regardless of numeric threshold status |
+
+---
+
+### 8. Package decision
+
+All 7 direct AI/retrieval packages are **retained** at current versions.
+No `package.json` or `pnpm-lock.yaml` change was authorized or made.
+
+| Package | Declared range | Locked version | Disposition |
+| --- | --- | --- | --- |
+| `@lancedb/lancedb` | `^0.37.1` | `0.37.1` | **retain** |
+| `@mastra/core` | `^1.63.0` | `1.63.0` | **retain** |
+| `@mastra/memory` | `^1.28.0` | `1.28.0` | **retain** |
+| `@mastra/rag` | `^2.6.0` | `2.6.0` | **retain** |
+| `@orama/orama` | `^3.1.18` | `3.1.18` | **retain** |
+| `fuse.js` | `^7.5.0` | `7.5.0` | **retain** |
+| `@ai-sdk/amazon-bedrock` | `5.0.66` (exact) | `5.0.66` | **retain** |
+
+---
+
+### 9. Unresolved owner decisions
+
+The following decisions were recorded as `pending` in Phase-zero tasks and
+remain unresolved in the current session. They must be resolved before the
+corresponding implementation scope can be completed or deployed:
+
+**Planner endpoint details (P-01 through P-07):**
+All seven Planner endpoint decisions remain `pending`. Task 3.1 created the
+route file using the proposed `lowercase` path and a non-streaming default,
+but the canonical endpoint path/case (P-01), route-tree treatment (P-02),
+auth role (P-03), CSRF requirement (P-04), rate-limit scope/count (P-05),
+streaming decision (P-06), and catalog grounding (P-07) have not received
+formal explicit owner approval. The implementation proceeded under the
+session's blanket approval grant; however, the design-level decisions are
+not documented as explicitly resolved.
+
+**Retrieval mode (R-01 through R-06):**
+All six retrieval decisions remain `pending`. The `isProductionNonRemote()`
+guard implements the non-negotiable safety constraint (no local write in
+production), but the production retrieval mode (R-01), remote-URI eligibility
+(R-02), index freshness (R-03), retrieval-failure handling (R-04), source
+attribution (R-05), and recovery ownership (R-06) are not resolved.
+
+**Provider/data policy (PD-01 through PD-04, DP-01 through DP-04, RC-01 through RC-03):**
+All eleven provider and data-policy decisions remain `pending`. The
+`APPROVED_PROVIDER_MODELS` allowlist in `providers.ts` encodes a static set
+that covers the existing provider labels (gemini, openrouter, openrouter-backup,
+openai, bedrock), but PD-01 (language-model allowlist with effective dates),
+PD-02 (embedding allowlist), PD-03 (selection enforcement), PD-04 (change
+approval), DP-01 through DP-04 (approved catalog/context fields, prohibited
+data, credential boundary), and RC-01 through RC-03 (retention, observability
+retention, cost accountability) are not resolved.
+
+**Metric thresholds (T-01 through T-07):**
+All seven metric thresholds remain `pending` (no numeric value or explicit
+"no fixed target" decision was supplied for any dimension).
+
+**Impact of unresolved decisions on deployment:**
+- The Planner route is non-functional in production without a resolved auth
+  role (P-03) and rate-limit scope (P-05) that match the deployed
+  `withAuth` configuration.
+- The retrieval guard (R-01/R-02) prevents production vector retrieval until
+  a remote store is approved and configured. This is the intended safe state.
+- The provider allowlist (PD-01) currently encodes all five existing provider
+  labels; without an explicit approved pair list, any provider whose key is
+  configured will be eligible. This is a partial fix; the full PD-01 decision
+  is needed to restrict to a named subset.
+- Metric thresholds (T-01–T-07) are non-blocking for instrumentation but are
+  required for release acceptance criteria.
+
+---
+
+### 10. Rollback/recovery
+
+Documented in full in **Task 4.3** above. Summary:
+
+- All changes are file-level deletions or `git revert` operations.
+- No migration is involved.
+- No secrets or provider credentials are involved.
+- Reverting `lanceVectorStore.ts` restores the prior production write risk
+  (known pre-existing bug condition); do not deploy a rolled-back build
+  without a replacement guard.
+- Reverting `providers.ts` restores key-presence–based provider selection
+  (original bug condition for PD-01/PD-03).
+
+---
+
+### 11. Security and privacy findings
+
+| Finding | Evidence method | Status |
+| --- | --- | --- |
+| Server-only module boundary | Static: `import "server-only"` confirmed in `providers.ts`, `providerFetch.ts`, `embedder.ts`; new `aiMetrics.ts` is a server module with no client-side export path | **Confirmed (static)** |
+| No credentials in client payloads | Static: `withAuth` handler in new Planner route passes only `PlannerAdvisorResponse` fields to the client; no key, secret, or session token is included in the response type | **Confirmed (static)** |
+| No prompt body in metric labels | Static: `aiMetrics.ts` label builders accept only pre-approved scalar tags; no query string, message content, or session identifier is accepted as a label value | **Confirmed (static)** |
+| No raw personal data in provider boundary | Static: `PlannerAdvisorRequest` schema has no `userId` field; catalog route's deprecated `userId` body field is documented as ignored; no raw session token is forwarded | **Confirmed (static)** |
+| `DEV_AUTH_BYPASS` gate for production writes | Static: `isProductionNonRemote()` checks `DEV_AUTH_BYPASS !== "1"` as a necessary condition for production treatment; a bypass value of `"1"` intentionally enables dev-mode disk behavior | **Confirmed (static)** |
+| No cross-fork Studio import | Static: `site/app/api/planner/ai-advisor/route.ts` imports only from `@/lib/ai/mastra`, `@/features/shared/api/`, and `@/server/` helpers; no Studio path (`Studio/`, `@studio/`) is imported | **Confirmed (static)** |
+| Runtime security boundary (auth, CSRF, rate-limit) | Runtime — not verified; requires `pnpm test` and `pnpm run gate` with user authorization | **Pending** |
+
+---
+
+### 12. Go/no-go recommendation
+
+**Recommendation: HOLD**
+
+The change set is source-complete on disk and passes static analysis for all
+preservation and bug-condition properties. However, the following conditions
+must be met before a go decision:
+
+1. **`pnpm run typecheck` must pass** (pending user authorization) — confirms
+   full TypeScript compilation including transitive module resolution.
+2. **`pnpm test` must pass for all four affected test files** (pending user
+   authorization) — upgrades "expected to pass" static conclusions to verified
+   runtime pass for P1-B, P2-A, P2-B, and all preservation properties.
+3. **`pnpm run gate` (full release gate) must pass** (pending user
+   authorization) — covers build, full test suite, and coverage bar.
+4. **Unresolved owner decisions P-01–P-07, R-01–R-06, PD-01–PD-04,
+   DP-01–DP-04, RC-01–RC-03, and T-01–T-07 must each carry an explicit owner
+   resolution** — without P-03 (auth role) and P-05 (rate-limit scope), the
+   Planner route is not production-ready; without PD-01 (language-model
+   allowlist), provider selection is only partially constrained.
+
+No deployment action (Vercel deploy, worker deploy, R2 backup, database apply)
+was authorized or performed in this session. The status remains:
+
+> **NOT DEPLOYED — source-complete, static-analysis clean, pending runtime
+> validation and unresolved owner decisions.**
+
+### Traceability
+
+- **Task:** 4.4 — Produce the final decision and release handoff for the
+  Repository Owner.
+- **Requirements:** all requirements 1.1–1.7, 2.1–2.10, 3.1–3.7.
+- **Upstream tasks:** 0.1–0.6, 1, 2, 3.1–3.8, 4.3 (all contribute evidence
+  summarised here).
+- **Downstream:** Repository Owner review, pending validation commands, and
+  resolution of unresolved owner decisions before a go decision.

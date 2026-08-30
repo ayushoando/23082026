@@ -80,7 +80,7 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - Declare repository remediation and full validation as separate completion states.
     - _Requirements: 14.8-14.10, 17.7, 18.1-18.9, 19.2, 19.4-19.8_
 
-- [ ] 2. Workstream 2 — Remediate fork, geometry, and persistence integrity
+- [~] 2. Workstream 2 — Remediate fork, geometry, and persistence integrity
   - [x] 2.1 Audit every inventoried Planner/Studio dependency and remediate all fork-boundary violations
     - Remove Planner-to-Studio, Studio-to-Planner, and cross-zone FOCSS imports; create independent Planner-owned equivalents where needed and extend findings to all affected workflows.
     - Preserve Planner API casing and approved shared-infrastructure boundaries.
@@ -176,11 +176,11 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - Preserve document, unsaved state, active tool/workflow, and meaningful selection across resize/orientation changes.
     - Keep commands reachable without page-level horizontal scrolling; use reversible panels, dismissible tablet overlays, non-overlapping desktop regions, and visual-viewport-aware modal scrolling.
     - _Requirements: 2.2, 6.1-6.7_
-  - [~] 3.10 Route every state-changing canvas action through Planner semantic commands
+  - [x] 3.10 Route every state-changing canvas action through Planner semantic commands
     - Make select, move, rotate, resize, duplicate, delete, zoom, and pan invoke common Planner-owned command logic from pointer, touch, keyboard, and visible accessible controls.
     - Provide explicit alternatives for multi-pointer gestures.
     - _Requirements: 7.1-7.4, 7.7_
-  - [~] 3.11 Remediate touch scope, keyboard traversal, menus, panels, and dialogs
+  - [-] 3.11 Remediate touch scope, keyboard traversal, menus, panels, and dialogs
     - Restrict `touch-action` suppression to active gesture regions, provide logical visible focus, move focus into opened surfaces, trap only modal focus, and restore the invoker on close.
     - _Requirements: 7.4-7.6, 8.1, 8.2_
   - [~] 3.12 Write property-based test for responsive context preservation
@@ -233,7 +233,7 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
   - [-] 4.3 Remediate server-derived owner scope and session-expiry handling
     - Derive identity only from the verified server session, list only owned records, use one documented non-disclosing item policy, reject/ignore client owner identifiers, and retain unsaved UI state on expiry through a typed handoff to workstream 3.
     - _Requirements: 10.3-10.8, 11.5_
-  - [~] 4.4 Remediate safe structured errors and correlation responses
+  - [x] 4.4 Remediate safe structured errors and correlation responses
     - Return stable codes and correlation identifiers while excluding secrets, credentials, stack traces, tokens, request bodies, project content, and cross-owner data.
     - _Requirements: 11.8, 11.9, 17.3_
   - [x] 4.5 Write property-based test for server-derived owner scope
