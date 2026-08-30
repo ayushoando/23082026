@@ -110,6 +110,93 @@
         "chatSessionId": "sess_c358d6dd-fd59-4a2e-80fb-a577ef11557b",
         "timestamp": 1788091808656
       }
+    ],
+    "4. Checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "e7fbbfe9-bc3e-4696-95a0-78a24c0864f2",
+        "chatSessionId": "sess_c05a5f2b-6b3b-4846-97af-2ced17a95edb",
+        "timestamp": 1788099212229
+      }
+    ],
+    "5.1 Implement recovery planning for code rollback, Worker rollback, Products schema rollback, Admin schema rollback, and data recovery.": [
+      {
+        "executionId": "e7fbbfe9-bc3e-4696-95a0-78a24c0864f2",
+        "chatSessionId": "sess_c05a5f2b-6b3b-4846-97af-2ced17a95edb",
+        "timestamp": 1788099212354
+      },
+      {
+        "executionId": "e7fbbfe9-bc3e-4696-95a0-78a24c0864f2",
+        "chatSessionId": "sess_c05a5f2b-6b3b-4846-97af-2ced17a95edb",
+        "timestamp": 1788099238328
+      }
+    ],
+    "5.2 Implement monitoring extraction and gap assessment from OpenTelemetry, metrics, local Prometheus/Grafana configuration, root command routes, and runbook evidence.": [
+      {
+        "executionId": "e7fbbfe9-bc3e-4696-95a0-78a24c0864f2",
+        "chatSessionId": "sess_c05a5f2b-6b3b-4846-97af-2ced17a95edb",
+        "timestamp": 1788099212414
+      },
+      {
+        "executionId": "e7fbbfe9-bc3e-4696-95a0-78a24c0864f2",
+        "chatSessionId": "sess_c05a5f2b-6b3b-4846-97af-2ced17a95edb",
+        "timestamp": 1788099239183
+      }
+    ],
+    "5.3 Implement deterministic runbook/CI/configuration alignment comparison and priority assignment.": [
+      {
+        "executionId": "e7fbbfe9-bc3e-4696-95a0-78a24c0864f2",
+        "chatSessionId": "sess_c05a5f2b-6b3b-4846-97af-2ced17a95edb",
+        "timestamp": 1788099212485
+      }
+    ],
+    "6.1 Implement review assembly, partitioned JSON/Markdown rendering, secret redaction, and output-path enforcement.": [
+      {
+        "executionId": "e7fbbfe9-bc3e-4696-95a0-78a24c0864f2",
+        "chatSessionId": "sess_c05a5f2b-6b3b-4846-97af-2ced17a95edb",
+        "timestamp": 1788099212570
+      }
+    ],
+    "6.2 Wire a thin root command entry point only after separate owner approval for the exact `package.json` and script changes.": [
+      {
+        "executionId": "e7fbbfe9-bc3e-4696-95a0-78a24c0864f2",
+        "chatSessionId": "sess_c05a5f2b-6b3b-4846-97af-2ced17a95edb",
+        "timestamp": 1788099212664
+      }
+    ],
+    "7. Final checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "e7fbbfe9-bc3e-4696-95a0-78a24c0864f2",
+        "chatSessionId": "sess_c05a5f2b-6b3b-4846-97af-2ced17a95edb",
+        "timestamp": 1788099212734
+      }
+    ],
+    "2.3 Write property test for unsupported external-claim classification.": [
+      {
+        "executionId": "e7fbbfe9-bc3e-4696-95a0-78a24c0864f2",
+        "chatSessionId": "sess_c05a5f2b-6b3b-4846-97af-2ced17a95edb",
+        "timestamp": 1788099235586
+      }
+    ],
+    "2.4 Write property test for persisted-data release and recovery completeness.": [
+      {
+        "executionId": "e7fbbfe9-bc3e-4696-95a0-78a24c0864f2",
+        "chatSessionId": "sess_c05a5f2b-6b3b-4846-97af-2ced17a95edb",
+        "timestamp": 1788099237093
+      }
+    ],
+    "3.3 Write property test for attributable missing backup-coverage gaps.": [
+      {
+        "executionId": "e7fbbfe9-bc3e-4696-95a0-78a24c0864f2",
+        "chatSessionId": "sess_c05a5f2b-6b3b-4846-97af-2ced17a95edb",
+        "timestamp": 1788099237955
+      }
+    ],
+    "3.4 Write property test for scheduled-workflow credential redaction.": [
+      {
+        "executionId": "e7fbbfe9-bc3e-4696-95a0-78a24c0864f2",
+        "chatSessionId": "sess_c05a5f2b-6b3b-4846-97af-2ced17a95edb",
+        "timestamp": 1788099238091
+      }
     ]
   }
 }

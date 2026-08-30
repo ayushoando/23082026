@@ -297,7 +297,7 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
   - [x] 5.8 Expand automated browser/device profiles beyond the required representative profiles
     - Add non-duplicative cross-browser/device cases only after required profiles and remediations are covered; do not make these extra profiles a prerequisite for closing already proven findings.
     - _Requirements: 6.1, 7.1, 8.1, 16.1-16.7_
-  - [-] 5.9 Add targeted unit and integration regression tests for every remediated finding after Gate D
+  - [x] 5.9 Add targeted unit and integration regression tests for every remediated finding after Gate D
     - Cover geometry, commands, state transitions, API middleware order, owner scope, adapters, revision/idempotency/schema behavior, guest handoff, observability, migration transformations when present, and all defect-specific edge cases.
     - Tag/link tests to finding ids, source paths, requirements, and evidence class. Use distinct concern-specific test files or wait for explicit serial file transfer; never edit a workstream-owned test file concurrently.
     - _Requirements: 2.6, 18.1, 18.5, 19.1-19.4_

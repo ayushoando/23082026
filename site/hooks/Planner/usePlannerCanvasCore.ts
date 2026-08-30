@@ -267,7 +267,27 @@ export const useCanvasCore = ({
   const fitToContent = useCallback(() => {
     const c = fabricRef.current;
     if (!c) return;
-    // Prefer sheet + content; fall back to origin-centred 100% when empty
+
+    const resolveFitCenterX = (canvasWidth: number, contentWidth: number, padding: number) => {
+      const defaultCenter = canvasWidth / 2;
+      const stage = wrapperRef.current;
+      const workspace = stage?.closest(".workspace");
+      if (!(stage instanceof HTMLElement) || !(workspace instanceof HTMLElement)) {
+        return defaultCenter;
+      }
+
+      const stageRect = stage.getBoundingClientRect();
+      const workspaceRect = workspace.getBoundingClientRect();
+      const workspaceCenterInStage =
+        workspaceRect.left + workspaceRect.width / 2 - stageRect.left;
+      const minimumCenter = padding + contentWidth / 2;
+      const maximumCenter = canvasWidth - padding - contentWidth / 2;
+
+      if (minimumCenter > maximumCenter) return defaultCenter;
+      return Math.min(maximumCenter, Math.max(minimumCenter, workspaceCenterInStage));
+    };
+
+    // Prefer sheet + content; fall back to origin-centred 100% when empty.
     const objs = c
       .getObjects()
       .filter(
@@ -276,35 +296,53 @@ export const useCanvasCore = ({
           !(o as OoFabricObject).data?.isGuide,
       );
     if (objs.length === 0) {
-      const cw = c.getWidth();
-      const ch = c.getHeight();
-      c.setViewportTransform([1, 0, 0, 1, cw / 2, ch / 2]);
+      const canvasWidth = c.getWidth();
+      const canvasHeight = c.getHeight();
+      c.setViewportTransform([1, 0, 0, 1, canvasWidth / 2, canvasHeight / 2]);
       setZoom(1);
       return;
     }
+
     let minX = Infinity;
     let minY = Infinity;
     let maxX = -Infinity;
     let maxY = -Infinity;
-    objs.forEach((o) => {
-      const b = o.getBoundingRect();
-      minX = Math.min(minX, b.left);
-      minY = Math.min(minY, b.top);
-      maxX = Math.max(maxX, b.left + b.width);
-      maxY = Math.max(maxY, b.top + b.height);
+    objs.forEach((object) => {
+      const bounds = object.getBoundingRect();
+      minX = Math.min(minX, bounds.left);
+      minY = Math.min(minY, bounds.top);
+      maxX = Math.max(maxX, bounds.left + bounds.width);
+      maxY = Math.max(maxY, bounds.top + bounds.height);
     });
-    const cw = c.getWidth();
-    const ch = c.getHeight();
-    const pad = 80;
-    const bw = Math.max(1, maxX - minX);
-    const bh = Math.max(1, maxY - minY);
-    const z = Math.min((cw - pad * 2) / bw, (ch - pad * 2) / bh);
-    const clampZ = Math.max(0.1, Math.min(6, z));
-    const cx = (minX + maxX) / 2;
-    const cy = (minY + maxY) / 2;
-    c.setViewportTransform([clampZ, 0, 0, clampZ, cw / 2 - cx * clampZ, ch / 2 - cy * clampZ]);
-    setZoom(clampZ);
-  }, [fabricRef]);
+
+    const canvasWidth = c.getWidth();
+    const canvasHeight = c.getHeight();
+    const padding = 80;
+    const contentWidth = Math.max(1, maxX - minX);
+    const contentHeight = Math.max(1, maxY - minY);
+    const fitZoom = Math.min(
+      (canvasWidth - padding * 2) / contentWidth,
+      (canvasHeight - padding * 2) / contentHeight,
+    );
+    const zoom = Math.max(0.1, Math.min(6, fitZoom));
+    const contentCenterX = (minX + maxX) / 2;
+    const contentCenterY = (minY + maxY) / 2;
+    const fitCenterX = resolveFitCenterX(
+      canvasWidth,
+      contentWidth * zoom,
+      padding,
+    );
+
+    c.setViewportTransform([
+      zoom,
+      0,
+      0,
+      zoom,
+      fitCenterX - contentCenterX * zoom,
+      canvasHeight / 2 - contentCenterY * zoom,
+    ]);
+    setZoom(zoom);
+  }, [fabricRef, wrapperRef]);
 
   // Viewport-only keyboard shortcuts (no selection required).
   // State-changing canvas actions (move/resize/zoom/rotate/delete/duplicate)

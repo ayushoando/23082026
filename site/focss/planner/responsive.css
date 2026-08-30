@@ -270,6 +270,10 @@
     right: 8px;
     top: 8px;
     max-width: calc(100vw - 16px);
+    transform: translate(
+      var(--planner-overlay-offset-x, 0px),
+      var(--planner-overlay-offset-y, 0px)
+    );
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }

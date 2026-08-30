@@ -141,7 +141,7 @@ export function usePanelResize({
     handleProps: {
       role: "separator" as const,
       tabIndex: 0,
-      "aria-label": edge === "start" ? "Resize right panel" : "Resize left panel",
+      "aria-label": edge === "start" ? "Resize left panel" : "Resize right panel",
       "aria-orientation": "vertical" as const,
       "aria-valuenow": width,
       "aria-valuemin": minWidth,

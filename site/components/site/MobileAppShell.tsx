@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -31,6 +32,7 @@ export function MobileAppShell({
   children: ReactNode;
   primaryAction?: { label: string; href: string };
 }) {
+  const t = useTranslations("marketing.chrome");
   const pathname = usePathname() || "/";
   const active = activeTabFor(pathname);
   const [navOpen, setNavOpen] = useState(false);
@@ -39,7 +41,7 @@ export function MobileAppShell({
   return (
     <div className="mobile-app-shell">
       <header className="mobile-app-bar">
-        <Link href="/" aria-label="One and Only — home" className="mobile-app-bar__brand">
+        <Link href="/" aria-label={t("header.homeLabel")} className="mobile-app-bar__brand">
           <OneAndOnlyLogo variant="orange" className="h-7" />
         </Link>
         <div className="mobile-app-bar__actions">
@@ -57,7 +59,7 @@ export function MobileAppShell({
           )}
           <button
             type="button"
-            aria-label="Open menu"
+            aria-label={t("header.openMenu")}
             aria-expanded={navOpen}
             aria-controls="mobile-nav-drawer"
             aria-haspopup="dialog"
@@ -70,7 +72,7 @@ export function MobileAppShell({
           </button>
           <button
             type="button"
-            aria-label="Open search"
+            aria-label={t("mobile.openSearch")}
             aria-expanded={navOpen}
             aria-controls="mobile-nav-drawer"
             aria-haspopup="dialog"
@@ -90,17 +92,28 @@ export function MobileAppShell({
           </div>
         ) : null}
       </div>
-      <nav className="mobile-tab-bar" aria-label="Mobile primary">
+      <nav className="mobile-tab-bar" aria-label={t("mobile.primaryNavigation")}>
         {MOBILE_TABS.map((tab) => {
           const Icon = ICONS[tab.icon];
           const isPlanner = isPlannerEntryHref(tab.href);
           const LinkCmp = isPlanner ? PlannerLaunchLink : TrackedLink;
           const isActive = active === tab.id;
+          const tabLabel = t(
+            tab.id === "home"
+              ? "header.homeLabel"
+              : tab.id === "catalog"
+                ? "navigation.allProducts"
+                : tab.id === "planner"
+                  ? "navigation.planner"
+                  : tab.id === "about"
+                    ? "navigation.about"
+                    : "navigation.signIn",
+          );
           return (
             <LinkCmp
               key={tab.id}
               href={tab.href}
-              label={tab.label}
+              label={tabLabel}
               surface="mobile-tab-bar"
               onClick={() =>
                 trackSiteTabSelected({ pathname, tab: tab.id, destination: tab.href })
@@ -109,7 +122,7 @@ export function MobileAppShell({
               aria-current={isActive ? "page" : undefined}
             >
               <Icon size={22} weight={isActive ? "fill" : "regular"} />
-              <span className="mobile-tab__label">{tab.label}</span>
+              <span className="mobile-tab__label">{tabLabel}</span>
             </LinkCmp>
           );
         })}

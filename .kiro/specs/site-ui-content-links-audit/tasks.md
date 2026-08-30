@@ -25,21 +25,21 @@ Implement and execute a read-only TypeScript audit program in six ordered waves 
     - **Validation criteria:** A dry source-level configuration load deterministically selects only approved audit paths, records immutable run inputs, and fails closed before any prohibited write.
     - _Requirements: 4.7, 19.5, 22.1, 22.7, 23.6, 23.7_
 
-  - [ ] 1.2 Implement typed schemas and conditional runtime validation
+  - [x] 1.2 Implement typed schemas and conditional runtime validation
     - Define versioned TypeScript schemas for provenance, source/tool registries, routes, dynamic instances, shells, specialized inventories, profiles, applicability, matrix rows, authorization, evidence, findings, copy/Hindi proposals, severity, duplicate groups, exclusions, gaps, handoffs, wave checkpoints, manifests, and completion proof.
     - Enforce mandatory fields plus conditional blockers for `blocked`/`not-run`, rationale for `not-applicable`, and authorization envelopes for runtime-observed claims.
     - **Prerequisites:** 1.1.
     - **Validation criteria:** Valid examples for every record type parse; incomplete conditional records are quarantined with stable diagnostics and cannot close a partition.
     - _Requirements: 3.6, 3.7, 4.1-4.6, 20.1-20.8, 22.9, 26.5_
 
-  - [ ] 1.3 Build source, existing-tool, and evidence adapters
+  - [x] 1.3 Build source, existing-tool, and evidence adapters
     - Register source authority ranks and typed adapters for the App Router tree, repository data/read paths, static generation declarations, route contracts, internal links, sitemap/metadata sources, generated inventories, and every Existing Audit Tool used.
     - Record each tool's scope, inputs, outputs, profiles, omissions, authorization class, last observed state, residual work, and adapter schema without executing protected tools.
     - **Prerequisites:** 1.2.
     - **Validation criteria:** Every adapter emits validated candidate records with provenance; unsupported fields become explicit gaps, sampled output cannot close uncovered rows, and higher-authority conflicts remain traceable.
     - _Requirements: 1.6, 2.1, 2.4, 2.5, 25.1-25.7_
 
-  - [ ] 1.4 Implement canonical route, shell, and dynamic-instance discovery
+  - [-] 1.4 Implement canonical route, shell, and dynamic-instance discovery
     - Collect every static/dynamic page, route group ownership, redirect-only route, layout, template, visible provider, loading/error/not-found boundary, consent/offline shell, and other user-visible Shared Shell.
     - Resolve dynamic instances by provenance-preserving union across declarations, repository data, contracts, links, sitemap candidates, prior revisioned inventories, and separately supplied authorized runtime discoveries; never invent placeholder instances.
     - Normalize URLs deterministically, preserve conflicting claims, classify surface/status, and create explicit exclusions or unresolved-instance Coverage Gaps.
@@ -63,35 +63,35 @@ Implement and execute a read-only TypeScript audit program in six ordered waves 
     - **Validation criteria:** Interrupted runs resume without duplicate identity; matching completed partitions are skipped; changed fingerprints invalidate dependent partitions; manifests reconcile authored versus generated artifacts without copying them.
     - _Requirements: 22.1, 22.7-22.9, 24.8, 26.9, 26.12_
 
-  - [ ]* 1.7 Write the property test for canonical inventory closure
+  - [ ] 1.7 Write the property test for canonical inventory closure
     - **Property 1: Canonical inventory closure** — generate candidate sets and verify exactly one canonical/exclusion/gap/conflict-linked classification with no unclassified record.
     - **[SEPARATE EXPLICIT AUTHORIZATION REQUIRED]** Authorize the exact targeted Vitest `--run` command before execution; do not run a build or gate as a substitute.
     - **Prerequisites:** 1.4.
     - **Validation criteria:** At least 100 generated cases pass and the test name includes `Feature: site-ui-content-links-audit, Property 1: Canonical inventory closure`.
     - **Validates:** Requirements 1.1-1.8, 2.1, 2.4, 2.6, 19.1-19.4, 26.1.
 
-  - [ ]* 1.8 Write the property test for dynamic-instance deduplication
+  - [ ] 1.8 Write the property test for dynamic-instance deduplication
     - **Property 2: Provenance-preserving dynamic-instance deduplication** — verify order independence, one normalized instance, full provenance union, and discovery-time retention.
     - **[SEPARATE EXPLICIT AUTHORIZATION REQUIRED]** Authorize the exact targeted Vitest `--run` command before execution.
     - **Prerequisites:** 1.4.
     - **Validation criteria:** At least 100 generated multisets pass with the required feature/property test name.
     - **Validates:** Requirements 2.2, 2.3, 2.5.
 
-  - [ ]* 1.9 Write the property test for occurrence expansion and finding bijection
+  - [ ] 1.9 Write the property test for occurrence expansion and finding bijection
     - **Property 3: Exact occurrence expansion and finding bijection** — verify the unique applicability Cartesian product and one aggregate finding ID per row.
     - **[SEPARATE EXPLICIT AUTHORIZATION REQUIRED]** Authorize the exact targeted Vitest `--run` command before execution.
     - **Prerequisites:** 1.5.
     - **Validation criteria:** At least 100 generated profiles pass; no tuple is sampled away or represented by another tuple.
     - **Validates:** Requirements 3.1-3.9, 5.8, 7.1-7.2, 7.7, 9.1-9.2, 9.7, 10.7, 12.8, 17.3, 19.6-19.8, 26.2-26.4.
 
-  - [ ]* 1.10 Write the property test for authorization-lane non-escalation
+  - [ ] 1.10 Write the property test for authorization-lane non-escalation
     - **Property 4: Authorization-lane non-escalation** — verify static evidence cannot satisfy runtime claims and missing/denied authorization never executes work.
     - **[SEPARATE EXPLICIT AUTHORIZATION REQUIRED]** Authorize the exact targeted Vitest `--run` command before execution.
     - **Prerequisites:** 1.2 and 1.6.
     - **Validation criteria:** At least 100 generated authorization combinations pass; every denied/missing case records exact pending work and claim basis.
     - **Validates:** Requirements 4.1-4.6, 15.3, 15.7, 16.7, 17.8, 26.10.
 
-  - [ ]* 1.11 Write the property test for zero product-code mutation
+  - [ ] 1.11 Write the property test for zero product-code mutation
     - **Property 5: Zero product-code mutation** — verify change manifests accept only approved audit tooling/artifact paths and reject `site/**` and other product boundaries.
     - **[SEPARATE EXPLICIT AUTHORIZATION REQUIRED]** Authorize the exact targeted Vitest `--run` command before execution.
     - **Prerequisites:** 1.1 and 1.6.
@@ -127,14 +127,14 @@ Implement and execute a read-only TypeScript audit program in six ordered waves 
     - **Validation criteria:** Every Wave 1 row has exactly one schema-valid finding; every dimension record is traceable to inventory and occurrence IDs; blocked/not-run and not-applicable conditions carry mandatory details.
     - _Requirements: 3.7-3.9, 4.1-4.6, 7.7, 20.1-20.8, 26.3-26.5_
 
-  - [ ]* 2.4 Write the property test for inventory-to-occurrence traceability
+  - [ ] 2.4 Write the property test for inventory-to-occurrence traceability
     - **Property 6: Inventory-to-occurrence traceability** — verify all specialized items map to every applicable occurrence or an explicit rationale/gap/exclusion.
     - **[SEPARATE EXPLICIT AUTHORIZATION REQUIRED]** Authorize the exact targeted Vitest `--run` command before execution.
     - **Prerequisites:** 2.1-2.3.
     - **Validation criteria:** At least 100 generated inventories pass with no silently orphaned dimension item.
     - **Validates:** Requirements 5.1-5.2, 7.1, 8.1, 10.1, 11.1, 12.1, 13.1, 14.1, 16.1, 17.1-17.2, 18.1.
 
-  - [ ]* 2.5 Write the property test for link normalization and defects
+  - [ ] 2.5 Write the property test for link normalization and defects
     - **Property 7: Link normalization and defect generation** — verify idempotence, route/redirect comparison, complete target fields, and occurrence-specific defect creation.
     - **[SEPARATE EXPLICIT AUTHORIZATION REQUIRED]** Authorize the exact targeted Vitest `--run` command before execution.
     - **Prerequisites:** 2.1 and 2.3.
@@ -162,21 +162,21 @@ Implement and execute a read-only TypeScript audit program in six ordered waves 
     - **Validation criteria:** Each applicable dimension has per-occurrence evidence or an explicit runtime/gap status; no single route/profile result stands in for another; copy proposals preserve cited facts and approval state.
     - _Requirements: 5-18, 20.1-20.8, 26.6_
 
-  - [ ]* 3.3 Write the property test for journey terminality and boundary contracts
+  - [ ] 3.3 Write the property test for journey terminality and boundary contracts
     - **Property 8: Journey graph terminality and boundary contracts** — verify every entry reaches a terminal outcome/gap and every access/surface crossing carries its complete contract.
     - **[SEPARATE EXPLICIT AUTHORIZATION REQUIRED]** Authorize the exact targeted Vitest `--run` command before execution.
     - **Prerequisites:** 3.1.
     - **Validation criteria:** At least 100 generated journey graphs pass, including loops, dead ends, access transitions, and surface transitions.
     - **Validates:** Requirements 6.1-6.2, 6.4-6.7, 16.5.
 
-  - [ ]* 3.4 Write the property test for replacement-ready content completeness
+  - [ ] 3.4 Write the property test for replacement-ready content completeness
     - **Property 9: Replacement-ready content completeness** — verify every relevant defect has final English content/structure, placement, intent, state, preserved facts, and a compliant Hindi Note.
     - **[SEPARATE EXPLICIT AUTHORIZATION REQUIRED]** Authorize the exact targeted Vitest `--run` command before execution.
     - **Prerequisites:** 3.2.
     - **Validation criteria:** At least 100 generated content defects pass; unapproved machine Hindi can never satisfy approval evidence.
     - **Validates:** Requirements 8.3-8.8, 14.6, 18.6, 26.6.
 
-  - [ ]* 3.5 Write the property test for metadata route consistency
+  - [ ] 3.5 Write the property test for metadata route consistency
     - **Property 10: Metadata route consistency** — verify deterministic canonical/sitemap comparison, per-instance conclusions, and indexing rationale for specialized routes.
     - **[SEPARATE EXPLICIT AUTHORIZATION REQUIRED]** Authorize the exact targeted Vitest `--run` command before execution.
     - **Prerequisites:** 3.1-3.2.
@@ -218,7 +218,7 @@ Implement and execute a read-only TypeScript audit program in six ordered waves 
     - **Validation criteria:** All Wave 3 matrix rows have terminal static/gap/pending status, fork ownership is explicit, and bypass/guest evidence never substitutes for hosted protected evidence.
     - _Requirements: 3.4-3.9, 4.3-4.6, 7.1-7.7, 16.1-16.7, 19.5-19.8, 20.6-20.7_
 
-  - [ ]* 4.5 Write the property test for duplicate grouping and fork ownership
+  - [ ] 4.5 Write the property test for duplicate grouping and fork ownership
     - **Property 13: Duplicate grouping preserves occurrence identity and fork ownership** — verify grouping retains every finding/evidence record and cannot merge Planner and Studio implementation ownership.
     - **[SEPARATE EXPLICIT AUTHORIZATION REQUIRED]** Authorize the exact targeted Vitest `--run` command before execution.
     - **Prerequisites:** 4.2-4.4 and the grouping contract from the schemas.
@@ -322,56 +322,56 @@ Implement and execute a read-only TypeScript audit program in six ordered waves 
     - **Validation criteria:** All totals reconcile; every in-scope item and wave is terminal; completion prominently reports blocked/not-run/owner-decision totals rather than treating them as passes.
     - _Requirements: 4.7, 22.8-22.9, 26.1-26.12_
 
-  - [ ]* 6.6 Write the property test for complete conditional evidence schemas
+  - [ ] 6.6 Write the property test for complete conditional evidence schemas
     - **Property 11: Complete conditional evidence schema** — verify mandatory fields and conditional blocker/applicability fields for every result classification.
     - **[SEPARATE EXPLICIT AUTHORIZATION REQUIRED]** Authorize the exact targeted Vitest `--run` command before execution.
     - **Prerequisites:** 2.3 and 6.1.
     - **Validation criteria:** At least 100 generated records pass/fail in accordance with the schema contract.
     - **Validates:** Requirements 20.1-20.8, 26.5.
 
-  - [ ]* 6.7 Write the property test for severity monotonicity and ordering
+  - [ ] 6.7 Write the property test for severity monotonicity and ordering
     - **Property 12: Severity monotonicity and deterministic ordering** — verify higher impact cannot reduce severity and ordering is stable with a deciding dimension/rationale.
     - **[SEPARATE EXPLICIT AUTHORIZATION REQUIRED]** Authorize the exact targeted Vitest `--run` command before execution.
     - **Prerequisites:** 6.1.
     - **Validation criteria:** At least 100 generated finding sets pass.
     - **Validates:** Requirements 15.6, 16.4, 17.7, 21.1-21.7, 26.7.
 
-  - [ ]* 6.8 Write the property test for wave closure and downstream invalidation
+  - [ ] 6.8 Write the property test for wave closure and downstream invalidation
     - **Property 14: Wave closure and downstream invalidation** — verify entry/terminality guards and dependent-row invalidation after upstream changes.
     - **[SEPARATE EXPLICIT AUTHORIZATION REQUIRED]** Authorize the exact targeted Vitest `--run` command before execution.
     - **Prerequisites:** 1.6 and all wave controllers.
     - **Validation criteria:** At least 100 generated wave/invalidation scenarios pass.
     - **Validates:** Requirements 22.1-22.9, 26.12.
 
-  - [ ]* 6.9 Write the property test for remediation handoff completeness
+  - [ ] 6.9 Write the property test for remediation handoff completeness
     - **Property 15: Remediation handoff completeness** — verify exactly one complete handoff per defect/group and explicit separate-implementation authorization.
     - **[SEPARATE EXPLICIT AUTHORIZATION REQUIRED]** Authorize the exact targeted Vitest `--run` command before execution.
     - **Prerequisites:** 6.3.
     - **Validation criteria:** At least 100 generated defects/groups pass, including state/profile/access/language acceptance selectors.
     - **Validates:** Requirements 11.6-11.7, 23.1-23.6, 23.8, 26.8.
 
-  - [ ]* 6.10 Write the property test for explicit exclusions and coverage gaps
+  - [ ] 6.10 Write the property test for explicit exclusions and coverage gaps
     - **Property 16: Explicit exclusions and coverage gaps** — verify complete records, owner decisions for visible exclusions, and no disappearance from totals.
     - **[SEPARATE EXPLICIT AUTHORIZATION REQUIRED]** Authorize the exact targeted Vitest `--run` command before execution.
     - **Prerequisites:** 6.4.
     - **Validation criteria:** At least 100 generated excluded/gapped item sets pass.
     - **Validates:** Requirements 13.7, 24.1-24.8, 26.9.
 
-  - [ ]* 6.11 Write the property test for partial existing-tool evidence
+  - [ ] 6.11 Write the property test for partial existing-tool evidence
     - **Property 17: Existing tools remain partial evidence** — verify exact mapping, residual uncovered rows, authority conflict handling, and prohibition on sample-based completeness.
     - **[SEPARATE EXPLICIT AUTHORIZATION REQUIRED]** Authorize the exact targeted Vitest `--run` command; do not execute the adapted browser/test tools as part of this property test.
     - **Prerequisites:** 1.3 and 6.4.
     - **Validation criteria:** At least 100 generated tool outputs/scope declarations pass.
     - **Validates:** Requirements 25.1-25.7.
 
-  - [ ]* 6.12 Write the property test for completion-proof reconciliation
+  - [ ] 6.12 Write the property test for completion-proof reconciliation
     - **Property 18: Completion proof reconciles all totals** — verify all canonical set totals, classifications, waves, pending operations, and zero-unclassified invariants before completion.
     - **[SEPARATE EXPLICIT AUTHORIZATION REQUIRED]** Authorize the exact targeted Vitest `--run` command before execution.
     - **Prerequisites:** 6.5.
     - **Validation criteria:** At least 100 generated complete/incomplete runs pass; any mismatch prevents a complete declaration.
     - **Validates:** Requirements 26.1-26.12.
 
-  - [ ]* 6.13 Write golden-fixture and end-to-end audit-program integration tests
+  - [ ] 6.13 Write golden-fixture and end-to-end audit-program integration tests
     - Cover route groups, redirects, dynamic provenance, fragments/downloads/external links, source conflicts, denied authorization, missing credentials, partial output, invalidation/resume, copy/Hindi constraints, fork separation, and manifest closure using repository-safe fixtures.
     - **[SEPARATE EXPLICIT AUTHORIZATION REQUIRED]** Authorize the exact targeted Vitest `--run` command; no browser, protected route, build, or gate is authorized by this task.
     - **Prerequisites:** 6.1-6.5.

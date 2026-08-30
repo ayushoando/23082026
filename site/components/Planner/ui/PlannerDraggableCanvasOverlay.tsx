@@ -1,6 +1,13 @@
 "use client";
 
-import { useCallback, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
+import {
+  useCallback,
+  useRef,
+  useState,
+  type CSSProperties,
+  type PointerEvent as ReactPointerEvent,
+  type ReactNode,
+} from "react";
 
 type Offset = { x: number; y: number };
 
@@ -88,7 +95,12 @@ export function DraggableCanvasOverlay({
       className={className}
       data-testid={testId}
       data-dragging={dragging ? "true" : "false"}
-      style={{ transform: `translate(${offset.x}px, ${offset.y}px)` }}
+      style={
+        {
+          "--planner-overlay-offset-x": `${offset.x}px`,
+          "--planner-overlay-offset-y": `${offset.y}px`,
+        } as CSSProperties
+      }
       onPointerMove={onPointerMove}
       onPointerUp={endDrag}
       onPointerCancel={endDrag}

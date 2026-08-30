@@ -57,6 +57,7 @@ export interface ShowroomsPageViewProps {
   ctaTitleAccent: string;
   ctaDescription: string;
   ctaPrimary: string;
+  ctaSecondary: string;
   mapHeading: string;
 }
 

@@ -129,19 +129,6 @@ export const DOWNLOADS_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
   ],
 });
 
-export const PRIVACY_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
-  title: "Privacy Policy | One&Only",
-  description:
-    "How One&Only handles enquiry data, cookies, and records for furniture planning and commercial support across India.",
-  path: "/privacy",
-  image: "/assets/marketing/hero/pages/Planner-oneandonly-bright.webp",
-  keywords: [
-    "One&Only privacy policy",
-    "office furniture privacy India",
-    "enquiry data cookies India",
-  ],
-});
-
 export const TERMS_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
   title: "Terms & Conditions | One&Only office furniture",
   description:

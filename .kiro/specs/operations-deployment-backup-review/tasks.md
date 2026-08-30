@@ -38,7 +38,7 @@ Implement a repository-local TypeScript operations-review tool that reads an exp
     - **Validates: Requirements 1.2, 6.3**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
 
-- [~] 2. Extract and assess independent Vercel and Cloudflare Worker release surfaces
+- [ ] 2. Extract and assess independent Vercel and Cloudflare Worker release surfaces
   - [x] 2.1 Implement Vercel local-configuration extraction from `vercel.json`, root command routes, and runbook material.
     - Emit configured build/deploy route, target assumptions, post-deployment evidence expectations, persisted-data release prerequisites, and P0/P1 gaps without asserting hosted deployment status.
     - Require owner, migration/seed impact, backup prerequisite, compatibility hazard, code-release order, and rollback path for persisted-data releases.
@@ -49,11 +49,11 @@ Implement a repository-local TypeScript operations-review tool that reads an exp
     - Produce a Worker-only release decision with approval point, rollback/recovery procedure, and expected verification evidence; never merge it into Vercel release state.
     - _Requirements: 3.1, 3.2, 3.3, 3.4_
     - **Acceptance evidence:** The matrix contains all four named cases and external edge behavior is classified unverified unless current authorized evidence is supplied.
-  - [~] 2.3 Write property test for unsupported external-claim classification.
+  - [ ] 2.3 Write property test for unsupported external-claim classification.
     - **Property 3: Unsupported external claims remain unverified.**
     - **Validates: Requirements 1.3, 2.4, 3.3, 5.3, 8.2**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
-  - [~] 2.4 Write property test for persisted-data release and recovery completeness.
+  - [ ] 2.4 Write property test for persisted-data release and recovery completeness.
     - **Property 4: Persisted-data release and recovery records are complete.**
     - **Validates: Requirements 2.2, 7.2, 7.3**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
@@ -62,7 +62,7 @@ Implement a repository-local TypeScript operations-review tool that reads an exp
     - **Validates: Requirements 3.2**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
 
-- [~] 3. Model Products/Admin backup coverage and the R2 backup flow independently
+- [ ] 3. Model Products/Admin backup coverage and the R2 backup flow independently
   - [x] 3.1 Implement separate Products and Admin evidence extraction and coverage assessment.
     - Read only the approved database/runbook/migration sources to capture project reference, ownership scope, configured backup route, recovery documentation, and target coverage.
     - Represent schema rollback, provider recovery/PITR, and data restore as distinct recovery paths; do not access either database or run migration/backup/restore commands.
@@ -73,11 +73,11 @@ Implement a repository-local TypeScript operations-review tool that reads an exp
     - Redact secret-like values and create unverified findings independently for creation, retention, integrity, and retrievability when provider evidence is absent.
     - _Requirements: 5.1, 5.2, 5.3, 5.4_
     - **Acceptance evidence:** Rendered data contains no credential values and does not claim R2 object existence or retrievability from repository configuration.
-  - [~] 3.3 Write property test for attributable missing backup-coverage gaps.
+  - [ ] 3.3 Write property test for attributable missing backup-coverage gaps.
     - **Property 6: Missing database-backup elements produce attributable gaps.**
     - **Validates: Requirements 4.3**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
-  - [~] 3.4 Write property test for scheduled-workflow credential redaction.
+  - [ ] 3.4 Write property test for scheduled-workflow credential redaction.
     - **Property 7: Scheduled-workflow review redacts credentials while preserving structure.**
     - **Validates: Requirements 5.2**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.

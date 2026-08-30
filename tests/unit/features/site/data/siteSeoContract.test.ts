@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import type { Metadata } from "next";
 
 import {
+  LOCALE_AWARE_METADATA_PATHS,
   SEO01_STATIC_METADATA,
   expectedStaticSitemapPaths,
   indexableStaticPathsMissingMetadata,
@@ -14,9 +15,11 @@ import {
 } from "@/features/site/data/siteSeoContract";
 
 describe("siteSeoContract (name-mirror)", () => {
-  it("registers metadata for every static indexable public path", () => {
+  it("registers static metadata and accounts for locale-aware metadata routes", () => {
     expect(indexableStaticPathsMissingMetadata()).toEqual([]);
     expect(SEO01_STATIC_METADATA.length).toBeGreaterThan(10);
+    expect(LOCALE_AWARE_METADATA_PATHS).toEqual(new Set(["/privacy"]));
+    expect(SEO01_STATIC_METADATA.some((entry) => entry.path === "/privacy")).toBe(false);
   });
 
   it("metadataTitleString handles string, absolute, and default title shapes", () => {

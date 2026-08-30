@@ -516,7 +516,7 @@ export function SiteHeader() {
                               isActive ? "shell-nav-link-current text-primary" : "text-strong",
                             )}
                           >
-                            {label}
+                            {link.label}
                           </Link>
                         );
                       })}

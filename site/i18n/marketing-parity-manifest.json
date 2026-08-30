@@ -67,6 +67,17 @@
     "components/home/InteractiveTools.tsx",
     "components/home/TrustStrip.tsx",
     "components/home/WhyChooseUs.tsx",
-    "components/shared/ContactTeaser.tsx"
+    "components/shared/ContactTeaser.tsx",
+    "components/site/Header.tsx",
+    "components/site/HeaderProductsMegaMenu.tsx",
+    "components/site/HeaderSearchPanel.tsx",
+    "components/site/Footer.tsx",
+    "components/site/LanguageSwitcher.tsx",
+    "components/site/MobileAppShell.tsx",
+    "components/site/MobileNavDrawer.tsx",
+    "components/site/CookieConsentBar.tsx",
+    "components/ui/WhatsAppCTA.tsx",
+    "app/(site)/clients/page.tsx",
+    "app/(site)/sitemap/page.tsx"
   ]
 }

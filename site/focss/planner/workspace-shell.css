@@ -198,9 +198,31 @@
   margin: 0 0 10px 0;
 }
 
-.ooplanner-root .prop-row { display: grid; grid-template-columns: 90px 1fr; align-items: center; gap: 8px; margin-bottom: 8px; }
-.ooplanner-root .prop-row__label { font-size: 12px; color: var(--text-muted); }
-.ooplanner-root .prop-row__inputs { display: flex; gap: 6px; }
+.ooplanner-root .prop-row {
+  display: grid;
+  grid-template-columns: 90px minmax(0, 1fr);
+  align-items: start;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.ooplanner-root .prop-row__label {
+  display: flex;
+  align-items: center;
+  min-height: 34px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.ooplanner-root .prop-row__inputs {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 6px;
+}
+.ooplanner-root .prop-row > .select,
+.ooplanner-root .prop-row__inputs > .input {
+  min-width: 0;
+  width: 100%;
+}
 
 .ooplanner-root .status-bar {
   height: 28px;
@@ -277,9 +299,15 @@
 .ooplanner-root .canvas-overlay {
   position: absolute;
   top: 12px;
-  right: 12px;
+  left: 50%;
+  right: auto;
   display: inline-flex;
   align-items: center;
+  max-width: calc(100% - 24px);
+  transform: translate(
+    calc(-50% + var(--planner-overlay-offset-x, 0px)),
+    var(--planner-overlay-offset-y, 0px)
+  );
   padding: 3px;
   border-radius: 12px;
   background: color-mix(in srgb, var(--color-white-50) 94%, transparent);
@@ -290,6 +318,7 @@
   z-index: 5;
 }
 .ooplanner-root .canvas-overlay .btn {
+  min-height: 34px;
   border-radius: 8px;
   border: 1px solid transparent;
   box-shadow: none;

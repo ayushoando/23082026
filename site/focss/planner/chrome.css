@@ -213,15 +213,32 @@
 .ooplanner-root .oo-toolbar {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 2px;
   padding: 4px 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
   background: var(--color-white-50);
   border-bottom: 1px solid var(--border-soft);
   flex: 0 0 auto;
+  scrollbar-gutter: stable;
 }
-.ooplanner-root .oo-toolbar__group-wrap { display: flex; align-items: center; }
-.ooplanner-root .oo-toolbar__group { display: flex; align-items: center; gap: 2px; }
+.ooplanner-root .oo-toolbar__group-wrap {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: stretch;
+  min-height: 32px;
+}
+.ooplanner-root .oo-toolbar__group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.ooplanner-root .oo-toolbar__slot {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+}
 .ooplanner-root .oo-toolbar__sep {
   width: 1px;
   align-self: stretch;
@@ -232,6 +249,7 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
+  min-height: 32px;
   padding: 5px 8px;
   border: 1px solid transparent;
   border-radius: 7px;

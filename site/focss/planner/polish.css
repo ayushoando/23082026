@@ -203,24 +203,43 @@
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 8px;
+  width: 24px;
   z-index: 50;
   cursor: col-resize;
   touch-action: none;
   background: transparent;
 }
 
+.ooplanner-root .side-panel__resize::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 11px;
+  width: 2px;
+  content: "";
+  background: transparent;
+}
+
 .ooplanner-root .side-panel__resize[data-edge="end"] {
-  right: -4px;
+  right: -12px;
 }
 
 .ooplanner-root .side-panel__resize[data-edge="start"] {
-  left: -4px;
+  left: -12px;
 }
 
-.ooplanner-root .side-panel__resize:hover,
-.ooplanner-root .side-panel__resize[data-active="true"] {
+.ooplanner-root .side-panel__resize:hover::before,
+.ooplanner-root .side-panel__resize[data-active="true"]::before {
   background: color-mix(in srgb, var(--color-obb-600) 45%, transparent);
+}
+
+.ooplanner-root .side-panel__resize:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -4px;
+}
+
+.ooplanner-root .side-panel__resize:focus-visible::before {
+  background: var(--color-focus);
 }
 
 .ooplanner-root .side-panel[data-collapsed="true"] .side-panel__resize {

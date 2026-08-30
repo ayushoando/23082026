@@ -19,7 +19,6 @@ import {
   PLANNER_HELP_PAGE_METADATA,
   PLANNER_LANDING_PAGE_METADATA,
   PLANNING_PAGE_METADATA,
-  PRIVACY_PAGE_METADATA,
   PRODUCTS_PAGE_METADATA,
   CLIENTS_PAGE_METADATA,
   REFUND_POLICY_PAGE_METADATA,
@@ -33,6 +32,12 @@ import {
 import { SITE_BRAND } from "./brand";
 import { buildPageMetadata, buildProductJsonLd } from "./seo";
 import { SITE_URL } from "@/lib/siteUrl";
+
+/**
+ * Indexable routes whose metadata is resolved from the request locale.
+ * They are intentionally omitted from the English static-metadata registry.
+ */
+export const LOCALE_AWARE_METADATA_PATHS: ReadonlySet<string> = new Set(["/privacy"]);
 
 /** Static indexable paths that must own unique title + description + canonical. */
 export const SEO01_STATIC_METADATA: ReadonlyArray<{
@@ -60,7 +65,6 @@ export const SEO01_STATIC_METADATA: ReadonlyArray<{
   { path: "/compare", metadata: COMPARE_PAGE_METADATA },
   { path: "/trusted-by", metadata: TRUSTED_BY_PAGE_METADATA },
   { path: "/showrooms", metadata: SHOWROOMS_PAGE_METADATA },
-  { path: "/privacy", metadata: PRIVACY_PAGE_METADATA },
   { path: "/terms", metadata: TERMS_PAGE_METADATA },
   { path: "/refund-and-return-policy", metadata: REFUND_POLICY_PAGE_METADATA },
   { path: "/sustainability", metadata: SUSTAINABILITY_PAGE_METADATA },
@@ -120,7 +124,8 @@ export function indexableStaticPathsMissingMetadata(
       (meta) =>
         meta.classification === "public" &&
         meta.indexable &&
-        !meta.route.includes("["),
+        !meta.route.includes("[") &&
+        !LOCALE_AWARE_METADATA_PATHS.has(meta.route),
     )
     .map((meta) => meta.route)
     .filter((route) => !registered.has(route));

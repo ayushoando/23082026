@@ -21,7 +21,6 @@ import {
   SERVICE_PAGE_METADATA,
   PLANNING_PAGE_METADATA,
   DOWNLOADS_PAGE_METADATA,
-  PRIVACY_PAGE_METADATA,
   TERMS_PAGE_METADATA,
   COMPARE_PAGE_METADATA,
   QUOTE_CART_PAGE_METADATA,
@@ -43,7 +42,6 @@ describe("routeMetadata site-data", () => {
     expect(SERVICE_PAGE_METADATA.alternates?.canonical).toBe("https://mock-site-url.com/service");
     expect(PLANNING_PAGE_METADATA.alternates?.canonical).toBe("https://mock-site-url.com/planning");
     expect(DOWNLOADS_PAGE_METADATA.alternates?.canonical).toBe("https://mock-site-url.com/downloads");
-    expect(PRIVACY_PAGE_METADATA.alternates?.canonical).toBe("https://mock-site-url.com/privacy");
     expect(TERMS_PAGE_METADATA.alternates?.canonical).toBe("https://mock-site-url.com/terms");
     expect(COMPARE_PAGE_METADATA.alternates?.canonical).toBe("https://mock-site-url.com/compare");
     expect(QUOTE_CART_PAGE_METADATA.alternates?.canonical).toBe("https://mock-site-url.com/quote-cart");

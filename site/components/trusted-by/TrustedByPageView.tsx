@@ -46,6 +46,7 @@ export interface TrustedByPageViewProps {
   ctaTitleAccent: string;
   ctaDescription: string;
   ctaPrimary: string;
+  ctaSecondary: string;
   deliveryQuotesLabel: string;
 }
 

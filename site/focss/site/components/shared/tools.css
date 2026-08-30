@@ -5,7 +5,7 @@
    These pages are live marketing pages with `indexable: false` that currently
    render `div.tools-engine-placeholder` and `div.tools-faq` without any CSS rules.
    
-   Owner: site/app/(site)/tools/*/page.tsx
+   Owner: site/app/(site)/tools/[slug]/page.tsx
    Scope: Calculator placeholder pages only
    Status: Temporary styling until interactive calculators are built
    -------------------------------------------------------------------------- */

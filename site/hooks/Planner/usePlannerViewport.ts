@@ -36,6 +36,7 @@ export interface PlannerViewportState {
 /** Breakpoint thresholds (inclusive lower bound). */
 const TABLET_MIN = 640;
 const DESKTOP_MIN = 1024;
+const INITIAL_VIEWPORT_DIMENSIONS = { width: DESKTOP_MIN, height: 768 } as const;
 
 function classifyWidth(width: number): PlannerViewportClass {
   if (width >= DESKTOP_MIN) return "desktop";
@@ -47,14 +48,34 @@ function deriveOrientation(width: number, height: number): PlannerOrientation {
   return width >= height ? "landscape" : "portrait";
 }
 
+function createPlannerViewportState(
+  width: number,
+  height: number,
+): PlannerViewportState {
+  const viewportClass = classifyWidth(width);
+  return {
+    viewportClass,
+    orientation: deriveOrientation(width, height),
+    isPhone: viewportClass === "phone",
+    isTablet: viewportClass === "tablet",
+    isDesktop: viewportClass === "desktop",
+    viewportWidth: width,
+    viewportHeight: height,
+  };
+}
+
+const INITIAL_VIEWPORT_STATE = createPlannerViewportState(
+  INITIAL_VIEWPORT_DIMENSIONS.width,
+  INITIAL_VIEWPORT_DIMENSIONS.height,
+);
+
 function getVisualViewportDimensions(): { width: number; height: number } {
-  if (typeof window === "undefined") {
-    return { width: 1024, height: 768 };
-  }
-  // Prefer visualViewport for accurate dimensions when on-screen keyboard is open
-  const vv = window.visualViewport;
-  if (vv) {
-    return { width: vv.width, height: vv.height };
+  if (typeof window === "undefined") return INITIAL_VIEWPORT_DIMENSIONS;
+
+  // Prefer visualViewport for accurate dimensions when on-screen keyboard is open.
+  const visualViewport = window.visualViewport;
+  if (visualViewport) {
+    return { width: visualViewport.width, height: visualViewport.height };
   }
   return { width: window.innerWidth, height: window.innerHeight };
 }
@@ -62,84 +83,60 @@ function getVisualViewportDimensions(): { width: number; height: number } {
 /**
  * Planner viewport class hook.
  *
- * Classifies the current viewport into phone / tablet / desktop and tracks
- * orientation. Uses the visual viewport API when available so that on-screen
- * keyboards are accounted for.
- *
- * State is preserved across resize and orientation changes — this hook only
- * reports the viewport class; it never resets document content, unsaved
- * state, active tool, or selection.
+ * The server and the first client render must share this fixed desktop snapshot
+ * so SSR can hydrate without structurally changing the docks. The effect below
+ * then measures the real visual viewport and maintains it through resize and
+ * orientation changes.
  */
 export function usePlannerViewport(): PlannerViewportState {
-  const [state, setState] = useState<PlannerViewportState>(() => {
-    const { width, height } = getVisualViewportDimensions();
-    const vc = classifyWidth(width);
-    return {
-      viewportClass: vc,
-      orientation: deriveOrientation(width, height),
-      isPhone: vc === "phone",
-      isTablet: vc === "tablet",
-      isDesktop: vc === "desktop",
-      viewportWidth: width,
-      viewportHeight: height,
-    };
-  });
+  const [state, setState] = useState<PlannerViewportState>(INITIAL_VIEWPORT_STATE);
 
   // Ref to track previous viewport class for transition detection
   const prevClassRef = useRef(state.viewportClass);
 
   const update = useCallback(() => {
     const { width, height } = getVisualViewportDimensions();
-    const vc = classifyWidth(width);
-    const orientation = deriveOrientation(width, height);
+    const nextState = createPlannerViewportState(width, height);
 
-    setState((prev) => {
+    setState((previousState) => {
       if (
-        prev.viewportClass === vc &&
-        prev.orientation === orientation &&
-        prev.viewportWidth === width &&
-        prev.viewportHeight === height
+        previousState.viewportClass === nextState.viewportClass &&
+        previousState.orientation === nextState.orientation &&
+        previousState.viewportWidth === nextState.viewportWidth &&
+        previousState.viewportHeight === nextState.viewportHeight
       ) {
-        return prev;
+        return previousState;
       }
-      prevClassRef.current = vc;
-      return {
-        viewportClass: vc,
-        orientation,
-        isPhone: vc === "phone",
-        isTablet: vc === "tablet",
-        isDesktop: vc === "desktop",
-        viewportWidth: width,
-        viewportHeight: height,
-      };
+      prevClassRef.current = nextState.viewportClass;
+      return nextState;
     });
   }, []);
 
   useEffect(() => {
-    // Initial sync (SSR → client)
+    // Measure only after hydration so the first browser tree matches SSR.
     update();
 
-    // Listen to both window resize and visual viewport resize/scroll
-    const vv = window.visualViewport;
+    // Listen to both window resize and visual viewport resize/scroll.
+    const visualViewport = window.visualViewport;
 
     window.addEventListener("resize", update);
-    if (vv) {
-      vv.addEventListener("resize", update);
-      vv.addEventListener("scroll", update);
+    if (visualViewport) {
+      visualViewport.addEventListener("resize", update);
+      visualViewport.addEventListener("scroll", update);
     }
 
-    // Orientation change on mobile
-    const mql = window.matchMedia("(orientation: portrait)");
+    // Orientation change on mobile.
+    const mediaQuery = window.matchMedia("(orientation: portrait)");
     const onOrientationChange = () => update();
-    mql.addEventListener("change", onOrientationChange);
+    mediaQuery.addEventListener("change", onOrientationChange);
 
     return () => {
       window.removeEventListener("resize", update);
-      if (vv) {
-        vv.removeEventListener("resize", update);
-        vv.removeEventListener("scroll", update);
+      if (visualViewport) {
+        visualViewport.removeEventListener("resize", update);
+        visualViewport.removeEventListener("scroll", update);
       }
-      mql.removeEventListener("change", onOrientationChange);
+      mediaQuery.removeEventListener("change", onOrientationChange);
     };
   }, [update]);
 

@@ -2962,7 +2962,7 @@ const Planner = ({
         ) : null}
         <SidePanelResizeHandle edge="end" active={toolsPanel.active} {...toolsPanel.handleProps} />
       </aside>
-      <div className="canvas-stage" data-testid="canvas-stage" data-rulers="true">
+      <div className="canvas-stage" data-testid="canvas-stage">
         {/* Accessible canvas region (Req 8.1, 8.2): The Fabric canvas is a
             bitmap drawing surface with no native AT semantics. This sibling
             region exposes the current tool, selection state, object count,
@@ -3012,7 +3012,7 @@ const Planner = ({
           onAction={applyAlign}
         />
         <DraggableCanvasOverlay
-          storageKey="ooplanner.canvas-overlay.v2"
+          storageKey="ooplanner.canvas-overlay.v3"
           className="canvas-overlay canvas-overlay--planner"
         >
           <ProjectMenu
