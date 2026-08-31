@@ -308,7 +308,7 @@ describe(
               // A well-formed static evidence record is valid.
               expect(
                 staticResult.success,
-                `Static evidence record with claimBasis="${staticClaimBasis}" and evidenceLane="static-inspection" must be valid. Errors: ${JSON.stringify(staticResult.error?.errors)}`,
+                `Static evidence record with claimBasis="${staticClaimBasis}" and evidenceLane="static-inspection" must be valid. Errors: ${JSON.stringify(staticResult.error?.issues)}`,
               ).toBe(true);
 
               // ── Case B: static claim basis with protected-runtime lane (must fail) ──
@@ -328,9 +328,8 @@ describe(
               ).toBe(false);
 
               // The rejection must reference the static-lane requirement.
-              const escalatedErrors = escalatedResult.error?.errors ?? [];
-              const hasStaticLaneIssue = escalatedErrors.some(
-                (e) =>
+              const escalatedErrors = escalatedResult.error?.issues ?? [];
+              const hasStaticLaneIssue = escalatedErrors.some((e: { message?: string; path: unknown[] }) =>
                   e.message === "AUDIT_SCHEMA_STATIC_CLAIM_REQUIRES_STATIC_LANE" ||
                   e.path.includes("evidenceLane"),
               );
@@ -357,9 +356,8 @@ describe(
                 `runtime-observed claim on static-inspection lane must be INVALID. Got: ${JSON.stringify(runtimeClaimOnStaticResult)}`,
               ).toBe(false);
 
-              const runtimeClaimErrors = runtimeClaimOnStaticResult.error?.errors ?? [];
-              const hasRuntimeLaneIssue = runtimeClaimErrors.some(
-                (e) =>
+              const runtimeClaimErrors = runtimeClaimOnStaticResult.error?.issues ?? [];
+              const hasRuntimeLaneIssue = runtimeClaimErrors.some((e: { message?: string; path: unknown[] }) =>
                   e.message === "AUDIT_SCHEMA_RUNTIME_CLAIM_REQUIRES_PROTECTED_LANE" ||
                   e.path.includes("evidenceLane"),
               );
@@ -425,12 +423,12 @@ describe(
               const notRunResult = EvidenceRecordSchema.safeParse(notRunRecord);
               expect(
                 notRunResult.success,
-                `A ${unexecutedResult} evidence record with blockers must be valid. Errors: ${JSON.stringify(notRunResult.error?.errors)}`,
+                `A ${unexecutedResult} evidence record with blockers must be valid. Errors: ${JSON.stringify(notRunResult.error?.issues)}`,
               ).toBe(true);
 
               // ── Case B: "executed" result without authorization (must fail) ──
               const unauthorizedExecutedRecord = {
-                ...staticEvidenceBase(`ev-${recordId}-unauth`, fullOccurrenceId, "runtime-observed"),
+                ...staticEvidenceBase(`ev-${recordId}-unauth`, fullOccurrenceId, "source-observed"),
                 recordId: `ev-${recordId}-unauth`,
                 evidenceId: `evid.ev-${recordId}-unauth`,
                 claimBasis: "runtime-observed" as const,
@@ -447,9 +445,8 @@ describe(
                 `A runtime-observed record with resultClassification="${executedResult}" and no authorization must be INVALID. Got: ${JSON.stringify(unauthorizedExecutedResult)}`,
               ).toBe(false);
 
-              const unauthorizedErrors = unauthorizedExecutedResult.error?.errors ?? [];
-              const hasAuthIssue = unauthorizedErrors.some(
-                (e) =>
+              const unauthorizedErrors = unauthorizedExecutedResult.error?.issues ?? [];
+              const hasAuthIssue = unauthorizedErrors.some((e: { message?: string; path: unknown[] }) =>
                   e.message === "AUDIT_SCHEMA_RUNTIME_AUTHORIZATION_REQUIRED" ||
                   e.path.includes("authorization"),
               );
@@ -518,7 +515,7 @@ describe(
               const authResult = AuthorizationEvidenceSchema.safeParse(deniedAuth);
               expect(
                 authResult.success,
-                `Denied authorization without executedAt/exitStatus must be valid. Errors: ${JSON.stringify(authResult.error?.errors)}`,
+                `Denied authorization without executedAt/exitStatus must be valid. Errors: ${JSON.stringify(authResult.error?.issues)}`,
               ).toBe(true);
 
               // ── Case B: denied auth with executedAt must be invalid ────────
@@ -560,7 +557,7 @@ describe(
               const blockedResult = EvidenceRecordSchema.safeParse(blockedEvidence);
               expect(
                 blockedResult.success,
-                `Blocked evidence with denied auth must be valid. Errors: ${JSON.stringify(blockedResult.error?.errors)}`,
+                `Blocked evidence with denied auth must be valid. Errors: ${JSON.stringify(blockedResult.error?.issues)}`,
               ).toBe(true);
 
               // ── Case D: non-blocked result with denied auth must be invalid ─
@@ -581,9 +578,8 @@ describe(
                 `Non-blocked result with denied authorization must be INVALID. Got: ${JSON.stringify(escalatedParseResult)}`,
               ).toBe(false);
 
-              const escalatedErrors = escalatedParseResult.error?.errors ?? [];
-              const hasDenialIssue = escalatedErrors.some(
-                (e) =>
+              const escalatedErrors = escalatedParseResult.error?.issues ?? [];
+              const hasDenialIssue = escalatedErrors.some((e: { message?: string; path: unknown[] }) =>
                   e.message ===
                     "AUDIT_SCHEMA_DENIED_AUTHORIZATION_REQUIRES_BLOCKED_RESULT" ||
                   e.path.includes("resultClassification"),
@@ -599,7 +595,7 @@ describe(
               );
               expect(
                 blockerValidationResult.success,
-                `Blocker with non-empty pendingOperation must be valid. Errors: ${JSON.stringify(blockerValidationResult.error?.errors)}`,
+                `Blocker with non-empty pendingOperation must be valid. Errors: ${JSON.stringify(blockerValidationResult.error?.issues)}`,
               ).toBe(true);
 
               const blockerData = blockerValidationResult.data!;
@@ -714,9 +710,8 @@ describe(
                 ).toBe(false);
 
                 // Error must reference the denial/result mismatch
-                const staticDeniedErrors = staticDeniedResult.error?.errors ?? [];
-                const hasMismatchIssue = staticDeniedErrors.some(
-                  (e) =>
+                const staticDeniedErrors = staticDeniedResult.error?.issues ?? [];
+                const hasMismatchIssue = staticDeniedErrors.some((e: { message?: string; path: unknown[] }) =>
                     e.message === "AUDIT_SCHEMA_DENIED_AUTHORIZATION_REQUIRES_BLOCKED_RESULT" ||
                     e.path.includes("resultClassification"),
                 );
@@ -760,7 +755,7 @@ describe(
               const correctResult = EvidenceRecordSchema.safeParse(correctUnexecuted);
               expect(
                 correctResult.success,
-                `A ${correctUnexecuted.resultClassification} record with non-permitting auth must be valid. Errors: ${JSON.stringify(correctResult.error?.errors)}`,
+                `A ${correctUnexecuted.resultClassification} record with non-permitting auth must be valid. Errors: ${JSON.stringify(correctResult.error?.issues)}`,
               ).toBe(true);
             },
           ),
@@ -843,7 +838,7 @@ describe(
                 const blockerResult = BlockerDetailSchema.safeParse(blocker);
                 expect(
                   blockerResult.success,
-                  `Well-formed blocker must be valid. Errors: ${JSON.stringify(blockerResult.error?.errors)}`,
+                  `Well-formed blocker must be valid. Errors: ${JSON.stringify(blockerResult.error?.issues)}`,
                 ).toBe(true);
                 expect(blockerResult.data!.pendingOperation.trim().length).toBeGreaterThan(0);
                 expect(blockerResult.data!.detail.trim().length).toBeGreaterThan(0);
@@ -877,7 +872,7 @@ describe(
               const compliantResult = EvidenceRecordSchema.safeParse(compliantRecord);
               expect(
                 compliantResult.success,
-                `Compliant ${unexecutedResult} record must be valid. Errors: ${JSON.stringify(compliantResult.error?.errors)}`,
+                `Compliant ${unexecutedResult} record must be valid. Errors: ${JSON.stringify(compliantResult.error?.issues)}`,
               ).toBe(true);
 
               // Confirm every blocker on the parsed record carries non-empty fields
@@ -890,7 +885,7 @@ describe(
               const parsed = parseAuditRecord(compliantRecord);
               expect(parsed.success).toBe(true);
               if (parsed.success) {
-                const rec = parsed.record;
+                const rec = parsed.data;
                 if (rec.recordType === "evidence") {
                   expect((rec.blockers ?? []).length).toBeGreaterThan(0);
                   for (const blocker of rec.blockers ?? []) {

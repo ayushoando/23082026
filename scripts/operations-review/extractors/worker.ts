@@ -170,7 +170,7 @@ export function extractWorkerReview(sources: WorkerReviewSources): WorkerReviewE
     },
   ];
 
-  const unverifiedExternalState = routingCases.map((routingCase) => ({
+  const unverifiedExternalState: EvidenceFact[] = routingCases.map((routingCase) => ({
     id: `worker-hosted-${routingCase.id}`,
     surface: WORKER_SURFACE,
     statement: `Hosted edge behavior is unverified: ${routingCase.expectedConfiguredBehavior}`,

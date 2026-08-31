@@ -86,11 +86,11 @@ vi.mock("@/components/shared/RouteCtaBand", () => ({
   ),
 }));
 
-import ServicePage, { metadata } from "@/app/(site)/service/page";
+import ServicePage, { generateMetadata } from "@/app/(site)/service/page";
 
 describe("app/(site)/service/page.tsx — behavior", () => {
-  it("exports canonical SEO metadata with absolute single-brand title", () => {
-    expect(metadata).toEqual(SERVICE_PAGE_METADATA);
+  it("exports canonical SEO metadata with absolute single-brand title", async () => {
+    expect(await generateMetadata()).toEqual(SERVICE_PAGE_METADATA);
     const titleValue =
       typeof SERVICE_PAGE_METADATA.title === "string"
         ? SERVICE_PAGE_METADATA.title

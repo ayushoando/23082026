@@ -1863,7 +1863,7 @@ function normalizePartition(value: unknown): PartitionManifest {
     dependencyFingerprints: isRecord(value.dependencyFingerprints)
       ? Object.fromEntries(
           Object.entries(value.dependencyFingerprints).filter(
-            ([key, item]) => typeof item === "string" && key.trim(),
+            (entry): entry is [string, string] => typeof entry[1] === "string" && entry[0].trim().length > 0,
           ),
         )
       : {},
@@ -1911,10 +1911,10 @@ function normalizeRunManifest(value: RunManifest, fallback: RunManifest): RunMan
     recordId: typeof raw.recordId === "string" ? raw.recordId : fallback.recordId,
     manifestId: typeof raw.manifestId === "string" ? raw.manifestId : fallback.manifestId,
     sourceHashes: isRecord(raw.sourceHashes)
-      ? Object.fromEntries(Object.entries(raw.sourceHashes).filter(([, item]) => typeof item === "string"))
+      ? Object.fromEntries(Object.entries(raw.sourceHashes).filter((entry): entry is [string, string] => typeof entry[1] === "string"))
       : fallback.sourceHashes,
     toolVersions: isRecord(raw.toolVersions)
-      ? Object.fromEntries(Object.entries(raw.toolVersions).filter(([, item]) => typeof item === "string"))
+      ? Object.fromEntries(Object.entries(raw.toolVersions).filter((entry): entry is [string, string] => typeof entry[1] === "string"))
       : fallback.toolVersions,
     inventoryGeneration: typeof raw.inventoryGeneration === "number"
       ? raw.inventoryGeneration

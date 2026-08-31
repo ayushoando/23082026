@@ -1,4 +1,19 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+
+const { jsPdfSave, jsPdfAddImage, JsPdfCtor } = vi.hoisted(() => {
+  const jsPdfSave = vi.fn();
+  const jsPdfAddImage = vi.fn();
+  class JsPdfCtor {
+    addImage = jsPdfAddImage;
+    save = jsPdfSave;
+  }
+  return { jsPdfSave, jsPdfAddImage, JsPdfCtor };
+});
+
+vi.mock("jspdf", () => ({
+  default: JsPdfCtor,
+}));
+
 import {
   canvasJsonToDataUrl,
   canvasJsonToDownloadText,
@@ -7,6 +22,7 @@ import {
   downloadText,
   exportJPEG,
   exportJPG,
+  exportPDF,
   exportPNG,
   exportRaster,
   exportSVG,
@@ -56,6 +72,22 @@ describe("studioExporters", () => {
   afterEach(() => {
     vi.unstubAllGlobals();
     vi.restoreAllMocks();
+    jsPdfSave.mockClear();
+    jsPdfAddImage.mockClear();
+  });
+
+  it("exportPDF returns false and skips jsPDF when canvas has no exportable objects (STU-FIX-03)", () => {
+    const c = mockCanvas({ getObjects: vi.fn(() => []) });
+    expect(exportPDF(c as never, "empty.pdf")).toBe(false);
+    expect(jsPdfAddImage).not.toHaveBeenCalled();
+    expect(jsPdfSave).not.toHaveBeenCalled();
+  });
+
+  it("exportPDF returns true and saves when canvas has exportable objects", () => {
+    const c = mockCanvas();
+    expect(exportPDF(c as never, "floor-plan.pdf")).toBe(true);
+    expect(jsPdfAddImage).toHaveBeenCalled();
+    expect(jsPdfSave).toHaveBeenCalledWith("floor-plan.pdf");
   });
 
   it("exportPNG uses png format", () => {

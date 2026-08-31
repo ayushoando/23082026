@@ -71,7 +71,14 @@ export const canvasJsonToDataUrl = (json: unknown): string => {
   return `data:application/json;charset=utf-8,${encodeURIComponent(text)}`;
 };
 
-export const exportPDF = (canvas: Canvas, filename = "floor-plan.pdf"): void => {
+/**
+ * Returns `false` (no-op) when the canvas has no exportable objects — callers
+ * should show a "Nothing to export" toast in that case rather than saving a
+ * blank PDF (STU-FIX-03).
+ */
+export const exportPDF = (canvas: Canvas, filename = "floor-plan.pdf"): boolean => {
+  if (!contentBounds(canvas)) return false;
+
   const dataUrl = exportPNG(canvas, { dpiMultiplier: 3 });
   const width = canvas.getWidth();
   const height = canvas.getHeight();
@@ -79,6 +86,7 @@ export const exportPDF = (canvas: Canvas, filename = "floor-plan.pdf"): void => 
   const pdf = new jsPDF({ orientation, unit: "px", format: [width, height] });
   pdf.addImage(dataUrl, "PNG", 0, 0, width, height);
   pdf.save(filename);
+  return true;
 };
 
 export const downloadDataUrl = (dataUrl: string, filename: string): void => {

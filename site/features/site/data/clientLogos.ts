@@ -1,15 +1,19 @@
-/** Maps roster display names → files under public/assets/marketing/client-logos/. */
+/** Maps source and canonical client names to files under the unified logo folder. */
 export const CLIENT_LOGO_SRC_BY_NAME: Readonly<Record<string, string>> = {
-  // Financial
   "Ambuja Neotia": "/assets/marketing/client-logos/ambuja-neotia.png",
   "Annapurna Finance": "/assets/marketing/client-logos/annapurna-finance.jpg",
   "Annapurna Bank Limited": "/assets/marketing/client-logos/annapurna-finance.jpg",
-  "Bureau of Indian Standards": "/assets/marketing/client-logos/bureau-of-indian-standards.jpg",
+  "Asian Paints": "/assets/marketing/client-logos/asian-paints-limited.svg",
+  "Asian Paints Limited": "/assets/marketing/client-logos/asian-paints-limited.svg",
+  "BHEL": "/assets/marketing/client-logos/bhel.svg",
   "BIS": "/assets/marketing/client-logos/bureau-of-indian-standards.jpg",
   "BSPHCL": "/assets/marketing/client-logos/bsphcl.jpg",
   "Bihar State Power Holding Company Limited": "/assets/marketing/client-logos/bsphcl.jpg",
+  "Bureau of Indian Standards": "/assets/marketing/client-logos/bureau-of-indian-standards.jpg",
   "Canara Bank": "/assets/marketing/client-logos/canara-bank.jpg",
   "Canara Bank Limited": "/assets/marketing/client-logos/canara-bank-limited.svg",
+  "Commercial Tax Department, Government of India": "/assets/marketing/client-logos/income-tax-department.png",
+  "Commercial Tax Department": "/assets/marketing/client-logos/income-tax-department.png",
   "Corporation Bank": "/assets/marketing/client-logos/corporation-bank.jpg",
   "CRI Pumps": "/assets/marketing/client-logos/cri-pumps.jpg",
   "Customs and Central Excise": "/assets/marketing/client-logos/customs-and-central-excise.jpg",
@@ -22,9 +26,6 @@ export const CLIENT_LOGO_SRC_BY_NAME: Readonly<Record<string, string>> = {
   "FHI Solutions LLC / Bill & Melinda Gates Foundation": "/assets/marketing/client-logos/fhi-360.png",
   "Franklin Templeton": "/assets/marketing/client-logos/franklin-templeton.jpg",
   "Franklin Templeton Investments": "/assets/marketing/client-logos/franklin-templeton.jpg",
-  "L&T Finance Limited": "/assets/marketing/client-logos/l-and-t-finance-limited.png",
-  "L&T": "/assets/marketing/client-logos/l-and-t-finance-limited.png",
-  "Larsen & Toubro": "/assets/marketing/client-logos/l-and-t-finance-limited.png",
   "Government of Bihar": "/assets/marketing/client-logos/government-of-bihar.jpg",
   "Bihar Government": "/assets/marketing/client-logos/government-of-bihar.jpg",
   "Rural Works Department, Government of Bihar": "/assets/marketing/client-logos/government-of-bihar.jpg",
@@ -39,6 +40,9 @@ export const CLIENT_LOGO_SRC_BY_NAME: Readonly<Record<string, string>> = {
   "Indian Oil": "/assets/marketing/client-logos/iocl.svg",
   "IOCL": "/assets/marketing/client-logos/iocl.svg",
   "JSW": "/assets/marketing/client-logos/jsw.png",
+  "L&T": "/assets/marketing/client-logos/l-and-t-finance-limited.png",
+  "L&T Finance Limited": "/assets/marketing/client-logos/l-and-t-finance-limited.png",
+  "Larsen & Toubro": "/assets/marketing/client-logos/l-and-t-finance-limited.png",
   "Maruti Suzuki": "/assets/marketing/client-logos/maruti-suzuki-limited.png",
   "Maruti Suzuki Limited": "/assets/marketing/client-logos/maruti-suzuki-limited.png",
   "MECON": "/assets/marketing/client-logos/mecon-limited.jpg",
@@ -64,12 +68,6 @@ export const CLIENT_LOGO_SRC_BY_NAME: Readonly<Record<string, string>> = {
   "Usha": "/assets/marketing/client-logos/usha-international-ltd.png",
   "Usha International": "/assets/marketing/client-logos/usha-international-ltd.png",
   "Usha International Ltd": "/assets/marketing/client-logos/usha-international-ltd.png",
-  // New SVG additions
-  "Asian Paints Limited": "/assets/marketing/client-logos/asian-paints-limited.svg",
-  "BHEL": "/assets/marketing/client-logos/bhel.svg",
-  "Coca-Cola": "/assets/marketing/client-logos/coca-cola.svg",
-  "State Bank of India": "/assets/marketing/client-logos/state-bank-of-india.svg",
-  "Union Bank of India": "/assets/marketing/client-logos/union-bank-of-india.svg",
 };
 
 export function resolveClientLogoSrc(name: string, explicitSrc?: string): string | undefined {

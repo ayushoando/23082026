@@ -498,7 +498,6 @@ const ROUTE_CONTRACT_ENTRIES: readonly RouteContractEntry[] = [
   { route: "/support-ivr", classification: "redirect", audience: "Public", intent: "→ /service", owner: "Ops", indexable: false },
   { route: "/tracking", classification: "redirect", audience: "Public", intent: "→ /service", owner: "Ops", indexable: false },
   { route: "/templates", classification: "redirect", audience: "Public", intent: "→ /products", owner: "Site", indexable: false },
-  { route: "/repo-store", classification: "redirect", audience: "Internal", intent: "→ /", owner: "Ops", indexable: false },
   // Admin routes
   { route: "/admin", classification: "protected", audience: "Administrator", intent: "Admin home", owner: "Admin", indexable: false },
   { route: "/admin/catalog", classification: "protected", audience: "Administrator", intent: "Catalog management", owner: "Admin", indexable: false },
@@ -595,7 +594,6 @@ const NEXT_CONFIG_REDIRECTS: readonly RedirectEntry[] = [
   { source: "/support-ivr", destination: "/service/", permanent: true },
   { source: "/tracking", destination: "/service/", permanent: true },
   { source: "/login", destination: "/access/", permanent: true },
-  { source: "/repo-store", destination: "/", permanent: true },
   { source: "/planner/features/3d-view", destination: "/planner/features/export/", permanent: true },
   { source: "/workstations/configurator", destination: "/downloads/", permanent: true },
   { source: "/results", destination: "/dashboard", permanent: true },
@@ -904,7 +902,7 @@ export async function discoverCanonicalInventory(
   // Update the route's coverageGapIds
   const productRoute = routes.find((r) => r.routeId === productRouteId);
   if (productRoute) {
-    const mutable = productRoute as { coverageGapIds: string[] };
+    const mutable = productRoute as unknown as { coverageGapIds: string[] };
     mutable.coverageGapIds = [productGapId];
   }
 
@@ -1031,7 +1029,7 @@ export async function discoverCanonicalInventory(
 
     const route = routes.find((r) => r.routeId === rId);
     if (route) {
-      const mutable = route as { coverageGapIds: string[] };
+      const mutable = route as unknown as { coverageGapIds: string[] };
       mutable.coverageGapIds = [...mutable.coverageGapIds, gId];
     }
   }

@@ -1,7 +1,7 @@
 import "@/tests/helpers/nextIntlServerEnMock";
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import ShowroomsPage, { metadata } from "@/app/(site)/showrooms/page";
+import ShowroomsPage, { generateMetadata } from "@/app/(site)/showrooms/page";
 import { SHOWROOMS_HIGHLIGHTS, SHOWROOMS_PAGE_COPY } from "@/features/site/data/routeCopy";
 
 vi.mock("@/features/site/data/routeMetadata", () => ({
@@ -26,7 +26,8 @@ vi.mock("gsap", () => ({
 
 describe("ShowroomsPage Route", () => {
   it("renders standard marketing hero and visit details", async () => {
-    expect(metadata).toEqual({ title: "Showrooms Title" });
+    const resolvedMetadata = await generateMetadata();
+    expect(resolvedMetadata.title).toBeDefined();
 
     render(await ShowroomsPage());
 

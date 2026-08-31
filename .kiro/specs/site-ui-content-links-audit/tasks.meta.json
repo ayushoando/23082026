@@ -753,6 +753,16 @@
         "executionId": "3140cb5e-071f-46b9-b73a-e002199f8d5d",
         "chatSessionId": "sess_a2de6dd3-d892-4e80-b889-aff5afb9f480",
         "timestamp": 1788122161394
+      },
+      {
+        "executionId": "2eeff1e6-a21b-4970-b7ea-8fbe70f44bee",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788170005216
+      },
+      {
+        "executionId": "eb310a9b-8157-4ed5-b437-e3a0db9e92bd",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788171818474
       }
     ],
     "6.2 Finalize replacement-ready copy, IA, metadata, and Hindi review queues": [
@@ -1420,6 +1430,177 @@
         "executionId": "bd71cece-9a49-4172-b0c1-ae885a720876",
         "chatSessionId": "sess_8fdedb99-c8b2-4d21-a3d3-5a9de71eb1c9",
         "timestamp": 1788147347843
+      }
+    ],
+    "2.2 Build auth/legal/consent/error/offline foundation inventories and per-occurrence evidence/findings": [
+      {
+        "executionId": "2eeff1e6-a21b-4970-b7ea-8fbe70f44bee",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788170004548
+      },
+      {
+        "executionId": "2eeff1e6-a21b-4970-b7ea-8fbe70f44bee",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788170014588
+      },
+      {
+        "executionId": "a88ade35-f7d0-46c8-a117-b3fbe0a88ae7",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788170471291
+      },
+      {
+        "executionId": "a88ade35-f7d0-46c8-a117-b3fbe0a88ae7",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788171078599
+      }
+    ],
+    "2.4 Execute and checkpoint the Wave 1 static batch": [
+      {
+        "executionId": "2eeff1e6-a21b-4970-b7ea-8fbe70f44bee",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788170004661
+      },
+      {
+        "executionId": "a88ade35-f7d0-46c8-a117-b3fbe0a88ae7",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788171098393
+      },
+      {
+        "executionId": "a88ade35-f7d0-46c8-a117-b3fbe0a88ae7",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788171739551
+      }
+    ],
+    "3.1 Build surface-specific journey, form, asset, copy/IA, metadata, and static-dimension evidence": [
+      {
+        "executionId": "2eeff1e6-a21b-4970-b7ea-8fbe70f44bee",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788170004724
+      },
+      {
+        "executionId": "eb310a9b-8157-4ed5-b437-e3a0db9e92bd",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788171818015
+      },
+      {
+        "executionId": "eb310a9b-8157-4ed5-b437-e3a0db9e92bd",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788172055998
+      }
+    ],
+    "3.3 Execute and checkpoint the Wave 2 static batch": [
+      {
+        "executionId": "2eeff1e6-a21b-4970-b7ea-8fbe70f44bee",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788170004784
+      },
+      {
+        "executionId": "eb310a9b-8157-4ed5-b437-e3a0db9e92bd",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788171818094
+      }
+    ],
+    "4.1 Build the protected/admin, Planner-only, Studio-only, and specialized-state static partitions": [
+      {
+        "executionId": "2eeff1e6-a21b-4970-b7ea-8fbe70f44bee",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788170004848
+      },
+      {
+        "executionId": "eb310a9b-8157-4ed5-b437-e3a0db9e92bd",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788171818158
+      }
+    ],
+    "4.2 Complete the grouped optional fork-ownership property test and checkpoint Wave 3": [
+      {
+        "executionId": "2eeff1e6-a21b-4970-b7ea-8fbe70f44bee",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788170004911
+      },
+      {
+        "executionId": "eb310a9b-8157-4ed5-b437-e3a0db9e92bd",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788171818212
+      }
+    ],
+    "5.1 Register protected operations and enforce the authorization gate": [
+      {
+        "executionId": "2eeff1e6-a21b-4970-b7ea-8fbe70f44bee",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788170004972
+      },
+      {
+        "executionId": "eb310a9b-8157-4ed5-b437-e3a0db9e92bd",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788171818281
+      }
+    ],
+    "5.2 Execute the authorized responsive, accessibility, state, asset, analytics, security, metadata, external-link, and performance workstreams": [
+      {
+        "executionId": "2eeff1e6-a21b-4970-b7ea-8fbe70f44bee",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788170005036
+      },
+      {
+        "executionId": "eb310a9b-8157-4ed5-b437-e3a0db9e92bd",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788171818363
+      }
+    ],
+    "5.3 Ingest runtime outputs and checkpoint Wave 4, with optional authorization-gate tests": [
+      {
+        "executionId": "2eeff1e6-a21b-4970-b7ea-8fbe70f44bee",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788170005141
+      },
+      {
+        "executionId": "eb310a9b-8157-4ed5-b437-e3a0db9e92bd",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788171818408
+      }
+    ],
+    "6.2 Finalize copy/Hindi proposals, remediation handoffs, exclusions, gaps, conflicts, and pending operations": [
+      {
+        "executionId": "2eeff1e6-a21b-4970-b7ea-8fbe70f44bee",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788170005278
+      },
+      {
+        "executionId": "eb310a9b-8157-4ed5-b437-e3a0db9e92bd",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788171818546
+      }
+    ],
+    "6.3 Generate final artifact manifests and machine-checkable completion proof": [
+      {
+        "executionId": "2eeff1e6-a21b-4970-b7ea-8fbe70f44bee",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788170005334
+      },
+      {
+        "executionId": "eb310a9b-8157-4ed5-b437-e3a0db9e92bd",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788171818608
+      }
+    ],
+    "6.5 Perform final artifact review and close Wave 5": [
+      {
+        "executionId": "2eeff1e6-a21b-4970-b7ea-8fbe70f44bee",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788170005397
+      },
+      {
+        "executionId": "eb310a9b-8157-4ed5-b437-e3a0db9e92bd",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788171818673
+      }
+    ],
+    "2.3 Complete the grouped optional Wave 1 property tests": [
+      {
+        "executionId": "eb310a9b-8157-4ed5-b437-e3a0db9e92bd",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788172044342
       }
     ]
   }

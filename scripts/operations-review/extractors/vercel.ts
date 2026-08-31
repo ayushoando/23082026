@@ -253,7 +253,7 @@ export function extractVercelReview(
     ),
     fact(
       "vercel.target.region",
-      `The configured Vercel region list is ${config.regions.join(", ")}.`,
+      `The configured Vercel region list is ${Array.isArray(config.regions) ? config.regions.join(", ") : String(config.regions)}.`,
       "observed-local",
       sources.vercelConfig,
       "$.regions",

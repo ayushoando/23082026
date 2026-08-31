@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Non-admin site and client access sitemap</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #111923;
+      --panel: #192432;
+      --line: #33485c;
+      --text: #edf4f8;
+      --muted: #a7b9c7;
+      --accent: #8be0bc;
+      --public: #8be0bc;
+      --utility: #f2cf85;
+      --protected: #93b8ff;
+      --app: #d1a6f6;
+      --redirect: #f09b9b;
+      --source: #d4bdf4;
+      --system: #a9bac7;
+      --shadow: 0 18px 50px rgba(0, 0, 0, .24);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); font: 15px/1.45 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    body { padding: 22px; }
+    button, input, select { font: inherit; }
+    button { color: inherit; }
+    .page { max-width: 1800px; margin: 0 auto; }
+    .eyebrow { color: var(--accent); font-size: .74rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+    h1 { margin: 5px 0 8px; font-size: clamp(1.65rem, 3vw, 2.75rem); line-height: 1.08; letter-spacing: -.035em; }
+    h2 { margin: 0; font-size: 1.05rem; }
+    p { margin: 0; }
+    .intro { display: grid; grid-template-columns: minmax(0, 1fr) minmax(270px, 420px); gap: 22px; align-items: end; margin-bottom: 18px; }
+    .scope-note, .evidence-note { color: var(--muted); max-width: 100ch; }
+    .evidence-note { border-left: 3px solid var(--accent); padding-left: 13px; font-size: .88rem; }
+    .shell { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); overflow: hidden; }
+    .tabs { display: flex; flex-wrap: wrap; gap: 7px; padding: 12px; border-bottom: 1px solid var(--line); background: #151f2b; }
+    .tab { border: 1px solid #3a5267; border-radius: 999px; background: transparent; color: var(--muted); cursor: pointer; padding: 8px 12px; transition: background .18s ease, color .18s ease, border-color .18s ease; }
+    .tab:hover, .tab:focus-visible { border-color: var(--accent); color: var(--text); outline: none; }
+    .tab[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: #0e211b; font-weight: 750; }
+    .filters { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 12px; border-bottom: 1px solid var(--line); }
+    .field { display: flex; align-items: center; gap: 7px; color: var(--muted); }
+    .field span { font-size: .83rem; }
+    input[type="search"], select { min-height: 36px; border: 1px solid #3a5267; border-radius: 8px; background: #111923; color: var(--text); padding: 6px 10px; }
+    input[type="search"] { min-width: min(390px, 72vw); }
+    input[type="search"]:focus, select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+    .check { font-size: .85rem; }
+    .result-count { margin-left: auto; color: var(--muted); font-size: .82rem; }
+    .map-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; padding: 10px 12px; border-bottom: 1px solid var(--line); background: #172330; }
+    .tool-button { min-width: 37px; height: 34px; border: 1px solid #496177; border-radius: 8px; background: #223244; cursor: pointer; font-weight: 800; }
+    .tool-button:hover, .tool-button:focus-visible { border-color: var(--accent); background: #2b4155; outline: none; }
+    .zoom-readout { min-width: 53px; color: var(--muted); text-align: center; font-variant-numeric: tabular-nums; }
+    .map-help { margin-left: auto; color: var(--muted); font-size: .78rem; }
+    .map-wrap { position: relative; height: min(70vh, 760px); min-height: 450px; background: #0e151e; overflow: hidden; }
+    svg { display: block; width: 100%; height: 100%; touch-action: none; user-select: none; cursor: grab; }
+    svg.dragging { cursor: grabbing; }
+    .grid { fill: url(#gridPattern); opacity: .35; }
+    .edge { stroke: #5a7187; stroke-width: 2; fill: none; opacity: .78; marker-end: url(#arrow); transition: opacity .18s ease; }
+    .edge-label { fill: #9cb0bf; font-size: 12px; paint-order: stroke; stroke: #0e151e; stroke-width: 4px; stroke-linejoin: round; }
+    .branch rect { fill: #14202b; stroke: #2e4355; stroke-width: 2; rx: 16; }
+    .branch .label { fill: var(--accent); font-size: 16px; font-weight: 800; }
+    .branch .hint { fill: var(--muted); font-size: 12px; }
+    .node { cursor: pointer; transition: opacity .18s ease; }
+    .node rect { fill: #223244; stroke: #668097; stroke-width: 2; rx: 10; }
+    .node:hover rect, .node:focus rect { stroke: var(--accent); stroke-width: 3; }
+    .node:focus { outline: none; }
+    .node .route { fill: var(--text); font-size: 13.5px; font-weight: 760; }
+    .node .detail { fill: #b4c3cf; font-size: 11.5px; }
+    .node.public rect { stroke: var(--public); }
+    .node.utility rect { stroke: var(--utility); }
+    .node.protected rect { stroke: var(--protected); }
+    .node.app rect { stroke: var(--app); }
+    .node.redirect rect { stroke: var(--redirect); }
+    .node.source rect { stroke: var(--source); }
+    .node.system rect { stroke: var(--system); }
+    .node.dimmed { opacity: .12; }
+    .node.match rect { filter: drop-shadow(0 0 8px rgba(139, 224, 188, .65)); }
+    .edge.dimmed, .edge-label.dimmed { opacity: .08; }
+    .empty-map { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); pointer-events: none; }
+    .detail { display: grid; grid-template-columns: minmax(180px, 300px) 1fr; gap: 14px; padding: 14px 16px; border-top: 1px solid var(--line); background: #172330; }
+    .detail-title { color: var(--accent); font-weight: 760; }
+    .detail-copy { color: var(--muted); }
+    .legend { display: flex; flex-wrap: wrap; gap: 9px 17px; padding: 13px 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: .8rem; }
+    .legend-item { display: inline-flex; align-items: center; gap: 7px; }
+    .swatch { width: 11px; height: 11px; border-radius: 3px; border: 2px solid currentColor; }
+    .swatch.public { color: var(--public); }
+    .swatch.utility { color: var(--utility); }
+    .swatch.protected { color: var(--protected); }
+    .swatch.app { color: var(--app); }
+    .swatch.redirect { color: var(--redirect); }
+    .swatch.source { color: var(--source); }
+    .swatch.system { color: var(--system); }
+    footer { margin: 15px 2px 0; color: var(--muted); font-size: .82rem; }
+    footer strong { color: var(--text); }
+    @media (max-width: 760px) {
+      body { padding: 12px; }
+      .intro { grid-template-columns: 1fr; gap: 11px; }
+      .map-wrap { min-height: 420px; height: 62vh; }
+      .result-count { width: 100%; margin-left: 0; }
+      .map-help { width: 100%; margin-left: 0; }
+      .detail { grid-template-columns: 1fr; gap: 5px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="intro">
+      <div>
+        <div class="eyebrow">Layered source sitemap</div>
+        <h1>Non-admin site and client access</h1>
+        <p class="scope-note">The primary view is a clean page hierarchy. Utilities, journeys, redirect aliases, source-defined content, and internal/system boundaries are separate views rather than extra page nodes.</p>
+      </div>
+      <p class="evidence-note"><strong>Evidence boundary:</strong> this is a static artifact. Source presence and classification do not prove a build, render, link, authorization, redirect response, or data load. Product records and other data-driven instances are not fabricated here.</p>
+    </header>
+
+    <section class="shell" aria-label="Interactive sitemap">
+      <nav class="tabs" role="tablist" aria-label="Sitemap views">
+        <button class="tab" role="tab" aria-selected="true" data-view="tree">Primary page tree</button>
+        <button class="tab" role="tab" aria-selected="false" data-view="products">Products by category</button>
+        <button class="tab" role="tab" aria-selected="false" data-view="visitor">Visitor journeys</button>
+        <button class="tab" role="tab" aria-selected="false" data-view="client">Client access</button>
+        <button class="tab" role="tab" aria-selected="false" data-view="redirects">Redirect register — not pages</button>
+        <button class="tab" role="tab" aria-selected="false" data-view="mapped">Mapped / not mapped</button>
+        <button class="tab" role="tab" aria-selected="false" data-view="system">Excluded / system</button>
+      </nav>
+      <div class="filters">
+        <label class="field"><span>Search</span><input id="search" type="search" placeholder="route, symbol, or journey" autocomplete="off"></label>
+        <label class="field"><span>Kind</span><select id="kind"><option value="all">All</option><option value="public">Public</option><option value="utility">Utility</option><option value="protected">Protected/client</option><option value="app">App</option><option value="redirect">Redirect</option><option value="source">Source-defined</option><option value="system">System</option></select></label>
+        <label class="field check"><input id="matchOnly" type="checkbox"> show matches only</label>
+        <span id="resultCount" class="result-count" aria-live="polite"></span>
+      </div>
+      <div class="map-toolbar" aria-label="Map controls">
+        <button id="zoomIn" class="tool-button" type="button" title="Zoom in" aria-label="Zoom in">+</button>
+        <button id="zoomOut" class="tool-button" type="button" title="Zoom out" aria-label="Zoom out">−</button>
+        <button id="fit" class="tool-button" type="button">Fit to view</button>
+        <button id="reset" class="tool-button" type="button">Reset</button>
+        <span id="zoomReadout" class="zoom-readout">100%</span>
+        <span class="map-help">Drag to pan · wheel to zoom · select a card for evidence</span>
+      </div>
+      <div class="map-wrap">
+        <svg id="map" viewBox="0 0 1800 1100" role="img" aria-label="Sitemap diagram">
+          <defs>
+            <pattern id="gridPattern" width="32" height="32" patternUnits="userSpaceOnUse">
+              <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#243544" stroke-width="1"></path>
+            </pattern>
+            <marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto" markerUnits="strokeWidth">
+              <path d="M0,0 L9,4.5 L0,9 z" fill="#6c879c"></path>
+            </marker>
+          </defs>
+          <rect class="grid" x="0" y="0" width="100%" height="100%"></rect>
+          <g id="viewport"></g>
+        </svg>
+        <div id="emptyMap" class="empty-map" hidden>No cards match the current filter.</div>
+      </div>
+      <div class="detail" aria-live="polite">
+        <div id="detailTitle" class="detail-title">Select a card</div>
+        <div id="detailCopy" class="detail-copy">Each card carries a source-oriented route, journey, register, or mapping note. Search and filtering are local to this static file.</div>
+      </div>
+      <div class="legend" aria-label="Legend">
+        <span class="legend-item"><i class="swatch public"></i>public page</span>
+        <span class="legend-item"><i class="swatch utility"></i>utility / noindex</span>
+        <span class="legend-item"><i class="swatch protected"></i>protected / client</span>
+        <span class="legend-item"><i class="swatch app"></i>interactive app</span>
+        <span class="legend-item"><i class="swatch redirect"></i>redirect-only</span>
+        <span class="legend-item"><i class="swatch source"></i>source-defined</span>
+        <span class="legend-item"><i class="swatch system"></i>excluded / system</span>
+      </div>
+    </section>
+
+    <footer><strong>Scope note:</strong> `/trusted-by` and `/clients` are flat sibling pages. The primary tree shows six concrete product category routes and each category's `[product]` pattern, but never fabricates individual product records. Admin/API surfaces and staff/admin-only `/oostudio` appear only in the final exclusion/system view.</footer>
+  </div>
+
+  <script>
+    (() => {
+      const svg = document.getElementById("map");
+      const viewport = document.getElementById("viewport");
+      const search = document.getElementById("search");
+      const kind = document.getElementById("kind");
+      const matchOnly = document.getElementById("matchOnly");
+      const resultCount = document.getElementById("resultCount");
+      const emptyMap = document.getElementById("emptyMap");
+      const zoomReadout = document.getElementById("zoomReadout");
+      const detailTitle = document.getElementById("detailTitle");
+      const detailCopy = document.getElementById("detailCopy");
+      const SVG_NS = "http://www.w3.org/2000/svg";
+      const state = { view: "tree", scale: 1, panX: 0, panY: 0, dragging: false, startX: 0, startY: 0, originX: 0, originY: 0 };
+
+      const n = (id, x, y, w, h, type, route, detail) => ({ id, x, y, w, h, type, route, detail });
+      const e = (from, to, label = "") => ({ from, to, label });
+      const b = (x, y, w, h, label, hint) => ({ x, y, w, h, label, hint });
+
+      const views = {
+        tree: {
+          title: "Primary page tree — public and client page routes only",
+          note: "This view contains only source-defined public/client pages and route patterns. Utilities, redirect aliases, source-defined content, and system surfaces live in separate views. A card is static route evidence; it does not prove rendering, linking, authorization, or data availability.",
+          width: 2600, height: 1710,
+          branches: [
+            b(30, 160, 500, 1450, "Public content", "public page and legal/page-index routes"),
+            b(560, 160, 420, 570, "Planner marketing", "public marketing pages; separate from the app"),
+            b(1010, 160, 610, 1450, "Products", "canonical categories and data-driven detail patterns"),
+            b(1650, 160, 370, 500, "Proof", "flat public sibling pages"),
+            b(2050, 160, 500, 1330, "Client access and workspaces", "auth/noindex/app pages; not public navigation")
+          ],
+          nodes: [
+            n("root", 1140, 30, 320, 72, "public", "/", "public marketing home"),
+            n("pubAbout", 55, 225, 450, 62, "public", "/about", "public company page"),
+            n("pubCareer", 55, 310, 450, 62, "public", "/career", "public careers page"),
+            n("pubContact", 55, 395, 450, 62, "public", "/contact", "public enquiry page"),
+            n("pubPlanning", 55, 480, 450, 62, "public", "/planning", "public planning service page"),
+            n("pubSolutions", 55, 565, 450, 62, "public", "/solutions", "public solution hub"),
+            n("pubSolutionCategory", 55, 650, 450, 62, "public", "/solutions/[category]", "dynamic public solution page pattern"),
+            n("pubShowrooms", 55, 735, 450, 62, "public", "/showrooms", "public showroom page"),
+            n("pubService", 55, 820, 450, 62, "public", "/service", "public service page"),
+            n("pubDownloads", 55, 905, 450, 62, "public", "/downloads", "public resources page"),
+            n("pubSustainability", 55, 990, 450, 62, "public", "/sustainability", "public sustainability page"),
+            n("pubPrivacy", 55, 1075, 450, 62, "public", "/privacy", "public legal page"),
+            n("pubTerms", 55, 1160, 450, 62, "public", "/terms", "public legal page"),
+            n("pubRefund", 55, 1245, 450, 62, "public", "/refund-and-return-policy", "public policy page"),
+            n("pubSitemap", 55, 1330, 450, 62, "public", "/sitemap", "public HTML route index"),
+            n("planner", 585, 225, 370, 62, "public", "/planner", "public Planner marketing page"),
+            n("plannerHelp", 585, 340, 370, 62, "public", "/planner/help", "public Planner help page"),
+            n("plannerFeatures", 585, 455, 370, 62, "public", "/planner/features", "public Planner feature hub"),
+            n("plannerFeature", 585, 570, 370, 62, "public", "/planner/features/[slug]", "dynamic public feature page pattern"),
+            n("productsRoot", 1045, 225, 280, 62, "public", "/products", "public catalog entry"),
+            n("catSeating", 1045, 345, 275, 62, "public", "/products/seating", "canonical category page"),
+            n("prodSeating", 1340, 345, 255, 62, "public", "/products/seating/[product]", "data-driven product detail pattern"),
+            n("catWorkstations", 1045, 515, 275, 62, "public", "/products/workstations", "canonical category page"),
+            n("prodWorkstations", 1340, 515, 255, 62, "public", "/products/workstations/[product]", "data-driven product detail pattern"),
+            n("catTables", 1045, 685, 275, 62, "public", "/products/tables", "canonical category page"),
+            n("prodTables", 1340, 685, 255, 62, "public", "/products/tables/[product]", "data-driven product detail pattern"),
+            n("catStorages", 1045, 855, 275, 62, "public", "/products/storages", "canonical category page"),
+            n("prodStorages", 1340, 855, 255, 62, "public", "/products/storages/[product]", "data-driven product detail pattern"),
+            n("catSoftSeating", 1045, 1025, 275, 62, "public", "/products/soft-seating", "canonical category page"),
+            n("prodSoftSeating", 1340, 1025, 255, 62, "public", "/products/soft-seating/[product]", "data-driven product detail pattern"),
+            n("catEducation", 1045, 1195, 275, 62, "public", "/products/education", "canonical category page"),
+            n("prodEducation", 1340, 1195, 255, 62, "public", "/products/education/[product]", "data-driven product detail pattern"),
+            n("trusted", 1680, 250, 310, 62, "public", "/trusted-by", "public proof page; flat sibling"),
+            n("clients", 1680, 390, 310, 62, "public", "/clients", "public portfolio page; flat sibling"),
+            n("access", 2080, 225, 430, 62, "protected", "/access", "auth entry; noindex intent; not public navigation"),
+            n("portal", 2080, 365, 250, 62, "protected", "/portal", "authenticated portal; protected/noindex"),
+            n("portalId", 2360, 365, 190, 62, "protected", "/portal/[id]", "authenticated dynamic view"),
+            n("portalGuest", 2080, 505, 250, 62, "protected", "/portal/guest", "guest portal; protected/noindex"),
+            n("portalGuestView", 2360, 505, 190, 62, "protected", "/portal/guest/view/[id]", "shared guest view"),
+            n("dashboard", 2080, 645, 430, 62, "protected", "/dashboard", "authenticated dashboard; protected/noindex"),
+            n("ooplanner", 2080, 825, 430, 62, "app", "/ooplanner", "interactive Planner entry; app/noindex"),
+            n("oopProjects", 2080, 965, 250, 62, "app", "/ooplanner/projects", "saved projects; app/authenticated"),
+            n("oopProject", 2360, 965, 190, 62, "app", "/ooplanner/projects/[id]", "dynamic project workspace")
+          ],
+          edges: [
+            e("root", "pubAbout"), e("root", "planner"), e("root", "productsRoot"), e("root", "trusted"), e("root", "clients"), e("root", "access"), e("root", "portal"), e("root", "dashboard"), e("root", "ooplanner"),
+            e("planner", "plannerHelp"), e("planner", "plannerFeatures"), e("plannerFeatures", "plannerFeature"),
+            e("productsRoot", "catSeating"), e("productsRoot", "catWorkstations"), e("productsRoot", "catTables"), e("productsRoot", "catStorages"), e("productsRoot", "catSoftSeating"), e("productsRoot", "catEducation"),
+            e("catSeating", "prodSeating"), e("catWorkstations", "prodWorkstations"), e("catTables", "prodTables"), e("catStorages", "prodStorages"), e("catSoftSeating", "prodSoftSeating"), e("catEducation", "prodEducation"),
+            e("portal", "portalId"), e("portal", "portalGuest"), e("portalGuest", "portalGuestView"), e("ooplanner", "oopProjects"), e("oopProjects", "oopProject")
+          ]
+        },
+        products: {
+          title: "Products by category — canonical pages and detail patterns",
+          note: "The category vocabulary is taken from the live source classification. Each [product] card is a route pattern only: concrete records, slugs, pricing, images, and availability are data-driven and are not enumerated by this sitemap.",
+          width: 1700, height: 900,
+          branches: [b(30, 150, 1640, 700, "Products by category", "six canonical category pages, each with a dynamic [product] detail pattern")],
+          nodes: [
+            n("productRoot", 690, 35, 320, 68, "public", "/products", "public catalog entry"),
+            n("pSeating", 70, 205, 300, 62, "public", "/products/seating", "canonical category page"),
+            n("pSeatingDetail", 70, 310, 300, 62, "public", "/products/seating/[product]", "data-driven detail pattern"),
+            n("pWorkstations", 510, 205, 300, 62, "public", "/products/workstations", "canonical category page"),
+            n("pWorkstationsDetail", 510, 310, 300, 62, "public", "/products/workstations/[product]", "data-driven detail pattern"),
+            n("pTables", 950, 205, 300, 62, "public", "/products/tables", "canonical category page"),
+            n("pTablesDetail", 950, 310, 300, 62, "public", "/products/tables/[product]", "data-driven detail pattern"),
+            n("pStorages", 1390, 205, 240, 62, "public", "/products/storages", "canonical category page"),
+            n("pStoragesDetail", 1390, 310, 240, 62, "public", "/products/storages/[product]", "data-driven detail pattern"),
+            n("pSoftSeating", 290, 500, 300, 62, "public", "/products/soft-seating", "canonical category page"),
+            n("pSoftSeatingDetail", 290, 605, 300, 62, "public", "/products/soft-seating/[product]", "data-driven detail pattern"),
+            n("pEducation", 1030, 500, 300, 62, "public", "/products/education", "canonical category page"),
+            n("pEducationDetail", 1030, 605, 300, 62, "public", "/products/education/[product]", "data-driven detail pattern")
+          ],
+          edges: [e("productRoot", "pSeating"), e("productRoot", "pWorkstations"), e("productRoot", "pTables"), e("productRoot", "pStorages"), e("productRoot", "pSoftSeating"), e("productRoot", "pEducation"), e("pSeating", "pSeatingDetail"), e("pWorkstations", "pWorkstationsDetail"), e("pTables", "pTablesDetail"), e("pStorages", "pStoragesDetail"), e("pSoftSeating", "pSoftSeatingDetail"), e("pEducation", "pEducationDetail")]
+        },
+        visitor: {
+          title: "Visitor journeys — intended relationships, not runtime proof",
+          note: "These lines describe source-oriented journey groupings. They do not prove that a link is present, clickable, or followed in a browser. Utility routes appear here only as journey outcomes and remain outside the primary page tree.",
+          width: 1850, height: 1180,
+          branches: [
+            b(30, 150, 1780, 190, "Discover → specify → enquire", "public catalog pages followed by utility or conversation outcomes"),
+            b(30, 390, 1780, 190, "Proof → conversation", "flat proof siblings followed by a human-supported next step"),
+            b(30, 630, 1780, 190, "Planner-led entry", "marketing pages hand off to the separate interactive app"),
+            b(30, 870, 1780, 190, "Support and guided tools", "utilities and support pages point toward contact/planning intent")
+          ],
+          nodes: [
+            n("vHome", 55, 215, 210, 62, "public", "/", "discover"), n("vProducts", 300, 215, 230, 62, "public", "/products", "browse catalog"), n("vCategory", 565, 215, 270, 62, "public", "/products/seating", "choose a category"), n("vProduct", 870, 215, 320, 62, "public", "/products/seating/[product]", "inspect a data-driven detail"), n("vCompare", 1225, 215, 210, 62, "utility", "/compare", "shortlist"), n("vQuote", 1470, 215, 250, 62, "utility", "/quote-cart", "quote-list outcome"),
+            n("vTrusted", 55, 455, 220, 62, "public", "/trusted-by", "proof overview"), n("vClients", 330, 455, 220, 62, "public", "/clients", "detailed work"), n("vContact", 605, 455, 220, 62, "public", "/contact", "conversation"), n("vPlanning", 880, 455, 220, 62, "public", "/planning", "planning request"),
+            n("vPlanner", 55, 695, 220, 62, "public", "/planner", "marketing entry"), n("vFeatures", 330, 695, 250, 62, "public", "/planner/features", "learn features"), n("vApp", 635, 695, 250, 62, "app", "/ooplanner", "launch workspace"), n("vAccess", 940, 695, 220, 62, "protected", "/access", "auth/guest entry"),
+            n("vService", 55, 935, 220, 62, "public", "/service", "after-sales"), n("vDownloads", 330, 935, 240, 62, "public", "/downloads", "resources"), n("vChoose", 630, 935, 250, 62, "utility", "/choose-product", "guided choice"), n("vCalc", 940, 935, 330, 62, "utility", "/tools/*-calculator", "two placeholder shells"), n("vOutcome", 1330, 935, 220, 62, "public", "/contact", "human next step")
+          ],
+          edges: [e("vHome", "vProducts"), e("vProducts", "vCategory"), e("vCategory", "vProduct"), e("vProduct", "vCompare"), e("vCompare", "vQuote"), e("vTrusted", "vClients", "explore work"), e("vTrusted", "vContact", "conversation"), e("vTrusted", "vPlanning", "planning"), e("vPlanner", "vFeatures"), e("vFeatures", "vApp", "launch"), e("vApp", "vAccess", "when needed"), e("vService", "vOutcome"), e("vDownloads", "vOutcome"), e("vChoose", "vApp"), e("vCalc", "vOutcome")]
+        },
+        client: {
+          title: "Client access — auth, protected, and app pages",
+          note: "This view separates client-accessible pages from public navigation. The edges are source-oriented access/journey relationships; they do not prove session transitions, authorization, or hosted behavior.",
+          width: 1750, height: 1000,
+          branches: [
+            b(30, 150, 810, 690, "Customer portal and guest view", "auth entry, protected portal pages, and guest share pattern"),
+            b(900, 150, 800, 690, "Planner app workspace", "interactive app pages with noindex/authenticated intent")
+          ],
+          nodes: [
+            n("cAccess", 60, 225, 300, 62, "protected", "/access", "auth entry; noindex intent"),
+            n("cDashboard", 430, 225, 330, 62, "protected", "/dashboard", "authenticated dashboard; noindex"),
+            n("cPortal", 60, 390, 250, 62, "protected", "/portal", "authenticated portal; noindex"),
+            n("cPortalId", 380, 390, 250, 62, "protected", "/portal/[id]", "dynamic protected plan view"),
+            n("cGuest", 60, 555, 250, 62, "protected", "/portal/guest", "guest portal; noindex"),
+            n("cGuestView", 380, 555, 360, 62, "protected", "/portal/guest/view/[id]", "shared guest view"),
+            n("cOop", 930, 225, 330, 62, "app", "/ooplanner", "interactive entry; app/noindex"),
+            n("cProjects", 930, 390, 300, 62, "app", "/ooplanner/projects", "saved projects; authenticated"),
+            n("cProject", 1290, 390, 360, 62, "app", "/ooplanner/projects/[id]", "dynamic project workspace")
+          ],
+          edges: [e("cAccess", "cDashboard", "sign in"), e("cAccess", "cPortal", "workspace"), e("cPortal", "cPortalId"), e("cPortal", "cGuest", "guest"), e("cGuest", "cGuestView"), e("cOop", "cProjects"), e("cProjects", "cProject")]
+        },
+        redirects: {
+          title: "Redirect register — not pages",
+          note: "Every alias in this view is redirect-only and intentionally absent from the primary page tree. The destination group records approved source intent; HTTP status, response body, and hosted redirect behavior are not verified here.",
+          width: 1850, height: 1200,
+          branches: [
+            b(30, 150, 850, 210, "Destination: /", "home group"), b(930, 150, 850, 210, "Destination: /clients", "proof group"),
+            b(30, 420, 850, 210, "Destination: /service", "support group"), b(930, 420, 850, 210, "Destination: /products", "catalog group"),
+            b(30, 690, 850, 210, "Destination: /terms", "legal group"), b(930, 690, 850, 210, "Destination: /access", "auth group"),
+            b(30, 960, 1750, 180, "Destination: /products/[category]", "canonical category group")
+          ],
+          nodes: [
+            n("rHome", 70, 225, 370, 72, "redirect", "/news · /brochure · /download-brochure · /catalog", "redirect aliases; not pages"), n("rHomeDest", 500, 225, 330, 72, "public", "/", "destination page"),
+            n("rClients", 970, 225, 370, 72, "redirect", "/gallery · /portfolio · /projects · /social", "redirect aliases; not pages"), n("rClientsDest", 1400, 225, 330, 72, "public", "/clients", "destination page"),
+            n("rService", 70, 495, 370, 72, "redirect", "/support-ivr · /tracking", "redirect aliases; not pages"), n("rServiceDest", 500, 495, 330, 72, "public", "/service", "destination page"),
+            n("rProducts", 970, 495, 370, 72, "redirect", "/templates · /portal/svg-catalog · /portal/svg-catalog/[slug]", "redirect aliases; not pages"), n("rProductsDest", 1400, 495, 330, 72, "public", "/products", "destination page"),
+            n("rTerms", 70, 765, 370, 72, "redirect", "/imprint", "redirect alias; not a page"), n("rTermsDest", 500, 765, 330, 72, "public", "/terms", "destination page"),
+            n("rAccess", 970, 765, 370, 72, "redirect", "/login", "redirect alias; not a page"), n("rAccessDest", 1400, 765, 330, 72, "protected", "/access", "destination page"),
+            n("rCategory", 500, 1015, 500, 72, "redirect", "/products/category/[slug]", "redirect alias; not a page"), n("rCategoryDest", 1080, 1015, 450, 72, "public", "/products/[category]", "canonical category destination pattern")
+          ],
+          edges: [e("rHome", "rHomeDest"), e("rClients", "rClientsDest"), e("rService", "rServiceDest"), e("rProducts", "rProductsDest"), e("rTerms", "rTermsDest"), e("rAccess", "rAccessDest"), e("rCategory", "rCategoryDest")]
+        },
+        mapped: {
+          title: "Mapped / not mapped — page routes versus audit material",
+          note: "Mapped means represented in one of the route, journey, utility, redirect, or system views. Source-defined symbols below are content blocks/helpers, not pages. A static no-consumer result is not runtime proof that a symbol is unused or not rendered.",
+          width: 2050, height: 1350,
+          branches: [
+            b(30, 150, 630, 430, "Mapped primary pages", "the route-only hierarchy in the first view"),
+            b(700, 150, 630, 430, "Journey / utility-only", "supporting context outside the primary tree"),
+            b(1370, 150, 630, 430, "Redirect-only", "aliases grouped by destination; never pages"),
+            b(30, 630, 1970, 620, "Source-defined content/helpers with no direct focused consumer", "content blocks and helpers are not page nodes; static search limits apply")
+          ],
+          nodes: [
+            n("mPrimary", 70, 235, 550, 100, "public", "Mapped primary page routes", "public, Planner marketing, Products, Proof, and client-access branches"),
+            n("mInstances", 70, 380, 550, 100, "source", "Not mapped as instances", "product records, slugs, IDs, inventory, and other runtime data"),
+            n("mUtility", 740, 235, 550, 100, "utility", "/compare · /quote-cart · /choose-product", "journey/utility-only; quote-cart had no static inbound link in focused audit"),
+            n("mCalculators", 740, 380, 550, 100, "utility", "/tools/*-calculator", "two placeholder/noindex shells; not primary pages"),
+            n("mRedirect", 1410, 235, 550, 100, "redirect", "Redirect register", "destination groups only; aliases are not pages"),
+            n("mSystem", 1410, 380, 550, 100, "system", "Excluded / system", "/admin/**, /api/**, Studio, crawler, tooling, infra, build, observability"),
+            n("mFaq", 70, 735, 430, 82, "source", "HOMEPAGE_FAQ_CONTENT", "content block, not a page; no direct focused consumer found"),
+            n("mPartner", 540, 735, 430, 82, "source", "HOMEPAGE_PARTNERSHIP_CONTENT / inactive partnership panel", "optional content branch; static inactive-path evidence only"),
+            n("mLegacy", 1010, 735, 430, 105, "source", "Legacy homepage exports", "PROJECTS · SHOWCASE · STATS · PROCESS · SECTORS · SOLUTIONS · WHY_CHOOSE_US · TESTIMONIALS"),
+            n("mStats", 1480, 735, 430, 82, "source", "TRUSTED_BY_STATS", "proof stats content, not a page; no direct focused consumer found"),
+            n("mCopy", 70, 895, 430, 105, "source", "Unused trusted-by copy fields", "heroKicker · statsKicker · craftQuote · craftAttribution · rosterTitle · rosterDescription"),
+            n("mClients", 540, 895, 430, 82, "source", "CLIENTS_PAGE_CLIENTS / PROJECTS_PAGE_CLIENTS", "curated/deprecated data, not pages; no direct focused consumer found"),
+            n("mGroup", 1010, 895, 430, 82, "source", "groupClientsBySector", "grouping helper, not a page; no direct focused consumer found"),
+            n("mMissing", 1480, 895, 430, 82, "source", "trustedByClientsMissingLogos", "inspection helper, not a page; no direct focused consumer found"),
+            n("mShowrooms", 70, 1080, 430, 82, "source", "SHOWROOMS_CLIENTS", "showroom client list, not a page; no direct focused consumer found"),
+            n("mHero", 540, 1080, 430, 82, "source", "HERO_CAROUSEL_SLIDES", "legacy hero data, not a page"),
+            n("mSpace", 1010, 1080, 430, 82, "source", "spaceCalculator.ts", "pure engine, not a page; no focused page/component import found")
+          ],
+          edges: []
+        },
+        system: {
+          title: "Excluded / system — outside the client page hierarchy",
+          note: "These surfaces are shown for boundary clarity only. They are not indexable client page nodes in the primary tree, and their authorization, crawler responses, infrastructure routing, build output, and operational behavior are not asserted by this static map.",
+          width: 1750, height: 1000,
+          branches: [b(30, 150, 1690, 700, "Excluded / system surfaces", "admin, API, staff Studio, fallback, crawler, tooling, infrastructure, build, and observability")],
+          nodes: [
+            n("sAdmin", 70, 235, 330, 82, "system", "/admin/**", "staff/admin pages and management tools"),
+            n("sApi", 460, 235, 330, 82, "system", "/api/**", "API handlers; not page nodes"),
+            n("sStudio", 850, 235, 330, 82, "system", "/oostudio", "staff/admin-only Studio app; noindex intent"),
+            n("sOffline", 1240, 235, 330, 82, "system", "/offline", "noindex fallback/maintenance utility"),
+            n("sRobots", 70, 435, 330, 82, "system", "/robots.txt", "crawler policy endpoint"),
+            n("sXml", 460, 435, 330, 82, "system", "/sitemap.xml", "generated crawler sitemap endpoint"),
+            n("sDocs", 850, 435, 330, 82, "system", "/tech-docs/**", "tech-docs tooling and SPA surface"),
+            n("sInfra", 1240, 435, 330, 82, "system", "proxy · worker/R2 · asset delivery", "infrastructure and delivery paths"),
+            n("sBuild", 300, 635, 330, 82, "system", "Build output", "generated artifacts; not source routes"),
+            n("sObservability", 750, 635, 360, 82, "system", "Observability endpoints", "metrics and operational surfaces"),
+            n("sBoundary", 1230, 635, 340, 82, "system", "System boundary", "not client content; runtime behavior unverified")
+          ],
+          edges: []
+        }
+      };
+
+      function el(name, attrs = {}) {
+        const node = document.createElementNS(SVG_NS, name);
+        Object.entries(attrs).forEach(([key, value]) => node.setAttribute(key, String(value)));
+        return node;
+      }
+
+      function center(node) { return { x: node.x + node.w / 2, y: node.y + node.h / 2 }; }
+      function routeText(node) { return `${node.route} — ${node.detail}`.toLowerCase(); }
+
+      function render() {
+        const model = views[state.view];
+        svg.setAttribute("viewBox", `0 0 ${model.width} ${model.height}`);
+        viewport.replaceChildren();
+        const branchGroup = el("g", { "aria-hidden": "true" });
+        const edgeGroup = el("g", { "aria-hidden": "true" });
+        const nodeGroup = el("g");
+        const lookup = new Map(model.nodes.map((node) => [node.id, node]));
+
+        (model.branches || []).forEach((branch) => {
+          const group = el("g", { class: "branch" });
+          const rect = el("rect", { x: branch.x, y: branch.y, width: branch.w, height: branch.h });
+          const label = el("text", { x: branch.x + 18, y: branch.y + 30, class: "label" });
+          label.textContent = branch.label;
+          const hint = el("text", { x: branch.x + 18, y: branch.y + 52, class: "hint" });
+          hint.textContent = branch.hint;
+          group.append(rect, label, hint);
+          branchGroup.appendChild(group);
+        });
+
+        model.edges.forEach((edge) => {
+          const from = lookup.get(edge.from);
+          const to = lookup.get(edge.to);
+          if (!from || !to) return;
+          const a = center(from); const b = center(to);
+          const line = el("line", { x1: a.x, y1: a.y, x2: b.x, y2: b.y, class: "edge", "data-from": edge.from, "data-to": edge.to });
+          edgeGroup.appendChild(line);
+          if (edge.label) {
+            const label = el("text", { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 - 7, class: "edge-label", "text-anchor": "middle", "data-from": edge.from, "data-to": edge.to });
+            label.textContent = edge.label;
+            edgeGroup.appendChild(label);
+          }
+        });
+
+        model.nodes.forEach((node) => {
+          const group = el("g", { class: `node ${node.type}`, tabindex: "0", role: "button", "aria-label": `${node.route}: ${node.detail}`, "data-id": node.id, "data-type": node.type, "data-search": routeText(node) });
+          const rect = el("rect", { x: node.x, y: node.y, width: node.w, height: node.h });
+          const route = el("text", { x: node.x + 14, y: node.y + 25, class: "route" });
+          route.textContent = node.route;
+          const detail = el("text", { x: node.x + 14, y: node.y + 47, class: "detail" });
+          detail.textContent = node.detail;
+          group.append(rect, route, detail);
+          group.addEventListener("click", () => selectNode(node));
+          group.addEventListener("keydown", (event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); selectNode(node); } });
+          nodeGroup.appendChild(group);
+        });
+        viewport.append(branchGroup, edgeGroup, nodeGroup);
+        applyTransform();
+        applyFilters();
+        detailTitle.textContent = model.title;
+        detailCopy.textContent = model.note;
+      }
+
+      function selectNode(node) {
+        detailTitle.textContent = node.route;
+        detailCopy.textContent = `${node.detail}. View: ${views[state.view].title}. Static source evidence does not by itself prove runtime rendering, authorization, linking, redirect behavior, or data availability.`;
+      }
+
+      function applyFilters() {
+        const query = search.value.trim().toLowerCase();
+        const selectedKind = kind.value;
+        const cards = [...viewport.querySelectorAll(".node")];
+        let visible = 0;
+        cards.forEach((card) => {
+          const matchesText = !query || card.dataset.search.includes(query);
+          const matchesKind = selectedKind === "all" || card.dataset.type === selectedKind;
+          const matches = matchesText && matchesKind;
+          card.classList.toggle("match", Boolean(query) && matchesText && matchesKind);
+          card.classList.toggle("dimmed", matchOnly.checked ? !matches : Boolean(query || selectedKind !== "all") && !matches);
+          if (matches) visible += 1;
+        });
+        viewport.querySelectorAll(".edge, .edge-label").forEach((edge) => {
+          const from = viewport.querySelector(`.node[data-id="${edge.dataset.from}"]`);
+          const to = viewport.querySelector(`.node[data-id="${edge.dataset.to}"]`);
+          const active = from && to && !from.classList.contains("dimmed") && !to.classList.contains("dimmed");
+          edge.classList.toggle("dimmed", !active);
+        });
+        resultCount.textContent = `${visible} of ${cards.length} cards`;
+        emptyMap.hidden = visible !== 0;
+      }
+
+      function applyTransform() {
+        viewport.setAttribute("transform", `translate(${state.panX} ${state.panY}) scale(${state.scale})`);
+        zoomReadout.textContent = `${Math.round(state.scale * 100)}%`;
+      }
+      function setZoom(next, focusX = 0, focusY = 0) {
+        const bounded = Math.max(.35, Math.min(3.2, next));
+        const ratio = bounded / state.scale;
+        state.panX = focusX - (focusX - state.panX) * ratio;
+        state.panY = focusY - (focusY - state.panY) * ratio;
+        state.scale = bounded;
+        applyTransform();
+      }
+      function resetView() { state.scale = 1; state.panX = 0; state.panY = 0; applyTransform(); }
+      function fitView() {
+        const model = views[state.view];
+        const rect = svg.getBoundingClientRect();
+        const scaleX = rect.width / model.width;
+        const scaleY = rect.height / model.height;
+        state.scale = Math.max(.35, Math.min(1, Math.min(scaleX, scaleY) * .92));
+        state.panX = (model.width * (1 - state.scale)) / 2;
+        state.panY = (model.height * (1 - state.scale)) / 2;
+        applyTransform();
+      }
+
+      document.querySelectorAll(".tab").forEach((tab) => tab.addEventListener("click", () => {
+        state.view = tab.dataset.view;
+        document.querySelectorAll(".tab").forEach((item) => item.setAttribute("aria-selected", item === tab ? "true" : "false"));
+        resetView();
+        render();
+        window.requestAnimationFrame(fitView);
+      }));
+      search.addEventListener("input", applyFilters);
+      kind.addEventListener("change", applyFilters);
+      matchOnly.addEventListener("change", applyFilters);
+      document.getElementById("zoomIn").addEventListener("click", () => setZoom(state.scale * 1.2, views[state.view].width / 2, views[state.view].height / 2));
+      document.getElementById("zoomOut").addEventListener("click", () => setZoom(state.scale / 1.2, views[state.view].width / 2, views[state.view].height / 2));
+      document.getElementById("reset").addEventListener("click", resetView);
+      document.getElementById("fit").addEventListener("click", fitView);
+
+      svg.addEventListener("wheel", (event) => {
+        event.preventDefault();
+        const box = svg.getBoundingClientRect();
+        const x = ((event.clientX - box.left) / box.width) * views[state.view].width;
+        const y = ((event.clientY - box.top) / box.height) * views[state.view].height;
+        setZoom(state.scale * (event.deltaY < 0 ? 1.12 : .89), x, y);
+      }, { passive: false });
+      svg.addEventListener("pointerdown", (event) => {
+        if (event.target.closest(".node")) return;
+        state.dragging = true; state.startX = event.clientX; state.startY = event.clientY; state.originX = state.panX; state.originY = state.panY;
+        svg.classList.add("dragging"); svg.setPointerCapture(event.pointerId);
+      });
+      svg.addEventListener("pointermove", (event) => {
+        if (!state.dragging) return;
+        const box = svg.getBoundingClientRect();
+        state.panX = state.originX + ((event.clientX - state.startX) / box.width) * views[state.view].width;
+        state.panY = state.originY + ((event.clientY - state.startY) / box.height) * views[state.view].height;
+        applyTransform();
+      });
+      const endDrag = (event) => { if (!state.dragging) return; state.dragging = false; svg.classList.remove("dragging"); if (svg.hasPointerCapture(event.pointerId)) svg.releasePointerCapture(event.pointerId); };
+      svg.addEventListener("pointerup", endDrag);
+      svg.addEventListener("pointercancel", endDrag);
+      window.addEventListener("resize", () => { if (state.view) fitView(); });
+
+      render();
+      window.requestAnimationFrame(fitView);
+    })();
+  </script>
+</body>
+</html>

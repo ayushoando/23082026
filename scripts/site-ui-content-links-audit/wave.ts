@@ -317,9 +317,11 @@ export function waveStatusSummary(
   waveId: number,
 ): WaveStatusSummary {
   const checkpoint = store.createWaveCheckpoint(config, waveId);
+  const summaryStatus: WaveManifest["status"] =
+    checkpoint.status === "leased" ? "in-progress" : checkpoint.status;
   return Object.freeze({
     waveId,
-    status: checkpoint.status,
+    status: summaryStatus,
     entryCriteriaMet: checkpoint.entryCriteriaMet,
     ownedPartitionCount: checkpoint.ownedItemCount,
     terminalCount: checkpoint.terminalItemCount,

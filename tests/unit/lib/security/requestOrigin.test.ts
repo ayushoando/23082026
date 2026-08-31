@@ -14,8 +14,13 @@ function mockReq(headers: Record<string, string>, url = "http://localhost:3000/a
 }
 
 describe("isAllowedBrowserOrigin", () => {
-  it("allows requests with no Origin or Referer (non-browser)", () => {
-    expect(isAllowedBrowserOrigin(mockReq({}))).toBe(true);
+  it("allows requests with no Origin or Referer outside production (non-browser)", () => {
+    expect(isAllowedBrowserOrigin(mockReq({}), { NODE_ENV: "test" })).toBe(true);
+    expect(isAllowedBrowserOrigin(mockReq({}), { NODE_ENV: "development" })).toBe(true);
+  });
+
+  it("rejects requests with no Origin or Referer in production (SEC-H03)", () => {
+    expect(isAllowedBrowserOrigin(mockReq({}), { NODE_ENV: "production" })).toBe(false);
   });
 
   it("allows same-origin Origin header", () => {

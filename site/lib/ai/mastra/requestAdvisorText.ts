@@ -2,7 +2,7 @@ import "server-only";
 
 import type { Agent } from "@mastra/core/agent";
 
-import { getAdvisorAgent, type AdvisorRole } from "./advisorAgent";
+import { getAdvisorAgent } from "./advisorAgent";
 import { resolveAdvisorModelChain, toMastraModel, type AdvisorModelTarget } from "./providers";
 
 export type AdvisorChatMessage = {
@@ -99,36 +99,6 @@ async function requestAgentText(
 
   const output = await agent.generate(mastraMessages, executionOptions);
   return await output.text;
-}
-
-/**
- * Try each provider in the chain until one succeeds.
- * Abort errors are never retried (user cancelled).
- */
-async function requestWithFailover(
-  role: AdvisorRole,
-  messages: AdvisorChatMessage[],
-  options: RequestAdvisorMessagesOptions = {},
-): Promise<string> {
-  const chain = resolveAdvisorModelChain();
-  if (chain.length === 0) {
-    throw new Error("No AI providers configured");
-  }
-
-  const agent = await getAdvisorAgent(role);
-  let lastError: unknown;
-
-  for (const target of chain) {
-    try {
-      return await requestAgentText(agent, target, messages, options);
-    } catch (err) {
-      if (isAbortLikeError(err)) throw err;
-      lastError = err;
-      console.warn(`[advisor] ${target.label} failed, trying next provider:`, err);
-    }
-  }
-
-  throw lastError;
 }
 
 export async function requestAdvisorMessages(

@@ -129,16 +129,10 @@ describe("SITE-SEO-03 sitemap, robots, classification agreement", () => {
       "/quote-cart",
       "/tracking",
       "/access",
-      "/repo-store",
       "/choose-product",
     ]) {
       expect(getRouteClassification(route)?.indexable, route).toBe(false);
     }
-  });
-
-  it("classifies retired repo-store as redirect home", () => {
-    expect(getRouteClassification("/repo-store")?.classification).toBe("redirect");
-    expect(getRouteClassification("/repo-store")?.canonicalUrl).toContain("/");
   });
 
   it("emits robots noindex on utility page metadata", () => {

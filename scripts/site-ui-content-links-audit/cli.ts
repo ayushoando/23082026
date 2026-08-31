@@ -10,6 +10,9 @@
  *   wave:complete    — enforce exit criteria and close a wave.
  *   wave:invalidate  — invalidate a wave and cascade to owned partitions.
  *   manifest:open    — open (or resume) a run manifest and print summary.
+ *   wave:foundations — build Wave 1 task 2.2 foundation inventories, evidence,
+ *                      terminal matrix rows, and occurrence findings.
+ *   wave:static       — execute and checkpoint the complete Wave 1 static batch.
  *
  * Protected commands (test, build, gate, browser, hosted, performance) are
  * NOT wired here. They require separate explicit current-session authorization
@@ -24,6 +27,8 @@ import {
   verifyFailClosedArtifactPolicy,
 } from "./artifactPaths";
 import { loadAuditConfiguration } from "./config";
+import { runWave1Foundations } from "./wave1-foundations";
+import { runWave1StaticBatch } from "./wave1-static-batch";
 import {
   discoverCanonicalInventory,
   discoveryToAuditRecords,
@@ -198,6 +203,20 @@ export async function runAuditCommand(
   }
 
   // -------------------------------------------------------------------------
+  // wave:foundations — build Wave 1 task 2.2 static foundation evidence
+  // -------------------------------------------------------------------------
+  if (command === "wave:foundations") {
+    return runWave1Foundations(repositoryRoot, readOption(argv, "config"));
+  }
+
+  // -------------------------------------------------------------------------
+  // wave:static — execute and checkpoint the complete Wave 1 static batch
+  // -------------------------------------------------------------------------
+  if (command === "wave:static") {
+    return runWave1StaticBatch(repositoryRoot, readOption(argv, "config"));
+  }
+
+  // -------------------------------------------------------------------------
   // wave:run — open ManifestStore and start a wave
   // -------------------------------------------------------------------------
   if (command === "wave:run") {
@@ -288,7 +307,7 @@ export async function runAuditCommand(
 
   throw new Error(
     `Unknown audit command: ${command}. Valid commands: config:dry, discover, ` +
-    `wave:plan, wave:run, wave:checkpoint, wave:complete, wave:invalidate, manifest:open`,
+    `wave:plan, wave:foundations, wave:static, wave:run, wave:checkpoint, wave:complete, wave:invalidate, manifest:open`,
   );
 }
 

@@ -251,7 +251,7 @@ export const TASKS_5_12_TO_5_14_REPOSITORY_EVIDENCE: EvidenceRecord = {
     "The property tests are authored but unexecuted. Their presence is repository evidence only and is not a passing test result.",
   artifact: {
     authorship: "authored",
-    path: "tests/unit/planner/plannerValidationEvidence.property.test.ts",
+    path: "tests/unit/planner/plannerValidationEvidence.property.test.ts" as unknown as `plans/planner-comprehensive-audit/${string}`,
   },
 };
 

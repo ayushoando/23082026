@@ -1,4 +1,5 @@
 import type { ClientBadgeData } from "@/components/ClientBadge";
+import { TRUSTED_BY_CLIENTS } from "@/features/site/data/proof";
 import { buildWhatsAppHref } from "@/features/site/data/contact";
 
 export const ABOUT_PAGE_COPY = {
@@ -170,16 +171,20 @@ export const CLIENTS_PAGE_COPY = {
   heroTitleLead: "Trusted",
   heroTitleAccent: "clients.",
   heroSubtitle:
-    "Executed workplace deliveries across government, finance, energy, and manufacturing.",
+    "Executed workplace deliveries and selected client proof across government, finance, education, energy, and manufacturing.",
   heroSubtitleTemplate:
-    "{clients} organisations across government, finance, energy, and manufacturing.",
+    "{clients} organisations represented across government, finance, education, energy, and manufacturing.",
   heroBackgroundImage: "/assets/marketing/clients/DMRC/dmrc-1.webp",
-  eyebrow: "Case studies",
+  eyebrow: "Client proof",
   emptyTitle: "Gallery updating",
   emptyDescription:
-    "Installation photos are being prepared. Browse trusted clients or contact the team.",
+    "Installation photos are being prepared. Browse selected client proof or contact the team.",
   contactCta: "Contact us",
-  trustedCta: "Trusted by",
+  trustedCta: "View selected clients",
+  selectedClientsKicker: "Selected clients",
+  selectedClientsTitle: "A considered selection of client organisations.",
+  selectedClientsDescription:
+    "A curated set of verified marks complements the installation work shown above. This is not an exhaustive public directory.",
   planningCta: "Request planning call",
   pullQuotes: [
     {
@@ -203,69 +208,8 @@ export const CLIENTS_PAGE_COPY = {
 /** @deprecated Use CLIENTS_PAGE_COPY */
 export const PROJECTS_PAGE_COPY = CLIENTS_PAGE_COPY;
 
-export const CLIENTS_PAGE_CLIENTS: ClientBadgeData[] = [
-  { name: "Adani Power", sector: "Energy" },
-  { name: "Adecco", sector: "Corporate" },
-  { name: "Ambuja Neotia", sector: "Corporate" },
-  { name: "Annapurna Finance", sector: "Finance" },
-  { name: "Asian Paints", sector: "FMCG" },
-  { name: "Azim Premji Foundation", sector: "NGO / UN" },
-  { name: "BBC Media Action", sector: "NGO / UN" },
-  { name: "BHEL", sector: "Energy" },
-  { name: "Bureau of Indian Standards", sector: "Government" },
-  { name: "BNP Paribas", sector: "Finance" },
-  { name: "BSPHCL", sector: "Energy", location: "Bihar" },
-  { name: "Bandhan Bank", sector: "Finance" },
-  { name: "Big Bazaar", sector: "FMCG" },
-  { name: "Government of Bihar", sector: "Government", location: "Patna" },
-  { name: "Indian Army", sector: "Government" },
-  { name: "Birla School", sector: "Education" },
-  { name: "CIMP", sector: "Education", location: "Patna" },
-  { name: "CRI Pumps", sector: "Manufacturing" },
-  { name: "Canara Bank", sector: "Finance" },
-  { name: "Coca-Cola", sector: "FMCG" },
-  { name: "DMRC", sector: "Government", location: "New Delhi" },
-  { name: "Dalmia Bharat Cement", sector: "Manufacturing" },
-  { name: "Essel Utilities", sector: "Energy" },
-  { name: "FHI 360", sector: "NGO / UN" },
-  { name: "Franklin Templeton Investments", sector: "Finance" },
-  { name: "D. Goenka School", sector: "Education" },
-  { name: "Government of India", sector: "Government" },
-  { name: "HDFC", sector: "Finance" },
-  { name: "HelpAge India", sector: "NGO / UN" },
-  { name: "Hyundai", sector: "Automotive" },
-  { name: "IDBI Bank", sector: "Finance" },
-  { name: "ITC Limited", sector: "FMCG" },
-  { name: "Income Tax Department", sector: "Government" },
-  { name: "Indian Bank", sector: "Finance" },
-  { name: "IndianOil", sector: "Energy" },
-  { name: "Amara Raja", sector: "Manufacturing" },
-  { name: "JSW", sector: "Manufacturing" },
-  { name: "Janalakshmi", sector: "Finance" },
-  { name: "L&T", sector: "Manufacturing" },
-  { name: "Maruti Suzuki", sector: "Automotive" },
-  { name: "NTPC", sector: "Energy" },
-  { name: "NABARD", sector: "Finance" },
-  { name: "SAIL", sector: "Manufacturing" },
-  { name: "State Bank of India", sector: "Finance" },
-  { name: "SITI Networks", sector: "Telecom" },
-  { name: "Shriram", sector: "Finance" },
-  { name: "Sonalika International", sector: "Manufacturing" },
-  { name: "Survey of India", sector: "Government" },
-  { name: "Syndicate Bank", sector: "Finance" },
-  { name: "Tata Steel", sector: "Manufacturing" },
-  { name: "Tata Motors", sector: "Automotive" },
-  { name: "Titan", sector: "Manufacturing", location: "Patna, Bihar" },
-  { name: "TVS Group", sector: "Automotive" },
-  { name: "United Nations", sector: "NGO / UN" },
-  { name: "Usha International", sector: "Manufacturing", location: "New Delhi" },
-  { name: "Ujjivan Small Finance Bank", sector: "Finance" },
-  { name: "UNICEF", sector: "NGO / UN" },
-  { name: "United Spirits", sector: "FMCG" },
-  { name: "Vodafone", sector: "Telecom" },
-  { name: "World Health Organization", sector: "NGO / UN" },
-  { name: "ZTE", sector: "Telecom" },
-];
+/** Canonical curated proof selection; the full identity universe lives in clientRegistry.ts. */
+export const CLIENTS_PAGE_CLIENTS: ClientBadgeData[] = TRUSTED_BY_CLIENTS;
 
 /** @deprecated Use CLIENTS_PAGE_CLIENTS */
 export const PROJECTS_PAGE_CLIENTS = CLIENTS_PAGE_CLIENTS;

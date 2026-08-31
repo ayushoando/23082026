@@ -89,11 +89,11 @@ vi.mock("@/components/shared/RouteCtaBand", () => ({
   ),
 }));
 
-import SustainabilityPage, { metadata } from "@/app/(site)/sustainability/page";
+import SustainabilityPage, { generateMetadata } from "@/app/(site)/sustainability/page";
 
 describe("app/(site)/sustainability/page.tsx — behavior", () => {
-  it("exports canonical SEO metadata with absolute single-brand title", () => {
-    expect(metadata).toEqual(SUSTAINABILITY_PAGE_METADATA);
+  it("exports canonical SEO metadata with absolute single-brand title", async () => {
+    expect(await generateMetadata()).toEqual(SUSTAINABILITY_PAGE_METADATA);
     const titleValue =
       typeof SUSTAINABILITY_PAGE_METADATA.title === "string"
         ? SUSTAINABILITY_PAGE_METADATA.title

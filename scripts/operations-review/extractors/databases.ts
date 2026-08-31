@@ -11,8 +11,8 @@ import {
 } from "../models";
 import type { RepositorySource } from "../sourceAdapter";
 
-const PRODUCTS_SURFACE: Surface = "products-database";
-const ADMIN_SURFACE: Surface = "admin-database";
+const PRODUCTS_SURFACE: "products-database" = "products-database";
+const ADMIN_SURFACE: "admin-database" = "admin-database";
 
 // ---------------------------------------------------------------------------
 // Public interfaces

@@ -1,9 +1,13 @@
 import { NextResponse } from "next/server";
 import { readCatalogAssetBytes } from "@/lib/storage/r2Catalog";
+import { enforcePublicApiRateLimit } from "@/app/api/_lib/public";
 
 type Ctx = { params: Promise<{ path: string[] }> };
 
-export async function GET(_request: Request, context: Ctx) {
+export async function GET(request: Request, context: Ctx) {
+  const rateError = await enforcePublicApiRateLimit(request, "files-catalog:get", 60);
+  if (rateError) return rateError;
+
   const { path } = await context.params;
   const segments = (path ?? []).map((part) => part.trim()).filter(Boolean);
   if (segments.length === 0) {

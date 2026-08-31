@@ -184,7 +184,6 @@ describe("public route matrix — classification honesty", () => {
       { path: "/support-ivr", classification: "redirect" },
       { path: "/tracking", classification: "redirect" },
       { path: "/products/category/seating", classification: "redirect" },
-      { path: "/repo-store", classification: "redirect" },
       { path: "/login", classification: "redirect" },
       { path: "/portal/svg-catalog", classification: "redirect" },
       { path: "/portal/svg-catalog/side-table-001", classification: "redirect" },

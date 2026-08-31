@@ -6,232 +6,65 @@
 
 ---
 
-## Wave 1: Critical Security (Week 1) — Est. 12-16 hours
+## Wave 1: Critical Security (Week 1) — Est. 2-5 hours (revised)
 
-### SEC-R01: Add Next.js Middleware for Defense-in-Depth Auth
+### CORRECTION — SEC-R01 and SEC-R02 were based on a false premise
 
-**Finding:** SEC-C01 — No middleware.ts exists
-**Priority:** P0 — Critical
-**Effort:** 4-6 hours
-**Owner:** Core team
-**Risk if skipped:** Any new route added without `withAuth` is silently public
+The original security audit searched for `middleware.ts` and found none, concluding there was no defense-in-depth auth layer or CSP on HTML pages. **This was a miss, not a real gap.**
 
-**Approach:**
+Next.js 16 renamed `middleware.ts` → `proxy.ts` (must be named `proxy`, live at the app root). This project already has a comprehensive `site/proxy.ts` (verified against its own `NEXT.JS 16 PROXY` header comment, the absence of any `middleware` doc page in `node_modules/next/dist/docs/`, and the existing `tests/unit/proxy.test.ts` coverage). It already implements:
 
-Create `site/middleware.ts` that enforces route-level access control as a first gate:
+- **Defense-in-depth auth** — `isProtectedPath()` blocks `/admin`, `/dashboard`, `/portal` at the edge via session cookie check, before any handler runs. Dev bypass respected. Member-only write APIs (`/api/plans`, `/api/admin`, etc.) return 403 for unauthenticated mutation attempts.
+- **Full CSP with per-request nonce** — `buildContentSecurityPolicy()` generates a fresh nonce per request (`createCspNonce()`), forwards it via `x-nonce` header (read by `getRequestNonce()` in `site/app/(site)/layout.tsx`), and sets `script-src 'self' 'nonce-...' blob: <analytics origins>`. Canvas-heavy routes (`/ooplanner`, `/oostudio`) get `'unsafe-eval'` scoped only to those paths.
+- **HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, COOP, CORP** — all set in `applySecurityHeaders()`.
+- **Maintenance mode fail-closed for mutations** — write methods outside a tiny allowlist get 503 during readonly maintenance.
+- **www→apex redirect, retired-path redirects** — all handled before the auth gate.
 
-```typescript
-// site/middleware.ts
-import { NextResponse, type NextRequest } from "next/server";
-
-// Routes that require authentication at the middleware level
-const PROTECTED_PREFIXES = [
-  "/admin",
-  "/api/admin",
-  "/api/Studio",
-  "/api/Planner",
-  "/api/plans",
-  "/api/audit",
-  "/api/exports",
-  "/api/files/exports",
-  "/api/files/projects",
-  "/api/files/uploads",
-  "/oostudio",
-  "/ooplanner",
-  "/dashboard",
-  "/crm",
-  "/ops",
-];
-
-// Routes that are always public (no middleware auth check)
-const PUBLIC_PREFIXES = [
-  "/api/health",
-  "/api/csrf",
-  "/api/route",
-  "/api/products",
-  "/api/categories",
-  "/api/nav-",
-  "/api/filter",
-  "/api/business-stats",
-  "/api/theme/active",
-  "/api/customer-queries",
-  "/api/tracking",
-  "/api/log-error",
-  "/api/generate-alt",
-  "/api/files/catalog",
-  "/_next",
-  "/favicon",
-  "/icon",
-];
-
-function isPublicRoute(pathname: string): boolean {
-  return PUBLIC_PREFIXES.some((prefix) => pathname.startsWith(prefix));
-}
-
-function isProtectedRoute(pathname: string): boolean {
-  return PROTECTED_PREFIXES.some((prefix) => pathname.startsWith(prefix));
-}
-
-export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-
-  // Public routes: pass through
-  if (isPublicRoute(pathname)) {
-    return NextResponse.next();
-  }
-
-  // Protected routes: check for session cookie
-  if (isProtectedRoute(pathname)) {
-    const hasSession =
-      request.cookies.has("sb-rxzpznmxbaoxpikowmfc-auth-token") ||
-      request.cookies.has("sb-rxzpznmxbaoxpikowmfc-auth-token.0");
-
-    // Dev bypass
-    if (process.env.NODE_ENV !== "production" &&
-        process.env.DEV_AUTH_BYPASS === "1") {
-      return NextResponse.next();
-    }
-
-    if (!hasSession) {
-      // API routes: return 401
-      if (pathname.startsWith("/api/")) {
-        return NextResponse.json(
-          { error: "AUTH_REQUIRED", message: "Authentication required" },
-          { status: 401 }
-        );
-      }
-      // Page routes: redirect to login
-      const url = request.nextUrl.clone();
-      url.pathname = "/access";
-      url.searchParams.set("next", pathname);
-      return NextResponse.redirect(url);
-    }
-  }
-
-  return NextResponse.next();
-}
-
-export const config = {
-  matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|icon|site.webmanifest|assets).*)",
-  ],
-};
-```
-
-**Implementation steps:**
-1. Create `site/middleware.ts` with the pattern above
-2. Read Next.js 16 middleware docs from `node_modules/next/dist/docs/` before implementation
-3. Verify with `pnpm run typecheck`
-4. Test: existing auth still works, public routes remain accessible, protected routes redirect
-5. Run `pnpm run test:audit:api-routes` to cross-check
-
-**Important:** This is defense-in-depth only. The existing `withAuth` per-route guards remain the primary auth layer. Middleware provides a fast-rejection first gate.
+**No action needed.** SEC-R01 and SEC-R02 are closed as false positives. See `SEC-R01-CLOSED` below for the verification evidence.
 
 ---
 
-### SEC-R02: Add Content Security Policy to HTML Pages
+### SEC-R01-CLOSED: Verification Evidence
 
-**Finding:** SEC-C02 — No CSP on HTML pages
-**Priority:** P0 — Critical
-**Effort:** 4-6 hours
-**Owner:** Core team
+| Claim in original audit | Actual state |
+|---|---|
+| No middleware.ts exists | Correct — but irrelevant. Next 16 uses `proxy.ts`, confirmed present at `site/proxy.ts` |
+| No middleware-level auth | False — `isProtectedPath()` + `hasSessionAuthCookies()` gate `/admin`, `/dashboard`, `/portal` at the edge |
+| No CSP on HTML pages | False — `buildContentSecurityPolicy()` sets CSP with nonce on every non-static request via the `matcher` config |
+| Any new route without `withAuth` is silently public | Partially true only for API routes not covered by `MEMBER_ONLY_WRITE_PREFIXES`; page routes under `/admin`, `/dashboard`, `/portal` ARE covered by `isProtectedPath()` |
 
-**Approach:**
-
-Add CSP headers to the site's HTML responses in `next.config.js`. Use the existing nonce infrastructure in `site/app/(site)/layout.tsx`.
-
-**Step 1:** Add CSP header to `config/build/next.config.js` `headers()`:
-
-```javascript
-{
-  source: "/((?!api/).*)",  // All non-API routes
-  headers: [
-    {
-      key: "Content-Security-Policy",
-      value: [
-        "default-src 'self'",
-        "script-src 'self' 'nonce-{NONCE}' https://va.vercel-scripts.com",
-        "style-src 'self' 'unsafe-inline'",  // Tailwind needs inline styles
-        "img-src 'self' data: blob: https://oando.co.in https://*.supabase.co",
-        "font-src 'self'",
-        "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://openrouter.ai",
-        "frame-ancestors 'self'",
-        "base-uri 'self'",
-        "form-action 'self'",
-        "object-src 'none'",
-      ].join("; "),
-    },
-    {
-      key: "X-Content-Type-Options",
-      value: "nosniff",
-    },
-    {
-      key: "X-Frame-Options",
-      value: "SAMEORIGIN",
-    },
-    {
-      key: "Referrer-Policy",
-      value: "strict-origin-when-cross-origin",
-    },
-  ],
-},
-```
-
-**Step 2:** Since Next.js doesn't support nonce substitution in static headers, implement CSP via the middleware created in SEC-R01 using the nonce from the layout:
-
-```typescript
-// In middleware.ts, add response headers
-const nonce = crypto.randomUUID();
-const response = NextResponse.next();
-response.headers.set("x-nonce", nonce);
-response.headers.set("Content-Security-Policy",
-  `default-src 'self'; script-src 'self' 'nonce-${nonce}' https://va.vercel-scripts.com; ...`
-);
-```
-
-**Step 3:** Verify the layout's `getRequestNonce()` reads the nonce from the middleware's header.
-
-**Implementation steps:**
-1. Add CSP headers to middleware (not next.config.js — nonce requires per-request generation)
-2. Test locally that all pages render without CSP violations
-3. Start in report-only mode: `Content-Security-Policy-Report-Only` header
-4. Monitor for violations for 1 week
-5. Switch to enforcement mode
-6. Run `pnpm run gate:fast` to verify no regressions
+**Residual gap:** `isProtectedPath()` does not cover `/oostudio` or `/ooplanner` — these are intentionally treated as guest-accessible product surfaces (`GUEST_PRODUCT_SURFACE_PREFIXES`) with auth enforced at the layout level instead (see STU-FIX-01, already applied this session: `requireAuthUser("/oostudio", "admin")`). This is a deliberate design choice, not an oversight — documented in `site/proxy.ts` comments.
 
 ---
 
-### SEC-R03: Add Rate Limiting to File Serving Routes
+### SEC-R03: Add Rate Limiting to File Serving Routes (REVISED — narrower scope)
 
 **Finding:** SEC-H01 + SEC-H04 — File routes lack auth and rate limiting
 **Priority:** P1 — High
-**Effort:** 2-3 hours
+**Effort:** 15 minutes (revised down from 2-3 hours after verification)
 **Owner:** Core team
 
-**Approach:**
+**Verification result:** 4 of 5 file routes already have `withAuth` + rate limiting:
+- `exports/[filename]/route.ts` — `role: "member"`, 60/min ✓
+- `furniture/[filename]/route.ts` — `role: "guest"`, 120/min ✓
+- `projects/[filename]/route.ts` — `role: "member"`, 60/min ✓
+- `uploads/[filename]/route.ts` — `role: "member"`, 60/min ✓
 
-Add `enforcePublicApiRateLimit` to all file serving routes:
+**Only `catalog/[...path]/route.ts` is genuinely unprotected** — no auth (correct, it's public catalog imagery) but no rate limit either.
 
+**Fix applied:**
 ```typescript
 // site/app/api/files/catalog/[...path]/route.ts
 import { enforcePublicApiRateLimit } from "@/app/api/_lib/public";
 
-export async function GET(request: Request, context: Ctx) {
-  const rateError = await enforcePublicApiRateLimit(request, "files-catalog:get", 60);
+export async function GET(_request: Request, context: Ctx) {
+  const rateError = await enforcePublicApiRateLimit(_request, "files-catalog:get", 60);
   if (rateError) return rateError;
-
-  // ... existing logic
+  // ... existing logic unchanged
 }
 ```
 
-**Apply to:**
-- `site/app/api/files/catalog/[...path]/route.ts` — 60 req/min (public catalog assets)
-- `site/app/api/files/exports/[filename]/route.ts` — 20 req/min (verify auth exists)
-- `site/app/api/files/furniture/[filename]/route.ts` — 20 req/min (verify auth exists)
-- `site/app/api/files/projects/[filename]/route.ts` — 20 req/min (verify auth exists)
-- `site/app/api/files/uploads/[filename]/route.ts` — 20 req/min (verify auth exists)
-
-Also verify path traversal safety in `readCatalogAssetBytes`.
+**Status: ✅ Applied.**
 
 ---
 
@@ -244,28 +77,7 @@ Also verify path traversal safety in `readCatalogAssetBytes`.
 
 **Approach:**
 
-Add token-based auth or restrict to internal network:
-
-```typescript
-// site/app/api/metrics/route.ts
-export async function GET(request: Request) {
-  if (process.env.NODE_ENV === "production" &&
-      process.env.OBSERVABILITY_METRICS_ENABLED !== "1") {
-    return new Response("Not Found", { status: 404 });
-  }
-
-  // Add auth: Bearer token or internal-only check
-  const authHeader = request.headers.get("authorization");
-  const expectedToken = process.env.METRICS_AUTH_TOKEN;
-  if (expectedToken && authHeader !== `Bearer ${expectedToken}`) {
-    return new Response("Unauthorized", { status: 401 });
-  }
-
-  // ... existing logic
-}
-```
-
-Add `METRICS_AUTH_TOKEN` to `.env.example`.
+Add token-based auth. **Status: ✅ Applied** — `site/app/api/metrics/route.ts` now requires `METRICS_AUTH_TOKEN` (via timing-safe comparison) whenever the token is configured. `.env.example` documents the new var.
 
 ---
 
@@ -275,28 +87,10 @@ Add `METRICS_AUTH_TOKEN` to `.env.example`.
 
 **Finding:** SEC-H03 — Origin check allows missing headers
 **Priority:** P1 — High
-**Effort:** 2 hours
+**Effort:** 30 minutes (revised down)
+**Status: ✅ Applied**
 
-**Approach:**
-
-Modify `isAllowedBrowserOrigin` to reject when both headers are missing in production:
-
-```typescript
-export function isAllowedBrowserOrigin(req, options?: { allowMissing?: boolean }): boolean {
-  const originHeader = req.headers.get("origin");
-  const refererHeader = req.headers.get("referer");
-
-  if (!originHeader && !refererHeader) {
-    // In production, require at least one header for browser requests
-    if (options?.allowMissing === true) return true;
-    if (process.env.NODE_ENV === "production") return false;
-    return true; // Dev: allow for curl/tests
-  }
-  // ... rest unchanged
-}
-```
-
-Update call sites to pass `{ allowMissing: true }` only for routes that intentionally accept server-to-server requests.
+`isAllowedBrowserOrigin()` now takes an injectable `env` parameter (matching the codebase's existing pattern in `devAuthBypass.ts`) and fails closed when both `Origin` and `Referer` are absent **in production only**. Non-production (dev, test, CI) keeps the permissive behavior for curl/server-to-server calls. Only caller (`customer-queries/route.ts`) needed no changes — it calls with the default `process.env`. Test file updated with a new production-mode case.
 
 ---
 
@@ -597,12 +391,15 @@ if (contentLength > MAX_MULTIPART_UPLOAD_BYTES) {
 
 ## Summary Timeline
 
-| Week | Wave | Key deliverables |
-|---|---|---|
-| Week 1 | Wave 1: Critical Security | middleware.ts, CSP headers, file route rate limits, metrics auth |
-| Week 2 | Wave 2: High Security + Critical SEO | Origin check fix, 404 URL fixes, robots review, redirect fixes |
-| Week 3-4 | Wave 3: Medium Issues | Content quality fixes, CORS policy, token deprecation, tracking auth |
-| Ongoing | Wave 4: SEO Growth | Image optimization, internal linking, monitoring setup |
+| Week | Wave | Key deliverables | Status |
+|---|---|---|---|
+| — | Wave 1 (corrected) | SEC-R01/R02 closed as false positives (proxy.ts already covers this); SEC-R03 file-route rate limit; SEC-R04 metrics auth | ✅ Done this session |
+| — | Wave 2 (security part) | SEC-R05 origin check fail-closed in production | ✅ Done this session |
+| Week 2 | Wave 2 (SEO part) | 404 URL fixes, robots review, redirect fixes | Pending — needs live Search Console export |
+| Week 3-4 | Wave 3: Medium Issues | Content quality fixes, CORS policy, token deprecation, tracking auth | Pending |
+| Ongoing | Wave 4: SEO Growth | Image optimization, internal linking, monitoring setup | Pending |
+
+**Session correction:** The original audit's two "Critical" findings (SEC-C01 no middleware, SEC-C02 no CSP) were false positives — it missed that Next.js 16 renamed `middleware.ts` to `proxy.ts`, and `site/proxy.ts` already implements both. Actual Wave 1/2 security work this session totaled ~1 hour (3 small fixes) instead of the originally estimated 14-20 hours.
 
 ---
 

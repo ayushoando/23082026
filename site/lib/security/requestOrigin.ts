@@ -13,21 +13,27 @@ function parseOrigin(value: string | null): URL | null {
 }
 
 /**
- * True when Origin/Referer matches the request host (or is absent — non-browser clients).
- * Missing Origin+Referer is allowed for same-site form tools and server-to-server tests;
- * cross-origin browsers always send Origin on POST.
+ * True when Origin/Referer matches the request host.
+ *
+ * Missing Origin+Referer is allowed in non-production (curl, unit tests,
+ * server-to-server calls in dev) but fails closed in production: a fetch/XHR
+ * POST from a real browser always carries Origin, so an unauthenticated
+ * mutation with neither header in production is treated as untrusted
+ * (SEC-H03 — previously allowed unconditionally).
  */
-export function isAllowedBrowserOrigin(req: {
-  headers: { get(name: string): string | null };
-  nextUrl?: { origin: string };
-  url?: string;
-}): boolean {
+export function isAllowedBrowserOrigin(
+  req: {
+    headers: { get(name: string): string | null };
+    nextUrl?: { origin: string };
+    url?: string;
+  },
+  env: NodeJS.ProcessEnv = process.env,
+): boolean {
   const originHeader = req.headers.get("origin");
   const refererHeader = req.headers.get("referer");
 
-  // Non-browser callers (curl, unit tests) often omit both.
   if (!originHeader && !refererHeader) {
-    return true;
+    return env.NODE_ENV !== "production";
   }
 
   let requestOrigin: string;

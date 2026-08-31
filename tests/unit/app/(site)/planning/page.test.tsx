@@ -1,7 +1,7 @@
 import "@/tests/helpers/nextIntlServerEnMock";
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import Page, { metadata } from "@/app/(site)/planning/page";
+import Page, { generateMetadata } from "@/app/(site)/planning/page";
 import { PLANNING_PAGE_METADATA } from "@/features/site/data/routeMetadata";
 
 vi.mock("@gsap/react", () => ({
@@ -37,8 +37,8 @@ vi.mock("@/components/shared/RouteCtaBand", () => ({
   ),
 }));
 describe("app/(site)/planning/page.tsx", () => {
-  it("exports registry planning metadata (SITE-SEO-01 lockstep)", () => {
-    expect(metadata).toBe(PLANNING_PAGE_METADATA);
+  it("exports registry planning metadata (SITE-SEO-01 lockstep)", async () => {
+    expect(await generateMetadata()).toEqual(PLANNING_PAGE_METADATA);
   });
 
   it("renders planner entry + contact paths without Admin", async () => {

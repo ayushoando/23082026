@@ -1,7 +1,7 @@
 import "../../../../helpers/nextIntlServerEnMock";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, within } from "@testing-library/react";
-import ClientsPage, { metadata } from "@/app/(site)/clients/page";
+import ClientsPage, { generateMetadata } from "@/app/(site)/clients/page";
 import { CLIENTS_PAGE_METADATA } from "@/features/site/data/routeMetadata";
 import { CLIENTS_PAGE_COPY, CLIENTS_WORK } from "@/features/site/data/routeCopy";
 import { expectHomeMarketingShell } from "@/tests/unit/app/(site)/_template.homepage.test";
@@ -112,8 +112,8 @@ describe("app/(site)/clients/page.tsx — behavior", () => {
     vi.clearAllMocks();
   });
 
-  it("exports canonical SEO metadata with absolute single-brand title", () => {
-    expect(metadata).toEqual(CLIENTS_PAGE_METADATA);
+  it("exports canonical SEO metadata with absolute single-brand title", async () => {
+    expect(await generateMetadata()).toEqual(CLIENTS_PAGE_METADATA);
     const titleValue =
       typeof CLIENTS_PAGE_METADATA.title === "string"
         ? CLIENTS_PAGE_METADATA.title

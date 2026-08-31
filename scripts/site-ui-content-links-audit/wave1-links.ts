@@ -177,7 +177,6 @@ const KNOWN_ROUTE_PATTERNS = new Set([
   "/support-ivr",
   "/tracking",
   "/templates",
-  "/repo-store",
   "/oando-planner",
   "/buddy-planner",
   "/crm",

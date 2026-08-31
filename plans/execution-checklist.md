@@ -94,3 +94,61 @@ Add to `.env.local` and `.env.example`:
 2. Update `lanceVectorStore.test.ts` and `preservedModules.test.ts` to test the new Vectorize store
 3. Run `pnpm run gate:fast` to verify full test suite
 4. Deploy Worker: `pnpm run worker:deploy`
+
+
+---
+
+## Phase 6: SEO/Security Remedy Plan Execution (plans/seosec/) ✅
+
+### Critical correction
+- **SEC-C01/SEC-C02 closed as false positives.** Original audit searched for `middleware.ts` and found none — but missed that Next.js 16 renamed the convention to `proxy.ts`. `site/proxy.ts` already implements defense-in-depth auth (`isProtectedPath()`) AND full CSP with per-request nonces (`buildContentSecurityPolicy()`). Verified via the file's own header comment, absence of any `middleware` doc page in `node_modules/next/dist/docs/`, and 54 passing tests in `tests/unit/proxy.test.ts`.
+
+### Fixes applied
+- [x] **SEC-R03** — Added `enforcePublicApiRateLimit` (60/min) to `site/app/api/files/catalog/[...path]/route.ts`. Verified the other 4 file routes already had `withAuth` + rate limits (original finding overstated scope).
+- [x] **SEC-R04** — Added `METRICS_AUTH_TOKEN` bearer-token gate (timing-safe compare) to `site/app/api/metrics/route.ts`. Documented in `.env.example`.
+- [x] **SEC-R05** — `isAllowedBrowserOrigin()` now fails closed on missing Origin/Referer in production (injectable `env` param, matches `devAuthBypass.ts` pattern). Updated `tests/unit/lib/security/requestOrigin.test.ts` with production-mode case.
+
+### Verification
+- `pnpm run typecheck` — clean
+- `pnpm exec vitest run tests/unit/lib/security/requestOrigin.test.ts tests/unit/proxy.test.ts` — 60/60 pass
+- Updated `plans/seosec/remedy-plan.md` and `plans/seosec/security-audit-report.md` with corrections and fix status
+
+### Files modified
+| File | Change |
+|---|---|
+| `site/app/api/files/catalog/[...path]/route.ts` | Added rate limiting |
+| `site/app/api/metrics/route.ts` | Added bearer-token auth gate |
+| `.env.example` | Documented `METRICS_AUTH_TOKEN` |
+| `site/lib/security/requestOrigin.ts` | Fail-closed in production for missing Origin/Referer |
+| `tests/unit/lib/security/requestOrigin.test.ts` | Added production-mode test case |
+| `plans/seosec/remedy-plan.md` | Corrected Wave 1/2, marked fixes done |
+| `plans/seosec/security-audit-report.md` | Corrected SEC-C01/C02, updated SEC-H01-H04 |
+
+### Remaining in plans/seosec/ (not executed — needs live data or is content/ops work)
+- SEO-R01 through SEO-R09 — require live Google Search Console export access
+- SEC-R06 (CORS policy) — needs product decision on whether cross-origin consumers are planned
+- SEC-R07 (deprecate static admin token) — needs external consumer migration coordination
+- SEC-R08 (tracking route anon key + RLS) — needs a new migration + RLS policy design
+- SEC-R09 (upload content-length pre-check) — small, still pending
+
+
+---
+
+## Phase 7: Studio Remedy Plan — STU-FIX-03 (final item) ✅
+
+STU-FIX-01 and STU-FIX-02 were already applied earlier this session (Phase 1). This phase closed the last item:
+
+- [x] **STU-FIX-03** — `exportPDF` in `site/lib/Studio/studioExporters.ts` now returns `boolean`; returns `false` and skips jsPDF construction when `contentBounds(canvas)` is `null` (empty canvas), `true` on real save.
+- [x] Added test coverage: `tests/unit/studio/studioExporters.test.ts` — 2 new cases (empty-canvas no-op, normal save), mocked `jspdf` via `vi.hoisted`. 14/14 tests pass.
+- [x] Updated `plans/studio-audit/remedy-plan.md`, `studio-audit-report.md`, `README.md` — all 3 findings (STU-C01, STU-H01/H02, STU-M03) marked fixed with inline evidence.
+
+**plans/studio-audit/ is now fully closed** — audit + remedy plan both complete.
+
+### Files modified
+| File | Change |
+|---|---|
+| `site/lib/Studio/studioExporters.ts` | `exportPDF` returns `boolean`, guards against empty canvas |
+| `tests/unit/studio/studioExporters.test.ts` | Added `exportPDF` test coverage with mocked `jspdf` |
+| `plans/studio-audit/remedy-plan.md` | Marked all 3 fixes done with evidence |
+| `plans/studio-audit/studio-audit-report.md` | Updated severity summary + 3 findings with fix status |
+| `plans/studio-audit/README.md` | Updated to reflect full closure |

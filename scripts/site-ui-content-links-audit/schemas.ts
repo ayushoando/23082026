@@ -448,7 +448,7 @@ export const SharedShellRecordSchema = z
 
 const OccurrenceSelectorSchema = z
   .object({
-    subjectIds: StringListSchema,
+    subjectIds: OptionalStringListSchema,
     stateIds: OptionalStringListSchema,
     viewportIds: OptionalStringListSchema,
     browserIds: OptionalStringListSchema,
@@ -561,7 +561,7 @@ export const CoverageMatrixRowSchema = z
     browserId: NonEmptyStringSchema,
     accessContextId: NonEmptyStringSchema,
     languageId: z.enum(["en", "hi"]),
-    applicableDimensionIds: StringListSchema,
+    applicableDimensionIds: z.array(NonEmptyStringSchema),
     waveId: NonEmptyStringSchema,
     status: z.union([z.literal("pending"), ResultClassificationSchema]),
     findingId: NonEmptyStringSchema.optional(),

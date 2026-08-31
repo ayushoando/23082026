@@ -10,14 +10,14 @@
 
 ## Executive Summary
 
-The application demonstrates **strong security fundamentals** with a well-designed auth wrapper (`withAuth`), comprehensive rate limiting, CSRF protection, and proper secret isolation. However, there are **6 critical/high findings** and **9 medium/low findings** that need attention. The most impactful gap is the absence of a Next.js `middleware.ts` for defense-in-depth auth enforcement, and missing Content Security Policy on HTML pages.
+The application demonstrates **strong security fundamentals** with a well-designed auth wrapper (`withAuth`), comprehensive rate limiting, CSRF protection, proper secret isolation, and (as corrected below) a thorough edge-layer proxy providing defense-in-depth auth and CSP. Of the original 6 critical/high findings, **2 were false positives** (the audit searched for `middleware.ts` by name and missed that Next.js 16 renamed the convention to `proxy.ts`; `site/proxy.ts` already implements both defense-in-depth auth and full CSP with per-request nonces). The remaining findings — file route rate limiting, metrics endpoint auth, and the origin-check fail-open gap — have been fixed this session.
 
-### Severity Summary
+### Severity Summary (updated post-remediation)
 
 | Severity | Count | Status |
 |----------|-------|--------|
-| Critical | 2 | Needs immediate action |
-| High | 4 | Needs action within 2 weeks |
+| Critical | 0 (was 2) | Both closed as false positives — see SEC-C01/C02 correction below |
+| High | 4 | 3 fixed this session (SEC-H01, SEC-H02, SEC-H03); 1 remaining (SEC-H04, see below) |
 | Medium | 5 | Planned remediation |
 | Low | 4 | Best-practice hardening |
 | Informational | 3 | Acknowledged strengths |
@@ -41,159 +41,85 @@ The application demonstrates **strong security fundamentals** with a well-design
 
 ---
 
-## Critical Findings
+## Critical Findings — CORRECTED (both closed as false positives)
 
-### SEC-C01: No Next.js Middleware for Auth Enforcement
+### SEC-C01 / SEC-C02: CLOSED — proxy.ts already covers both
 
-**Severity:** CRITICAL
-**OWASP:** A01 Broken Access Control
-**Location:** Project root — `middleware.ts` is absent
+**Original claim:** No `middleware.ts` exists, so there's no defense-in-depth auth or CSP on HTML pages.
 
-**Finding:** There is no `middleware.ts` at the project or site root. All authentication and authorization is enforced per-route-handler via the `withAuth` HOF (`site/features/shared/api/withAuth.ts`) or inline `requireAdminSession`/`enforceAdminRateLimit` calls.
+**Correction:** Next.js 16 renamed `middleware.ts` to `proxy.ts` (file must be named `proxy`, live at the app root). This repo has a comprehensive `site/proxy.ts` — the original audit's file-name search missed it. Verified by:
+- `site/proxy.ts` contains a header comment: `NEXT.JS 16 PROXY — Must be named 'proxy' and placed at the root of the project`
+- No `middleware` doc page exists anywhere in `node_modules/next/dist/docs/`
+- `tests/unit/proxy.test.ts` has 54 passing tests covering this exact file
 
-**Risk:** If a developer adds a new API route or page and forgets to wrap it with auth, it is **silently open to the public**. This is the #1 OWASP 2025 risk category. The CVE-2025-29927 vulnerability demonstrated that even middleware-based auth can be bypassed, but having no middleware at all means there is zero defense-in-depth at the routing layer.
+**What `site/proxy.ts` actually implements:**
+- `isProtectedPath()` blocks `/admin`, `/dashboard`, `/portal` at the edge via `hasSessionAuthCookies()`, before any handler or layout runs — this **is** defense-in-depth auth
+- `buildContentSecurityPolicy()` generates a fresh nonce per request and sets `script-src 'self' 'nonce-...'` on every non-static-asset request (see `matcher` config) — this **is** CSP on HTML pages, with the nonce forwarded via `x-nonce` header and consumed by `getRequestNonce()` in `site/app/(site)/layout.tsx`
+- HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, COOP, CORP — all set in `applySecurityHeaders()`
+- Member-only write API blocking (`isMemberOnlyWriteApi()`) returns 403 for unauthenticated mutations on `/api/plans`, `/api/admin`, etc.
+- Maintenance-mode fail-closed for mutations outside a tiny allowlist
 
-**Evidence:**
-- No `middleware.ts` anywhere outside `node_modules/`
-- `site/app/api/files/catalog/[...path]/route.ts` — serves R2 catalog assets with **no auth and no rate limiting**
-- `site/app/api/route.ts` — health-style endpoint, intentionally open (acceptable)
-- `site/app/api/health/route.ts` — liveness probe, intentionally open (acceptable)
+**Residual scope note:** `isProtectedPath()` deliberately excludes `/oostudio` and `/ooplanner` — these are guest-accessible product surfaces by design, with auth enforced at the layout level instead. `/oostudio` was missing that layout-level auth call; this was fixed separately this session (see `plans/studio-audit/`) and is unrelated to the proxy/middleware question.
 
-**Current mitigations:**
-- `withAuth` HOF is well-implemented and consistently used on protected routes
-- Admin routes consistently use `enforceAdminMutationGuard`
-- Test script `test:audit:api-routes` exists to audit route safety
-
-**Remediation:** See remedy plan SEC-R01.
-
----
-
-### SEC-C02: No Content Security Policy on HTML Pages
-
-**Severity:** CRITICAL
-**OWASP:** A02 Security Misconfiguration
-**Location:** `config/build/next.config.js` → `headers()`
-
-**Finding:** The `Content-Security-Policy` header is only set on `/api/:path*` responses (`default-src 'self'`). The main HTML pages served to browsers have **no CSP header**. A `getRequestNonce()` utility exists in the site layout, suggesting CSP was planned, but the response-level header is never configured.
-
-**Risk:** Without CSP, any XSS vulnerability (even via a third-party script or CDN compromise) can execute arbitrary JavaScript, steal cookies, and exfiltrate data. CSP is the last line of defense against XSS.
-
-**Evidence:**
-- `config/build/next.config.js` headers section only targets `/api/:path*`
-- `site/app/(site)/layout.tsx` line 46: uses `nonce={nonce}` on script tags (CSP nonce infrastructure exists)
-- No CSP header on `/(.*)`  or `/:path*` in next.config.js or vercel.json
-
-**Current mitigations:**
-- All `dangerouslySetInnerHTML` usage is wrapped with `sanitizeJsonForScript()` (good)
-- No `eval()` or raw `innerHTML` in application code
-- Nonce infrastructure partially built
-
-**Remediation:** See remedy plan SEC-R02.
+**Status: No further action.** See `plans/seosec/remedy-plan.md` for the full correction writeup.
 
 ---
 
 ## High Findings
 
-### SEC-H01: File Serving Routes Lack Auth and Rate Limiting
+### SEC-H01: File Serving Routes Lack Auth and Rate Limiting — ✅ FIXED
 
 **Severity:** HIGH
 **OWASP:** A01 Broken Access Control
 **Location:** `site/app/api/files/catalog/[...path]/route.ts`
 
-**Finding:** The catalog file serving route has **no authentication** and **no rate limiting**. It reads from R2 storage and serves binary assets directly. An attacker could enumerate all catalog assets or use the endpoint for resource exhaustion.
+**Finding:** The catalog file serving route had **no rate limiting** (auth correctly absent — it's a public catalog asset endpoint). It reads from R2 storage and serves binary assets directly.
 
-**Evidence:**
-```typescript
-// site/app/api/files/catalog/[...path]/route.ts
-export async function GET(_request: Request, context: Ctx) {
-  const { path } = await context.params;
-  // NO auth check
-  // NO rate limit
-  const webPath = `/assets/catalog/${segments.join("/")}`;
-  const asset = await readCatalogAssetBytes(webPath);
-  // ...serves binary directly
-}
-```
+**Verification of the other 4 file routes:** `exports`, `furniture`, `projects`, `uploads` all already had `withAuth` with role + rate limit configured — the original finding's blanket claim about all 5 routes was only accurate for `catalog`.
 
-Other file routes under `site/app/api/files/` (exports, furniture, projects, uploads) should also be verified.
+**Fix applied:** Added `enforcePublicApiRateLimit(request, "files-catalog:get", 60)` to the top of the handler.
 
-**Risk:** Resource exhaustion, unauthorized asset scraping, potential path traversal if `readCatalogAssetBytes` doesn't sanitize.
+**Risk (resolved):** Resource exhaustion via unbounded scraping is now rate-limited at 60 req/min per IP.
 
 **Remediation:** See remedy plan SEC-R03.
 
 ---
 
-### SEC-H02: Metrics Endpoint Exposure
+### SEC-H02: Metrics Endpoint Exposure — ✅ FIXED
 
 **Severity:** HIGH
 **OWASP:** A02 Security Misconfiguration
 **Location:** `site/app/api/metrics/route.ts`
 
-**Finding:** The Prometheus metrics endpoint is gated by an environment flag (`OBSERVABILITY_METRICS_ENABLED`) in production, but when enabled, it has **no authentication**. Prometheus metrics can leak request counts, error rates, response times, and internal service topology.
+**Finding:** The Prometheus metrics endpoint was gated by an environment flag (`OBSERVABILITY_METRICS_ENABLED`) in production, but when enabled, it had **no authentication**.
 
-**Evidence:**
-```typescript
-export async function GET() {
-  if (process.env.NODE_ENV === "production" &&
-      process.env.OBSERVABILITY_METRICS_ENABLED !== "1") {
-    return new Response("Not Found", { status: 404 });
-  }
-  // No auth check — anyone can scrape metrics
-  const registry = getMetricsRegistry();
-  return new Response(await registry.metrics(), { ... });
-}
-```
-
-**Remediation:** See remedy plan SEC-R04.
+**Fix applied:** Added `isAuthorizedMetricsRequest()` — when `METRICS_AUTH_TOKEN` is configured, every request must present `Authorization: Bearer <token>`, compared with `timingSafeEqual`. Unset token = open (preserves the dev default). Documented in `.env.example`.
 
 ---
 
-### SEC-H03: Origin Check Allows Missing Origin/Referer
+### SEC-H03: Origin Check Allows Missing Origin/Referer — ✅ FIXED
 
 **Severity:** HIGH
 **OWASP:** A01 Broken Access Control
 **Location:** `site/lib/security/requestOrigin.ts`
 
-**Finding:** The `isAllowedBrowserOrigin()` function returns `true` when both `Origin` and `Referer` headers are absent. While the comment says "non-browser callers (curl, unit tests) often omit both," this also means any tool or script that omits these headers bypasses the origin check entirely.
+**Finding:** The `isAllowedBrowserOrigin()` function returned `true` unconditionally when both `Origin` and `Referer` headers were absent, in every environment.
 
-**Evidence:**
-```typescript
-export function isAllowedBrowserOrigin(req): boolean {
-  const originHeader = req.headers.get("origin");
-  const refererHeader = req.headers.get("referer");
-  // Non-browser callers (curl, unit tests) often omit both.
-  if (!originHeader && !refererHeader) {
-    return true;  // ← allows bypassing origin check
-  }
-  // ...
-}
-```
-
-**Risk:** Any script can POST to `/api/customer-queries` without Origin/Referer and bypass the origin check. The honeypot field and rate limiting partially mitigate this, but it's still a gap.
-
-**Remediation:** See remedy plan SEC-R05.
+**Fix applied:** The function now takes an injectable `env` parameter and returns `env.NODE_ENV !== "production"` for the missing-headers case — fails closed in production, stays permissive in dev/test/CI for curl and server-to-server calls. `tests/unit/lib/security/requestOrigin.test.ts` updated with a new production-mode assertion; all 6 cases pass.
 
 ---
 
-### SEC-H04: Missing Rate Limiting on Several Public Endpoints
+### SEC-H04: Missing Rate Limiting on Several Public Endpoints — MOSTLY RESOLVED
 
-**Severity:** HIGH
+**Severity:** HIGH → LOW (revised after verification)
 **OWASP:** A04 Insecure Design
 **Location:** Multiple route files
 
-**Finding:** While most routes have rate limiting, the following lack it:
+**Finding (revised):** The original claim that 4 file routes "lack rate limiting" was inaccurate — verification found `exports`, `furniture`, `projects`, and `uploads` all already use `withAuth` with role + explicit `rateLimit` values (60-120/min). Only `catalog/[...path]` was genuinely unprotected, and that's now fixed (see SEC-H01).
 
-| Route | Method | Rate Limit | Auth |
-|---|---|---|---|
-| `/api/files/catalog/[...path]` | GET | ❌ None | ❌ None |
-| `/api/files/exports/[filename]` | GET | ❌ Not verified | Varies |
-| `/api/files/furniture/[filename]` | GET | ❌ Not verified | Varies |
-| `/api/files/projects/[filename]` | GET | ❌ Not verified | Varies |
-| `/api/files/uploads/[filename]` | GET | ❌ Not verified | Varies |
-| `/api/route.ts` (root) | GET | ❌ None | ❌ None (intentional) |
-| `/api/health` | GET | ❌ None | ❌ None (intentional) |
+`/api/route.ts` and `/api/health` remain intentionally open with no rate limit — both are minimal liveness/status probes with no data exposure or resource cost, consistent with standard practice for health-check endpoints.
 
-**Remediation:** See remedy plan SEC-R03.
+**Status:** No further action needed.
 
 ---
 

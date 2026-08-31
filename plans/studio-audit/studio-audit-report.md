@@ -10,16 +10,16 @@
 
 The Furniture Studio is a **fully-featured 2D furniture authoring tool** built on Fabric.js v7, with drawing tools, layers, snap/grid, alignment, context menus, rulers, AI generation/suggestion/restyling, multi-format export (PNG/JPEG/SVG/PDF/DXF/JSON), and a furniture catalog with CRUD + publish pipeline. The architecture is clean — types, stores, components, and server modules are isolated in the Studio fork tree with no Planner imports.
 
-The **critical gap** is that the Studio has **no authentication**. The layout doesn't call `requireAuthUser`. Anyone who knows `/oostudio` can access the full furniture authoring tool, create/edit/delete items, use AI features (which consume LLM credits), and publish to the catalog. This is likely an oversight since the admin nav links to Studio and admin has auth.
+**Update (2026-08-31):** All 3 fixable findings (STU-C01, STU-H01/H02, STU-M03) have been applied this session — see the Fixed status inline below and `plans/studio-audit/remedy-plan.md`. The critical gap was that the Studio had **no authentication**: the layout never called `requireAuthUser`, so anyone who knew `/oostudio` could access the full furniture authoring tool, use AI features (consuming LLM credits), and publish to the catalog. This is now closed.
 
-### Severity Summary
+### Severity Summary (post-remediation)
 
-| Severity | Count |
-|---|---|
-| Critical | 1 |
-| High | 2 |
-| Medium | 3 |
-| Low | 2 |
+| Severity | Count | Status |
+|---|---|---|
+| Critical | 1 | ✅ Fixed (STU-C01) |
+| High | 2 | ✅ Fixed (STU-H01, STU-H02) |
+| Medium | 3 | 1 fixed (STU-M03); 2 remain as documented low-priority tech debt (STU-M01 decomposition, STU-M02 intentional duplication) |
+| Low | 2 | Unverified/informational, no action needed |
 
 ---
 
@@ -66,66 +66,30 @@ Server:
 
 ## Findings
 
-### STU-C01: No Authentication on Studio Route
+### STU-C01: No Authentication on Studio Route — ✅ FIXED
 
 **Severity:** CRITICAL
 **Location:** `site/features/Studio/layout.tsx`
 
-The Studio layout renders directly without any auth check:
-```typescript
-export default function StudioLayout({ children }) {
-  return (
-    <main id="main-content" className="oostudio-root" tabIndex={-1}>
-      <div className="app-root">
-        <TopBar />
-        {children}
-        <Toast />
-      </div>
-    </main>
-  );
-}
-```
+The Studio layout rendered directly without any auth check, unlike the admin layout which calls `requireAuthUser("/admin", "admin")`.
 
-Compare with the admin layout which calls `await requireAuthUser("/admin", "admin")`. Studio is entirely open.
-
-**All 6 Studio API routes DO have auth** (they use `withAuth({ role: "admin" })` or `withAuth({ role: "member" })`), so the API itself is protected. But:
-- The Studio **page and UI** loads for unauthenticated users
-- The client-side `studioApi.ts` (using axios) will get 401s from API routes, but the UI renders first
-- AI panel, tool rail, export menu — all visible to anonymous visitors
-- This is a privacy/brand risk even if data mutations fail
-
-**Fix:** Add `await requireAuthUser("/oostudio", "admin")` to the Studio layout.
+**Fix applied:** Added `await requireAuthUser("/oostudio", "admin")` plus `export const dynamic = "force-dynamic"` (the cookie read forces dynamic rendering) to `site/features/Studio/layout.tsx`.
 
 ---
 
-### STU-H01: studioApi.ts Uses axios (Single Remaining Import)
+### STU-H01 / STU-H02: axios Usage + Missing CSRF on Studio CRUD — ✅ FIXED
 
 **Severity:** HIGH
-**Location:** `site/lib/Studio/studioApi.ts`
+**Location:** `site/lib/Studio/studioApi.ts`, `site/components/Studio/StudioAiPanel.tsx`
 
-This is the only file in the codebase using `axios`. It creates a bare `axios.create({ baseURL: "/api" })` instance with:
-- No CSRF token handling (the `publishFurniture` function in the same file already uses `browserApiFetch` which handles CSRF)
-- No error normalization consistent with the rest of the codebase
-- No retry logic
+`studioApi.ts` used a bare `axios.create()` instance for 5 CRUD functions with no CSRF token handling, while `publishFurniture` in the same file already used `browserApiFetch` (which does handle CSRF). This meant CRUD mutations could be rejected with 403 in production (CSRF required, token never sent).
 
-Five CRUD functions (`listFurniture`, `createFurniture`, `updateFurniture`, `deleteFurniture`, `uploadFurniture`) use bare axios, while `publishFurniture` uses `browserApiFetch`. This inconsistency means CRUD operations **skip CSRF protection** that `browserApiFetch` provides.
+**Fix applied:** All axios usage replaced with `browserApiFetch`-backed helpers:
+- `studioApi.ts` — added a shared `jsonFetch()` helper; `listFurniture`, `createFurniture`, `updateFurniture`, `deleteFurniture`, `uploadFurniture` all route through it or `browserApiFetch` directly
+- `StudioAiPanel.tsx` — the `aiApi` object (used by `Studio.tsx` for AI generate/suggest/restyle) replaced its own `api.post()` calls with a new `aiPost()` helper, also backed by `browserApiFetch`
+- `axios` removed from `package.json` (`pnpm remove axios`) — was the last usage in the entire codebase
 
-**Fix:** Replace all axios calls with `browserApiFetch`, then `pnpm remove axios`. See `plans/packages/remedy-plan.md` B1.
-
----
-
-### STU-H02: Studio CRUD Missing CSRF on Mutations
-
-**Severity:** HIGH
-**Location:** `site/lib/Studio/studioApi.ts`
-
-Because the axios instance doesn't include CSRF tokens, POST/PATCH/DELETE to `/api/Studio/furniture/*` lack the `X-CSRF-Token` header. The API routes have `requireCsrf: true` in their `withAuth` config, which means:
-- In production, mutations should be rejected with 403 (CSRF failed)
-- Unless `isDevAuthBypassEnabled()` is true, which skips CSRF checks
-
-This is a functional bug — Studio CRUD operations may fail in production for non-bypass users.
-
-**Fix:** Same as STU-H01 — replace axios with `browserApiFetch` which automatically handles CSRF token acquisition and retry.
+**Side effect fixed:** `AiGenerateResult`'s fields (`name`, `category`, `tags`, `dimensions`) were optional, forcing defensive `?.` chains in `Studio.tsx`. Since the AI is expected to always return complete metadata, these are now required fields — cleaner types, no silent `undefined` fallthrough.
 
 ---
 
@@ -157,20 +121,14 @@ The file explicitly documents that `BadRequestError`, `readJsonBody`, and simila
 
 ---
 
-### STU-M03: Export Menu Has No Content Bounds Check
+### STU-M03: Export Menu Has No Content Bounds Check — ✅ FIXED
 
 **Severity:** MEDIUM
 **Location:** `site/lib/Studio/studioExporters.ts`
 
-`contentBounds()` returns `null` when the canvas has no exportable objects. Individual export functions handle this, but the `exportPDF` function doesn't check for empty canvas:
-```typescript
-export const exportPDF = (canvas: Canvas, filename = "floor-plan.pdf"): void => {
-  const dataUrl = exportPNG(canvas, { dpiMultiplier: 3 });
-  // ... creates PDF from potentially empty canvas
-};
-```
+`contentBounds()` returned `null` when the canvas has no exportable objects, but `exportPDF` never checked it before constructing a jsPDF document.
 
-**Fix:** Check `contentBounds()` before PDF export, show toast "Nothing to export" if empty.
+**Fix applied:** `exportPDF` now returns `boolean` (was `void`) — checks `contentBounds(canvas)` first and returns `false` without touching jsPDF when empty, `true` on a real save. Note: `exportPDF` isn't currently wired to a UI button in Studio (only Planner has an active PDF export button today), so this is forward-looking protection. Test coverage added in `tests/unit/studio/studioExporters.test.ts` (14/14 passing, including 2 new cases for this guard).
 
 ---
 

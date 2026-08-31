@@ -12,6 +12,17 @@ const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 const baseConfig = require("../config/build/next.config.js");
 
+const HOME_REDIRECT_SOURCES = new Set([
+  "/news",
+  "/news/",
+  "/brochure",
+  "/brochure/",
+  "/download-brochure",
+  "/download-brochure/",
+  "/catalog",
+  "/catalog/",
+]);
+
 const monorepoRoot = path.join(/* turbopackIgnore: true */ __dirname, "..");
 
 // Merge experimental so fork-required TypeScript 7 CLI flag cannot be dropped
@@ -24,6 +35,14 @@ const experimental = {
 module.exports = withNextIntl({
   ...baseConfig,
   experimental,
+  async redirects() {
+    const redirects = await baseConfig.redirects();
+    return redirects.map((redirect) =>
+      HOME_REDIRECT_SOURCES.has(redirect.source)
+        ? { ...redirect, destination: "/" }
+        : redirect,
+    );
+  },
   // Optional isolated distDir for quiet multi-agent probes (e.g. OANDO_NEXT_DIST=.next-3010).
   // Unset → default `.next` (shared with the primary `pnpm run dev` on :3000).
   ...(process.env.OANDO_NEXT_DIST
