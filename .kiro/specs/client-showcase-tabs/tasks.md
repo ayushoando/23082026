@@ -10,13 +10,13 @@ Implement a four-tab sector showcase on the existing `/clients` marketing page. 
 
 - [ ] 1. Types and data layer
 
-  - [ ] 1.1 Create `site/lib/clients/clientTypes.ts`
+  - [-] 1.1 Create `site/lib/clients/clientTypes.ts`
     - Define and export `SectorTabId`, `SectorTabMeta`, `ClientRecord`, and `LogoApprovalRecord` interfaces exactly as specified in the design document
     - All four types must be named exports; no default exports
     - _Requirements: 1.1, 1.2, 3.1, 5.1, 7.2_
     - _Validates: P1, P2, P8_
 
-  - [ ] 1.2 Create `site/lib/clients/clientRegistry.ts` — constants and registry array
+  - [~] 1.2 Create `site/lib/clients/clientRegistry.ts` — constants and registry array
     - Export the `SECTOR_TABS: SectorTabMeta[]` constant with all four entries in the required order and with the exact label strings from the requirements IA table
     - Declare `CLIENT_REGISTRY: ClientRecord[]` containing all 87 source-inventory entries; every entry must have `published: false` and a `// @review` comment
     - Add `// @review` comments matching all nine Initial Review Cue rows from Requirement 5.7 on the relevant entries (Tata Motors / Tata Motors Limited duplicate cue; TVS Limited, Bharti Airtel Limited, DMI repeated-entry cues; Dalmia DSP PO, Itian Limited, Bihar State Pul Nirman Nigam Limited, Bharti Nxtra Limited, June Elevators unclear-identity cues)
@@ -24,7 +24,7 @@ Implement a four-tab sector showcase on the existing `/clients` marketing page. 
     - _Requirements: 1.1, 1.4, 5.1, 5.3, 5.7, 4.1, 4.4_
     - _Validates: P1, P4, P8, P13_
 
-  - [ ] 1.3 Add `getPublishedRecords` and `getGroupedRecords` to `clientRegistry.ts`
+  - [~] 1.3 Add `getPublishedRecords` and `getGroupedRecords` to `clientRegistry.ts`
     - `getPublishedRecords()` filters `CLIENT_REGISTRY` to `published === true` entries only
     - `getGroupedRecords()` groups published records by `sectorTab`, applies `Intl.Collator('en-IN')` sort on `displayName` with `canonicalId` as tiebreaker, and returns `Record<SectorTabId, ClientRecord[]>`
     - All four sector keys must always be present in the returned object (empty array for tabs with no published records)
@@ -33,7 +33,7 @@ Implement a four-tab sector showcase on the existing `/clients` marketing page. 
 
 - [ ] 2. Core keyboard hook
 
-  - [ ] 2.1 Create `site/hooks/useSectorTabs.ts`
+  - [~] 2.1 Create `site/hooks/useSectorTabs.ts`
     - Implement roving-focus pattern: only `activeTab` has `tabIndex={0}`; all others have `tabIndex={-1}`
     - `getTabProps(tab, index)` returns `{ role: 'tab', id, 'aria-selected', 'aria-controls', tabIndex, onKeyDown, onClick }`
     - `getTabListProps()` returns `{ role: 'tablist' }`
@@ -45,7 +45,7 @@ Implement a four-tab sector showcase on the existing `/clients` marketing page. 
 
 - [ ] 3. Leaf RSC components
 
-  - [ ] 3.1 Create `site/components/site/clients/ClientLogoArea.tsx`
+  - [~] 3.1 Create `site/components/site/clients/ClientLogoArea.tsx`
     - Props interface: `{ displayName: string; logoPath?: string }`
     - When `logoPath` is present: render `<img>` with `object-contain`, `onError` handler that sets local `imgFailed` state, and falls back to Logo Fallback on error (`useState` required — must render inside a client boundary)
     - When `logoPath` is absent or `imgFailed` is true: render Logo Fallback — a `bg-[var(--surface-muted)]` surface containing initials derived from `getInitials(displayName)` per the two-word algorithm in the design
@@ -54,7 +54,7 @@ Implement a four-tab sector showcase on the existing `/clients` marketing page. 
     - _Requirements: 3.2, 3.3, 3.4_
     - _Validates: P6_
 
-  - [ ] 3.2 Create `site/components/site/clients/ClientCard.tsx`
+  - [~] 3.2 Create `site/components/site/clients/ClientCard.tsx`
     - Props interface: `{ record: ClientRecord }`
     - Render `<article>` with `aria-label` derived from `record.displayName`
     - Compose `<ClientLogoArea>` with `displayName` and `logoPath` from the record
@@ -65,7 +65,7 @@ Implement a four-tab sector showcase on the existing `/clients` marketing page. 
 
 - [ ] 4. Composite client-boundary components
 
-  - [ ] 4.1 Create `site/components/site/clients/SectorTabButton.tsx`
+  - [~] 4.1 Create `site/components/site/clients/SectorTabButton.tsx`
     - Props interface: `{ tab: SectorTabMeta; isSelected: boolean; tabProps: ReturnType<UseSectorTabsReturn['getTabProps']>; ref?: React.Ref<HTMLButtonElement> }`
     - Spread `tabProps` onto a `<button>` element
     - Apply `min-h-[44px] min-w-[44px] px-4 py-2.5` for WCAG 44px target size
@@ -74,7 +74,7 @@ Implement a four-tab sector showcase on the existing `/clients` marketing page. 
     - _Requirements: 2.1, 2.7, 2.8_
     - _Validates: P5_
 
-  - [ ] 4.2 Create `site/components/site/clients/ClientTabPanel.tsx`
+  - [~] 4.2 Create `site/components/site/clients/ClientTabPanel.tsx`
     - Props interface: `{ tab: SectorTabMeta; records: ClientRecord[]; panelProps: ReturnType<UseSectorTabsReturn['getPanelProps']> }`
     - Spread `panelProps` (including `hidden` attribute) onto the panel `<div>`
     - When `records.length > 0`: render an auto-sizing grid `grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))] gap-4 md:gap-6` containing one `<ClientCard>` per record
@@ -82,7 +82,7 @@ Implement a four-tab sector showcase on the existing `/clients` marketing page. 
     - _Requirements: 1.6, 6.3, 6.4, 6.5, 8.3_
     - _Validates: P7, P11_
 
-  - [ ] 4.3 Create `site/components/site/clients/SectorTabList.tsx`
+  - [~] 4.3 Create `site/components/site/clients/SectorTabList.tsx`
     - Props interface: `{ tabs: SectorTabMeta[]; activeTab: SectorTabId; onSelect: (id: SectorTabId) => void }`
     - Call `useSectorTabs` and spread `getTabListProps()` onto the list container
     - Render one `<SectorTabButton>` per tab; pass `getTabProps(tab, index)` and `isSelected` to each
@@ -90,7 +90,7 @@ Implement a four-tab sector showcase on the existing `/clients` marketing page. 
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.9_
     - _Validates: P5_
 
-  - [ ] 4.4 Create `site/components/site/clients/ClientShowcase.tsx`
+  - [~] 4.4 Create `site/components/site/clients/ClientShowcase.tsx`
     - Mark `'use client'` at top of file
     - Props interface: `{ grouped: Record<SectorTabId, ClientRecord[]>; tabs: SectorTabMeta[] }`
     - Initialize `activeTab` state to `'financial-services'`
@@ -100,7 +100,7 @@ Implement a four-tab sector showcase on the existing `/clients` marketing page. 
 
 - [ ] 5. Page-level RSC wrapper and integration
 
-  - [ ] 5.1 Create `site/components/site/clients/ClientShowcaseSection.tsx`
+  - [~] 5.1 Create `site/components/site/clients/ClientShowcaseSection.tsx`
     - Named RSC export; no `'use client'` directive
     - Call `getGroupedRecords()` synchronously (no `await`) and pass the result to `<ClientShowcase>`
     - Outer `<section>`: `w-full overflow-x-hidden section-y-sm` with an accessible landmark label
@@ -110,7 +110,7 @@ Implement a four-tab sector showcase on the existing `/clients` marketing page. 
     - _Requirements: 8.1, 8.2, 8.4, 8.5_
     - _Validates: P14_
 
-  - [ ] 5.2 Integrate `ClientShowcaseSection` into `ClientsPageView`
+  - [~] 5.2 Integrate `ClientShowcaseSection` into `ClientsPageView`
     - Modify `site/features/site/clients/ClientsPageView.tsx`
     - Import `ClientShowcaseSection` from `@/components/site/clients/ClientShowcaseSection`
     - Add a new `<HomeSection variant="white" spacing="sm">` block containing `<HomeSectionInner><ClientShowcaseSection /></HomeSectionInner>` immediately after the existing case-studies `HomeSection`
@@ -120,19 +120,19 @@ Implement a four-tab sector showcase on the existing `/clients` marketing page. 
 
 - [ ] 6. Static assets directory
 
-  - [ ] 6.1 Create `site/public/images/clients/README.md`
+  - [~] 6.1 Create `site/public/images/clients/README.md`
     - Create the directory `site/public/images/clients/` by placing a `README.md` inside it
     - Content: note that logo files for the client registry go here, each file named after `canonicalId`, and that a Logo Approval Record must exist and have status `Approved for Web Display` before any file is committed; no logo files are committed now
     - _Requirements: 4.1, 4.2, 4.3, 4.4_
 
-- [ ] 7. Checkpoint — verify data layer and hook before tests
+- [~] 7. Checkpoint — verify data layer and hook before tests
   - Ensure `site/lib/clients/clientTypes.ts`, `site/lib/clients/clientRegistry.ts`, and `site/hooks/useSectorTabs.ts` are coherent TypeScript with no type errors.
   - Ensure all 87 registry entries are present, all have `published: false`, and all nine review-cue entries carry `@review` comments.
   - Ask the user if questions arise before proceeding to tests.
 
 - [ ] 8. Unit and property-based tests
 
-  - [ ] 8.1 Write tests for `clientRegistry.ts` — constants and filtering
+  - [~] 8.1 Write tests for `clientRegistry.ts` — constants and filtering
     - Test file: `tests/unit/lib/clients/clientRegistry.test.ts`
     - Unit test: `SECTOR_TABS` has length 4 and labels equal the exact IA sequence (exhaustive constant check)
     - Property test (fast-check): for any generated `ClientRecord[]` with varying `sectorTab`, `getGroupedRecords()` places every published record in exactly one group matching its `sectorTab` — no record absent, none duplicated across groups
@@ -142,14 +142,14 @@ Implement a four-tab sector showcase on the existing `/clients` marketing page. 
     - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5_
     - _Validates: P1, P2, P3, P4_
 
-  - [ ] 8.2 Write tests for `clientRegistry.ts` — ordering and deduplication
+  - [~] 8.2 Write tests for `clientRegistry.ts` — ordering and deduplication
     - Test file: `tests/unit/lib/clients/clientRegistry.test.ts` (same file, additional `describe` block)
     - Property test (fast-check): for any permutation of the same published `ClientRecord[]`, `getGroupedRecords()` returns the same ordered sequence in each tab (en-IN collation on `displayName`, `canonicalId` as tiebreaker)
     - Property test (fast-check): for any generated registry where multiple records share the same `canonicalId`, `getGroupedRecords()` for the matching tab returns at most one entry per unique `canonicalId`
     - _Requirements: 5.5, 6.1, 6.2_
     - _Validates: P9, P10_
 
-  - [ ] 8.3 Write model-based tests for `useSectorTabs`
+  - [~] 8.3 Write model-based tests for `useSectorTabs`
     - Test file: `tests/unit/lib/hooks/useSectorTabs.test.ts` (use `renderHook` from `@testing-library/react`)
     - Enumerate all 4 × 6 = 24 combinations of focused-tab index (0–3) × key (`ArrowRight`, `ArrowLeft`, `Home`, `End`, `Enter`, `Space`)
     - Assert exact `focusedIndex` after each Arrow/Home/End transition; assert `activeTab` unchanged
@@ -158,7 +158,7 @@ Implement a four-tab sector showcase on the existing `/clients` marketing page. 
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6_
     - _Validates: P5_
 
-  - [ ] 8.4 Write component tests for `ClientLogoArea`
+  - [~] 8.4 Write component tests for `ClientLogoArea`
     - Test file: `tests/unit/components/site/clients/ClientLogoArea.test.tsx`
     - With `logoPath` present and image load success: `<img>` rendered; fallback not rendered
     - With `logoPath` absent: fallback initials rendered; no `<img>` element
@@ -167,14 +167,14 @@ Implement a four-tab sector showcase on the existing `/clients` marketing page. 
     - _Requirements: 3.2, 3.3, 3.4_
     - _Validates: P6_
 
-  - [ ] 8.5 Write component tests for `ClientCard`
+  - [~] 8.5 Write component tests for `ClientCard`
     - Test file: `tests/unit/components/site/clients/ClientCard.test.tsx`
     - `aria-label` on the card article equals `record.displayName`
     - Visible text content contains the full `displayName`
     - _Requirements: 3.6, 3.7_
     - _Validates: P6_
 
-  - [ ] 8.6 Write component tests for `ClientTabPanel`
+  - [~] 8.6 Write component tests for `ClientTabPanel`
     - Test file: `tests/unit/components/site/clients/ClientTabPanel.test.tsx`
     - When given zero records: empty-sector state element present; `tab.label` appears in the message
     - When given zero records: all four `SectorTabButton` elements remain present and not `disabled` (render full `ClientShowcase` with one empty sector)
@@ -184,7 +184,7 @@ Implement a four-tab sector showcase on the existing `/clients` marketing page. 
 
 - [ ] 9. Playwright browser checks
 
-  - [ ] 9.1 Create `tests/e2e/clients-showcase-keyboard.spec.ts`
+  - [~] 9.1 Create `tests/e2e/clients-showcase-keyboard.spec.ts`
     - At viewport widths 320, 768, and 1024px: navigate to `/clients`
     - Tab into the tab list; confirm focus lands on Financial Services tab
     - ArrowRight through all four tabs; confirm focus wraps from Corporates & Multinationals back to Financial Services
@@ -195,7 +195,7 @@ Implement a four-tab sector showcase on the existing `/clients` marketing page. 
     - _Requirements: 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 2.10_
     - _Validates: P12_
 
-  - [ ] 9.2 Create `tests/e2e/clients-showcase-layout.spec.ts`
+  - [~] 9.2 Create `tests/e2e/clients-showcase-layout.spec.ts`
     - At viewport widths 320, 768, 1280, 1440, and 1920px: navigate to `/clients`
     - Assert `document.documentElement.scrollWidth === window.innerWidth` (no horizontal page scrollbar)
     - Assert `ClientShowcaseSection` is horizontally centered: left offset equals right offset (within 1px)
@@ -206,14 +206,14 @@ Implement a four-tab sector showcase on the existing `/clients` marketing page. 
 
 - [ ] 10. i18n string keys
 
-  - [ ] 10.1 Add `clients.showcase` namespace to `site/i18n/messages/en.json`
+  - [~] 10.1 Add `clients.showcase` namespace to `site/i18n/messages/en.json`
     - Add the following two keys under a new `"clients"` → `"showcase"` path (merge with existing `"clients"` key if one already exists):
       - `"sectionHeading"`: `"Our Clients"`
       - `"emptySector"`: `"No published clients in {sector} yet."`
     - Keep all existing keys unchanged; add only the new namespace
     - _Requirements: 6.3_
 
-- [ ] 11. Final checkpoint — ensure all tests pass
+- [~] 11. Final checkpoint — ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
 ---

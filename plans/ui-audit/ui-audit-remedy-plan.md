@@ -145,36 +145,36 @@ The remedy should make the Planner feel like a first-class product surface while
 
 ## Phase 3 — Interaction, focus, and motion accessibility
 
-**Findings:** UI-017, UI-018, UI-020, UI-021, UI-022; recheck UI-003, UI-014, UI-015.
+**Findings:** UI-020, UI-021, UI-022; recheck UI-003, UI-014, UI-015.
+
+> **Removed from this phase:** UI-017 (contact `:focus-visible` — resolved), UI-018 (contact transition — resolved).
 
 **Likely source areas**
 
-- `site/focss/site/components/contact/contact-page-pass.css`
-- `site/focss/site/components/contact/home-contact-page.css`
-- `site/focss/site/components/contact/home-contact-teaser.css`
 - `site/focss/base/animations.css`
 - Shared focus utility/token source discovered during baseline
 - Planner feature/landing CSS from Phase 2
 
 **Actions**
 
-1. Replace mouse-oriented input `:focus` styling with `:focus-visible` where appropriate, while retaining a non-silent focus indication for keyboard users and preserving invalid/active states.
-2. Replace the contact input’s hard-coded `150ms` transition with the closest motion token, unless a shorter field-response duration is intentionally documented and applied consistently.
-3. Standardize focus-ring treatment around the project’s existing `--focus-ring` or equivalent. Use one visual language across outline/box-shadow consumers without removing focus from controls with unusual clipping or dark backgrounds.
-4. Refine reduced-motion behavior so decorative transitions/animations are suppressed while essential focus, disclosure, validation, and state changes remain understandable. Validate the Planner reveal sequence and demo float specifically.
+1. Replace mouse-oriented input `:focus` styling with `:focus-visible` where appropriate on **remaining non-contact components**, while retaining a non-silent focus indication for keyboard users and preserving invalid/active states.
+2. Standardize focus-ring treatment around the project’s existing `--focus-ring` or equivalent. Use one visual language across outline/box-shadow consumers without removing focus from controls with unusual clipping or dark backgrounds.
+3. Refine reduced-motion behavior so decorative transitions/animations are suppressed while essential focus, disclosure, validation, and state changes remain understandable. Validate the Planner reveal sequence and demo float specifically.
 
 **Acceptance checks**
 
 - Keyboard traversal exposes a clear focus indicator on all affected controls against light and dark surfaces.
 - Pointer clicks do not create distracting persistent rings where `:focus-visible` is intended.
 - Reduced-motion users receive no decorative movement, no delayed hidden content, and no loss of essential state feedback.
-- Contact input transitions use a documented project token or documented exception.
+
 
 **Rollback:** Revert only interaction and animation files. Where a Planner CSS file was first changed in Phase 2 and later changed here, revert the Phase 3 diff hunks only; do not revert Phase 2 layout/hierarchy changes.
 
 ## Phase 4 — SEO metadata, structured data, and image semantics
 
-**Findings:** UI-001, UI-002, UI-008, UI-010, UI-011. UI-009 is verified complete; UI-023 is verified complete; UI-024 is a documented, intentional optional-metadata choice rather than a defect.
+**Findings:** UI-001, UI-002, UI-008, UI-011. UI-009 is verified complete; UI-023 is verified complete; UI-024 is a documented, intentional optional-metadata choice rather than a defect.
+
+> **Removed from this phase:** UI-010 (LocalBusiness on homepage — resolved: `buildLocalBusinessJsonLd()` exists in `seo.ts` and FurnitureStore is embedded sitewide via `buildGlobalJsonLd()` in layout).
 
 **Likely source areas**
 
@@ -236,11 +236,12 @@ A phase is complete only when its source acceptance checks pass and the relevant
 | UI-004 | 2 | Feature-index mobile hero height |
 | UI-005 | 1 | Distinct medium/semibold semantics |
 | UI-006 | 1 | Independent semantic color roles |
-| UI-007 | 1 | Dark semantic surfaces and contrast |
-| UI-008, UI-010–UI-011 | 4 | Supported schema and no guessed facts |
+| UI-007 | ~~1~~ | ✅ **Resolved** — `html.dark {}` class-based layer in `semantic.css` (WorkspaceThemeProvider) |
+| UI-008, UI-011 | 4 | Supported schema and no guessed facts |
 | UI-009 | Verified complete | Preserve existing FAQ schema/visible-Q&A parity |
 | UI-012–UI-016 | 2 | Planner hierarchy, entry motion, shared CSS rationale |
-| UI-017–UI-018, UI-020–UI-022 | 3 | Focus, transitions, reduced motion |
+| UI-017–UI-018 | ~~3~~ | ✅ **Resolved** — contact focus uses `:focus` + `:focus-visible`; transition uses `var(--motion-fast)` |
+| UI-020–UI-022 | 3 | Remaining focus and reduced motion |
 | UI-019 | 1 | Loaded-font-safe weight and token cleanup |
 | UI-023 | Verified complete | Preserve `OneAndOnlyLogo` image-component use |
 | UI-024 | Not a defect | Do not add false OG dimensions for variable assets |
@@ -251,7 +252,8 @@ A phase is complete only when its source acceptance checks pass and the relevant
 ## Current status
 
 - Audit report: **complete as a static report** at `plans/ui-audit/ui-audit-report.md`.
-- Remedy plan: **created by this continuation** at `plans/ui-audit/ui-audit-remedy-plan.md`.
+- Remedy plan: **created and verified** at `plans/ui-audit/ui-audit-remedy-plan.md`.
+- **Verification pass (2026-08-31):** 5 findings resolved (UI-007, UI-010, UI-017, UI-018 + UI-010 sitewide), 25 open, 3 verified-complete.
 - Product implementation: **not started**.
 - Validation: **not run in this continuation**.
 - Git commit/push: **not performed**.
