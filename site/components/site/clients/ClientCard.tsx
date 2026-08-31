@@ -11,7 +11,10 @@ export function ClientCard({ record }: ClientCardProps) {
       aria-label={record.displayName}
       className="group relative overflow-hidden rounded-lg border border-[var(--border-soft)] bg-[var(--surface-card)] transition-shadow hover:shadow-[var(--shadow-lift)]"
     >
-      <ClientLogoArea displayName={record.displayName} logoPath={record.logoPath} />
+      <ClientLogoArea
+        displayName={record.displayName}
+        logoPath={record.logoPath}
+      />
       <div className="px-3 py-2">
         <p className="truncate text-sm font-medium text-[var(--text-body)]">
           {record.displayName}

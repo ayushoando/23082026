@@ -50,7 +50,9 @@ export function useSectorTabs(
           e.preventDefault();
           const next = (index + 1) % count;
           setFocusedIndex(next);
-          const tabBtn = document.querySelector<HTMLButtonElement>(`#${tabs[next].tabId}`);
+          const tabBtn = document.querySelector<HTMLButtonElement>(
+            `#${tabs[next].tabId}`,
+          );
           tabBtn?.focus();
           break;
         }
@@ -58,21 +60,27 @@ export function useSectorTabs(
           e.preventDefault();
           const prev = (index - 1 + count) % count;
           setFocusedIndex(prev);
-          const tabBtn = document.querySelector<HTMLButtonElement>(`#${tabs[prev].tabId}`);
+          const tabBtn = document.querySelector<HTMLButtonElement>(
+            `#${tabs[prev].tabId}`,
+          );
           tabBtn?.focus();
           break;
         }
         case "Home": {
           e.preventDefault();
           setFocusedIndex(0);
-          const tabBtn = document.querySelector<HTMLButtonElement>(`#${tabs[0].tabId}`);
+          const tabBtn = document.querySelector<HTMLButtonElement>(
+            `#${tabs[0].tabId}`,
+          );
           tabBtn?.focus();
           break;
         }
         case "End": {
           e.preventDefault();
           setFocusedIndex(count - 1);
-          const tabBtn = document.querySelector<HTMLButtonElement>(`#${tabs[count - 1].tabId}`);
+          const tabBtn = document.querySelector<HTMLButtonElement>(
+            `#${tabs[count - 1].tabId}`,
+          );
           tabBtn?.focus();
           break;
         }

@@ -8,7 +8,11 @@ interface SectorTabButtonProps {
   tabProps: ReturnType<UseSectorTabsReturn["getTabProps"]>;
 }
 
-export function SectorTabButton({ tab, isSelected, tabProps }: SectorTabButtonProps) {
+export function SectorTabButton({
+  tab,
+  isSelected,
+  tabProps,
+}: SectorTabButtonProps) {
   return (
     <button
       {...tabProps}

@@ -1,15 +1,25 @@
 import { ClientsCaseStudies } from "@/components/clients/ClientsCaseStudies";
 import { ClientsHero } from "@/components/clients/ClientsHero";
-import { HomeMarketingLayout, HomeSection, HomeSectionInner } from "@/components/home/layout";
+import {
+  HomeMarketingLayout,
+  HomeSection,
+  HomeSectionInner,
+} from "@/components/home/layout";
 import { KpiIntegrityMonitor } from "@/components/analytics/KpiIntegrityMonitor";
 import { RouteCtaBand } from "@/components/shared/RouteCtaBand";
 import { ContactTeaser } from "@/components/shared/ContactTeaser";
 import { MarketingCtaLink } from "@/components/ui/MarketingCtaLink";
 import { getBusinessStats } from "@/features/crm/businessStats";
 import { buildClientWorkWithPhotos } from "@/features/site/data/clientWorkPhotos";
-import { CLIENTS_PAGE_COPY, CLIENTS_WORK } from "@/features/site/data/routeCopy";
+import {
+  CLIENTS_PAGE_COPY,
+  CLIENTS_WORK,
+} from "@/features/site/data/routeCopy";
 import { withLocaleCopy } from "@/lib/i18n/withLocaleCopy";
-import { buildBreadcrumbJsonLd, buildPageJsonLd } from "@/features/site/data/seo";
+import {
+  buildBreadcrumbJsonLd,
+  buildPageJsonLd,
+} from "@/features/site/data/seo";
 import { formatKpiValuePlus } from "@/lib/kpiFormat";
 import { SITE_URL } from "@/lib/siteUrl";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
@@ -116,7 +126,10 @@ export async function ClientsPageView() {
       >
         <div className="home-shell-xl clients-pull-quotes">
           {copy.pullQuotes.map((item) => (
-            <figure key={item.attribution} className="clients-pull-quote about-craft-quote">
+            <figure
+              key={item.attribution}
+              className="clients-pull-quote about-craft-quote"
+            >
               <span className="about-craft-quote__rule" aria-hidden="true" />
               <blockquote className="clients-pull-quote__text about-craft-quote__text text-pretty">
                 {item.quote}

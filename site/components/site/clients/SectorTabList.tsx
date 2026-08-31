@@ -9,8 +9,15 @@ interface SectorTabListProps {
   onSelect: (id: SectorTabId) => void;
 }
 
-export function SectorTabList({ tabs, activeTab, onSelect }: SectorTabListProps) {
-  const { getTabListProps, getTabProps, setActiveTab } = useSectorTabs(tabs, activeTab);
+export function SectorTabList({
+  tabs,
+  activeTab,
+  onSelect,
+}: SectorTabListProps) {
+  const { getTabListProps, getTabProps, setActiveTab } = useSectorTabs(
+    tabs,
+    activeTab,
+  );
 
   function handleSelect(id: SectorTabId) {
     setActiveTab(id);

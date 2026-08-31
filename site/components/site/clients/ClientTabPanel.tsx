@@ -10,7 +10,11 @@ interface ClientTabPanelProps {
   panelProps: ReturnType<UseSectorTabsReturn["getPanelProps"]>;
 }
 
-export function ClientTabPanel({ tab, records, panelProps }: ClientTabPanelProps) {
+export function ClientTabPanel({
+  tab,
+  records,
+  panelProps,
+}: ClientTabPanelProps) {
   const t = useTranslations("clients.showcase");
 
   return (
