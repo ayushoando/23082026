@@ -9,6 +9,6 @@ export async function generateMetadata(): Promise<Metadata> {
   return CLIENTS_PAGE_METADATA;
 }
 
-export default async function ClientsPage() {
+export default function ClientsPage() {
   return ClientsPageView();
 }

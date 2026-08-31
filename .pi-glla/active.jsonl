@@ -1,1 +1,0 @@
-{"type":"context_usage_sample","value":{"goalId":null,"provider":"antigravity","model":"gemini-3.7-flash","providerUsage":{"inputTokens":2447,"outputTokens":228,"cacheReadTokens":53275,"cacheWriteTokens":0,"totalTokens":55950},"contextUsage":{"tokens":55950,"contextWindow":1048576,"percent":5.335807800292969}},"at":"2026-08-31T15:41:36.752Z"}
