@@ -290,13 +290,13 @@ function conceptualPairSlugForPath(path: string): string {
 export function buildSitemapCsvRows(sections?: readonly SitemapSection[]): SitemapCsvRow[] {
   const resolvedSections = sections ?? buildSitemapSections();
 
-  const publicRows = resolvedSections.flatMap((section) =>
+  const publicRows: SitemapCsvRow[] = resolvedSections.flatMap((section) =>
     section.links.map((link) => ({
       section: section.heading,
       path: link.href,
       label: link.label,
-      audience: "public",
-      inXmlSitemap: link.href === "/sitemap.xml" ? "no" : "yes",
+      audience: "public" as const,
+      inXmlSitemap: link.href === "/sitemap.xml" ? "no" as const : "yes" as const,
       conceptualPairSlug: conceptualPairSlugForPath(link.href),
     })),
   );

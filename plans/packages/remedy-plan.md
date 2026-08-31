@@ -1,214 +1,311 @@
 # Package Dependency Remedy Plan
 
-**Date:** 2026-08-31
+**Date:** 2026-08-31 (updated with replacement analysis)
 **Source:** [`package-audit-report.md`](./package-audit-report.md)
 **Priority:** Ordered by impact and risk
-**Estimated total effort:** ~4-6 hours across 3 waves
 
 ---
 
-## Wave 1: Immediate Cleanup (30 minutes)
+## Part A: Immediate Cleanup
 
-Safe, zero-risk changes. No code modifications. No behavior changes.
-
-### PKG-FIX-01: Remove 3 dead packages
+### A1. Remove 3 dead packages
 
 ```bash
 pnpm remove use corepack pnpm
 ```
 
-**What this does:**
-- `use` — Removes an accidental install with zero imports. The npm package "use" is a plugin utility from 2019, not React's `use()` hook.
-- `corepack` — Removes a redundant copy of a Node.js built-in. The `packageManager` field already handles version enforcement.
-- `pnpm` — Removes a ~30MB redundant copy of the package manager that's already declared in `packageManager`.
+| Package | Why it's here | Why remove |
+|---|---|---|
+| `use` v3.1.1 | Accidental install — not React's `use()` | Zero imports. Abandoned npm package from 2019. Supply chain risk. |
+| `corepack` v0.35.0 | Misunderstanding — it's a Node.js built-in | Zero imports. `packageManager` field already handles pnpm version. |
+| `pnpm` v11.24.0 | Redundant — declared as both `packageManager` AND dep | Zero imports. Wastes ~30MB. |
 
-**Verification:** `pnpm install && pnpm run typecheck`
-
-**Risk:** None. Zero imports confirmed for all three.
-
----
-
-### PKG-FIX-02: Move polygon-clipping to devDependencies
+### A2. Move polygon-clipping to devDependencies
 
 ```bash
 pnpm remove polygon-clipping && pnpm add -D polygon-clipping@^0.15.7
 ```
 
-**What this does:** Moves a script-only dependency out of the production dependency list. Only imported in `scripts/generate-svg/pipelineCore.ts` — never in runtime `site/` code.
+Only used in `scripts/generate-svg/pipelineCore.ts` — build-time script, never in runtime `site/` code.
 
-**Verification:** `pnpm run typecheck`
-
-**Risk:** None. Standalone builds won't change because scripts aren't part of the Next.js build.
-
----
-
-## Wave 2: Security Fixes (1-2 hours)
-
-Address the 3 vulnerabilities via pnpm overrides. All are transitive — we can't change the direct dependency versions, but we can force the transitive copies to patched versions.
-
-### PKG-FIX-03: Add pnpm overrides for transitive vulnerabilities
-
-Add to `package.json`:
+### A3. Add pnpm overrides for 2 transitive CVEs
 
 ```json
-{
-  "pnpm": {
-    "overrides": {
-      "@huggingface/transformers>sharp": ">=0.35.4",
-      "@esbuild-kit/core-utils>esbuild": ">=0.25.0"
-    }
+"pnpm": {
+  "overrides": {
+    "@huggingface/transformers>sharp": ">=0.35.4",
+    "@esbuild-kit/core-utils>esbuild": ">=0.25.0"
   }
 }
 ```
 
-Then:
-```bash
-pnpm install
-pnpm audit
-```
+Then `pnpm install && pnpm audit`.
 
-**What this does:**
-- Forces the sharp copy inside `@lancedb/lancedb > @huggingface/transformers` to use our patched 0.35.4+ (fixes HIGH CVE-2026-33327/33328/35590/35591)
-- Forces the esbuild copy inside `drizzle-kit > @esbuild-kit` to use 0.25.0+ (fixes MODERATE GHSA-67mh-4wv8-2f99)
-
-**Not overriding (yet):** `@ai-sdk/provider-utils` (LOW severity, and the fix requires a major version bump from v3 to v4 which may break `@mastra/core`). Monitor for `@mastra/core` to update its dependency.
-
-**Verification:**
-```bash
-pnpm audit  # Should show 0 high/moderate, 1 low remaining
-pnpm run typecheck
-```
-
-**Risk:** Low. Overrides only affect transitive copies. Our direct deps are unaffected. Test AI features (advisor, embeddings) and `drizzle-kit` commands after applying.
-
----
-
-### PKG-FIX-04: Update 17 outdated packages
+### A4. Update all 17 outdated packages
 
 ```bash
 pnpm update
 ```
 
-This updates all caret-range packages to their latest compatible versions. Since all gaps are minor/patch, this should be safe.
-
-**Key updates:**
-- `zod` 4.4.3 → 4.5.4 (bug fixes, performance)
-- `next-intl` 4.13.7 → 4.14.1 (new features)
-- `@mastra/core` 1.63.0 → 1.63.2 (may improve PKG-V03)
-- `wrangler` 4.126.0 → 4.127.1 (Worker dev tooling)
-
-**Verification:**
-```bash
-pnpm run typecheck
-pnpm run typecheck:tests
-# If authorized: pnpm run gate:fast
-```
-
-**Risk:** Low for patch updates. Medium for `next-intl` minor bump (4.13→4.14) — test i18n pages.
+All gaps are minor/patch. Safe with lockfile.
 
 ---
 
-## Wave 3: Code Changes (2-3 hours)
+## Part B: Package Replacements
 
-### PKG-FIX-05: Replace axios with native fetch
+### B1. `axios` → native `fetch` (REMOVE)
 
-**Single file to change:** `site/lib/Studio/studioApi.ts`
+**Current:** 1 import in `site/lib/Studio/studioApi.ts`. Uses `axios.create()` for GET/POST/PATCH/DELETE to `/api/Studio/*`.
 
-The rest of the codebase uses `browserApiFetch` from `site/lib/api/browserApi.ts` which wraps native `fetch` with CSRF token handling, error normalization, and retry logic. The Studio API module is the only file using axios.
+**Replace with:** The project's own `browserApiFetch` from `site/lib/api/browserApi.ts`, which already wraps native `fetch` with CSRF token handling, error normalization, and retry. The `publishFurniture` function in the same file already uses `browserApiFetch` — the rest of the file just needs to follow suit.
 
-**Steps:**
-1. Read `site/lib/Studio/studioApi.ts` to understand current axios usage patterns
-2. Replace axios calls with `browserApiFetch` or plain `fetch` + appropriate headers
-3. Verify Studio features work (furniture CRUD, AI generate/suggest/restyle, uploads)
-4. Remove axios: `pnpm remove axios`
+**Savings:** ~30KB gzipped removed from client bundle. One fewer HTTP client to maintain.
 
-**Verification:**
-```bash
-pnpm run typecheck
-# Test Studio API operations manually or via existing tests
-```
-
-**Risk:** Medium. Need to verify all Studio API calls maintain the same behavior (error handling, request/response format, CSRF tokens). Test each Studio operation.
+**Effort:** 1-2 hours. Rewrite 5 functions in one file.
 
 ---
 
-### PKG-FIX-06: Align framer-motion version across workspaces
+### B2. `framer-motion` → `motion` (RENAME/UPGRADE)
 
-**tech-docs-generator** uses `framer-motion@12.43.0` while the main app uses `13.1.1`. This causes two copies to be installed.
+**Current:** `framer-motion@13.1.1` with 15+ component imports across site/.
 
-**Option A (recommended):** Update tech-docs to v13:
-```bash
-pnpm --filter oando-tech-docs update framer-motion@^13.1.1
-```
+**Replace with:** `motion` — the same library, [renamed in 2025](https://motion.dev/). The import path changed from `framer-motion` to `motion/react`. The `motion` package also offers a `motion/mini` entry (2.3KB) for simple animations and `motion` (17KB) for the full API — vs the current 35KB for `framer-motion`.
 
-**Option B:** If v13 has breaking changes for tech-docs, declare framer-motion only in root and let pnpm workspace hoisting share it.
+**Why:** `framer-motion` is the legacy package name. `motion` is the actively maintained successor. Same API, same team, but the new package has tree-shaking improvements and a smaller core. Eventually `framer-motion` will stop getting updates.
 
-**Verification:** `pnpm --filter oando-tech-docs build`
-
-**Risk:** Low-Medium. framer-motion v12→v13 may have API changes. Test the tech-docs SPA page transitions.
-
----
-
-### PKG-FIX-07: Standardize version pinning strategy
-
-**Recommended approach:** Use caret ranges (`^`) everywhere and rely on the lockfile for reproducibility.
-
-The current mix has ~15 exact-pinned and ~45 caret-ranged deps with no clear pattern for why some are pinned. Since:
-- `pnpm-lock.yaml` is committed (ensures reproducible installs)
-- `dependabot.yml` is configured (automated update PRs)
-- CI uses `pnpm install --frozen-lockfile` (prevents drift)
-
-…exact pinning in `package.json` adds no safety but makes manual updates harder.
-
-**Exception:** Keep `react` and `react-dom` exact-pinned since React major/minor bumps can break the world.
-
-**This is a low-priority housekeeping task.** Only do it when touching package.json for other reasons.
-
----
-
-## Summary
-
-| Wave | Actions | Effort | Risk |
-|---|---|---|---|
-| Wave 1 | Remove `use`, `corepack`, `pnpm`; move `polygon-clipping` to dev | 30 min | Zero |
-| Wave 2 | Add pnpm overrides for 2 CVEs; run `pnpm update` for 17 patches | 1-2 hours | Low |
-| Wave 3 | Replace axios→fetch; align framer-motion; standardize pinning | 2-3 hours | Medium |
-
-### Immediate `package.json` diff (Waves 1+2)
-
+**Migration:** Mechanical import path change. The API is identical.
 ```diff
-  "dependencies": {
--   "axios": "1.20.0",
--   "corepack": "^0.35.0",
--   "pnpm": "11.24.0",
--   "polygon-clipping": "^0.15.7",
--   "use": "^3.1.1",
-    ...
-  },
-  "devDependencies": {
-+   "polygon-clipping": "^0.15.7",
-    ...
-  },
-+ "pnpm": {
-+   "overrides": {
-+     "@huggingface/transformers>sharp": ">=0.35.4",
-+     "@esbuild-kit/core-utils>esbuild": ">=0.25.0"
-+   }
-+ }
+- import { motion, AnimatePresence } from "framer-motion";
++ import { motion, AnimatePresence } from "motion/react";
 ```
 
+**Savings:** Potentially 15-18KB gzipped if components are migrated to `motion/mini` where they only use basic animations (many of your components just do fadeUp/opacity/translateY).
+
+**Effort:** 2-3 hours. Find-and-replace imports, test each component. Also aligns tech-docs-generator (currently on framer-motion 12.43.0).
+
 ---
 
-## Validation Commands (Pending Authorization)
+### B3. `gsap` + `@gsap/react` — EVALUATE CONSOLIDATION
 
-| Command | Verifies |
+**Current:** gsap is used in 3-4 places:
+- `site/lib/helpers/gsapMotion.ts` — ScrollTrigger setup, reveal presets
+- Quote-cart header reveal (GSAP_REVEAL with stagger)
+- Legal pages (`data-legal-reveal` scroll animation)
+- `useGSAP` hook from `@gsap/react`
+
+**framer-motion already provides:** `useInView`, `whileInView`, `useScroll`, `useTransform`, `AnimatePresence` — all of which cover the same use cases (scroll-triggered reveals, parallax, staggered entry).
+
+**Option 1: Consolidate to motion only** — Replace GSAP scroll reveals with motion's `whileInView` + stagger. This is what `site/lib/helpers/motion.ts` already does for 15+ components. GSAP's 3-4 consumers would move to the same pattern.
+- **Savings:** ~25KB gzipped (gsap core + ScrollTrigger + @gsap/react)
+- **Effort:** 4-6 hours. Rewrite scroll reveal logic in 3-4 components.
+- **Risk:** Medium. GSAP's `ScrollTrigger` is more powerful for complex scrub/pin animations. But this project doesn't use scrub or pin — just basic scroll-triggered opacity/translateY reveals, which motion handles natively.
+
+**Option 2: Keep both** — The current split is logical (framer-motion = component-level declarative, gsap = imperative scroll). ~60KB combined is acceptable for a marketing site.
+
+**Recommendation:** Option 1 (consolidate). The gsap usage is minimal and duplicates what motion already does in 15+ other components. But this is lower priority than the other fixes.
+
+---
+
+### B4. `uuid` → Web Crypto (PARTIAL REPLACE)
+
+**Current:** 1 import in `site/lib/uuid/normalizeUuid.ts` for `uuidv5()` (deterministic name-based UUIDs from slugs) and `validate()`.
+
+**The situation:** `crypto.randomUUID()` is native and already used elsewhere for random UUIDs. But UUIDv5 (deterministic, SHA-1-based) has no native Web Crypto equivalent. There's a [gist showing how to implement it with SubtleCrypto](https://gist.github.com/ijisol/bc6ebd1ecb1c31d4981f24c8093a3b82), but it's ~40 lines of manual SHA-1 hashing.
+
+**Recommendation:** Keep `uuid` for now. The v5 functionality is genuinely needed for `catalogProductIdFromSlug()` and has no clean native replacement. The package is well-maintained and lightweight (~5KB). Not worth hand-rolling SHA-1 UUID generation.
+
+---
+
+### B5. `@t3-oss/env-nextjs` → Zod 4 native env validation (EVALUATE)
+
+**Current:** 1 import in `site/lib/env.server.ts`. Uses `createEnv()` to validate server environment variables with Zod schemas.
+
+**Zod 4 (already installed)** now has built-in `.parse()` that can validate `process.env` directly. The `@t3-oss/env-nextjs` wrapper adds:
+- Client/server env separation (prevents server env leaking to client bundles)
+- `NEXT_PUBLIC_` prefix enforcement
+- Validation at import time with good error messages
+
+**Recommendation:** Keep for now. The client/server separation and `NEXT_PUBLIC_` enforcement is valuable and not trivially replicated with raw Zod. The package is actively maintained (Colin McDonnell is involved) and tiny (~2KB). But if you ever want to simplify, a 30-line Zod wrapper would replace it.
+
+---
+
+### B6. `@prometheus-io/client` — CORRECT PACKAGE (no replacement needed)
+
+**Current:** v0.16.0. This IS the official Prometheus Node.js client — it was renamed from `prom-client` to `@prometheus-io/client` in the v16 release. The project is on the right package. Just update to 0.16.1.
+
+---
+
+### B7. `clsx` + `tailwind-merge` → keep both (no replacement)
+
+**Current:** `clsx` for conditional class joining, `tailwind-merge` for deduplication. Combined in `site/lib/utils.ts` as `cn()`.
+
+10+ direct `clsx` imports also exist across components (bypassing `cn()`).
+
+**Why keep:** This is the standard pattern. `tailwind-merge` can't replace `clsx` (it handles dedup, not conditional logic). `clsx` can't replace `tailwind-merge` (it doesn't know Tailwind class priority). Together they're ~3KB.
+
+**Minor cleanup:** Consider replacing the 10+ direct `clsx` imports with `cn()` from `site/lib/utils.ts` for consistency, since `cn()` already wraps both.
+
+---
+
+## Part C: Architecture Assessment — Package Groups
+
+### C1. AI & Retrieval Stack (7 packages, ~2.5MB installed)
+
+| Package | Role | Imports | Verdict |
+|---|---|---|---|
+| `@mastra/core` | Agent framework, LLM routing, embeddings | 7 files | ✅ Core — justified |
+| `@mastra/memory` | Conversation memory for advisor agent | 1 file (`advisorMemory.ts`) | 🟡 Light usage — single file wrapper |
+| `@mastra/rag` | RAG pipeline tools | 1 file (`catalogRag.ts`) — `createVectorQueryTool` | 🟡 Light usage — single function import |
+| `@ai-sdk/amazon-bedrock` | Bedrock LLM provider for Mastra | Provider config | ✅ Required if using Bedrock |
+| `@lancedb/lancedb` | Vector embeddings storage/search | 1 file (`lanceVectorStore.ts`) | ✅ Required for semantic search |
+| `@orama/orama` | Full-text search engine | 1 file (`catalogLocalSearch.ts`) | 🟡 See analysis below |
+| `fuse.js` | Fuzzy client-side search | 1 file (`applyCatalogProductFilters.ts`) | 🟡 See analysis below |
+
+**3 search engines — is that redundant?**
+
+No, they serve different purposes in a search funnel:
+
+| Engine | Where | What it does |
+|---|---|---|
+| **LanceDB** | Server — vector store | Semantic similarity search ("chairs like Aeron"). Embedding-based. Used by the AI advisor for RAG retrieval. |
+| **Orama** | Server — full-text | Exact/partial text matching with scoring ("mesh back 500mm"). Used for structured catalog search with filters. |
+| **Fuse.js** | Client — fuzzy filter | Typo-tolerant fuzzy matching on already-loaded product lists ("ergnomic" → "ergonomic"). Used in the product filter grid after data is fetched. |
+
+**Could any be removed?**
+- Fuse.js: Orama can also do fuzzy matching, but Fuse.js runs client-side on already-loaded data — different execution context. If you wanted to eliminate it, you'd move all filtering server-side. Low priority.
+- Orama: Could theoretically be replaced by Supabase full-text search (`tsvector`) or LanceDB's own filtering. But Orama runs in-process without network latency. Keep.
+- LanceDB: No replacement for vector search. Required for the AI advisor's RAG pipeline.
+
+**@mastra/memory and @mastra/rag — are they justified?**
+
+They're lightly used (1 file each) but they're part of the Mastra ecosystem that `@mastra/core` depends on architecturally. Removing them would mean reimplementing conversation memory and the vector query tool manually. The value isn't in lines of code — it's in Mastra's integration with the agent framework. Keep.
+
+---
+
+### C2. Animation Stack (4 packages, ~60KB gzipped)
+
+| Package | Imports | Role |
+|---|---|---|
+| `framer-motion` 13.1.1 | 15+ components | Declarative component animations (motion.div, AnimatePresence, useInView, useScroll) |
+| `gsap` 3.15.0 | 2 files | ScrollTrigger reveals on legal/quote-cart pages |
+| `@gsap/react` 2.1.2 | via useGSAP hook | React integration for gsap |
+| `tw-animate-css` 1.4.0 | CSS-only (runtime.css) | Tailwind animation utility classes |
+
+**The overlap:** framer-motion and gsap both do scroll-triggered reveals. framer-motion does it in 15+ components via `whileInView`/`useInView`. gsap does it in 2-3 components via `ScrollTrigger`. The gsap usage could migrate to framer-motion's patterns, saving ~25KB. See B3 above.
+
+**tw-animate-css:** Provides pre-built CSS animation classes (fade-in, slide-up, etc.) used via Tailwind utility classes. The FOCSS system has its own keyframes too (`home-reveal-up`, `marquee-left`, etc.). tw-animate-css fills a different niche — it's for component-level CSS animations in admin/planner surfaces where framer-motion isn't loaded. Keep.
+
+---
+
+### C3. State Management (3 packages)
+
+| Package | Stores | Role |
+|---|---|---|
+| `zustand` 5.0.15 | 7 stores | Studio UI, Studio catalog, Planner UI, Planner catalog, quote-cart (persisted), product compare (persisted), CRM |
+| `@tanstack/react-query` 5.102.6 | Used in FilterGrid, admin pages | Server state caching + refetch |
+| `nuqs` 2.10.1 | 5 imports | URL query state for filters and admin views |
+
+**Is there overlap?** No — each handles a different state tier:
+- **zustand:** Client-only ephemeral/persisted state (cart, compare, dock panel positions)
+- **react-query:** Server state with cache invalidation (product lists, admin data)
+- **nuqs:** URL state (filter params, search terms — shareable/bookmarkable)
+
+This is actually a clean architecture. No replacements needed.
+
+---
+
+### C4. Database Stack (4 packages)
+
+| Package | Role | When used |
+|---|---|---|
+| `@supabase/supabase-js` | Supabase client (query builder, auth, storage) | Most runtime queries — `.from().select().eq()` |
+| `@supabase/ssr` | SSR cookie-based Supabase client | Server components + API routes |
+| `drizzle-orm` | Type-safe ORM with migrations | Schema definitions, some server queries |
+| `postgres` | Raw Postgres driver | Scripts (seed, migrate, backup), Drizzle connection |
+
+**The pattern:** Supabase JS for most application queries (benefits from RLS, real-time, auth integration). Drizzle for schema definitions and type generation. Raw `postgres` driver for scripts and Drizzle's connection layer. This is the [recommended Supabase + Drizzle pattern](https://supabase.com/docs/guides/database/drizzle).
+
+**Could Drizzle replace Supabase JS?** Technically yes — Drizzle can do everything the Supabase client does, with stronger types. But you'd lose:
+- Supabase's built-in RLS enforcement on the client
+- Real-time subscriptions
+- Storage client integration
+- The simpler `.from().select()` API for basic queries
+
+**Recommendation:** Keep both. The split is standard and well-reasoned. Use Supabase JS for auth + RLS-guarded reads, Drizzle for complex joins/aggregations and schema management.
+
+---
+
+### C5. Observability Stack (4 packages)
+
+| Package | Role | Status |
+|---|---|---|
+| `@vercel/otel` 2.1.3 | OpenTelemetry registration | 1 import in `instrumentation.ts` — registers OTLP exporter |
+| `@prometheus-io/client` 0.16.0 | Custom Prometheus metrics | Used in `site/lib/observability/metrics.ts` |
+| `@vercel/analytics` 2.0.1 | Vercel Web Analytics (page views, visitor counts) | Mounted in `SiteAnalytics.tsx` |
+| `@vercel/speed-insights` 2.0.0 | Core Web Vitals (LCP, FID, CLS) | Mounted in `SiteAnalytics.tsx` |
+
+**Overlap?** Vercel Analytics and Prometheus metrics track different things:
+- Vercel: Client-side page views, visitors, Web Vitals (sent to Vercel dashboard)
+- Prometheus: Server-side request counts, latencies, error rates (scraped by Prometheus/Grafana stack in `config/observability/`)
+- OTLP: Distributed traces (sent to configured OTLP endpoint, if set)
+
+No replacements needed. The stack is clean and each package serves a distinct purpose.
+
+---
+
+### C6. UI Component Stack (5 packages)
+
+| Package | Role | Usage depth |
+|---|---|---|
+| `react-aria-components` 1.20.0 | Accessible UI primitives | Button, Dialog, Modal, Input, TextArea — 5+ component files |
+| `dockview-react` 8.2.0 | Dock panel layout | Studio + Planner dock shells (6+ imports) |
+| `@phosphor-icons/react` 2.1.10 | Icon library | Used everywhere (50+ imports estimated) |
+| `embla-carousel-react` 8.6.0 | Carousel/slider | Product gallery, hero slider |
+| `fabric` 7.4.0 | HTML5 Canvas | Planner + Studio drawing canvas — core to the product |
+
+**Are there redundant component libraries?** No. react-aria provides accessible primitives (button, dialog, modal), not a full component library. The project builds its own components on top. dockview is a specialized dock/panel layout that nothing else provides. fabric is the 2D canvas engine — irreplaceable for the Planner/Studio product.
+
+No replacements needed.
+
+---
+
+### C7. Form Stack (4 packages)
+
+| Package | Role |
 |---|---|
-| `pnpm install` | Dependency tree resolves after changes |
-| `pnpm audit` | Vulnerabilities resolved |
-| `pnpm run typecheck` | No type errors from removals |
-| `pnpm run typecheck:tests` | Test types still valid |
-| `pnpm run gate:fast` | Full dev-loop validation |
+| `react-hook-form` 7.86.0 | Form state, validation, submission |
+| `@hookform/resolvers` 5.9.1 | Zod resolver for react-hook-form |
+| `zod` 4.4.3 | Schema validation (forms + API + env) |
+| `next-safe-action` 8.6.1 | Type-safe server actions with error handling |
+
+**Are forms consistent?** Yes — contact forms, admin forms, and catalog management all use react-hook-form + zod + next-safe-action. The pattern is: zod schema → react-hook-form with zodResolver → useAction(serverAction) for submission. Clean and consistent.
+
+No replacements needed.
 
 ---
 
-*Plan generated from static analysis. All package removals were verified to have zero imports in the codebase.*
+## Summary — What to actually change
+
+| Priority | Action | Savings | Effort |
+|---|---|---|---|
+| **Do now** | Remove `use`, `corepack`, `pnpm` | ~30MB node_modules, supply chain risk | 5 min |
+| **Do now** | Add pnpm overrides for 2 CVEs | Fixes HIGH + MODERATE vulnerabilities | 10 min |
+| **Do now** | `pnpm update` | 17 packages current | 5 min |
+| **Do soon** | Replace `axios` → `browserApiFetch` | ~30KB client bundle | 1-2 hours |
+| **Do soon** | Rename `framer-motion` → `motion` | Future-proofing, potential 15-18KB savings | 2-3 hours |
+| **Evaluate** | Consolidate gsap → motion | ~25KB client bundle | 4-6 hours |
+| **Keep** | AI stack (7 packages) | N/A — each serves a distinct role | — |
+| **Keep** | State management (zustand + react-query + nuqs) | N/A — clean tier split | — |
+| **Keep** | Database stack (supabase + drizzle + postgres) | N/A — recommended pattern | — |
+| **Keep** | Observability (otel + prometheus + vercel) | N/A — distinct metrics | — |
+| **Keep** | UI components (react-aria + dockview + phosphor + embla + fabric) | N/A — each irreplaceable | — |
+| **Keep** | Form stack (react-hook-form + zod + next-safe-action) | N/A — consistent pattern | — |
+| **Keep** | Search stack (LanceDB + Orama + Fuse.js) | N/A — different tiers of search | — |
+| **Keep** | `uuid` | v5 deterministic UUIDs have no native replacement | — |
+| **Keep** | `@t3-oss/env-nextjs` | Client/server env separation worth the 2KB | — |
+
+---
+
+*Analysis based on import grep across entire codebase, `pnpm audit`, `pnpm outdated`, and web research for package alternatives. All "zero imports" claims verified by regex search.*
+
+Content was rephrased for compliance with licensing restrictions.

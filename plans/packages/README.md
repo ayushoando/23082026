@@ -1,44 +1,46 @@
 # Package & Dependency Audit Plan
 
 **Created:** 2026-08-31
-**Status:** Audit complete, 3-wave remedy plan ready for execution
+**Status:** Full audit complete with architecture assessment and replacement analysis
 **Owner:** Repository owner
 
 ## Documents
 
 | Document | Purpose |
 |---|---|
-| [`package-audit-report.md`](./package-audit-report.md) | Full audit: 49 deps + 27 devDeps — vulnerabilities, dead packages, usage analysis, version hygiene |
-| [`remedy-plan.md`](./remedy-plan.md) | 3-wave fix plan with exact commands, diffs, and verification steps |
+| [`package-audit-report.md`](./package-audit-report.md) | Full inventory: 49 deps + 27 devDeps — vulnerabilities, dead packages, usage classification |
+| [`remedy-plan.md`](./remedy-plan.md) | Cleanup actions + replacement analysis + architecture assessment for every package group |
 
-## Key Findings
+## Key Decisions
 
-### Remove immediately (zero imports confirmed)
-- **`use`** v3.1.1 — Accidental install. Not React's `use()` hook. Zero imports.
-- **`corepack`** v0.35.0 — Node.js built-in, not a project dependency. `packageManager` field already handles this.
-- **`pnpm`** v11.24.0 — Declared as both `packageManager` AND dependency. Redundant ~30MB.
+### Remove (3 dead, 1 replaceable)
+| Package | Action | Reason |
+|---|---|---|
+| `use` | Remove | Zero imports. Accidental install. Supply chain risk. |
+| `corepack` | Remove | Zero imports. Node.js built-in, not a project dep. |
+| `pnpm` | Remove | Zero imports. Redundant with `packageManager` field. |
+| `axios` | Replace with native `fetch` | 1 import. Rest of codebase uses `browserApiFetch`. |
 
-### Security (3 vulnerabilities, all transitive)
-- **HIGH:** sharp <0.35.0 via `@lancedb/lancedb` → Fix with pnpm override
-- **MODERATE:** esbuild ≤0.24.2 via `drizzle-kit` → Fix with pnpm override
-- **LOW:** `@ai-sdk/provider-utils` ≤3.0.97 via `@mastra/core` → Monitor
+### Rename (1)
+| Package | Action | Reason |
+|---|---|---|
+| `framer-motion` | Migrate to `motion` package | Same library, renamed in 2025. Better tree-shaking, `motion/mini` (2.3KB) for simple animations. |
 
-### Replaceable
-- **`axios`** v1.20.0 — 1 import in entire codebase (`studioApi.ts`). Replace with native `fetch`.
+### Evaluate (1)
+| Package | Action | Reason |
+|---|---|---|
+| `gsap` + `@gsap/react` | Consider consolidating to `motion` | 3-4 uses doing scroll reveals that motion already handles in 15+ other components. Saves ~25KB. |
 
-### Outdated
-- 17 packages behind by minor/patch versions. `pnpm update` resolves all.
+### Keep — Architecture Justified (everything else)
+| Group | Packages | Reason |
+|---|---|---|
+| AI & Retrieval (7) | mastra/core, mastra/memory, mastra/rag, ai-sdk/bedrock, lancedb, orama, fuse.js | Each serves a distinct search tier (vector, full-text, fuzzy) or AI role. No redundancy. |
+| State (3) | zustand, react-query, nuqs | Clean tier split: client state, server cache, URL state. |
+| Database (4) | supabase-js, supabase/ssr, drizzle-orm, postgres | Recommended Supabase + Drizzle pattern. Each has a role. |
+| Observability (4) | vercel/otel, prometheus-io, vercel/analytics, vercel/speed-insights | Server metrics, client analytics, traces — no overlap. |
+| UI (5) | react-aria, dockview, phosphor-icons, embla-carousel, fabric | Each irreplaceable for its role. No duplication. |
+| Forms (4) | react-hook-form, hookform/resolvers, zod, next-safe-action | Consistent pattern across all forms. |
 
-## Remedy Timeline
-
-| Wave | What | Effort | Risk |
-|---|---|---|---|
-| Wave 1 | Remove 3 dead packages + move polygon-clipping to dev | 30 min | Zero |
-| Wave 2 | pnpm overrides for CVEs + `pnpm update` | 1-2 hours | Low |
-| Wave 3 | Replace axios, align framer-motion, standardize pinning | 2-3 hours | Medium |
-
-## Data Sources
-- `pnpm outdated` — 17 packages behind
-- `pnpm audit` — 3 vulnerabilities (1 high, 1 moderate, 1 low)
-- `pnpm ls --depth 0` — 109 packages across 2 workspaces
-- Import grep analysis — every dependency checked for actual usage
+## Security
+- 3 transitive CVEs fixable with pnpm overrides
+- 17 packages behind by minor/patch — `pnpm update` resolves all

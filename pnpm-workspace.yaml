@@ -24,6 +24,9 @@ overrides:
   onnxruntime-common: 1.19.2
   unicorn-magic: 0.4.0
   zod-from-json-schema: 0.5.6
+  # CVE overrides — force transitive deps to patched versions
+  "@huggingface/transformers>sharp": ">=0.35.4"
+  "@esbuild-kit/core-utils>esbuild": ">=0.25.0"
   # Vitest declares jsdom as an optional peer; fabric lists it for Node canvas tests.
   # We use happy-dom only — strip jsdom from the graph (pnpm peer-removal override).
   "vitest>jsdom": "-"
