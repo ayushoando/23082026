@@ -1,0 +1,70 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "7. Checkpoint - planner route and observability wired": [
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103321573
+      },
+      {
+        "executionId": "99453f14-73db-4d32-8a30-f521e8351cb4",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788105134993
+      }
+    ],
+    "9. Final checkpoint - full validation": [
+      {
+        "executionId": "989aa5a6-90e7-4775-9a82-e4ae60667a71",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103321795
+      },
+      {
+        "executionId": "99453f14-73db-4d32-8a30-f521e8351cb4",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788105135776
+      }
+    ],
+    "6.1 Implement the planner advisor handler and route with withAuth guardrails": [
+      {
+        "executionId": "40bcdc06-9f4a-4587-9908-4a9df3ebcdd4",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788103508982
+      },
+      {
+        "executionId": "acc18fd9-5ebf-4324-a5ff-0228fcaee7b9",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788104360701
+      },
+      {
+        "executionId": "acc18fd9-5ebf-4324-a5ff-0228fcaee7b9",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788104870608
+      }
+    ],
+    "6.2 Implement response shaping (streaming and non-streaming) and heuristic fallback": [
+      {
+        "executionId": "acc18fd9-5ebf-4324-a5ff-0228fcaee7b9",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788104879998
+      },
+      {
+        "executionId": "99453f14-73db-4d32-8a30-f521e8351cb4",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788105133726
+      },
+      {
+        "executionId": "99453f14-73db-4d32-8a30-f521e8351cb4",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788105162891
+      }
+    ],
+    "6.3 Wire the planner and catalog handlers through the observability adapter": [
+      {
+        "executionId": "99453f14-73db-4d32-8a30-f521e8351cb4",
+        "chatSessionId": "sess_36385ce3-36e9-45d2-80b3-011ffc257bc8",
+        "timestamp": 1788105134409
+      }
+    ]
+  }
+}

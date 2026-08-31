@@ -1,0 +1,45 @@
+﻿---
+name: verify-and-gate
+description: Use when the user explicitly authorizes repository tests or gates and the enabled pre-execution hook permits the requested command.
+---
+
+# Verify and Gate
+
+USER-EXPLICIT AUTHORIZATION REQUIRED. By default, users run tests and gates themselves. An agent may execute a test-like command only when the user explicitly authorizes that command in the current session **and** the enabled pre-execution `block-agent-tests` hook permits it. The live hook uses `PreToolUse` for agent shell tools and invokes `.kiro/hooks/block-agent-tests.mjs`. If it denies a command, do not retry, bypass, weaken, or remove it; provide the exact command for the user instead.
+
+Authority: the current user instruction, live hook state, root `AGENTS.md`, and `Testing-handbook.md` govern execution.
+
+## Sequence (dev loop)
+1. Focused tests first:
+   `pnpm exec vitest run --config tests/vitest.config.ts <path>`
+2. Then fast gate (per-module dev bar):
+   `pnpm run gate:fast`
+3. Ship bar only when releasing:
+   `pnpm run gate`
+
+Always run from repo root with `pnpm`. Never npm/yarn/npx.
+
+## Two lanes
+`pnpm run test` runs TWO vitest lanes (default + tech-docs). Each prints its own
+summary; a `| tail` keeps only the last. Read BOTH, or the two JSON files under
+`results/tests/`. tech-docs lane: `pnpm exec vitest run --config tests/vitest.tech-docs.config.ts`.
+
+## Persistence mode in tests
+Vitest sets `DEV_AUTH_BYPASS: "true"` so both persistence selectors resolve to
+`supabase`. A route test mocking only disk helpers WILL reach the network. Disk
+contract tests must `vi.mock` `plannerPersistenceMode` / `furnitureCatalogMode`.
+Production filesystem is read-only — disk-green proves nothing about the live path.
+
+## Honesty
+No hollow tests. A partial green is not done. Build interrupted by the environment
+is not a successful build. Record blockers in `Failures.md`.
+
+## Powers to activate (agent decides)
+- Unit/gate green is not browser proof. For explicitly authorized interactive UI,
+  canvas, or route visual verification, check the installed-power registry first
+  and use a suitable browser capability only if it is present, against
+  `http://localhost:3000` (never `127.0.0.1`).
+- Route production observability to the repository's live observability modules.
+  Do not infer Sentry or Datadog RUM wiring, and use an external observability
+  capability only after a direct registry check confirms availability.
+Apply the Kiro Agent Contract at ./.kiro/skills/oando-master/SKILL.md before any action.
