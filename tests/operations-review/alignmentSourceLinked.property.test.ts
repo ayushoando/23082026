@@ -90,6 +90,7 @@ function baselineInput(): AlignmentInput {
         "    runs-on: ubuntu-latest",
         "    steps:",
         "      - run: pnpm run backup:supabase:r2",
+        "      # recovery: restore via db:restore",
       ].join("\n"),
     ),
     operationsRouter: makeSource(
@@ -106,7 +107,15 @@ function baselineInput(): AlignmentInput {
 /** A well-formed script name that is unlikely to collide with baseline scripts. */
 const phantomScriptArb = fc
   .stringMatching(/^[a-z][a-z0-9-]{3,20}$/)
-  .filter((s) => !["vercel:prod", "worker:deploy", "backup:supabase:r2", "db:restore"].includes(s));
+  .filter(
+    (s) =>
+      ![
+        "vercel:prod",
+        "worker:deploy",
+        "backup:supabase:r2",
+        "db:restore",
+      ].includes(s),
+  );
 
 /** An all-caps environment variable name. */
 const envVarArb = fc.stringMatching(/^[A-Z][A-Z0-9_]{3,30}$/);
@@ -203,7 +212,9 @@ describe("Property 12: Alignment comparison produces complete, source-linked dif
         };
         const { differences } = compareAlignment(input);
 
-        const commandDiffs = differences.filter((d) => d.dimension === "command");
+        const commandDiffs = differences.filter(
+          (d) => d.dimension === "command",
+        );
         expect(commandDiffs.length).toBeGreaterThan(0);
 
         const matchingDiff = commandDiffs.find((d) =>
@@ -238,7 +249,9 @@ describe("Property 12: Alignment comparison produces complete, source-linked dif
         };
         const { differences } = compareAlignment(input);
 
-        const commandDiffs = differences.filter((d) => d.dimension === "command");
+        const commandDiffs = differences.filter(
+          (d) => d.dimension === "command",
+        );
         expect(commandDiffs.length).toBeGreaterThan(0);
 
         const matchingDiff = commandDiffs.find((d) =>
@@ -271,10 +284,14 @@ describe("Property 12: Alignment comparison produces complete, source-linked dif
         };
         const { differences } = compareAlignment(input);
 
-        const envDiffs = differences.filter((d) => d.dimension === "environment");
+        const envDiffs = differences.filter(
+          (d) => d.dimension === "environment",
+        );
         expect(envDiffs.length).toBeGreaterThan(0);
 
-        const matchingDiff = envDiffs.find((d) => d.exactDifference.includes(envVar));
+        const matchingDiff = envDiffs.find((d) =>
+          d.exactDifference.includes(envVar),
+        );
         expect(matchingDiff).toBeDefined();
         expect(matchingDiff!.sourcePaths).toContain("vercel.json");
         expect(matchingDiff!.sourcePaths).toContain("OPERATIONS_RUNBOOK.md");
@@ -350,7 +367,9 @@ describe("Property 12: Alignment comparison produces complete, source-linked dif
         };
         const { differences } = compareAlignment(input);
 
-        const recoveryDiffs = differences.filter((d) => d.dimension === "recovery");
+        const recoveryDiffs = differences.filter(
+          (d) => d.dimension === "recovery",
+        );
         expect(recoveryDiffs.length).toBeGreaterThan(0);
 
         for (const diff of recoveryDiffs) {
@@ -398,7 +417,9 @@ describe("Property 12: Alignment comparison produces complete, source-linked dif
     expect(approvalDiffs.length).toBeGreaterThan(0);
 
     for (const diff of approvalDiffs) {
-      expect(diff.sourcePaths).toContain(".github/workflows/supabase-backup-r2.yml");
+      expect(diff.sourcePaths).toContain(
+        ".github/workflows/supabase-backup-r2.yml",
+      );
       expect(diff.sourcePaths).toContain("OPERATIONS_RUNBOOK.md");
       expect(diff.exactDifference.trim()).not.toBe("");
       expect(diff.recommendedResolution.trim()).not.toBe("");

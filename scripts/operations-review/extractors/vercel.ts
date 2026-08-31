@@ -78,7 +78,11 @@ function requireString(value: unknown, field: string): string {
 }
 
 function requireStringArray(value: unknown, field: string): readonly string[] {
-  if (!Array.isArray(value) || value.length === 0 || value.some((item) => typeof item !== "string")) {
+  if (
+    !Array.isArray(value) ||
+    value.length === 0 ||
+    value.some((item) => typeof item !== "string")
+  ) {
     throw new Error(`vercel.json requires a non-empty ${field} string array.`);
   }
   return value;
@@ -89,7 +93,8 @@ function parseVercelConfig(source: RepositorySource): Required<VercelConfig> {
   try {
     parsed = JSON.parse(source.content);
   } catch (error) {
-    const message = error instanceof Error ? error.message : "unknown parse error";
+    const message =
+      error instanceof Error ? error.message : "unknown parse error";
     throw new Error(`Cannot parse vercel.json: ${message}`);
   }
 
@@ -107,10 +112,21 @@ function parseVercelConfig(source: RepositorySource): Required<VercelConfig> {
   };
 }
 
-function assertContains(source: RepositorySource, expected: string, locator: string): void {
-  if (!source.content.includes(expected)) {
-    throw new Error(`${source.source.path} does not contain expected ${locator}: ${expected}`);
+function assertContains(
+  source: RepositorySource,
+  expected: string,
+  locator: string,
+): void {
+  if (source.content.includes(expected)) {
+    return;
   }
+  const noSpace = expected.replace(/":\s+"/g, '":"');
+  if (source.content.includes(noSpace)) {
+    return;
+  }
+  throw new Error(
+    `${source.source.path} does not contain expected ${locator}: ${expected}`,
+  );
 }
 
 function isPresent(value: string | undefined): value is string {
@@ -125,8 +141,14 @@ function persistedDataGaps(
     return [];
   }
 
-  const runbookRelease = reference(sources.runbook, "§1 Deploy: order and production command sequence");
-  const runbookRollback = reference(sources.runbook, "§4 Rollback: code/schema separation and compatibility hazard");
+  const runbookRelease = reference(
+    sources.runbook,
+    "§1 Deploy: order and production command sequence",
+  );
+  const runbookRollback = reference(
+    sources.runbook,
+    "§4 Rollback: code/schema separation and compatibility hazard",
+  );
   const gaps: AttributableVercelGap[] = [];
 
   const addGap = (
@@ -186,7 +208,12 @@ function persistedDataGaps(
       "P0",
       "critical",
       "Name the backup artifact/category and evidence required before release.",
-      [reference(sources.runbook, "opening production-impact warning; §6 Backups")],
+      [
+        reference(
+          sources.runbook,
+          "opening production-impact warning; §6 Backups",
+        ),
+      ],
     );
   }
   if (!isPresent(input.compatibilityHazard)) {
@@ -236,12 +263,36 @@ export function extractVercelReview(
 ): VercelExtractionResult {
   const config = parseVercelConfig(sources.vercelConfig);
 
-  assertContains(sources.packageManifest, '"vercel:prod": "node scripts/run-ops.mjs vercel:prod"', "scripts.vercel:prod");
-  assertContains(sources.packageManifest, '"vercel:preview": "node scripts/run-ops.mjs vercel:preview"', "scripts.vercel:preview");
-  assertContains(sources.operationsRouter, '"vercel:prod": () =>', "COMMANDS[vercel:prod]");
-  assertContains(sources.operationsRouter, '"vercel:preview": () =>', "COMMANDS[vercel:preview]");
-  assertContains(sources.runbook, "Order: **migrations → seed → code.**", "§1 Deploy order");
-  assertContains(sources.runbook, "Smoke in browser:", "§1 post-deployment smoke expectation");
+  assertContains(
+    sources.packageManifest,
+    '"vercel:prod": "node scripts/run-ops.mjs vercel:prod"',
+    "scripts.vercel:prod",
+  );
+  assertContains(
+    sources.packageManifest,
+    '"vercel:preview": "node scripts/run-ops.mjs vercel:preview"',
+    "scripts.vercel:preview",
+  );
+  assertContains(
+    sources.operationsRouter,
+    '"vercel:prod": () =>',
+    "COMMANDS[vercel:prod]",
+  );
+  assertContains(
+    sources.operationsRouter,
+    '"vercel:preview": () =>',
+    "COMMANDS[vercel:preview]",
+  );
+  assertContains(
+    sources.runbook,
+    "Order: **migrations → seed → code.**",
+    "§1 Deploy order",
+  );
+  assertContains(
+    sources.runbook,
+    "Smoke in browser:",
+    "§1 post-deployment smoke expectation",
+  );
 
   const observedConfiguration: EvidenceFact[] = [
     fact(
@@ -315,14 +366,14 @@ export function extractVercelReview(
   const gaps = persistedDataGaps(persistedDataRelease, sources);
   const completePersistedImpact =
     persistedDataRelease && gaps.length === 0
-      ? {
+      ? ({
           databaseOwners: persistedDataRelease.databaseOwners!,
           migrationImpact: persistedDataRelease.migrationImpact!,
           seedImpact: persistedDataRelease.seedImpact!,
           backupPrerequisite: persistedDataRelease.backupPrerequisite!,
           compatibilityHazard: persistedDataRelease.compatibilityHazard!,
           codeReleaseOrder: persistedDataRelease.codeReleaseOrder!,
-        } satisfies PersistedDataImpact
+        } satisfies PersistedDataImpact)
       : undefined;
 
   const releaseDecision: VercelReleaseDecision = {
@@ -338,7 +389,9 @@ export function extractVercelReview(
       "Observed /ooplanner rail, place, save, and reload smoke result",
       "Rollback readiness evidence for every persisted-data change",
     ],
-    ...(completePersistedImpact ? { persistedDataImpact: completePersistedImpact } : {}),
+    ...(completePersistedImpact
+      ? { persistedDataImpact: completePersistedImpact }
+      : {}),
     sources: [
       reference(sources.packageManifest, "$.scripts.vercel:prod"),
       reference(sources.operationsRouter, "COMMANDS[vercel:prod]"),
@@ -346,5 +399,10 @@ export function extractVercelReview(
     ],
   };
 
-  return { observedConfiguration, unverifiedExternalState, releaseDecision, gaps };
+  return {
+    observedConfiguration,
+    unverifiedExternalState,
+    releaseDecision,
+    gaps,
+  };
 }

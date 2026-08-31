@@ -16,7 +16,8 @@ const DiagnosticCode = {
     "AUDIT_SCHEMA_RUNTIME_CLAIM_REQUIRES_PROTECTED_LANE",
   runtimeOccurrenceNotAuthorized:
     "AUDIT_SCHEMA_RUNTIME_OCCURRENCE_NOT_AUTHORIZED",
-  staticClaimRequiresStaticLane: "AUDIT_SCHEMA_STATIC_CLAIM_REQUIRES_STATIC_LANE",
+  staticClaimRequiresStaticLane:
+    "AUDIT_SCHEMA_STATIC_CLAIM_REQUIRES_STATIC_LANE",
   unknownRecordType: "AUDIT_SCHEMA_UNKNOWN_RECORD_TYPE",
 } as const;
 
@@ -25,11 +26,12 @@ export type AuditSchemaDiagnosticCode =
 
 const NonEmptyStringSchema = z.string().trim().min(1);
 const StringListSchema = z.array(NonEmptyStringSchema).min(1);
-const OptionalStringListSchema = z.array(NonEmptyStringSchema);
-const IsoTimestampSchema = z.string().refine(
-  (value) => Number.isFinite(Date.parse(value)),
-  { message: "AUDIT_SCHEMA_INVALID_TIMESTAMP" },
-);
+const OptionalStringListSchema = z.array(NonEmptyStringSchema).optional();
+const IsoTimestampSchema = z
+  .string()
+  .refine((value) => Number.isFinite(Date.parse(value)), {
+    message: "AUDIT_SCHEMA_INVALID_TIMESTAMP",
+  });
 const SchemaVersionSchema = z.literal(AUDIT_SCHEMA_VERSION);
 
 const ProductSurfaceSchema = z.enum([
@@ -126,7 +128,8 @@ function addConditionalResultIssues(
   context: z.RefinementCtx,
 ): void {
   if (
-    (resultClassification === "blocked" || resultClassification === "not-run") &&
+    (resultClassification === "blocked" ||
+      resultClassification === "not-run") &&
     (!blockers || blockers.length === 0)
   ) {
     context.addIssue({
@@ -169,7 +172,10 @@ export const AuthorizationEvidenceSchema = z
   .strict()
   .superRefine((authorization, context) => {
     if (authorization.hookDecision === "deny") {
-      if (authorization.executedAt !== undefined || authorization.exitStatus !== undefined) {
+      if (
+        authorization.executedAt !== undefined ||
+        authorization.exitStatus !== undefined
+      ) {
         context.addIssue({
           code: "custom",
           path: ["executedAt"],
@@ -178,7 +184,10 @@ export const AuthorizationEvidenceSchema = z
       }
     }
 
-    if (authorization.executedAt !== undefined && authorization.hookDecision !== "permit") {
+    if (
+      authorization.executedAt !== undefined &&
+      authorization.hookDecision !== "permit"
+    ) {
       context.addIssue({
         code: "custom",
         path: ["hookDecision"],
@@ -324,7 +333,10 @@ export const AdapterGapRecordSchema = z
   })
   .strict()
   .superRefine((gap, context) => {
-    if (gap.gapKind === "unsupported-field" && gap.unsupportedFields.length === 0) {
+    if (
+      gap.gapKind === "unsupported-field" &&
+      (!gap.unsupportedFields || gap.unsupportedFields.length === 0)
+    ) {
       context.addIssue({
         code: "custom",
         path: ["unsupportedFields"],
@@ -607,7 +619,10 @@ export const HindiNoteSchema = z
         message: "AUDIT_SCHEMA_APPROVED_HINDI_REQUIRES_APPROVAL_REFERENCE",
       });
     }
-    if (!note.approvedHindiText && (!note.translationRequired || !note.humanReviewRequired)) {
+    if (
+      !note.approvedHindiText &&
+      (!note.translationRequired || !note.humanReviewRequired)
+    ) {
       context.addIssue({
         code: "custom",
         path: ["translationRequired"],
@@ -651,7 +666,10 @@ export const SeverityAssessmentSchema = z
   })
   .strict();
 
-const EvidenceSeveritySchema = z.union([SeveritySchema, z.literal("not-applicable")]);
+const EvidenceSeveritySchema = z.union([
+  SeveritySchema,
+  z.literal("not-applicable"),
+]);
 
 export const EvidenceRecordSchema = z
   .object({
@@ -719,12 +737,15 @@ export const EvidenceRecordSchema = z
 
     if (
       evidence.resultClassification !== "not-applicable" &&
+      evidence.resultClassification !== "not-run" &&
+      evidence.resultClassification !== "blocked" &&
       evidence.severity === "not-applicable"
     ) {
       context.addIssue({
         code: "custom",
         path: ["severity"],
-        message: "AUDIT_SCHEMA_NOT_APPLICABLE_SEVERITY_REQUIRES_NOT_APPLICABLE_RESULT",
+        message:
+          "AUDIT_SCHEMA_NOT_APPLICABLE_SEVERITY_REQUIRES_NOT_APPLICABLE_RESULT",
       });
     }
 
@@ -736,7 +757,9 @@ export const EvidenceRecordSchema = z
           message: DiagnosticCode.runtimeClaimRequiresProtectedLane,
         });
       }
-      if (!supportsRuntimeClaim(evidence.authorization, evidence.occurrenceId)) {
+      if (
+        !supportsRuntimeClaim(evidence.authorization, evidence.occurrenceId)
+      ) {
         context.addIssue({
           code: "custom",
           path: ["authorization"],
@@ -1126,9 +1149,7 @@ export const AuditRecordSchemas = {
 } as const;
 
 export type AuditRecordType = keyof typeof AuditRecordSchemas;
-export type AuditRecord = z.infer<
-  (typeof AuditRecordSchemas)[AuditRecordType]
->;
+export type AuditRecord = z.infer<(typeof AuditRecordSchemas)[AuditRecordType]>;
 
 export interface AuditSchemaDiagnostic {
   readonly code: string;
@@ -1161,7 +1182,9 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-function stableDiagnostics(error: z.ZodError): readonly AuditSchemaDiagnostic[] {
+function stableDiagnostics(
+  error: z.ZodError,
+): readonly AuditSchemaDiagnostic[] {
   return Object.freeze(
     error.issues
       .map((issue, index) => {
@@ -1196,11 +1219,12 @@ function diagnostic(
   return Object.freeze({ code, path: Object.freeze([...path]), message });
 }
 
-export function parseAuditRecord(
-  value: unknown,
-):
+export function parseAuditRecord(value: unknown):
   | { readonly success: true; readonly data: AuditRecord }
-  | { readonly success: false; readonly diagnostics: readonly AuditSchemaDiagnostic[] } {
+  | {
+      readonly success: false;
+      readonly diagnostics: readonly AuditSchemaDiagnostic[];
+    } {
   if (!isRecord(value) || typeof value.recordType !== "string") {
     return {
       success: false,
@@ -1261,7 +1285,10 @@ export function validateAuditPartition(
     }
 
     validRecords.push(parsed.data);
-    if (parsed.data.recordType === "matrix-row" && parsed.data.status === "pending") {
+    if (
+      parsed.data.recordType === "matrix-row" &&
+      parsed.data.status === "pending"
+    ) {
       pendingOccurrenceIds.push(parsed.data.occurrenceId);
     }
   });
@@ -1313,13 +1340,15 @@ const EXAMPLE_PROVENANCE = {
 } as const;
 const EXAMPLE_BLOCKER = {
   blockerKind: "authorization",
-  detail: "The browser workflow has not received current-session authorization.",
+  detail:
+    "The browser workflow has not received current-session authorization.",
   pendingOperation: "pnpm exec playwright test --project=chromium",
 } as const;
 const EXAMPLE_AUTHORIZATION = {
   operationId: "operation.runtime-home",
   exactOperation: "pnpm exec playwright test --project=chromium --grep home",
-  authorizationStatement: "The repository owner authorized this exact operation.",
+  authorizationStatement:
+    "The repository owner authorized this exact operation.",
   authorizedInCurrentSession: true,
   repositoryRoot: "d:/23082026",
   hookName: "block-agent-tests",
@@ -1330,7 +1359,9 @@ const EXAMPLE_AUTHORIZATION = {
   targetEnvironment: "local",
   affectedOccurrenceIds: ["occurrence.home.default"],
   credentialOrFixtureNeeds: [],
-  outputLocations: ["results/site-ui-content-links-audit/example/evidence/runtime.json"],
+  outputLocations: [
+    "results/site-ui-content-links-audit/example/evidence/runtime.json",
+  ],
   limitations: ["The observation applies only to the selected occurrence."],
 } as const;
 
@@ -1371,7 +1402,8 @@ export function createAuditSchemaExamples(): readonly unknown[] {
     assessmentId: "severity.home.copy",
     findingId: "F-occurrence.home.default",
     severity: "low",
-    severityRationale: "The wording is localized and does not block the journey.",
+    severityRationale:
+      "The wording is localized and does not block the journey.",
     decidingDimension: "user-impact",
     userImpact: "The user may need more time to identify the catalog action.",
     affectedAudience: "marketing visitors",
@@ -1444,8 +1476,10 @@ export function createAuditSchemaExamples(): readonly unknown[] {
       subjectKeys: ["site/app/(site)/page.tsx"],
       gapKind: "unsupported-field",
       unsupportedFields: ["visibleOutput"],
-      missingPrerequisite: "The route adapter does not evaluate rendered visibility.",
-      proposedResolution: "Evaluate visible output in a later static or authorized runtime stage.",
+      missingPrerequisite:
+        "The route adapter does not evaluate rendered visibility.",
+      proposedResolution:
+        "Evaluate visible output in a later static or authorized runtime stage.",
       status: "open",
       provenance: [EXAMPLE_PROVENANCE],
     },
@@ -1627,7 +1661,8 @@ export function createAuditSchemaExamples(): readonly unknown[] {
       occurrenceId: "occurrence.home.default",
       resultClassification: "conforming",
       claimBasis: "source-observed",
-      conclusionSummary: "The static source declares the expected catalog link.",
+      conclusionSummary:
+        "The static source declares the expected catalog link.",
       evidenceIds: ["evidence.home.link"],
       requirementIds: ["5.1"],
       productSurface: "marketing",
@@ -1641,7 +1676,8 @@ export function createAuditSchemaExamples(): readonly unknown[] {
       productSurface: "marketing",
       rootCauseSignature: "marketing-navigation-label",
       likelySourceAreas: ["site/components/site/SiteHeader.tsx"],
-      violatedContract: "Visible labels must identify the expected destination.",
+      violatedContract:
+        "Visible labels must identify the expected destination.",
       failureMechanism: "Ambiguous navigation copy.",
       findingIds: ["F-occurrence.home.default"],
       occurrenceIds: ["occurrence.home.default"],
@@ -1652,7 +1688,8 @@ export function createAuditSchemaExamples(): readonly unknown[] {
       exclusionId: "exclusion.legacy-route",
       inventoryId: "route.legacy",
       itemKind: "route",
-      reason: "The source identifies this route as legacy and outside the audit scope.",
+      reason:
+        "The source identifies this route as legacy and outside the audit scope.",
       evidenceReferences: ["site/app/legacy/page.tsx"],
       decisionOwner: "repository-owner",
       decidedAt: EXAMPLE_TIMESTAMP,
@@ -1678,8 +1715,10 @@ export function createAuditSchemaExamples(): readonly unknown[] {
       findingIds: ["F-occurrence.home.default"],
       affectedOccurrenceIds: ["occurrence.home.default"],
       rootCauseHypothesis: "The heading does not name the catalog destination.",
-      expectedOutcome: "Users understand that the call to action opens the catalog.",
-      proposedBehavior: "Replace the ambiguous heading with the approved proposal.",
+      expectedOutcome:
+        "Users understand that the call to action opens the catalog.",
+      proposedBehavior:
+        "Replace the ambiguous heading with the approved proposal.",
       copyProposalId: "proposal.home.heading",
       productSurface: "marketing",
       likelySourceAreas: ["site/components/site/SiteHeader.tsx"],
@@ -1698,7 +1737,8 @@ export function createAuditSchemaExamples(): readonly unknown[] {
       regressionRisk: "Low.",
       rolloutConsiderations: "Publish with reviewed Hindi wording.",
       rollbackConsiderations: "Restore the previous approved copy.",
-      verificationMethod: "Review the rendered copy in an authorized browser workflow.",
+      verificationMethod:
+        "Review the rendered copy in an authorized browser workflow.",
       requiresSeparateImplementationAuthorization: true,
     },
     {
@@ -1711,7 +1751,9 @@ export function createAuditSchemaExamples(): readonly unknown[] {
       exitCriteria: ["Schemas validate."],
       dependencyWaveIds: [],
       ownedPartitionIds: ["partition.wave-0.marketing"],
-      ownedOutputPaths: ["results/site-ui-content-links-audit/example/manifests/wave-0.json"],
+      ownedOutputPaths: [
+        "results/site-ui-content-links-audit/example/manifests/wave-0.json",
+      ],
       authorizationRequirement: "static-inspection-only",
       inputFingerprint: "fingerprint.wave-0",
       inventoryGeneration: 1,
@@ -1785,7 +1827,7 @@ export function createAuditSchemaExamples(): readonly unknown[] {
   ]);
 }
 
-export function createBlockedEvidenceExample(): unknown {
+export function createBlockedEvidenceExample(): Record<string, unknown> {
   return {
     ...exampleEnvelope("evidence", "record.evidence.blocked"),
     evidenceId: "evidence.home.runtime-blocked",
@@ -1811,7 +1853,9 @@ export function createBlockedEvidenceExample(): unknown {
     evidenceType: "authorization-gap",
     sourceOrRuntimeLocation: "authorization registry",
     capturedAt: EXAMPLE_TIMESTAMP,
-    reproductionSteps: ["Request authorization for the exact browser operation."],
+    reproductionSteps: [
+      "Request authorization for the exact browser operation.",
+    ],
     evidenceReferences: ["authorization registry"],
     requirementIds: ["4.3"],
     journeyIds: [],

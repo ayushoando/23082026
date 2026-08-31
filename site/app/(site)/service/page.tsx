@@ -8,7 +8,11 @@ import {
   SERVICE_PAGE_COPY,
   SERVICE_PAGE_PILLARS,
 } from "@/features/site/data/routeCopy";
-import { buildBreadcrumbJsonLd, buildPageJsonLd, buildPageMetadata } from "@/features/site/data/seo";
+import { SERVICE_PAGE_METADATA } from "@/features/site/data/routeMetadata";
+import {
+  buildBreadcrumbJsonLd,
+  buildPageJsonLd,
+} from "@/features/site/data/seo";
 import { withLocaleCopy } from "@/lib/i18n/withLocaleCopy";
 import { SITE_URL } from "@/lib/siteUrl";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
@@ -25,12 +29,7 @@ async function loadServiceCopy() {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const copy = await loadServiceCopy();
-  return buildPageMetadata(SITE_URL, {
-    title: `${copy.heroTitle} | One&Only`,
-    description: copy.heroSubtitle,
-    path: "/service",
-  });
+  return SERVICE_PAGE_METADATA;
 }
 
 export default async function ServicePage() {
@@ -50,11 +49,15 @@ export default async function ServicePage() {
     <HomeMarketingLayout>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(serviceJsonLd) }}
+        dangerouslySetInnerHTML={{
+          __html: sanitizeJsonForScript(serviceJsonLd),
+        }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{
+          __html: sanitizeJsonForScript(breadcrumbJsonLd),
+        }}
       />
       <ServicePageView
         heroKicker={copy.heroKicker}

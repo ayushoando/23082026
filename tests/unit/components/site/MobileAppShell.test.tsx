@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, within } from "@testing-library/react";
 import { MobileAppShell } from "@/components/site/MobileAppShell";
 import { trackSiteTabSelected } from "@/lib/analytics/siteEvents";
 
@@ -17,7 +17,13 @@ vi.mock("@/components/ui/Logo", () => ({
 }));
 
 vi.mock("@/components/site/MobileNavDrawer", () => ({
-  MobileNavDrawer: ({ open, onClose }: { open: boolean; onClose: () => void }) => (
+  MobileNavDrawer: ({
+    open,
+    onClose,
+  }: {
+    open: boolean;
+    onClose: () => void;
+  }) => (
     <div data-testid="mobile-drawer" data-open={open}>
       <button type="button" onClick={onClose} data-testid="close-drawer">
         Close
@@ -57,15 +63,25 @@ describe("MobileAppShell", () => {
     );
 
     expect(screen.getByTestId("shell-child")).toBeInTheDocument();
-    expect(screen.getByRole("navigation", { name: "Mobile primary" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Home" })).toHaveAttribute("href", "/");
-    expect(screen.getByRole("link", { name: "Catalog" })).toHaveAttribute("aria-current", "page");
-    expect(screen.getByRole("link", { name: "Planner" })).toHaveAttribute(
+    const tabBar = screen.getByRole("navigation", { name: /Mobile primary/i });
+    expect(tabBar).toBeInTheDocument();
+    expect(within(tabBar).getByRole("link", { name: /home/i })).toHaveAttribute(
       "href",
-      expect.stringMatching(/^\/ooplanner/),
+      "/",
     );
-    expect(screen.getByRole("link", { name: "About Us" })).toHaveAttribute("href", "/about");
-    expect(screen.getByRole("link", { name: "Account" })).toHaveAttribute("href", "/access");
+    expect(
+      within(tabBar).getByRole("link", { name: /All Products|Catalog/i }),
+    ).toHaveAttribute("aria-current", "page");
+    expect(
+      within(tabBar).getByRole("link", { name: "Planner" }),
+    ).toHaveAttribute("href", expect.stringMatching(/^\/ooplanner/));
+    expect(within(tabBar).getByRole("link", { name: "About" })).toHaveAttribute(
+      "href",
+      "/about",
+    );
+    expect(
+      within(tabBar).getByRole("link", { name: /Sign in|Account/i }),
+    ).toHaveAttribute("href", "/access");
     expect(screen.getByTestId("site-footer")).toBeInTheDocument();
     expect(screen.getByTestId("logo-marquee")).toBeInTheDocument();
   });
@@ -78,11 +94,20 @@ describe("MobileAppShell", () => {
     );
 
     const menuBtn = screen.getByRole("button", { name: "Open menu" });
-    expect(screen.getByTestId("mobile-drawer")).toHaveAttribute("data-open", "false");
+    expect(screen.getByTestId("mobile-drawer")).toHaveAttribute(
+      "data-open",
+      "false",
+    );
     fireEvent.click(menuBtn);
-    expect(screen.getByTestId("mobile-drawer")).toHaveAttribute("data-open", "true");
+    expect(screen.getByTestId("mobile-drawer")).toHaveAttribute(
+      "data-open",
+      "true",
+    );
     fireEvent.click(screen.getByTestId("close-drawer"));
-    expect(screen.getByTestId("mobile-drawer")).toHaveAttribute("data-open", "false");
+    expect(screen.getByTestId("mobile-drawer")).toHaveAttribute(
+      "data-open",
+      "false",
+    );
   });
 
   it("opens the search drawer from the app bar", () => {
@@ -93,11 +118,20 @@ describe("MobileAppShell", () => {
     );
 
     const searchBtn = screen.getByRole("button", { name: "Open search" });
-    expect(screen.getByTestId("mobile-drawer")).toHaveAttribute("data-open", "false");
+    expect(screen.getByTestId("mobile-drawer")).toHaveAttribute(
+      "data-open",
+      "false",
+    );
     fireEvent.click(searchBtn);
-    expect(screen.getByTestId("mobile-drawer")).toHaveAttribute("data-open", "true");
+    expect(screen.getByTestId("mobile-drawer")).toHaveAttribute(
+      "data-open",
+      "true",
+    );
     fireEvent.click(screen.getByTestId("close-drawer"));
-    expect(screen.getByTestId("mobile-drawer")).toHaveAttribute("data-open", "false");
+    expect(screen.getByTestId("mobile-drawer")).toHaveAttribute(
+      "data-open",
+      "false",
+    );
   });
 
   it("emits site_tab_selected when a tab is clicked", () => {
@@ -107,7 +141,8 @@ describe("MobileAppShell", () => {
       </MobileAppShell>,
     );
 
-    fireEvent.click(screen.getByRole("link", { name: "Home" }));
+    const tabBar = screen.getByRole("navigation", { name: /Mobile primary/i });
+    fireEvent.click(within(tabBar).getByRole("link", { name: /home/i }));
     expect(trackSiteTabSelected).toHaveBeenCalledWith({
       pathname: "/products",
       tab: "home",

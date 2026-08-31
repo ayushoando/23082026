@@ -17,11 +17,11 @@ export function SectorTabButton({
     <button
       {...tabProps}
       className={[
-        "min-h-[44px] min-w-[44px] shrink-0 whitespace-nowrap rounded-md px-4 py-2.5 text-sm font-medium transition-colors",
-        "focus-visible:ring-2 focus-visible:ring-[var(--color-focus)] focus-visible:ring-offset-2 focus-visible:outline-none",
+        "min-h-11 min-w-11 shrink-0 whitespace-nowrap rounded-md px-4 py-2.5 text-sm font-medium transition-colors",
+        "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none",
         isSelected
-          ? "bg-[var(--surface-active)] text-[var(--text-on-active)] shadow-sm"
-          : "text-[var(--text-body)] hover:bg-[var(--surface-hover)]",
+          ? "bg-primary text-white shadow-sm"
+          : "text-body hover:bg-muted",
       ].join(" ")}
     >
       {tab.label}

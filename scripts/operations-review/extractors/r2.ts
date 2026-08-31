@@ -81,30 +81,52 @@ function fact(
   };
 }
 
-function assertContains(source: RepositorySource, expected: string, locator: string): void {
-  if (!source.content.includes(expected)) {
-    throw new Error(`${source.source.path} does not contain expected ${locator}.`);
+function assertContains(
+  source: RepositorySource,
+  expected: string,
+  locator: string,
+): void {
+  if (source.content.includes(expected)) {
+    return;
   }
+  const noSpace = expected.replace(/":\s+"/g, '":"');
+  if (source.content.includes(noSpace)) {
+    return;
+  }
+  throw new Error(
+    `${source.source.path} does not contain expected ${locator}.`,
+  );
 }
 
 function parseWorkflowMetadata(source: RepositorySource): R2WorkflowMetadata {
   const scheduleMatch = source.content.match(
     /^\s*-\s*cron:\s*(?:"([^"]+)"|'([^']+)'|([^\s#]+))\s*$/m,
   );
-  const schedule = scheduleMatch?.[1] ?? scheduleMatch?.[2] ?? scheduleMatch?.[3];
-  const timeoutMatch = source.content.match(/^\s*timeout-minutes:\s*(\d+)\s*$/m);
+  const schedule =
+    scheduleMatch?.[1] ?? scheduleMatch?.[2] ?? scheduleMatch?.[3];
+  const timeoutMatch = source.content.match(
+    /^\s*timeout-minutes:\s*(\d+)\s*$/m,
+  );
 
   if (!schedule) {
-    throw new Error(`${source.source.path} does not declare a scheduled workflow cron expression.`);
+    throw new Error(
+      `${source.source.path} does not declare a scheduled workflow cron expression.`,
+    );
   }
   if (!/^\s*workflow_dispatch:\s*$/m.test(source.content)) {
-    throw new Error(`${source.source.path} does not declare workflow_dispatch.`);
+    throw new Error(
+      `${source.source.path} does not declare workflow_dispatch.`,
+    );
   }
   if (!timeoutMatch) {
-    throw new Error(`${source.source.path} does not declare a workflow timeout.`);
+    throw new Error(
+      `${source.source.path} does not declare a workflow timeout.`,
+    );
   }
   if (!source.content.includes("pnpm run ops backup:supabase:r2")) {
-    throw new Error(`${source.source.path} does not declare the Supabase-to-R2 command route.`);
+    throw new Error(
+      `${source.source.path} does not declare the Supabase-to-R2 command route.`,
+    );
   }
 
   const secretNames = Array.from(
@@ -116,7 +138,9 @@ function parseWorkflowMetadata(source: RepositorySource): R2WorkflowMetadata {
   const uniqueSecretNames = [...new Set(secretNames)].sort();
 
   if (uniqueSecretNames.length === 0) {
-    throw new Error(`${source.source.path} does not declare workflow secret names.`);
+    throw new Error(
+      `${source.source.path} does not declare workflow secret names.`,
+    );
   }
 
   return {
@@ -201,11 +225,15 @@ export function extractR2WorkflowReview(
       command: workflow.commandRoute,
       purpose: "CI database-dump upload route.",
       artifactCategories: ["database-dumps"],
-      source: sourceAt(sources.workflow, "jobs.backup.steps run: pnpm run ops backup:supabase:r2"),
+      source: sourceAt(
+        sources.workflow,
+        "jobs.backup.steps run: pnpm run ops backup:supabase:r2",
+      ),
     },
     {
       command: "pnpm run r2:backup",
-      purpose: "Root route for the configured database-dump and repository-backup operations.",
+      purpose:
+        "Root route for the configured database-dump and repository-backup operations.",
       artifactCategories: ["database-dumps", "repository-backups"],
       source: sourceAt(sources.rootPackage, "$.scripts.r2:backup"),
     },

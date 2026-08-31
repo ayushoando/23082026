@@ -15,21 +15,28 @@ export { CSRF_COOKIE_NAME, CSRF_HEADER_NAME };
  * Generate a cryptographically secure CSRF token.
  */
 export function generateCsrfToken(): string {
-  return crypto.randomUUID();
+ return crypto.randomUUID();
 }
 
 /**
  * Validate a CSRF token using timing-safe comparison.
  * Prevents timing attacks that could leak token information.
  */
-export function validateCsrfToken(token: string, expectedToken: string): boolean {
-  if (!token || !expectedToken) {return false;}
-  if (token.length !== expectedToken.length) {return false;}
+export function validateCsrfToken(
+ token: string,
+ expectedToken: string,
+): boolean {
+ if (!token || !expectedToken) {
+  return false;
+ }
+ if (token.length !== expectedToken.length) {
+  return false;
+ }
 
-  const tokenBuffer = Buffer.from(token);
-  const expectedBuffer = Buffer.from(expectedToken);
+ const tokenBuffer = Buffer.from(token);
+ const expectedBuffer = Buffer.from(expectedToken);
 
-  return timingSafeEqual(tokenBuffer, expectedBuffer);
+ return timingSafeEqual(tokenBuffer, expectedBuffer);
 }
 
 /**
@@ -37,29 +44,51 @@ export function validateCsrfToken(token: string, expectedToken: string): boolean
  * HttpOnly, secure, sameSite=strict to prevent XSS and CSRF attacks.
  */
 export async function setCsrfTokenCookie(token: string): Promise<void> {
+ try {
   const cookieStore = await cookies();
   cookieStore.set(CSRF_COOKIE_NAME, token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    path: "/",
-    maxAge: 60 * 60 * 24, // 24 hours
+   httpOnly: true,
+   secure: process.env.NODE_ENV === "production",
+   sameSite: "strict",
+   path: "/",
+   maxAge: 60 * 60 * 24, // 24 hours
   });
+ } catch {
+  // Outside request store context (e.g. unit tests)
+ }
 }
 
 /**
  * Get CSRF token from cookie.
  */
-export async function getCsrfTokenFromCookie(): Promise<string | null> {
+export async function getCsrfTokenFromCookie(
+ request?: Request,
+): Promise<string | null> {
+ if (request) {
+  const cookieHeader = request.headers.get("cookie");
+  if (cookieHeader) {
+   const prefix = `${CSRF_COOKIE_NAME}=`;
+   for (const part of cookieHeader.split(";")) {
+    const trimmed = part.trim();
+    if (trimmed.startsWith(prefix)) {
+     return decodeURIComponent(trimmed.slice(prefix.length));
+    }
+   }
+  }
+ }
+ try {
   const cookieStore = await cookies();
   return cookieStore.get(CSRF_COOKIE_NAME)?.value ?? null;
+ } catch {
+  return null;
+ }
 }
 
 /**
  * Get CSRF token from request header.
  */
 export function getCsrfTokenFromHeader(request: Request): string | null {
-  return request.headers.get(CSRF_HEADER_NAME);
+ return request.headers.get(CSRF_HEADER_NAME);
 }
 
 /**
@@ -67,10 +96,12 @@ export function getCsrfTokenFromHeader(request: Request): string | null {
  * Compares header token with cookie token using timing-safe comparison.
  */
 export async function validateCsrfRequest(request: Request): Promise<boolean> {
-  const headerToken = getCsrfTokenFromHeader(request);
-  const cookieToken = await getCsrfTokenFromCookie();
+ const headerToken = getCsrfTokenFromHeader(request);
+ const cookieToken = await getCsrfTokenFromCookie(request);
 
-  if (!headerToken || !cookieToken) {return false;}
+ if (!headerToken || !cookieToken) {
+  return false;
+ }
 
-  return validateCsrfToken(headerToken, cookieToken);
+ return validateCsrfToken(headerToken, cookieToken);
 }

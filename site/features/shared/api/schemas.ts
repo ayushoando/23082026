@@ -56,7 +56,8 @@ export type CreateStandardCatalogItemInput = z.infer<
 >;
 
 /** Body for patching a standard catalog item (all fields optional). */
-export const PatchStandardCatalogItemSchema = CreateStandardCatalogItemSchema.partial();
+export const PatchStandardCatalogItemSchema =
+  CreateStandardCatalogItemSchema.partial();
 
 export type PatchStandardCatalogItemInput = z.infer<
   typeof PatchStandardCatalogItemSchema
@@ -220,6 +221,8 @@ export const PlannerAdvisorRequestSchema = z.object({
     .min(1)
     .max(20),
   context: z.unknown().optional(),
+  /** When true, the response is an NDJSON stream instead of the JSON envelope. */
+  stream: z.boolean().optional(),
 });
 
 /** Planner sketch-to-plan request (`/api/planner/sketch-to-plan`). */
@@ -315,22 +318,24 @@ export const SketchToPlanRouteErrorSchema = z.object({
 // ---------------------------------------------------------------------------
 
 /** Public customer query submission. */
-export const CustomerQuerySchema = z.object({
-  name: z.string().trim().min(1).max(180),
-  company: z.string().trim().max(180).optional(),
-  email: z.string().trim().max(180).optional(),
-  phone: z.string().trim().max(50).optional(),
-  preferredContact: z.enum(["email", "whatsapp", "phone", "any"]).optional(),
-  message: z.string().trim().min(1).max(5000),
-  requirement: z.string().trim().max(300).optional(),
-  budget: z.string().trim().max(120).optional(),
-  timeline: z.string().trim().max(120).optional(),
-  source: z.string().trim().max(60).optional(),
-  sourcePath: z.string().trim().max(200).optional(),
-}).refine((data) => Boolean(data.email || data.phone), {
-  message: "Please provide email or phone.",
-  path: ["email"],
-});
+export const CustomerQuerySchema = z
+  .object({
+    name: z.string().trim().min(1).max(180),
+    company: z.string().trim().max(180).optional(),
+    email: z.string().trim().max(180).optional(),
+    phone: z.string().trim().max(50).optional(),
+    preferredContact: z.enum(["email", "whatsapp", "phone", "any"]).optional(),
+    message: z.string().trim().min(1).max(5000),
+    requirement: z.string().trim().max(300).optional(),
+    budget: z.string().trim().max(120).optional(),
+    timeline: z.string().trim().max(120).optional(),
+    source: z.string().trim().max(60).optional(),
+    sourcePath: z.string().trim().max(200).optional(),
+  })
+  .refine((data) => Boolean(data.email || data.phone), {
+    message: "Please provide email or phone.",
+    path: ["email"],
+  });
 
 /** Admin customer-query patch. */
 export const PatchCustomerQuerySchema = z.object({
@@ -367,19 +372,26 @@ export const ActivateThemeSchema = z.object({
 
 /** Theme publish. */
 export const PublishThemeSchema = z.object({
-  themeName: z.string().trim().regex(/^[a-z0-9][a-z0-9-_]{1,63}$/i),
+  themeName: z
+    .string()
+    .trim()
+    .regex(/^[a-z0-9][a-z0-9-_]{1,63}$/i),
   tokens: z.record(z.string(), z.unknown()),
 });
 
 /** Feature flag patch. */
-export const FeatureFlagsPatchSchema = z.object({
-  key: z.string().trim().max(120).optional(),
-  enabled: z.boolean().optional(),
-  updates: z.record(z.string(), z.boolean()).optional(),
-}).refine(
-  (data) => Boolean(data.updates && Object.keys(data.updates).length > 0) || Boolean(data.key),
-  { message: "No updates provided", path: ["updates"] },
-);
+export const FeatureFlagsPatchSchema = z
+  .object({
+    key: z.string().trim().max(120).optional(),
+    enabled: z.boolean().optional(),
+    updates: z.record(z.string(), z.boolean()).optional(),
+  })
+  .refine(
+    (data) =>
+      Boolean(data.updates && Object.keys(data.updates).length > 0) ||
+      Boolean(data.key),
+    { message: "No updates provided", path: ["updates"] },
+  );
 
 /** Filter/rank request — product IDs resolved server-side from catalog. */
 export const FilterRankSchema = z.object({
@@ -405,7 +417,9 @@ export const NavSearchSchema = z.object({
 /** Smart wizard request. */
 export const SmartWizardSchema = z.object({
   templateId: z.string().trim().min(1).max(120),
-  roomType: z.enum(["open-plan", "executive", "studio", "coworking", "blank"]).optional(),
+  roomType: z
+    .enum(["open-plan", "executive", "studio", "coworking", "blank"])
+    .optional(),
   roomWidthMm: z.number().positive().finite(),
   roomLengthMm: z.number().positive().finite(),
   style: z.string().trim().max(60).optional(),

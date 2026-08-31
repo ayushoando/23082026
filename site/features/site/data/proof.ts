@@ -8,17 +8,17 @@ import type { SectorTabId } from "@/lib/clients/clientTypes";
  * SOLUTIONS_PAGE_COPY.stats and conservative floors in fallbacks.ts.
  */
 export const TRUSTED_BY_STATS = [
-  { value: "14+", label: "Years of experience" },
-  { value: "120+", label: "Projects completed" },
-  { value: "120+", label: "Selected organisations" },
-  { value: "20+", label: "Locations serviced" },
+ { value: "14+", label: "Years of experience" },
+ { value: "120+", label: "Projects completed" },
+ { value: "120+", label: "Selected organisations" },
+ { value: "20+", label: "Locations serviced" },
 ] as const;
 
 const BADGE_SECTOR_BY_TAB: Record<SectorTabId, string> = {
-  "financial-services": "Finance",
-  "government-public-sector": "Government",
-  "education-social-impact": "Education / Social Impact",
-  "corporates-multinationals": "Corporate",
+ "financial-services": "Finance",
+ "government-public-sector": "Government",
+ "education-social-impact": "Education / Social Impact",
+ "corporates-multinationals": "Corporate",
 };
 
 /**
@@ -26,15 +26,16 @@ const BADGE_SECTOR_BY_TAB: Record<SectorTabId, string> = {
  * the complete 108-record registry: only selected proof records are surfaced.
  * Records without an exact asset keep ClientBadge's existing monogram fallback.
  */
-export const TRUSTED_BY_CLIENTS: ClientBadgeData[] = getCuratedLogoRecords().map((record) => ({
+export const TRUSTED_BY_CLIENTS: ClientBadgeData[] =
+ getCuratedLogoRecords().map((record) => ({
   name: record.displayName,
   sector: BADGE_SECTOR_BY_TAB[record.sectorTab],
-  logoSrc: record.logoPath,
-}));
+  location: record.displayName === "Titan" ? "Patna, Bihar" : undefined,
+ }));
 
 /** Static inspection helper for unresolved curated logo associations. */
 export function trustedByClientsMissingLogos(): string[] {
-  return TRUSTED_BY_CLIENTS.filter(
-    (client) => !resolveClientLogoSrc(client.name, client.logoSrc),
-  ).map((client) => client.name);
+ return TRUSTED_BY_CLIENTS.filter(
+  (client) => !resolveClientLogoSrc(client.name, client.logoSrc),
+ ).map((client) => client.name);
 }

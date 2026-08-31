@@ -73,7 +73,13 @@ vi.mock("@prometheus-io/client", () => {
 
 vi.mock("@planner/server/plannerRouteAdapter", () => ({
   createPlannerHandler: vi.fn(
-    ({ endpointId, operation }: { endpointId: string; operation: PlannerOperation }) => {
+    ({
+      endpointId,
+      operation,
+    }: {
+      endpointId: string;
+      operation: PlannerOperation;
+    }) => {
       if (endpointId !== "planner.ai-advisor") {
         throw new Error(`Unexpected endpoint: ${endpointId}`);
       }
@@ -100,7 +106,10 @@ vi.mock("@planner/server/plannerRouteAdapter", () => ({
           return Response.json(
             {
               success: false,
-              error: { code: "CSRF_FAILED", message: "Request verification failed" },
+              error: {
+                code: "CSRF_FAILED",
+                message: "Request verification failed",
+              },
               correlationId,
             },
             { status: 403 },
@@ -114,7 +123,10 @@ vi.mock("@planner/server/plannerRouteAdapter", () => ({
           return Response.json(
             {
               success: false,
-              error: { code: "INVALID_REQUEST", message: "Could not parse request body" },
+              error: {
+                code: "INVALID_REQUEST",
+                message: "Could not parse request body",
+              },
               correlationId,
             },
             { status: 400 },
@@ -132,8 +144,16 @@ vi.mock("@planner/server/plannerRouteAdapter", () => ({
         try {
           const result = await operation.invoke(context);
           if (result.ok) {
+            if ("raw" in result) {
+              return result.raw as Response;
+            }
             return Response.json(
-              { success: true, contractVersion: 1, data: result.data, correlationId },
+              {
+                success: true,
+                contractVersion: 1,
+                data: result.data,
+                correlationId,
+              },
               { status: result.status ?? 200 },
             );
           }
@@ -144,7 +164,9 @@ vi.mock("@planner/server/plannerRouteAdapter", () => ({
               error: {
                 code: result.code ?? "INTERNAL_ERROR",
                 message: "Request failed",
-                ...(result.metadata?.issues ? { issues: result.metadata.issues } : {}),
+                ...(result.metadata?.issues
+                  ? { issues: result.metadata.issues }
+                  : {}),
               },
               correlationId,
             },
@@ -186,7 +208,9 @@ const invokePost = (request: NextRequest) => POST(request, routeContext);
 
 const validBody = {
   mode: "chat" as const,
-  messages: [{ role: "user" as const, content: "Suggest a better office layout." }],
+  messages: [
+    { role: "user" as const, content: "Suggest a better office layout." },
+  ],
   context: { seatCount: 8, floorAreaSqFt: 900 },
 };
 
@@ -211,7 +235,9 @@ function postJson(body: unknown = validBody, csrfToken?: string): NextRequest {
   });
 }
 
-async function responseSnapshot(response: Response): Promise<{ status: number; body: string }> {
+async function responseSnapshot(
+  response: Response,
+): Promise<{ status: number; body: string }> {
   return { status: response.status, body: await response.text() };
 }
 
@@ -269,7 +295,9 @@ describe("POST /api/planner/ai-advisor route wiring", () => {
   });
 
   it("records observability side effects without changing the route status or body", async () => {
-    const baseline = await responseSnapshot(await invokePost(postJson(validBody, "test-csrf")));
+    const baseline = await responseSnapshot(
+      await invokePost(postJson(validBody, "test-csrf")),
+    );
 
     const observedResponse = await withAiObservability(
       "planner",
@@ -305,7 +333,9 @@ describe("POST /api/planner/ai-advisor route wiring", () => {
   });
 
   it("swallows observability failures and still returns the unchanged route response", async () => {
-    const baseline = await responseSnapshot(await invokePost(postJson(validBody, "test-csrf")));
+    const baseline = await responseSnapshot(
+      await invokePost(postJson(validBody, "test-csrf")),
+    );
 
     const observedResponse = await withAiObservability(
       "planner",
@@ -317,5 +347,69 @@ describe("POST /api/planner/ai-advisor route wiring", () => {
     const observed = await responseSnapshot(observedResponse);
 
     expect(observed).toEqual(baseline);
+  });
+
+  it("streams NDJSON events ending with a terminal result when stream is true", async () => {
+    requestAdvisorMessages.mockImplementation(
+      async (
+        _target: unknown,
+        _messages: unknown,
+        options?: { onDelta?: (delta: string) => void },
+      ) => {
+        options?.onDelta?.("Use a ");
+        options?.onDelta?.("1200 mm aisle.");
+        return "Use a 1200 mm aisle.";
+      },
+    );
+
+    const response = await invokePost(
+      postJson({ ...validBody, stream: true }, "test-csrf"),
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get("content-type")).toContain(
+      "application/x-ndjson",
+    );
+
+    const events = (await response.text())
+      .split("\n")
+      .filter((line) => line.trim().length > 0)
+      .map((line) => JSON.parse(line) as { type: string; result?: unknown });
+
+    const terminal = events.at(-1);
+    expect(terminal).toMatchObject({
+      type: "result",
+      result: { content: "Use a 1200 mm aisle.", provider: "gemini" },
+    });
+    expect(events.some((event) => event.type === "delta")).toBe(true);
+  });
+
+  it("ends the stream with a degraded fallback result when no provider responds", async () => {
+    resolveAdvisorModelChain.mockReturnValue([
+      { provider: "gemini", label: "Gemini" },
+    ]);
+    requestAdvisorMessages.mockRejectedValue(new Error("provider down"));
+
+    const response = await invokePost(
+      postJson({ ...validBody, stream: true }, "test-csrf"),
+    );
+
+    expect(response.status).toBe(200);
+
+    const events = (await response.text())
+      .split("\n")
+      .filter((line) => line.trim().length > 0)
+      .map(
+        (line) =>
+          JSON.parse(line) as {
+            type: string;
+            result?: { degraded?: boolean; content?: string };
+          },
+      );
+
+    const terminal = events.at(-1);
+    expect(terminal?.type).toBe("result");
+    expect(terminal?.result?.degraded).toBe(true);
+    expect(terminal?.result?.content).toContain("unable to reach");
   });
 });

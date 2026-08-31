@@ -7,7 +7,10 @@ import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
-const monorepoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../..");
+const monorepoRoot = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "../../..",
+);
 const scriptPath = path.join(monorepoRoot, "scripts/AsNeeded/verify-focss.mjs");
 
 type Fixture = {
@@ -16,7 +19,9 @@ type Fixture = {
 };
 
 function makeFixture(): Fixture {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), "verify-focss-structure-"));
+  const root = fs.mkdtempSync(
+    path.join(os.tmpdir(), "verify-focss-structure-"),
+  );
   const focssRoot = path.join(root, "site", "focss");
   const write = (relativePath: string, content: string) => {
     const target = path.join(focssRoot, relativePath);
@@ -24,7 +29,10 @@ function makeFixture(): Fixture {
     fs.writeFileSync(target, content, "utf8");
   };
 
-  write("base/scan.css", '@import "tailwindcss";\n@source "../../app/**/*.tsx";\n');
+  write(
+    "base/scan.css",
+    '@import "tailwindcss";\n@source "../../app/**/*.tsx";\n',
+  );
   write("base/runtime.css", '@import "tw-animate-css";\n');
   write("base/document.css", "html {}\n");
   write(
@@ -115,6 +123,7 @@ function makeFixture(): Fixture {
     "polish.css",
     "workspace-shell.css",
     "workspace.css",
+    "workspace-lists.css",
     "responsive.css",
     "dock.css",
   ]) {
@@ -134,6 +143,7 @@ function makeFixture(): Fixture {
       '@import "./polish.css";',
       '@import "./workspace-shell.css";',
       '@import "./workspace.css";',
+      '@import "./workspace-lists.css";',
       '@import "./responsive.css";',
       '@import "./dock.css";',
       "",
@@ -185,7 +195,11 @@ function runExpectFail(root: string): string {
   try {
     run(root);
   } catch (error) {
-    const result = error as { status?: number; stderr?: string; stdout?: string };
+    const result = error as {
+      status?: number;
+      stderr?: string;
+      stdout?: string;
+    };
     expect(result.status).toBe(1);
     return `${result.stderr ?? ""}${result.stdout ?? ""}`;
   }
@@ -206,7 +220,10 @@ describe("verify-focss structure scope", () => {
     const fixture = makeFixture();
     try {
       fixture.write("package.json", '{"name":"forbidden"}\n');
-      fixture.write("site/components/leak.css", '@import "../../admin/entry.css";\n');
+      fixture.write(
+        "site/components/leak.css",
+        '@import "../../admin/entry.css";\n',
+      );
       fixture.write(
         "site/entry.css",
         [
@@ -223,7 +240,9 @@ describe("verify-focss structure scope", () => {
       );
 
       const output = runExpectFail(fixture.root);
-      expect(output).toContain("forbidden FOCSS path exists: site/focss/package.json");
+      expect(output).toContain(
+        "forbidden FOCSS path exists: site/focss/package.json",
+      );
       expect(output).toContain("site/entry.css must not reach admin/");
     } finally {
       fs.rmSync(fixture.root, { recursive: true, force: true });
@@ -238,8 +257,12 @@ describe("verify-focss structure scope", () => {
       fixture.write("admin/oversized.css", ".rule {}\n".repeat(801));
 
       const output = runExpectFail(fixture.root);
-      expect(output).toContain("FOCSS import cycle: admin/a.css -> admin/b.css -> admin/a.css");
-      expect(output).toContain("admin/oversized.css exceeds the 800-line FOCSS maximum");
+      expect(output).toContain(
+        "FOCSS import cycle: admin/a.css -> admin/b.css -> admin/a.css",
+      );
+      expect(output).toContain(
+        "admin/oversized.css exceeds the 800-line FOCSS maximum",
+      );
     } finally {
       fs.rmSync(fixture.root, { recursive: true, force: true });
     }
@@ -248,11 +271,18 @@ describe("verify-focss structure scope", () => {
   it("rejects raw color literals and Tailwind source declarations outside base", () => {
     const fixture = makeFixture();
     try {
-      fixture.write("admin/invalid.css", ".invalid { color: #abcdef; }\n@source " + '"./**/*.tsx";\n');
+      fixture.write(
+        "admin/invalid.css",
+        ".invalid { color: #abcdef; }\n@source " + '"./**/*.tsx";\n',
+      );
 
       const output = runExpectFail(fixture.root);
-      expect(output).toContain("admin/invalid.css contains raw color literal #abcdef");
-      expect(output).toContain("admin/invalid.css uses @source; only base/scan.css may configure Tailwind sources");
+      expect(output).toContain(
+        "admin/invalid.css contains raw color literal #abcdef",
+      );
+      expect(output).toContain(
+        "admin/invalid.css uses @source; only base/scan.css may configure Tailwind sources",
+      );
     } finally {
       fs.rmSync(fixture.root, { recursive: true, force: true });
     }
@@ -266,7 +296,9 @@ describe("verify-focss structure scope", () => {
 
       const output = runExpectFail(fixture.root);
       expect(output).toContain("forbidden flat base sheet: base/palette.css");
-      expect(output).toContain("site/components/buttons.css must live under site/components/shared/");
+      expect(output).toContain(
+        "site/components/buttons.css must live under site/components/shared/",
+      );
     } finally {
       fs.rmSync(fixture.root, { recursive: true, force: true });
     }
@@ -275,13 +307,22 @@ describe("verify-focss structure scope", () => {
   it("rejects shadcn pack files and document-level Admin token scope", () => {
     const fixture = makeFixture();
     try {
-      fixture.write("features/shadcn/theme.css", ":root { --background: var(--surface-card); }\n");
+      fixture.write(
+        "features/shadcn/theme.css",
+        ":root { --background: var(--surface-card); }\n",
+      );
       fixture.write("admin/base/tokens.css", "body:has(.admin-page) {}\n");
 
       const output = runExpectFail(fixture.root);
-      expect(output).toContain("features/shadcn/* must not exist (shadcn pack retired)");
-      expect(output).toContain("admin/base/tokens.css must scope Admin overrides to .shell-admin-layout");
-      expect(output).toContain("admin/base/tokens.css must not override document-level body tokens");
+      expect(output).toContain(
+        "features/shadcn/* must not exist (shadcn pack retired)",
+      );
+      expect(output).toContain(
+        "admin/base/tokens.css must scope Admin overrides to .shell-admin-layout",
+      );
+      expect(output).toContain(
+        "admin/base/tokens.css must not override document-level body tokens",
+      );
     } finally {
       fs.rmSync(fixture.root, { recursive: true, force: true });
     }

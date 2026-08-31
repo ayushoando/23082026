@@ -1,10 +1,19 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
-import { SiteHeader, __resetNavCategoriesLoadForTests } from '@/components/site/Header';
-import { trackSiteSearchSubmitted } from '@/lib/analytics/siteEvents';
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  act,
+} from "@testing-library/react";
+import {
+  SiteHeader,
+  __resetNavCategoriesLoadForTests,
+} from "@/components/site/Header";
+import { trackSiteSearchSubmitted } from "@/lib/analytics/siteEvents";
 
 // Mock phosphor icons
-vi.mock('@phosphor-icons/react', () => ({
+vi.mock("@phosphor-icons/react", () => ({
   CaretDown: () => <span data-testid="caret-icon" />,
   List: () => <span data-testid="list-icon" />,
   MagnifyingGlass: () => <span data-testid="magnifier-icon" />,
@@ -13,60 +22,60 @@ vi.mock('@phosphor-icons/react', () => ({
 }));
 
 // Mock Logo
-vi.mock('@/components/ui/Logo', () => ({
+vi.mock("@/components/ui/Logo", () => ({
   OneAndOnlyLogo: () => <div data-testid="header-logo" />,
 }));
 
 // Mock Navigation data
-vi.mock('@/lib/navigation', () => ({
-  NAV_CATEGORY_GROUP_ORDER: ['seating'],
+vi.mock("@/lib/navigation", () => ({
+  NAV_CATEGORY_GROUP_ORDER: ["seating"],
   NAV_CATEGORY_GROUPS: {
-    seating: { label: 'Seating Group', ids: ['chairs'] },
+    seating: { label: "Seating Group", ids: ["chairs"] },
   },
   groupCategories: vi.fn((cats) => cats),
 }));
 
-vi.mock('@/features/site/data/navigation', () => ({
+vi.mock("@/features/site/data/navigation", () => ({
   SITE_HEADER_PRIMARY_LINKS: [
-    { label: 'Home', href: '/' },
-    { label: 'Products', href: '/products', hasMega: true },
+    { label: "Home", href: "/" },
+    { label: "Products", href: "/products", hasMega: true },
   ],
   SITE_HEADER_MORE_LINKS: [
-    { label: 'Portal', href: '/portal', headerSlot: 'more' as const },
-    { label: 'Login', href: '/login', headerSlot: 'more' as const },
+    { label: "Portal", href: "/portal", headerSlot: "more" as const },
+    { label: "Login", href: "/login", headerSlot: "more" as const },
   ],
   SITE_NAV_LINKS: [
-    { label: 'Home', href: '/' },
-    { label: 'Products', href: '/products', hasMega: true },
-    { label: 'Portal', href: '/portal', headerSlot: 'more' as const },
-    { label: 'Login', href: '/login', headerSlot: 'more' as const },
+    { label: "Home", href: "/" },
+    { label: "Products", href: "/products", hasMega: true },
+    { label: "Portal", href: "/portal", headerSlot: "more" as const },
+    { label: "Login", href: "/login", headerSlot: "more" as const },
   ],
-  SITE_AUTH_LINK: { label: 'Sign in', href: '/access' },
+  SITE_AUTH_LINK: { label: "Sign in", href: "/access" },
   SITE_CTA_LINKS: [
-    { label: 'Quote Cart', href: '/quote-cart', variant: 'primary' },
+    { label: "Quote Cart", href: "/quote-cart", variant: "primary" },
   ],
 }));
 
-vi.mock('@/lib/analytics/siteEvents', () => ({
+vi.mock("@/lib/analytics/siteEvents", () => ({
   trackPlannerLaunchClicked: vi.fn(),
   trackSiteSearchSubmitted: vi.fn(),
 }));
 
 const mockPush = vi.fn();
-vi.mock('next/navigation', () => ({
-  usePathname: () => '/products',
+vi.mock("next/navigation", () => ({
+  usePathname: () => "/products",
   useRouter: () => ({
     push: mockPush,
   }),
 }));
 
-describe('SiteHeader Component', () => {
+describe("SiteHeader Component", () => {
   let mockFetch: ReturnType<typeof vi.fn>;
 
   async function renderSettledHeader() {
     const result = render(<SiteHeader />);
     await waitFor(() => {
-      expect(mockFetch).toHaveBeenCalledWith('/api/nav-categories/');
+      expect(mockFetch).toHaveBeenCalledWith("/api/nav-categories/");
     });
     await act(async () => {});
     return result;
@@ -77,22 +86,30 @@ describe('SiteHeader Component', () => {
     __resetNavCategoriesLoadForTests();
 
     mockFetch = vi.fn((url: string, _options?: RequestInit) => {
-      if (url.includes('/api/nav-categories/')) {
+      if (url.includes("/api/nav-categories/")) {
         return Promise.resolve({
           ok: true,
           json: async () => ({
             groups: [
               {
-                groupId: 'seating',
-                groupLabel: 'Seating Group',
+                groupId: "seating",
+                groupLabel: "Seating Group",
                 items: [
                   {
-                    id: 'chairs',
-                    name: 'Chairs',
-                    href: '/products/chairs',
+                    id: "chairs",
+                    name: "Chairs",
+                    href: "/products/chairs",
                     subcategories: [
-                      { id: 'task-chairs', name: 'Task chairs', href: '/products/chairs/task' },
-                      { id: 'cafe-chairs', name: 'Cafe chairs', href: '/products/chairs/cafe' }, // filtered to Others
+                      {
+                        id: "task-chairs",
+                        name: "Task chairs",
+                        href: "/products/chairs/task",
+                      },
+                      {
+                        id: "cafe-chairs",
+                        name: "Cafe chairs",
+                        href: "/products/chairs/cafe",
+                      }, // filtered to Others
                     ],
                   },
                 ],
@@ -101,73 +118,84 @@ describe('SiteHeader Component', () => {
           }),
         });
       }
-      if (url.includes('/api/nav-search/')) {
+      if (url.includes("/api/nav-search/")) {
         return Promise.resolve({
           ok: true,
           json: async () => ({
             results: [
-              { id: 'r1', title: 'Task Chair Premium', href: '/products/chairs/task', type: 'product', source: 'local' },
+              {
+                id: "r1",
+                title: "Task Chair Premium",
+                href: "/products/chairs/task",
+                type: "product",
+                source: "local",
+              },
             ],
-            rankingMode: 'local',
+            rankingMode: "local",
           }),
         });
       }
-      return Promise.reject(new Error('Unknown Endpoint'));
+      return Promise.reject(new Error("Unknown Endpoint"));
     });
 
     global.fetch = mockFetch as typeof fetch;
   });
 
-  it('renders logo, nav links and fetch categories on mount', async () => {
+  it("renders logo, nav links and fetch categories on mount", async () => {
     await renderSettledHeader();
 
-    expect(screen.getByTestId('header-logo')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute('href', '/');
+    expect(screen.getByTestId("header-logo")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Home" })).toHaveAttribute(
+      "href",
+      "/",
+    );
 
     // Verify categories fetched
     await waitFor(() => {
-      expect(mockFetch).toHaveBeenCalledWith('/api/nav-categories/');
+      expect(mockFetch).toHaveBeenCalledWith("/api/nav-categories/");
     });
   });
 
-  it('opens and closes products mega menu on mouse enter/leave', async () => {
+  it("opens and closes products mega menu on mouse enter/leave", async () => {
     await renderSettledHeader();
 
     // Wait for categories to load
     await waitFor(() => {
-      expect(mockFetch).toHaveBeenCalledWith('/api/nav-categories/');
+      expect(mockFetch).toHaveBeenCalledWith("/api/nav-categories/");
     });
 
-    const megaTrigger = screen.getByRole('button', { name: /Products/i });
+    const megaTrigger = screen.getByRole("button", { name: /Products/i });
 
     // Hover to open
     fireEvent.mouseEnter(megaTrigger);
-    expect(screen.getByText('Seating Group')).toBeInTheDocument();
-    expect(screen.getByText('Task chairs')).toBeInTheDocument();
+    expect(screen.getByText("Seating Group")).toBeInTheDocument();
+    expect(screen.getByText("Task chairs")).toBeInTheDocument();
 
     // Leave trigger should schedule close
     fireEvent.mouseLeave(megaTrigger);
     await waitFor(() => {
-      expect(screen.queryByText('Seating Group')).toBeNull();
+      expect(screen.queryByText("Seating Group")).toBeNull();
     });
   });
 
-  it('performs debounced search and displays results panel', async () => {
+  it("performs debounced search and displays results panel", async () => {
     await renderSettledHeader();
 
     await waitFor(() => {
-      expect(mockFetch).toHaveBeenCalledWith('/api/nav-categories/');
+      expect(mockFetch).toHaveBeenCalledWith("/api/nav-categories/");
     });
 
     vi.useFakeTimers({ shouldAdvanceTime: true });
 
-    const searchInput = screen.getByPlaceholderText('Search products...');
+    const searchInput = screen.getByPlaceholderText("Search products...");
     fireEvent.focus(searchInput);
-    
-    // Default quick links list
-    expect(screen.getByRole('link', { name: 'All Products' })).toBeInTheDocument();
 
-    fireEvent.change(searchInput, { target: { value: 'Task' } });
+    // Default quick links list
+    expect(
+      screen.getByRole("link", { name: "All Products" }),
+    ).toBeInTheDocument();
+
+    fireEvent.change(searchInput, { target: { value: "Task" } });
 
     await act(async () => {
       await vi.advanceTimersByTimeAsync(300);
@@ -175,106 +203,133 @@ describe('SiteHeader Component', () => {
 
     await waitFor(() => {
       expect(mockFetch).toHaveBeenLastCalledWith(
-        '/api/nav-search/',
+        "/api/nav-search/",
         expect.objectContaining({
-          method: 'POST',
-          body: JSON.stringify({ query: 'Task', limit: 8, context: 'header' }),
-        })
+          method: "POST",
+          body: JSON.stringify({ query: "Task", limit: 8, context: "header" }),
+        }),
       );
     });
 
     // Check result renders
     await waitFor(() => {
-      expect(screen.getByRole('link', { name: /Task Chair Premium/i })).toBeInTheDocument();
+      expect(
+        screen.getByRole("link", { name: /Task Chair Premium/i }),
+      ).toBeInTheDocument();
     });
 
     // Click result hides panel
-    fireEvent.click(screen.getByRole('link', { name: /Task Chair Premium/i }));
-    expect(screen.queryByRole('link', { name: /Task Chair Premium/i })).toBeNull();
+    fireEvent.click(screen.getByRole("link", { name: /Task Chair Premium/i }));
+    expect(
+      screen.queryByRole("link", { name: /Task Chair Premium/i }),
+    ).toBeNull();
 
     await act(async () => {});
     vi.useRealTimers();
   });
 
-  it('submits search form and redirects using resolved destination', async () => {
+  it("submits search form and redirects using resolved destination", async () => {
     await renderSettledHeader();
 
-    const searchInput = screen.getByPlaceholderText('Search products...');
-    fireEvent.change(searchInput, { target: { value: 'Premium' } });
+    const searchInput = screen.getByPlaceholderText("Search products...");
+    fireEvent.change(searchInput, { target: { value: "Premium" } });
 
     // Submit form
-    const searchForm = screen.getByPlaceholderText('Search products...').closest('form')!;
+    const searchForm = screen
+      .getByPlaceholderText("Search products...")
+      .closest("form")!;
     fireEvent.submit(searchForm);
 
-    await waitFor(() => {
-      expect(trackSiteSearchSubmitted).toHaveBeenCalledWith({
-        pathname: '/products',
-        surface: 'header',
-        queryLength: 7,
-        destination: '/products/chairs/task', // resolved from result
-      });
-      expect(mockPush).toHaveBeenCalledWith('/products/chairs/task');
-    }, { timeout: 2000 });
+    await waitFor(
+      () => {
+        expect(trackSiteSearchSubmitted).toHaveBeenCalledWith({
+          pathname: "/products",
+          surface: "header",
+          queryLength: 7,
+          destination: "/products/chairs/task", // resolved from result
+        });
+        expect(mockPush).toHaveBeenCalledWith("/products/chairs/task");
+      },
+      { timeout: 2000 },
+    );
   });
 
-  it('exposes language dropdown and no Guided Planner in header', async () => {
+  it("exposes language dropdown and no Guided Planner in header", async () => {
     await renderSettledHeader();
 
-    expect(screen.getByLabelText('Select Language')).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /Guided Planner/i })).toBeNull();
+    expect(screen.getByLabelText(/Select Language/i)).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /Guided Planner/i }),
+    ).toBeNull();
   });
 
-  it('announces search status for assistive tech (quote cart not in header)', async () => {
+  it("announces search status for assistive tech (quote cart not in header)", async () => {
     await renderSettledHeader();
 
-    expect(screen.queryByRole('link', { name: 'View Quote Cart' })).toBeNull();
-    expect(screen.getByRole('search', { name: 'Site product search' })).toBeInTheDocument();
-    expect(screen.getByRole('status')).toHaveTextContent(/Search products/i);
+    expect(screen.queryByRole("link", { name: "View Quote Cart" })).toBeNull();
+    expect(
+      screen.getByRole("search", { name: "Site product search" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent(
+      /Type at least two characters|Search products/i,
+    );
   });
 
-  it('collapses secondary destinations under More flyout', async () => {
+  it("collapses secondary destinations under More flyout", async () => {
     await renderSettledHeader();
 
-    expect(screen.queryByRole('menuitem', { name: 'Portal' })).toBeNull();
-    expect(screen.queryByRole('menuitem', { name: 'Login' })).toBeNull();
+    expect(screen.queryByRole("menuitem", { name: "Portal" })).toBeNull();
+    expect(screen.queryByRole("menuitem", { name: "Login" })).toBeNull();
 
-    const moreBtn = screen.getByRole('button', { name: /More/i });
+    const moreBtn = screen.getByRole("button", { name: /More/i });
     fireEvent.mouseEnter(moreBtn);
 
-    expect(screen.getByRole('menuitem', { name: 'Portal' })).toHaveAttribute('href', '/portal');
-    expect(screen.getByRole('menuitem', { name: 'Login' })).toHaveAttribute('href', '/login');
+    expect(screen.getByRole("menuitem", { name: "Portal" })).toHaveAttribute(
+      "href",
+      "/portal",
+    );
+    expect(screen.getByRole("menuitem", { name: "Login" })).toHaveAttribute(
+      "href",
+      "/login",
+    );
   });
 
-  it('renders the mobile navigation trigger with the drawer closed', async () => {
+  it("renders the mobile navigation trigger with the drawer closed", async () => {
     await renderSettledHeader();
 
-    expect(screen.getByRole('button', { name: /Open menu/i })).toBeInTheDocument();
-    expect(screen.queryByTestId('mobile-drawer')).toBeNull();
-    expect(screen.getByRole('banner')).toHaveClass('site-header');
+    expect(
+      screen.getByRole("button", { name: /Open menu/i }),
+    ).toBeInTheDocument();
+    expect(screen.queryByTestId("mobile-drawer")).toBeNull();
+    expect(screen.getByRole("banner")).toHaveClass("site-header");
   });
 
-  it('keeps desktop header actions from overflowing the bar', async () => {
+  it("keeps desktop header actions from overflowing the bar", async () => {
     await renderSettledHeader();
 
-    const banner = screen.getByRole('banner');
+    const banner = screen.getByRole("banner");
     // home-shell-xl: same max + gutters as marketing body/footer (not shell-container-wide).
-    const shell = banner.querySelector('.home-shell-xl');
+    const shell = banner.querySelector(".home-shell-xl");
     expect(shell?.className).toMatch(/min-w-0/);
 
-    const locale = screen.getByLabelText('Select Language');
+    const locale = screen.getByLabelText(/Select Language/i);
     expect(locale.className).toMatch(/min-h-11/);
   });
 
-  it('adds shadow style class on page scroll', async () => {
+  it("adds shadow style class on page scroll", async () => {
     await renderSettledHeader();
 
     // Initially window.scrollY is 0
-    expect(screen.getByRole('banner')).not.toHaveClass('[box-shadow:var(--shadow-panel)]');
+    expect(screen.getByRole("banner")).not.toHaveClass(
+      "[box-shadow:var(--shadow-panel)]",
+    );
 
     // Mock scrolling
     window.scrollY = 20;
     fireEvent.scroll(window);
 
-    expect(screen.getByRole('banner')).toHaveClass('[box-shadow:var(--shadow-panel)]');
+    expect(screen.getByRole("banner")).toHaveClass(
+      "[box-shadow:var(--shadow-panel)]",
+    );
   });
 });

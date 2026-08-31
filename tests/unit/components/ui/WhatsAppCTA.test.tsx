@@ -15,8 +15,13 @@ vi.mock("@/lib/analytics/siteEvents", () => ({
 }));
 
 vi.mock("@/features/site/data/contact", () => ({
-  buildWhatsAppHref: vi.fn((text: string) => `https://wa.me/mock?text=${encodeURIComponent(text)}`),
-  buildMailtoHref: vi.fn((subject: string) => `mailto:mock@example.com?subject=${encodeURIComponent(subject)}`),
+  buildWhatsAppHref: vi.fn(
+    (text: string) => `https://wa.me/mock?text=${encodeURIComponent(text)}`,
+  ),
+  buildMailtoHref: vi.fn(
+    (subject: string) =>
+      `mailto:mock@example.com?subject=${encodeURIComponent(subject)}`,
+  ),
   toTelHref: vi.fn((phone: string) => `tel:${phone}`),
   SITE_CONTACT: {
     supportPhone: "+9111111111",
@@ -76,7 +81,9 @@ describe("WhatsAppCTA Component", () => {
     vi.mocked(routeSuppressesFloatingQuickContact).mockReturnValue(true);
     const { container } = render(<WhatsAppCTA />);
     expect(container.querySelector("button")).toBeNull();
-    expect(screen.queryByRole("button", { name: /WhatsApp quick contact/i })).toBeNull();
+    expect(
+      screen.queryByRole("button", { name: /WhatsApp quick contact/i }),
+    ).toBeNull();
     expect(screen.queryByRole("dialog", { name: "Quick contact" })).toBeNull();
   });
 
@@ -86,7 +93,9 @@ describe("WhatsAppCTA Component", () => {
 
     render(<WhatsAppCTA />);
 
-    const fab = screen.getByRole("button", { name: "Open WhatsApp quick contact" });
+    const fab = screen.getByRole("button", {
+      name: "Open WhatsApp quick contact",
+    });
     expect(fab).toHaveAttribute("aria-expanded", "false");
     expect(fab).toHaveAttribute("aria-controls", "quick-contact-panel");
     expect(fab).toHaveClass("site-fab-launcher--whatsapp");
@@ -101,7 +110,9 @@ describe("WhatsAppCTA Component", () => {
 
     render(<WhatsAppCTA />);
 
-    const fab = screen.getByRole("button", { name: "Open WhatsApp quick contact" });
+    const fab = screen.getByRole("button", {
+      name: "Open WhatsApp quick contact",
+    });
     expect(fab).toHaveClass("site-fab-anchor--bottom");
     expect(fab).not.toHaveClass("site-fab-anchor--bottom-raised");
   });
@@ -112,7 +123,9 @@ describe("WhatsAppCTA Component", () => {
 
     render(<WhatsAppCTA />);
 
-    const fab = screen.getByRole("button", { name: "Open WhatsApp quick contact" });
+    const fab = screen.getByRole("button", {
+      name: "Open WhatsApp quick contact",
+    });
     expect(screen.queryByText("Quick contact")).toBeNull();
 
     fireEvent.click(fab);
@@ -121,7 +134,10 @@ describe("WhatsAppCTA Component", () => {
     const dialog = screen.getByRole("dialog", { name: "Quick contact" });
     expect(dialog).toHaveAttribute("id", "quick-contact-panel");
     expect(dialog).toHaveClass("quick-contact-panel");
-    expect(screen.getByRole("button", { name: "Close quick contact panel" })).toBeInTheDocument();
+    expect(
+      screen.getAllByRole("button", { name: "Close WhatsApp quick contact" })
+        .length,
+    ).toBeGreaterThan(0);
 
     const whatsappLink = screen.getByRole("link", { name: /WhatsApp now/i });
     expect(whatsappLink).toHaveAttribute(
@@ -130,7 +146,10 @@ describe("WhatsAppCTA Component", () => {
     );
     expect(whatsappLink).toHaveAttribute("target", "_blank");
     expect(whatsappLink).toHaveAttribute("rel", "noopener noreferrer");
-    expect(screen.getByRole("link", { name: /Call team/i })).toHaveAttribute("href", "tel:+9111111111");
+    expect(screen.getByRole("link", { name: /Call team/i })).toHaveAttribute(
+      "href",
+      "tel:+9111111111",
+    );
     expect(screen.getByRole("link", { name: /Email us/i })).toHaveAttribute(
       "href",
       "mailto:mock@example.com?subject=Workspace%20enquiry",
@@ -172,15 +191,21 @@ describe("WhatsAppCTA Component", () => {
     vi.mocked(hasConsentChoice).mockReturnValue(true);
 
     render(<WhatsAppCTA />);
-    fireEvent.click(screen.getByRole("button", { name: "Open WhatsApp quick contact" }));
-    expect(screen.getByRole("dialog", { name: "Quick contact" })).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole("button", { name: "Close quick contact panel" }));
-    expect(screen.queryByRole("dialog", { name: "Quick contact" })).toBeNull();
-    expect(screen.getByRole("button", { name: "Open WhatsApp quick contact" })).toHaveAttribute(
-      "aria-expanded",
-      "false",
+    fireEvent.click(
+      screen.getByRole("button", { name: "Open WhatsApp quick contact" }),
     );
+    expect(
+      screen.getByRole("dialog", { name: "Quick contact" }),
+    ).toBeInTheDocument();
+
+    const closeButtons = screen.getAllByRole("button", {
+      name: "Close WhatsApp quick contact",
+    });
+    fireEvent.click(closeButtons[closeButtons.length - 1]);
+    expect(screen.queryByRole("dialog", { name: "Quick contact" })).toBeNull();
+    expect(
+      screen.getByRole("button", { name: "Open WhatsApp quick contact" }),
+    ).toHaveAttribute("aria-expanded", "false");
   });
 
   it("reacts to oando-cookie-consent dispatchEvent and swaps FAB anchor", () => {
@@ -200,19 +225,25 @@ describe("WhatsAppCTA Component", () => {
 
     const { rerender } = render(<WhatsAppCTA />);
 
-    const fabBefore = screen.getByRole("button", { name: "Open WhatsApp quick contact" });
+    const fabBefore = screen.getByRole("button", {
+      name: "Open WhatsApp quick contact",
+    });
     expect(fabBefore).toHaveClass("site-fab-anchor--bottom-raised");
 
     vi.mocked(hasConsentChoice).mockReturnValue(true);
     act(() => {
       if (storedCallback) storedCallback();
-      window.dispatchEvent(new CustomEvent("oando-cookie-consent", { detail: { value: "accepted" } }));
+      window.dispatchEvent(
+        new CustomEvent("oando-cookie-consent", {
+          detail: { value: "accepted" },
+        }),
+      );
     });
 
     rerender(<WhatsAppCTA />);
-    expect(screen.getByRole("button", { name: "Open WhatsApp quick contact" })).toHaveClass(
-      "site-fab-anchor--bottom",
-    );
+    expect(
+      screen.getByRole("button", { name: "Open WhatsApp quick contact" }),
+    ).toHaveClass("site-fab-anchor--bottom");
 
     addSpy.mockRestore();
   });

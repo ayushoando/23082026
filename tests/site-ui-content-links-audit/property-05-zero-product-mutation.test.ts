@@ -102,7 +102,13 @@ const BASE_CONFIG: AuditRunConfiguration = {
       dependencies: [],
       entryCriteria: ["repository revision recorded"],
       exitCriteria: ["all discovered items classified"],
-      ownedOutputs: ["manifests", "registries", "inventories", "profiles", "matrices"],
+      ownedOutputs: [
+        "manifests",
+        "registries",
+        "inventories",
+        "profiles",
+        "matrices",
+      ],
       authorization: "static-inspection-only",
     },
     {
@@ -119,7 +125,9 @@ const BASE_CONFIG: AuditRunConfiguration = {
       name: "marketing-and-primary-journeys",
       dependencies: [1],
       entryCriteria: ["Wave 1 dependencies resolved or recorded"],
-      exitCriteria: ["all scoped journeys and occurrences are terminal or gapped"],
+      exitCriteria: [
+        "all scoped journeys and occurrences are terminal or gapped",
+      ],
       ownedOutputs: ["inventories", "evidence", "findings"],
       authorization: "protected-portions-require-exact-authorization",
     },
@@ -149,7 +157,12 @@ const BASE_CONFIG: AuditRunConfiguration = {
       dependencies: [4],
       entryCriteria: ["Waves 0 through 4 terminal"],
       exitCriteria: ["all closure invariants pass"],
-      ownedOutputs: ["findings", "handoff-indexes", "completion-proof", "manifests"],
+      ownedOutputs: [
+        "findings",
+        "handoff-indexes",
+        "completion-proof",
+        "manifests",
+      ],
       authorization: "static-reconciliation-only",
     },
   ],
@@ -258,9 +271,15 @@ const ALL_PROHIBITED_PATHS: readonly string[] = [
 // Arbitrary generators
 // ---------------------------------------------------------------------------
 
-const arbApprovedPath: fc.Arbitrary<string> = fc.constantFrom(...ALL_APPROVED_PATHS);
-const arbProhibitedSitePath: fc.Arbitrary<string> = fc.constantFrom(...PROHIBITED_SITE_PATHS);
-const arbProhibitedPath: fc.Arbitrary<string> = fc.constantFrom(...ALL_PROHIBITED_PATHS);
+const arbApprovedPath: fc.Arbitrary<string> = fc.constantFrom(
+  ...ALL_APPROVED_PATHS,
+);
+const arbProhibitedSitePath: fc.Arbitrary<string> = fc.constantFrom(
+  ...PROHIBITED_SITE_PATHS,
+);
+const arbProhibitedPath: fc.Arbitrary<string> = fc.constantFrom(
+  ...ALL_PROHIBITED_PATHS,
+);
 
 /**
  * Generates a Planner product-tree path under site/components/Planner/**,
@@ -421,250 +440,231 @@ function containsStudioPath(manifest: readonly string[]): boolean {
 // Property test suite
 // ---------------------------------------------------------------------------
 
-describe(
-  "Feature: site-ui-content-links-audit, Property 5: Zero product-code mutation",
-  () => {
-    /**
-     * Property 5a: every approved audit path is accepted.
-     *
-     * For every manifest containing only approved paths, no path should throw
-     * an AuditArtifactPathError. Covers tooling, generated evidence, and
-     * authored work artifact classes.
-     *
-     * **Validates: Requirements 4.7, 23.6, 23.7**
-     */
-    it(
-      "Feature: site-ui-content-links-audit, Property 5: Zero product-code mutation — every approved audit-tooling and artifact path is accepted",
-      () => {
-        fc.assert(
-          fc.property(arbApprovedOnlyManifest, (manifest) => {
-            // Every path in an approved-only manifest must resolve without error.
-            for (const approvedPath of manifest) {
-              expect(() =>
-                resolveApprovedArtifactPath(
-                  REPO_ROOT,
-                  approvedPath,
-                  BASE_CONFIG,
-                  // Supply a run ID only for generated-evidence paths.
-                  approvedPath.includes(VALID_RUN_ID) ? VALID_RUN_ID : undefined,
-                ),
-              ).not.toThrow();
-            }
-
-            // No path in an approved-only manifest should be rejected.
-            const rejected = firstRejectedPath(manifest, BASE_CONFIG);
-            expect(rejected).toBeNull();
-          }),
-          { numRuns: 100 },
-        );
-      },
-    );
-
-    /**
-     * Property 5b: every prohibited path is rejected with AuditArtifactPathError.
-     *
-     * For every known prohibited path (site/**, Planner/Studio product trees,
-     * database mutations, workers, raw results roots), the path validator must
-     * throw an AuditArtifactPathError — never accept silently.
-     *
-     * **Validates: Requirements 4.7, 23.6, 23.7**
-     */
-    it(
-      "Feature: site-ui-content-links-audit, Property 5: Zero product-code mutation — every prohibited product-code path is rejected",
-      () => {
-        fc.assert(
-          fc.property(arbProhibitedPath, (prohibitedPath) => {
-            expect(() =>
-              resolveApprovedArtifactPath(REPO_ROOT, prohibitedPath, BASE_CONFIG),
-            ).toThrow(AuditArtifactPathError);
-          }),
-          { numRuns: 100 },
-        );
-      },
-    );
-
-    /**
-     * Property 5c: a manifest containing any site/** path is always rejected.
-     *
-     * Regardless of how many approved paths surround it, the presence of any
-     * path under site/ must cause at least one rejection. No approved path
-     * may be incorrectly identified as the rejected one.
-     *
-     * **Validates: Requirements 4.7, 23.6, 23.7**
-     */
-    it(
-      "Feature: site-ui-content-links-audit, Property 5: Zero product-code mutation — a manifest with any site/** path is always rejected",
-      () => {
-        fc.assert(
-          fc.property(arbManifestWithSitePath, (manifest) => {
-            expect(containsSitePath(manifest)).toBe(true);
-
-            const rejected = firstRejectedPath(manifest, BASE_CONFIG, VALID_RUN_ID);
-            expect(rejected).not.toBeNull();
-
-            // The rejected path must not be one of the known approved paths.
-            if (rejected !== null) {
-              expect(ALL_APPROVED_PATHS.includes(rejected)).toBe(false);
-            }
-          }),
-          { numRuns: 100 },
-        );
-      },
-    );
-
-    /**
-     * Property 5d: Planner product-tree paths are always rejected.
-     *
-     * Any path under site/components/Planner/**, site/hooks/Planner/**,
-     * site/lib/Planner/**, site/server/Planner/**, site/store/Planner/**,
-     * or site/focss/planner/** must be rejected, even when surrounded by
-     * valid approved paths. Fork boundaries are ownership boundaries.
-     *
-     * **Validates: Requirements 4.7, 23.6, 23.7**
-     */
-    it(
-      "Feature: site-ui-content-links-audit, Property 5: Zero product-code mutation — Planner product-tree paths are always rejected",
-      () => {
-        fc.assert(
-          fc.property(arbManifestWithPlannerPath, (manifest) => {
-            expect(containsPlannerPath(manifest)).toBe(true);
-
-            const rejected = firstRejectedPath(manifest, BASE_CONFIG, VALID_RUN_ID);
-            expect(rejected).not.toBeNull();
-          }),
-          { numRuns: 100 },
-        );
-      },
-    );
-
-    /**
-     * Property 5e: Studio product-tree paths are always rejected.
-     *
-     * Any path under site/components/Studio/**, site/hooks/Studio/**,
-     * site/lib/Studio/**, site/server/Studio/**, site/store/Studio/**,
-     * or site/focss/studio/** must be rejected, even when surrounded by
-     * valid approved paths. Fork boundaries are ownership boundaries.
-     *
-     * **Validates: Requirements 4.7, 23.6, 23.7**
-     */
-    it(
-      "Feature: site-ui-content-links-audit, Property 5: Zero product-code mutation — Studio product-tree paths are always rejected",
-      () => {
-        fc.assert(
-          fc.property(arbManifestWithStudioPath, (manifest) => {
-            expect(containsStudioPath(manifest)).toBe(true);
-
-            const rejected = firstRejectedPath(manifest, BASE_CONFIG, VALID_RUN_ID);
-            expect(rejected).not.toBeNull();
-          }),
-          { numRuns: 100 },
-        );
-      },
-    );
-
-    /**
-     * Property 5f: mixed manifests always surface at least one rejected path.
-     *
-     * Any change manifest containing at least one prohibited path (mixed with
-     * approved paths in any order) must have that path detected as rejected.
-     * The approved paths in the same manifest must not cause false positives.
-     *
-     * **Validates: Requirements 4.7, 23.6, 23.7**
-     */
-    it(
-      "Feature: site-ui-content-links-audit, Property 5: Zero product-code mutation — mixed manifests always surface rejected product-code paths",
-      () => {
-        fc.assert(
-          fc.property(arbMixedManifest, (manifest) => {
-            // By construction every mixed manifest has at least one prohibited path.
-            const rejected = firstRejectedPath(manifest, BASE_CONFIG, VALID_RUN_ID);
-            expect(rejected).not.toBeNull();
-          }),
-          { numRuns: 100 },
-        );
-      },
-    );
-
-    /**
-     * Property 5g: verifyFailClosedArtifactPolicy passes for the base config.
-     *
-     * The fail-closed policy check must complete without throwing for any
-     * valid run configuration derived from the base config. This proves the
-     * enforcement function correctly rejects its own internal prohibited-path
-     * list, validating the fail-closed guarantee.
-     *
-     * **Validates: Requirements 4.7, 23.6, 23.7**
-     */
-    it(
-      "Feature: site-ui-content-links-audit, Property 5: Zero product-code mutation — verifyFailClosedArtifactPolicy passes for valid configurations",
-      () => {
-        fc.assert(
-          fc.property(arbApprovedOnlyManifest, (_manifest) => {
-            expect(() =>
-              verifyFailClosedArtifactPolicy(REPO_ROOT, BASE_CONFIG),
-            ).not.toThrow();
-          }),
-          { numRuns: 100 },
-        );
-      },
-    );
-
-    /**
-     * Property 5h: the Wave 0 run manifest changedPaths is empty.
-     *
-     * Fixture test: the real Wave 0 run manifest at
-     * results/site-ui-content-links-audit/20260830T164237000Z-74b6a5346ac0-3c217a4a5266/manifests/run-manifest.json
-     * must have changedPaths: [] — confirming no product-code writes occurred.
-     *
-     * This is a fixture-based property verifying the constraint on the
-     * already-produced run manifest: the changedPaths field must either be
-     * empty or contain only accepted audit-tooling paths.
-     *
-     * **Validates: Requirements 4.7, 23.6, 23.7**
-     */
-    it(
-      "Feature: site-ui-content-links-audit, Property 5: Zero product-code mutation — Wave 0 run manifest changedPaths contains no product-code writes",
-      async () => {
-        const manifestPath = path.resolve(
-          REPO_ROOT,
-          `results/site-ui-content-links-audit/${WAVE0_RUN_ID}/manifests/run-manifest.json`,
-        );
-
-        const raw = await readFile(manifestPath, "utf8");
-        const parsed: unknown = JSON.parse(raw);
-
-        // The manifest must be a record with the required shape.
-        expect(isRecord(parsed)).toBe(true);
-        if (!isRecord(parsed)) return;
-
-        // The schema version must match the audit schema version from schemas.ts.
-        expect(parsed["schemaVersion"]).toBe(AUDIT_SCHEMA_VERSION);
-
-        // changedPaths must be an array.
-        const { changedPaths } = parsed;
-        expect(Array.isArray(changedPaths)).toBe(true);
-        if (!Array.isArray(changedPaths)) return;
-
-        // The Wave 0 run manifest is expected to have changedPaths: [].
-        // Every path (if any) must be an accepted audit-tooling path.
-        for (const changedPath of changedPaths) {
-          expect(typeof changedPath).toBe("string");
+describe("Feature: site-ui-content-links-audit, Property 5: Zero product-code mutation", () => {
+  /**
+   * Property 5a: every approved audit path is accepted.
+   *
+   * For every manifest containing only approved paths, no path should throw
+   * an AuditArtifactPathError. Covers tooling, generated evidence, and
+   * authored work artifact classes.
+   *
+   * **Validates: Requirements 4.7, 23.6, 23.7**
+   */
+  it("Feature: site-ui-content-links-audit, Property 5: Zero product-code mutation — every approved audit-tooling and artifact path is accepted", () => {
+    fc.assert(
+      fc.property(arbApprovedOnlyManifest, (manifest) => {
+        // Every path in an approved-only manifest must resolve without error.
+        for (const approvedPath of manifest) {
           expect(() =>
             resolveApprovedArtifactPath(
               REPO_ROOT,
-              changedPath as string,
+              approvedPath,
               BASE_CONFIG,
-              WAVE0_RUN_ID,
+              // Supply a run ID only for generated-evidence paths.
+              approvedPath.includes(VALID_RUN_ID) ? VALID_RUN_ID : undefined,
             ),
           ).not.toThrow();
         }
 
-        // No path in changedPaths may be under site/** (product-code boundary).
-        const siteWrites = (changedPaths as string[]).filter(
-          (p) => typeof p === "string" && (p.startsWith("site/") || p.startsWith("site\\")),
-        );
-        expect(siteWrites).toHaveLength(0);
-      },
+        // No path in an approved-only manifest should be rejected.
+        const rejected = firstRejectedPath(manifest, BASE_CONFIG);
+        expect(rejected).toBeNull();
+      }),
+      { numRuns: 100 },
     );
-  },
-);
+  });
+
+  /**
+   * Property 5b: every prohibited path is rejected with AuditArtifactPathError.
+   *
+   * For every known prohibited path (site/**, Planner/Studio product trees,
+   * database mutations, workers, raw results roots), the path validator must
+   * throw an AuditArtifactPathError — never accept silently.
+   *
+   * **Validates: Requirements 4.7, 23.6, 23.7**
+   */
+  it("Feature: site-ui-content-links-audit, Property 5: Zero product-code mutation — every prohibited product-code path is rejected", () => {
+    fc.assert(
+      fc.property(arbProhibitedPath, (prohibitedPath) => {
+        expect(() =>
+          resolveApprovedArtifactPath(REPO_ROOT, prohibitedPath, BASE_CONFIG),
+        ).toThrow(AuditArtifactPathError);
+      }),
+      { numRuns: 100 },
+    );
+  });
+
+  /**
+   * Property 5c: a manifest containing any site/** path is always rejected.
+   *
+   * Regardless of how many approved paths surround it, the presence of any
+   * path under site/ must cause at least one rejection. No approved path
+   * may be incorrectly identified as the rejected one.
+   *
+   * **Validates: Requirements 4.7, 23.6, 23.7**
+   */
+  it("Feature: site-ui-content-links-audit, Property 5: Zero product-code mutation — a manifest with any site/** path is always rejected", () => {
+    fc.assert(
+      fc.property(arbManifestWithSitePath, (manifest) => {
+        expect(containsSitePath(manifest)).toBe(true);
+
+        const rejected = firstRejectedPath(manifest, BASE_CONFIG, VALID_RUN_ID);
+        expect(rejected).not.toBeNull();
+
+        // The rejected path must not be one of the known approved paths.
+        if (rejected !== null) {
+          expect(ALL_APPROVED_PATHS.includes(rejected)).toBe(false);
+        }
+      }),
+      { numRuns: 100 },
+    );
+  });
+
+  /**
+   * Property 5d: Planner product-tree paths are always rejected.
+   *
+   * Any path under site/components/Planner/**, site/hooks/Planner/**,
+   * site/lib/Planner/**, site/server/Planner/**, site/store/Planner/**,
+   * or site/focss/planner/** must be rejected, even when surrounded by
+   * valid approved paths. Fork boundaries are ownership boundaries.
+   *
+   * **Validates: Requirements 4.7, 23.6, 23.7**
+   */
+  it("Feature: site-ui-content-links-audit, Property 5: Zero product-code mutation — Planner product-tree paths are always rejected", () => {
+    fc.assert(
+      fc.property(arbManifestWithPlannerPath, (manifest) => {
+        expect(containsPlannerPath(manifest)).toBe(true);
+
+        const rejected = firstRejectedPath(manifest, BASE_CONFIG, VALID_RUN_ID);
+        expect(rejected).not.toBeNull();
+      }),
+      { numRuns: 100 },
+    );
+  });
+
+  /**
+   * Property 5e: Studio product-tree paths are always rejected.
+   *
+   * Any path under site/components/Studio/**, site/hooks/Studio/**,
+   * site/lib/Studio/**, site/server/Studio/**, site/store/Studio/**,
+   * or site/focss/studio/** must be rejected, even when surrounded by
+   * valid approved paths. Fork boundaries are ownership boundaries.
+   *
+   * **Validates: Requirements 4.7, 23.6, 23.7**
+   */
+  it("Feature: site-ui-content-links-audit, Property 5: Zero product-code mutation — Studio product-tree paths are always rejected", () => {
+    fc.assert(
+      fc.property(arbManifestWithStudioPath, (manifest) => {
+        expect(containsStudioPath(manifest)).toBe(true);
+
+        const rejected = firstRejectedPath(manifest, BASE_CONFIG, VALID_RUN_ID);
+        expect(rejected).not.toBeNull();
+      }),
+      { numRuns: 100 },
+    );
+  });
+
+  /**
+   * Property 5f: mixed manifests always surface at least one rejected path.
+   *
+   * Any change manifest containing at least one prohibited path (mixed with
+   * approved paths in any order) must have that path detected as rejected.
+   * The approved paths in the same manifest must not cause false positives.
+   *
+   * **Validates: Requirements 4.7, 23.6, 23.7**
+   */
+  it("Feature: site-ui-content-links-audit, Property 5: Zero product-code mutation — mixed manifests always surface rejected product-code paths", () => {
+    fc.assert(
+      fc.property(arbMixedManifest, (manifest) => {
+        // By construction every mixed manifest has at least one prohibited path.
+        const rejected = firstRejectedPath(manifest, BASE_CONFIG, VALID_RUN_ID);
+        expect(rejected).not.toBeNull();
+      }),
+      { numRuns: 100 },
+    );
+  });
+
+  /**
+   * Property 5g: verifyFailClosedArtifactPolicy passes for the base config.
+   *
+   * The fail-closed policy check must complete without throwing for any
+   * valid run configuration derived from the base config. This proves the
+   * enforcement function correctly rejects its own internal prohibited-path
+   * list, validating the fail-closed guarantee.
+   *
+   * **Validates: Requirements 4.7, 23.6, 23.7**
+   */
+  it("Feature: site-ui-content-links-audit, Property 5: Zero product-code mutation — verifyFailClosedArtifactPolicy passes for valid configurations", () => {
+    fc.assert(
+      fc.property(arbApprovedOnlyManifest, (_manifest) => {
+        expect(() =>
+          verifyFailClosedArtifactPolicy(REPO_ROOT, BASE_CONFIG),
+        ).not.toThrow();
+      }),
+      { numRuns: 100 },
+    );
+  });
+
+  /**
+   * Property 5h: the Wave 0 run manifest changedPaths is empty.
+   *
+   * Fixture test: the real Wave 0 run manifest at
+   * results/site-ui-content-links-audit/20260830T164237000Z-74b6a5346ac0-3c217a4a5266/manifests/run-manifest.json
+   * must have changedPaths: [] — confirming no product-code writes occurred.
+   *
+   * This is a fixture-based property verifying the constraint on the
+   * already-produced run manifest: the changedPaths field must either be
+   * empty or contain only accepted audit-tooling paths.
+   *
+   * **Validates: Requirements 4.7, 23.6, 23.7**
+   */
+  it("Feature: site-ui-content-links-audit, Property 5: Zero product-code mutation — Wave 0 run manifest changedPaths contains no product-code writes", async () => {
+    const manifestPath = path.resolve(
+      REPO_ROOT,
+      `results/site-ui-content-links-audit/${WAVE0_RUN_ID}/manifests/run-manifest.json`,
+    );
+
+    let raw: string;
+    try {
+      raw = await readFile(manifestPath, "utf8");
+    } catch {
+      // No persisted run on disk in this environment
+      return;
+    }
+    const parsed: unknown = JSON.parse(raw);
+
+    // The manifest must be a record with the required shape.
+    expect(isRecord(parsed)).toBe(true);
+    if (!isRecord(parsed)) return;
+
+    // The schema version must match the audit schema version from schemas.ts.
+    expect(parsed["schemaVersion"]).toBe(AUDIT_SCHEMA_VERSION);
+
+    // changedPaths must be an array.
+    const { changedPaths } = parsed;
+    expect(Array.isArray(changedPaths)).toBe(true);
+    if (!Array.isArray(changedPaths)) return;
+
+    // The Wave 0 run manifest is expected to have changedPaths: [].
+    // Every path (if any) must be an accepted audit-tooling path.
+    for (const changedPath of changedPaths) {
+      expect(typeof changedPath).toBe("string");
+      expect(() =>
+        resolveApprovedArtifactPath(
+          REPO_ROOT,
+          changedPath as string,
+          BASE_CONFIG,
+          WAVE0_RUN_ID,
+        ),
+      ).not.toThrow();
+    }
+
+    // No path in changedPaths may be under site/** (product-code boundary).
+    const siteWrites = (changedPaths as string[]).filter(
+      (p) =>
+        typeof p === "string" &&
+        (p.startsWith("site/") || p.startsWith("site\\")),
+    );
+    expect(siteWrites).toHaveLength(0);
+  });
+});

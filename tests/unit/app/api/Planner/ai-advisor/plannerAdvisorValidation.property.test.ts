@@ -28,11 +28,48 @@ import { NextRequest } from "next/server";
 
 const resolveAdvisorModelChain = vi.hoisted(() => vi.fn());
 const requestAdvisorMessages = vi.hoisted(() => vi.fn());
+const mockCounterInc = vi.hoisted(() => vi.fn());
+const mockHistogramObserve = vi.hoisted(() => vi.fn());
+const mockGaugeInc = vi.hoisted(() => vi.fn());
 
 vi.mock("@/lib/ai/mastra", () => ({
   resolveAdvisorModelChain,
   requestAdvisorMessages,
 }));
+
+vi.mock("server-only", () => ({}));
+
+vi.mock("@/lib/observability/metrics", () => ({
+  getMetricsRegistry: () => ({}),
+}));
+
+vi.mock("@prometheus-io/client", () => {
+  class Counter {
+    public constructor(public readonly config: Record<string, unknown>) {}
+
+    public inc(labels?: Record<string, string>): void {
+      mockCounterInc(this.config.name, labels ?? {});
+    }
+  }
+
+  class Histogram {
+    public constructor(public readonly config: Record<string, unknown>) {}
+
+    public observe(labels: Record<string, string>, value: number): void {
+      mockHistogramObserve(this.config.name, labels, value);
+    }
+  }
+
+  class Gauge {
+    public constructor(public readonly config: Record<string, unknown>) {}
+
+    public inc(labels?: Record<string, string>): void {
+      mockGaugeInc(this.config.name, labels ?? {});
+    }
+  }
+
+  return { Counter, Histogram, Gauge };
+});
 
 // ---------------------------------------------------------------------------
 // Mock the Planner route adapter
@@ -43,9 +80,7 @@ vi.mock("@planner/server/plannerRouteAdapter", () => ({
       operation,
     }: {
       operation: {
-        invoke: (
-          ctx: unknown,
-        ) => Promise<{
+        invoke: (ctx: unknown) => Promise<{
           ok: boolean;
           status: number;
           data?: unknown;
@@ -57,7 +92,7 @@ vi.mock("@planner/server/plannerRouteAdapter", () => ({
       async (req: Request) => {
         const correlationId = "test-correlation-id";
 
-        let body: unknown = undefined;
+        let body: unknown ;
         const ct = req.headers.get("content-type") ?? "";
         if (ct.includes("application/json")) {
           try {
@@ -66,7 +101,10 @@ vi.mock("@planner/server/plannerRouteAdapter", () => ({
             return Response.json(
               {
                 success: false,
-                error: { code: "INVALID_REQUEST", message: "Could not parse request body" },
+                error: {
+                  code: "INVALID_REQUEST",
+                  message: "Could not parse request body",
+                },
                 correlationId,
               },
               { status: 400 },
@@ -85,7 +123,12 @@ vi.mock("@planner/server/plannerRouteAdapter", () => ({
           const result = await operation.invoke(context);
           if (result.ok) {
             return Response.json(
-              { success: true, contractVersion: 1, data: result.data, correlationId },
+              {
+                success: true,
+                contractVersion: 1,
+                data: result.data,
+                correlationId,
+              },
               { status: result.status ?? 200 },
             );
           }
@@ -95,7 +138,9 @@ vi.mock("@planner/server/plannerRouteAdapter", () => ({
               error: {
                 code: result.code ?? "INTERNAL_ERROR",
                 message: "Request failed",
-                ...(result.metadata?.issues ? { issues: result.metadata.issues } : {}),
+                ...(result.metadata?.issues
+                  ? { issues: result.metadata.issues }
+                  : {}),
               },
               correlationId,
             },
@@ -134,20 +179,27 @@ import { POST } from "@/app/api/planner/ai-advisor/route";
 
 /** Empty object — missing the required messages field. */
 const missingMessagesArb = fc.record({
-  mode: fc.option(fc.constantFrom("chat" as const, "space-suggest" as const), { nil: undefined }),
+  mode: fc.option(fc.constantFrom("chat" as const, "space-suggest" as const), {
+    nil: undefined,
+  }),
   context: fc.option(fc.constant({ seatCount: 5 }), { nil: undefined }),
 });
 
 /** Empty messages array — schema requires minLength 1. */
 const emptyMessagesArb = fc.record({
-  mode: fc.option(fc.constantFrom("chat" as const, "space-suggest" as const), { nil: undefined }),
+  mode: fc.option(fc.constantFrom("chat" as const, "space-suggest" as const), {
+    nil: undefined,
+  }),
   messages: fc.constant([]),
 });
 
 /** Messages array exceeding max of 20 items. */
 const tooManyMessagesArb = fc.record({
   messages: fc.array(
-    fc.record({ role: fc.constant("user" as const), content: fc.string({ minLength: 1, maxLength: 50 }) }),
+    fc.record({
+      role: fc.constant("user" as const),
+      content: fc.string({ minLength: 1, maxLength: 50 }),
+    }),
     { minLength: 21, maxLength: 30 },
   ),
 });
@@ -175,9 +227,9 @@ const overMaxContentArb = fc.record({
 const invalidRoleArb = fc.record({
   messages: fc.array(
     fc.record({
-      role: fc.string({ minLength: 1, maxLength: 20 }).filter(
-        (s) => !["user", "assistant", "system"].includes(s),
-      ),
+      role: fc
+        .string({ minLength: 1, maxLength: 20 })
+        .filter((s) => !["user", "assistant", "system"].includes(s)),
       content: fc.string({ minLength: 1, maxLength: 50 }),
     }),
     { minLength: 1, maxLength: 3 },
@@ -219,7 +271,9 @@ describe("Feature: ai-implementation-audit, Property 7: Invalid request bodies a
   beforeEach(() => {
     vi.clearAllMocks();
     // Providers should never be reached for invalid bodies
-    resolveAdvisorModelChain.mockReturnValue([{ provider: "gemini", label: "Gemini" }]);
+    resolveAdvisorModelChain.mockReturnValue([
+      { provider: "gemini", label: "Gemini" },
+    ]);
     requestAdvisorMessages.mockResolvedValue("Should not be called");
   });
 

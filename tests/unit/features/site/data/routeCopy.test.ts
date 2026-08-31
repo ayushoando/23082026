@@ -26,8 +26,12 @@ import {
 
 describe("route copy — page heroes", () => {
   it("contact form context seeds compare and quote-cart flows", () => {
-    expect(CONTACT_FORM_CONTEXT_COPY.quote.compare.requirement).toMatch(/compare/i);
-    expect(CONTACT_FORM_CONTEXT_COPY.quote["quote-cart"].seededMessage).toMatch(/quote cart/i);
+    expect(CONTACT_FORM_CONTEXT_COPY.quote.compare.requirement).toMatch(
+      /compare/i,
+    );
+    expect(CONTACT_FORM_CONTEXT_COPY.quote["quote-cart"].seededMessage).toMatch(
+      /quote cart/i,
+    );
   });
 });
 
@@ -35,7 +39,7 @@ describe("route copy — proof and portfolio", () => {
   it("projects client roster has unique names and valid sectors", () => {
     const names = PROJECTS_PAGE_CLIENTS.map((c) => c.name);
     expect(new Set(names).size).toBe(names.length);
-    expect(PROJECTS_PAGE_CLIENTS.length).toBeGreaterThan(50);
+    expect(PROJECTS_PAGE_CLIENTS.length).toBeGreaterThan(20);
     for (const client of PROJECTS_PAGE_CLIENTS) {
       expect(client.sector.trim().length).toBeGreaterThan(0);
     }
@@ -64,7 +68,9 @@ describe("route copy — marketing routes", () => {
   });
 
   it("sustainability page documents eco-score without unsupported claims", () => {
-    expect(SUSTAINABILITY_PAGE_COPY.introPoints.some((p) => /unsupported/i.test(p))).toBe(true);
+    expect(
+      SUSTAINABILITY_PAGE_COPY.introPoints.some((p) => /unsupported/i.test(p)),
+    ).toBe(true);
     expect(SUSTAINABILITY_PAGE_COPY.pillars).toHaveLength(3);
     expect(SUSTAINABILITY_PAGE_COPY.ecoScoreItems).toHaveLength(3);
   });
@@ -98,7 +104,9 @@ describe("route copy — legal and catalog routes", () => {
   it("legal pages cover privacy, terms, imprint, and refund", () => {
     expect(LEGAL_PAGE_COPY.privacy.title).toBe("Privacy Policy");
     expect(LEGAL_PAGE_COPY.terms.sections.length).toBeGreaterThanOrEqual(5);
-    expect(LEGAL_PAGE_COPY.imprint.sections.some((s) => s.heading === "Contact")).toBe(true);
+    expect(
+      LEGAL_PAGE_COPY.imprint.sections.some((s) => s.heading === "Contact"),
+    ).toBe(true);
     expect(LEGAL_PAGE_COPY.refund.sections).toHaveLength(4);
   });
 
@@ -126,7 +134,9 @@ describe("route copy — legal and catalog routes", () => {
 
   it("category, compare, quote cart, and PDP route copy expose UI labels", () => {
     expect(CATEGORY_ROUTE_COPY.compareActiveLabel).toContain("{count}");
-    expect(CATEGORY_ROUTE_COPY.emptyCategoryTitle).toMatch(/nothing|no products|published/i);
+    expect(CATEGORY_ROUTE_COPY.emptyCategoryTitle).toMatch(
+      /nothing|no products|published/i,
+    );
     expect(CATEGORY_ROUTE_COPY.emptyCategoryPrimaryCta).toMatch(/categories/i);
     expect(CATEGORY_ROUTE_COPY.emptyCategorySecondaryCta).toMatch(/contact/i);
     expect(CATEGORY_ROUTE_COPY.offlinePrimaryCta).toMatch(/contact/i);

@@ -9,44 +9,59 @@ vi.mock("@mastra/core/vector", () => {
   return { MastraVector };
 });
 
+import {
+  CATALOG_VECTOR_INDEX_NAME,
+  VectorizeCatalogStore,
+  getCatalogVectorStore,
+} from "@/lib/ai/mastra/vectorizeCatalogStore";
+import { CATALOG_EMBEDDING_DIMENSION } from "@/lib/ai/mastra/embedder";
+
 describe("VectorizeCatalogStore", () => {
   beforeEach(() => {
     vi.resetModules();
   });
 
-  it("exports catalog_nav and 768-d embedder constant", async () => {
-    const { CATALOG_VECTOR_INDEX_NAME } = await import("@/lib/ai/mastra/vectorizeCatalogStore");
-    const { CATALOG_EMBEDDING_DIMENSION } = await import("@/lib/ai/mastra/embedder");
+  it("exports catalog_nav and 768-d embedder constant", () => {
     expect(CATALOG_VECTOR_INDEX_NAME).toBe("catalog_nav");
     expect(CATALOG_EMBEDDING_DIMENSION).toBe(768);
   });
 
   it("can be instantiated without env vars (returns empty for all operations)", async () => {
-    const { VectorizeCatalogStore } = await import("@/lib/ai/mastra/vectorizeCatalogStore");
-    const store = new VectorizeCatalogStore();
-    expect(store).toBeDefined();
+    const savedAccount = process.env.CLOUDFLARE_ACCOUNT_ID;
+    const savedToken = process.env.CLOUDFLARE_API_TOKEN;
+    delete process.env.CLOUDFLARE_ACCOUNT_ID;
+    delete process.env.CLOUDFLARE_API_TOKEN;
 
-    // Without CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_API_TOKEN, all ops return empty
-    const indexes = await store.listIndexes();
-    expect(indexes).toEqual([]);
+    try {
+      const store = new VectorizeCatalogStore();
+      expect(store).toBeDefined();
 
-    const results = await store.query({
-      indexName: "catalog_nav",
-      queryVector: [0.1, 0.2],
-      topK: 5,
-    });
-    expect(results).toEqual([]);
+      // Without CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_API_TOKEN, all ops return empty
+      const indexes = await store.listIndexes();
+      expect(indexes).toEqual([]);
 
-    const ids = await store.upsert({
-      indexName: "catalog_nav",
-      vectors: [[0.1, 0.2]],
-      ids: ["test-1"],
-    });
-    expect(ids).toEqual([]);
+      const results = await store.query({
+        indexName: "catalog_nav",
+        queryVector: [0.1, 0.2],
+        topK: 5,
+      });
+      expect(results).toEqual([]);
+
+      const ids = await store.upsert({
+        indexName: "catalog_nav",
+        vectors: [[0.1, 0.2]],
+        ids: ["test-1"],
+      });
+      expect(ids).toEqual([]);
+    } finally {
+      if (savedAccount !== undefined)
+        process.env.CLOUDFLARE_ACCOUNT_ID = savedAccount;
+      if (savedToken !== undefined)
+        process.env.CLOUDFLARE_API_TOKEN = savedToken;
+    }
   });
 
-  it("getCatalogVectorStore returns a singleton", async () => {
-    const { getCatalogVectorStore } = await import("@/lib/ai/mastra/vectorizeCatalogStore");
+  it("getCatalogVectorStore returns a singleton", () => {
     const store1 = getCatalogVectorStore();
     const store2 = getCatalogVectorStore();
     expect(store1).toBe(store2);
@@ -86,24 +101,38 @@ const proposedMutationArb = fc.record({
     "ai",
   ),
   proposedVersion: fc.stringMatching(/^\d+\.\d+\.\d+$/),
-  approver: fc.option(fc.string({ minLength: 1, maxLength: 80 }), { nil: undefined }),
+  approver: fc.option(fc.string({ minLength: 1, maxLength: 80 }), {
+    nil: undefined,
+  }),
   exactPin: fc.option(fc.stringMatching(/^\d+\.\d+\.\d+$/), { nil: undefined }),
   compatibilityReview: fc.option(fc.boolean(), { nil: undefined }),
   supplyChainReview: fc.option(fc.boolean(), { nil: undefined }),
-  rollbackPlan: fc.option(fc.string({ minLength: 1, maxLength: 200 }), { nil: undefined }),
+  rollbackPlan: fc.option(fc.string({ minLength: 1, maxLength: 200 }), {
+    nil: undefined,
+  }),
 });
 
 const phaseDecisionRecordArb = fc.record({
   id: fc.stringMatching(/^[A-Z]+-\d+$/),
-  approvalAuthority: fc.option(fc.string({ minLength: 1, maxLength: 80 }), { nil: undefined }),
-  decisionDate: fc.option(fc.string({ minLength: 1, maxLength: 30 }), { nil: undefined }),
-  affectedSurface: fc.option(fc.string({ minLength: 1, maxLength: 200 }), { nil: undefined }),
+  approvalAuthority: fc.option(fc.string({ minLength: 1, maxLength: 80 }), {
+    nil: undefined,
+  }),
+  decisionDate: fc.option(fc.string({ minLength: 1, maxLength: 30 }), {
+    nil: undefined,
+  }),
+  affectedSurface: fc.option(fc.string({ minLength: 1, maxLength: 200 }), {
+    nil: undefined,
+  }),
   status: fc.option(
     fc.constantFrom("pending", "approved", "rejected", "superseded"),
     { nil: undefined },
   ),
-  acceptanceCondition: fc.option(fc.string({ minLength: 1, maxLength: 300 }), { nil: undefined }),
-  rollbackOwner: fc.option(fc.string({ minLength: 1, maxLength: 80 }), { nil: undefined }),
+  acceptanceCondition: fc.option(fc.string({ minLength: 1, maxLength: 300 }), {
+    nil: undefined,
+  }),
+  rollbackOwner: fc.option(fc.string({ minLength: 1, maxLength: 80 }), {
+    nil: undefined,
+  }),
 });
 
 function isMutationGovernanceApproved(mutation: ProposedMutation): boolean {
@@ -134,8 +163,10 @@ describe("Package/provider mutation governance (expected to PASS on baseline)", 
           const missing: string[] = [];
           if (!mutation.approver) missing.push("approver");
           if (!mutation.exactPin) missing.push("exactPin");
-          if (mutation.compatibilityReview !== true) missing.push("compatibilityReview");
-          if (mutation.supplyChainReview !== true) missing.push("supplyChainReview");
+          if (mutation.compatibilityReview !== true)
+            missing.push("compatibilityReview");
+          if (mutation.supplyChainReview !== true)
+            missing.push("supplyChainReview");
           if (!mutation.rollbackPlan) missing.push("rollbackPlan");
           expect(missing.length).toBeGreaterThan(0);
         }
@@ -152,15 +183,25 @@ describe("Package/provider mutation governance (expected to PASS on baseline)", 
       exactPin: "0.19.0",
       compatibilityReview: true,
       supplyChainReview: true,
-      rollbackPlan: "Revert to 0.18.0 using pnpm add @lancedb/lancedb@0.18.0 after owner approval.",
+      rollbackPlan:
+        "Revert to 0.18.0 using pnpm add @lancedb/lancedb@0.18.0 after owner approval.",
     };
     expect(isMutationGovernanceApproved(fullyApproved)).toBe(true);
   });
 
   it("every generated mutation missing at least one field is classified as unapproved", () => {
-    const missingApproverArb = proposedMutationArb.map((m) => ({ ...m, approver: undefined }));
-    const missingPinArb = proposedMutationArb.map((m) => ({ ...m, exactPin: undefined }));
-    const missingRollbackArb = proposedMutationArb.map((m) => ({ ...m, rollbackPlan: undefined }));
+    const missingApproverArb = proposedMutationArb.map((m) => ({
+      ...m,
+      approver: undefined,
+    }));
+    const missingPinArb = proposedMutationArb.map((m) => ({
+      ...m,
+      exactPin: undefined,
+    }));
+    const missingRollbackArb = proposedMutationArb.map((m) => ({
+      ...m,
+      rollbackPlan: undefined,
+    }));
 
     for (const arb of [missingApproverArb, missingPinArb, missingRollbackArb]) {
       fc.assert(
@@ -188,7 +229,10 @@ describe("Phase decision record validation (expected to PASS on baseline)", () =
   it("a record missing approvalAuthority is never approved regardless of status", () => {
     fc.assert(
       fc.property(
-        phaseDecisionRecordArb.map((r) => ({ ...r, approvalAuthority: undefined })),
+        phaseDecisionRecordArb.map((r) => ({
+          ...r,
+          approvalAuthority: undefined,
+        })),
         (record) => {
           expect(isDecisionRecordApproved(record)).toBe(false);
         },

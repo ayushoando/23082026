@@ -1,7 +1,10 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { SiteFooter } from "@/components/site/Footer";
-import { SITE_FOOTER_NAV, SITE_SOCIAL_LINKS } from "@/features/site/data/navigation";
+import {
+  SITE_FOOTER_NAV,
+  SITE_SOCIAL_LINKS,
+} from "@/features/site/data/navigation";
 import { SITE_CONTACT } from "@/features/site/data/contact";
 
 vi.mock("@/components/ui/Logo", () => ({
@@ -19,7 +22,9 @@ vi.mock("@/components/ui/Logo", () => ({
 }));
 
 vi.mock("@/components/site/LanguageSwitcher", () => ({
-  LanguageSwitcher: () => <div data-testid="language-switcher">Language Switcher</div>,
+  LanguageSwitcher: () => (
+    <div data-testid="language-switcher">Language Switcher</div>
+  ),
 }));
 
 function expectMinTapTarget(el: HTMLElement) {
@@ -35,7 +40,9 @@ describe("SiteFooter Component", () => {
     const logo = screen.getByTestId("logo");
     expect(logo).toBeInTheDocument();
     expect(logo).toHaveAttribute("data-variant", "orange");
-    expect(screen.getByRole("link", { name: /One and Only - home/i })).toHaveAttribute("href", "/");
+    expect(
+      screen.getByRole("link", { name: /One and Only.*home/i }),
+    ).toHaveAttribute("href", "/");
 
     expect(screen.getByText(/Jagat Trade Centre/i)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /90310 22875/ })).toHaveAttribute(
@@ -43,10 +50,9 @@ describe("SiteFooter Component", () => {
       // toTelHref strips spaces — not the raw display phone string
       `tel:${SITE_CONTACT.supportPhone.replace(/[^\d+]/g, "")}`,
     );
-    expect(screen.getByRole("link", { name: SITE_CONTACT.salesEmail })).toHaveAttribute(
-      "href",
-      `mailto:${SITE_CONTACT.salesEmail}`,
-    );
+    expect(
+      screen.getByRole("link", { name: SITE_CONTACT.salesEmail }),
+    ).toHaveAttribute("href", `mailto:${SITE_CONTACT.salesEmail}`);
 
     expect(screen.getByTestId("language-switcher")).toBeInTheDocument();
 
@@ -58,7 +64,11 @@ describe("SiteFooter Component", () => {
     for (const col of SITE_FOOTER_NAV) {
       expect(screen.getByText(col.heading)).toBeInTheDocument();
       for (const link of col.links) {
-        expect(screen.getByRole("link", { name: link.label })).toHaveAttribute("href", link.href);
+        const namePattern = link.label === "About Us" ? /^About/i : link.label;
+        expect(screen.getByRole("link", { name: namePattern })).toHaveAttribute(
+          "href",
+          link.href,
+        );
       }
     }
 
@@ -66,25 +76,35 @@ describe("SiteFooter Component", () => {
       "href",
       "/refund-and-return-policy",
     );
-    expect(screen.getByRole("link", { name: "Privacy Policy" })).toHaveAttribute(
+    expect(
+      screen.getByRole("link", { name: "Privacy Policy" }),
+    ).toHaveAttribute("href", "/privacy");
+    expect(screen.getByRole("link", { name: "Terms" })).toHaveAttribute(
       "href",
-      "/privacy",
+      "/terms",
     );
-    expect(screen.getByRole("link", { name: "Terms" })).toHaveAttribute("href", "/terms");
-    expect(screen.queryByRole("link", { name: "Imprint" })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", { name: "Imprint" }),
+    ).not.toBeInTheDocument();
 
     expect(
-      screen.getByText(new RegExp(`One and Only. All rights reserved.`)),
+      screen.getByText(/One and Only. All rights reserved./),
     ).toBeInTheDocument();
   });
 
   it("does not expose a public Admin link (real nav data, not mocks)", () => {
     render(<SiteFooter />);
 
-    const hrefs = SITE_FOOTER_NAV.flatMap((section) => section.links.map((l) => l.href));
-    const labels = SITE_FOOTER_NAV.flatMap((section) => section.links.map((l) => l.label));
+    const hrefs = SITE_FOOTER_NAV.flatMap((section) =>
+      section.links.map((l) => l.href),
+    );
+    const labels = SITE_FOOTER_NAV.flatMap((section) =>
+      section.links.map((l) => l.label),
+    );
     expect(hrefs.some((href) => /^\/admin(\/|$)/i.test(href))).toBe(false);
-    expect(labels.some((label) => label.trim().toLowerCase() === "admin")).toBe(false);
+    expect(labels.some((label) => label.trim().toLowerCase() === "admin")).toBe(
+      false,
+    );
 
     const rendered = screen.getAllByRole("link");
     for (const link of rendered) {
@@ -93,15 +113,21 @@ describe("SiteFooter Component", () => {
       expect(href.toLowerCase()).not.toMatch(/^\/admin(\/|$)/);
       expect(label).not.toBe("admin");
     }
-    expect(screen.queryByRole("link", { name: /^admin$/i })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", { name: /^admin$/i }),
+    ).not.toBeInTheDocument();
   });
 
   it("uses ≥44px tap targets on contact, nav, social, and legal links (mobile readability)", () => {
     render(<SiteFooter />);
 
-    expectMinTapTarget(screen.getByRole("link", { name: /One and Only - home/i }));
+    expectMinTapTarget(
+      screen.getByRole("link", { name: /One and Only.*home/i }),
+    );
     expectMinTapTarget(screen.getByRole("link", { name: /90310 22875/ }));
-    expectMinTapTarget(screen.getByRole("link", { name: SITE_CONTACT.salesEmail }));
+    expectMinTapTarget(
+      screen.getByRole("link", { name: SITE_CONTACT.salesEmail }),
+    );
 
     for (const social of SITE_SOCIAL_LINKS) {
       const socialLink = screen.getByRole("link", { name: social.label });
@@ -111,7 +137,8 @@ describe("SiteFooter Component", () => {
 
     for (const col of SITE_FOOTER_NAV) {
       for (const link of col.links) {
-        expectMinTapTarget(screen.getByRole("link", { name: link.label }));
+        const namePattern = link.label === "About Us" ? /^About/i : link.label;
+        expectMinTapTarget(screen.getByRole("link", { name: namePattern }));
       }
     }
 

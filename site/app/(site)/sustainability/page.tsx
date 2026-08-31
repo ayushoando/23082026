@@ -4,8 +4,12 @@ import { ContactTeaser } from "@/components/shared/ContactTeaser";
 import { SustainabilityPageView } from "@/components/sustainability/SustainabilityPageView";
 import { HomeMarketingLayout } from "@/components/home/layout";
 import { SUSTAINABILITY_PAGE_COPY } from "@/features/site/data/routeCopy";
+import { SUSTAINABILITY_PAGE_METADATA } from "@/features/site/data/routeMetadata";
 import { withLocaleCopy } from "@/lib/i18n/withLocaleCopy";
-import { buildBreadcrumbJsonLd, buildPageJsonLd, buildPageMetadata } from "@/features/site/data/seo";
+import {
+  buildBreadcrumbJsonLd,
+  buildPageJsonLd,
+} from "@/features/site/data/seo";
 import { SITE_URL } from "@/lib/siteUrl";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
@@ -17,12 +21,7 @@ async function loadSustainabilityCopy() {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const copy = await loadSustainabilityCopy();
-  return buildPageMetadata(SITE_URL, {
-    title: `${copy.heroTitle} | One&Only`,
-    description: copy.heroSubtitle,
-    path: "/sustainability",
-  });
+  return SUSTAINABILITY_PAGE_METADATA;
 }
 
 /** Editorial sustainability — photography-forward hero, bronze punctuation, pillar rows. */
@@ -43,11 +42,15 @@ export default async function SustainabilityPage() {
     <HomeMarketingLayout>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(sustainabilityJsonLd) }}
+        dangerouslySetInnerHTML={{
+          __html: sanitizeJsonForScript(sustainabilityJsonLd),
+        }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{
+          __html: sanitizeJsonForScript(breadcrumbJsonLd),
+        }}
       />
       <SustainabilityPageView
         heroKicker={copy.heroKicker}

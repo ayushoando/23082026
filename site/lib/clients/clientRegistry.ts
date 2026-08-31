@@ -54,7 +54,9 @@ function source(
  * Owner-approved identity groups. Source names remain in each canonical record
  * so review work can trace a public label back to the supplied roster.
  */
-export const CLIENT_IDENTITY_MERGES: Readonly<Record<string, readonly string[]>> = {
+export const CLIENT_IDENTITY_MERGES: Readonly<
+  Record<string, readonly string[]>
+> = {
   sonalika: ["Sonalika", "Sonalika International", "Sonalika Tractors"],
   cimp: ["CIMP", "Chandragupt Institute of Management (CIMP)"],
   dmi: ["DMI", "Development Management Institute (DMI)"],
@@ -65,11 +67,18 @@ export const CLIENT_IDENTITY_MERGES: Readonly<Record<string, readonly string[]>>
   "canara-bank": ["Canara Bank", "Canara Bank Limited"],
   "syndicate-bank": ["Syndicate Bank", "Syndicate Bank Limited"],
   "united-bank": ["United Bank of India", "United Bank Limited"],
-  "franklin-templeton": ["Franklin Templeton", "Franklin Templeton Investments"],
+  "franklin-templeton": [
+    "Franklin Templeton",
+    "Franklin Templeton Investments",
+  ],
   "asian-paints": ["Asian Paints", "Asian Paints Limited"],
   "maruti-suzuki": ["Maruti Suzuki", "Maruti Suzuki Limited"],
   mecon: ["MECON", "MECON Limited"],
-  "usha-international": ["Usha", "Usha International", "Usha International Ltd"],
+  "usha-international": [
+    "Usha",
+    "Usha International",
+    "Usha International Ltd",
+  ],
   "d-goenka-school": ["D. Goenka School", "GD Goenka"],
   "aditya-birla-school": ["Birla School", "Aditya Birla School"],
   "amara-raja": ["Amara Raja", "Amara Raja Battery"],
@@ -96,7 +105,10 @@ export const CLIENT_IDENTITY_MERGES: Readonly<Record<string, readonly string[]>>
   ],
   itc: ["ITC Limited", "ITC Dairy Limited"],
   "bbc-media-action": ["BBC Media Action", "BBC Media Limited"],
-  "government-of-bihar": ["Government of Bihar", "Rural Works Department, Government of Bihar"],
+  "government-of-bihar": [
+    "Government of Bihar",
+    "Rural Works Department, Government of Bihar",
+  ],
   "commercial-tax-department-government-of-india": [
     "Commercial Tax Department, Government of India",
     "Commercial Tax Department",
@@ -114,7 +126,9 @@ export const CLIENT_IDENTITY_MERGES: Readonly<Record<string, readonly string[]>>
 };
 
 const SOURCE_NAME_TO_CANONICAL_ID = new Map<string, string>();
-for (const [canonicalId, sourceNames] of Object.entries(CLIENT_IDENTITY_MERGES)) {
+for (const [canonicalId, sourceNames] of Object.entries(
+  CLIENT_IDENTITY_MERGES,
+)) {
   for (const sourceName of sourceNames) {
     SOURCE_NAME_TO_CANONICAL_ID.set(sourceName, canonicalId);
   }
@@ -137,7 +151,9 @@ const SOURCE_CLIENT_RECORDS: SourceClientRecord[] = [
     canonicalId: "corporation-bank",
     logoPath: "/assets/marketing/client-logos/corporation-bank.jpg",
   }), // @review
-  source("CARE India", "education-social-impact", { canonicalId: "care-india" }), // @review
+  source("CARE India", "education-social-impact", {
+    canonicalId: "care-india",
+  }), // @review
   source("UNICEF", "education-social-impact", { canonicalId: "unicef" }), // @review
   source("World Health Organization (WHO)", "education-social-impact", {
     canonicalId: "world-health-organization-who",
@@ -145,14 +161,22 @@ const SOURCE_CLIENT_RECORDS: SourceClientRecord[] = [
   source("Azim Premji Foundation", "education-social-impact", {
     canonicalId: "azim-premji-foundation",
   }), // @review
-  source("HelpAge India", "education-social-impact", { canonicalId: "helpage-india" }), // @review
-  source("Ispat Ltd", "corporates-multinationals", { canonicalId: "ispat-ltd" }), // @review
+  source("HelpAge India", "education-social-impact", {
+    canonicalId: "helpage-india",
+  }), // @review
+  source("Ispat Ltd", "corporates-multinationals", {
+    canonicalId: "ispat-ltd",
+  }), // @review
   source("MECON Limited", "corporates-multinationals", {
     canonicalId: "mecon-limited",
     logoPath: "/assets/marketing/client-logos/mecon-limited.jpg",
   }), // @review
-  source("TVS Limited", "corporates-multinationals", { canonicalId: "tvs-limited" }), // @review — owner-supplied repeated-entry cue.
-  source("Patna High Court", "government-public-sector", { canonicalId: "patna-high-court" }), // @review
+  source("TVS Limited", "corporates-multinationals", {
+    canonicalId: "tvs-limited",
+  }), // @review — owner-supplied repeated-entry cue.
+  source("Patna High Court", "government-public-sector", {
+    canonicalId: "patna-high-court",
+  }), // @review
   source("BHEL", "government-public-sector", {
     canonicalId: "bhel",
     logoPath: "/assets/marketing/client-logos/bhel.svg",
@@ -161,34 +185,58 @@ const SOURCE_CLIENT_RECORDS: SourceClientRecord[] = [
     canonicalId: "gd-goenka",
     logoPath: "/assets/marketing/client-logos/gd-goenka.jpg",
   }), // @review
-  source("Bihar State Electronics Development Corporation Limited", "government-public-sector", {
-    canonicalId: "bihar-state-electronics-development-corporation-limited",
+  source(
+    "Bihar State Electronics Development Corporation Limited",
+    "government-public-sector",
+    {
+      canonicalId: "bihar-state-electronics-development-corporation-limited",
+    },
+  ), // @review
+  source(
+    "Rural Works Department, Government of Bihar",
+    "government-public-sector",
+    {
+      canonicalId: "rural-works-department-government-of-bihar",
+      logoPath: "/assets/marketing/client-logos/government-of-bihar.jpg",
+    },
+  ), // @review
+  source(
+    "Bihar State Power Holding Company Limited",
+    "government-public-sector",
+    {
+      canonicalId: "bihar-state-power-holding-company-limited",
+      logoPath: "/assets/marketing/client-logos/bsphcl.jpg",
+    },
+  ), // @review
+  source("Vodafone Limited", "corporates-multinationals", {
+    canonicalId: "vodafone-limited",
   }), // @review
-  source("Rural Works Department, Government of Bihar", "government-public-sector", {
-    canonicalId: "rural-works-department-government-of-bihar",
-    logoPath: "/assets/marketing/client-logos/government-of-bihar.jpg",
-  }), // @review
-  source("Bihar State Power Holding Company Limited", "government-public-sector", {
-    canonicalId: "bihar-state-power-holding-company-limited",
-    logoPath: "/assets/marketing/client-logos/bsphcl.jpg",
-  }), // @review
-  source("Vodafone Limited", "corporates-multinationals", { canonicalId: "vodafone-limited" }), // @review
   source("Amul", "corporates-multinationals", { canonicalId: "amul" }), // @review
-  source("Aakash Education", "corporates-multinationals", { canonicalId: "aakash-education" }), // @review
-  source("Rourkela Steel Plant", "government-public-sector", { canonicalId: "rourkela-steel-plant" }), // @review
+  source("Aakash Education", "corporates-multinationals", {
+    canonicalId: "aakash-education",
+  }), // @review
+  source("Rourkela Steel Plant", "government-public-sector", {
+    canonicalId: "rourkela-steel-plant",
+  }), // @review
   source("Bihar State Pul Nirman Nigam Limited", "government-public-sector", {
     canonicalId: "bihar-state-pul-nirman-nigam-limited",
   }), // @review — unclear supplied spelling or entity identity.
-  source("Bihar State Road Development Corporation Limited", "government-public-sector", {
-    canonicalId: "bihar-state-road-development-corporation-limited",
-  }), // @review
+  source(
+    "Bihar State Road Development Corporation Limited",
+    "government-public-sector",
+    {
+      canonicalId: "bihar-state-road-development-corporation-limited",
+    },
+  ), // @review
   source("Airports Authority of India", "government-public-sector", {
     canonicalId: "airports-authority-of-india",
   }), // @review
   source("BAMETI", "government-public-sector", { canonicalId: "bameti" }), // @review
   source("DMI", "corporates-multinationals", { canonicalId: "dmi" }), // @review — owner-supplied repeated-entry cue.
   source("CIMP", "education-social-impact", { canonicalId: "cimp" }), // @review
-  source("June Elevators", "corporates-multinationals", { canonicalId: "june-elevators" }), // @review — unclear supplied spelling or entity identity.
+  source("June Elevators", "corporates-multinationals", {
+    canonicalId: "june-elevators",
+  }), // @review — unclear supplied spelling or entity identity.
   source("Paradeep Phosphates", "corporates-multinationals", {
     canonicalId: "paradeep-phosphates",
     logoPath: "/assets/marketing/client-logos/paradeep-phosphates.jpg",
@@ -197,7 +245,9 @@ const SOURCE_CLIENT_RECORDS: SourceClientRecord[] = [
     canonicalId: "cri-pumps",
     logoPath: "/assets/marketing/client-logos/cri-pumps.jpg",
   }), // @review
-  source("Bihar Tourism", "government-public-sector", { canonicalId: "bihar-tourism" }), // @review
+  source("Bihar Tourism", "government-public-sector", {
+    canonicalId: "bihar-tourism",
+  }), // @review
   source("Income Tax Department", "government-public-sector", {
     canonicalId: "income-tax-department",
     logoPath: "/assets/marketing/client-logos/income-tax-department.png",
@@ -205,7 +255,9 @@ const SOURCE_CLIENT_RECORDS: SourceClientRecord[] = [
   source("Bharti Nxtra Limited", "corporates-multinationals", {
     canonicalId: "bharti-nxtra-limited",
   }), // @review — unclear supplied spelling or entity identity.
-  source("Virbac Animal Health", "corporates-multinationals", { canonicalId: "virbac-animal-health" }), // @review
+  source("Virbac Animal Health", "corporates-multinationals", {
+    canonicalId: "virbac-animal-health",
+  }), // @review
   source("Tata Motors", "corporates-multinationals", {
     canonicalId: "tata-motors",
     logoPath: "/assets/marketing/client-logos/tata-motors.svg",
@@ -214,12 +266,16 @@ const SOURCE_CLIENT_RECORDS: SourceClientRecord[] = [
     canonicalId: "essel-power-limited",
     logoPath: "/assets/marketing/client-logos/essel-utilities.jpg",
   }), // @review
-  source("Janalakshmi Bank Limited", "financial-services", { canonicalId: "janalakshmi-bank-limited" }), // @review
+  source("Janalakshmi Bank Limited", "financial-services", {
+    canonicalId: "janalakshmi-bank-limited",
+  }), // @review
   source("Annapurna Bank Limited", "financial-services", {
     canonicalId: "annapurna-bank-limited",
     logoPath: "/assets/marketing/client-logos/annapurna-finance.jpg",
   }), // @review
-  source("Bandhan Bank Limited", "financial-services", { canonicalId: "bandhan-bank-limited" }), // @review
+  source("Bandhan Bank Limited", "financial-services", {
+    canonicalId: "bandhan-bank-limited",
+  }), // @review
   source("Syndicate Bank Limited", "financial-services", {
     canonicalId: "syndicate-bank-limited",
     logoPath: "/assets/marketing/client-logos/syndicate-bank-limited.png",
@@ -232,10 +288,16 @@ const SOURCE_CLIENT_RECORDS: SourceClientRecord[] = [
     canonicalId: "canara-bank-limited",
     logoPath: "/assets/marketing/client-logos/canara-bank-limited.svg",
   }), // @review
-  source("UCO Bank Limited", "financial-services", { canonicalId: "uco-bank-limited" }), // @review
-  source("Can Fin Homes", "financial-services", { canonicalId: "can-fin-homes" }), // @review
+  source("UCO Bank Limited", "financial-services", {
+    canonicalId: "uco-bank-limited",
+  }), // @review
+  source("Can Fin Homes", "financial-services", {
+    canonicalId: "can-fin-homes",
+  }), // @review
   source("SBI Life", "financial-services", { canonicalId: "sbi-life" }), // @review
-  source("College of Horticulture", "education-social-impact", { canonicalId: "college-of-horticulture" }), // @review
+  source("College of Horticulture", "education-social-impact", {
+    canonicalId: "college-of-horticulture",
+  }), // @review
   source("Coca-Cola", "corporates-multinationals", {
     canonicalId: "coca-cola",
     logoPath: "/assets/marketing/client-logos/coca-cola.svg",
@@ -244,10 +306,13 @@ const SOURCE_CLIENT_RECORDS: SourceClientRecord[] = [
     canonicalId: "iocl",
     logoPath: "/assets/marketing/client-logos/iocl.svg",
   }), // @review
-  source("Dalmia DSP PO", "education-social-impact", { canonicalId: "dalmia-dsp-po" }), // @review — unclear supplied spelling or entity identity.
+  source("Dalmia DSP PO", "education-social-impact", {
+    canonicalId: "dalmia-dsp-po",
+  }), // @review — unclear supplied spelling or entity identity.
   source("Steel Authority of India Limited", "government-public-sector", {
     canonicalId: "steel-authority-of-india-limited",
-    logoPath: "/assets/marketing/client-logos/steel-authority-of-india-limited.png",
+    logoPath:
+      "/assets/marketing/client-logos/steel-authority-of-india-limited.png",
   }), // @review
   source("Usha International Ltd", "corporates-multinationals", {
     canonicalId: "usha-international-ltd",
@@ -264,9 +329,15 @@ const SOURCE_CLIENT_RECORDS: SourceClientRecord[] = [
     canonicalId: "hyundai-limited",
     logoPath: "/assets/marketing/client-logos/hyundai-limited.jpg",
   }), // @review
-  source("Livspace Limited", "corporates-multinationals", { canonicalId: "livspace-limited" }), // @review
-  source("ITC Dairy Limited", "corporates-multinationals", { canonicalId: "itc-dairy-limited" }), // @review
-  source("AIIMS Patna", "education-social-impact", { canonicalId: "aiims-patna" }), // @review
+  source("Livspace Limited", "corporates-multinationals", {
+    canonicalId: "livspace-limited",
+  }), // @review
+  source("ITC Dairy Limited", "corporates-multinationals", {
+    canonicalId: "itc-dairy-limited",
+  }), // @review
+  source("AIIMS Patna", "education-social-impact", {
+    canonicalId: "aiims-patna",
+  }), // @review
   source("IPAC", "education-social-impact", { canonicalId: "ipac" }), // @review
   source("Union Bank of India", "financial-services", {
     canonicalId: "union-bank-of-india",
@@ -281,48 +352,89 @@ const SOURCE_CLIENT_RECORDS: SourceClientRecord[] = [
     canonicalId: "maruti-suzuki-limited",
     logoPath: "/assets/marketing/client-logos/maruti-suzuki-limited.png",
   }), // @review
-  source("Amara Raja Battery", "corporates-multinationals", { canonicalId: "amara-raja-battery" }), // @review
+  source("Amara Raja Battery", "corporates-multinationals", {
+    canonicalId: "amara-raja-battery",
+  }), // @review
   source("L&T Finance Limited", "financial-services", {
     canonicalId: "l-and-t-finance-limited",
     logoPath: "/assets/marketing/client-logos/l-and-t-finance-limited.png",
   }), // @review
-  source("Itian Limited", "corporates-multinationals", { canonicalId: "itian-limited" }), // @review — unclear supplied spelling or entity identity.
-  source("Diageo Limited", "corporates-multinationals", { canonicalId: "diageo-limited" }), // @review
-  source("Standard Chartered Bank", "financial-services", { canonicalId: "standard-chartered-bank" }), // @review
+  source("Itian Limited", "corporates-multinationals", {
+    canonicalId: "itian-limited",
+  }), // @review — unclear supplied spelling or entity identity.
+  source("Diageo Limited", "corporates-multinationals", {
+    canonicalId: "diageo-limited",
+  }), // @review
+  source("Standard Chartered Bank", "financial-services", {
+    canonicalId: "standard-chartered-bank",
+  }), // @review
   source("Franklin Templeton", "financial-services", {
     canonicalId: "franklin-templeton",
     logoPath: "/assets/marketing/client-logos/franklin-templeton.jpg",
   }), // @review
-  source("BIADA Bihar", "government-public-sector", { canonicalId: "biada-bihar" }), // @review
-  source("Bihar Foundation", "government-public-sector", { canonicalId: "bihar-foundation" }), // @review
-  source("Indian Army", "government-public-sector", { canonicalId: "indian-army" }), // @review
-  source("Adani Power", "corporates-multinationals", { canonicalId: "adani-power" }), // @review
-  source("Tourism Department", "government-public-sector", { canonicalId: "tourism-department" }), // @review
-  source("Excise and Customs Department, Jamshedpur", "government-public-sector", {
-    canonicalId: "excise-and-customs-department-jamshedpur",
-    logoPath: "/assets/marketing/client-logos/customs-and-central-excise.jpg",
+  source("BIADA Bihar", "government-public-sector", {
+    canonicalId: "biada-bihar",
   }), // @review
-  source("FHI Solutions LLC / Bill & Melinda Gates Foundation", "education-social-impact", {
-    canonicalId: "fhi-solutions-llc-bill-and-melinda-gates-foundation",
-    logoPath: "/assets/marketing/client-logos/fhi-360.png",
+  source("Bihar Foundation", "government-public-sector", {
+    canonicalId: "bihar-foundation",
   }), // @review
+  source("Indian Army", "government-public-sector", {
+    canonicalId: "indian-army",
+  }), // @review
+  source("Adani Power", "corporates-multinationals", {
+    canonicalId: "adani-power",
+  }), // @review
+  source("Tourism Department", "government-public-sector", {
+    canonicalId: "tourism-department",
+  }), // @review
+  source(
+    "Excise and Customs Department, Jamshedpur",
+    "government-public-sector",
+    {
+      canonicalId: "excise-and-customs-department-jamshedpur",
+      logoPath: "/assets/marketing/client-logos/customs-and-central-excise.jpg",
+    },
+  ), // @review
+  source(
+    "FHI Solutions LLC / Bill & Melinda Gates Foundation",
+    "education-social-impact",
+    {
+      canonicalId: "fhi-solutions-llc-bill-and-melinda-gates-foundation",
+      logoPath: "/assets/marketing/client-logos/fhi-360.png",
+    },
+  ), // @review
   source("Asian Paints Limited", "corporates-multinationals", {
     canonicalId: "asian-paints-limited",
     logoPath: "/assets/marketing/client-logos/asian-paints-limited.svg",
   }), // @review
-  source("BBC Media Limited", "corporates-multinationals", { canonicalId: "bbc-media-limited" }), // @review
-  source("Ricoh India Limited", "corporates-multinationals", { canonicalId: "ricoh-india-limited" }), // @review
+  source("BBC Media Limited", "corporates-multinationals", {
+    canonicalId: "bbc-media-limited",
+  }), // @review
+  source("Ricoh India Limited", "corporates-multinationals", {
+    canonicalId: "ricoh-india-limited",
+  }), // @review
   source("JEEViKA", "government-public-sector", { canonicalId: "jeevika" }), // @review
   source("Shriram Commercial Vehicle Finance", "financial-services", {
     canonicalId: "shriram-commercial-vehicle-finance",
-    logoPath: "/assets/marketing/client-logos/shriram-commercial-vehicle-finance.png",
+    logoPath:
+      "/assets/marketing/client-logos/shriram-commercial-vehicle-finance.png",
   }), // @review
-  source("Crompton Greaves Limited", "corporates-multinationals", { canonicalId: "crompton-greaves-limited" }), // @review
-  source("Micro Focus Limited", "corporates-multinationals", { canonicalId: "micro-focus-limited" }), // @review
-  source("UltraTech Limited", "corporates-multinationals", { canonicalId: "ultratech-limited" }), // @review
+  source("Crompton Greaves Limited", "corporates-multinationals", {
+    canonicalId: "crompton-greaves-limited",
+  }), // @review
+  source("Micro Focus Limited", "corporates-multinationals", {
+    canonicalId: "micro-focus-limited",
+  }), // @review
+  source("UltraTech Limited", "corporates-multinationals", {
+    canonicalId: "ultratech-limited",
+  }), // @review
   source("IIT Patna", "education-social-impact", { canonicalId: "iit-patna" }), // @review
-  source("Aditya Birla School", "education-social-impact", { canonicalId: "aditya-birla-school" }), // @review
-  source("Kidzee School", "education-social-impact", { canonicalId: "kidzee-school" }), // @review
+  source("Aditya Birla School", "education-social-impact", {
+    canonicalId: "aditya-birla-school",
+  }), // @review
+  source("Kidzee School", "education-social-impact", {
+    canonicalId: "kidzee-school",
+  }), // @review
 ];
 
 /** Additional source records already present in the public client proof copy. */
@@ -338,9 +450,16 @@ const ADDITIONAL_SOURCE_CLIENT_RECORDS: SourceClientRecord[] = [
   }), // @review
   source("BNP Paribas", "financial-services", { canonicalId: "bnp-paribas" }), // @review
   source("Bandhan Bank", "financial-services", { canonicalId: "bandhan-bank" }), // @review — retained separately from Bandhan Bank Limited.
-  source("Big Bazaar", "corporates-multinationals", { canonicalId: "big-bazaar" }), // @review
-  source("DMRC", "government-public-sector", { canonicalId: "dmrc", projectWorkId: "dmrc" }), // @review
-  source("Dalmia Bharat Cement", "corporates-multinationals", { canonicalId: "dalmia-bharat-cement" }), // @review
+  source("Big Bazaar", "corporates-multinationals", {
+    canonicalId: "big-bazaar",
+  }), // @review
+  source("DMRC", "government-public-sector", {
+    canonicalId: "dmrc",
+    projectWorkId: "dmrc",
+  }), // @review
+  source("Dalmia Bharat Cement", "corporates-multinationals", {
+    canonicalId: "dalmia-bharat-cement",
+  }), // @review
   source("HDFC", "financial-services", {
     canonicalId: "hdfc-bank",
     logoPath: "/assets/marketing/client-logos/hdfc-limited.jpg",
@@ -364,21 +483,48 @@ const ADDITIONAL_SOURCE_CLIENT_RECORDS: SourceClientRecord[] = [
     canonicalId: "sonalika",
     logoPath: "/assets/marketing/client-logos/sonalika.jpg",
   }), // @review
-  source("Tata Steel", "corporates-multinationals", { canonicalId: "tata-steel" }), // @review
-  source("United Nations", "education-social-impact", { canonicalId: "united-nations" }), // @review
+  source("Tata Steel", "corporates-multinationals", {
+    canonicalId: "tata-steel",
+  }), // @review
+  source("Titan", "corporates-multinationals", {
+    canonicalId: "titan",
+    logoPath: "/assets/marketing/client-logos/titan-limited.png",
+    projectWorkId: "titan",
+  }), // @review
+  source("United Nations", "education-social-impact", {
+    canonicalId: "united-nations",
+  }), // @review
   source("Ujjivan Small Finance Bank", "financial-services", {
     canonicalId: "ujjivan-small-finance-bank",
     logoPath: "/assets/marketing/client-logos/ujjivan-small-finance-bank.jpg",
   }), // @review
-  source("United Spirits", "corporates-multinationals", { canonicalId: "united-spirits" }), // @review
+  source("United Spirits", "corporates-multinationals", {
+    canonicalId: "united-spirits",
+  }), // @review
   source("ZTE", "corporates-multinationals", { canonicalId: "zte" }), // @review
-  source("Commercial Tax Department, Government of India", "government-public-sector", {
-    canonicalId: "commercial-tax-department-government-of-india",
-  }), // @review — merged tax identity retains the Income Tax source association.
-  source("HDFC Mutual Fund", "financial-services", { canonicalId: "hdfc-mutual-fund" }), // @review — no exact logo asset.
+  source(
+    "Commercial Tax Department, Government of India",
+    "government-public-sector",
+    {
+      canonicalId: "commercial-tax-department-government-of-india",
+    },
+  ), // @review — merged tax identity retains the Income Tax source association.
+  source("HDFC Mutual Fund", "financial-services", {
+    canonicalId: "hdfc-mutual-fund",
+  }), // @review — no exact logo asset.
 ];
 
-const CANONICAL_OVERRIDES: Readonly<Record<string, Partial<Pick<ClientRecord, "displayName" | "sectorTab" | "logoPath" | "projectWorkId">>>> = {
+const CANONICAL_OVERRIDES: Readonly<
+  Record<
+    string,
+    Partial<
+      Pick<
+        ClientRecord,
+        "displayName" | "sectorTab" | "logoPath" | "projectWorkId"
+      >
+    >
+  >
+> = {
   sonalika: {
     displayName: "Sonalika",
     logoPath: "/assets/marketing/client-logos/sonalika.jpg",
@@ -387,16 +533,29 @@ const CANONICAL_OVERRIDES: Readonly<Record<string, Partial<Pick<ClientRecord, "d
   dmi: { displayName: "Development Management Institute (DMI)" },
   "tata-motors": { displayName: "Tata Motors" },
   bsphcl: { displayName: "Bihar State Power Holding Company Limited" },
-  indianoil: { displayName: "IndianOil", logoPath: "/assets/marketing/client-logos/iocl.svg" },
-  sail: { displayName: "SAIL", logoPath: "/assets/marketing/client-logos/steel-authority-of-india-limited.png" },
+  indianoil: {
+    displayName: "IndianOil",
+    logoPath: "/assets/marketing/client-logos/iocl.svg",
+  },
+  sail: {
+    displayName: "SAIL",
+    logoPath:
+      "/assets/marketing/client-logos/steel-authority-of-india-limited.png",
+  },
   "canara-bank": { displayName: "Canara Bank" },
   "syndicate-bank": { displayName: "Syndicate Bank" },
   "united-bank": { displayName: "United Bank of India" },
-  "franklin-templeton": { displayName: "Franklin Templeton", projectWorkId: "franklin-templeton" },
+  "franklin-templeton": {
+    displayName: "Franklin Templeton",
+    projectWorkId: "franklin-templeton",
+  },
   "asian-paints": { displayName: "Asian Paints" },
   "maruti-suzuki": { displayName: "Maruti Suzuki" },
   mecon: { displayName: "MECON" },
-  "usha-international": { displayName: "Usha International", projectWorkId: "usha" },
+  "usha-international": {
+    displayName: "Usha International",
+    projectWorkId: "usha",
+  },
   "d-goenka-school": { displayName: "D. Goenka School" },
   "aditya-birla-school": { displayName: "Birla School" },
   "amara-raja": { displayName: "Amara Raja" },
@@ -404,8 +563,16 @@ const CANONICAL_OVERRIDES: Readonly<Record<string, Partial<Pick<ClientRecord, "d
   hyundai: { displayName: "Hyundai" },
   vodafone: { displayName: "Vodafone" },
   "shriram-commercial-vehicle-finance": { displayName: "Shriram" },
-  "tvs-group": { displayName: "TVS Group", projectWorkId: "tvs", sectorTab: "corporates-multinationals" },
-  titan: { displayName: "Titan", sectorTab: "corporates-multinationals", projectWorkId: "titan" },
+  "tvs-group": {
+    displayName: "TVS Group",
+    projectWorkId: "tvs",
+    sectorTab: "corporates-multinationals",
+  },
+  titan: {
+    displayName: "Titan",
+    sectorTab: "corporates-multinationals",
+    projectWorkId: "titan",
+  },
   "customs-and-central-excise": { displayName: "Customs and Central Excise" },
   "annapurna-finance": { displayName: "Annapurna Finance" },
   "l-and-t-finance-limited": { displayName: "L&T" },
@@ -413,7 +580,10 @@ const CANONICAL_OVERRIDES: Readonly<Record<string, Partial<Pick<ClientRecord, "d
   "fhi-360": { displayName: "FHI 360" },
   itc: { displayName: "ITC Limited" },
   "bbc-media-action": { displayName: "BBC Media Action" },
-  "government-of-bihar": { displayName: "Government of Bihar", projectWorkId: "government" },
+  "government-of-bihar": {
+    displayName: "Government of Bihar",
+    projectWorkId: "government",
+  },
   "commercial-tax-department-government-of-india": {
     displayName: "Commercial Tax Department, Government of India",
   },
@@ -425,7 +595,7 @@ const CANONICAL_OVERRIDES: Readonly<Record<string, Partial<Pick<ClientRecord, "d
     displayName: "All India Institute of Medical Sciences (AIIMS)",
     sectorTab: "education-social-impact",
   },
-  "hdfc-bank": { displayName: "HDFC Bank", sectorTab: "financial-services" },
+  "hdfc-bank": { displayName: "HDFC", sectorTab: "financial-services" },
 };
 
 export const CURATED_LOGO_CLIENT_IDS = [
@@ -471,11 +641,15 @@ const PUBLIC_CANONICAL_IDS = new Set<string>([
   "dmrc",
 ]);
 
-function buildCanonicalRegistry(sourceRecords: readonly SourceClientRecord[]): ClientRecord[] {
+function buildCanonicalRegistry(
+  sourceRecords: readonly SourceClientRecord[],
+): ClientRecord[] {
   const grouped = new Map<string, SourceClientRecord[]>();
 
   for (const sourceRecord of sourceRecords) {
-    const canonicalId = SOURCE_NAME_TO_CANONICAL_ID.get(sourceRecord.displayName) ?? sourceRecord.canonicalId;
+    const canonicalId =
+      SOURCE_NAME_TO_CANONICAL_ID.get(sourceRecord.displayName) ??
+      sourceRecord.canonicalId;
     const records = grouped.get(canonicalId) ?? [];
     records.push(sourceRecord);
     grouped.set(canonicalId, records);
@@ -485,7 +659,9 @@ function buildCanonicalRegistry(sourceRecords: readonly SourceClientRecord[]): C
   const emitted = new Set<string>();
 
   for (const sourceRecord of sourceRecords) {
-    const canonicalId = SOURCE_NAME_TO_CANONICAL_ID.get(sourceRecord.displayName) ?? sourceRecord.canonicalId;
+    const canonicalId =
+      SOURCE_NAME_TO_CANONICAL_ID.get(sourceRecord.displayName) ??
+      sourceRecord.canonicalId;
     if (emitted.has(canonicalId)) {
       continue;
     }
@@ -501,7 +677,8 @@ function buildCanonicalRegistry(sourceRecords: readonly SourceClientRecord[]): C
     const logoPath =
       override.logoPath ?? records.find((record) => record.logoPath)?.logoPath;
     const projectWorkId =
-      override.projectWorkId ?? records.find((record) => record.projectWorkId)?.projectWorkId;
+      override.projectWorkId ??
+      records.find((record) => record.projectWorkId)?.projectWorkId;
 
     registry.push({
       canonicalId,
@@ -510,7 +687,8 @@ function buildCanonicalRegistry(sourceRecords: readonly SourceClientRecord[]): C
       sectorTab: override.sectorTab ?? records[0].sectorTab,
       ...(logoPath ? { logoPath } : {}),
       published:
-        PUBLIC_CANONICAL_IDS.has(canonicalId) || records.some((record) => record.published),
+        PUBLIC_CANONICAL_IDS.has(canonicalId) ||
+        records.some((record) => record.published),
       ...(projectWorkId ? { projectWorkId } : {}),
     });
     emitted.add(canonicalId);
@@ -530,9 +708,9 @@ export function getClientRecord(canonicalId: string): ClientRecord | undefined {
 }
 
 export function getCuratedLogoRecords(): ClientRecord[] {
-  return CURATED_LOGO_CLIENT_IDS
-    .map((canonicalId) => getClientRecord(canonicalId))
-    .filter((record): record is ClientRecord => Boolean(record));
+  return CURATED_LOGO_CLIENT_IDS.map((canonicalId) =>
+    getClientRecord(canonicalId),
+  ).filter((record): record is ClientRecord => Boolean(record));
 }
 
 export function getPublishedRecords(): ClientRecord[] {

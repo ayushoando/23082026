@@ -1,13 +1,22 @@
 "use client";
 
-import { type ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { trackPlannerProjectStart } from "@/lib/analytics/conversionContract";
 import { buildAccessRedirect } from "@/lib/auth/plannerRedirect";
 import { PhIcon } from "@planner/components/ui/PlannerPhIcon";
-import { PlannerStateSurface, type PlannerVisualStateKind } from "@planner/components/ui/PlannerStateSurface";
+import {
+  PlannerStateSurface,
+  type PlannerVisualStateKind,
+} from "@planner/components/ui/PlannerStateSurface";
 import { OoButton } from "@planner/components/ui/PlannerOoButton";
 import {
   classifyPlannerProjectsListFailure,
@@ -31,7 +40,9 @@ export function ProjectsList() {
   const showToast = usePlannerUIStore((state) => state.showToast);
   const [projects, setProjects] = useState<PlannerProject[]>([]);
   const [loading, setLoading] = useState(true);
-  const [failure, setFailure] = useState<PlannerProjectsListFailure | null>(null);
+  const [failure, setFailure] = useState<PlannerProjectsListFailure | null>(
+    null,
+  );
   const [retryCount, setRetryCount] = useState(0);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [creatingSample, setCreatingSample] = useState(false);
@@ -79,30 +90,45 @@ export function ProjectsList() {
     return created;
   }, []);
 
-  const clearMutationKey = useCallback((operation: string, projectId: string) => {
-    mutationKeysRef.current.delete(`${operation}:${projectId}`);
-  }, []);
+  const clearMutationKey = useCallback(
+    (operation: string, projectId: string) => {
+      mutationKeysRef.current.delete(`${operation}:${projectId}`);
+    },
+    [],
+  );
 
-  const mutationFailure = useCallback((error: unknown, action: string) => {
-    if (!(error instanceof PlannerApiError)) {
+  const mutationFailure = useCallback(
+    (error: unknown, action: string) => {
+      if (!(error instanceof PlannerApiError)) {
+        showToast(`${action} failed. Try again.`, "error");
+        return;
+      }
+      if (
+        error.isUnauthorized ||
+        error.recovery === "reauthenticate-preserve-unsaved"
+      ) {
+        showToast("Sign in again to continue.", "error");
+        router.push(buildAccessRedirect("/ooplanner/projects"));
+        return;
+      }
+      if (error.isConflict) {
+        showToast(
+          "This plan changed elsewhere. Refresh the list before retrying.",
+          "error",
+        );
+        return;
+      }
+      if (error.isOffline) {
+        showToast(
+          "You are offline. Reconnect and retry; no plan was removed.",
+          "error",
+        );
+        return;
+      }
       showToast(`${action} failed. Try again.`, "error");
-      return;
-    }
-    if (error.isUnauthorized || error.recovery === "reauthenticate-preserve-unsaved") {
-      showToast("Sign in again to continue.", "error");
-      router.push(buildAccessRedirect("/ooplanner/projects"));
-      return;
-    }
-    if (error.isConflict) {
-      showToast("This plan changed elsewhere. Refresh the list before retrying.", "error");
-      return;
-    }
-    if (error.isOffline) {
-      showToast("You are offline. Reconnect and retry; no plan was removed.", "error");
-      return;
-    }
-    showToast(`${action} failed. Try again.`, "error");
-  }, [router, showToast]);
+    },
+    [router, showToast],
+  );
 
   const doDelete = async (project: PlannerProject) => {
     if (deletingId || !window.confirm(`Delete "${project.name}"?`)) return;
@@ -113,7 +139,9 @@ export function ProjectsList() {
         idempotencyKey: mutationKey("delete", project.id),
       });
       clearMutationKey("delete", project.id);
-      setProjects((current) => current.filter((item) => item.id !== project.id));
+      setProjects((current) =>
+        current.filter((item) => item.id !== project.id),
+      );
       showToast("Deleted", "ok");
     } catch (error: unknown) {
       mutationFailure(error, "Delete");
@@ -208,13 +236,18 @@ export function ProjectsList() {
     );
   } else if (projects.length === 0) {
     content = (
-      <section className="panel-empty-state" data-state="empty" data-testid="projects-empty-state">
+      <section
+        className="panel-empty-state"
+        data-state="empty"
+        data-testid="projects-empty-state"
+      >
         <div className="panel-empty-state__icon" aria-hidden="true">
           <PhIcon name="group" size={24} />
         </div>
         <h2 className="panel-empty-state__title">No saved plans yet</h2>
         <p className="panel-empty-state__body">
-          Start a new plan to draw your floor, place furniture, and review the BOQ.
+          Start a new plan to draw your floor, place furniture, and review the
+          BOQ.
         </p>
         <div className="mt-2 flex flex-wrap justify-center gap-3">
           <Link
@@ -233,7 +266,9 @@ export function ProjectsList() {
             }}
             data-testid="empty-state-sample-workspace"
           >
-            {creatingSample ? "Creating sample…" : "Start from a sample workspace"}
+            {creatingSample
+              ? "Creating sample…"
+              : "Start from a sample workspace"}
           </OoButton>
         </div>
       </section>
@@ -242,10 +277,14 @@ export function ProjectsList() {
     content = (
       <div className="projects-grid">
         {projects.map((project) => (
-          <article key={project.id} className="project-card" data-testid={`project-${project.id}`}>
+          <article
+            key={project.id}
+            className="project-card"
+            data-testid={`project-${project.id}`}
+          >
             <Link
               href={`/ooplanner/projects/${project.id}`}
-              className="block rounded-[inherit] text-inherit no-underline outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-focus)] focus-visible:ring-offset-2"
+              className="project-card__link"
               aria-label={`Open plan ${project.name}`}
             >
               <div className="project-card__thumb">
@@ -257,7 +296,8 @@ export function ProjectsList() {
               </div>
               <div className="project-card__name">{project.name}</div>
               <div className="project-card__meta">
-                {project.objects_count} objects · {new Date(project.updated_at).toLocaleDateString()}
+                {project.objects_count} objects ·{" "}
+                {new Date(project.updated_at).toLocaleDateString()}
               </div>
             </Link>
             <div className="mt-2 flex justify-end">
@@ -285,19 +325,26 @@ export function ProjectsList() {
 
   return (
     <div
-      className="flex-1 overflow-auto bg-[var(--surface-soft)]"
+      className="planner-projects-page flex-1 overflow-auto"
       data-testid="projects-page"
     >
       <header className="flex items-center justify-between gap-4 px-6 pb-1 pt-6">
         <div>
-          <h1 className="m-0 text-xl font-semibold tracking-tight text-[var(--text-strong)]">
+          <h1 className="planner-projects-page__heading m-0 text-xl font-semibold tracking-tight">
             Floor plans
           </h1>
-          <p className="mt-1 text-xs text-[var(--text-muted)]" aria-live="polite">
+          <p
+            className="planner-projects-page__summary mt-1 text-xs"
+            aria-live="polite"
+          >
             {summary}
           </p>
         </div>
-        <Link className="btn btn--primary" href="/ooplanner?new=1" data-testid="btn-new-project">
+        <Link
+          className="btn btn--primary"
+          href="/ooplanner?new=1"
+          data-testid="btn-new-project"
+        >
           <PhIcon name="plus" size={18} /> New plan
         </Link>
       </header>

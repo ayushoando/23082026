@@ -8,7 +8,11 @@ import {
   PLANNING_PAGE_DELIVERABLES,
   PLANNING_PAGE_STEPS,
 } from "@/features/site/data/routeCopy";
-import { buildBreadcrumbJsonLd, buildPageJsonLd, buildPageMetadata } from "@/features/site/data/seo";
+import { PLANNING_PAGE_METADATA } from "@/features/site/data/routeMetadata";
+import {
+  buildBreadcrumbJsonLd,
+  buildPageJsonLd,
+} from "@/features/site/data/seo";
 import { withLocaleCopy } from "@/lib/i18n/withLocaleCopy";
 import { SITE_URL } from "@/lib/siteUrl";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
@@ -25,12 +29,7 @@ async function loadPlanningCopy() {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const copy = await loadPlanningCopy();
-  return buildPageMetadata(SITE_URL, {
-    title: `${copy.heroTitle} | One&Only`,
-    description: copy.heroSubtitle,
-    path: "/planning",
-  });
+  return PLANNING_PAGE_METADATA;
 }
 
 export default async function PlanningPage() {
@@ -50,11 +49,15 @@ export default async function PlanningPage() {
     <HomeMarketingLayout>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(planningJsonLd) }}
+        dangerouslySetInnerHTML={{
+          __html: sanitizeJsonForScript(planningJsonLd),
+        }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{
+          __html: sanitizeJsonForScript(breadcrumbJsonLd),
+        }}
       />
       <PlanningPageView
         heroKicker={copy.heroKicker}

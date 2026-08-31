@@ -16,7 +16,13 @@
  * effect-driven load lifecycle in Planner.tsx.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, waitFor, fireEvent, act } from "@testing-library/react";
+import {
+  render,
+  screen,
+  waitFor,
+  fireEvent,
+  act,
+} from "@testing-library/react";
 
 /* ------------------------------------------------------------------ */
 /* Hoisted mocks — must precede module imports                         */
@@ -24,10 +30,17 @@ import { render, screen, waitFor, fireEvent, act } from "@testing-library/react"
 
 const mockPush = vi.fn();
 const mockReplace = vi.fn();
-const mockParams = vi.hoisted(() => ({ current: {} as Record<string, string | string[] | undefined> }));
+const mockParams = vi.hoisted(() => ({
+  current: {} as Record<string, string | string[] | undefined>,
+}));
 
 vi.mock("next/navigation", () => ({
-  useRouter: () => ({ push: mockPush, replace: mockReplace, back: vi.fn(), prefetch: vi.fn() }),
+  useRouter: () => ({
+    push: mockPush,
+    replace: mockReplace,
+    back: vi.fn(),
+    prefetch: vi.fn(),
+  }),
   useParams: () => mockParams.current,
   usePathname: () => "/ooplanner/projects/test",
   useSearchParams: () => new URLSearchParams(),
@@ -77,12 +90,21 @@ vi.mock("@planner/lib/plannerApi", () => ({
       this.retryAfterSeconds = options.retryAfterSeconds;
       this.recovery = options.recovery;
     }
-    get isUnauthorized() { return this.status === 401; }
-    get isForbidden() { return this.status === 403; }
-    get isNotFound() { return this.status === 404; }
-    get isTransient() { return this.status === 429 || this.status >= 500; }
+    get isUnauthorized() {
+      return this.status === 401;
+    }
+    get isForbidden() {
+      return this.status === 403;
+    }
+    get isNotFound() {
+      return this.status === 404;
+    }
+    get isTransient() {
+      return this.status === 429 || this.status >= 500;
+    }
   },
-  isAbortError: (err: unknown) => err instanceof DOMException && (err as DOMException).name === "AbortError",
+  isAbortError: (err: unknown) =>
+    err instanceof DOMException && (err as DOMException).name === "AbortError",
 }));
 
 /* Mock Fabric — the canvas must not actually initialize in happy-dom */
@@ -134,7 +156,12 @@ vi.mock("@planner/hooks/usePlannerHistory", () => ({
 }));
 
 vi.mock("@planner/hooks/usePlannerCanvasCore", () => ({
-  useCanvasCore: () => ({ fitToContent: vi.fn(), zoomIn: vi.fn(), zoomOut: vi.fn(), resetZoom: vi.fn() }),
+  useCanvasCore: () => ({
+    fitToContent: vi.fn(),
+    zoomIn: vi.fn(),
+    zoomOut: vi.fn(),
+    resetZoom: vi.fn(),
+  }),
 }));
 
 vi.mock("@planner/hooks/usePlannerKeyboardShortcuts", () => ({
@@ -144,6 +171,7 @@ vi.mock("@planner/hooks/usePlannerKeyboardShortcuts", () => ({
 /* Mock zustand stores */
 const mockShowToast = vi.fn();
 vi.mock("@planner/store/plannerUiStore", () => ({
+  confirmPlannerNavigation: () => true,
   usePlannerUIStore: (selector: (s: Record<string, unknown>) => unknown) => {
     const state: Record<string, unknown> = {
       accessMode: "guest",
@@ -163,7 +191,11 @@ vi.mock("@planner/store/plannerUiStore", () => ({
 
 vi.mock("@planner/store/plannerCatalogStore", () => ({
   useCatalogStore: (selector: (s: Record<string, unknown>) => unknown) => {
-    const state: Record<string, unknown> = { items: [], loading: false, load: vi.fn() };
+    const state: Record<string, unknown> = {
+      items: [],
+      loading: false,
+      load: vi.fn(),
+    };
     return selector(state);
   },
 }));
@@ -306,9 +338,15 @@ describe("Planner editor load-state integration", () => {
     mockParams.current = {};
     // Provide a minimal localStorage mock
     const store: Record<string, string> = {};
-    vi.spyOn(Storage.prototype, "getItem").mockImplementation((key) => store[key] ?? null);
-    vi.spyOn(Storage.prototype, "setItem").mockImplementation((key, val) => { store[key] = val; });
-    vi.spyOn(Storage.prototype, "removeItem").mockImplementation((key) => { delete store[key]; });
+    vi.spyOn(Storage.prototype, "getItem").mockImplementation(
+      (key) => store[key] ?? null,
+    );
+    vi.spyOn(Storage.prototype, "setItem").mockImplementation((key, val) => {
+      store[key] = val;
+    });
+    vi.spyOn(Storage.prototype, "removeItem").mockImplementation((key) => {
+      delete store[key];
+    });
     // Ensure DOM has the slot Planner expects
     const slot = document.createElement("div");
     slot.id = "topbar-actions-slot";
@@ -391,9 +429,15 @@ describe("Planner editor load-state integration", () => {
       const workspace = screen.getByTestId("planner-workspace");
       expect(workspace).toHaveAttribute("data-load-state", "not-found");
     });
-    expect(screen.getByRole("heading", { name: /plan not found/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /try again/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /back to projects/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /plan not found/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /try again/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /back to projects/i }),
+    ).toBeInTheDocument();
   });
 
   it("shows sign-in action (not retry) when getProject rejects with 401 — the state a persisted audit artifact actually recorded", async () => {
@@ -414,10 +458,16 @@ describe("Planner editor load-state integration", () => {
       const workspace = screen.getByTestId("planner-workspace");
       expect(workspace).toHaveAttribute("data-load-state", "unauthorized");
     });
-    expect(screen.getByRole("heading", { name: /sign in required/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /^sign in$/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /sign in required/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /^sign in$/i }),
+    ).toBeInTheDocument();
     // No "Try again" — a 401 cannot be resolved by repeating the same request.
-    expect(screen.queryByRole("button", { name: /try again/i })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /try again/i }),
+    ).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: /^sign in$/i }));
     expect(mockPush).toHaveBeenCalledWith(
@@ -429,9 +479,14 @@ describe("Planner editor load-state integration", () => {
     mockParams.current = { id: "p_forbidden" };
     const { PlannerApiError } = await import("@planner/lib/plannerApi");
     mockGetProject.mockRejectedValue(
-      new PlannerApiError(403, "INSUFFICIENT_PERMISSIONS", "Insufficient permissions", {
-        detail: "Insufficient permissions",
-      }),
+      new PlannerApiError(
+        403,
+        "INSUFFICIENT_PERMISSIONS",
+        "Insufficient permissions",
+        {
+          detail: "Insufficient permissions",
+        },
+      ),
     );
 
     render(<Planner />);
@@ -440,8 +495,12 @@ describe("Planner editor load-state integration", () => {
       const workspace = screen.getByTestId("planner-workspace");
       expect(workspace).toHaveAttribute("data-load-state", "forbidden");
     });
-    expect(screen.getByRole("heading", { name: /access denied/i })).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /try again/i })).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /access denied/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /try again/i }),
+    ).not.toBeInTheDocument();
   });
 
   it("shows transient-error and allows retry when getProject rejects with 503", async () => {
@@ -459,7 +518,9 @@ describe("Planner editor load-state integration", () => {
       const workspace = screen.getByTestId("planner-workspace");
       expect(workspace).toHaveAttribute("data-load-state", "transient-error");
     });
-    expect(screen.getByRole("heading", { name: /temporarily unavailable/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /temporarily unavailable/i }),
+    ).toBeInTheDocument();
 
     // Retry: clicking Try again should re-invoke getProject
     mockGetProject.mockClear();
@@ -506,7 +567,9 @@ describe("Planner editor load-state integration", () => {
     render(<Planner />);
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /back to projects/i })).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: /back to projects/i }),
+      ).toBeInTheDocument();
     });
 
     fireEvent.click(screen.getByRole("button", { name: /back to projects/i }));

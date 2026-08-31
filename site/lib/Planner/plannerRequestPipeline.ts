@@ -57,6 +57,12 @@ export type PlannerOperationResult<T> =
       readonly headers?: HeadersInit;
     }
   | {
+      readonly ok: true;
+      /** Pre-built response returned verbatim — bypasses envelope serialization
+       * (used by streaming endpoints that emit NDJSON, not a JSON envelope). */
+      readonly raw: Response;
+    }
+  | {
       readonly ok: false;
       readonly status: number;
       readonly code: PlannerApiErrorCode;
@@ -151,7 +157,9 @@ function validateSchema(
       return [];
     }
     case "boolean":
-      return typeof value === "boolean" ? [] : [issue(path, "Expected a boolean")];
+      return typeof value === "boolean"
+        ? []
+        : [issue(path, "Expected a boolean")];
     case "array":
       return Array.isArray(value)
         ? value.flatMap((entry, index) =>
@@ -173,7 +181,9 @@ function validateSchema(
           }
           continue;
         }
-        issues.push(...validateSchema(propertySchema, entry, `${path}.${name}`));
+        issues.push(
+          ...validateSchema(propertySchema, entry, `${path}.${name}`),
+        );
       }
       return issues;
     }
@@ -183,7 +193,9 @@ function validateSchema(
       );
       return alternatives.some((candidate) => candidate.length === 0)
         ? []
-        : alternatives[0] ?? [issue(path, "Value does not match any allowed shape")];
+        : (alternatives[0] ?? [
+            issue(path, "Value does not match any allowed shape"),
+          ]);
     }
   }
 }
@@ -206,19 +218,30 @@ function readParameters(
     }
     if (value === null || value === undefined || value === "") {
       if (parameter.required) {
-        issues.push(issue(`${path}.${parameter.name}`, "Required value is missing"));
+        issues.push(
+          issue(`${path}.${parameter.name}`, "Required value is missing"),
+        );
       }
       continue;
     }
     values[parameter.name] = value;
-    issues.push(...validateSchema(parameter.schema, value, `${path}.${parameter.name}`));
+    issues.push(
+      ...validateSchema(parameter.schema, value, `${path}.${parameter.name}`),
+    );
   }
   return { values, issues };
 }
 
-function normalizeFormValue(schema: PlannerSchema, value: FormDataEntryValue): unknown {
-  if (schema.type === "number" && typeof value === "string") return Number(value);
-  if (schema.type === "boolean" && typeof value === "string") return value === "true";
+type NormalizedFormFieldValue = string | number | boolean | File;
+
+function normalizeFormValue(
+  schema: PlannerSchema,
+  value: FormDataEntryValue,
+): NormalizedFormFieldValue {
+  if (schema.type === "number" && typeof value === "string")
+    return Number(value);
+  if (schema.type === "boolean" && typeof value === "string")
+    return value === "true";
   return value;
 }
 
@@ -254,7 +277,11 @@ async function validateRequest(
   input: PlannerPipelineRequest,
   descriptor: PlannerEndpointDescriptor,
 ): Promise<ValidationResult> {
-  const requestUrl = new URL(input.request.url);
+  const rawUrl = input.request.url || "/";
+  const queryIndex = rawUrl.indexOf("?");
+  const searchParams = new URLSearchParams(
+    queryIndex >= 0 ? rawUrl.slice(queryIndex + 1) : "",
+  );
   const path = readParameters(
     descriptor.request.path,
     (name) => input.pathParams?.[name],
@@ -262,7 +289,7 @@ async function validateRequest(
   );
   const query = readParameters(
     descriptor.request.query,
-    (name) => requestUrl.searchParams.get(name),
+    (name) => searchParams.get(name),
     "query",
   );
   const headers = readParameters(
@@ -275,7 +302,9 @@ async function validateRequest(
     ...path.issues,
     ...query.issues,
     ...headers.issues,
-    ...(body.issue ? [body.issue] : validateSchema(descriptor.request.body, body.value, "body")),
+    ...(body.issue
+      ? [body.issue]
+      : validateSchema(descriptor.request.body, body.value, "body")),
   ];
   return {
     value:
@@ -381,7 +410,9 @@ export async function processPlannerRequest<T>(input: {
     if (!quota.allowed) {
       const retryAfterSeconds = Math.max(
         0,
-        Math.ceil((quota.resetAt - (dependencies.now?.() ?? Date.now())) / 1000),
+        Math.ceil(
+          (quota.resetAt - (dependencies.now?.() ?? Date.now())) / 1000,
+        ),
       );
       return plannerApiFailure(
         "RATE_LIMITED",
@@ -470,6 +501,9 @@ export async function processPlannerRequest<T>(input: {
       request: validated.value,
     });
     if (result.ok) {
+      if ("raw" in result) {
+        return result.raw;
+      }
       return plannerApiSuccess(
         result.data,
         correlationId,

@@ -20,14 +20,14 @@ export function ClientTabPanel({
   return (
     <div {...panelProps}>
       {records.length > 0 ? (
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))] gap-4 md:gap-6">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 md:gap-6 lg:grid-cols-5">
           {records.map((record) => (
             <ClientCard key={record.canonicalId} record={record} />
           ))}
         </div>
       ) : (
         <div role="status" aria-live="polite" className="py-10 text-center">
-          <p className="text-sm text-[var(--text-muted)]">
+          <p className="text-sm text-muted">
             {t("emptySector", { sector: tab.label })}
           </p>
         </div>

@@ -13,9 +13,10 @@ const trustedByPagePath = resolve(
   "../../../../..",
   "site/app/(site)/trusted-by/page.tsx",
 );
-const trustedByPageViewInvocation = readFileSync(trustedByPagePath, "utf8").match(
-  /<TrustedByPageView\b[\s\S]*?\/>/,
-)?.[0];
+const trustedByPageViewInvocation = readFileSync(
+  trustedByPagePath,
+  "utf8",
+).match(/<TrustedByPageView\b[\s\S]*?\/>/)?.[0];
 
 vi.mock("@/lib/helpers/gsapMotion", () => ({
   registerGsapPlugins: () => {},
@@ -49,7 +50,11 @@ vi.mock("next/image", () => ({
 
 vi.mock("@/components/site/EditorialHeroMedia", () => ({
   EditorialHeroMedia: ({ image }: { image: { alt: string; src: string } }) => (
-    <div data-testid="mock-editorial-hero-media" data-alt={image.alt} data-src={image.src} />
+    <div
+      data-testid="mock-editorial-hero-media"
+      data-alt={image.alt}
+      data-src={image.src}
+    />
   ),
 }));
 
@@ -57,8 +62,12 @@ vi.mock("@/components/home/layout", () => ({
   HomeMarketingLayout: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="home-marketing-layout">{children}</div>
   ),
-  HomeSection: ({ children }: { children: React.ReactNode }) => <section>{children}</section>,
-  HomeSectionInner: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  HomeSection: ({ children }: { children: React.ReactNode }) => (
+    <section>{children}</section>
+  ),
+  HomeSectionInner: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
 }));
 
 vi.mock("@/components/shared/ContactTeaser", () => ({
@@ -66,7 +75,15 @@ vi.mock("@/components/shared/ContactTeaser", () => ({
 }));
 
 vi.mock("@/components/ui/MarketingCtaLink", () => ({
-  MarketingCtaLink: ({ children, href, label }: { children: React.ReactNode; href: string; label: string }) => (
+  MarketingCtaLink: ({
+    children,
+    href,
+    label,
+  }: {
+    children: React.ReactNode;
+    href: string;
+    label: string;
+  }) => (
     <a href={href} aria-label={label} data-testid="mock-marketing-cta">
       {children}
     </a>
@@ -107,9 +124,12 @@ describe("app/(site)/trusted-by/page.tsx", () => {
     // **Validates: Requirements 1.1, 1.2**
     expect(trustedByPageViewInvocation).toBeDefined();
 
-    const rosterKickerAttributes = trustedByPageViewInvocation?.match(/\brosterKicker\s*=/g) ?? [];
+    const rosterKickerAttributes =
+      trustedByPageViewInvocation?.match(/\brosterKicker\s*=/g) ?? [];
     const authoritativeRosterKickerAttributes =
-      trustedByPageViewInvocation?.match(/rosterKicker=\{copy\.rosterKicker\}/g) ?? [];
+      trustedByPageViewInvocation?.match(
+        /rosterKicker=\{copy\.rosterKicker\}/g,
+      ) ?? [];
 
     expect(rosterKickerAttributes).toHaveLength(1);
     expect(authoritativeRosterKickerAttributes).toHaveLength(1);
@@ -120,15 +140,23 @@ describe("app/(site)/trusted-by/page.tsx", () => {
     expect(trustedByPageViewInvocation).toBeDefined();
 
     const propMappings =
-      trustedByPageViewInvocation?.match(/^\s+\w+=\{[^}\r\n]+\}$/gm)?.map((mapping) => mapping.trim()) ?? [];
-    const rosterMappings = propMappings.filter((mapping) => mapping.startsWith("rosterKicker="));
-    const nonRosterMappings = propMappings.filter((mapping) => !mapping.startsWith("rosterKicker="));
+      trustedByPageViewInvocation
+        ?.match(/^\s+\w+=\{[^}\r\n]+\}$/gm)
+        ?.map((mapping) => mapping.trim()) ?? [];
+    const rosterMappings = propMappings.filter((mapping) =>
+      mapping.startsWith("rosterKicker="),
+    );
+    const nonRosterMappings = propMappings.filter(
+      (mapping) => !mapping.startsWith("rosterKicker="),
+    );
 
     expect(rosterMappings.length).toBeGreaterThan(0);
-    expect(new Set(rosterMappings)).toEqual(new Set(["rosterKicker={copy.rosterKicker}"]));
+    expect(new Set(rosterMappings)).toEqual(
+      new Set(["rosterKicker={copy.rosterKicker}"]),
+    );
     // Preservation baseline: the full set of non-roster prop mappings must remain present,
     // in order, so removing the duplicate rosterKicker cannot drop any sibling prop.
-    expect(nonRosterMappings).toHaveLength(21);
+    expect(nonRosterMappings).toHaveLength(22);
     expect(nonRosterMappings).toEqual([
       "heroTitleLead={copy.heroTitleLead}",
       "heroTitleAccent={copy.heroTitleAccent}",
@@ -151,19 +179,25 @@ describe("app/(site)/trusted-by/page.tsx", () => {
       "ctaDescription={copy.ctaDescription}",
       "ctaPrimary={copy.ctaPrimary}",
       "ctaSecondary={copy.ctaSecondary}",
+      "deliveryQuotesLabel={copy.deliveryQuotesLabel}",
     ]);
   });
 
   it("exports canonical SEO metadata with absolute single-brand title", () => {
-    expect(TRUSTED_BY_PAGE_METADATA.alternates?.canonical).toMatch(/\/trusted-by\/?$/);
+    expect(TRUSTED_BY_PAGE_METADATA.alternates?.canonical).toMatch(
+      /\/trusted-by\/?$/,
+    );
     const titleValue =
       typeof TRUSTED_BY_PAGE_METADATA.title === "string"
         ? TRUSTED_BY_PAGE_METADATA.title
-        : ((TRUSTED_BY_PAGE_METADATA.title as { absolute?: string })?.absolute ?? String(TRUSTED_BY_PAGE_METADATA.title));
+        : ((TRUSTED_BY_PAGE_METADATA.title as { absolute?: string })
+            ?.absolute ?? String(TRUSTED_BY_PAGE_METADATA.title));
     expect(titleValue).toMatch(/Trusted by/);
     expect(titleValue).toMatch(/One&Only/);
     expect(TRUSTED_BY_PAGE_METADATA.openGraph?.url).toMatch(/\/trusted-by\/?$/);
-    expect(TRUSTED_BY_PAGE_METADATA.description).toBe(TRUSTED_BY_PAGE_COPY.heroSubtitle);
+    expect(TRUSTED_BY_PAGE_METADATA.description).toBe(
+      TRUSTED_BY_PAGE_COPY.heroSubtitle,
+    );
   });
 
   it("renders marketing layout with hero labelled region and editorial copy", async () => {
@@ -179,39 +213,69 @@ describe("app/(site)/trusted-by/page.tsx", () => {
     expect(h1).toHaveAttribute("id", "trusted-by-hero-heading");
     expect(h1).toHaveTextContent(TRUSTED_BY_PAGE_COPY.heroTitleLead);
     expect(h1).toHaveTextContent(TRUSTED_BY_PAGE_COPY.heroTitleAccent);
-    expect(screen.queryByText(TRUSTED_BY_PAGE_COPY.heroKicker)).not.toBeInTheDocument();
-    expect(screen.queryByText(TRUSTED_BY_PAGE_COPY.heroSubtitle)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(TRUSTED_BY_PAGE_COPY.heroKicker),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(TRUSTED_BY_PAGE_COPY.heroSubtitle),
+    ).not.toBeInTheDocument();
 
     expect(screen.getByTestId("mock-editorial-hero-media")).toBeInTheDocument();
-    expect(screen.getByTestId("mock-editorial-hero-media")).toHaveAttribute("data-alt", "Institutional workspace delivery by One and Only");
+    expect(screen.getByTestId("mock-editorial-hero-media")).toHaveAttribute(
+      "data-alt",
+      "Institutional workspace delivery by One and Only",
+    );
 
     // Hero CTA uses ctaSecondary -> /clients (also appears in footer CTA band; scope to hero)
     const heroEl = screen.getByTestId("trusted-by-hero");
-    expect(within(heroEl).getByRole("link", { name: TRUSTED_BY_PAGE_COPY.ctaSecondary })).toHaveAttribute("href", "/clients");
+    expect(
+      within(heroEl).getByRole("link", {
+        name: TRUSTED_BY_PAGE_COPY.ctaSecondary,
+      }),
+    ).toHaveAttribute("href", "/clients");
 
     // Story section
     expect(screen.getByTestId("trusted-by-story")).toBeInTheDocument();
-    expect(screen.getByText(TRUSTED_BY_PAGE_COPY.overviewKicker)).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 2, name: TRUSTED_BY_PAGE_COPY.overviewTitle })).toBeInTheDocument();
-    expect(screen.getByText(TRUSTED_BY_PAGE_COPY.overviewDescription)).toBeInTheDocument();
+    expect(
+      screen.getByText(TRUSTED_BY_PAGE_COPY.overviewKicker),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        level: 2,
+        name: TRUSTED_BY_PAGE_COPY.overviewTitle,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(TRUSTED_BY_PAGE_COPY.overviewDescription),
+    ).toBeInTheDocument();
 
     expect(screen.getByTestId("trusted-by-roster")).toBeInTheDocument();
     expect(screen.getByText(TRUSTED_BY_CLIENTS[0].name)).toBeInTheDocument();
 
-    const ldScripts = container.querySelectorAll('script[type="application/ld+json"]');
+    const ldScripts = container.querySelectorAll(
+      'script[type="application/ld+json"]',
+    );
     expect(ldScripts.length).toBeGreaterThanOrEqual(2);
   });
 
   it("iterates stats, palette, quotes, and sectors from source-of-truth", async () => {
     const { container } = render(await TrustedByPage());
 
-    expect(screen.queryByRole("group", { name: TRUSTED_BY_PAGE_COPY.statsKicker })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("group", { name: TRUSTED_BY_PAGE_COPY.statsKicker }),
+    ).not.toBeInTheDocument();
 
     // Client roster
     expect(screen.getByTestId("trusted-by-roster")).toBeInTheDocument();
-    expect(screen.getByText(TRUSTED_BY_PAGE_COPY.rosterKicker)).toBeInTheDocument();
-    expect(screen.queryByText(TRUSTED_BY_PAGE_COPY.rosterTitle)).not.toBeInTheDocument();
-    expect(screen.queryByText(TRUSTED_BY_PAGE_COPY.rosterDescription)).not.toBeInTheDocument();
+    expect(
+      screen.getByText(TRUSTED_BY_PAGE_COPY.rosterKicker),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText(TRUSTED_BY_PAGE_COPY.rosterTitle),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(TRUSTED_BY_PAGE_COPY.rosterDescription),
+    ).not.toBeInTheDocument();
     const badges = container.querySelectorAll(".client-badge");
     expect(badges).toHaveLength(TRUSTED_BY_CLIENTS.length);
     expect(screen.getByText("Titan")).toBeInTheDocument();
@@ -219,8 +283,12 @@ describe("app/(site)/trusted-by/page.tsx", () => {
 
     // Quotes section
     expect(screen.getByTestId("trusted-by-quotes")).toBeInTheDocument();
-    expect(screen.getByText(TRUSTED_BY_PAGE_COPY.quotesKicker)).toBeInTheDocument();
-    expect(screen.getByText(TRUSTED_BY_PAGE_COPY.quotesTitle)).toBeInTheDocument();
+    expect(
+      screen.getByText(TRUSTED_BY_PAGE_COPY.quotesKicker),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(TRUSTED_BY_PAGE_COPY.quotesTitle),
+    ).toBeInTheDocument();
     const quoteBlocks = container.querySelectorAll(".clients-pull-quote");
     expect(quoteBlocks).toHaveLength(TRUSTED_BY_PAGE_COPY.quotes.length);
     TRUSTED_BY_PAGE_COPY.quotes.forEach((q) => {
@@ -229,38 +297,72 @@ describe("app/(site)/trusted-by/page.tsx", () => {
     });
 
     // Sectors derived from TRUSTED_BY_CLIENTS unique sectors
-    const expectedSectors = Array.from(new Set(TRUSTED_BY_CLIENTS.map((c) => c.sector)));
+    const expectedSectors = Array.from(
+      new Set(TRUSTED_BY_CLIENTS.map((c) => c.sector)),
+    );
     expect(screen.getByTestId("trusted-by-sectors")).toBeInTheDocument();
-    expect(screen.getByText(TRUSTED_BY_PAGE_COPY.sectorsKicker)).toBeInTheDocument();
-    expect(screen.getByText(TRUSTED_BY_PAGE_COPY.sectorsTitle)).toBeInTheDocument();
-    expect(screen.getByText(TRUSTED_BY_PAGE_COPY.sectorsDescription)).toBeInTheDocument();
+    expect(
+      screen.getByText(TRUSTED_BY_PAGE_COPY.sectorsKicker),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(TRUSTED_BY_PAGE_COPY.sectorsTitle),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(TRUSTED_BY_PAGE_COPY.sectorsDescription),
+    ).toBeInTheDocument();
     const sectorRows = container.querySelectorAll(".trusted-by-sector-row");
     expect(sectorRows).toHaveLength(expectedSectors.length);
     expectedSectors.forEach((sector) => {
-      expect(within(screen.getByTestId("trusted-by-sectors")).getByText(sector)).toBeInTheDocument();
+      expect(
+        within(screen.getByTestId("trusted-by-sectors")).getByText(sector),
+      ).toBeInTheDocument();
     });
     // Ensure no duplicate sector rendering
-    expect(new Set(Array.from(sectorRows).map((el) => el.textContent?.trim())).size).toBe(expectedSectors.length);
+    expect(
+      new Set(Array.from(sectorRows).map((el) => el.textContent?.trim())).size,
+    ).toBe(expectedSectors.length);
   });
 
   it("renders CTA band with computed hrefs, and contact teaser", async () => {
     render(await TrustedByPage());
 
-    expect(screen.queryByText(TRUSTED_BY_PAGE_COPY.craftQuote)).not.toBeInTheDocument();
-    expect(screen.queryByText(TRUSTED_BY_PAGE_COPY.craftAttribution)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(TRUSTED_BY_PAGE_COPY.craftQuote),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(TRUSTED_BY_PAGE_COPY.craftAttribution),
+    ).not.toBeInTheDocument();
 
     const ctaBand = screen.getByTestId("mock-route-cta-band");
     expect(ctaBand).toBeInTheDocument();
-    expect(within(ctaBand).getByText(TRUSTED_BY_PAGE_COPY.ctaKicker)).toBeInTheDocument();
-    expect(within(ctaBand).getByText(TRUSTED_BY_PAGE_COPY.ctaDescription)).toBeInTheDocument();
+    expect(
+      within(ctaBand).getByText(TRUSTED_BY_PAGE_COPY.ctaKicker),
+    ).toBeInTheDocument();
+    expect(
+      within(ctaBand).getByText(TRUSTED_BY_PAGE_COPY.ctaDescription),
+    ).toBeInTheDocument();
     // Title lead+accent rendered inside h2
-    expect(within(ctaBand).getByRole("heading", { level: 2 })).toHaveTextContent(TRUSTED_BY_PAGE_COPY.ctaTitleLead);
-    expect(within(ctaBand).getByRole("heading", { level: 2 })).toHaveTextContent(TRUSTED_BY_PAGE_COPY.ctaTitleAccent);
+    expect(
+      within(ctaBand).getByRole("heading", { level: 2 }),
+    ).toHaveTextContent(TRUSTED_BY_PAGE_COPY.ctaTitleLead);
+    expect(
+      within(ctaBand).getByRole("heading", { level: 2 }),
+    ).toHaveTextContent(TRUSTED_BY_PAGE_COPY.ctaTitleAccent);
 
-    expect(within(ctaBand).getByRole("link", { name: TRUSTED_BY_PAGE_COPY.ctaPrimary })).toHaveAttribute("href", "/contact");
-    expect(within(ctaBand).getByRole("link", { name: TRUSTED_BY_PAGE_COPY.ctaSecondary })).toHaveAttribute("href", "/clients");
+    expect(
+      within(ctaBand).getByRole("link", {
+        name: TRUSTED_BY_PAGE_COPY.ctaPrimary,
+      }),
+    ).toHaveAttribute("href", "/contact");
+    expect(
+      within(ctaBand).getByRole("link", {
+        name: TRUSTED_BY_PAGE_COPY.ctaSecondary,
+      }),
+    ).toHaveAttribute("href", "/clients");
 
     expect(screen.getByTestId("mock-contact-teaser")).toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: /nonexistent-cta/i })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", { name: /nonexistent-cta/i }),
+    ).not.toBeInTheDocument();
   });
 });

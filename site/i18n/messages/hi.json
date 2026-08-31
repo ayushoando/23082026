@@ -981,7 +981,11 @@
     "heroSubtitleTemplate": "सरकार, वित्त, ऊर्जा, विनिर्माण आदि में {clients} संगठन।",
     "featuredLabel": "चयनित संगठन",
     "featuredTitle": "ग्राहक सूची",
-    "allLabel": "क्षेत्रवार विवरण"
+    "allLabel": "क्षेत्रवार विवरण",
+    "showcase": {
+      "sectionHeading": "हमारे ग्राहक",
+      "emptySector": "{sector} में अभी कोई प्रकाशित ग्राहक नहीं है।"
+    }
   },
   "service": {
     "heroTitle": "सेवा और सहायता",

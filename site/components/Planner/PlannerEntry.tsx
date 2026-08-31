@@ -18,30 +18,38 @@ export function PlannerEntry({
   const isGuest = accessMode === "guest";
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col" data-planner-access={accessMode}>
-      {isGuest ? (
-        <section
-          className="planner-access-status flex flex-wrap items-center justify-between gap-2 px-4 py-2 text-xs sm:px-6"
-          aria-label="Planner access status"
-          role="status"
+    <div
+      className="flex min-h-0 flex-1 flex-col"
+      data-planner-access={accessMode}
+    >
+      <section
+        className="planner-access-status flex flex-wrap items-center justify-between gap-2 px-4 py-2 text-xs sm:px-6"
+        aria-label="Planner access status"
+        role="status"
+      >
+        <p className="m-0">
+          <strong className="planner-access-status__label font-semibold">
+            {isGuest ? "Guest workspace" : "Signed-in workspace"}
+          </strong>{" "}
+          <span>
+            {isGuest
+              ? "Browse the catalog and prepare a layout. Sign in when you want to save or open plans."
+              : "Your saved plans are available from the project list."}
+          </span>
+        </p>
+        <Link
+          className="btn btn--sm"
+          href={
+            isGuest ? buildAccessRedirect("/ooplanner") : "/ooplanner/projects"
+          }
         >
-          <p className="m-0">
-            <strong className="planner-access-status__label font-semibold">
-              Guest workspace
-            </strong>{" "}
-            <span>
-              Browse the catalog and prepare a layout. Sign in when you want to save or open plans.
-            </span>
-          </p>
-          <Link
-            className="btn btn--sm"
-            href={buildAccessRedirect("/ooplanner")}
-          >
-            Sign in to save
-          </Link>
-        </section>
-      ) : null}
-      <Planner accessMode={accessMode} projectStartIntent={projectStartIntent} />
+          {isGuest ? "Sign in to save" : "View saved plans"}
+        </Link>
+      </section>
+      <Planner
+        accessMode={accessMode}
+        projectStartIntent={projectStartIntent}
+      />
     </div>
   );
 }

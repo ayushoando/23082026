@@ -3,7 +3,10 @@
  */
 
 import { describe, expect, it, vi } from "vitest";
-import { TRUSTED_BY_CLIENTS, TRUSTED_BY_STATS } from "@/features/site/data/proof";
+import {
+  TRUSTED_BY_CLIENTS,
+  TRUSTED_BY_STATS,
+} from "@/features/site/data/proof";
 
 describe("TRUSTED_BY_STATS", () => {
   it("shows experience and client scale KPIs", () => {
@@ -21,9 +24,9 @@ describe("TRUSTED_BY_STATS", () => {
     const orgStat = TRUSTED_BY_STATS.find((s) => /organisation/i.test(s.label));
     expect(orgStat).toBeDefined();
     expect(orgStat?.label).toMatch(/selected organisations/i);
-    expect(TRUSTED_BY_STATS.some((s) => /corporate clients/i.test(s.label))).toBe(
-      false,
-    );
+    expect(
+      TRUSTED_BY_STATS.some((s) => /corporate clients/i.test(s.label)),
+    ).toBe(false);
   });
 });
 
@@ -50,10 +53,11 @@ describe("TRUSTED_BY_CLIENTS", () => {
     vi.resetModules();
     vi.doMock("@/features/site/data/clientLogos", () => ({
       CLIENT_LOGO_SRC_BY_NAME: {},
+      resolveClientLogoSrc: (_name: string, explicitSrc?: string) =>
+        explicitSrc,
     }));
-    const { trustedByClientsMissingLogos, TRUSTED_BY_CLIENTS: roster } = await import(
-      "@/features/site/data/proof"
-    );
+    const { trustedByClientsMissingLogos, TRUSTED_BY_CLIENTS: roster } =
+      await import("@/features/site/data/proof");
     const missing = trustedByClientsMissingLogos();
     expect(missing).toEqual(roster.map((client) => client.name));
     expect(missing.length).toBeGreaterThan(0);

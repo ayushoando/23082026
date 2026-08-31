@@ -20,7 +20,7 @@ export function ClientLogoArea({ displayName, logoPath }: ClientLogoAreaProps) {
   const showLogo = logoPath !== undefined && !imgFailed;
 
   return (
-    <div className="relative aspect-[3/2] w-full overflow-hidden">
+    <div className="relative aspect-3/2 w-full overflow-hidden">
       {showLogo ? (
         <img
           src={logoPath}
@@ -30,10 +30,10 @@ export function ClientLogoArea({ displayName, logoPath }: ClientLogoAreaProps) {
         />
       ) : (
         <div
-          className="absolute inset-0 flex items-center justify-center bg-[var(--surface-muted)]"
+          className="absolute inset-0 flex items-center justify-center bg-muted"
           aria-hidden="true"
         >
-          <span className="text-xl font-semibold tracking-wide text-[var(--text-muted)] select-none">
+          <span className="text-xl font-semibold tracking-wide text-muted select-none">
             {getInitials(displayName)}
           </span>
         </div>
