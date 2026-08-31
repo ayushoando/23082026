@@ -62,7 +62,7 @@ Implement a repository-local TypeScript operations-review tool that reads an exp
     - **Validates: Requirements 3.2**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
 
-- [ ] 3. Model Products/Admin backup coverage and the R2 backup flow independently
+- [x] 3. Model Products/Admin backup coverage and the R2 backup flow independently
   - [x] 3.1 Implement separate Products and Admin evidence extraction and coverage assessment.
     - Read only the approved database/runbook/migration sources to capture project reference, ownership scope, configured backup route, recovery documentation, and target coverage.
     - Represent schema rollback, provider recovery/PITR, and data restore as distinct recovery paths; do not access either database or run migration/backup/restore commands.
@@ -82,68 +82,68 @@ Implement a repository-local TypeScript operations-review tool that reads an exp
     - **Validates: Requirements 5.2**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
 
-- [ ] 4. Checkpoint - Ensure all tests pass
+- [x] 4. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
   - **Validation authorization:** No check is authorized by this plan. Any future `pnpm` test, typecheck, lint, build, or gate command requires exact current-session user authorization and enabled-hook permission. Deployments, provider operations, backups, restores, migrations, seeds, local observability services, and provider inspection remain separately protected.
 
-- [ ] 5. Assemble recovery readiness, monitoring gaps, and runbook/CI alignment
+- [x] 5. Assemble recovery readiness, monitoring gaps, and runbook/CI alignment
   - [x] 5.1 Implement recovery planning for code rollback, Worker rollback, Products schema rollback, Admin schema rollback, and data recovery.
     - Emit one complete Restore Drill specification per applicable Products, Admin, catalog, and repository recovery path, with authorized operator, non-production target, source artifact category, objective, success evidence, data boundary, cleanup/rollback, and a protected execution record.
     - Model completed-drill evidence requirements without executing or simulating a drill.
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 7.1, 7.3, 7.4_
     - **Acceptance evidence:** Each applicable recovery path maps to one source-linked drill; all drill executions and artifact retrieval remain pending protected operations.
-  - [ ] 5.2 Implement monitoring extraction and gap assessment from OpenTelemetry, metrics, local Prometheus/Grafana configuration, root command routes, and runbook evidence.
+  - [x] 5.2 Implement monitoring extraction and gap assessment from OpenTelemetry, metrics, local Prometheus/Grafana configuration, root command routes, and runbook evidence.
     - Separate source wiring from unverified collection, export, retention, queryability, and alerting; require signals, expected conditions, owner, and escalation path for release/recovery procedures.
     - _Requirements: 8.1, 8.2, 8.3, 8.4_
     - **Acceptance evidence:** Missing monitoring fields emit surface/procedure-specific gaps; no telemetry, log, or local-service call is performed.
-  - [ ] 5.3 Implement deterministic runbook/CI/configuration alignment comparison and priority assignment.
+  - [x] 5.3 Implement deterministic runbook/CI/configuration alignment comparison and priority assignment.
     - Compare command route, owner, environment, order, approval boundary, and recovery reference; retain both source paths, exact difference, affected surface, and recommended resolution for every mismatch.
     - Assign P0–P3 without downgrading independent data-loss, ownership, reversibility, or evidence gaps due to similar coverage elsewhere.
     - _Requirements: 2.3, 7.4, 9.1, 9.2, 9.3_
     - **Acceptance evidence:** Differences are source-linked and recommendations retain deterministic priority/risk rationale.
-  - [ ]* 5.4 Write property test for one-to-one complete Restore Drill generation.
+  - [~] 5.4 Write property test for one-to-one complete Restore Drill generation.
     - **Property 8: Applicable recovery paths map one-to-one to complete restore drills.**
     - **Validates: Requirements 6.1, 6.2**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
-  - [ ]* 5.5 Write property test for completed Restore Drill evidence fields.
+  - [ ] 5.5 Write property test for completed Restore Drill evidence fields.
     - **Property 9: Restore-drill evidence has audit-ready fields.**
     - **Validates: Requirements 6.4**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
-  - [ ]* 5.6 Write property test for incident uncertainty preservation.
+  - [ ] 5.6 Write property test for incident uncertainty preservation.
     - **Property 10: Incident records preserve decision-critical uncertainty.**
     - **Validates: Requirements 7.4**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
-  - [ ]* 5.7 Write property test for attributable monitoring gaps.
+  - [ ] 5.7 Write property test for attributable monitoring gaps.
     - **Property 11: Monitoring gaps are attributable and complete.**
     - **Validates: Requirements 8.3**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
-  - [ ]* 5.8 Write property test for complete source-linked alignment differences.
+  - [ ] 5.8 Write property test for complete source-linked alignment differences.
     - **Property 12: Alignment comparison produces complete, source-linked differences.**
     - **Validates: Requirements 9.1, 9.2**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
 
-- [ ] 6. Render safe evidence records and wire the review entry point
-  - [ ] 6.1 Implement review assembly, partitioned JSON/Markdown rendering, secret redaction, and output-path enforcement.
+- [x] 6. Render safe evidence records and wire the review entry point
+  - [x] 6.1 Implement review assembly, partitioned JSON/Markdown rendering, secret redaction, and output-path enforcement.
     - Output may be written only after an implementation owner explicitly selects either `agents-work/operations-deployment-backup-review/reviews/` for authored decisions or `results/operations-deployment-backup-review/` for generated evidence; reject `site/`, `results/` root, and provider-backed paths.
     - Include timestamp, locally available revision metadata, source list, observations, unverified external state, protected operations, recommendations/gaps, owner decisions, release decisions, restore drills, and alignment differences.
     - State explicitly that no protected operation was executed.
     - _Requirements: 1.2, 1.3, 5.3, 9.4_
     - **Acceptance evidence:** Each finding occupies exactly one appropriate output section; rendered outputs have no secret values and no operational-success claim without authorized evidence.
-  - [ ] 6.2 Wire a thin root command entry point only after separate owner approval for the exact `package.json` and script changes.
+  - [x] 6.2 Wire a thin root command entry point only after separate owner approval for the exact `package.json` and script changes.
     - The command must invoke the local review tool without arguments that cause deployments, provider inspection, backups, restores, migrations, seeds, or services.
     - If approval is not granted, retain the library-only implementation and document the command integration as a P1 owner decision in the generated record.
     - _Requirements: 1.1, 1.2, 9.1, 9.4_
     - **Acceptance evidence:** Static inspection proves that the entry point has no provider client, child-process, or mutable infrastructure code path.
-  - [ ]* 6.3 Write property test for non-overlapping Evidence Record partitions.
+  - [ ] 6.3 Write property test for non-overlapping Evidence Record partitions.
     - **Property 13: Evidence Record sections form a non-overlapping partition.**
     - **Validates: Requirements 9.4**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
-  - [ ]* 6.4 Write fixture-based unit/integration tests for Vercel, Worker, Products/Admin, R2, monitoring, redaction, missing sources, malformed sources, and CI/runbook mismatch handling.
+  - [ ] 6.4 Write fixture-based unit/integration tests for Vercel, Worker, Products/Admin, R2, monitoring, redaction, missing sources, malformed sources, and CI/runbook mismatch handling.
     - Use repository-local fixtures only; do not contact providers or start a service.
     - _Requirements: 2.1, 2.3, 3.1, 3.4, 4.1, 4.2, 4.4, 5.1, 5.4, 7.1, 8.1, 9.3_
     - **Execution authorization:** The exact targeted Vitest command remains pending exact user authorization and enabled-hook permission.
 
-- [ ] 7. Final checkpoint - Ensure all tests pass
+- [x] 7. Final checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
   - **Required completion evidence:** static review of changed paths; observed outcomes from only explicitly authorized and hook-permitted commands; source-linked review output proving protected actions stayed pending; a separate owner decision for any generated-output location or `package.json` integration.
   - **Pending authorization:** `pnpm run check:layout`, `pnpm run typecheck`, targeted Vitest, `pnpm run lint`, build/gate commands, deployment, Worker commands, database commands, R2 backup/retrieval, restores, provider inspections, provider logs, and local monitoring services. None are authorized by this task plan.

@@ -843,6 +843,7 @@ export class ManifestStore {
       runId: immutableRunInputs.runId,
       auditId: immutableRunInputs.auditId,
       schemaVersion: immutableRunInputs.schemaVersion,
+      schemaHash: options.schemaHash ?? "",
       repositoryRevision: immutableRunInputs.repositoryRevision,
       configurationHash: immutableRunInputs.configurationHash,
       sourceHashes: { ...(options.sourceHashes ?? {}) },
@@ -1448,7 +1449,7 @@ export class ManifestStore {
       .filter((partition) => !isClosureSafeState(partition.state) || Boolean(partition.lease))
       .map((partition) => partition.partitionId);
     if (wavePartitions.length === 0) {
-      throw new WaveExitCriteriaError(waveId, [toPartitionId(`wave-${waveId}/<no-owned-partitions>`)]]);
+      throw new WaveExitCriteriaError(waveId, [toPartitionId(`wave-${waveId}/<no-owned-partitions>`)]);
     }
     if (nonterminal.length > 0) throw new WaveExitCriteriaError(waveId, nonterminal);
   }

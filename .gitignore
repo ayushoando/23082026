@@ -63,6 +63,7 @@ site/public/assets/others/misc/from-recovery/
 
 # IDE / agent session tooling (not product)
 .commandcode/
+.kiro/
 
 .qoder/
 

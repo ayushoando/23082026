@@ -17,7 +17,7 @@ Implement and execute a read-only TypeScript audit program in six ordered waves 
 
 ## Tasks
 
-- [ ] 1. Wave 0 — Establish prerequisites, canonical inventory, schemas, profiles, and matrix
+- [x] 1. Wave 0 — Establish prerequisites, canonical inventory, schemas, profiles, and matrix
   - [x] 1.1 Create the non-product audit-program entry points and run configuration
     - Add TypeScript command modules under `scripts/site-ui-content-links-audit/**` for wave execution, configuration loading, stable run IDs, repository revision/configuration hashing, and approved artifact-path enforcement.
     - Reject writes under `site/**`, unpartitioned `results/`, root report files, databases, and production destinations; preserve Planner and Studio as separate ownership partitions.
@@ -55,7 +55,7 @@ Implement and execute a read-only TypeScript audit program in six ordered waves 
     - **Validation criteria:** Matrix cardinality equals the declared Cartesian products; every applicable tuple occurs once; inapplicable dimensions remain recorded; profile changes invalidate only dependent rows.
     - _Requirements: 3.1-3.9, 7.1, 9.1-9.2, 17.3, 19.6-19.8, 22.8, 26.2_
 
-  - [ ] 1.6 Implement artifact manifests, partitioning, resumability, and wave control
+  - [x] 1.6 Implement artifact manifests, partitioning, resumability, and wave control
     - Write generated inventories/matrices as partitioned canonical data with small manifests and optional CSV review projections; include run/config/schema/tool/source hashes and supersession links.
     - Implement leases, heartbeats, terminal states, stale-lease recovery, one writer per partition, bounded concurrency, deterministic merges, inventory generations, dependency invalidation, redaction/quarantine, and review queues.
     - Enforce wave entry/exit criteria and prevent closure while owned items are nonterminal or invalidated.
@@ -63,42 +63,42 @@ Implement and execute a read-only TypeScript audit program in six ordered waves 
     - **Validation criteria:** Interrupted runs resume without duplicate identity; matching completed partitions are skipped; changed fingerprints invalidate dependent partitions; manifests reconcile authored versus generated artifacts without copying them.
     - _Requirements: 22.1, 22.7-22.9, 24.8, 26.9, 26.12_
 
-  - [ ] 1.7 Write the property test for canonical inventory closure
+  - [x] 1.7 Write the property test for canonical inventory closure
     - **Property 1: Canonical inventory closure** — generate candidate sets and verify exactly one canonical/exclusion/gap/conflict-linked classification with no unclassified record.
     - **[SEPARATE EXPLICIT AUTHORIZATION REQUIRED]** Authorize the exact targeted Vitest `--run` command before execution; do not run a build or gate as a substitute.
     - **Prerequisites:** 1.4.
     - **Validation criteria:** At least 100 generated cases pass and the test name includes `Feature: site-ui-content-links-audit, Property 1: Canonical inventory closure`.
     - **Validates:** Requirements 1.1-1.8, 2.1, 2.4, 2.6, 19.1-19.4, 26.1.
 
-  - [ ] 1.8 Write the property test for dynamic-instance deduplication
+  - [x] 1.8 Write the property test for dynamic-instance deduplication
     - **Property 2: Provenance-preserving dynamic-instance deduplication** — verify order independence, one normalized instance, full provenance union, and discovery-time retention.
     - **[SEPARATE EXPLICIT AUTHORIZATION REQUIRED]** Authorize the exact targeted Vitest `--run` command before execution.
     - **Prerequisites:** 1.4.
     - **Validation criteria:** At least 100 generated multisets pass with the required feature/property test name.
     - **Validates:** Requirements 2.2, 2.3, 2.5.
 
-  - [ ] 1.9 Write the property test for occurrence expansion and finding bijection
+  - [x] 1.9 Write the property test for occurrence expansion and finding bijection
     - **Property 3: Exact occurrence expansion and finding bijection** — verify the unique applicability Cartesian product and one aggregate finding ID per row.
     - **[SEPARATE EXPLICIT AUTHORIZATION REQUIRED]** Authorize the exact targeted Vitest `--run` command before execution.
     - **Prerequisites:** 1.5.
     - **Validation criteria:** At least 100 generated profiles pass; no tuple is sampled away or represented by another tuple.
     - **Validates:** Requirements 3.1-3.9, 5.8, 7.1-7.2, 7.7, 9.1-9.2, 9.7, 10.7, 12.8, 17.3, 19.6-19.8, 26.2-26.4.
 
-  - [ ] 1.10 Write the property test for authorization-lane non-escalation
+  - [x] 1.10 Write the property test for authorization-lane non-escalation
     - **Property 4: Authorization-lane non-escalation** — verify static evidence cannot satisfy runtime claims and missing/denied authorization never executes work.
     - **[SEPARATE EXPLICIT AUTHORIZATION REQUIRED]** Authorize the exact targeted Vitest `--run` command before execution.
     - **Prerequisites:** 1.2 and 1.6.
     - **Validation criteria:** At least 100 generated authorization combinations pass; every denied/missing case records exact pending work and claim basis.
     - **Validates:** Requirements 4.1-4.6, 15.3, 15.7, 16.7, 17.8, 26.10.
 
-  - [ ] 1.11 Write the property test for zero product-code mutation
+  - [x] 1.11 Write the property test for zero product-code mutation
     - **Property 5: Zero product-code mutation** — verify change manifests accept only approved audit tooling/artifact paths and reject `site/**` and other product boundaries.
     - **[SEPARATE EXPLICIT AUTHORIZATION REQUIRED]** Authorize the exact targeted Vitest `--run` command before execution.
     - **Prerequisites:** 1.1 and 1.6.
     - **Validation criteria:** At least 100 generated path manifests pass, including Planner/Studio product-tree rejection cases.
     - **Validates:** Requirements 4.7, 23.6, 23.7.
 
-  - [ ] 1.12 Execute and checkpoint the Wave 0 static batch
+  - [x] 1.12 Execute and checkpoint the Wave 0 static batch
     - Run only the source-inspection entry point to produce generation-1 registries, canonical route/dynamic/shell inventories, applicability records, matrix partitions, and manifests.
     - Record adapter errors and inaccessible domains as gaps; do not execute tests, browsers, builds, gates, protected routes, local services, or hosted operations.
     - **Prerequisites:** 1.1-1.6; optional 1.7-1.11 only if separately authorized.
@@ -106,7 +106,7 @@ Implement and execute a read-only TypeScript audit program in six ordered waves 
     - _Requirements: 1.8, 2.6, 3.6, 22.1, 22.7-22.9, 26.1-26.2_
 
 - [ ] 2. Wave 1 — Audit shared foundations, route/link integrity, and global states
-  - [ ] 2.1 Implement static inventories for shared shells, links, navigation, states, and journeys
+  - [x] 2.1 Implement static inventories for shared shells, links, navigation, states, and journeys
     - Extract anchors, router actions, menu/breadcrumb models, downloads, fragments, external targets, headers/footers/dialogs/banners, global/local navigation, back/cancel/recovery actions, and foundational journey edges.
     - Compare normalized internal links with route/redirect evidence; retain external availability as an unresolved runtime claim while recording static ownership/protocol/opening/security attributes.
     - **Prerequisites:** Wave 0 closed (1.12).

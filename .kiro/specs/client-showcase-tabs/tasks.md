@@ -149,7 +149,7 @@ Implement a four-tab sector showcase on the existing `/clients` marketing page. 
     - _Requirements: 5.5, 6.1, 6.2_
     - _Validates: P9, P10_
 
-  - [ ]* 8.3 Write model-based tests for `useSectorTabs`
+  - [ ] 8.3 Write model-based tests for `useSectorTabs`
     - Test file: `tests/unit/lib/hooks/useSectorTabs.test.ts` (use `renderHook` from `@testing-library/react`)
     - Enumerate all 4 × 6 = 24 combinations of focused-tab index (0–3) × key (`ArrowRight`, `ArrowLeft`, `Home`, `End`, `Enter`, `Space`)
     - Assert exact `focusedIndex` after each Arrow/Home/End transition; assert `activeTab` unchanged
@@ -158,7 +158,7 @@ Implement a four-tab sector showcase on the existing `/clients` marketing page. 
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6_
     - _Validates: P5_
 
-  - [ ]* 8.4 Write component tests for `ClientLogoArea`
+  - [ ] 8.4 Write component tests for `ClientLogoArea`
     - Test file: `tests/unit/components/site/clients/ClientLogoArea.test.tsx`
     - With `logoPath` present and image load success: `<img>` rendered; fallback not rendered
     - With `logoPath` absent: fallback initials rendered; no `<img>` element
@@ -167,14 +167,14 @@ Implement a four-tab sector showcase on the existing `/clients` marketing page. 
     - _Requirements: 3.2, 3.3, 3.4_
     - _Validates: P6_
 
-  - [ ]* 8.5 Write component tests for `ClientCard`
+  - [ ] 8.5 Write component tests for `ClientCard`
     - Test file: `tests/unit/components/site/clients/ClientCard.test.tsx`
     - `aria-label` on the card article equals `record.displayName`
     - Visible text content contains the full `displayName`
     - _Requirements: 3.6, 3.7_
     - _Validates: P6_
 
-  - [ ]* 8.6 Write component tests for `ClientTabPanel`
+  - [ ] 8.6 Write component tests for `ClientTabPanel`
     - Test file: `tests/unit/components/site/clients/ClientTabPanel.test.tsx`
     - When given zero records: empty-sector state element present; `tab.label` appears in the message
     - When given zero records: all four `SectorTabButton` elements remain present and not `disabled` (render full `ClientShowcase` with one empty sector)
