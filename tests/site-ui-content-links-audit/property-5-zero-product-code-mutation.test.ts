@@ -235,7 +235,7 @@ const arbProhibitedSitePath: fc.Arbitrary<string> = fc.constantFrom(
   ...PROHIBITED_SITE_PATHS,
 );
 
-const arbProhibitedOtherPath: fc.Arbitrary<string> = fc.constantFrom(
+const _arbProhibitedOtherPath: fc.Arbitrary<string> = fc.constantFrom(
   ...PROHIBITED_OTHER_PATHS,
 );
 

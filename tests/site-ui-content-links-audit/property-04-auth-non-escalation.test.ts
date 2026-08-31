@@ -143,7 +143,7 @@ interface AuthScenario {
 }
 
 /** A complete authorization evidence envelope for the given scenario. */
-function buildAuthorizationEvidence(
+function _buildAuthorizationEvidence(
   scenario: AuthScenario,
   includeExecution: boolean,
 ): AuthorizationEvidence {
@@ -203,7 +203,7 @@ interface AuthorizationScenario {
   readonly claimBasis: "source-observed" | "source-inferred-expectation" | "runtime-observed";
 }
 
-const ARB_AUTH_SCENARIO: fc.Arbitrary<AuthorizationScenario> = fc
+const _ARB_AUTH_SCENARIO: fc.Arbitrary<AuthorizationScenario> = fc
   .tuple(
     ARB_AUTHORIZED_IN_SESSION,
     ARB_HOOK_DECISION,

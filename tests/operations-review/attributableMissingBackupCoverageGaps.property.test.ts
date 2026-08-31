@@ -155,7 +155,7 @@ const ownershipScopeArb = fc.constantFrom(
   "staff, customer, plan, furniture, descriptor, price-book, audit, and customer-query data",
 );
 
-const optionalStringArb = fc.option(
+const _optionalStringArb = fc.option(
   fc.stringMatching(/^[A-Za-z][A-Za-z0-9 /_.*-]{2,60}$/),
   { nil: undefined },
 );

@@ -16,6 +16,14 @@
       "reason": "Conditional profile/env guards: each rendered regression journey is assigned to a specific Playwright project (profile.project) so tests skip on non-matching browsers; the authenticated conflict journey skips unless PLANNER_CONFLICT_PROJECT_ID is set. Skips fire only on unsupported environments, never as placeholders.",
       "expires": "2027-09-01",
       "replacementTest": "tests/e2e/planner-comprehensive-audit-regression.spec.ts — same file; skips are the guards, not placeholders"
+    },
+    {
+      "file": "tests/e2e/planner-comprehensive-audit-browser.spec.ts",
+      "rule": "contains-skip",
+      "owner": "repository-owner",
+      "reason": "Conditional profile/env guards: every test is assigned to a specific Playwright project (profile.project) so it skips on non-matching browsers; conflict/undo journeys skip when required env vars are absent. Skips fire only on unsupported environments or missing config, never as placeholders.",
+      "expires": "2027-09-01",
+      "replacementTest": "tests/e2e/planner-comprehensive-audit-browser.spec.ts — same file; skips are the guards, not placeholders"
     }
   ]
 }

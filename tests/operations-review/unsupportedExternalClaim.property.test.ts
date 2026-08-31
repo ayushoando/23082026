@@ -13,7 +13,7 @@ import {
   type RepositorySource,
   type WorkerReviewSources,
 } from "../../scripts/operations-review";
-import type { EvidenceFact, EvidenceStatus, SourceReference } from "../../scripts/operations-review";
+import type { EvidenceFact, EvidenceStatus } from "../../scripts/operations-review";
 
 /**
  * An external claim is any statement about hosted provider state — deployment

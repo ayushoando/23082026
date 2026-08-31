@@ -693,9 +693,7 @@ export function stateApplicability(
  * still requires audit coverage per Req 3.5.
  */
 export function languageApplicability(
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _surface: ProductSurface,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _languageId: LanguageId,
 ): ApplicabilityDecision {
   // Both English and Hindi are applicable on all surfaces per requirements 3.5

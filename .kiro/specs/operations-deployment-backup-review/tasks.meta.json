@@ -15,6 +15,10 @@
     "5.7 Write property test for attributable monitoring gaps.": {
       "status": "passed",
       "lastRunTimestamp": 1788150446852
+    },
+    "5.8 Write property test for complete source-linked alignment differences.": {
+      "status": "passed",
+      "lastRunTimestamp": 1788151114099
     }
   },
   "executionHistory": {
@@ -571,6 +575,11 @@
         "executionId": "81c37fe8-1371-4157-8675-30e49aedd639",
         "chatSessionId": "sess_35da55a7-02ee-4f65-a034-011096b04c98",
         "timestamp": 1788150708794
+      },
+      {
+        "executionId": "81c37fe8-1371-4157-8675-30e49aedd639",
+        "chatSessionId": "sess_35da55a7-02ee-4f65-a034-011096b04c98",
+        "timestamp": 1788151131961
       }
     ],
     "6.3 Write property test for non-overlapping Evidence Record partitions.": [
@@ -578,6 +587,16 @@
         "executionId": "7dc7a6c9-5a18-4656-86f6-3e076ee91a18",
         "chatSessionId": "sess_35da55a7-02ee-4f65-a034-011096b04c98",
         "timestamp": 1788142404995
+      },
+      {
+        "executionId": "81c37fe8-1371-4157-8675-30e49aedd639",
+        "chatSessionId": "sess_35da55a7-02ee-4f65-a034-011096b04c98",
+        "timestamp": 1788151136147
+      },
+      {
+        "executionId": "81c37fe8-1371-4157-8675-30e49aedd639",
+        "chatSessionId": "sess_35da55a7-02ee-4f65-a034-011096b04c98",
+        "timestamp": 1788151565754
       }
     ],
     "6.4 Write fixture-based unit/integration tests for Vercel, Worker, Products/Admin, R2, monitoring, redaction, missing sources, malformed sources, and CI/runbook mismatch handling.": [
@@ -585,6 +604,16 @@
         "executionId": "7dc7a6c9-5a18-4656-86f6-3e076ee91a18",
         "chatSessionId": "sess_35da55a7-02ee-4f65-a034-011096b04c98",
         "timestamp": 1788142405031
+      },
+      {
+        "executionId": "81c37fe8-1371-4157-8675-30e49aedd639",
+        "chatSessionId": "sess_35da55a7-02ee-4f65-a034-011096b04c98",
+        "timestamp": 1788151143612
+      },
+      {
+        "executionId": "81c37fe8-1371-4157-8675-30e49aedd639",
+        "chatSessionId": "sess_35da55a7-02ee-4f65-a034-011096b04c98",
+        "timestamp": 1788151570732
       }
     ]
   }

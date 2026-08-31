@@ -9,8 +9,12 @@ This directory holds active planning coordination. Durable architecture facts be
 | [`ui-audit/`](./ui-audit/) | UI audit — 33 findings across 34 routes (5 resolved), phased remedy plan (Phases 0–5). |
 | [`packages/`](./packages/) | Package & dependency audit — dead packages removed, CVE overrides, replacement analysis. |
 | [`ai-audit/`](./ai-audit/) | AI implementation audit — Mastra agents, RAG pipeline, vector store, 3-wave remedy plan. |
-| [`admin-audit/`](./admin-audit/) | Admin surface audit — pages, data flow, feature gaps, security review. |
-| [`studio-audit/`](./studio-audit/) | Studio (Product Studio) audit — canvas, furniture CRUD, publishing, exports. |
+| [`admin-audit/`](./admin-audit/) | Admin surface audit — 17 pages, 16 API endpoints, auth, data flow. Studio auth gap found. |
+| [`studio-audit/`](./studio-audit/) | Studio audit — canvas, furniture CRUD, publishing, exports. **No auth** (fixed). |
+| [`planner-audit/`](./planner-audit/) | Planner audit — 4 routes, 10 API endpoints, canvas, projects, offline, AI. Best-architected surface. |
+| [`db-audit/`](./db-audit/) | Database & migrations audit — 64 migrations, 2 DBs, RLS verified. Clean. |
+| [`testing-audit/`](./testing-audit/) | Testing audit — Vitest + Playwright, gate system, audit scripts. Solid infrastructure. |
+| [`worker-audit/`](./worker-audit/) | Cloudflare Worker audit — R2, caching, robots, HSTS. Needs Vectorize binding for AI fix. |
 | [`focss-static-defects/`](./focss-static-defects/) | Reconciled static-defects plan and its colocated audit/decision records. |
 | [`plans-reports-references.csv`](./plans-reports-references.csv) | Root registry of known plans, reports, and durable references. |
 | [`CONTEXT.md`](./CONTEXT.md) | Optional lazy domain glossary; create only when domain modeling requires it. |

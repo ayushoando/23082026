@@ -279,7 +279,7 @@ test.describe("Planner — touch and keyboard input parity", () => {
     let focusMovedOutside = false;
     for (let i = 0; i < count + 2; i++) {
       await page.keyboard.press("Tab");
-      const focused = page.locator(":focus");
+      const _focused = page.locator(":focus");
       const inToolbar = await toolbar.locator(":focus").count();
       if (inToolbar === 0) {
         focusMovedOutside = true;
@@ -616,10 +616,10 @@ test.describe("Planner — contrast and visual states", () => {
   test("loading state shows a spinner or skeleton and passes AA contrast check", async ({ page }) => {
     // Intercept the first canvas load to linger in loading state
     await page.setViewportSize({ width: 1_440, height: 900 });
-    let loadingObserved = false;
+    let _loadingObserved = false;
 
     await page.route("**/api/Planner/**", async (route) => {
-      loadingObserved = true;
+      _loadingObserved = true;
       await route.continue();
     });
 

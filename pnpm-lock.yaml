@@ -81,9 +81,6 @@ importers:
       '@vercel/speed-insights':
         specifier: ^2.0.0
         version: 2.0.0(next@16.3.3(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@26.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)
-      axios:
-        specifier: 1.20.0
-        version: 1.20.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
       clsx:
         specifier: 2.1.1
         version: 2.1.1
@@ -3065,10 +3062,6 @@ packages:
     resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
     engines: {node: '>=6.5'}
 
-  agent-base@6.0.2:
-    resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
-    engines: {node: '>= 6.0.0'}
-
   agentkeepalive@4.6.0:
     resolution: {integrity: sha512-kja8j7PjmncONqaTsB8fQ+wE2mSU2DJ9D4XKoJ5PFWIdRMa6SLSN1ff4mOr4jCbfRSsxR4keIiySJU0N9T5hIQ==}
     engines: {node: '>= 8.0.0'}
@@ -3145,9 +3138,6 @@ packages:
   axe-core@4.13.0:
     resolution: {integrity: sha512-UzGt8zg7Ny8djbYMhxl2zuEevVa7r2gJjYY5Lwr1xM7+XU2nd6CkIWFTVcCIbAP63vSz71NaVyyuSk9lHKcy0A==}
     engines: {node: '>=4'}
-
-  axios@1.20.0:
-    resolution: {integrity: sha512-r8aOh8j9cGKpgQAqpzrUHnSIc6a59Y3Xf/cv8sy1DrHCkZHzQGEuoq1tARk6qSyDdtQGSDgpb9kFlruzPvrgwg==}
 
   bail@2.0.2:
     resolution: {integrity: sha512-0xO6mYd7JB2YesxDKplafRpsiOzPt9V02ddPCLbY1xYGPOX24NTyN50qnUxgCPcSoYMhKpAuBTjQoRZCAkUDRw==}
@@ -3870,15 +3860,6 @@ packages:
   flatted@3.4.4:
     resolution: {integrity: sha512-5+ybhBZANEJxaH3X5evAFatUxLfEHSr7n6kYJ+1Qd0mUqr4eu9gIf6GDbWHf8RJijHrjjO8G+la14SlL2SeS1Q==}
 
-  follow-redirects@1.16.0:
-    resolution: {integrity: sha512-y5rN/uOsadFT/JfYwhxRS5R7Qce+g3zG97+JrtFZlC9klX/W5hD7iiLzScI4nZqUS7DNUdhPgw4xI8W2LuXlUw==}
-    engines: {node: '>=4.0'}
-    peerDependencies:
-      debug: '*'
-    peerDependenciesMeta:
-      debug:
-        optional: true
-
   form-data-encoder@1.7.2:
     resolution: {integrity: sha512-qfqtYan3rxrnCk1VYaA4H+Ms9xdpPqvLZa6xmMgFvhO32x7/3J/ExcTd6qpxM0vH2GdMI+poehyBZvqfMTto8A==}
 
@@ -4013,10 +3994,6 @@ packages:
   html2canvas@1.4.1:
     resolution: {integrity: sha512-fPU6BHNpsyIhr8yyMpTLLxAbkaK8ArIBcmZIRiBLiDhjeqvXolaEmDGmELFuX9I4xDcaKKcJl+TKZLqruBbmWA==}
     engines: {node: '>=8.0.0'}
-
-  https-proxy-agent@5.0.1:
-    resolution: {integrity: sha512-dFcAjpTQFgoLMzC2VwU+C/CbS7uRL0lWmxDITmqm7C+7F0Odmj6s9l6alZc6AELXhrnggM2CeWSXHGOdX2YtwA==}
-    engines: {node: '>= 6'}
 
   human-signals@8.0.1:
     resolution: {integrity: sha512-eKCa6bwnJhvxj14kZk5NCPc6Hb6BdsU9DZcOnmQKSnO1VKrfV0zCvtttPZUsBvjmNDn8rpcJfpwSYnHBjc95MQ==}
@@ -4853,10 +4830,6 @@ packages:
   protobufjs@7.6.6:
     resolution: {integrity: sha512-dYDWdjSl5RNb7SgPxGQcRU+GtvP7s2fpkrY0r432PcOIaZ0/rBcxEZnQN67iJhFuQiVw754JDoPruPCNdGsbjg==}
     engines: {node: '>=12.0.0'}
-
-  proxy-from-env@2.1.0:
-    resolution: {integrity: sha512-cJ+oHTW1VAEa8cJslgmUZrc+sjRKgAKl3Zyse6+PV38hZe/V6Z14TbCuXcan9F9ghlz4QrFr2c92TNF82UkYHA==}
-    engines: {node: '>=10'}
 
   pump@3.0.4:
     resolution: {integrity: sha512-VS7sjc6KR7e1ukRFhQSY5LM2uBWAUPiOPa/A3mkKmiMwSmRFUITt0xuj+/lesgnCv+dPIEYlkzrcyXgquIHMcA==}
@@ -7741,12 +7714,6 @@ snapshots:
     dependencies:
       event-target-shim: 5.0.1
 
-  agent-base@6.0.2(supports-color@10.2.2):
-    dependencies:
-      debug: 4.4.3(supports-color@10.2.2)
-    transitivePeerDependencies:
-      - supports-color
-
   agentkeepalive@4.6.0:
     dependencies:
       humanize-ms: 1.2.1
@@ -7819,16 +7786,6 @@ snapshots:
   aws4fetch@1.0.20: {}
 
   axe-core@4.13.0: {}
-
-  axios@1.20.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2):
-    dependencies:
-      follow-redirects: 1.16.0(debug@4.4.3(supports-color@10.2.2))
-      form-data: 4.0.6
-      https-proxy-agent: 5.0.1(supports-color@10.2.2)
-      proxy-from-env: 2.1.0
-    transitivePeerDependencies:
-      - debug
-      - supports-color
 
   bail@2.0.2: {}
 
@@ -8531,10 +8488,6 @@ snapshots:
 
   flatted@3.4.4: {}
 
-  follow-redirects@1.16.0(debug@4.4.3(supports-color@10.2.2)):
-    optionalDependencies:
-      debug: 4.4.3(supports-color@10.2.2)
-
   form-data-encoder@1.7.2: {}
 
   form-data@4.0.6:
@@ -8681,13 +8634,6 @@ snapshots:
       css-line-break: 2.1.0
       text-segmentation: 1.0.3
     optional: true
-
-  https-proxy-agent@5.0.1(supports-color@10.2.2):
-    dependencies:
-      agent-base: 6.0.2(supports-color@10.2.2)
-      debug: 4.4.3(supports-color@10.2.2)
-    transitivePeerDependencies:
-      - supports-color
 
   human-signals@8.0.1: {}
 
@@ -9667,8 +9613,6 @@ snapshots:
       '@types/node': 26.4.0
       long: 5.3.2
     optional: true
-
-  proxy-from-env@2.1.0: {}
 
   pump@3.0.4:
     dependencies:

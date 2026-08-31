@@ -2,32 +2,63 @@
  * Furniture Studio API client. Talks only to `/api/Studio/*` (plus the neutral
  * `/api/exports`) — never to a Planner route.
  */
-import axios from "axios";
-import { apiPath, browserApiFetch } from "@/lib/api/browserApi";
+import { browserApiFetch, apiPath } from "@/lib/api/browserApi";
 
-export const api = axios.create({
-  baseURL: "/api",
-  headers: { "Content-Type": "application/json" },
-});
+async function jsonFetch<T = unknown>(
+  url: string,
+  init?: RequestInit,
+): Promise<T> {
+  const res = await browserApiFetch(apiPath(url), init);
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({ error: { message: `Request failed (${res.status})` } }));
+    const message =
+      (body as { error?: { message?: string }; message?: string }).error?.message ??
+      (body as { message?: string }).message ??
+      `Request failed (${res.status})`;
+    throw new Error(message);
+  }
+  return res.json() as Promise<T>;
+}
 
-export const listFurniture = (params: Record<string, string> = {}) =>
-  api.get("/Studio/furniture", { params }).then((r) => r.data);
+export const listFurniture = (params: Record<string, string> = {}) => {
+  const query = new URLSearchParams(params).toString();
+  const url = query ? `/api/Studio/furniture?${query}` : "/api/Studio/furniture";
+  return jsonFetch(url);
+};
 
 export const createFurniture = (payload: unknown) =>
-  api.post("/Studio/furniture", payload).then((r) => r.data);
+  jsonFetch("/api/Studio/furniture", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
 
 export const updateFurniture = (id: string, payload: unknown) =>
-  api.patch(`/Studio/furniture/${id}`, payload).then((r) => r.data);
+  jsonFetch(`/api/Studio/furniture/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
 
 export const deleteFurniture = (id: string) =>
-  api.delete(`/Studio/furniture/${id}`).then((r) => r.data);
+  jsonFetch(`/api/Studio/furniture/${id}`, {
+    method: "DELETE",
+  });
 
-export const uploadFurniture = (formData: FormData) =>
-  axios
-    .post("/api/Studio/furniture/upload", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    })
-    .then((r) => r.data);
+export const uploadFurniture = async (formData: FormData) => {
+  const res = await browserApiFetch(apiPath("/api/Studio/furniture/upload"), {
+    method: "POST",
+    body: formData,
+  });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({ error: { message: `Upload failed (${res.status})` } }));
+    const message =
+      (body as { error?: { message?: string } }).error?.message ??
+      `Upload failed (${res.status})`;
+    throw new Error(message);
+  }
+  return res.json();
+};
 
 export type PublishFurnitureResult = {
   success: true;
@@ -80,6 +111,10 @@ export async function publishFurniture(
 }
 
 export const createExport = (payload: { format?: string; data_url: string; name?: string }) =>
-  api.post("/exports", payload).then((r) => r.data);
+  jsonFetch("/api/exports", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
 
 export const fileUrl = (path: string | null | undefined) => (path ? path : null);

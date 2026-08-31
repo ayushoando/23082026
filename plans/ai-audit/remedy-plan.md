@@ -8,42 +8,28 @@
 
 ## Wave 1: Critical Fixes (Week 1) — Est. 8-12 hours
 
-### AI-FIX-01: Decide on Production Vector Search Strategy
+### AI-FIX-01: Migrate Vector Search to Cloudflare Vectorize
 
 **Finding:** AI-C01 — Vector store returns empty in production
 **Priority:** P0
 
-The entire LanceDB + embedding pipeline is dead in production because the default URI is a local filesystem path and Vercel's FS is read-only. You have three options:
-
-**Option A: Supabase pgvector (recommended)**
-Use the existing Admin Supabase database with the `pgvector` extension. No new service to manage. Embeddings stored alongside other data.
+The entire LanceDB + embedding pipeline is dead in production because the default URI is a local filesystem path and Vercel's FS is read-only. Migrate to **Cloudflare Vectorize** — your Worker already handles edge logic, and Vectorize runs at the edge with no new service to manage.
 
 Steps:
-1. Enable pgvector on the Admin Supabase project: `CREATE EXTENSION IF NOT EXISTS vector;`
-2. Create an embeddings table:
-   ```sql
-   CREATE TABLE catalog_embeddings (
-     id TEXT PRIMARY KEY,
-     embedding vector(768),
-     title TEXT,
-     keywords TEXT,
-     href TEXT,
-     type TEXT,
-     text TEXT,
-     updated_at TIMESTAMPTZ DEFAULT NOW()
-   );
-   CREATE INDEX ON catalog_embeddings USING ivfflat (embedding vector_cosine_ops);
+1. Create Vectorize index via wrangler CLI:
+   ```bash
+   npx wrangler vectorize create catalog-nav --dimensions 768 --metric cosine
    ```
-3. Replace `LanceCatalogVectorStore` with a Supabase-backed implementation using `@supabase/supabase-js` `.rpc()` for vector queries
-4. Remove `@lancedb/lancedb` dependency (saves significant `node_modules` weight — LanceDB pulls in native binaries)
-
-**Option B: LanceDB Cloud**
-Configure `LANCE_DB_URI` to point to a LanceDB Cloud instance. Minimal code change — just set the env var.
-
-**Option C: Accept dev-only vector search**
-Document that semantic search only works locally. Remove the dead code paths in production. Focus Orama as the primary search engine.
-
-**Recommendation:** Option A. You already pay for Supabase, pgvector is free, and it eliminates the LanceDB native binary dependency.
+2. Add binding to `workers/oando-worker-proxy/wrangler.toml`:
+   ```toml
+   [[vectorize]]
+   binding = "CATALOG_VECTORS"
+   index_name = "catalog-nav"
+   ```
+3. Add a vector search endpoint to the Worker (or use Vectorize REST API from Next.js)
+4. Replace `LanceCatalogVectorStore` with a Vectorize-backed implementation using `fetch` (no new package needed)
+5. Remove `@lancedb/lancedb` dependency — saves significant `node_modules` weight and eliminates the HIGH CVE (sharp via huggingface/transformers)
+6. Keep Gemini API for embedding generation (OpenRouter doesn't do embeddings)
 
 ---
 
@@ -101,11 +87,13 @@ Delete `catalogAdvisorAgent.ts`. Update `requestAdvisorText.ts` imports.
 
 ---
 
-### AI-FIX-03: Add Provider Failover to Agent Requests
+### AI-FIX-03: Simplify to OpenRouter-Primary + Add Failover
 
 **Finding:** AI-C03 — Only the first provider is tried
 **Priority:** P0
 **Effort:** 3-4 hours
+
+Simplify the provider chain: **OpenRouter is the primary LLM provider.** Keep Gemini API key for embeddings only (OpenRouter doesn't do embeddings). Remove Bedrock/OpenAI from the LLM chain unless explicitly needed later.
 
 Wrap agent calls with a failover loop in `requestAdvisorText.ts`:
 

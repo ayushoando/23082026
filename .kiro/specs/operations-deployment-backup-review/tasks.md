@@ -117,7 +117,7 @@ Implement a repository-local TypeScript operations-review tool that reads an exp
     - **Property 11: Monitoring gaps are attributable and complete.**
     - **Validates: Requirements 8.3**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
-  - [-] 5.8 Write property test for complete source-linked alignment differences.
+  - [x] 5.8 Write property test for complete source-linked alignment differences.
     - **Property 12: Alignment comparison produces complete, source-linked differences.**
     - **Validates: Requirements 9.1, 9.2**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
@@ -134,11 +134,11 @@ Implement a repository-local TypeScript operations-review tool that reads an exp
     - If approval is not granted, retain the library-only implementation and document the command integration as a P1 owner decision in the generated record.
     - _Requirements: 1.1, 1.2, 9.1, 9.4_
     - **Acceptance evidence:** Static inspection proves that the entry point has no provider client, child-process, or mutable infrastructure code path.
-  - [ ] 6.3 Write property test for non-overlapping Evidence Record partitions.
+  - [x] 6.3 Write property test for non-overlapping Evidence Record partitions.
     - **Property 13: Evidence Record sections form a non-overlapping partition.**
     - **Validates: Requirements 9.4**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
-  - [ ] 6.4 Write fixture-based unit/integration tests for Vercel, Worker, Products/Admin, R2, monitoring, redaction, missing sources, malformed sources, and CI/runbook mismatch handling.
+  - [x] 6.4 Write fixture-based unit/integration tests for Vercel, Worker, Products/Admin, R2, monitoring, redaction, missing sources, malformed sources, and CI/runbook mismatch handling.
     - Use repository-local fixtures only; do not contact providers or start a service.
     - _Requirements: 2.1, 2.3, 3.1, 3.4, 4.1, 4.2, 4.4, 5.1, 5.4, 7.1, 8.1, 9.3_
     - **Execution authorization:** The exact targeted Vitest command remains pending exact user authorization and enabled-hook permission.

@@ -92,7 +92,7 @@ const PRODUCT_SURFACES = [
   "shared-shell",
 ] as const;
 
-type ProductSurface = (typeof PRODUCT_SURFACES)[number];
+type _ProductSurface = (typeof PRODUCT_SURFACES)[number];
 
 // ---------------------------------------------------------------------------
 // Minimal sub-set pickers used by arbitraries
