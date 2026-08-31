@@ -3,15 +3,14 @@ import { NextResponse } from "next/server";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import {
   enforceAdminRateLimit,
-  requireAdminSession,
+  enforceAdminMutationGuard,
 } from "@/app/api/admin/_lib/server";
-import { validateCsrfRequest } from "@/lib/security/csrf";
-import { CSRF_REJECTION_HEADER_NAME } from "@/lib/security/csrfConstants";
 import {
   contentTypeForKey,
   createR2CatalogClient,
   resolveCatalogBucketName,
 } from "@/lib/storage/r2Catalog";
+import { logAdminAction } from "@/lib/audit/logAdminAction";
 
 function isThemeName(value: unknown): value is string {
   return typeof value === "string" && /^[a-z0-9][a-z0-9-_]{1,63}$/i.test(value.trim());
@@ -22,18 +21,8 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
 }
 
 export async function POST(req: NextRequest) {
-  const rateError = await enforceAdminRateLimit(req, "themes:publish", 10);
-  if (rateError) {return rateError;}
-  const authError = await requireAdminSession();
-  if (authError) {return authError;}
-
-  const isCsrfValid = await validateCsrfRequest(req);
-  if (!isCsrfValid) {
-    return NextResponse.json(
-      { error: "Invalid or missing CSRF token" },
-      { status: 403, headers: { [CSRF_REJECTION_HEADER_NAME]: "1" } },
-    );
-  }
+  const guard = await enforceAdminMutationGuard(req, "themes:publish", 10);
+  if (!guard.ok) {return guard.response;}
 
   try {
     const body = await req.json().catch(() => ({}));
@@ -59,6 +48,8 @@ export async function POST(req: NextRequest) {
         CacheControl: "public, max-age=60",
       }),
     );
+
+    void logAdminAction(guard.actorId, "theme:publish", themeName.trim());
 
     const cdnBase =
       process.env.CLOUDFLARE_CDN_URL?.trim() ||

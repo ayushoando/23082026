@@ -87,8 +87,11 @@
 }
 
 .shell-portal-search:focus,
+.shell-portal-search:focus-visible,
 .shell-portal-select:focus,
-.shell-portal-input:focus {
+.shell-portal-select:focus-visible,
+.shell-portal-input:focus,
+.shell-portal-input:focus-visible {
   outline: none;
   box-shadow: var(--focus-ring);
   border-color: transparent;

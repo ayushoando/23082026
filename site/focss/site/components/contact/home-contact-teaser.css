@@ -162,7 +162,8 @@
 .contact-teaser__input::placeholder {
   color: var(--text-subtle);
 }
-.contact-teaser__input:focus {
+.contact-teaser__input:focus,
+.contact-teaser__input:focus-visible {
   border-color: var(--color-primary);
   background: var(--color-white-50);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-ocean-boat-blue-300) 35%, transparent);

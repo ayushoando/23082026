@@ -1486,6 +1486,11 @@
         "executionId": "eb310a9b-8157-4ed5-b437-e3a0db9e92bd",
         "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
         "timestamp": 1788172055998
+      },
+      {
+        "executionId": "eb310a9b-8157-4ed5-b437-e3a0db9e92bd",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788172884436
       }
     ],
     "3.3 Execute and checkpoint the Wave 2 static batch": [
@@ -1498,6 +1503,16 @@
         "executionId": "eb310a9b-8157-4ed5-b437-e3a0db9e92bd",
         "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
         "timestamp": 1788171818094
+      },
+      {
+        "executionId": "eb310a9b-8157-4ed5-b437-e3a0db9e92bd",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788172899527
+      },
+      {
+        "executionId": "bfc0b947-51d2-44a6-be20-78cba684da4f",
+        "chatSessionId": "sess_947d863f-c345-48e6-a283-48f68b54febb",
+        "timestamp": 1788174481103
       }
     ],
     "4.1 Build the protected/admin, Planner-only, Studio-only, and specialized-state static partitions": [

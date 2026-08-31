@@ -37,7 +37,7 @@ export const SITE_BRAND = {
    * spoken/search form so SERPs match common queries.
    */
   defaultTitle:
-    "One&Only | One and Only Furniture | Premium Office Solutions India",
+    "One&Only | One and Only Furniture | Office Solutions India",
   description:
     "One&Only (One and Only Furniture) — premium ergonomic office furniture for modern workplaces across India. Workstations, seating, storage, tables, and soft seating with planning-led delivery nationwide.",
   organizationDescription:

@@ -259,6 +259,7 @@
     }
   },
   "plannerLanding": {
+    "kicker": "Space Planner",
     "titleLead": "Plan your",
     "titleAccent": "office",
     "description": "True-scale floor plans, real catalog furniture, PDF export.",

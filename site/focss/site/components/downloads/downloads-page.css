@@ -63,7 +63,7 @@
 
 .downloads-process__index {
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: var(--font-weight-copy-semibold);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: color-mix(in srgb, var(--color-bronze-300) 90%, white);

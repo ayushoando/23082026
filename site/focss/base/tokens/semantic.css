@@ -23,14 +23,15 @@
 
   /* ── Status ── */
   --color-success: var(--color-ocean-boat-blue-550);
-  --color-warning: var(--color-bronze-400);
+  --color-warning: var(--color-bronze-600);
   --color-danger: var(--color-dark-midnight-blue-450);
   /* --color-error-red lives on the palette (raw) */
 
-  /* ── Channel accents ── */
-  --color-whatsapp: var(--color-bronze-400);
-  --color-whatsapp-hover: var(--color-bronze-500);
-  --color-whatsapp-footer-hover: var(--color-bronze-600);
+  /* ── Channel accents (WhatsApp brand is green; use the sustain ramp so it
+       no longer aliases the bronze accent/warning roles) ── */
+  --color-whatsapp: var(--color-sustain-400);
+  --color-whatsapp-hover: var(--color-sustain-500);
+  --color-whatsapp-footer-hover: color-mix(in srgb, var(--color-sustain-500) 80%, black);
 
   /* ── Surfaces (light) — ecru paper; studio wells stay cool white ── */
   --surface-page: var(--color-ecru-100);

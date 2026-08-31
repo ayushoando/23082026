@@ -150,7 +150,8 @@
   color: var(--text-inverse-body);
 }
 
-.site-footer__locale-select:focus {
+.site-footer__locale-select:focus,
+.site-footer__locale-select:focus-visible {
   border-color: color-mix(in srgb, var(--color-primary) 55%, var(--border-inverse));
 }
 

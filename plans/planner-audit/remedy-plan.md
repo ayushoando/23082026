@@ -1,11 +1,21 @@
 # Planner Remedy Plan
 
 **Date:** 2026-08-31
+**Status:** ✅ ALL FIXES COMPLETE — 2026-08-31
 **Source:** [`planner-audit-report.md`](./planner-audit-report.md)
 
 ---
 
-## Fixes
+## Fix Status
+
+| Fix | Status | Evidence |
+|---|---|---|
+| PLN-FIX-01: IndexedDB offline backup | ✅ Done | `site/lib/Planner/plannerLocalBackup.ts` created. Wired into `Planner.tsx` — 30s periodic backup when dirty, cleared on successful server save |
+| PLN-FIX-02: AI advisor rate scope consistency | ✅ Done | `ai-advisor/route.ts` — `rateLimitScope` updated to `"planner-advisor"` matching the endpoint contract |
+| PLN-FIX-03: Auto-save for authenticated users | ✅ Done | `Planner.tsx` — `useEffect` auto-saves every 60s when `accessMode === "authenticated"`, `hasUnsavedChanges`, and `projectId` is set |
+| PLN-FIX-04: Tighten guest AI rate limits | ✅ Done | AI advisor: inner 2/min guest check before handler body. sketch-to-plan contract `requests` reduced 6→2 |
+
+---
 
 ### PLN-FIX-01: IndexedDB Auto-Save for Offline Resilience (P1)
 

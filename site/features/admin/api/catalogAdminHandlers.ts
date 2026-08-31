@@ -203,6 +203,12 @@ export async function listStandardCatalog(req: NextRequest): Promise<NextRespons
   let items: CatalogResponseRow[] = [];
   let source = "local-catalog";
 
+  if (!supabase && process.env.NODE_ENV === "production") {
+    return error(
+      new ApiError(503, API_ERROR_CODES.SERVICE_UNAVAILABLE, "Catalog database is not configured"),
+    );
+  }
+
   if (supabase) {
     const { data, error: dbError } = await supabase
       .from("planner_managed_products")

@@ -1,7 +1,7 @@
 /* /compare — utilitarian commerce chrome (tables, thumbs, numbers). No hero theater. */
 
 .compare-page {
-  background: var(--surface-page, var(--color-white-50));
+  background: var(--surface-page);
   padding-block-start: 4rem;
 }
 
@@ -138,7 +138,7 @@
   width: 100%;
   min-width: 47.5rem;
   border-collapse: collapse;
-  background: var(--surface-page, var(--color-white-50));
+  background: var(--surface-page);
 }
 
 .compare-table th,

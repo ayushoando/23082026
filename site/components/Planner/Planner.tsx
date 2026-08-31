@@ -134,6 +134,7 @@ import {
   transientErrorState,
 } from "./plannerLoadState";
 import { buildAccessRedirect } from "@/lib/auth/plannerRedirect";
+import { saveLocalBackup, clearLocalBackup } from "@/lib/Planner/plannerLocalBackup";
 import { PlannerProjectLoadState } from "./PlannerProjectLoadState";
 import { serializeFabricCanvas } from "@planner/lib/plannerFabricSerialize";
 import { useRuntimeFeatureFlags } from "@/lib/hooks/useRuntimeFeatureFlags";
@@ -1649,6 +1650,8 @@ const Planner = ({
       setConflictRevision(null);
       setConflictProjectId(null);
       saveIdempotencyRef.current = null;
+      // Clear IndexedDB backup — server copy is now authoritative.
+      void clearLocalBackup(projectIdRef.current);
       try {
         localStorage.setItem(PLANNER_LAST_PROJECT_KEY, saved.id);
       } catch {
@@ -1708,6 +1711,29 @@ const Planner = ({
     saving,
     showToast,
   ]);
+
+  // Auto-save every 60 s for authenticated users with unsaved changes and a
+  // persisted project. New drafts (no projectId) are excluded — save first.
+  useEffect(() => {
+    if (accessMode !== "authenticated" || !hasUnsavedChanges || !projectId) return;
+    const timer = setInterval(() => {
+      void saveProject();
+    }, 60_000);
+    return () => clearInterval(timer);
+  }, [accessMode, hasUnsavedChanges, projectId, saveProject]);
+
+  // IndexedDB local backup every 30 s when there are unsaved changes.
+  // Independent of network — fires for both guest and authenticated.
+  useEffect(() => {
+    if (!hasUnsavedChanges) return;
+    const timer = setInterval(() => {
+      const c = fabricRef.current;
+      if (!c) return;
+      const canvasJson = serializeFabricCanvas(c, ["data"]);
+      void saveLocalBackup(projectId, canvasJson, sheetRef.current);
+    }, 30_000);
+    return () => clearInterval(timer);
+  }, [hasUnsavedChanges, projectId]);
 
   // Load project by URL id, falling back to the last-saved project id from
   // localStorage. The URL is the primary binding (shareable, matches the

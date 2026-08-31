@@ -100,7 +100,8 @@
   color: var(--text-subtle);
 }
 
-.pdp-reviews-input:focus {
+.pdp-reviews-input:focus,
+.pdp-reviews-input:focus-visible {
   border-color: color-mix(in srgb, var(--color-primary) 50%, transparent);
   background: var(--surface-panel-strong);
 }

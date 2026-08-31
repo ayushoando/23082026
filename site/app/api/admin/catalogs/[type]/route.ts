@@ -23,6 +23,7 @@ import {
   listStandardCatalog,
   resolveCatalogType,
 } from "@/features/admin/api/catalogAdminHandlers";
+import { logAdminAction } from "@/lib/audit/logAdminAction";
 
 type RouteContext = {
   params: Promise<{ type: string }>;
@@ -45,11 +46,14 @@ export const GET = withAuth<RouteContext>(
  * Create a catalog item of the given type. Admin only.
  */
 export const POST = withAuth<RouteContext>(
-  async (req, _auth, context) => {
+  async (req, auth, context) => {
     const { type: rawType } = await context.params;
     const type = resolveCatalogType(rawType);
-    if (type === "standard") {return createStandardCatalog(req as NextRequest);}
-    return createConfiguratorCatalog(req as NextRequest);
+    const result = type === "standard"
+      ? await createStandardCatalog(req as NextRequest)
+      : await createConfiguratorCatalog(req as NextRequest);
+    void logAdminAction(auth.user?.id ?? "admin", "catalog:create", null, { catalogType: type });
+    return result;
   },
   { role: "admin", rateLimitScope: "admin-catalogs:post", rateLimit: 20, requireCsrf: true },
 );

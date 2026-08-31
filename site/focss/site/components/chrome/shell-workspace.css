@@ -157,7 +157,8 @@
   color: var(--text-subtle);
 }
 
-.shell-workspace-auth-input:focus {
+.shell-workspace-auth-input:focus,
+.shell-workspace-auth-input:focus-visible {
   outline: none;
   border-color: var(--color-primary);
   background: var(--surface-soft);

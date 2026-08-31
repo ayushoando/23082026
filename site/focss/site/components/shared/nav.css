@@ -205,7 +205,8 @@
   transition: width var(--motion-base) var(--ease-standard);
 }
 
-.ai-search-shell input:focus {
+.ai-search-shell input:focus,
+.ai-search-shell input:focus-visible {
   width: 18rem;
 }
 

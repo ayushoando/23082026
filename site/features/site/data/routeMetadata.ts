@@ -30,7 +30,7 @@ import { SITE_URL } from "@/lib/siteUrl";
  */
 
 export const ABOUT_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
-  title: "About One&Only | One and Only Furniture India — Steelcase & Featherlite",
+  title: "About One&Only | One and Only Furniture India",
   description: ABOUT_PAGE_COPY.heroSubtitle,
   path: "/about",
   keywords: [

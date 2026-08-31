@@ -35,7 +35,9 @@ async function handleFeaturesGet(): Promise<NextResponse> {
   return success({ flags: result.flags, source: result.source });
 }
 
-async function handleFeaturesPatch(req: NextRequest): Promise<NextResponse> {
+import { logAdminAction } from "@/lib/audit/logAdminAction";
+
+async function handleFeaturesPatch(req: NextRequest, actorId: string): Promise<NextResponse> {
   const body = (await req.json().catch(() => ({}))) as Record<string, unknown>;
   const parsed = FeatureFlagsPatchSchema.safeParse(body);
   if (!parsed.success) {
@@ -66,6 +68,7 @@ async function handleFeaturesPatch(req: NextRequest): Promise<NextResponse> {
     );
   }
 
+  void logAdminAction(actorId, "feature_flag:update", null, { updates: rawUpdates });
   return success({ source: result.source });
 }
 
@@ -77,6 +80,6 @@ export const GET = withAuth(
 
 /** Update feature flags. Admin role; rate-limited. */
 export const PATCH = withAuth(
-  async (req) => handleFeaturesPatch(req as NextRequest),
+  async (req, auth) => handleFeaturesPatch(req as NextRequest, auth.user?.id ?? "admin"),
   { role: "admin", rateLimitScope: "admin-features:patch", rateLimit: 20, requireCsrf: true },
 );

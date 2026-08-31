@@ -7,9 +7,11 @@ import {
   type AdvisorProviderId,
   type AdvisorChatMessage,
 } from "@/lib/ai/mastra";
+import { rateLimit } from "@/lib/rateLimit";
+import { normalizeClientIp } from "@/lib/clientIp";
+import { validationError } from "@/features/shared/api/apiResponse";
 import { withAuth, type AuthContext } from "@/features/shared/api/withAuth";
 import { success } from "@/features/shared/api/apiResponse";
-import { validationError } from "@/features/shared/api/apiResponse";
 import { PlannerAdvisorRequestSchema } from "@/features/shared/api/schemas";
 import { recordAdvisorRequest } from "@/lib/observability/aiMetrics";
 
@@ -226,8 +228,24 @@ function buildPlannerResponse(
 
 async function handlePlannerAdvisor(
   req: NextRequest,
-  _auth: AuthContext,
+  auth: AuthContext,
 ): Promise<NextResponse | Response> {
+  // Guests (unauthenticated) get a tighter 2 req/min limit on top of the
+  // outer 5/min gate so authenticated members retain higher throughput.
+  if (!auth.user) {
+    const ip = normalizeClientIp(
+      req.headers.get("cf-connecting-ip") ||
+      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      "127.0.0.1",
+    );
+    const guestLimit = await rateLimit(`planner-ai-advisor-guest:${ip}`, 2, 60_000);
+    if (!guestLimit.success) {
+      return new Response(
+        JSON.stringify({ error: "Rate limit exceeded. Sign in for higher limits." }),
+        { status: 429, headers: { "Content-Type": "application/json" } },
+      );
+    }
+  }
   const body = await req.json().catch(() => null);
   const parsed = PlannerAdvisorRequestSchema.safeParse(body);
   if (!parsed.success) {
@@ -356,5 +374,5 @@ async function handlePlannerAdvisor(
  */
 export const POST = withAuth(
   async (req, auth) => handlePlannerAdvisor(req as NextRequest, auth),
-  { role: "guest", rateLimitScope: "planner-ai-advisor", rateLimit: 5, requireCsrf: true },
+  { role: "guest", rateLimitScope: "planner-advisor", rateLimit: 5, requireCsrf: true },
 );

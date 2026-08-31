@@ -58,6 +58,9 @@ export function PlannerFloorplanHero() {
             initial="hidden"
             animate="visible"
           >
+            <motion.p variants={fadeUpVariants} className="home-kicker planner-landing-hero__kicker">
+              {t("kicker")}
+            </motion.p>
             <h1 className="planner-landing-hero__title">
               <motion.span variants={titleVariants}>
                 {titleLead}

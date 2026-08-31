@@ -19,6 +19,29 @@ const BREADCRUMB_JSON_LD = buildBreadcrumbJsonLd(SITE_URL, [
   { name: "Workspace Planner", path: "/planner" },
 ]);
 
+const SOFTWARE_APP_JSON_LD = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "One&Only Workspace Planner",
+  url: `${SITE_URL}/planner`,
+  applicationCategory: "BusinessApplication",
+  operatingSystem: "Web",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "INR",
+  },
+  description:
+    "Browser-based 2D and 3D office floor planner with mm-accurate walls, real catalog furniture, AI layout assist, and branded PDF export for client-ready proposals.",
+  featureList: [
+    "2D floor plan drawing",
+    "3D view",
+    "Catalog furniture placement",
+    "AI layout assist",
+    "PDF export",
+  ],
+});
+
 export default function PlannerLandingRoute() {
   return (
     <>
@@ -29,6 +52,10 @@ export default function PlannerLandingRoute() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(BREADCRUMB_JSON_LD) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: SOFTWARE_APP_JSON_LD }}
       />
       <PlannerLandingPage />
     </>

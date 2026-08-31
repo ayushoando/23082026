@@ -78,7 +78,7 @@
   margin: 0;
   font-size: var(--type-label-size);
   font-weight: var(--font-weight-copy-medium);
-  letter-spacing: 0.12em;
+  letter-spacing: var(--type-letter-label-wide);
   text-transform: uppercase;
   color: var(--text-muted);
 }

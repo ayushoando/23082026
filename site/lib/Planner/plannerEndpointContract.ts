@@ -654,7 +654,7 @@ export const PLANNER_ENDPOINT_DESCRIPTORS = [
       errors: standardErrors([400, 403, 405, 429, 500, 503]),
     },
     security: { auth: "guest", owner: "not-applicable", csrf: "double-submit-cookie", origin: "same-site-cookie-and-csrf" },
-    rateLimit: { ...baseRateLimit, scope: "planner-sketch-to-plan", requests: 6 },
+    rateLimit: { ...baseRateLimit, scope: "planner-sketch-to-plan", requests: 2 },
     compatibility: baseCompatibility,
   },
 ] as const satisfies readonly PlannerEndpointDescriptor[];

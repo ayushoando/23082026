@@ -86,7 +86,7 @@ All code is TypeScript with named exports. Tests live under `tests/`. Commands r
     - Iterate `resolveAdvisorModelChain()` calling `requestAdvisorMessages(target, messages, { signal, stream, onDelta })` under an `AbortController` timeout, taking the first usable text; expose only `target.label`
     - _Requirements: 3.1, 3.2, 3.7, 4.1, 4.2, 4.3, 4.4_
 
-  - [ ] 6.2 Implement response shaping (streaming and non-streaming) and heuristic fallback
+  - [~] 6.2 Implement response shaping (streaming and non-streaming) and heuristic fallback
     - Non-streaming: return the `success()` envelope carrying a `PlannerAdvisorResponse` body (`content` string plus optional `suggestion`, `degraded`, `provider`, `layout`)
     - Streaming: return an `application/x-ndjson` `Response` using the same `ReadableStream` + `JEST_WORKER_ID` buffering pattern as the catalog route, emitting `status`/`delta`/`result`/`error` events and ending with a terminal `result` event whose payload is the `PlannerAdvisorResponse`
     - When no provider yields a usable response (including empty chain), return the deterministic Heuristic_Fallback with the fallback marker (`degraded`/`fallbackUsed`) set to `true`

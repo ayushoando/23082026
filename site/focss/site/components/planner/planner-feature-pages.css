@@ -15,7 +15,7 @@
 .pfp-hero-band {
   position: relative;
   overflow: hidden;
-  min-height: auto;
+  min-height: 26rem;
   padding-block: 1.5rem 1rem;
   background: var(--surface-inverse);
 }

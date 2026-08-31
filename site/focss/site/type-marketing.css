@@ -6,7 +6,7 @@
   letter-spacing: var(--type-letter-tight);
   line-height: var(--type-leading-display);
   font-kerning: normal;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
   text-wrap: balance;
 }
 
@@ -17,7 +17,7 @@
   letter-spacing: var(--type-letter-title);
   line-height: 1.08;
   font-kerning: normal;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
   /* black-100 — not pure #000 / ink-950 (too harsh on ecru paper) */
   color: var(--text-heading, var(--color-black-100));
   text-wrap: balance;
@@ -84,7 +84,7 @@
   letter-spacing: var(--type-letter-tight);
   line-height: var(--type-leading-display);
   font-kerning: normal;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
   text-wrap: balance;
 }
 
@@ -95,7 +95,7 @@
   letter-spacing: var(--type-letter-tight);
   line-height: var(--type-leading-display);
   font-kerning: normal;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
   text-wrap: balance;
 }
 

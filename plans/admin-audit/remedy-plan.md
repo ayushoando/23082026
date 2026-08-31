@@ -1,11 +1,22 @@
 # Admin Surface Remedy Plan
 
 **Date:** 2026-08-31
+**Status:** ✅ ALL FIXES COMPLETE — 2026-08-31
 **Source:** [`admin-audit-report.md`](./admin-audit-report.md)
 
 ---
 
-## Priority Fixes
+## Fix Status
+
+| Fix | Status | Evidence |
+|---|---|---|
+| ADM-FIX-01: Studio auth gate | ✅ Done | `site/features/Studio/layout.tsx` — `requireAuthUser("/oostudio", "admin")` added |
+| ADM-FIX-02: CRM feature gate | ✅ Done | `site/app/admin/crm/layout.tsx` created — renders "module off" page when `adminCrm` flag is false |
+| ADM-FIX-03: Audit log wiring | ✅ Done | `site/lib/audit/logAdminAction.ts` created. Wired into catalog POST/PATCH/DELETE, features PATCH, themes publish |
+| ADM-FIX-04: Analytics sample data banner | ✅ Done | `AdminAnalyticsPageView.tsx` — shows `AdminAlert variant="info"` when `data?.source === "sample"` |
+| ADM-FIX-05: Production catalog DB error | ✅ Done | `catalogAdminHandlers.ts` `listStandardCatalog` — throws 503 in production when `supabase` is null |
+
+---
 
 ### ADM-FIX-01: Add Auth to Studio Route (P0)
 

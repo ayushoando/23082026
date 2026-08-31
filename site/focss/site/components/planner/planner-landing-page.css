@@ -40,8 +40,13 @@
   text-align: center;
 }
 
+.planner-landing-hero__kicker {
+  color: var(--color-accent);
+  margin: 0 auto 0.75rem;
+}
+
 .planner-landing-hero__title {
-  max-width: 12ch;
+  max-width: 22ch;
   margin: 0 auto;
   color: var(--text-inverse);
   font-family: var(--font-display);
@@ -62,7 +67,11 @@
 
 @media (width >= 64rem) {
   .planner-landing-hero {
-    min-height: min(52vh, 30rem);
+    min-height: min(52vh, 38rem);
+  }
+
+  .planner-landing-hero__kicker {
+    margin-inline: 0;
   }
 
   .planner-landing-hero__title {

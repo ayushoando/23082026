@@ -24,6 +24,7 @@ import {
   patchStandardCatalog,
   resolveCatalogType,
 } from "@/features/admin/api/catalogAdminHandlers";
+import { logAdminAction } from "@/lib/audit/logAdminAction";
 
 type RouteContext = {
   params: Promise<{ type: string; id: string }>;
@@ -33,11 +34,14 @@ type RouteContext = {
  * Update a catalog item of the given type by id. Admin only.
  */
 export const PATCH = withAuth<RouteContext>(
-  async (req, _auth, context) => {
+  async (req, auth, context) => {
     const { type: rawType, id } = await context.params;
     const type = resolveCatalogType(rawType);
-    if (type === "standard") {return patchStandardCatalog(req as NextRequest, id);}
-    return patchConfiguratorCatalog(req as NextRequest, id);
+    const result = type === "standard"
+      ? await patchStandardCatalog(req as NextRequest, id)
+      : await patchConfiguratorCatalog(req as NextRequest, id);
+    void logAdminAction(auth.user?.id ?? "admin", "catalog:update", id, { catalogType: type });
+    return result;
   },
   { role: "admin", rateLimitScope: "admin-catalogs:patch", rateLimit: 40, requireCsrf: true },
 );
@@ -46,11 +50,14 @@ export const PATCH = withAuth<RouteContext>(
  * Delete (or soft-archive) a catalog item of the given type by id. Admin only.
  */
 export const DELETE = withAuth<RouteContext>(
-  async (_req, _auth, context) => {
+  async (_req, auth, context) => {
     const { type: rawType, id } = await context.params;
     const type = resolveCatalogType(rawType);
-    if (type === "standard") {return deleteStandardCatalog(id);}
-    return deleteConfiguratorCatalog(id);
+    const result = type === "standard"
+      ? await deleteStandardCatalog(id)
+      : await deleteConfiguratorCatalog(id);
+    void logAdminAction(auth.user?.id ?? "admin", "catalog:delete", id, { catalogType: type });
+    return result;
   },
   { role: "admin", rateLimitScope: "admin-catalogs:delete", rateLimit: 15, requireCsrf: true },
 );

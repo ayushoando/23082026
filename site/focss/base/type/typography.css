@@ -19,7 +19,11 @@
   --font-weight-light: 300;
   --font-weight-regular: 400;
   --font-weight-medium: 500;
-  --font-weight-semibold: 500;
+  /* No 600 face is embedded (300/400/500/700 loaded). 600 is an intentional
+     synthesis point: browsers render it as the nearest heavier match between
+     the 500 and 700 static faces, giving semibold visual weight distinct
+     from medium without inventing a new font file. */
+  --font-weight-semibold: 600;
   --font-weight-bold: 700;
 
   /* Role aliases → scale (do not invent extra faces) */

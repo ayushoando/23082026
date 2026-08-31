@@ -200,6 +200,13 @@ export default function AdminAnalyticsPageView() {
         </AdminAlert>
       ) : null}
 
+      {data?.source === "sample" ? (
+        <AdminAlert variant="info" role="status">
+          Analytics are showing <strong>sample data</strong>. Connect the
+          planner database to see real telemetry.
+        </AdminAlert>
+      ) : null}
+
       {loading && !data ? (
         <AdminLoadingPanel
           title="Loading analytics…"

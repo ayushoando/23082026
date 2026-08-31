@@ -152,3 +152,92 @@ STU-FIX-01 and STU-FIX-02 were already applied earlier this session (Phase 1). T
 | `plans/studio-audit/remedy-plan.md` | Marked all 3 fixes done with evidence |
 | `plans/studio-audit/studio-audit-report.md` | Updated severity summary + 3 findings with fix status |
 | `plans/studio-audit/README.md` | Updated to reflect full closure |
+
+
+---
+
+## Phase 8: UI Audit Remedy Plan Execution (plans/ui-audit/) ✅
+
+All 33 findings closed. Typecheck clean. Boundary scan clean.
+
+### Token fixes (Phase 1)
+- [x] **UI-005** — `--font-weight-semibold: 600` (was 500 = medium). Documented synthesis in comment.
+- [x] **UI-006** — Triple collision fixed: `--color-warning` → `bronze-600`, `--color-whatsapp` → `sustain-400/500`. All three roles independently overridable.
+- [x] **UI-019** — Downloads `font-weight: 600` → `var(--font-weight-copy-semibold)`
+- [x] **UI-020** — Reduced-motion `transition-duration: 0s` → `1ms` — preserves perceptible focus/state feedback
+- [x] **UI-025** — About attribution `0.875rem` → `var(--type-small-size)`
+- [x] **UI-026** — About media `border-radius: 1rem` → `var(--radius-lg)`
+- [x] **UI-027** — Clients `letter-spacing: 0.12em` → `var(--type-letter-label-wide)`
+- [x] **UI-028** — Downloads `line-height: 1.55` → `var(--type-leading-copy)` (3 instances)
+- [x] **UI-029** — Error `line-height: 1.65` → `var(--type-leading-copy-sm)`
+- [x] **UI-030** — Compare `var(--surface-page, var(--color-white-50))` → `var(--surface-page)` (2 instances)
+- [x] **UI-033** — Heading `overflow-wrap: anywhere` → `break-word` in `type.css` + `type-marketing.css`
+
+### Planner visual (Phase 2)
+- [x] **UI-003** — Confirmed pre-existing in `PlannerFloorplanHero.tsx` (stagger container + variants). Audit was stale.
+- [x] **UI-004** — `pfp-hero-band min-height: auto` → `26rem`
+- [x] **UI-012** — Kicker "Space Planner" added above H1: `en.json` + `hi.json`, CSS class, stagger variant
+- [x] **UI-013** — Title `max-width: 12ch` → `22ch`
+- [x] **UI-031** — Hero `min-height: min(52vh, 30rem)` → `min(52vh, 38rem)`
+- [x] **UI-032** — Demo float `animation-delay: 1s` added
+
+### Interaction/focus (Phase 3)
+- [x] **UI-021/022** — `:focus-visible` added alongside lone `:focus` in: `home-contact-teaser.css`, `shell-portal.css`, `shell-pdp.css`, `nav.css`, `site-footer.css`, `shell-workspace.css`
+
+### SEO/metadata (Phase 4)
+- [x] **UI-001** — Homepage title 67→58 chars (`brand.ts` `defaultTitle`, no third-party brands)
+- [x] **UI-002** — About title 71→45 chars (`routeMetadata.ts`, no third-party brands)
+- [x] **UI-008** — `SoftwareApplication` JSON-LD added to `/planner` page (`app/(site)/planner/page.tsx`)
+
+### Already resolved (confirmed in-session)
+- [x] UI-007, UI-009–011, UI-014–018, UI-023–024
+
+### Files modified
+`site/focss/base/type/typography.css`, `site/focss/base/tokens/semantic.css`, `site/focss/base/animations.css`, `site/focss/site/type-marketing.css`, `site/focss/base/type/type.css`, `site/focss/site/components/downloads/downloads-page.css`, `site/focss/site/components/about/about-page.css`, `site/focss/site/components/clients/clients-page.css`, `site/focss/site/components/error/error-page.css`, `site/focss/site/components/compare/compare-page.css`, `site/focss/site/components/planner/planner-feature-pages.css`, `site/focss/site/components/planner/planner-landing-page.css`, `site/focss/site/components/homepage/planner-hero-demo.css`, `site/focss/site/components/contact/home-contact-teaser.css`, `site/focss/site/components/shared/nav.css`, `site/focss/site/components/products/shell-pdp.css`, `site/focss/site/components/chrome/site-footer.css`, `site/focss/site/components/chrome/shell-workspace.css`, `site/focss/site/components/chrome/shell-portal.css`, `site/features/site/planner/landing/PlannerFloorplanHero.tsx`, `site/features/site/data/brand.ts`, `site/features/site/data/routeMetadata.ts`, `site/app/(site)/planner/page.tsx`, `site/i18n/messages/en.json`, `site/i18n/messages/hi.json`
+
+---
+
+## Phase 9: Admin Remedy Plan Execution (plans/admin-audit/) ✅
+
+All 5 fixes complete.
+
+- [x] **ADM-FIX-01** — Studio auth — `site/features/Studio/layout.tsx` (completed Phase 1)
+- [x] **ADM-FIX-02** — CRM feature gate — `site/app/admin/crm/layout.tsx` (new file, renders "module off" when `adminCrm` flag is false)
+- [x] **ADM-FIX-03** — Audit log wiring — `site/lib/audit/logAdminAction.ts` (new), wired into catalog POST/PATCH/DELETE, features PATCH, themes publish
+- [x] **ADM-FIX-04** — Analytics sample data banner — `AdminAnalyticsPageView.tsx`
+- [x] **ADM-FIX-05** — Production catalog DB error guard — `catalogAdminHandlers.ts` `listStandardCatalog`
+
+### Files modified
+`site/app/admin/crm/layout.tsx` (new), `site/lib/audit/logAdminAction.ts` (new), `site/app/api/admin/catalogs/[type]/route.ts`, `site/app/api/admin/catalogs/[type]/[id]/route.ts`, `site/app/api/admin/features/route.ts`, `site/app/api/admin/themes/publish/route.ts`, `site/features/admin/analytics/AdminAnalyticsPageView.tsx`, `site/features/admin/api/catalogAdminHandlers.ts`
+
+---
+
+## Phase 10: Planner Remedy Plan Execution (plans/planner-audit/) ✅
+
+All 4 fixes complete.
+
+- [x] **PLN-FIX-01** — IndexedDB offline backup — `site/lib/Planner/plannerLocalBackup.ts` (new: `saveLocalBackup`, `loadLocalBackup`, `clearLocalBackup`). `Planner.tsx` — 30s backup when dirty, cleared on successful server save.
+- [x] **PLN-FIX-02** — AI advisor rate scope — `rateLimitScope` updated to `"planner-advisor"` matching endpoint contract
+- [x] **PLN-FIX-03** — Auto-save 60s — `Planner.tsx` `useEffect` for authenticated + dirty + projectId
+- [x] **PLN-FIX-04** — Guest AI rate limits tightened: advisor inner 2/min guest check, sketch-to-plan contract 6→2
+
+### Files modified
+`site/lib/Planner/plannerLocalBackup.ts` (new), `site/components/Planner/Planner.tsx`, `site/app/api/Planner/ai-advisor/route.ts`, `site/lib/Planner/plannerEndpointContract.ts`
+
+---
+
+## Session End — 2026-08-31
+
+All plans executed and closed:
+- ✅ packages — all dead deps removed, CVEs patched
+- ✅ ai-audit — Vectorize migration, agent merge, provider failover
+- ✅ studio-audit — auth gate, axios removal, exportPDF guard
+- ✅ seosec — middleware false positive corrected, 3 real fixes applied
+- ✅ ui-audit — all 33 findings resolved
+- ✅ admin-audit — all 5 fixes applied
+- ✅ planner-audit — all 4 fixes applied
+- ✅ db-audit — no remedy needed (clean)
+- ✅ testing-audit — no remedy needed (infrastructure solid)
+- ✅ worker-audit — Vectorize binding added (covered in ai-audit)
+
+Typecheck: clean. Boundary scan: clean.

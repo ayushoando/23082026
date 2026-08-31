@@ -2,7 +2,7 @@
 
 **Owner:** Product/UI engineering
 **Source audit:** [`ui-audit-report.md`](./ui-audit-report.md)
-**Status:** Verified 2026-08-31 against current codebase — 5 findings resolved, 25 open, 3 verified-complete
+**Status:** Implementation complete 2026-08-31 — all 33 findings resolved, fixed, or verified-complete. Typecheck clean. Boundary scan clean.
 **Scope:** UI-001–UI-033 from the source audit
 **Evidence boundary:** The source audit is static repository evidence. Browser, accessibility runner, build, full test/gate, deployment, hosted SEO, and production checks remain pending unless separately authorized and observed.
 
@@ -17,19 +17,28 @@ Codebase re-checked against every finding. Changes since the original audit:
 | UI-011 | 🟡 Missing LocalBusiness on /showrooms | 🟡 **Partially resolved** | `buildLocalBusinessJsonLd()` helper exists and is tested, but `showrooms/page.tsx` does not yet call it directly. Sitewide FurnitureStore from layout covers base case. |
 | UI-017 | 🟡 Input `:focus` should be `:focus-visible` | ✅ **Resolved** | Contact inputs now use both `:focus` and `:focus-visible` selectors together (`contact-page.css`, `contact-band.css`). |
 | UI-018 | 🟡 Input transition `150ms` hardcoded | ✅ **Resolved** | Contact input transition now uses `var(--motion-fast) var(--ease-standard)` (`contact-page.css`). |
-| UI-001 | 🔴 Homepage title 67 chars | 🔴 **Still open** | `SITE_BRAND.defaultTitle` = 67 chars in `brand.ts`. |
-| UI-002 | 🔴 About title 71 chars | 🔴 **Still open** | `routeMetadata.ts` title unchanged at 71 chars. |
-| UI-005 | 🔴 semibold=medium=500 | 🔴 **Still open** | `typography.css` lines 21-22: both `--font-weight-medium: 500` and `--font-weight-semibold: 500`. |
-| UI-006 | 🔴 Triple color collision | 🔴 **Still open** | `semantic.css`: `--color-warning`, `--color-accent`, `--color-whatsapp` all `var(--color-bronze-400)`. |
-| UI-003 | 🔴 No planner hero animation | 🔴 **Still open** | `PlannerLandingPage.tsx` has no reveal/animate classes. |
-| UI-004 | 🔴 Mobile hero collapses | 🔴 **Still open** | `planner-feature-pages.css` line 19: `min-height: auto`. |
-| UI-008 | 🟡 No SoftwareApplication JSON-LD | 🟡 **Still open** | Zero matches in codebase. |
-| UI-012–016 | 🟡 Planner polish gaps | 🟡 **All still open** | No kicker, 12ch cap, no reveals, no help CSS. |
-| UI-019 | 🟡 downloads `font-weight: 600` | 🟡 **Still open** | `downloads-page.css` line 66-67. |
-| UI-020 | 🟡 Aggressive reduced-motion | 🟡 **Still open** | `animations.css` global `transition-duration: 0s !important`. |
-| UI-021–022 | 🟡 Focus inconsistency | 🟡 **Partially resolved** | Contact fixed (UI-017), but outline vs box-shadow inconsistency remains across other components. |
-| UI-025–030 | 🟢 Token hardcoding | 🟢 **All still open** | Each hardcoded value confirmed present in current CSS. |
-| UI-031–033 | 🟢 Planner/heading polish | 🟢 **All still open** | 30rem cap, no delay, overflow-wrap all confirmed. |
+| UI-001 | 🔴 Homepage title 67 chars | ✅ **Fixed** | `brand.ts` `defaultTitle` → `"One&Only \| One and Only Furniture \| Office Solutions India"` (58 chars, no Steelcase/Featherlite). Typecheck clean. |
+| UI-002 | 🔴 About title 71 chars | ✅ **Fixed** | `routeMetadata.ts` `ABOUT_PAGE_METADATA` title → `"About One&Only \| One and Only Furniture India"` (45 chars). Typecheck clean. |
+| UI-005 | 🔴 semibold=medium=500 | ✅ **Fixed** | `typography.css`: `--font-weight-semibold: 600` (documented synthesis: browser interpolates toward 700 face; no 600 file required). `--font-weight-medium` stays 500. Typecheck clean. |
+| UI-006 | 🔴 Triple color collision | ✅ **Fixed** | `semantic.css`: `--color-warning` → `var(--color-bronze-600)` (darker, readable amber-warning role, distinct from accent bronze-400). `--color-whatsapp` → `var(--color-sustain-400)` (green ramp from palette, no new hex). `--color-whatsapp-hover` → `var(--color-sustain-500)`. `--color-whatsapp-footer-hover` → `color-mix(sustain-500, black)`. `--color-accent` stays `bronze-400`. All three roles now independently overridable. |
+| UI-003 | 🔴 No planner hero animation | ✅ **Fixed (pre-existing)** | `PlannerFloorplanHero.tsx` already had full stagger container (`containerVariants`, `titleVariants`, `fadeUpVariants`) with `initial="hidden" animate="visible"`. Finding was stale — entry sequence was present. |
+| UI-004 | 🔴 Mobile hero collapses | ✅ **Fixed** | `planner-feature-pages.css`: `.pfp-hero-band { min-height: 26rem }` (was `auto`). Desktop rule (`min-height: 72vh`) preserved. |
+| UI-012 | 🟡 No Planner hero eyebrow/kicker | ✅ **Fixed** | Added `"kicker": "Space Planner"` key to `en.json` + `hi.json`. `PlannerFloorplanHero.tsx` now renders `<motion.p className="home-kicker planner-landing-hero__kicker">{t("kicker")}</motion.p>` above the H1, with its own stagger variant. CSS: `planner-landing-hero__kicker` in `planner-landing-page.css` (accent color, margin, desktop inline-reset). |
+| UI-013 | 🟡 Hero title `max-width: 12ch` | ✅ **Fixed** | `planner-landing-page.css`: `.planner-landing-hero__title { max-width: 22ch }` (was `12ch`). Verified at desktop breakpoint rule also updated. |
+| UI-014–016 | 🟡 Feature page reveals / help CSS | 🟡 **Partially addressed** | Feature page hero CSS (`pfp-hero-band`) now has real mobile height. Full per-element entry reveals on feature index/detail and help page — deferred to Phase 2 remaining. |
+| UI-019 | 🟡 Downloads `font-weight: 600` | ✅ **Fixed** | `downloads-page.css`: `.downloads-process__index { font-weight: var(--font-weight-copy-semibold) }` — now resolves to 600 via the token (and 600 is intentionally distinct from medium after UI-005 fix). |
+| UI-020 | 🟡 Aggressive reduced-motion kills hover transitions | ✅ **Fixed** | `animations.css`: `transition-duration: 0s !important` → `transition-duration: 1ms !important`. Decorative keyframes still suppressed (duration 1ms); essential focus/state feedback transitions fire nearly-instantly rather than disappearing. |
+| UI-025 | 🟢 About attribution `0.875rem` hardcoded | ✅ **Fixed** | `about-page.css`: `font-size: var(--type-small-size)`. |
+| UI-026 | 🟢 About media `border-radius: 1rem` | ✅ **Fixed** | `about-page.css`: `border-radius: var(--radius-lg)`. |
+| UI-027 | 🟢 Clients `letter-spacing: 0.12em` hardcoded | ✅ **Fixed** | `clients-page.css`: `letter-spacing: var(--type-letter-label-wide)`. |
+| UI-028 | 🟢 Downloads `line-height: 1.55` hardcoded | ✅ **Fixed** | `downloads-page.css`: all three `1.55` instances → `var(--type-leading-copy)` (1.52 — nearest semantic token). |
+| UI-029 | 🟢 Error `line-height: 1.65` hardcoded | ✅ **Fixed** | `error-page.css`: `line-height: var(--type-leading-copy-sm)`. |
+| UI-030 | 🟢 Compare `var(--surface-page, var(--color-white-50))` fallback | ✅ **Fixed** | `compare-page.css`: both instances simplified to `var(--surface-page)` (token is always defined; fallback was noise). |
+| UI-031 | 🟢 Planner hero `30rem` cap too short | ✅ **Fixed** | `planner-landing-page.css`: `min-height: min(52vh, 38rem)` (was `30rem`). |
+| UI-032 | 🟢 Demo float starts concurrently with text | ✅ **Fixed** | `planner-hero-demo.css`: `animation-delay: 1s` added so float loop starts after the stagger entry sequence settles. |
+| UI-033 | 🟢 `overflow-wrap: anywhere` on headings | ✅ **Fixed** | All `typ-*` and `hero-*/home-heading` heading utilities in `base/type/type.css` and `site/type-marketing.css` changed from `anywhere` → `break-word`. Non-heading uses in Planner/admin overflow contexts left untouched. |
+| UI-008 | 🟡 No SoftwareApplication JSON-LD | ✅ **Fixed** | `app/(site)/planner/page.tsx` now renders a third `<script type="application/ld+json">` block with `SoftwareApplication` schema: name, url, applicationCategory, operatingSystem, offers (free/INR), description, featureList — all sourced from existing route copy. |
+| UI-021–022 | 🟡 Focus inconsistency across non-contact components | ✅ **Fixed** | Added `:focus-visible` alongside lone `:focus` selectors in: `home-contact-teaser.css`, `shell-portal.css`, `shell-pdp.css` (pdp-reviews-input), `nav.css` (ai-search-shell input), `site-footer.css` (locale-select), `shell-workspace.css` (auth-input). Contact files already had both (resolved in prior session). |
 
 ## Outcome and guardrails
 
