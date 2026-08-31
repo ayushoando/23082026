@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import "@focss/studio/entry.css";
 import TopBar from "@studio/components/StudioTopBar";
 import Toast from "@studio/components/StudioToast";
+import { requireAuthUser } from "@/lib/auth/session";
 
 export const metadata: Metadata = {
   title: "Studio",
@@ -11,11 +12,15 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function StudioLayout({
+export const dynamic = "force-dynamic";
+
+export default async function StudioLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  await requireAuthUser("/oostudio", "admin");
+
   return (
     <main id="main-content" className="oostudio-root" tabIndex={-1}>
       <div className="app-root">

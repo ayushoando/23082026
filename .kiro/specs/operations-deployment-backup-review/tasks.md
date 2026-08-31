@@ -101,23 +101,23 @@ Implement a repository-local TypeScript operations-review tool that reads an exp
     - Assign P0–P3 without downgrading independent data-loss, ownership, reversibility, or evidence gaps due to similar coverage elsewhere.
     - _Requirements: 2.3, 7.4, 9.1, 9.2, 9.3_
     - **Acceptance evidence:** Differences are source-linked and recommendations retain deterministic priority/risk rationale.
-  - [ ] 5.4 Write property test for one-to-one complete Restore Drill generation.
+  - [x] 5.4 Write property test for one-to-one complete Restore Drill generation.
     - **Property 8: Applicable recovery paths map one-to-one to complete restore drills.**
     - **Validates: Requirements 6.1, 6.2**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
-  - [-] 5.5 Write property test for completed Restore Drill evidence fields.
+  - [x] 5.5 Write property test for completed Restore Drill evidence fields.
     - **Property 9: Restore-drill evidence has audit-ready fields.**
     - **Validates: Requirements 6.4**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
-  - [-] 5.6 Write property test for incident uncertainty preservation.
+  - [x] 5.6 Write property test for incident uncertainty preservation.
     - **Property 10: Incident records preserve decision-critical uncertainty.**
     - **Validates: Requirements 7.4**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
-  - [ ] 5.7 Write property test for attributable monitoring gaps.
+  - [x] 5.7 Write property test for attributable monitoring gaps.
     - **Property 11: Monitoring gaps are attributable and complete.**
     - **Validates: Requirements 8.3**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
-  - [ ] 5.8 Write property test for complete source-linked alignment differences.
+  - [-] 5.8 Write property test for complete source-linked alignment differences.
     - **Property 12: Alignment comparison produces complete, source-linked differences.**
     - **Validates: Requirements 9.1, 9.2**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
