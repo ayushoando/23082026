@@ -378,7 +378,7 @@ function isQuarantinedState(state: PartitionState): boolean {
   return state === "quarantined";
 }
 
-function isMutableState(state: PartitionState): boolean {
+function _isMutableState(state: PartitionState): boolean {
   return !isClosureSafeState(state) && !isQuarantinedState(state);
 }
 
@@ -846,8 +846,8 @@ export class ManifestStore {
       schemaHash: options.schemaHash ?? "",
       repositoryRevision: immutableRunInputs.repositoryRevision,
       configurationHash: immutableRunInputs.configurationHash,
-      sourceHashes: { ...(options.sourceHashes ?? {}) },
-      toolVersions: { ...(options.toolVersions ?? {}) },
+      sourceHashes: { ...(options.sourceHashes) },
+      toolVersions: { ...(options.toolVersions) },
       inventoryGeneration: 0,
       partitions: [],
       waveManifests: [],
@@ -993,8 +993,8 @@ export class ManifestStore {
         options.dependencyPartitionIds ?? existing?.dependencyPartitionIds ?? [],
       );
       const dependencyFingerprints = {
-        ...(existing?.dependencyFingerprints ?? {}),
-        ...(options.dependencyFingerprints ?? {}),
+        ...(existing?.dependencyFingerprints),
+        ...(options.dependencyFingerprints),
       };
       const leased: PartitionManifest = {
         partitionId,
@@ -1680,7 +1680,7 @@ export class ManifestStore {
       status: "pending",
       inputFingerprint,
       dependencyPartitionIds: normalizeDependencies(options.dependencyPartitionIds ?? []),
-      dependencyFingerprints: { ...(options.dependencyFingerprints ?? {}) },
+      dependencyFingerprints: { ...(options.dependencyFingerprints) },
       inventoryGeneration: options.inventoryGeneration ?? this.runManifest.inventoryGeneration,
       ...(options.reviewQueueIds ? { reviewQueueIds: [...options.reviewQueueIds] } : {}),
       updatedAt: now(),

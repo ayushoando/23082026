@@ -242,7 +242,7 @@ const AUTH_GUARDED_PREFIXES = [
   "/offline",
 ];
 
-const NOINDEX_PREFIXES = new Set(AUTH_GUARDED_PREFIXES);
+const _NOINDEX_PREFIXES = new Set(AUTH_GUARDED_PREFIXES);
 
 function isAuthGuarded(path) {
   return AUTH_GUARDED_PREFIXES.some((prefix) => path === prefix || path.startsWith(`${prefix}/`));
@@ -526,7 +526,7 @@ async function liveMode() {
   let sitemapText;
   try {
     ({ text: sitemapText } = await fetchText(`${base}/sitemap.xml`));
-  } catch (error) {
+  } catch {
     console.error(`Cannot reach ${base}/sitemap.xml — is the server running?`);
     process.exit(1);
   }

@@ -16,7 +16,7 @@
  * Requirements: 5.1-5.8, 20.1-20.4
  */
 
-import { readdir, readFile, stat } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { createHash } from "node:crypto";
 
@@ -185,7 +185,7 @@ const KNOWN_ROUTE_PATTERNS = new Set([
   "/results",
 ]);
 
-const DYNAMIC_ROUTE_PARAMS_PATTERN = /\/\[[^\]]+\]/g;
+const _DYNAMIC_ROUTE_PARAMS_PATTERN = /\/\[[^\]]+\]/g;
 
 /** Check if a normalized path matches any known route or dynamic route pattern */
 function matchesKnownRoute(normalizedPath: string): string | null {

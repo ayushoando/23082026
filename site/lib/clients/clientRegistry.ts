@@ -358,14 +358,14 @@ export const CLIENT_REGISTRY: ClientRecord[] = [
     published: false, // @review — Unclear supplied spelling or entity identity; approve as supplied, approve a reviewed display name, or withhold.
   },
   {
-    canonicalId: "itian-limited",
-    displayName: "Itian Limited",
+    canonicalId: "titan-limited",
+    displayName: "Titan Limited",
     sectorTab: "education-social-impact",
     published: false, // @review — Unclear supplied spelling or entity identity; approve as supplied, approve a reviewed display name, or withhold.
   },
   {
-    canonicalId: "june-elevators",
-    displayName: "June Elevators",
+    canonicalId: "kone-elevators",
+    displayName: "Kone Elevators",
     sectorTab: "education-social-impact",
     published: false, // @review — Unclear supplied spelling or entity identity; approve as supplied, approve a reviewed display name, or withhold.
   },

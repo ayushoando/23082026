@@ -30,7 +30,6 @@ import {
 } from "./artifactPaths";
 import { loadAuditConfiguration, DEFAULT_CONFIG_PATH } from "./config";
 import {
-  ManifestStore,
   computeFingerprint,
   writeCanonicalPartition,
   toPartitionId,
@@ -41,7 +40,7 @@ import {
   createImmutableRunInputs,
   readRepositoryRevision,
 } from "./runIdentity";
-import { runWave, completeWave, runManifestPath } from "./wave";
+import { runWave, completeWave } from "./wave";
 import { buildLinkInventory } from "./wave1-links";
 import { buildNavigationInventory } from "./wave1-navigation";
 import { buildStateInventory } from "./wave1-states";

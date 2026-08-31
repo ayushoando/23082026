@@ -2,9 +2,8 @@ import "server-only";
 
 import type { Agent } from "@mastra/core/agent";
 
-import { getAdvisorAgent } from "./advisorAgent";
-import { getCatalogAdvisorAgent } from "./catalogAdvisorAgent";
-import { toMastraModel, type AdvisorModelTarget } from "./providers";
+import { getAdvisorAgent, type AdvisorRole } from "./advisorAgent";
+import { resolveAdvisorModelChain, toMastraModel, type AdvisorModelTarget } from "./providers";
 
 export type AdvisorChatMessage = {
   role: "system" | "user" | "assistant";
@@ -38,6 +37,15 @@ function toMastraMessages(messages: AdvisorChatMessage[]): MastraMessageListInpu
       }
     }
   });
+}
+
+function isAbortLikeError(err: unknown): boolean {
+  if (!err || typeof err !== "object") return false;
+  const e = err as { name?: string; message?: string };
+  return (
+    e.name === "AbortError" ||
+    String(e.message ?? "").toLowerCase().includes("aborted")
+  );
 }
 
 async function requestAgentText(
@@ -93,13 +101,60 @@ async function requestAgentText(
   return await output.text;
 }
 
+/**
+ * Try each provider in the chain until one succeeds.
+ * Abort errors are never retried (user cancelled).
+ */
+async function requestWithFailover(
+  role: AdvisorRole,
+  messages: AdvisorChatMessage[],
+  options: RequestAdvisorMessagesOptions = {},
+): Promise<string> {
+  const chain = resolveAdvisorModelChain();
+  if (chain.length === 0) {
+    throw new Error("No AI providers configured");
+  }
+
+  const agent = await getAdvisorAgent(role);
+  let lastError: unknown;
+
+  for (const target of chain) {
+    try {
+      return await requestAgentText(agent, target, messages, options);
+    } catch (err) {
+      if (isAbortLikeError(err)) throw err;
+      lastError = err;
+      console.warn(`[advisor] ${target.label} failed, trying next provider:`, err);
+    }
+  }
+
+  throw lastError;
+}
+
 export async function requestAdvisorMessages(
   target: AdvisorModelTarget,
   messages: AdvisorChatMessage[],
   options: RequestAdvisorMessagesOptions = {},
 ): Promise<string> {
-  const agent = await getAdvisorAgent();
-  return requestAgentText(agent, target, messages, options);
+  // Legacy signature passes a single target. Use failover starting from that target.
+  const chain = resolveAdvisorModelChain();
+  const targetIndex = chain.findIndex((t) => t.label === target.label);
+  const remainingChain = targetIndex >= 0 ? chain.slice(targetIndex) : chain;
+
+  const agent = await getAdvisorAgent("workspace");
+  let lastError: unknown;
+
+  for (const t of remainingChain) {
+    try {
+      return await requestAgentText(agent, t, messages, options);
+    } catch (err) {
+      if (isAbortLikeError(err)) throw err;
+      lastError = err;
+      console.warn(`[advisor] ${t.label} failed, trying next:`, err);
+    }
+  }
+
+  throw lastError;
 }
 
 export async function requestAdvisorText(
@@ -108,14 +163,30 @@ export async function requestAdvisorText(
   query: string,
   options: RequestAdvisorTextOptions = {},
 ): Promise<string> {
-  const agent = await getCatalogAdvisorAgent();
-  return requestAgentText(
-    agent,
-    target,
-    [
-      { role: "system", content: systemPrompt },
-      { role: "user", content: query },
-    ],
-    { ...options, jsonMode: options.jsonMode ?? true },
-  );
+  const chain = resolveAdvisorModelChain();
+  const targetIndex = chain.findIndex((t) => t.label === target.label);
+  const remainingChain = targetIndex >= 0 ? chain.slice(targetIndex) : chain;
+
+  const agent = await getAdvisorAgent("catalog");
+  let lastError: unknown;
+
+  for (const t of remainingChain) {
+    try {
+      return await requestAgentText(
+        agent,
+        t,
+        [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: query },
+        ],
+        { ...options, jsonMode: options.jsonMode ?? true },
+      );
+    } catch (err) {
+      if (isAbortLikeError(err)) throw err;
+      lastError = err;
+      console.warn(`[advisor] ${t.label} failed, trying next:`, err);
+    }
+  }
+
+  throw lastError;
 }

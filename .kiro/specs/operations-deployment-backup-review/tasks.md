@@ -138,7 +138,7 @@ Implement a repository-local TypeScript operations-review tool that reads an exp
     - **Property 13: Evidence Record sections form a non-overlapping partition.**
     - **Validates: Requirements 9.4**
     - **Execution authorization:** The targeted test command remains pending exact user authorization and enabled-hook permission.
-  - [x] 6.4 Write fixture-based unit/integration tests for Vercel, Worker, Products/Admin, R2, monitoring, redaction, missing sources, malformed sources, and CI/runbook mismatch handling.
+  - [ ] 6.4 Write fixture-based unit/integration tests for Vercel, Worker, Products/Admin, R2, monitoring, redaction, missing sources, malformed sources, and CI/runbook mismatch handling.
     - Use repository-local fixtures only; do not contact providers or start a service.
     - _Requirements: 2.1, 2.3, 3.1, 3.4, 4.1, 4.2, 4.4, 5.1, 5.4, 7.1, 8.1, 9.3_
     - **Execution authorization:** The exact targeted Vitest command remains pending exact user authorization and enabled-hook permission.

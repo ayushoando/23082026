@@ -2,7 +2,7 @@
 import { collectUserLayerRows, isDragDrawTool, isTooSmallDrawnShape } from "@studio/lib/studioCanvasLayers";
 import { OO, SCALE_PX_PER_MM, ooFontSans, ooFontSansShort } from "@studio/lib/studioPalette";
 import { DEFAULT_FURNITURE_DIMS_MM } from "@studio/lib/studioTokens";
-import type { DockviewApiLike, FurnitureDimensions, OoFabricObject } from "@studio/lib/studioTypes";
+import type { DockviewApiLike, FurnitureDimensions, FurnitureItem, OoFabricObject } from "@studio/lib/studioTypes";
 import React, { useEffect, useRef, useState, useCallback, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import * as fabric from "fabric";
@@ -938,10 +938,10 @@ const Studio = () => {
         notes: saveData.notes || null,
         top_png: topPng, top_svg: topSvg, top_fabric_json: topFabric, is_custom: true,
       };
-      const item = await createFurniture(payload);
+      const item = await createFurniture(payload) as FurnitureItem;
       addCatalogItem(item);
       let publishNote = "";
-      if (flags.studioPublishCatalog && item?.id) {
+      if (flags.studioPublishCatalog && item.id) {
         try {
           // Guest/member save always publishes as draft; live promotion is admin-only on the API.
           const published = await publishFurniture(String(item.id), { goLive: false });

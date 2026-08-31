@@ -7,7 +7,7 @@
  * Pure functions only — no file access, network, spawning, or side effects.
  */
 
-import type { AlignmentDifference, Gap, Priority, Risk, Surface } from "./models";
+import type { AlignmentDifference, Gap, Priority, Risk } from "./models";
 import type { RepositorySource } from "./sourceAdapter";
 
 // ---------------------------------------------------------------------------

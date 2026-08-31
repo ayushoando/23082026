@@ -13,7 +13,7 @@
  */
 
 import { createHash } from "node:crypto";
-import { readdir, stat } from "node:fs/promises";
+import { readdir } from "node:fs/promises";
 import path from "node:path";
 
 import {
@@ -23,7 +23,6 @@ import {
 import {
   AUDIT_SOURCE_IDS,
   SOURCE_AUTHORITY_RANKS,
-  type AdapterCandidateKind,
 } from "./adapters";
 
 // ---------------------------------------------------------------------------

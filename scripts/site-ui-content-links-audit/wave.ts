@@ -27,8 +27,6 @@ import type {
 import {
   ManifestStore,
   type WaveCheckpointRecord,
-  WaveEntryCriteriaError,
-  WaveExitCriteriaError,
   computeFingerprint,
   type ManifestStoreOptions,
   type PartitionId,

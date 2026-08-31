@@ -36,13 +36,10 @@ export type AdvisorModelTarget = AdvisorRouterTarget | AdvisorBedrockTarget;
 
 // ---------------------------------------------------------------------------
 // Allowlist — only provider/label pairs listed here may enter the model chain.
-// Add a new row only after owner approval; do not derive from env-var presence.
 // ---------------------------------------------------------------------------
 
 type AllowlistEntry = {
-  /** Must match an AdvisorProviderId value. */
   provider: AdvisorProviderId;
-  /** Must match the label string used when constructing the chain target. */
   label: string;
 };
 
@@ -54,22 +51,12 @@ export const APPROVED_PROVIDER_MODELS: readonly AllowlistEntry[] = [
   { provider: "bedrock",    label: "bedrock" },
 ] as const;
 
-/**
- * Returns true only when the given provider/label pair exists verbatim in
- * APPROVED_PROVIDER_MODELS. A configured API key alone is insufficient —
- * the pair must appear in the approved set.
- */
 export function isAllowlisted(provider: AdvisorProviderId, label: string): boolean {
   return APPROVED_PROVIDER_MODELS.some(
     (entry) => entry.provider === provider && entry.label === label,
   );
 }
 
-/**
- * Returns a new array containing only chain targets whose provider/label pair
- * appears in APPROVED_PROVIDER_MODELS. Callers that construct chains outside
- * resolveAdvisorModelChain may use this as a post-hoc filter.
- */
 export function filterAllowlistedChain(chain: AdvisorModelTarget[]): AdvisorModelTarget[] {
   return chain.filter((target) => isAllowlisted(target.provider, target.label));
 }
@@ -156,9 +143,22 @@ export function toMastraModel(target: AdvisorModelTarget | undefined) {
   return "model" in target ? target.model : target;
 }
 
+/**
+ * Build the LLM provider chain in priority order:
+ *
+ *   1. **Gemini** (free tier — 15 RPM, 1M tokens/day on Flash models)
+ *   2. **OpenRouter** primary key (paid or free models)
+ *   3. **OpenRouter** backup key
+ *   4. **OpenAI** (paid fallback)
+ *   5. **Bedrock** (paid fallback)
+ *
+ * Each provider is only added when its API key is configured AND it appears
+ * in the APPROVED_PROVIDER_MODELS allowlist.
+ */
 export function resolveAdvisorModelChain(): AdvisorModelTarget[] {
   const chain: AdvisorModelTarget[] = [];
 
+  // 1. Gemini — primary (free tier)
   const geminiKey = env.GEMINI_API_KEY?.trim();
   if (geminiKey) {
     const candidate: AdvisorModelTarget = {
@@ -174,29 +174,24 @@ export function resolveAdvisorModelChain(): AdvisorModelTarget[] {
     }
   }
 
+  // 2. OpenRouter — backup
   const primaryKey = env.OPENROUTER_API_KEY_PRIMARY?.trim();
-  if (primaryKey) {
-    // Build without pushing so we can allowlist-check first.
-    const label = "openrouter";
-    if (isAllowlisted("openrouter", label)) {
-      pushOpenRouterTarget(chain, primaryKey, label);
-    }
+  if (primaryKey && isAllowlisted("openrouter", "openrouter")) {
+    pushOpenRouterTarget(chain, primaryKey, "openrouter");
   }
 
   const backupKey = env.OPENROUTER_API_KEY_BACKUP?.trim();
-  if (backupKey) {
-    const label = "openrouter-backup";
-    if (isAllowlisted("openrouter", label)) {
-      pushOpenRouterTarget(chain, backupKey, label);
-    }
+  if (backupKey && isAllowlisted("openrouter", "openrouter-backup")) {
+    pushOpenRouterTarget(chain, backupKey, "openrouter-backup");
   }
 
-  // Keep the existing Gemini/OpenRouter order stable; new providers are fallbacks.
+  // 3. OpenAI — paid fallback (only if explicitly configured)
   const openAiKey = env.OPENAI_API_KEY?.trim();
   if (openAiKey && isAllowlisted("openai", "openai")) {
     pushOpenAITarget(chain, openAiKey);
   }
 
+  // 4. Bedrock — paid fallback (only if explicitly configured)
   const bedrockTarget = createBedrockTarget();
   if (bedrockTarget && isAllowlisted(bedrockTarget.provider, bedrockTarget.label)) {
     chain.push(bedrockTarget);

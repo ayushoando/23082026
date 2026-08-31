@@ -16,8 +16,8 @@ import {
 } from "./embedder";
 import {
   CATALOG_VECTOR_INDEX_NAME,
-  getLanceCatalogVectorStore,
-} from "./lanceVectorStore";
+  getCatalogVectorStore,
+} from "./vectorizeCatalogStore";
 
 export type CatalogVectorDocument = {
   id: string;
@@ -118,7 +118,7 @@ export async function ensureCatalogVectorIndex(force = false): Promise<void> {
       return;
     }
 
-    await getLanceCatalogVectorStore().upsert({
+    await getCatalogVectorStore().upsert({
       indexName: CATALOG_VECTOR_INDEX_NAME,
       vectors: embeddings,
       ids: documents.map((doc) => doc.id),
@@ -148,7 +148,7 @@ export function createCatalogVectorQueryTool() {
     id: "catalog_vector_search",
     description:
       "Semantic search over the furniture catalog (products, categories, and key site pages).",
-    vectorStore: getLanceCatalogVectorStore(),
+    vectorStore: getCatalogVectorStore(),
     indexName: CATALOG_VECTOR_INDEX_NAME,
     model,
     includeSources: true,
@@ -172,7 +172,7 @@ export async function searchCatalogVectors(query: string, limit = 8) {
     value: query,
   });
 
-  const hits = await getLanceCatalogVectorStore().query({
+  const hits = await getCatalogVectorStore().query({
     indexName: CATALOG_VECTOR_INDEX_NAME,
     queryVector: embedding,
     topK: limit,

@@ -28,7 +28,6 @@ import { createHash } from "node:crypto";
 
 import {
   createGeneratedArtifactPath,
-  createSurfacePartitionArtifactPath,
   resolveApprovedArtifactPath,
   verifyFailClosedArtifactPolicy,
 } from "./artifactPaths";
@@ -38,7 +37,6 @@ import {
   discoveryToAuditRecords,
 } from "./discovery";
 import {
-  ManifestStore,
   computeFingerprint,
   writeCanonicalPartition,
   toPartitionId,
@@ -54,16 +52,12 @@ import {
   ACCESS_PROFILES,
   LANGUAGE_PROFILES,
   STATE_VARIANTS,
-  AUDIT_DIMENSIONS,
-  CONSENT_PROFILES,
-  PERFORMANCE_PROFILES,
 } from "./profiles";
 import {
   createImmutableRunInputs,
   readRepositoryRevision,
 } from "./runIdentity";
 import {
-  runManifestPath,
   runWave,
   completeWave,
 } from "./wave";
@@ -443,7 +437,7 @@ export async function runWave0(
     sha256Short(String(occurrences.length)),
   ]);
 
-  const { waveManifest, store, manifestPath } = await runWave(
+  const { store, manifestPath } = await runWave(
     repositoryRoot,
     0,
     config,

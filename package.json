@@ -107,7 +107,6 @@
     "@aws-sdk/client-s3": "^3.1121.0",
     "@gsap/react": "^2.1.2",
     "@hookform/resolvers": "^5.9.1",
-    "@lancedb/lancedb": "^0.37.1",
     "@mastra/core": "^1.63.2",
     "@mastra/memory": "^1.28.1",
     "@mastra/rag": "^2.6.0",

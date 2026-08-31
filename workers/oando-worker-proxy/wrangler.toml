@@ -13,3 +13,9 @@ VERCEL_ORIGIN = "https://oando1408.vercel.app"
 # Comma-separated hosts that must NOT inherit Vercel preview noindex.
 # (Worker rewrites Host to *.vercel.app for origin routing.)
 PUBLIC_INDEXABLE_HOSTS = "oando.co.in,www.oando.co.in"
+
+# Vectorize index for catalog semantic search (AI advisor RAG)
+# Create with: npx wrangler vectorize create catalog-nav --dimensions 768 --metric cosine
+[[vectorize]]
+binding = "CATALOG_VECTORS"
+index_name = "catalog-nav"

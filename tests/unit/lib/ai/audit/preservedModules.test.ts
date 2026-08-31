@@ -16,8 +16,6 @@ import { describe, expect, it } from "vitest";
 // 1. retrieveCatalogProducts  (site/lib/ai/mastra/catalogRetrieval.ts)
 // ---------------------------------------------------------------------------
 
-// catalogRetrieval.ts has `import "server-only"`. Vitest node environment
-// allows this import; the module resolves without Next.js middleware.
 import { retrieveCatalogProducts } from "@/lib/ai/mastra/catalogRetrieval";
 
 // ---------------------------------------------------------------------------
@@ -27,14 +25,16 @@ import { retrieveCatalogProducts } from "@/lib/ai/mastra/catalogRetrieval";
 import { resolveAdvisorModelChain } from "@/lib/ai/mastra/providers";
 
 // ---------------------------------------------------------------------------
-// 3. LanceCatalogVectorStore + CATALOG_VECTOR_INDEX_NAME
-//    (site/lib/ai/mastra/lanceVectorStore.ts)
+// 3. VectorizeCatalogStore + CATALOG_VECTOR_INDEX_NAME
+//    (site/lib/ai/mastra/vectorizeCatalogStore.ts)
+//    Replaces the former LanceCatalogVectorStore after the LanceDB→Vectorize
+//    migration.
 // ---------------------------------------------------------------------------
 
 import {
-  LanceCatalogVectorStore,
+  VectorizeCatalogStore,
   CATALOG_VECTOR_INDEX_NAME,
-} from "@/lib/ai/mastra/lanceVectorStore";
+} from "@/lib/ai/mastra/vectorizeCatalogStore";
 
 // ---------------------------------------------------------------------------
 // Tests
@@ -52,7 +52,7 @@ describe("Task 4.3: remediated modules do not alter unrelated module exports", (
     });
 
     it("retrieveCatalogProducts accepts (query, products, limit) signature", () => {
-      // Verify arity — not invoking it (would require mocked LanceDB)
+      // Verify arity — not invoking it (would require mocked vector store)
       expect(retrieveCatalogProducts.length).toBeGreaterThanOrEqual(3);
     });
   });
@@ -72,20 +72,18 @@ describe("Task 4.3: remediated modules do not alter unrelated module exports", (
   });
 
   // -------------------------------------------------------------------------
-  // lanceVectorStore.ts
+  // vectorizeCatalogStore.ts (replaces lanceVectorStore.ts)
   // -------------------------------------------------------------------------
 
-  describe("lanceVectorStore.ts", () => {
-    it("LanceCatalogVectorStore is exported as a constructor (class)", () => {
-      // A class is typeof 'function' in JS/TS
-      expect(typeof LanceCatalogVectorStore).toBe("function");
+  describe("vectorizeCatalogStore.ts", () => {
+    it("VectorizeCatalogStore is exported as a constructor (class)", () => {
+      expect(typeof VectorizeCatalogStore).toBe("function");
     });
 
-    it("LanceCatalogVectorStore can be instantiated (constructor is callable)", () => {
-      // Pass a dummy URI so it does not attempt filesystem access
-      const store = new LanceCatalogVectorStore(":memory:");
+    it("VectorizeCatalogStore can be instantiated", () => {
+      const store = new VectorizeCatalogStore();
       expect(store).toBeDefined();
-      expect(store).toBeInstanceOf(LanceCatalogVectorStore);
+      expect(store).toBeInstanceOf(VectorizeCatalogStore);
     });
 
     it('CATALOG_VECTOR_INDEX_NAME equals "catalog_nav"', () => {

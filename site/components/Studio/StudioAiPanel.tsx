@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { PhIcon } from "@studio/components/ui/StudioPhIcon";
-import { api } from "@studio/lib/studioApi";
+import { browserApiFetch, apiPath } from "@/lib/api/browserApi";
 import { useStudioUIStore } from "@studio/store/studioUiStore";
 
 const PROMPT_EXAMPLES = [
@@ -85,12 +85,36 @@ export const AiPanel = ({ onGenerate, onSuggest, onRestyle, hasSelection: _hasSe
 };
 
 // helpers used from Studio
+
+/** Shape returned by AI generate/suggest/restyle endpoints. */
+export type AiGenerateResult = {
+  svg: string;
+  name: string;
+  category: string;
+  tags: string[];
+  dimensions: {
+    width_mm: number;
+    depth_mm: number;
+    height_mm: number;
+  };
+};
+
+async function aiPost<T = unknown>(path: string, body: unknown): Promise<T> {
+  const res = await browserApiFetch(apiPath(path), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error(`AI request failed (${res.status})`);
+  return res.json() as Promise<T>;
+}
+
 export const aiApi = {
-  generate: (prompt: string) => api.post("/Studio/ai/generate", { prompt }).then((r) => r.data),
+  generate: (prompt: string) => aiPost<AiGenerateResult>("/api/Studio/ai/generate", { prompt }),
   suggest: (svg: string, context: unknown) =>
-    api.post("/Studio/ai/suggest", { svg, context }).then((r) => r.data),
+    aiPost<AiGenerateResult>("/api/Studio/ai/suggest", { svg, context }),
   restyle: (svg: string, instruction: string) =>
-    api.post("/Studio/ai/restyle", { svg, instruction }).then((r) => r.data),
+    aiPost<AiGenerateResult>("/api/Studio/ai/restyle", { svg, instruction }),
 };
 
 export default AiPanel;

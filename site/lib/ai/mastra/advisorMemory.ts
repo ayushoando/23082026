@@ -4,7 +4,7 @@ import { InMemoryStore } from "@mastra/core/storage";
 import { Memory } from "@mastra/memory";
 
 import { isVectorRecallEnabled, resolveEmbedderModel, resolveMastraEmbeddingModel } from "./embedder";
-import { getLanceCatalogVectorStore } from "./lanceVectorStore";
+import { getCatalogVectorStore } from "./vectorizeCatalogStore";
 
 let advisorMemory: Memory | null = null;
 
@@ -21,7 +21,7 @@ export function getAdvisorMemory(): Memory {
     storage: new InMemoryStore({ id: "advisor-memory-storage" }),
     ...(vectorEnabled && embeddingModel
       ? {
-          vector: getLanceCatalogVectorStore(),
+          vector: getCatalogVectorStore(),
           embedder: embedder ?? undefined,
         }
       : {}),

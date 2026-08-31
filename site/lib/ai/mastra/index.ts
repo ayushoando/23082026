@@ -28,6 +28,7 @@ export {
   type RetrievableProduct,
 } from "./catalogRetrieval";
 export { getAdvisorMemory } from "./advisorMemory";
+export { getAdvisorAgent, type AdvisorRole } from "./advisorAgent";
 export { resolveEmbedderModel, resolveMastraEmbeddingModel, isVectorRecallEnabled } from "./embedder";
 export {
   getBedrockMantleBaseUrl,

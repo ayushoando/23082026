@@ -90,7 +90,7 @@ export const COMMAND_INTEGRATION_NOTE =
  *   ✓ No process.env credential access.
  *   ✓ No deployment, backup, restore, migration, or infrastructure call.
  */
-export function runReview(options?: {
+export function runReview(_options?: {
   /** Absolute repository root path — read-only access only. */
   repositoryRoot: string;
   /** Explicitly selected output directory path. */

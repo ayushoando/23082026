@@ -21,7 +21,6 @@ import { createHash } from "node:crypto";
 
 import {
   AUDIT_SCHEMA_VERSION,
-  type ProvenanceReference,
 } from "./schemas";
 import {
   type DiscoveredRoute,

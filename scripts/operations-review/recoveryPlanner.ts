@@ -364,6 +364,7 @@ function buildSchemaRollbackPlan(
   const hasRollbackComments = rollbackStepsFromMigrations.length > 0;
   const hasGovernanceCheck = runbookSource.content.includes("check:governance");
   const hasMigrationOrder = runbookSource.content.includes("## 2. Migration");
+  void hasMigrationOrder; // recorded for future expansion
 
   const observedFacts: EvidenceFact[] = [
     {
