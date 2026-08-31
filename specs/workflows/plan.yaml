@@ -1,0 +1,15 @@
+---
+name: plan
+command: /plan
+description: >-
+  Survey context, research prior art, and plan vertical slice tasks
+skills:
+  - survey-context
+  - research-first
+  - plan-work
+terminal_states:
+  - success
+  - no-op
+  - blocked
+  - exhausted
+verify: test -f specs/state.yaml

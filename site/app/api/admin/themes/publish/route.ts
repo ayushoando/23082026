@@ -1,10 +1,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
-import {
-  enforceAdminRateLimit,
-  enforceAdminMutationGuard,
-} from "@/app/api/admin/_lib/server";
+import { enforceAdminMutationGuard } from "@/app/api/admin/_lib/server";
 import {
   contentTypeForKey,
   createR2CatalogClient,
@@ -13,7 +10,10 @@ import {
 import { logAdminAction } from "@/lib/audit/logAdminAction";
 
 function isThemeName(value: unknown): value is string {
-  return typeof value === "string" && /^[a-z0-9][a-z0-9-_]{1,63}$/i.test(value.trim());
+  return (
+    typeof value === "string" &&
+    /^[a-z0-9][a-z0-9-_]{1,63}$/i.test(value.trim())
+  );
 }
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {
@@ -22,7 +22,9 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
 
 export async function POST(req: NextRequest) {
   const guard = await enforceAdminMutationGuard(req, "themes:publish", 10);
-  if (!guard.ok) {return guard.response;}
+  if (!guard.ok) {
+    return guard.response;
+  }
 
   try {
     const body = await req.json().catch(() => ({}));
@@ -30,7 +32,10 @@ export async function POST(req: NextRequest) {
     const tokens = (body as { tokens?: unknown }).tokens;
 
     if (!isThemeName(themeName) || !isPlainObject(tokens)) {
-      return NextResponse.json({ success: false, error: "Missing themeName or tokens" }, { status: 400 });
+      return NextResponse.json(
+        { success: false, error: "Missing themeName or tokens" },
+        { status: 400 },
+      );
     }
 
     const fileKey = `themes/${themeName.trim()}.json`;
@@ -58,7 +63,9 @@ export async function POST(req: NextRequest) {
       process.env.CLOULDFLARE_CDN_URL?.trim() ||
       process.env.CLOULDFLARE_S3_URL?.trim() ||
       "";
-    const cdnUrl = cdnBase ? `${cdnBase.replace(/\/$/, "")}/${fileKey}` : fileKey;
+    const cdnUrl = cdnBase
+      ? `${cdnBase.replace(/\/$/, "")}/${fileKey}`
+      : fileKey;
 
     return NextResponse.json({
       success: true,
@@ -68,6 +75,9 @@ export async function POST(req: NextRequest) {
   } catch (err: unknown) {
     console.error("CDN Upload Error:", err);
     const message = err instanceof Error ? err.message : "CDN upload failed";
-    return NextResponse.json({ success: false, error: message }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: message },
+      { status: 500 },
+    );
   }
 }

@@ -1,0 +1,14 @@
+---
+name: e2e
+command: /e2e
+description: >-
+  Execute post-deploy smoke tests and full multi-phase verification
+skills:
+  - smoke-test
+  - verify-work
+terminal_states:
+  - success
+  - no-op
+  - blocked
+  - exhausted
+verify: pnpm run test

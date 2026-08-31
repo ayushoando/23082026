@@ -1,0 +1,14 @@
+---
+name: tdd
+command: /tdd
+description: >-
+  Test-driven development cycle with F.I.R.S.T test quality enforcement
+skills:
+  - develop-tdd
+  - enforce-first
+terminal_states:
+  - success
+  - no-op
+  - blocked
+  - exhausted
+verify: pnpm run test

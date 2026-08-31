@@ -172,7 +172,8 @@
   background: transparent;
   border: none;
   cursor: pointer;
-  font-family: var(--font-numeric); font-variant-numeric: var(--numeric-figures);
+  font-family: var(--font-numeric);
+  font-variant-numeric: var(--numeric-figures);
 }
 
 .ooplanner-root .planner-unit-pill button[data-active="true"] {
@@ -356,7 +357,9 @@
   min-height: 0;
 }
 
-.ooplanner-root .planner-stack[data-planner-step="draw"] .side-panel--dock:not(.side-panel--left) {
+.ooplanner-root
+  .planner-stack[data-planner-step="draw"]
+  .side-panel--dock:not(.side-panel--left) {
   width: 0 !important;
   min-width: 0;
   border: none;
@@ -364,7 +367,10 @@
   pointer-events: none;
 }
 
-.ooplanner-root .planner-stack[data-planner-step="draw"] .side-panel--dock:not(.side-panel--left) .side-panel__resize {
+.ooplanner-root
+  .planner-stack[data-planner-step="draw"]
+  .side-panel--dock:not(.side-panel--left)
+  .side-panel__resize {
   display: none;
 }
 
@@ -376,7 +382,10 @@
   pointer-events: none;
 }
 
-.ooplanner-root .planner-stack[data-planner-step="review"] .side-panel--left .side-panel__resize {
+.ooplanner-root
+  .planner-stack[data-planner-step="review"]
+  .side-panel--left
+  .side-panel__resize {
   display: none;
 }
 
@@ -460,7 +469,9 @@
 }
 
 .ooplanner-root .pw-step-bar__btn[data-active="true"] .pw-step-bar__num,
-.ooplanner-root .pw-step-bar__btn[data-completion="complete"] .pw-step-bar__num {
+.ooplanner-root
+  .pw-step-bar__btn[data-completion="complete"]
+  .pw-step-bar__num {
   color: var(--color-white-50);
   background: var(--color-primary);
   border-color: var(--color-primary);
@@ -532,7 +543,8 @@
 .ooplanner-root .boq-panel__meta {
   font-size: 11px;
   color: var(--text-subtle);
-  font-family: var(--font-numeric); font-variant-numeric: var(--numeric-figures);
+  font-family: var(--font-numeric);
+  font-variant-numeric: var(--numeric-figures);
 }
 
 .ooplanner-root .boq-panel__empty {
@@ -577,7 +589,8 @@
 
 .ooplanner-root .boq-panel__qty {
   flex: 0 0 auto;
-  font-family: var(--font-numeric); font-variant-numeric: var(--numeric-figures);
+  font-family: var(--font-numeric);
+  font-variant-numeric: var(--numeric-figures);
   font-size: 12px;
   font-weight: 600;
   color: var(--text-strong);
@@ -588,9 +601,22 @@
   gap: 6px;
 }
 
-.ooplanner-root .canvas-overlay .input { padding: 6px 10px; border-radius: 8px; background: transparent; border: 1px solid transparent; font-family: var(--font-sans); font-size: 12px; font-weight: 500; }
-.ooplanner-root .canvas-overlay .input:hover { border-color: var(--border-soft); }
-.ooplanner-root .canvas-overlay .input:focus { background: var(--color-white-50); border-color: var(--color-focus); }
+.ooplanner-root .canvas-overlay .input {
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid transparent;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+}
+.ooplanner-root .canvas-overlay .input:hover {
+  border-color: var(--border-soft);
+}
+.ooplanner-root .canvas-overlay .input:focus {
+  background: var(--color-white-50);
+  border-color: var(--color-focus);
+}
 
 /* Planner overlay — row 1: panels + project; row 2: tools + export + save (stacks when narrow) */
 .ooplanner-root .canvas-overlay--stacked {
@@ -756,7 +782,15 @@
   z-index: 5;
   gap: 1px;
 }
-.ooplanner-root .align-toolbar[data-visible="true"] { display: inline-flex; }
+.ooplanner-root .align-toolbar[data-visible="true"] {
+  display: inline-flex;
+}
 
 /* Catalog rail, projects list, and access/projects surfaces moved to
    workspace-lists.css (FOCSS 800-line cap). */
+
+/* Requirement 9.5 — accessible overflow disclosure for long server-safe values. */
+.planner-disclosed-value {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}

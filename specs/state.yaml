@@ -1,0 +1,20 @@
+---
+active_flow: execute
+active_epic_id: null
+active_story_id: null
+active_bug_id: null
+active_decisions:
+  - "Standard Recipe Library registered with 8 workflow YAMLs"
+  - "Terminal-state taxonomy (success, no-op, blocked, exhausted) enforced"
+release:
+  target_version: null
+  last_tag: null
+  last_publish: null
+git:
+  branch: main
+  hash: 650f77d
+handoff:
+  last_step_completed: "Standard recipes created in specs/workflows/"
+  last_terminal_state: success
+  open_decisions: []
+  next_skill: survey-context

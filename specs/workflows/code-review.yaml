@@ -1,0 +1,15 @@
+---
+name: code-review
+command: /code-review
+description: >-
+  Audit code, dispatch peer review agent, and apply review responses
+skills:
+  - audit-code
+  - request-review
+  - respond-review
+terminal_states:
+  - success
+  - no-op
+  - blocked
+  - exhausted
+verify: git diff --name-only

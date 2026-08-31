@@ -27,21 +27,16 @@ import {
   type DiscoveredShell,
   type ProductSurface,
 } from "./discovery";
-import {
-  expandToOccurrences,
-  type OccurrenceRecord,
-} from "./profiles";
+import { expandToOccurrences, type OccurrenceRecord } from "./profiles";
 import { buildJourneyInventory, type JourneyRecord } from "./wave1-journeys";
 import {
   AUDIT_SCHEMA_VERSION,
   parseAuditRecord,
   type AuditRecord,
   type BlockerDetail,
+  type ProvenanceReference,
 } from "./schemas";
-import {
-  computeFingerprint,
-  writeCanonicalPartition,
-} from "./manifests";
+import { computeFingerprint, writeCanonicalPartition } from "./manifests";
 import {
   createImmutableRunInputs,
   readRepositoryRevision,
@@ -56,7 +51,10 @@ type SpecializedInventoryRecord = Extract<
   { readonly recordType: "specialized-inventory" }
 >;
 type EvidenceRecord = Extract<AuditRecord, { readonly recordType: "evidence" }>;
-type OccurrenceFinding = Extract<AuditRecord, { readonly recordType: "finding" }>;
+type OccurrenceFinding = Extract<
+  AuditRecord,
+  { readonly recordType: "finding" }
+>;
 type MatrixRow = Extract<AuditRecord, { readonly recordType: "matrix-row" }>;
 
 export type FoundationCategory =
@@ -123,7 +121,9 @@ function isSupportedSourceFile(root: string, absolutePath: string): boolean {
   if (SOURCE_EXTENSIONS.has(extension) && extension !== ".json") return true;
   if (extension !== ".json") return false;
 
-  const relativePath = normalizeRelativePath(path.relative(root, absolutePath)).toLowerCase();
+  const relativePath = normalizeRelativePath(
+    path.relative(root, absolutePath),
+  ).toLowerCase();
   return relativePath.startsWith("i18n/messages/");
 }
 
@@ -131,15 +131,30 @@ const AUTH_PATTERNS: readonly SourcePattern[] = [
   { label: "optional-session-lookup", expression: /getOptionalUser/ },
   { label: "required-session-lookup", expression: /requireAuthUser/ },
   { label: "server-redirect", expression: /\bredirect\s*\(/ },
-  { label: "return-path-sanitization", expression: /sanitizeNextPath|returnTo|return-to/ },
-  { label: "role-or-access-denial", expression: /unauthorized|forbidden|requiresAdmin|accessContext/i },
-  { label: "development-bypass", expression: /DEV_BYPASS_USER|isDevAuthBypassEnabled|devAuthBypass/i },
-  { label: "access-redirect-contract", expression: /buildAccessRedirect|isProtectedPath|redirectToLogin/ },
+  {
+    label: "return-path-sanitization",
+    expression: /sanitizeNextPath|returnTo|return-to/,
+  },
+  {
+    label: "role-or-access-denial",
+    expression: /unauthorized|forbidden|requiresAdmin|accessContext/i,
+  },
+  {
+    label: "development-bypass",
+    expression: /DEV_BYPASS_USER|isDevAuthBypassEnabled|devAuthBypass/i,
+  },
+  {
+    label: "access-redirect-contract",
+    expression: /buildAccessRedirect|isProtectedPath|redirectToLogin/,
+  },
   { label: "session-expiry-handling", expression: /expired|session/i },
 ];
 
 const LEGAL_PATTERNS: readonly SourcePattern[] = [
-  { label: "legal-translation-namespace", expression: /getTranslations\(["']legal["']\)/ },
+  {
+    label: "legal-translation-namespace",
+    expression: /getTranslations\(["']legal["']\)/,
+  },
   { label: "privacy-reference", expression: /privacy/i },
   { label: "terms-reference", expression: /terms/i },
   { label: "refund-policy-reference", expression: /refund|return-policy/i },
@@ -148,27 +163,64 @@ const LEGAL_PATTERNS: readonly SourcePattern[] = [
 
 const CONSENT_PATTERNS: readonly SourcePattern[] = [
   { label: "consent-cookie", expression: /oando_cookie_consent/ },
-  { label: "accepted-consent-state", expression: /CONSENT_ACCEPTED|["']accepted["']/ },
-  { label: "rejected-consent-state", expression: /CONSENT_REJECTED|["']rejected["']/ },
-  { label: "consent-event", expression: /oando-cookie-consent|flushAnalyticsAfterConsent/ },
-  { label: "analytics-consent-gate", expression: /hasAnalyticsConsent|beforeSend/ },
+  {
+    label: "accepted-consent-state",
+    expression: /CONSENT_ACCEPTED|["']accepted["']/,
+  },
+  {
+    label: "rejected-consent-state",
+    expression: /CONSENT_REJECTED|["']rejected["']/,
+  },
+  {
+    label: "consent-event",
+    expression: /oando-cookie-consent|flushAnalyticsAfterConsent/,
+  },
+  {
+    label: "analytics-consent-gate",
+    expression: /hasAnalyticsConsent|beforeSend/,
+  },
   { label: "consent-copy-and-state", expression: /consent|cookie/i },
-  { label: "analytics-event-declaration", expression: /emitSiteEvent|trackConversionEvent|CONVERSION_EVENTS/ },
+  {
+    label: "analytics-event-declaration",
+    expression: /emitSiteEvent|trackConversionEvent|CONVERSION_EVENTS/,
+  },
 ];
 
 const ERROR_PATTERNS: readonly SourcePattern[] = [
-  { label: "error-boundary", expression: /error-boundary|global-error|Error\s*\(/i },
+  {
+    label: "error-boundary",
+    expression: /error-boundary|global-error|Error\s*\(/i,
+  },
   { label: "loading-boundary", expression: /loading-boundary|loading/i },
   { label: "not-found-boundary", expression: /not-found|404/i },
-  { label: "offline-boundary", expression: /offline|service.worker|navigator\.onLine/i },
-  { label: "online-status-transition", expression: /useOnlineStatus|addEventListener\(["'](online|offline)["']/ },
-  { label: "maintenance-state", expression: /maintenanceMode|MAINTENANCE_OFFLINE_PAGE_PREFIXES|read-only maintenance/i },
-  { label: "retry-or-reset-control", expression: /retry|reset|reload|reconnect/i },
-  { label: "error-logging-path", expression: /logClientError|\/api\/log-error|console\.error|registerOTel/ },
+  {
+    label: "offline-boundary",
+    expression: /offline|service.worker|navigator\.onLine/i,
+  },
+  {
+    label: "online-status-transition",
+    expression: /useOnlineStatus|addEventListener\(["'](online|offline)["']/,
+  },
+  {
+    label: "maintenance-state",
+    expression:
+      /maintenanceMode|MAINTENANCE_OFFLINE_PAGE_PREFIXES|read-only maintenance/i,
+  },
+  {
+    label: "retry-or-reset-control",
+    expression: /retry|reset|reload|reconnect/i,
+  },
+  {
+    label: "error-logging-path",
+    expression: /logClientError|\/api\/log-error|console\.error|registerOTel/,
+  },
 ];
 
 function sha256Short(...parts: readonly string[]): string {
-  return createHash("sha256").update(parts.join("\0"), "utf8").digest("hex").slice(0, 16);
+  return createHash("sha256")
+    .update(parts.join("\0"), "utf8")
+    .digest("hex")
+    .slice(0, 16);
 }
 
 function normalizeRelativePath(value: string): string {
@@ -195,7 +247,10 @@ function sourceSurface(relativePath: string): ProductSurface {
     return "authentication";
   }
   if (value.includes("/admin/")) return "administration";
-  if (value.includes("/(site)/portal/") || value.includes("/(site)/dashboard/")) {
+  if (
+    value.includes("/(site)/portal/") ||
+    value.includes("/(site)/dashboard/")
+  ) {
     return "portal-dashboard";
   }
   if (value.includes("/ooplanner/")) return "planner";
@@ -233,10 +288,15 @@ function sourceMatches(
 }
 
 function hasPathSegment(relativePath: string, segment: string): boolean {
-  return normalizeRelativePath(relativePath).toLowerCase().includes(segment.toLowerCase());
+  return normalizeRelativePath(relativePath)
+    .toLowerCase()
+    .includes(segment.toLowerCase());
 }
 
-function isAuthSource(relativePath: string, matches: readonly SourceMatch[]): boolean {
+function isAuthSource(
+  relativePath: string,
+  matches: readonly SourceMatch[],
+): boolean {
   return (
     hasPathSegment(relativePath, "/lib/auth/") ||
     hasPathSegment(relativePath, "/access/") ||
@@ -245,7 +305,10 @@ function isAuthSource(relativePath: string, matches: readonly SourceMatch[]): bo
   );
 }
 
-function isLegalSource(relativePath: string, matches: readonly SourceMatch[]): boolean {
+function isLegalSource(
+  relativePath: string,
+  matches: readonly SourceMatch[],
+): boolean {
   return (
     hasPathSegment(relativePath, "/privacy/") ||
     hasPathSegment(relativePath, "/terms/") ||
@@ -254,7 +317,10 @@ function isLegalSource(relativePath: string, matches: readonly SourceMatch[]): b
   );
 }
 
-function isConsentSource(relativePath: string, matches: readonly SourceMatch[]): boolean {
+function isConsentSource(
+  relativePath: string,
+  matches: readonly SourceMatch[],
+): boolean {
   const value = normalizeRelativePath(relativePath).toLowerCase();
   return (
     value.includes("cookieconsent") ||
@@ -265,7 +331,10 @@ function isConsentSource(relativePath: string, matches: readonly SourceMatch[]):
   );
 }
 
-function isErrorSource(relativePath: string, matches: readonly SourceMatch[]): boolean {
+function isErrorSource(
+  relativePath: string,
+  matches: readonly SourceMatch[],
+): boolean {
   const value = normalizeRelativePath(relativePath).toLowerCase();
   return (
     value.endsWith("error.tsx") ||
@@ -285,7 +354,9 @@ async function collectSourceFiles(
   const entries = await readdir(current, { withFileTypes: true });
   const files: string[] = [];
 
-  for (const entry of entries.sort((left, right) => left.name.localeCompare(right.name))) {
+  for (const entry of entries.sort((left, right) =>
+    left.name.localeCompare(right.name),
+  )) {
     if (SKIPPED_DIRECTORIES.has(entry.name)) continue;
     const absolutePath = path.join(current, entry.name);
     if (entry.isDirectory()) {
@@ -301,7 +372,10 @@ async function collectSourceFiles(
 
 async function readSourceObservations(
   repositoryRoot: string,
-): Promise<{ readonly observations: readonly SourceFileObservation[]; readonly errors: readonly string[] }> {
+): Promise<{
+  readonly observations: readonly SourceFileObservation[];
+  readonly errors: readonly string[];
+}> {
   const sourceRoot = path.join(repositoryRoot, "site");
   const observations: SourceFileObservation[] = [];
   const errors: string[] = [];
@@ -309,7 +383,9 @@ async function readSourceObservations(
   try {
     relativePaths = await collectSourceFiles(sourceRoot);
   } catch (error) {
-    errors.push(`site: ${error instanceof Error ? error.message : String(error)}`);
+    errors.push(
+      `site: ${error instanceof Error ? error.message : String(error)}`,
+    );
   }
 
   for (const relativeSitePath of relativePaths) {
@@ -328,7 +404,9 @@ async function readSourceObservations(
         ],
       });
     } catch (error) {
-      errors.push(`${relativePath}: ${error instanceof Error ? error.message : String(error)}`);
+      errors.push(
+        `${relativePath}: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 
@@ -350,7 +428,10 @@ function uniqueMatches(
   });
 }
 
-function provenance(relativePath: string, discoveredAt: string) {
+function provenance(
+  relativePath: string,
+  discoveredAt: string,
+): ProvenanceReference[] {
   return [
     {
       sourceId: "source.app-router-tree",
@@ -359,7 +440,7 @@ function provenance(relativePath: string, discoveredAt: string) {
       discoveredAt,
       authorityRank: 10,
     },
-  ] as const;
+  ];
 }
 
 function categoryOwner(category: FoundationCategory): string {
@@ -408,7 +489,10 @@ function controlKind(
       if (value.includes("refund")) return "refund-policy-reference";
       return "legal-policy-reference";
     case "consent-analytics":
-      if (value.includes("cookieconsent") || value.endsWith("/lib/consent.ts")) {
+      if (
+        value.includes("cookieconsent") ||
+        value.endsWith("/lib/consent.ts")
+      ) {
         return "consent-control-and-persistence";
       }
       return "analytics-declaration-and-consent-gate";
@@ -416,7 +500,10 @@ function controlKind(
       if (value.endsWith("loading.tsx")) return "loading-boundary";
       if (value.endsWith("not-found.tsx")) return "not-found-boundary";
       if (value.includes("offline")) return "offline-boundary";
-      if (value.includes("errorlogger") || value.endsWith("instrumentation.ts")) {
+      if (
+        value.includes("errorlogger") ||
+        value.endsWith("instrumentation.ts")
+      ) {
         return "logging-path";
       }
       return "error-boundary-and-recovery-control";
@@ -490,7 +577,10 @@ function createFoundationInventory(
     foundationCategory: category,
     controlKind: controlKind(category, observation.relativePath),
     sourceSummary,
-    sourceMatches: matches.map((match) => ({ label: match.label, snippet: match.snippet })),
+    sourceMatches: matches.map((match) => ({
+      label: match.label,
+      snippet: match.snippet,
+    })),
     sourceOnly: true,
     runtimeRequired: true,
     legalConclusion: false,
@@ -499,19 +589,57 @@ function createFoundationInventory(
     pendingOperationKinds:
       category === "legal-policy"
         ? ["owner/legal review", "authorized route review"]
-        : ["authorized browser workflow", "hook permission", "runtime evidence ingestion"],
+        : [
+            "authorized browser workflow",
+            "hook permission",
+            "runtime evidence ingestion",
+          ],
     coveredStateVariants:
       category === "auth-session-access"
-        ? ["logged-in", "logged-out", "expired-session", "insufficient-role", "development-bypass"]
+        ? [
+            "logged-in",
+            "logged-out",
+            "expired-session",
+            "insufficient-role",
+            "development-bypass",
+          ]
         : category === "legal-policy"
           ? ["default", "disclosure-review"]
           : category === "consent-analytics"
-            ? ["undecided", "accepted", "rejected", "customized", "withdrawn", "unavailable"]
-            : ["loading", "skeleton", "error", "not-found", "offline", "reconnect", "recovery"],
+            ? [
+                "undecided",
+                "accepted",
+                "rejected",
+                "customized",
+                "withdrawn",
+                "unavailable",
+              ]
+            : [
+                "loading",
+                "skeleton",
+                "error",
+                "not-found",
+                "offline",
+                "reconnect",
+                "recovery",
+              ],
     coveredAccessContexts:
       category === "auth-session-access"
-        ? ["guest", "authenticated-customer", "authenticated-staff", "administrator", "expired-session", "insufficient-role", "development-bypass"]
-        : ["guest", "authenticated-customer", "authenticated-staff", "administrator"],
+        ? [
+            "guest",
+            "authenticated-customer",
+            "authenticated-staff",
+            "administrator",
+            "expired-session",
+            "insufficient-role",
+            "development-bypass",
+          ]
+        : [
+            "guest",
+            "authenticated-customer",
+            "authenticated-staff",
+            "administrator",
+          ],
   };
 
   return {
@@ -523,7 +651,10 @@ function createFoundationInventory(
     inventoryKind: categoryInventoryKind(category),
     owner: categoryOwner(category),
     sourceLocator: observation.relativePath,
-    productSurface: foundationProductSurface(category, observation.relativePath),
+    productSurface: foundationProductSurface(
+      category,
+      observation.relativePath,
+    ),
     provenance: provenance(observation.relativePath, discoveredAt),
     applicableOccurrenceSelector: {
       subjectIds: [],
@@ -556,12 +687,16 @@ export async function buildFoundationInventories(
   for (const observation of observations) {
     for (const category of categories) {
       if (shouldIncludeCategory(category, observation)) {
-        records.push(createFoundationInventory(category, observation, discoveredAt));
+        records.push(
+          createFoundationInventory(category, observation, discoveredAt),
+        );
       }
     }
   }
 
-  records.sort((left, right) => left.inventoryId.localeCompare(right.inventoryId));
+  records.sort((left, right) =>
+    left.inventoryId.localeCompare(right.inventoryId),
+  );
   return Object.freeze({
     records: Object.freeze(records),
     sourceFilesScanned: observations.length,
@@ -653,13 +788,47 @@ function evidenceDimension(category: FoundationCategory): string {
 function categoryRequirements(category: FoundationCategory): readonly string[] {
   switch (category) {
     case "auth-session-access":
-      return ["4.1", "4.2", "4.3", "4.6", "18.1", "18.4", "19.6", "20.1", "20.3", "20.5", "20.6"];
+      return [
+        "4.1",
+        "4.2",
+        "4.3",
+        "4.6",
+        "18.1",
+        "18.4",
+        "19.6",
+        "20.1",
+        "20.3",
+        "20.5",
+        "20.6",
+      ];
     case "legal-policy":
       return ["4.2", "18.1", "18.2", "18.6", "20.1", "20.3", "20.6"];
     case "consent-analytics":
-      return ["4.1", "4.2", "17.1", "17.2", "17.3", "17.8", "20.1", "20.3", "20.6"];
+      return [
+        "4.1",
+        "4.2",
+        "17.1",
+        "17.2",
+        "17.3",
+        "17.8",
+        "20.1",
+        "20.3",
+        "20.6",
+      ];
     case "error-recovery-offline":
-      return ["4.1", "4.2", "7.1", "7.2", "7.5", "7.6", "16.1", "16.7", "20.1", "20.3", "20.6"];
+      return [
+        "4.1",
+        "4.2",
+        "7.1",
+        "7.2",
+        "7.5",
+        "7.6",
+        "16.1",
+        "16.7",
+        "20.1",
+        "20.3",
+        "20.6",
+      ];
   }
 }
 
@@ -683,13 +852,25 @@ function categoryOwnerForEvidence(category: FoundationCategory): string {
 function categoryDependencies(category: FoundationCategory): readonly string[] {
   switch (category) {
     case "auth-session-access":
-      return ["Wave 4 authorized auth/browser evidence", "access-context fixtures or credentials"];
+      return [
+        "Wave 4 authorized auth/browser evidence",
+        "access-context fixtures or credentials",
+      ];
     case "legal-policy":
-      return ["content/legal owner review", "authorized route inspection where behavior affects the policy message"];
+      return [
+        "content/legal owner review",
+        "authorized route inspection where behavior affects the policy message",
+      ];
     case "consent-analytics":
-      return ["Wave 4 authorized consent workflow", "analytics inspection fixture without personal data"];
+      return [
+        "Wave 4 authorized consent workflow",
+        "analytics inspection fixture without personal data",
+      ];
     case "error-recovery-offline":
-      return ["Wave 4 authorized browser/network workflow", "safe error and offline fixtures"];
+      return [
+        "Wave 4 authorized browser/network workflow",
+        "safe error and offline fixtures",
+      ];
   }
 }
 
@@ -698,35 +879,30 @@ function pendingOperation(
   occurrence: OccurrenceRecord,
 ): PendingOperation {
   const operationId = `op.wave1.foundation.${sha256Short(category, occurrence.occurrenceId)}`;
-  const occurrenceContext =
-    `occurrence ${occurrence.occurrenceId} (${occurrence.concreteUrl}; state=${occurrence.stateId}; viewport=${occurrence.viewportId}; browser=${occurrence.browserId}; access=${occurrence.accessId}; language=${occurrence.languageId})`;
+  const occurrenceContext = `occurrence ${occurrence.occurrenceId} (${occurrence.concreteUrl}; state=${occurrence.stateId}; viewport=${occurrence.viewportId}; browser=${occurrence.browserId}; access=${occurrence.accessId}; language=${occurrence.languageId})`;
   let exactOperation: string;
   let requiredAuthorization: string;
   let resultWhenUnauthorized: "not-run" | "requires-owner-decision" = "not-run";
 
   switch (category) {
     case "auth-session-access":
-      exactOperation =
-        `Authorized browser workflow for ${occurrenceContext}: exercise guest, authenticated, expired-session, insufficient-role, and development-bypass transitions; verify redirect, return path, preserved context, and non-disclosure.`;
+      exactOperation = `Authorized browser workflow for ${occurrenceContext}: exercise guest, authenticated, expired-session, insufficient-role, and development-bypass transitions; verify redirect, return path, preserved context, and non-disclosure.`;
       requiredAuthorization =
         "Exact current-session authorization for this browser workflow, matching access contexts and hook permission; credentials or fixtures must be named before execution.";
       break;
     case "legal-policy":
-      exactOperation =
-        `Owner/legal review and authorized route inspection for ${occurrenceContext}: compare policy references, disclosure timing, links, and visible behavior without treating source inspection as legal approval.`;
+      exactOperation = `Owner/legal review and authorized route inspection for ${occurrenceContext}: compare policy references, disclosure timing, links, and visible behavior without treating source inspection as legal approval.`;
       requiredAuthorization =
         "Named content/legal owner decision plus exact authorized route inspection if rendered or runtime behavior is required.";
       resultWhenUnauthorized = "requires-owner-decision";
       break;
     case "consent-analytics":
-      exactOperation =
-        `Authorized consent workflow for ${occurrenceContext}: exercise undecided, accepted, rejected, customized, withdrawn, and unavailable states; verify analytics suppression/delivery, persistence, uniqueness, and payload minimization without persisting personal data.`;
+      exactOperation = `Authorized consent workflow for ${occurrenceContext}: exercise undecided, accepted, rejected, customized, withdrawn, and unavailable states; verify analytics suppression/delivery, persistence, uniqueness, and payload minimization without persisting personal data.`;
       requiredAuthorization =
         "Exact current-session authorization for this consent/analytics workflow, matching occurrence profiles and hook permission; no external network operation is implied.";
       break;
     case "error-recovery-offline":
-      exactOperation =
-        `Authorized browser and network workflow for ${occurrenceContext}: trigger loading, error, not-found, offline, reconnect, and recovery states; verify retained state, stale-message removal, logging behavior, and repeated-failure handling.`;
+      exactOperation = `Authorized browser and network workflow for ${occurrenceContext}: trigger loading, error, not-found, offline, reconnect, and recovery states; verify retained state, stale-message removal, logging behavior, and repeated-failure handling.`;
       requiredAuthorization =
         "Exact current-session authorization for this browser/network workflow, matching occurrence profiles and hook permission; safe fixtures are required.";
       break;
@@ -749,9 +925,10 @@ function pendingOperation(
 
 function blockerForOperation(operation: PendingOperation): BlockerDetail {
   return {
-    blockerKind: operation.resultWhenUnauthorized === "requires-owner-decision"
-      ? "owner-decision"
-      : "authorization",
+    blockerKind:
+      operation.resultWhenUnauthorized === "requires-owner-decision"
+        ? "owner-decision"
+        : "authorization",
     detail:
       operation.resultWhenUnauthorized === "requires-owner-decision"
         ? "The source record is not a legal or policy conclusion; the named owner review has not been supplied."
@@ -765,16 +942,22 @@ function relevantJourneyIds(
   category: FoundationCategory,
   journeys: readonly JourneyRecord[],
 ): readonly string[] {
-  const ids = journeys.filter((journey) => {
-    const name = journey.payload.journeyName.toLowerCase();
-    if (category === "auth-session-access") {
-      return name.includes("auth") || name.includes("session");
-    }
-    if (category === "error-recovery-offline") {
-      return name.includes("contact") || name.includes("planner") || name.includes("portal");
-    }
-    return false;
-  }).map((journey) => journey.inventoryId);
+  const ids = journeys
+    .filter((journey) => {
+      const name = journey.payload.journeyName.toLowerCase();
+      if (category === "auth-session-access") {
+        return name.includes("auth") || name.includes("session");
+      }
+      if (category === "error-recovery-offline") {
+        return (
+          name.includes("contact") ||
+          name.includes("planner") ||
+          name.includes("portal")
+        );
+      }
+      return false;
+    })
+    .map((journey) => journey.inventoryId);
   return [...new Set(ids)].sort();
 }
 
@@ -820,7 +1003,8 @@ function sourceInventoryForCategory(
     if (
       occurrence.subjectKind !== "shell" &&
       !applicableSurfaces.has(record.productSurface)
-    ) continue;
+    )
+      continue;
     totalCount++;
     if (samples.length < MAX_SOURCE_RECORD_SAMPLES_PER_EVIDENCE) {
       samples.push(record);
@@ -840,7 +1024,10 @@ function evidenceReferences(
 ): readonly string[] {
   const references = [
     `inventory:foundation:${category}:records=${selection.totalCount}`,
-    ...selection.records.flatMap((record) => [record.inventoryId, record.sourceLocator]),
+    ...selection.records.flatMap((record) => [
+      record.inventoryId,
+      record.sourceLocator,
+    ]),
     `occurrence:${occurrence.occurrenceId}`,
   ];
   return [...new Set(references)].sort();
@@ -855,11 +1042,14 @@ function sourceObservationText(
   }
   const summaries = selection.records.map((record) => {
     const summary = record.payload.sourceSummary;
-    return typeof summary === "string" ? `${record.sourceLocator}: ${summary}` : record.sourceLocator;
+    return typeof summary === "string"
+      ? `${record.sourceLocator}: ${summary}`
+      : record.sourceLocator;
   });
-  const sampleText = summaries.length > 0
-    ? ` Sampled source locations: ${summaries.join(" ")}`
-    : "";
+  const sampleText =
+    summaries.length > 0
+      ? ` Sampled source locations: ${summaries.join(" ")}`
+      : "";
   return `Static source observation only: ${selection.totalCount} ${category} declaration(s) matched this occurrence.${sampleText}`;
 }
 
@@ -867,7 +1057,9 @@ function buildApplicabilityEvidence(
   occurrence: OccurrenceRecord,
   createdAt: string,
 ): EvidenceRecord {
-  const rationale = occurrence.notApplicableRationale ?? "The occurrence is not applicable under the frozen Wave 0 profile rules.";
+  const rationale =
+    occurrence.notApplicableRationale ??
+    "The occurrence is not applicable under the frozen Wave 0 profile rules.";
   const evidenceId = `evidence.${sha256Short(occurrence.occurrenceId, "foundation-applicability")}`;
   return {
     schemaVersion: AUDIT_SCHEMA_VERSION,
@@ -886,12 +1078,14 @@ function buildApplicabilityEvidence(
     accessContext: occurrence.accessId,
     languageContext: occurrence.languageId,
     auditDimension: "wave1-foundation-applicability",
-    expectedResult: "Only applicable occurrence tuples receive foundation evaluation.",
+    expectedResult:
+      "Only applicable occurrence tuples receive foundation evaluation.",
     observedResult: rationale,
     claimBasis: "source-observed",
     resultClassification: "not-applicable",
     severity: "not-applicable",
-    severityRationale: "The tuple is outside the applicable foundation coverage for its access or state context.",
+    severityRationale:
+      "The tuple is outside the applicable foundation coverage for its access or state context.",
     userImpact: "No conclusion is drawn for an inapplicable tuple.",
     evidenceLane: "static-inspection",
     evidenceType: "profile-applicability-decision",
@@ -901,12 +1095,16 @@ function buildApplicabilityEvidence(
       `Review the frozen occurrence tuple ${occurrence.occurrenceId}.`,
       "Confirm the access/state applicability rationale before interpreting any foundation result.",
     ],
-    evidenceReferences: [`occurrence:${occurrence.occurrenceId}`, "scripts/site-ui-content-links-audit/profiles.ts"],
+    evidenceReferences: [
+      `occurrence:${occurrence.occurrenceId}`,
+      "scripts/site-ui-content-links-audit/profiles.ts",
+    ],
     requirementIds: ["3.4", "3.5", "20.1", "20.7"],
     journeyIds: [],
     shellIds: [],
     relatedFindingIds: [],
-    proposedOutcome: "Retain the explicit not-applicable rationale and do not substitute another occurrence.",
+    proposedOutcome:
+      "Retain the explicit not-applicable rationale and do not substitute another occurrence.",
     likelyOwner: "audit-program-owner",
     dependencies: [],
     verificationMethod: "Static profile-rule review; no runtime claim is made.",
@@ -925,11 +1123,17 @@ function buildFoundationEvidence(
 ): { readonly evidence: EvidenceRecord; readonly operation: PendingOperation } {
   const evidenceId = `evidence.${sha256Short(occurrence.occurrenceId, category)}`;
   const operation = pendingOperation(category, occurrence);
-  const categoryRecords = sourceInventoryForCategory(category, records, occurrence);
+  const categoryRecords = sourceInventoryForCategory(
+    category,
+    records,
+    occurrence,
+  );
   const references = evidenceReferences(category, categoryRecords, occurrence);
   const shellIds = relevantShellIds(occurrence, shells, allInventoryRecords);
-  const observed = sourceObservationText(categoryRecords);
-  const sourceLocations = categoryRecords.records.map((record) => record.sourceLocator);
+  const observed = sourceObservationText(category, categoryRecords);
+  const sourceLocations = categoryRecords.records.map(
+    (record) => record.sourceLocator,
+  );
 
   const evidence: EvidenceRecord = {
     schemaVersion: AUDIT_SCHEMA_VERSION,
@@ -950,29 +1154,49 @@ function buildFoundationEvidence(
     auditDimension: evidenceDimension(category),
     expectedResult: categoryExpectedResult(category),
     observedResult: observed,
-    claimBasis: categoryRecords.totalCount > 0 ? "source-observed" : "source-inferred-expectation",
+    claimBasis:
+      categoryRecords.totalCount > 0
+        ? "source-observed"
+        : "source-inferred-expectation",
     resultClassification: operation.resultWhenUnauthorized,
     severity: "advisory",
-    severityRationale: "This is a pending evidence record, not a verified defect; severity is not assigned until the required runtime or owner evidence exists.",
-    userImpact: "The source contract is recorded, but the affected state or control remains unverified in this occurrence context.",
+    severityRationale:
+      "This is a pending evidence record, not a verified defect; severity is not assigned until the required runtime or owner evidence exists.",
+    userImpact:
+      "The source contract is recorded, but the affected state or control remains unverified in this occurrence context.",
     evidenceLane: "static-inspection",
-    evidenceType: categoryRecords.totalCount > 0 ? "source-foundation-declaration" : "source-coverage-gap",
-    sourceOrRuntimeLocation: sourceLocations.length > 0 ? sourceLocations.join(", ") : "site source roots (no matching declaration)",
+    evidenceType:
+      categoryRecords.totalCount > 0
+        ? "source-foundation-declaration"
+        : "source-coverage-gap",
+    sourceOrRuntimeLocation:
+      sourceLocations.length > 0
+        ? sourceLocations.join(", ")
+        : "site source roots (no matching declaration)",
     capturedAt: createdAt,
     reproductionSteps: [
       ...(sourceLocations.length > 0
-        ? sourceLocations.map((location) => `Inspect source declaration at ${location}.`)
-        : ["Inspect the scanned site source roots for the missing foundation declaration."]),
+        ? sourceLocations.map(
+            (location) => `Inspect source declaration at ${location}.`,
+          )
+        : [
+            "Inspect the scanned site source roots for the missing foundation declaration.",
+          ]),
       "Do not treat static source evidence as rendered, runtime, analytics-delivery, authentication, offline-transition, recovery, or legal evidence.",
     ],
-    evidenceReferences: [...(references.length > 0 ? references : [`source-gap:${category}`, `occurrence:${occurrence.occurrenceId}`])],
+    evidenceReferences: [
+      ...(references.length > 0
+        ? references
+        : [`source-gap:${category}`, `occurrence:${occurrence.occurrenceId}`]),
+    ],
     requirementIds: [...categoryRequirements(category)],
     journeyIds: [...relevantJourneyIds(category, journeys)],
     shellIds: [...shellIds],
     relatedFindingIds: [],
-    proposedOutcome: category === "legal-policy"
-      ? "Obtain named owner/legal review and separately authorized route evidence before making a policy or compliance conclusion."
-      : "Run the exact pending operation with matching authorization and ingest occurrence-scoped evidence; retain this source expectation separately.",
+    proposedOutcome:
+      category === "legal-policy"
+        ? "Obtain named owner/legal review and separately authorized route evidence before making a policy or compliance conclusion."
+        : "Run the exact pending operation with matching authorization and ingest occurrence-scoped evidence; retain this source expectation separately.",
     likelyOwner: categoryOwnerForEvidence(category),
     dependencies: [...categoryDependencies(category)],
     verificationMethod: operation.exactOperation,
@@ -994,8 +1218,12 @@ function buildMatrixRow(
     recordId: `record.matrix.${occurrence.occurrenceId}`,
     createdAt,
     occurrenceId: occurrence.occurrenceId,
-    ...(occurrence.subjectKind === "route" ? { routeId: occurrence.subjectId } : {}),
-    ...(occurrence.subjectKind === "shell" ? { shellId: occurrence.subjectId } : {}),
+    ...(occurrence.subjectKind === "route"
+      ? { routeId: occurrence.subjectId }
+      : {}),
+    ...(occurrence.subjectKind === "shell"
+      ? { shellId: occurrence.subjectId }
+      : {}),
     concreteUrl: occurrence.concreteUrl,
     productSurface: occurrence.productSurface,
     stateId: occurrence.stateId,
@@ -1015,7 +1243,9 @@ function buildMatrixRow(
   };
 }
 
-function uniqueBlockers(blockers: readonly BlockerDetail[]): readonly BlockerDetail[] {
+function uniqueBlockers(
+  blockers: readonly BlockerDetail[],
+): readonly BlockerDetail[] {
   const seen = new Set<string>();
   return blockers.filter((blocker) => {
     const key = `${blocker.blockerKind}\0${blocker.pendingOperation}`;
@@ -1039,16 +1269,17 @@ function buildFinding(
   )
     ? "not-run"
     : evidenceRecords.some(
-        (record) => record.resultClassification === "requires-owner-decision",
-      )
+          (record) => record.resultClassification === "requires-owner-decision",
+        )
       ? "requires-owner-decision"
       : "not-applicable";
   const notApplicableRationale = occurrence.notApplicableRationale;
-  const conclusionSummary = resultClassification === "not-applicable"
-    ? `Foundation evaluation is not applicable for this occurrence: ${notApplicableRationale ?? "profile applicability rule"}.`
-    : resultClassification === "requires-owner-decision"
-      ? "Static policy evidence was recorded, but named owner/legal review is required; no legal conclusion is asserted."
-      : "Static foundation declarations were recorded, but protected runtime evidence remains not-run; no rendered, delivery, transition, recovery, or runtime conclusion is asserted.";
+  const conclusionSummary =
+    resultClassification === "not-applicable"
+      ? `Foundation evaluation is not applicable for this occurrence: ${notApplicableRationale ?? "profile applicability rule"}.`
+      : resultClassification === "requires-owner-decision"
+        ? "Static policy evidence was recorded, but named owner/legal review is required; no legal conclusion is asserted."
+        : "Static foundation declarations were recorded, but protected runtime evidence remains not-run; no rendered, delivery, transition, recovery, or runtime conclusion is asserted.";
 
   return {
     schemaVersion: AUDIT_SCHEMA_VERSION,
@@ -1058,15 +1289,20 @@ function buildFinding(
     findingId: occurrence.findingId,
     occurrenceId: occurrence.occurrenceId,
     resultClassification,
-    claimBasis: resultClassification === "not-applicable"
-      ? "source-observed"
-      : "source-inferred-expectation",
+    claimBasis:
+      resultClassification === "not-applicable"
+        ? "source-observed"
+        : "source-inferred-expectation",
     conclusionSummary,
     evidenceIds,
-    requirementIds: [...new Set(evidenceRecords.flatMap((record) => record.requirementIds))].sort(),
+    requirementIds: [
+      ...new Set(evidenceRecords.flatMap((record) => record.requirementIds)),
+    ].sort(),
     productSurface: occurrence.productSurface,
     copyRelated: false,
-    ...(resultClassification !== "not-applicable" && blockers.length > 0 ? { blockers: [...blockers] } : {}),
+    ...(resultClassification !== "not-applicable" && blockers.length > 0
+      ? { blockers: [...blockers] }
+      : {}),
     ...(resultClassification === "not-applicable" && notApplicableRationale
       ? { notApplicableRationale }
       : {}),
@@ -1124,10 +1360,26 @@ export function buildFoundationAuditRecords(
   }
 
   return Object.freeze({
-    matrixRows: Object.freeze(matrixRows.sort((left, right) => left.occurrenceId.localeCompare(right.occurrenceId))),
-    evidenceRecords: Object.freeze(evidenceRecords.sort((left, right) => left.evidenceId.localeCompare(right.evidenceId))),
-    findings: Object.freeze(findings.sort((left, right) => left.findingId.localeCompare(right.findingId))),
-    pendingOperations: Object.freeze(pendingOperations.sort((left, right) => left.operationId.localeCompare(right.operationId))),
+    matrixRows: Object.freeze(
+      matrixRows.sort((left, right) =>
+        left.occurrenceId.localeCompare(right.occurrenceId),
+      ),
+    ),
+    evidenceRecords: Object.freeze(
+      evidenceRecords.sort((left, right) =>
+        left.evidenceId.localeCompare(right.evidenceId),
+      ),
+    ),
+    findings: Object.freeze(
+      findings.sort((left, right) =>
+        left.findingId.localeCompare(right.findingId),
+      ),
+    ),
+    pendingOperations: Object.freeze(
+      pendingOperations.sort((left, right) =>
+        left.operationId.localeCompare(right.operationId),
+      ),
+    ),
   });
 }
 
@@ -1135,8 +1387,14 @@ export function buildFoundationAuditRecords(
 // Runner and artifact writing
 // ---------------------------------------------------------------------------
 
-function validateRecord(record: object): { readonly valid: boolean; readonly diagnostics?: readonly string[] } {
-  const parsed = parseAuditRecord(record);
+function validateRecord(record: unknown): {
+  readonly valid: boolean;
+  readonly diagnostics?: readonly string[];
+} {
+  if (!record || typeof record !== "object") {
+    return { valid: false, diagnostics: ["record:not-an-object"] };
+  }
+  const parsed = parseAuditRecord(record as object);
   if (parsed.success) return { valid: true };
   return {
     valid: false,
@@ -1146,10 +1404,7 @@ function validateRecord(record: object): { readonly valid: boolean; readonly dia
   };
 }
 
-function assertValidRecords(
-  records: readonly object[],
-  label: string,
-): void {
+function assertValidRecords(records: readonly object[], label: string): void {
   for (const [index, record] of records.entries()) {
     const validation = validateRecord(record);
     if (!validation.valid) {
@@ -1160,7 +1415,10 @@ function assertValidRecords(
   }
 }
 
-async function writeJsonFile(absolutePath: string, value: unknown): Promise<void> {
+async function writeJsonFile(
+  absolutePath: string,
+  value: unknown,
+): Promise<void> {
   await mkdir(path.dirname(absolutePath), { recursive: true });
   await writeFile(absolutePath, `${JSON.stringify(value, null, 2)}\n`, "utf8");
 }
@@ -1201,7 +1459,10 @@ export async function runWave1Foundations(
     discovery.shells,
   );
   const journeys = buildJourneyInventory(discoveredAt);
-  const inventory = await buildFoundationInventories(repositoryRoot, discoveredAt);
+  const inventory = await buildFoundationInventories(
+    repositoryRoot,
+    discoveredAt,
+  );
   const records = buildFoundationAuditRecords(
     occurrences,
     inventory.records,
@@ -1218,7 +1479,14 @@ export async function runWave1Foundations(
   const { runId } = immutableRunInputs;
   const { config } = loaded;
   const writtenPaths: string[] = [];
-  const partitionResults: Record<string, { readonly path: string; readonly records: number; readonly contentHash: string }> = {};
+  const partitionResults: Record<
+    string,
+    {
+      readonly path: string;
+      readonly records: number;
+      readonly contentHash: string;
+    }
+  > = {};
 
   type PartitionSpec = {
     readonly key: string;
@@ -1238,26 +1506,52 @@ export async function runWave1Foundations(
     records: inventory.records,
   });
 
-  const foundationSurfaces = [...new Set([
-    ...records.matrixRows.map((row) => row.productSurface),
-    ...records.findings.map((finding) => finding.productSurface),
-  ])].sort() as ProductSurface[];
+  const foundationSurfaces = [
+    ...new Set([
+      ...records.matrixRows.map((row) => row.productSurface),
+      ...records.findings.map((finding) => finding.productSurface),
+    ]),
+  ].sort() as ProductSurface[];
 
   for (const surface of foundationSurfaces) {
     partitionSpecs.push({
       key: `matrices/${surface}`,
-      relativePath: surfacePath(runId, "matrices", surface, "rows.ndjson", config),
-      records: records.matrixRows.filter((row) => row.productSurface === surface),
+      relativePath: surfacePath(
+        runId,
+        "matrices",
+        surface,
+        "rows.ndjson",
+        config,
+      ),
+      records: records.matrixRows.filter(
+        (row) => row.productSurface === surface,
+      ),
     });
     partitionSpecs.push({
       key: `evidence/${surface}`,
-      relativePath: surfacePath(runId, "evidence", surface, "evidence.ndjson", config),
-      records: records.evidenceRecords.filter((record) => record.productSurface === surface),
+      relativePath: surfacePath(
+        runId,
+        "evidence",
+        surface,
+        "evidence.ndjson",
+        config,
+      ),
+      records: records.evidenceRecords.filter(
+        (record) => record.productSurface === surface,
+      ),
     });
     partitionSpecs.push({
       key: `findings/${surface}`,
-      relativePath: surfacePath(runId, "findings", surface, "findings.ndjson", config),
-      records: records.findings.filter((finding) => finding.productSurface === surface),
+      relativePath: surfacePath(
+        runId,
+        "findings",
+        surface,
+        "findings.ndjson",
+        config,
+      ),
+      records: records.findings.filter(
+        (finding) => finding.productSurface === surface,
+      ),
     });
   }
 
@@ -1296,9 +1590,14 @@ export async function runWave1Foundations(
   for (const operation of records.pendingOperations) {
     pendingOperationMap.set(operation.operationId, operation);
   }
-  const pendingOperations = [...pendingOperationMap.values()].sort((left, right) => left.operationId.localeCompare(right.operationId));
+  const pendingOperations = [...pendingOperationMap.values()].sort(
+    (left, right) => left.operationId.localeCompare(right.operationId),
+  );
   const resultTotals = records.findings.reduce(
-    (totals, finding) => ({ ...totals, [finding.resultClassification]: totals[finding.resultClassification] + 1 }),
+    (totals, finding) => ({
+      ...totals,
+      [finding.resultClassification]: totals[finding.resultClassification] + 1,
+    }),
     {
       conforming: 0,
       nonconforming: 0,
@@ -1345,13 +1644,17 @@ export async function runWave1Foundations(
     coverage: {
       totalExpandedOccurrences: occurrences.length,
       foundationMatrixRows: records.matrixRows.length,
-      uniqueFindingIds: new Set(records.findings.map((finding) => finding.findingId)).size,
+      uniqueFindingIds: new Set(
+        records.findings.map((finding) => finding.findingId),
+      ).size,
       evidenceRecords: records.evidenceRecords.length,
       pendingOperations: pendingOperations.length,
       oneFindingPerMatrixRow:
         records.matrixRows.length === records.findings.length &&
-        new Set(records.matrixRows.map((row) => row.occurrenceId)).size === records.matrixRows.length &&
-        new Set(records.findings.map((finding) => finding.occurrenceId)).size === records.findings.length,
+        new Set(records.matrixRows.map((row) => row.occurrenceId)).size ===
+          records.matrixRows.length &&
+        new Set(records.findings.map((finding) => finding.occurrenceId))
+          .size === records.findings.length,
     },
     resultTotals: {
       conforming: resultTotals.conforming ?? 0,
@@ -1371,10 +1674,13 @@ export async function runWave1Foundations(
     ],
     changedPathManifest: {
       writtenPaths,
-      siteStarPaths: writtenPaths.filter((relativePath) => relativePath.startsWith("site/")),
+      siteStarPaths: writtenPaths.filter((relativePath) =>
+        relativePath.startsWith("site/"),
+      ),
       productCodeMutations: 0,
       allPathsInApprovedDestinations: writtenPaths.every(
-        (relativePath) => relativePath.startsWith("results/site-ui-content-links-audit/") ||
+        (relativePath) =>
+          relativePath.startsWith("results/site-ui-content-links-audit/") ||
           relativePath.startsWith("agents-work/site-ui-content-links-audit/"),
       ),
     },

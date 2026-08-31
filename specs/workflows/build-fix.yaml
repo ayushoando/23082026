@@ -1,0 +1,16 @@
+---
+name: build-fix
+command: /build-fix
+description: >-
+  Investigate bug, diagnose root cause, develop TDD fix, and validate
+skills:
+  - investigate-bug
+  - diagnose-root
+  - develop-tdd
+  - validate-fix
+terminal_states:
+  - success
+  - no-op
+  - blocked
+  - exhausted
+verify: pnpm run test

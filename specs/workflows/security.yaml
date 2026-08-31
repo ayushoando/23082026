@@ -1,0 +1,14 @@
+---
+name: security
+command: /security
+description: >-
+  Audit code quality and dispatch security-focused code review
+skills:
+  - audit-code
+  - request-review
+terminal_states:
+  - success
+  - no-op
+  - blocked
+  - exhausted
+verify: test -f specs/state.yaml

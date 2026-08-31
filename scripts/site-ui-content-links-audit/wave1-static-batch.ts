@@ -34,10 +34,7 @@ import {
   writeCanonicalPartition,
   type PartitionId,
 } from "./manifests";
-import {
-  expandToOccurrences,
-  type OccurrenceRecord,
-} from "./profiles";
+import { expandToOccurrences, type OccurrenceRecord } from "./profiles";
 import {
   AUDIT_SCHEMA_VERSION,
   parseAuditRecord,
@@ -50,12 +47,14 @@ import {
 import { completeWave, runWave } from "./wave";
 import { buildJourneyInventory, type JourneyRecord } from "./wave1-journeys";
 import { buildLinkInventory, type LinkInventoryRecord } from "./wave1-links";
-import { buildNavigationInventory, type NavItemRecord } from "./wave1-navigation";
+import {
+  buildNavigationInventory,
+  type NavItemRecord,
+} from "./wave1-navigation";
 import { buildStateInventory, type StateRecord } from "./wave1-states";
 import {
   buildFoundationAuditRecords,
   buildFoundationInventories,
-  type FoundationAuditOutput,
 } from "./wave1-foundations";
 
 // ---------------------------------------------------------------------------
@@ -68,9 +67,18 @@ type SpecializedInventoryRecord = Extract<
 >;
 type MatrixRow = Extract<AuditRecord, { readonly recordType: "matrix-row" }>;
 type EvidenceRecord = Extract<AuditRecord, { readonly recordType: "evidence" }>;
-type OccurrenceFinding = Extract<AuditRecord, { readonly recordType: "finding" }>;
+type OccurrenceFinding = Extract<
+  AuditRecord,
+  { readonly recordType: "finding" }
+>;
+
+type SharedShellRecord = Extract<
+  AuditRecord,
+  { readonly recordType: "shared-shell" }
+>;
 
 type InventoryRecord =
+  | SharedShellRecord
   | SpecializedInventoryRecord
   | LinkInventoryRecord
   | NavItemRecord
@@ -126,11 +134,14 @@ function isWave1Occurrence(occurrence: OccurrenceRecord): boolean {
   );
 }
 
-function validateAuditRecord(record: object): {
+function validateAuditRecord(record: unknown): {
   readonly valid: boolean;
   readonly diagnostics?: readonly string[];
 } {
-  const parsed = parseAuditRecord(record);
+  if (!record || typeof record !== "object") {
+    return { valid: false, diagnostics: ["record:not-an-object"] };
+  }
+  const parsed = parseAuditRecord(record as object);
   if (parsed.success) return { valid: true };
   return {
     valid: false,
@@ -140,10 +151,7 @@ function validateAuditRecord(record: object): {
   };
 }
 
-function assertValidRecords(
-  records: readonly object[],
-  label: string,
-): void {
+function assertValidRecords(records: readonly object[], label: string): void {
   for (const [index, record] of records.entries()) {
     const validation = validateAuditRecord(record);
     if (!validation.valid) {
@@ -154,7 +162,10 @@ function assertValidRecords(
   }
 }
 
-async function writeJsonFile(absolutePath: string, value: unknown): Promise<void> {
+async function writeJsonFile(
+  absolutePath: string,
+  value: unknown,
+): Promise<void> {
   await mkdir(path.dirname(absolutePath), { recursive: true });
   await writeFile(absolutePath, `${JSON.stringify(value, null, 2)}\n`, "utf8");
 }
@@ -173,16 +184,24 @@ function surfacePartitions(
   evidence: readonly EvidenceRecord[],
   findings: readonly OccurrenceFinding[],
 ): readonly ProductSurface[] {
-  return [...new Set([
-    ...rows.map((row) => row.productSurface),
-    ...evidence.map((record) => record.productSurface),
-    ...findings.map((finding) => finding.productSurface),
-  ])].sort() as ProductSurface[];
+  return [
+    ...new Set([
+      ...rows.map((row) => row.productSurface),
+      ...evidence.map((record) => record.productSurface),
+      ...findings.map((finding) => finding.productSurface),
+    ]),
+  ].sort() as ProductSurface[];
 }
 
-function pendingFromFoundation(
-  foundation: FoundationAuditOutput,
-): readonly PendingRuntimeOperation[] {
+function pendingFromFoundation(foundation: {
+  readonly pendingOperations: readonly {
+    readonly operationId: string;
+    readonly exactOperation: string;
+    readonly requiredAuthorization: string;
+    readonly occurrenceId: string;
+    readonly resultWhenUnauthorized: "not-run" | "requires-owner-decision";
+  }[];
+}): readonly PendingRuntimeOperation[] {
   return foundation.pendingOperations.map((operation) => ({
     operationId: operation.operationId,
     exactOperation: operation.exactOperation,
@@ -201,16 +220,18 @@ function linkPendingOperations(
   );
   if (pending.length === 0) return [];
 
-  const sourceKinds = [...new Set(pending.map((record) => record.payload.targetType))].sort();
-  const sourceDescription = sourceKinds.length > 0
-    ? sourceKinds.join(", ")
-    : "runtime-dependent link targets";
+  const sourceKinds = [
+    ...new Set(pending.map((record) => record.payload.targetType)),
+  ].sort();
+  const sourceDescription =
+    sourceKinds.length > 0
+      ? sourceKinds.join(", ")
+      : "runtime-dependent link targets";
 
   return [
     {
       operationId: "op.wave1.links.external-and-protocol-availability",
-      exactOperation:
-        `Authorized external/protocol target inspection for Wave 1 link inventory (${sourceDescription}): verify availability, protocol handling, opening behavior, download response, and security attributes without persisting secrets or personal data.`,
+      exactOperation: `Authorized external/protocol target inspection for Wave 1 link inventory (${sourceDescription}): verify availability, protocol handling, opening behavior, download response, and security attributes without persisting secrets or personal data.`,
       requiredAuthorization:
         "Exact current-session authorization for the named external/protocol inspection and hook permission; no network request is made during this static batch.",
       affectedOccurrenceIds: occurrenceIds,
@@ -240,10 +261,12 @@ function uniquePendingOperations(
     }
     byId.set(operation.operationId, {
       ...previous,
-      affectedOccurrenceIds: [...new Set([
-        ...previous.affectedOccurrenceIds,
-        ...operation.affectedOccurrenceIds,
-      ])].sort(),
+      affectedOccurrenceIds: [
+        ...new Set([
+          ...previous.affectedOccurrenceIds,
+          ...operation.affectedOccurrenceIds,
+        ]),
+      ].sort(),
     });
   }
   return [...byId.values()].sort((left, right) =>
@@ -251,7 +274,9 @@ function uniquePendingOperations(
   );
 }
 
-function resultTotals(findings: readonly OccurrenceFinding[]): Record<string, number> {
+function resultTotals(
+  findings: readonly OccurrenceFinding[],
+): Record<string, number> {
   const totals: Record<string, number> = {
     conforming: 0,
     nonconforming: 0,
@@ -267,7 +292,9 @@ function resultTotals(findings: readonly OccurrenceFinding[]): Record<string, nu
   return totals;
 }
 
-function inventoryStatusTotals(records: readonly InventoryRecord[]): Record<string, number> {
+function inventoryStatusTotals(
+  records: readonly InventoryRecord[],
+): Record<string, number> {
   return records.reduce<Record<string, number>>((totals, record) => {
     totals[record.status] = (totals[record.status] ?? 0) + 1;
     return totals;
@@ -298,8 +325,12 @@ export async function runWave1StaticBatch(
   });
   const discoveryRecords = discoveryToAuditRecords(discovery);
   const shellRecords = discoveryRecords.filter(
-    (record): record is Extract<AuditRecord, { readonly recordType: "shared-shell" }> =>
-      record.recordType === "shared-shell",
+    (
+      record,
+    ): record is Extract<
+      AuditRecord,
+      { readonly recordType: "shared-shell" }
+    > => record.recordType === "shared-shell",
   );
 
   const occurrences = expandToOccurrences(
@@ -410,7 +441,9 @@ export async function runWave1StaticBatch(
         `wave-1/${surface}/evidence.ndjson`,
         config,
       ),
-      records: evidenceRecords.filter((record) => record.productSurface === surface),
+      records: evidenceRecords.filter(
+        (record) => record.productSurface === surface,
+      ),
     });
     partitionSpecs.push({
       id: toPartitionId(`wave-1/findings/${surface}`),
@@ -520,9 +553,13 @@ export async function runWave1StaticBatch(
   );
   const matrixFindingBijection =
     matrixRows.length === findings.length &&
-    new Set(matrixRows.map((row) => row.occurrenceId)).size === matrixRows.length &&
-    new Set(findings.map((finding) => finding.occurrenceId)).size === findings.length &&
-    matrixRows.every((row) => row.findingId === findingIdByOccurrence.get(row.occurrenceId));
+    new Set(matrixRows.map((row) => row.occurrenceId)).size ===
+      matrixRows.length &&
+    new Set(findings.map((finding) => finding.occurrenceId)).size ===
+      findings.length &&
+    matrixRows.every(
+      (row) => row.findingId === findingIdByOccurrence.get(row.occurrenceId),
+    );
   const summaryRelative = `${config.artifactPaths.authoredRoot}/decisions/wave-1-static-batch-${runId}.json`;
   const allWrittenPaths = [...writtenPaths, summaryRelative];
 
@@ -564,9 +601,12 @@ export async function runWave1StaticBatch(
       evidenceRecords: evidenceRecords.length,
       findings: findings.length,
       matrixFindingBijection,
-      terminalMatrixRows: matrixRows.filter((row) => row.status !== "pending").length,
-      terminalFindings: findings.filter((finding) =>
-        finding.resultClassification !== "blocked" || Boolean(finding.blockers?.length),
+      terminalMatrixRows: matrixRows.filter((row) => row.status !== "pending")
+        .length,
+      terminalFindings: findings.filter(
+        (finding) =>
+          finding.resultClassification !== "blocked" ||
+          Boolean(finding.blockers?.length),
       ).length,
     },
     resultTotals: {
@@ -601,7 +641,9 @@ export async function runWave1StaticBatch(
     ],
     changedPathManifest: {
       writtenPaths: allWrittenPaths,
-      siteStarPaths: allWrittenPaths.filter((relativePath) => relativePath.startsWith("site/")),
+      siteStarPaths: allWrittenPaths.filter((relativePath) =>
+        relativePath.startsWith("site/"),
+      ),
       productCodeMutations: 0,
       allPathsInApprovedDestinations: allWrittenPaths.every(
         (relativePath) =>
@@ -630,9 +672,13 @@ export async function runWave1StaticBatch(
     validation: {
       everyOwnedPartitionTerminal: checkpoint.nonTerminalCount === 0,
       noQuarantinedPartitions: checkpoint.quarantineCount === 0,
-      everyMatrixRowTerminal: matrixRows.every((row) => row.status !== "pending"),
+      everyMatrixRowTerminal: matrixRows.every(
+        (row) => row.status !== "pending",
+      ),
       oneFindingPerMatrixRow: matrixFindingBijection,
-      noProductCodeWrite: writtenPaths.every((relativePath) => !relativePath.startsWith("site/")),
+      noProductCodeWrite: writtenPaths.every(
+        (relativePath) => !relativePath.startsWith("site/"),
+      ),
       sourceOnlyBatch: true,
     },
   };
@@ -643,7 +689,9 @@ export async function runWave1StaticBatch(
     config,
   );
   await writeJsonFile(summaryResolved.absolutePath, summary);
-  await completedWave.store.addAuthoredWorkReference(summaryResolved.relativePath);
+  await completedWave.store.addAuthoredWorkReference(
+    summaryResolved.relativePath,
+  );
   writtenPaths.push(summaryResolved.relativePath);
 
   return {

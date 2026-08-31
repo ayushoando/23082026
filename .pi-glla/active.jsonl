@@ -1,7 +1,1 @@
-{"type":"session_rebound","value":{"reason":"startup"},"at":"2026-08-31T15:37:41.654Z"}
-{"type":"session_waiting_for_load","value":{"reason":"startup"},"at":"2026-08-31T15:37:41.676Z"}
-{"type":"session_shutdown","value":{"reason":"quit"},"at":"2026-08-31T15:38:42.962Z"}
-{"type":"session_rebound","value":{"reason":"startup"},"at":"2026-08-31T15:38:52.601Z"}
-{"type":"id_invalidation","value":{"oldId":"01a05877-f532-7669-b09c-f34a491ab208","newId":"01a05879-1536-7e00-8e5e-6c886dd1a609","reason":"session_shutdown","shutdownReason":"quit","at":"2026-08-31T15:38:52.631Z"},"at":"2026-08-31T15:38:52.631Z"}
-{"type":"session_waiting_for_load","value":{"reason":"startup"},"at":"2026-08-31T15:38:52.633Z"}
-{"type":"state","value":{"goal":null,"list":[],"loop":null,"mainModelRecovery":null,"lastModelRef":"antigravity/gemini-3.7-flash","lastCompactionAt":null,"supervisorPausedAt":null,"loadHoldAt":null,"lastOutcome":null},"at":"2026-08-31T15:39:07.985Z"}
+{"type":"context_usage_sample","value":{"goalId":null,"provider":"antigravity","model":"gemini-3.7-flash","providerUsage":{"inputTokens":2447,"outputTokens":228,"cacheReadTokens":53275,"cacheWriteTokens":0,"totalTokens":55950},"contextUsage":{"tokens":55950,"contextWindow":1048576,"percent":5.335807800292969}},"at":"2026-08-31T15:41:36.752Z"}
