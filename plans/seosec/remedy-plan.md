@@ -122,6 +122,8 @@ Add token-based auth. **Status: ✅ Applied** — `site/app/api/metrics/route.ts
 "audit:sitemap-health": "node scripts/general/audit-sitemap-health.mjs"
 ```
 
+**Status (2026-09-01): Step 4 shipped.** `scripts/general/audit-sitemap-health.mjs` walks `sitemap.xml` (index or url-set) and every `<loc>`, flagging non-200 statuses, redirects (with `location`), `X-Robots-Tag: noindex`, and missing `<title>`/meta-robots noindex; exits 1 on findings. Registered as `pnpm run audit:sitemap-health`; tested by `tests/unit/scripts/audit-sitemap-health.test.ts`. Steps 1-3 (the actual 404 URL list) remain open — GSC export required.
+
 ---
 
 ### SEO-R02: Review 47 Robots-Blocked Pages
@@ -229,6 +231,7 @@ if (products.length === 0) {
 **Finding:** SEC-M01 — No CORS headers on API routes
 **Priority:** P2 — Medium
 **Effort:** 2-3 hours
+**Status (2026-09-02): ❌ OPEN — unchanged.** Remains pending a product decision on whether cross-origin consumers (mobile app, third-party integration) are planned. No CORS layer exists; same-origin browser enforcement remains the posture.
 
 **Approach:** If cross-origin access is not needed (current state), add explicit `Access-Control-Allow-Origin: same-origin` headers. If future mobile apps or third-party integrations need CORS:
 
@@ -258,12 +261,17 @@ export function corsHeaders(origin: string | null): HeadersInit {
 **Finding:** SEC-M02 — Static token auth fallback
 **Priority:** P2 — Medium
 **Effort:** 2 hours
+**Status (2026-09-01): ✅ Warning + rotation shipped — consumer removal still pending.**
 
 **Approach:**
 1. Add a deprecation warning log when token auth is used
 2. Set a deadline to remove token fallback (e.g., 2026-12-01)
 3. Migrate any external consumers to Supabase session auth
 4. Add token rotation support if the token must stay
+
+**Fix applied (steps 1, 2, 4):** New shared module `site/lib/security/staticAdminToken.ts` — one-per-token fingerprinted deprecation warning (SHA-256 prefix, never the token itself, deduped per process via `warnStaticAdminTokenUsage`), rotation via `CUSTOMER_QUERIES_ADMIN_TOKENS` (comma-separated list, newest first; legacy single `CUSTOMER_QUERIES_ADMIN_TOKEN` still accepted), sunset `STATIC_ADMIN_TOKEN_SUNSET = "2026-12-01"`. Wired into `site/app/api/customer-queries/manage/route.ts` (`isAuthorized` now matches against `acceptedStaticAdminTokens()` and calls `warnStaticAdminTokenUsage`). `.env.example` documents `CUSTOMER_QUERIES_ADMIN_TOKENS` with the deprecation note. Tests: `tests/unit/lib/security/staticAdminToken.test.ts` (9 cases).
+
+**Step 3 remains open:** external-consumer migration to Supabase session auth is an external-coordination item — the fallback itself is only removed once consumers retire, per the sunset date.
 
 ---
 
@@ -272,8 +280,9 @@ export function corsHeaders(origin: string | null): HeadersInit {
 **Finding:** SEC-M03 — Tracking route uses service role key for anonymous users
 **Priority:** P2 — Medium
 **Effort:** 3-4 hours
+**Status (2026-09-01): ✅ Fixed in code — RLS migration authored, not yet applied.**
 
-**Approach:**
+**Original approach (superseded):**
 
 Create the `user_viewed_products` table with RLS policies that allow anonymous writes (using `anon` key) scoped to the anonymous user's ID:
 
@@ -286,7 +295,9 @@ USING (user_id = auth.uid() OR user_id = current_setting('request.jwt.claims', t
 WITH CHECK (user_id = auth.uid() OR user_id = current_setting('request.jwt.claims', true)::json->>'sub');
 ```
 
-Then switch from `createSupabaseAuthAdminClient()` to `createAuthServerClient()` (anon key) in the tracking route.
+**Fix applied:** `site/app/api/tracking/route.ts` now verifies the caller's bearer token via a new `createSupabaseAuthAnonClient(token)` factory in `site/platform/supabase/auth-admin.ts` (token forwarded through Supabase client `global.headers`), and persists authenticated writes through that anon-key client so RLS — not the service-role key — governs the row. The owner-scoped policy is `site/platform/supabase/migrations.admin/20260901120000_user_history_owner_rls.sql` (`grant select, insert, update ... to authenticated` + `user_history_owner_dml` policy with `user_id = coalesce(auth.jwt() ->> 'sub', '')`; `-- rollback` section included, governance-compliant). Cookie-only anonymous writes intentionally remain server-mediated via the service-role path — no JWT exists to prove row ownership for them. Route tests updated: `tests/unit/app/api/tracking/route.test.ts` (10 pass).
+
+**Application status:** the migration is authored only; application to the Admin DB happens in the deploy-prep phase via authorized `pnpm run db:apply:admin -- --dry` then `db:apply:admin`. Do not treat the policy as live until then.
 
 ---
 
@@ -295,8 +306,9 @@ Then switch from `createSupabaseAuthAdminClient()` to `createAuthServerClient()`
 **Finding:** SEC-M05 — Upload size validated after parsing
 **Priority:** P3 — Low
 **Effort:** 1 hour
+**Status (2026-09-01): ✅ Fixed in code.**
 
-**Approach:**
+**Original approach:**
 
 Add a content-length header check before parsing the multipart body:
 
@@ -307,6 +319,8 @@ if (contentLength > MAX_MULTIPART_UPLOAD_BYTES) {
   return error(ApiError.fromCode(API_ERROR_CODES.VALIDATION_ERROR, "File too large"));
 }
 ```
+
+**Fix applied:** `isOversizedRequestBody(headers, limitBytes)` added to `site/lib/security/uploadLimits.ts` — rejects declared `Content-Length` above `MAX_MULTIPART_UPLOAD_BYTES` (10 MiB) plus a 64 KiB multipart boundary/text-field margin; when the header is absent or unparsable it returns `false` and defers to the existing post-parse `isOversizedUpload` backstop. Wired into `site/app/api/Studio/furniture/upload/route.ts` (413 returned **before** `formData()`) and the multipart branch of `readRequestBody` in `site/lib/Planner/plannerRequestPipeline.ts` (rejects before `formData()` materializes the body). Tests: `tests/unit/lib/security/uploadLimits.test.ts`.
 
 ---
 
@@ -375,6 +389,7 @@ if (contentLength > MAX_MULTIPART_UPLOAD_BYTES) {
 ```bash
 "audit:sitemap-health": "node scripts/general/audit-sitemap-health.mjs"
 ```
+   **Status (2026-09-01): script shipped** — see SEO-R01 step 4. Scheduling/alerting remains open.
 
 2. **Indexing alerts** — Set up Google Search Console email alerts for:
    - Sudden drop in indexed pages (>10% in a week)
@@ -395,9 +410,9 @@ if (contentLength > MAX_MULTIPART_UPLOAD_BYTES) {
 |---|---|---|---|
 | — | Wave 1 (corrected) | SEC-R01/R02 closed as false positives (proxy.ts already covers this); SEC-R03 file-route rate limit; SEC-R04 metrics auth | ✅ Done this session |
 | — | Wave 2 (security part) | SEC-R05 origin check fail-closed in production | ✅ Done this session |
-| Week 2 | Wave 2 (SEO part) | 404 URL fixes, robots review, redirect fixes | Pending — needs live Search Console export |
-| Week 3-4 | Wave 3: Medium Issues | Content quality fixes, CORS policy, token deprecation, tracking auth | Pending |
-| Ongoing | Wave 4: SEO Growth | Image optimization, internal linking, monitoring setup | Pending |
+| Week 2 | Wave 2 (SEO part) | 404 URL fixes, robots review, redirect fixes | Pending — needs live Search Console export (monitoring script shipped 2026-09-01) |
+| — | Wave 3: Medium Issues | SEC-R07 warning+rotation, SEC-R08 anon-key + owner RLS, SEC-R09 content-length pre-check | ✅ Fixed in code 2026-09-01 (SEC-R07 consumer removal pending sunset; SEC-R08 migration awaiting deploy-prep apply). SEC-R06 CORS still open pending product decision; content-quality (SEO-R04/R05) still needs GSC |
+| Ongoing | Wave 4: SEO Growth | Image optimization, internal linking, monitoring setup | Partially shipped 2026-09-01 — `audit:sitemap-health` script done; GSC-dependent items pending |
 
 **Session correction:** The original audit's two "Critical" findings (SEC-C01 no middleware, SEC-C02 no CSP) were false positives — it missed that Next.js 16 renamed `middleware.ts` to `proxy.ts`, and `site/proxy.ts` already implements both. Actual Wave 1/2 security work this session totaled ~1 hour (3 small fixes) instead of the originally estimated 14-20 hours.
 

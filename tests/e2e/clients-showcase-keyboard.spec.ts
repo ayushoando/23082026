@@ -37,10 +37,21 @@ for (const width of WIDTHS) {
         await expect(tabs.nth(index)).toHaveText(new RegExp(labels[index], "i"));
       }
 
-      await tabs.nth(3).focus();
+      // Rove to the last tab with the Arrow keys rather than calling
+      // focus() directly: a keyboard-only user can only reach a
+      // tabIndex={-1} tab through the roving handler, and the hook's
+      // internal index (site/hooks/useSectorTabs.ts) resyncs only on
+      // its own moves — see the product finding for programmatic focus.
+      for (let step = 1; step <= 3; step += 1) {
+        await page.keyboard.press("ArrowRight");
+        await expect(tabs.nth(step)).toBeFocused();
+      }
+
+      // Wrap forward from the last tab back to the first.
       await page.keyboard.press("ArrowRight");
       await expect(tabs.nth(0)).toBeFocused();
 
+      // And wrap backwards to the last tab.
       await page.keyboard.press("ArrowLeft");
       await expect(tabs.nth(3)).toBeFocused();
     });

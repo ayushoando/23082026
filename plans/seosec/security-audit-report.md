@@ -10,7 +10,7 @@
 
 ## Executive Summary
 
-The application demonstrates **strong security fundamentals** with a well-designed auth wrapper (`withAuth`), comprehensive rate limiting, CSRF protection, proper secret isolation, and (as corrected below) a thorough edge-layer proxy providing defense-in-depth auth and CSP. Of the original 6 critical/high findings, **2 were false positives** (the audit searched for `middleware.ts` by name and missed that Next.js 16 renamed the convention to `proxy.ts`; `site/proxy.ts` already implements both defense-in-depth auth and full CSP with per-request nonces). The remaining findings — file route rate limiting, metrics endpoint auth, and the origin-check fail-open gap — have been fixed this session.
+The application demonstrates **strong security fundamentals** with a well-designed auth wrapper (`withAuth`), comprehensive rate limiting, CSRF protection, proper secret isolation, and (as corrected below) a thorough edge-layer proxy providing defense-in-depth auth and CSP. Of the original 6 critical/high findings, **2 were false positives** (the audit searched for `middleware.ts` by name and missed that Next.js 16 renamed the convention to `proxy.ts`; `site/proxy.ts` already implements both defense-in-depth auth and full CSP with per-request nonces). The remaining findings — file route rate limiting, metrics endpoint auth, and the origin-check fail-open gap — have been fixed this session. A follow-up verification sweep (2026-09-01/02) additionally fixed SEC-M02 (deprecation warning + rotation shipped; fallback removal pending consumer sunset), SEC-M03 (authenticated tracking now persists via an anon-key session client under a new owner-scoped RLS migration — authored, apply pending deploy-prep) and SEC-M05 (content-length pre-check); SEC-M01 (CORS) remains open pending a product decision.
 
 ### Severity Summary (updated post-remediation)
 
@@ -18,7 +18,7 @@ The application demonstrates **strong security fundamentals** with a well-design
 |----------|-------|--------|
 | Critical | 0 (was 2) | Both closed as false positives — see SEC-C01/C02 correction below |
 | High | 4 | 3 fixed this session (SEC-H01, SEC-H02, SEC-H03); 1 remaining (SEC-H04, see below) |
-| Medium | 5 | Planned remediation |
+| Medium | 5 | SEC-M02/M03/M05 fixed in code 2026-09-01 (M02: fallback removal pending consumer sunset; M03: RLS migration authored, not yet applied); SEC-M01 open pending product decision; SEC-M04 accepted (dev-gated) |
 | Low | 4 | Best-practice hardening |
 | Informational | 3 | Acknowledged strengths |
 
@@ -136,9 +136,11 @@ The application demonstrates **strong security fundamentals** with a well-design
 
 **Remediation:** See remedy plan SEC-R06.
 
+**Status (2026-09-02): ❌ OPEN — unchanged.** Awaiting a product decision on whether cross-origin consumers are planned; no CORS layer shipped.
+
 ---
 
-### SEC-M02: Admin Token Auth Fallback in Customer Queries Management
+### SEC-M02: Admin Token Auth Fallback in Customer Queries Management — ⚠️ PARTIALLY FIXED (warning + rotation shipped)
 
 **Severity:** MEDIUM
 **OWASP:** A07 Identification & Auth Failures
@@ -158,11 +160,13 @@ async function isAuthorized(req: NextRequest): Promise<boolean> {
 
 **Mitigations:** Token comparison uses `timingSafeEqual` (good). Token is server-side only.
 
+**Fix status (2026-09-01):** The original code shown above is superseded. Shared module `site/lib/security/staticAdminToken.ts` now provides a per-token fingerprinted (SHA-256 prefix, deduped per process) deprecation warning, comma-list rotation via `CUSTOMER_QUERIES_ADMIN_TOKENS` (legacy single var still accepted), and a `STATIC_ADMIN_TOKEN_SUNSET = "2026-12-01"` deadline. Wired into the manage route's `isAuthorized`; documented in `.env.example`; tested at `tests/unit/lib/security/staticAdminToken.test.ts` (9 cases). The fallback itself is NOT removed — removal is gated on migrating external consumers to session auth (external-coordination item).
+
 **Remediation:** See remedy plan SEC-R07.
 
 ---
 
-### SEC-M03: Tracking Route Uses Admin Service Client for Anonymous Users
+### SEC-M03: Tracking Route Uses Admin Service Client for Anonymous Users — ✅ FIXED IN CODE (migration pending apply)
 
 **Severity:** MEDIUM
 **OWASP:** A01 Broken Access Control
@@ -171,6 +175,8 @@ async function isAuthorized(req: NextRequest): Promise<boolean> {
 **Finding:** The tracking route uses `createSupabaseAuthAdminClient()` (service role key) to read/write `user_viewed_products` for anonymous cookie-based users. This means the service role key is used for public-facing unauthenticated traffic, increasing its exposure surface.
 
 **Risk:** If there's a vulnerability in the tracking logic, it could be leveraged to perform operations with the service role key's elevated privileges.
+
+**Fix status (2026-09-01):** The route now verifies the caller's bearer token via a new `createSupabaseAuthAnonClient(token)` factory in `site/platform/supabase/auth-admin.ts` (token forwarded through `global.headers`) and persists authenticated writes through that anon-key client under a new owner-scoped RLS policy — `site/platform/supabase/migrations.admin/20260901120000_user_history_owner_rls.sql` (`grant select, insert, update ... to authenticated` + `user_history_owner_dml`, `user_id = coalesce(auth.jwt() ->> 'sub', '')`, with `-- rollback` section). Cookie-only anonymous writes intentionally remain server-mediated (service-role) since no JWT proves their ownership. Route tests updated: `tests/unit/app/api/tracking/route.test.ts` (10 pass). **Migration is authored, not applied** — application happens in deploy-prep via authorized `db:apply:admin` (dry first).
 
 **Remediation:** See remedy plan SEC-R08.
 
@@ -196,7 +202,7 @@ export const DEV_BYPASS_USER: DevBypassUser = {
 
 ---
 
-### SEC-M05: Upload Size Validation Only Client-Side Check
+### SEC-M05: Upload Size Validation Only Client-Side Check — ✅ FIXED
 
 **Severity:** MEDIUM
 **OWASP:** A04 Insecure Design
@@ -210,6 +216,8 @@ export function isOversizedUpload(file: File): boolean {
   return file.size > MAX_MULTIPART_UPLOAD_BYTES;
 }
 ```
+
+**Fix status (2026-09-01):** `isOversizedRequestBody()` added to `site/lib/security/uploadLimits.ts` — rejects declared `Content-Length` above the 10 MiB budget + 64 KiB multipart margin before `formData()`; absent/unparsable header falls through to the post-parse backstop. Wired into `site/app/api/Studio/furniture/upload/route.ts` (413 before parsing) and `site/lib/Planner/plannerRequestPipeline.ts` `readRequestBody` (multipart branch). Tests: `tests/unit/lib/security/uploadLimits.test.ts`.
 
 **Remediation:** See remedy plan SEC-R09.
 

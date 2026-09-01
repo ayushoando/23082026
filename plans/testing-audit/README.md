@@ -11,6 +11,8 @@
 | Vitest (tech-docs) | `tests/vitest.tech-docs.config.ts` | Tech-docs generator tests |
 | Vitest (site coverage) | `tests/vitest.site.config.ts` | Site-specific coverage |
 | Vitest (admin coverage) | `tests/vitest.admin.coverage.config.ts` | Admin coverage |
+| Vitest (admin live coverage) | `tests/vitest.admin.live.coverage.config.ts` | One-shot live admin-module coverage (measurement only, not a gate entry) |
+| Vitest (inventory coverage) | `tests/vitest.coverage.inventory.config.ts` | Dark-product inventory coverage — broad include, no thresholds |
 | Playwright | `config/build/playwright.config.ts` | E2E + browser tests |
 | Playwright (gate specs) | `config/build/playwright-gate-specs.json` | Release gate browser tests |
 | happy-dom | Via vitest config | DOM environment for tests |
@@ -29,8 +31,16 @@ tests/
 ├── helpers/       — Test utilities
 ├── support/       — Test support modules
 ├── manifests/     — Test manifests for audit scripts
+├── site-ui-content-links-audit/ — audit-program property tests (separate lane)
+├── tech-docs-generator/ — tech-docs lane setup + tests
 └── operations-review/ — Operations review tests
 ```
+
+### 2026-09-01 additions (verified on disk 2026-09-01)
+
+- **Unit:** `tests/unit/lib/clients/clientRegistry.test.ts` · `tests/unit/lib/hooks/useSectorTabs.test.ts` · `tests/unit/components/site/clients/` (3 files: `ClientCard.test.tsx`, `ClientLogoArea.test.tsx`, `ClientTabPanel.test.tsx`) · `tests/unit/lib/security/staticAdminToken.test.ts` · `tests/unit/scripts/audit-sitemap-health.test.ts` · `tests/unit/planner/plannerFinalReconciliation.test.ts`.
+- **E2E:** `tests/e2e/clients-showcase-keyboard.spec.ts`, `tests/e2e/clients-showcase-layout.spec.ts`.
+- **Audit-program lane:** 4 new property files in `tests/site-ui-content-links-audit/` (w3 partition isolation, w5r severity/duplicate reconciliation, w5h remediation handoffs, w5c completion-proof) — lane now **11 files / 36 tests**.
 
 ## Gate Structure (from package.json)
 
@@ -68,7 +78,7 @@ tests/
 - **Can't verify current coverage numbers** — running tests requires authorization
 - **No mutation testing** — no Stryker or similar tool. Property-based testing (fast-check) partially covers this.
 - **Visual regression** — `audit:visual` exists with Playwright screenshots, but not part of the regular gate
-- **Coverage configs proliferate** — 5 different vitest configs. Could consolidate with vitest workspaces.
+- **Coverage configs proliferate** — 6 vitest `*.config.ts` files under `tests/` (default, tech-docs, site, admin coverage, admin live coverage, inventory coverage; `vitest.shared.ts` is shared config, not a lane). Corrected 2026-09-01 — the earlier "5 different" wording was stale. Could consolidate with vitest workspaces.
 
 ### No remedy plan needed
 The testing infrastructure is solid. The audit scripts are better than most codebases. Running `pnpm run test` + `pnpm run gate:fast` would reveal any current failures, but that requires authorization.

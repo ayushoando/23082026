@@ -65,6 +65,8 @@ type DuplicateGroup = Extract<
   { readonly recordType: "duplicate-group" }
 >;
 type Severity = SeverityAssessmentRecord["severity"];
+/** Reconciliation domain: assessment severities plus the explicit bottom. */
+type RankedSeverity = Severity | "not-applicable";
 
 export type ResultClassification = OccurrenceFinding["resultClassification"];
 
@@ -79,15 +81,19 @@ export const SEVERITY_ORDER = [
   "low",
   "advisory",
   "not-applicable",
-] as const satisfies readonly Severity[];
+] as const satisfies readonly RankedSeverity[];
 
-export function severityRank(severity: Severity): number {
+export function severityRank(severity: RankedSeverity): number {
   return SEVERITY_ORDER.length - SEVERITY_ORDER.indexOf(severity);
 }
 
 /** Deterministic maximum: a higher impact can never reduce severity. */
-export function maxSeverity(severities: readonly Severity[]): Severity {
-  let best: Severity = "not-applicable";
+export function maxSeverity(severities: readonly Severity[]): Severity;
+export function maxSeverity(severities: readonly RankedSeverity[]): RankedSeverity;
+export function maxSeverity(
+  severities: readonly RankedSeverity[],
+): RankedSeverity {
+  let best: RankedSeverity = "not-applicable";
   for (const severity of severities) {
     if (severityRank(severity) > severityRank(best)) best = severity;
   }
@@ -678,7 +684,7 @@ export async function runWave5Reconciliation(
     "wave-5-reconcile",
     String(reconciled.finalFindings.length),
     String(reconciled.duplicateGroups.length),
-  ]).slice(0, 32);
+  ].join("\u0000")).slice(0, 32);
 
   const writtenPaths: string[] = [];
   const store = await ManifestStore.open(

@@ -27,6 +27,11 @@
 | 18 | [typescript-tests.md](18-typescript-tests.md) | Zero `any` debt, vitest lanes, skip manifests |
 | 19 | [dependencies-build.md](19-dependencies-build.md) | TS7/Next16/React19 frontier, config fragility |
 | 20 | [scripts-governance-recommendations.md](20-scripts-governance-recommendations.md) | Script sprawl, governance ratchets, prioritized actions |
+| 21 | [plans-folder.md](21-plans-folder.md) | plans/ deep audit: 16 folders, README drift, claim-vs-reality, handover coverage |
+| 22 | [packages-workspace.md](22-packages-workspace.md) | Workspace membership, tech-docs-generator, 100-script wiring, lockfile health, dead deps |
+| 23 | [config-docs-specs.md](23-config-docs-specs.md) | config/, docs/ drift, specs/ orphan, root markdown, tests inventory, results/ |
+| 24 | [platform-database.md](24-platform-database.md) | Two-DB discipline, migrations, type sync, server layer, seed flow |
+| 25 | [coverage-gaps.md](25-coverage-gaps.md) | What this static audit cannot see + what is needed to close the gaps |
 
 ## Severity rollup
 
@@ -35,3 +40,5 @@
 | High | 3 | Untracked-but-imported wave3/wave5 files (repo doesn't build from clean clone); `Planner.tsx` 3,387 lines; systemic Planner/Studio fork duplication with live drift |
 | Medium | ~14 | Unwired SVG sanitizer on upload path; `scan:secrets` not in CI gate; legacy `site/data/storage/` (43 stale files); hardcoded worker origin; redirect destination overrides; production-unoptimized images; no route-level error boundaries outside (site); single-bundle marketing CSS; gsap/jspdf/fabric static imports; hi/en content drift; governance ratchets P4:8 + S2:22 |
 | Low | ~25 | Dev-bypass on non-prod hosts, env contract gaps, fail-open rate limits, focss near-cap files, axe coverage gaps, dead code items, etc. |
+
+**Second pass (reports 21–24) corrections to first-pass findings:** `P4_migration_no_rollback: 8` is a stale baseline (0/64 migrations lack `-- rollback` today); the `pending-translations/` dir is empty; `scan-boundaries` finds no violations (unchanged); new High-adjacent item: `db:types` depends on an undeclared global `supabase` CLI; new Medium items: dead `turbo.json`, `admin/themes` reads an archived table, stale hand-written `platform/supabase/types.ts`, `routes.md` false "no redirect table" claim.

@@ -686,7 +686,7 @@ export async function runWave5Handoffs(
     immutableRunInputs.repositoryRevision,
     "wave-5-handoffs",
     String(built.handoffs.length),
-  ]).slice(0, 32);
+  ].join("\u0000")).slice(0, 32);
 
   const writtenPaths: string[] = [];
   const store = await ManifestStore.open(
@@ -765,7 +765,6 @@ export async function runWave5Handoffs(
     configurationHash: immutableRunInputs.configurationHash,
     inputFingerprint,
     handoffs: built.handoffs.length,
-    validation: built.validation,
     closureTotals: closure.totals,
     pendingOperations: built.pendingOperations,
     authoredWorkReferences: [

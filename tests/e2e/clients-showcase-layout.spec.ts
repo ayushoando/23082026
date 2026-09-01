@@ -50,15 +50,36 @@ for (const width of WIDTHS) {
         if (!container) return ["missing container"];
         const bounds = container.getBoundingClientRect();
         const offenders: string[] = [];
-        container
-          .querySelectorAll('[role="tab"], article')
-          .forEach((element) => {
+        const outside = (rect: DOMRect, limit: DOMRect) =>
+          rect.right > limit.right + 1 || rect.left < limit.left - 1;
+        const strip = container.querySelector<HTMLElement>(".clients-showcase__tabs");
+        // Below the 48rem breakpoint the tab strip is an intentional
+        // scroll row (clients-showcase.css: overflow-x auto + scroll-snap),
+        // so individual tabs legitimately extend past the container as long
+        // as the strip itself fits. At wrap widths tabs must stay inside.
+        const stripScrolls =
+          !!strip &&
+          ["auto", "scroll"].includes(getComputedStyle(strip).overflowX) &&
+          strip.scrollWidth > strip.clientWidth + 1;
+        if (strip && !stripScrolls && outside(strip.getBoundingClientRect(), bounds)) {
+          offenders.push("tab strip overflows container");
+        }
+        container.querySelectorAll("article").forEach((element) => {
+          const rect = element.getBoundingClientRect();
+          if (rect.width === 0) return; // hidden panels report zero width
+          if (outside(rect, bounds)) {
+            offenders.push(element.textContent?.slice(0, 40) ?? "?");
+          }
+        });
+        if (!stripScrolls) {
+          container.querySelectorAll('[role="tab"]').forEach((element) => {
             const rect = element.getBoundingClientRect();
-            if (rect.width === 0) return; // hidden panels report zero width
-            if (rect.right > bounds.right + 1 || rect.left < bounds.left - 1) {
+            if (rect.width === 0) return;
+            if (outside(rect, bounds)) {
               offenders.push(element.textContent?.slice(0, 40) ?? "?");
             }
           });
+        }
         return offenders;
       }, SHOWCASE);
       expect(overflow).toEqual([]);

@@ -14,6 +14,6 @@
 ## Closing summary
 
 - Phases 1–4 landed 2026-08-31; re-verification 2026-09-01 found the UI-028 "Fixed" claim false (three `line-height: 1.55` remained) and fixed it, then completed the genuinely open findings: UI-011 (showrooms LocalBusiness JSON-LD), UI-014/015 (Planner feature-index/detail entry reveals + pill focus ring), UI-016 (shared help styling documented, no new sheet).
-- Superseded `/clients` showcase scaffolding deleted (`site/components/site/clients/`, `site/hooks/useSectorTabs.ts`, `clients.showcase` i18n keys); `site/lib/clients/` retained — live, used by `proof.ts`; `home.showcase` i18n keys retained — live homepage section.
+- Superseded `/clients` showcase scaffolding deleted (`site/components/site/clients/`, `site/hooks/useSectorTabs.ts`, `clients.showcase` i18n keys); `site/lib/clients/` retained — live, used by `proof.ts`; `home.showcase` i18n keys retained — live homepage section. **Reversed 2026-09-02:** owner directed completing `plans/client-showcase-tabs`; showcase re-implemented against the current canonical registry, presentation in `site/focss/site/components/clients/clients-showcase.css` (style-token ratchet), deviations documented in that plan's `tasks.md`.
 - Evidence 2026-09-01: typecheck clean, `scan:boundaries` OK, `verify:focss` 0 failures, `lint:ui:strict` OK, focused vitest 207/207 (17 files), `pnpm run gate:fast` exit 0. Governance baseline re-recorded (S2 19→22 owner-directed; P4 42→8 tightened).
 - Not done: Phase 5 browser runtime profiles (static + unit evidence only).
