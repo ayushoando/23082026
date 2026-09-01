@@ -10,17 +10,14 @@ This record is the evidence ledger for the bounded rewrite of the 34 approved Ma
 - Additional agents used: none
 - Command validation: not authorized; optional Tasks 8.1–8.4 remain pending
 - Authority order: user instruction > live repository evidence > `AGENTS.md` > `Agents/` > `docs/`
-- Protected tree: `.kiro/specs/kiro-config-rewrite/**` (unchanged by this feature)
+- Protected tree: the external tooling-spec tree (since removed from this repository) (unchanged by this feature)
 - Rollback rule: restore only feature-owned file-level edits; never reset, clean, or overwrite unrelated work
 
 ## Baseline and containment
 
 All 34 paths were present, tracked, and clean before the first corpus edit. SHA-256 values were captured with `Get-FileHash` from the repository root. Pre-existing working-tree changes existed only outside this feature's allowlist:
 
-- `.kiro/kiro-repo-guidance-setup/contracts.ts` (modified)
-- `.kiro/kiro-repo-guidance-setup/tests/lane-d/projections-review.test.ts` (modified)
-- `.kiro/specs/kiro-config-rewrite/tasks.md` (modified, protected)
-- `.kiro/specs/kiro-config-rewrite/tasks.meta.json` (modified, protected)
+- paths under the external tooling-spec tree (since removed from this repository), including its guidance-setup contracts and tests and its protected spec task files (modified)
 - `scripts/_tmp_debug_cap.mjs` (deleted)
 - `scripts/_tmp_debug_projections.mjs` (deleted)
 - `scripts/_tmp_p13.mjs` (untracked)
@@ -193,7 +190,7 @@ Required checks for every row: scope, information architecture, language, access
 | `pnpm run check:layout` | absent | unrun | pending validation | Optional Task 8.3 not authorized |
 | broader gate | absent | unrun | pending validation | Optional Task 8.4 not authorized |
 
-Static commands used so far: `git status --short --untracked-files=all`; `Get-FileHash` with Git path/status inspection; public `Invoke-WebRequest` source retrieval. The first retrieval attempt timed out at an interactive PowerShell security prompt; the second used `-UseBasicParsing` and produced the source statuses above. The pre-execution environment emitted an unrelated TypeScript diagnostic from `.kiro/kiro-repo-guidance-setup/tests/lane-d/owner-decisions-property13.test.ts`; this feature did not invoke a typecheck and does not classify that diagnostic as validation evidence.
+Static commands used so far: `git status --short --untracked-files=all`; `Get-FileHash` with Git path/status inspection; public `Invoke-WebRequest` source retrieval. The first retrieval attempt timed out at an interactive PowerShell security prompt; the second used `-UseBasicParsing` and produced the source statuses above. The pre-execution environment emitted an unrelated TypeScript diagnostic from a lane-d property test in the external tooling-spec tree (since removed from this repository); this feature did not invoke a typecheck and does not classify that diagnostic as validation evidence.
 
 ## Review ledger
 
@@ -304,7 +301,7 @@ Design Properties 1–21 were applied as static acceptance checks. No property-b
 
 ## Containment and completion derivation
 
-Final static inspection found `34` allowlisted entries, `34` unique paths, `34` present paths, and `34` Git-tracked paths. Relative to the recorded baseline, all 34 corpus files were modified in place; none was created, deleted, moved, or renamed. Feature artifacts are `.kiro/specs/documentation-global-standards/implementation-record.md` (created during this feature, now tracked) and `.kiro/specs/documentation-global-standards/tasks.md` (modified). There are zero feature-owned changed-path exceptions.
+Final static inspection found `34` allowlisted entries, `34` unique paths, `34` present paths, and `34` Git-tracked paths. Relative to the recorded baseline, all 34 corpus files were modified in place; none was created, deleted, moved, or renamed. Feature artifacts are `plans/documentation-global-standards/implementation-record.md` (created during this feature, now tracked) and `plans/documentation-global-standards/tasks.md` (modified). There are zero feature-owned changed-path exceptions.
 
 During execution, an external commit advanced `HEAD`/`origin/main` to `14639ce` and incorporated the 34 corpus rewrites, the implementation record, task status, protected-tree changes, application/support changes, tests, and temporary scripts in one commit. This agent did not create that commit and did not modify, revert, clean, stage, or otherwise integrate its out-of-scope paths. Post-commit focused corrections remain visible in the scoped working-tree diff. The concurrent out-of-scope working-tree paths reported by final `git status` are not feature-owned and are excluded from the ledger; their movement means they cannot be described as byte-identical to the session baseline, only as untouched by this feature.
 
@@ -313,8 +310,8 @@ During execution, an external commit advanced `HEAD`/`origin/main` to `14639ce` 
 | Outcome | Paths | Ownership / status |
 |---|---|---|
 | modified in place | `AGENTS.md`; `README.md`; `START.md`; `CONTENTS.md`; `DOC-MAP.md`; `Failures.md`; `HANDOVER.md`; `OPERATIONS_RUNBOOK.md`; `owners.md`; `Testing-handbook.md`; `Agents/INDEX.md`; `Agents/01-standard.md`; `Agents/02-testing.md`; `Agents/03-browser.md`; `Agents/04-failures.md`; `Agents/05-documentation.md`; `Agents/06-architecture.md`; `Agents/07-css.md`; `Agents/research-gap-areas.md`; `Agents/research-practices.md`; `docs/README.md`; `docs/architecture/css.md`; `docs/architecture/layout.md`; `docs/architecture/product-map.md`; `docs/architecture/routes.md`; `docs/architecture/scripts.md`; `docs/architecture/stack.md`; `docs/database/drizzle.md`; `docs/database/ops.md`; `docs/database/schema.md`; `docs/governance/benchmarks.md`; `docs/governance/charter.md`; `docs/governance/focss-stop-drift.md`; `docs/governance/rules.md` | allowlisted; sole owners 4.1–4.8; verified |
-| created, then externally committed while active | `.kiro/specs/documentation-global-standards/implementation-record.md` | permitted feature evidence artifact |
-| modified | `.kiro/specs/documentation-global-standards/tasks.md` | permitted task-status artifact |
+| created, then externally committed while active | `plans/documentation-global-standards/implementation-record.md` | permitted feature evidence artifact |
+| modified | `plans/documentation-global-standards/tasks.md` | permitted task-status artifact |
 | deleted, moved, or renamed by feature | none | containment satisfied |
 
 Completion conditions are satisfied for all required static work: exact corpus membership, one resolved `rewritten` disposition and `verified` state per path, two file-specific reviews per path, focused correction closure, complete evidence/security classifications, no unresolved authority decision, and zero feature-owned containment exceptions. Optional Tasks 8.1–8.4 are not required completion outcomes and remain `unrun` because no exact command was authorized. Derived feature state: `complete` for Tasks 1–7, 9, and 10, with optional command validation pending and no behavioral-pass claim.
@@ -342,3 +339,7 @@ Optional command states remain exactly: Task 8.1 `unrun`; Task 8.2 `unrun`; Task
 ## Final checkpoint
 
 Internal static inspection confirms that this record contains the baseline, source, claim, conflict, operational, security, coverage, command, first-review, second-review, correction, containment, completion, and final-reporting records required by the approved design. The exact 34 documentation paths remain present and tracked. `tasks.md` and this record are the only permitted spec artifacts changed for this feature; `implementation-record.md` is the only feature-created artifact because `tasks.md` already existed. Optional Tasks 8.1–8.4 remain unchecked and `unrun`. Required Tasks 1–7, 9, and 10 are complete by static evidence. No prohibited validation was run or claimed, no worktree was created, and no feature write targeted an unowned path.
+
+## Evidence path relocation note
+
+2026-09-01 — evidence paths above were relocated from the removed external spec tree to `plans/documentation-global-standards/`.

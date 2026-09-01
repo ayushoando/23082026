@@ -49,19 +49,22 @@ describe("vitest dual-lane (Phase 4 parallel contention)", () => {
     expect(techDocs).toContain("../tests/tech-docs-generator/**/*.test.{ts,tsx}");
   });
 
-  it("does not include .kiro tests in the site test lane (site tests are product-only)", () => {
+  it("does not include external spec trees in the site test lane (site tests are product-only)", () => {
     const shared = fs.readFileSync(
       path.join(workspaceRoot, "tests/vitest.shared.ts"),
       "utf8",
     );
 
-    // .kiro test globs must not be present in VITEST_TEST_INCLUDE
-    expect(shared).not.toContain(
-      "../.kiro/kiro-repo-guidance-setup/tests/**/*.{test,spec}.{ts,tsx}",
-    );
-    expect(shared).not.toContain(
-      "../.kiro/specs/**/tests/**/*.{test,spec}.{ts,tsx}",
-    );
+    // VITEST_TEST_INCLUDE may only reference the product tests/ tree — no
+    // hidden external spec directories may ever enter the lane.
+    const includeMatch = shared.match(/VITEST_TEST_INCLUDE = \[([\s\S]*?)\]/);
+    expect(includeMatch).not.toBeNull();
+    const includeGlobs = [...includeMatch![1].matchAll(/"([^"]+)"/g)].map((match) => match[1]);
+    expect(includeGlobs.length).toBeGreaterThan(0);
+    for (const glob of includeGlobs) {
+      expect(glob.startsWith("../tests/")).toBe(true);
+      expect(glob).not.toMatch(/(^|\/)\.[^./]/);
+    }
 
     // Only the product tests/ directory should be included
     expect(shared).toContain("../tests/**/*.test.ts");

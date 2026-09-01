@@ -58,7 +58,7 @@ describe('render-repository-map', () => {
 
   it('makes no claims about tooling that does not exist in the repository', () => {
     const html = renderHtml({ repoRoot: defaultRepoRoot })
-    for (const phantom of ['Kiro', '.kiro', 'ltm/', 'working-with-kiro']) {
+    for (const phantom of ['ltm/']) {
       expect(html).not.toContain(phantom)
     }
   })

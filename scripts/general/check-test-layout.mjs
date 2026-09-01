@@ -42,7 +42,7 @@ const DEFAULT_MANIFEST = {
   supportRoot: "tests/support",
   migrationAllowlist: [],
 };
-const SKIP_DIRS = new Set(["node_modules", ".kiro", ".next", ".git", "archive", "_archive", "dist", "coverage", "results"]);
+const SKIP_DIRS = new Set(["node_modules", ".next", ".git", "archive", "_archive", "dist", "coverage", "results"]);
 
 function posix(value) {
   return value.replaceAll("\\", "/");

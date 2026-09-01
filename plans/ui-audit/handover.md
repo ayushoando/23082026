@@ -14,7 +14,7 @@ The 2026-08-31 "all fixed" table was not fully true. Per-finding code inspection
 ## Ownership decisions executed
 
 - Showcase scaffolding deleted per owner: `site/components/site/clients/` (6 files), `site/hooks/useSectorTabs.ts`, `clients.showcase` keys from `en.json`/`hi.json` (verified zero importers; `site/lib/clients/` kept — `proof.ts` imports it).
-- Plans folders trimmed to tasks + handover per owner; `plans/*/{requirements,design}.md` and `.config.kiro` deleted; `plans/PLAN.md` updated.
+- Plans folders trimmed to tasks + handover per owner; `plans/*/{requirements,design}.md` and an external AI-assistant scaffolding tree (and its spec folders) deleted; `plans/PLAN.md` updated.
 
 ## Verification evidence (observed 2026-09-01)
 

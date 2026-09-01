@@ -122,7 +122,6 @@ scripts/general/audit-eslint-disable.mjs,general,audit,Audit ESLint disable dire
 scripts/general/audit-gate-skips.mjs,general,audit,Audit gate skips,test:audit:gate-skips,present
 scripts/general/audit-hollow-tests.mjs,general,audit,Audit hollow tests,test:audit:hollow,present
 scripts/general/audit-repo-state.py,general,audit,Repository state audit,,present
-scripts/general/block-agent-tests.mjs,general,policy,Kiro PreToolUse test blocking hook,,present
 scripts/general/check-active-docs.mjs,general,check,Check active documentation,check:active-docs,present
 scripts/general/check-agents-folder.mjs,general,check,Check Agents folder,check:agents-folder,present
 scripts/general/check-agents-md.mjs,general,check,Check AGENTS.md,check:agents-md,present
@@ -185,26 +184,6 @@ scripts/generate-svg/_fixtures/linear-desk-param.json,generate-svg,fixture,Live 
 scripts/generate-svg/_fixtures/missing-geometry.json,generate-svg,fixture,Live SVG smoke input,ops p0:svg,present
 scripts/generate-svg/_fixtures/sectional.json,generate-svg,fixture,Live SVG smoke input,ops p0:svg,present
 scripts/generate-svg/_fixtures/side-table.json,generate-svg,fixture,Live SVG smoke input,ops p0:svg,present
-scripts/kiro-repo-guidance-setup/contracts.ts,kiro-repo-guidance-setup,module,Guidance contracts,,missing
-scripts/kiro-repo-guidance-setup/coverage.ts,kiro-repo-guidance-setup,module,Guidance coverage definitions,,missing
-scripts/kiro-repo-guidance-setup/compatibility.ts,kiro-repo-guidance-setup,module,Guidance compatibility rules,,missing
-scripts/kiro-repo-guidance-setup/contract-freeze.ts,kiro-repo-guidance-setup,module,Guidance contract freeze rules,,missing
-scripts/kiro-repo-guidance-setup/contracts.ts,kiro-repo-guidance-setup,module,Guidance contracts,,missinging
-scripts/kiro-repo-guidance-setup/integration-gate.ts,kiro-repo-guidance-setup,module,Guidance integration gate rules,,missing
-scripts/kiro-repo-guidance-setup/inventory.ts,kiro-repo-guidance-setup,module,Guidance inventory definitions,,missing
-scripts/kiro-repo-guidance-setup/owner-decisions.ts,kiro-repo-guidance-setup,module,Guidance owner decision rules,,missing
-scripts/kiro-repo-guidance-setup/ownership.ts,kiro-repo-guidance-setup,module,Guidance ownership definitions,,missing
-scripts/kiro-repo-guidance-setup/pipeline.ts,kiro-repo-guidance-setup,module,Guidance pipeline definitions,,missing
-scripts/kiro-repo-guidance-setup/policy.ts,kiro-repo-guidance-setup,module,Guidance policy definitions,,missing
-scripts/kiro-repo-guidance-setup/provenance.ts,kiro-repo-guidance-setup,module,Guidance provenance definitions,,missing
-scripts/kiro-repo-guidance-setup/reservations.ts,kiro-repo-guidance-setup,module,Guidance reservation rules,,missing
-scripts/kiro-repo-guidance-setup/reviewers.ts,kiro-repo-guidance-setup,module,Guidance reviewer definitions,,missing
-scripts/kiro-repo-guidance-setup/rollback.ts,kiro-repo-guidance-setup,module,Guidance rollback rules,,missing
-scripts/kiro-repo-guidance-setup/scope.ts,kiro-repo-guidance-setup,module,Guidance scope definitions,,missing
-scripts/kiro-repo-guidance-setup/skills.ts,kiro-repo-guidance-setup,module,Guidance skill definitions,,missing
-scripts/kiro-repo-guidance-setup/validation.ts,kiro-repo-guidance-setup,module,Guidance validation rules,,missing
-scripts/kiro-repo-guidance-setup/wave-guard.ts,kiro-repo-guidance-setup,module,Guidance wave guard rules,,missing
-scripts/kiro-repo-guidance-setup/wave-manifest.ts,kiro-repo-guidance-setup,module,Guidance wave manifest definitions,,missing
 scripts/lib/.gitkeep,lib,support,Directory retention placeholder,,present
 scripts/lib/assetPathMapTools.mjs,lib,helper,Shared asset path mapping helper,,present
 scripts/lib/cdnAssetResolver.ts,lib,helper,Shared CDN asset resolver,,present

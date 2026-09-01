@@ -90,12 +90,12 @@ describe("audit-gate-skips", () => {
     }
   });
 
-  it("ignores Kiro-owned tests outside the external audit root", () => {
-    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "audit-gate-skips-kiro-"));
+  it("ignores tests under external skip roots outside the audit scope", () => {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "audit-gate-skips-external-"));
     try {
       fs.mkdirSync(path.join(tmp, "config/build"), { recursive: true });
       fs.mkdirSync(path.join(tmp, "tests/manifests"), { recursive: true });
-      const relativeTestPath = "tests/.kiro/specs/example/tests/sample.test.ts";
+      const relativeTestPath = "tests/node_modules/example-pkg/tests/sample.test.ts";
       fs.mkdirSync(path.dirname(path.join(tmp, relativeTestPath)), { recursive: true });
       fs.writeFileSync(path.join(tmp, "config/build/playwright-gate-specs.json"), "{\"specs\":[]}\n");
       fs.writeFileSync(path.join(tmp, "tests/manifests/skip-exceptions.json"), "{\"version\":1,\"exceptions\":[]}\n");

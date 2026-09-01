@@ -30,8 +30,14 @@ describe("audit " + "eslint" + " suppress directives", () => {
     expect(source).toContain("site/lib");
     expect(source).toContain("tests");
     expect(source).toContain("scripts");
-    expect(source).not.toContain(".kiro/kiro-repo-guidance-setup/tests");
-    expect(source).not.toContain(".kiro/specs");
+    // SCAN_DIRS must stay product-only — no hidden external spec roots.
+    const scanDirsMatch = source.match(/const SCAN_DIRS = \[([\s\S]*?)\]/);
+    expect(scanDirsMatch).not.toBeNull();
+    const scanDirs = [...scanDirsMatch![1].matchAll(/"([^"]+)"/g)].map((m) => m[1]);
+    expect(scanDirs.length).toBeGreaterThan(0);
+    for (const dir of scanDirs) {
+      expect(dir).not.toMatch(/(^|\/)\.[^./]/);
+    }
     expect(source).not.toMatch(/SCAN_DIRS = \["app", "components"/);
   });
 
@@ -101,10 +107,10 @@ describe("audit " + "eslint" + " suppress directives", () => {
     }
   });
 
-  it("ignores Kiro-owned files outside the external scan scope", () => {
-    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "eslint-audit-kiro-"));
+  it("ignores files under external skip roots outside the scan scope", () => {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "eslint-audit-external-"));
     try {
-      const relativeTestPath = "tests/.kiro/specs/example/tests/bad.test.ts";
+      const relativeTestPath = "tests/node_modules/example-pkg/tests/bad.test.ts";
       const absolute = path.join(tmp, relativeTestPath);
       fs.mkdirSync(path.dirname(absolute), { recursive: true });
       fs.writeFileSync(

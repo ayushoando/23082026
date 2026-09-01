@@ -2,12 +2,12 @@
 
 ## Overview
 
-Rewrite and re-verify exactly the 34 Markdown files named by the approved requirements and design. A single agent executes every task serially, records all evidence in `.kiro/specs/documentation-global-standards/implementation-record.md`, preserves the authority order `user > live code and fresh commands > AGENTS.md > Agents/ > docs/`, and leaves every other repository path unchanged.
+Rewrite and re-verify exactly the 34 Markdown files named by the approved requirements and design. A single agent executes every task serially, records all evidence in `plans/documentation-global-standards/implementation-record.md`, preserves the authority order `user > live code and fresh commands > AGENTS.md > Agents/ > docs/`, and leaves every other repository path unchanged.
 
 ## Execution contract
 
 - Work from the repository root without worktrees and use `pnpm` only for an exact command the user authorizes in the current session and the enabled hook permits.
-- Create only `implementation-record.md` in addition to this task file. Do not modify `requirements.md`, `design.md`, `.config.kiro`, `.kiro/specs/kiro-config-rewrite/**`, application code, tests, databases, migrations, infrastructure, package or configuration files, generated evidence, or out-of-scope Markdown.
+- Create only `implementation-record.md` in addition to this task file. Do not modify `requirements.md`, `design.md`, the external tooling-spec tree (since removed from this repository), application code, tests, databases, migrations, infrastructure, package or configuration files, generated evidence, or out-of-scope Markdown.
 - The cohort subtasks in Task 4 are the sole write owners for the 34 documentation paths. Later findings must be routed back to the owning cohort and recorded as focused rereviews; they do not establish duplicate ownership.
 - Preserve all pre-existing user changes. If one conflicts with a named higher-authority source or acceptance criterion, record the original change, controlling source, and proposed resolution before editing it.
 - Do not implement property-based tests or validator code. Apply Design Properties 1–21 as static acceptance checks in the implementation record.
@@ -16,16 +16,16 @@ Rewrite and re-verify exactly the 34 Markdown files named by the approved requir
 ## Tasks
 
 - [x] 1. Establish the immutable corpus baseline and containment controls
-  - [x] 1.1 Create the baseline and allowlist sections in `.kiro/specs/documentation-global-standards/implementation-record.md`
+  - [x] 1.1 Create the baseline and allowlist sections in `plans/documentation-global-standards/implementation-record.md`
     - Record exactly the 34 approved paths, their cohort, presence, tracked state, baseline content identity, and pre-existing-change status before any documentation edit.
-    - Record protected paths and excluded asset classes, including `.kiro/specs/kiro-config-rewrite/**`, and define the only allowed outcomes: the 34 paths remain present and are unmodified or modified; permitted spec artifacts are created or modified.
+    - Record protected paths and excluded asset classes, including the external tooling-spec tree (since removed from this repository), and define the only allowed outcomes: the 34 paths remain present and are unmodified or modified; permitted spec artifacts are created or modified.
     - Capture each pre-existing user change without overwriting it and create the conflict-before-modification record required when a higher-authority source or criterion controls.
     - Add the changed-path ledger schema, sole cohort ownership map, rollback rule, and stop conditions for missing, duplicate, outside, deleted, or renamed paths.
     - Apply static acceptance checks from Design Properties 1, 3, and 20.
     - _Requirements: 1.1–1.3, 1.8–1.12, 3.1, 8.9, 11.19–11.20_
 
 - [x] 2. Research current official documentation guidance
-  - [x] 2.1 Build the Source Register in `.kiro/specs/documentation-global-standards/implementation-record.md`
+  - [x] 2.1 Build the Source Register in `plans/documentation-global-standards/implementation-record.md`
     - Retrieve only official, canonical HTTPS sources from W3C, Diátaxis, Microsoft, Google, the RFC Editor or IETF, and official CommonMark guidance for the concerns each publisher governs.
     - For every applied source, record publisher, title, canonical URL, successful UTC access time, displayed publication or update date when available, governing scope, current/superseded/unverified decision, latest applicable edition evidence, retrieval evidence, licensing-safe paraphrase, and every affected in-scope path.
     - Record failed access and supersession uncertainty as `unverified`; do not silently replace an unavailable official source with a secondary source.
@@ -34,7 +34,7 @@ Rewrite and re-verify exactly the 34 Markdown files named by the approved requir
     - _Requirements: 2.1–2.12, 6.14, 7.9–7.10, 9.6, 11.8_
 
 - [x] 3. Build the evidence and editorial control ledgers
-  - [x] 3.1 Populate the pre-rewrite ledgers in `.kiro/specs/documentation-global-standards/implementation-record.md`
+  - [x] 3.1 Populate the pre-rewrite ledgers in `plans/documentation-global-standards/implementation-record.md`
     - Create claim records for commands, paths, dates, versions, routes, schemas, persistence, deployment, observability, analytics, security, and other repository facts; include owning source, exact source location, observed value, status, and needed evidence when unresolved.
     - Create the canonical terminology and canonical-owner registries, including the six shared navigation documents, blocker ownership, validation evidence, browser evidence, operations, product map, script reference, fork boundary, two databases, persistence, FOCSS, plans, generated evidence, and status vocabulary.
     - Create conflict records with allowed classifications, authority levels, canonical owner, controlling evidence, unique local detail, affected paths, resolution, and state.
@@ -96,7 +96,7 @@ Rewrite and re-verify exactly the 34 Markdown files named by the approved requir
     - _Requirements: 3.2–3.8, 4.1–4.10, 5.1–5.12, 6.1–6.14, 7.1–7.13, 8.1–8.8, 9.1–9.9, 10.8–10.14, 11.3–11.7_
 
 - [x] 5. Checkpoint — close the complete first pass before second-pass review
-  - [x] 5.1 Reconcile all first-pass findings and dependency closures in `.kiro/specs/documentation-global-standards/implementation-record.md`
+  - [x] 5.1 Reconcile all first-pass findings and dependency closures in `plans/documentation-global-standards/implementation-record.md`
     - Confirm all 34 sole-owner cohort entries have completed first reviews, one provisional disposition, all required review dimensions, security records, claim/conflict evidence, and no omitted or duplicate path.
     - Process corrections in authority order by routing each change back to its sole owning cohort; append focused rereviews for every affected file, link, index, canonical reference, claim, conflict, source dependency, and operational-contract tag.
     - For a same-level unresolved conflict, preserve both baseline meanings, set `pending-owner-validation`, stop dependent work, and request owner resolution rather than inventing policy.
@@ -106,7 +106,7 @@ Rewrite and re-verify exactly the 34 Markdown files named by the approved requir
     - _Requirements: 1.5–1.9, 3.4–3.9, 7.11–7.13, 8.3–8.8, 9.1–9.9, 10.11–10.14, 11.1, 11.9–11.11, 11.16–11.18_
 
 - [x] 6. Perform a fresh complete second-pass review
-  - [x] 6.1 Re-read and second-review the exact 34-path corpus in `.kiro/specs/documentation-global-standards/implementation-record.md`
+  - [x] 6.1 Re-read and second-review the exact 34-path corpus in `plans/documentation-global-standards/implementation-record.md`
     - Use fresh file reads in allowlist order; do not copy first-pass conclusions. Record a distinct second-review result for every path and every required dimension.
     - Verify exact corpus membership and path presence; unique title and purpose; reader need; heading/list/table/image/fence/command-block structure; CommonMark/accessibility; local links and anchors; external citations; evidence-backed commands, paths, dates, and repository facts; conflict closure; security; operational-contract preservation; and six-navigation-document agreement.
     - Recheck every official source for canonical destination, publisher authority, applicability, access, and supersession; mark failed retrieval and dependent decisions unverified without inventing a pass.
@@ -115,7 +115,7 @@ Rewrite and re-verify exactly the 34 Markdown files named by the approved requir
     - _Requirements: 1.12, 2.2–2.10, 3.1–3.9, 4.1–4.10, 5.1–5.12, 6.1–6.14, 7.1–7.13, 8.1–8.9, 9.1–9.9, 10.1–10.14, 11.2–11.11, 11.21–11.24_
 
 - [x] 7. Prove containment and derive the completion state
-  - [x] 7.1 Finalize changed-path, coverage, and completion records in `.kiro/specs/documentation-global-standards/implementation-record.md`
+  - [x] 7.1 Finalize changed-path, coverage, and completion records in `plans/documentation-global-standards/implementation-record.md`
     - Compare baseline and final path maps and record every created, modified, deleted, or renamed path with ownership, allowlist status, and evidence.
     - Require all 34 original paths to remain present, exactly one resolved disposition and verified final state per path, two file-specific reviews per path, all corrections reverified, complete evidence classifications, zero changed-path exceptions, and zero required pending or failed outcomes.
     - Treat a `verified-retained` disposition as valid only with evidence for every required check; treat `consolidated-as-pointer` as valid only with a canonical destination and retained local operational context.
@@ -144,7 +144,7 @@ Rewrite and re-verify exactly the 34 Markdown files named by the approved requir
     - _Requirements: 7.7, 7.13, 10.9–10.11, 10.14, 11.14–11.18, 11.21–11.22_
 
 - [x] 9. Finalize honest implementation reporting
-  - [x] 9.1 Complete the final summary in `.kiro/specs/documentation-global-standards/implementation-record.md`
+  - [x] 9.1 Complete the final summary in `plans/documentation-global-standards/implementation-record.md`
     - Report all 34 dispositions and final states, first- and second-pass evidence, correction closure, source status, unresolved authority decisions, changed paths, and exact observed or pending command states.
     - Never report a pending, unrun, denied, blocked, interrupted, failed, or unobserved command as passed; distinguish static inspection from observed command evidence.
     - If a same-level authority conflict remains, identify it as `pending-owner-validation`, preserve the competing meanings, and request owner resolution. If an observed failure is outside scope, report it without changing excluded assets.

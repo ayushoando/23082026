@@ -43,7 +43,7 @@ const CONFIG: AuditRunConfiguration = {
   auditId: "site-ui-content-links-audit",
   schemaVersion: "1.0.0",
   specId: "test-spec",
-  specConfigPath: ".kiro/specs/site-ui-content-links-audit/.config.kiro",
+  specConfigPath: ".removed-specs/site-ui-content-links-audit/spec-config.json",
   artifactPaths: {
     toolingRoot: "scripts/site-ui-content-links-audit",
     generatedRoot: "results/site-ui-content-links-audit",

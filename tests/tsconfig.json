@@ -32,7 +32,6 @@
     "../site/types/webmcp.d.ts"
   ],
   "exclude": [
-    "../.kiro/**",
     "archive/**",
     "e2e/**",
     "tech-docs-generator/**",

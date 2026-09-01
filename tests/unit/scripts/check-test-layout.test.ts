@@ -88,12 +88,12 @@ describe("check-test-layout (name-mirror)", () => {
     }
   });
 
-  it("ignores Kiro-owned test files outside the external scan scope", () => {
-    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "check-test-layout-kiro-"));
+  it("ignores test files under external skip roots outside the scan scope", () => {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "check-test-layout-external-"));
     try {
       const paths = [
-        ".kiro/specs/example/tests/spec-owned.spec.ts",
-        "tests/.kiro/specs/example/tests/nested.spec.ts",
+        "tests/node_modules/example-pkg/tests/spec-owned.spec.ts",
+        "tests/.next/specs/example/tests/nested.spec.ts",
       ];
       for (const relative of paths) {
         fs.mkdirSync(path.dirname(path.join(tmp, relative)), { recursive: true });

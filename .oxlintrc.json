@@ -13,7 +13,6 @@
   },
   "ignorePatterns": [
     "**/node_modules/**",
-    "**/.kiro/**",
     "**/.next/**",
     "**/public/**",
     "**/results/**",

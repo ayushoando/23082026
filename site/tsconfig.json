@@ -70,7 +70,6 @@
     ".next/dev/dev/types/**/*.ts"
   ],
   "exclude": [
-    "../.kiro/**",
     "node_modules",
     "platform/supabase/functions"
   ]

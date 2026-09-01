@@ -30,7 +30,7 @@ function posix(value) {
 function walk(directory, files = []) {
   if (!fs.existsSync(directory)) return files;
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
-    if (["node_modules", ".git", ".kiro", "__snapshots__"].includes(entry.name)) continue;
+    if (["node_modules", ".git", "__snapshots__"].includes(entry.name)) continue;
     const absolute = path.join(directory, entry.name);
     if (entry.isDirectory()) walk(absolute, files);
     else if (TEST_SOURCE.test(entry.name)) files.push(absolute);

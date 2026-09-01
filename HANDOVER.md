@@ -4,7 +4,7 @@ This file preserves prior handoff context; it is not a source of current reposit
 
 ## Retained historical outcomes
 
-- A prior Kiro-configuration audit changed local skills, powers, steering, hooks, and permissions. Its runtime-recognition claims were not fully verified.
+- A prior configuration audit of an external AI-assistant scaffolding tree (and its spec folders) changed local skills, powers, steering, hooks, and permissions. Its runtime-recognition claims were not fully verified.
 - A prior shared-site assistant change reported a corrected launcher and added OpenAI and Amazon Bedrock fallback configuration. It explicitly left Planner and Studio fork trees untouched.
 - That handoff reported no commit or push and identified provider credentials and authorized validation as remaining operator work.
 
@@ -14,9 +14,9 @@ Store credentials only in `.env.local` or `site/.env.local`. Server credentials,
 
 ## Session notes — 2026-09-01
 
-- `.kiro\agents\*.md` (5 files) and several `.kiro\specs` subfolders vanished mid-session while `.kiro` was being modified by another process; not restored, not assumed. Rule for next sessions: **ask the user whenever an expected file is missing.**
-- Moved on user instruction: `agents-work\client-hub` → `plans\client-hub`; all `.kiro\specs\*` subfolders → `plans\` (`planner-comprehensive-audit` merged with its existing plan folder). `.kiro\specs` is now empty. Moves are unstaged in git.
-- Root docs, `docs/`, `plans/` (md), `.kiro\skills`, and `Agents/` handbooks were read in full this session.
+- Five `agents\*.md` files and several spec subfolders of the external AI-assistant scaffolding tree (and its spec folders) vanished mid-session while that tree was being modified by another process; not restored, not assumed. Rule for next sessions: **ask the user whenever an expected file is missing.**
+- Moved on user instruction: `agents-work\client-hub` → `plans\client-hub`; all spec subfolders of that scaffolding tree → `plans\` (`planner-comprehensive-audit` merged with its existing plan folder). Its spec folders were left empty, and the tree itself has since been removed from this repository. Moves are unstaged in git.
+- Root docs, `docs/`, `plans/` (md), the skills of the external AI-assistant scaffolding tree, and `Agents/` handbooks were read in full this session.
 
 ## Current-owner checklist
 

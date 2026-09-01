@@ -53,8 +53,8 @@ const WORKSTREAM_1_PATHS = [
   "plans/planner-comprehensive-audit/findingRegistry.ts",
   "plans/planner-comprehensive-audit/workflowTraceBuilder.ts",
   FINAL_RECONCILIATION_PATH,
-  // Corrected 2026-09-01: the plan artifacts moved from `.kiro/specs/**`
-  // (removed) to `plans/planner-comprehensive-audit/`.
+  // Corrected 2026-09-01: the plan artifacts moved from the removed
+  // external spec tree to `plans/planner-comprehensive-audit/`.
   "plans/planner-comprehensive-audit/tasks.md",
   "plans/planner-comprehensive-audit/handover.md",
 ] as const;
@@ -566,7 +566,7 @@ export const FINAL_PENDING_VALIDATION_COMMANDS = uniqueSorted(
 
 export const FINAL_PRESERVED_UNRELATED_PATHS = [
   // Corrected 2026-09-01: the ai-package-remediation spec folder
-  // (`.kiro/specs/**`, removed) lives on as `plans/packages/`.
+  // (the removed external spec tree) lives on as `plans/packages/`.
   "plans/packages/package-audit-report.md",
   "plans/packages/remedy-plan.md",
   "tests/unit/lib/ai/mastra/catalogRetrieval.test.ts",
@@ -574,7 +574,7 @@ export const FINAL_PRESERVED_UNRELATED_PATHS = [
 
 export const FINAL_PRESERVED_OUT_OF_SCOPE_PATHS = [
   // Corrected 2026-09-01: the ai-implementation-audit spec folder
-  // (`.kiro/specs/**`, removed) lives on as `plans/ai-audit/`.
+  // (the removed external spec tree) lives on as `plans/ai-audit/`.
   "plans/ai-audit/remedy-plan.md",
   "scripts/AsNeeded/verify-focss.mjs",
   "site/components/Planner/PlannerAlignBar.tsx",

@@ -6,7 +6,7 @@
 // full validation stays pending) but had no test importing it, so those
 // guards never executed. This test imports the module (running its guards)
 // and additionally asserts every recorded path exists on disk — the class of
-// drift that let stale `.kiro/specs/**` references survive unnoticed.
+// drift that let stale external-spec-tree references survive unnoticed.
 
 import { existsSync } from "node:fs";
 import path from "node:path";
@@ -63,11 +63,15 @@ describe("planner final reconciliation (task 6 checkpoint)", () => {
     expect(missing, `reconciliation references missing paths: ${missing.join(", ")}`).toEqual([]);
   });
 
-  it("no reconciliation path references the removed .kiro specs tree", () => {
+  it("keeps every preserved reconciliation path inside an allowlisted repository root", () => {
+    // Protective intent: preserved paths must live under real, tracked
+    // repository roots — never under the removed external spec tree or any
+    // other hidden scaffolding directory.
+    const allowedRoots = ["plans/", "site/", "tests/", "scripts/"];
     const offenders = [
       ...FINAL_COMPLETION_RECORD.preservedUnrelatedPaths,
       ...FINAL_COMPLETION_RECORD.preservedOutOfScopePaths,
-    ].filter((p) => p.startsWith(".kiro/"));
+    ].filter((p) => !allowedRoots.some((root) => p.startsWith(root)));
     expect(offenders).toEqual([]);
   });
 });

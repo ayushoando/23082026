@@ -20,7 +20,7 @@ const MARKETING_SEGMENT = `${path.sep}tests${path.sep}unit${path.sep}app${path.s
 function walk(dir, files = []) {
   if (!existsSync(dir)) return files;
   for (const entry of readdirSync(dir)) {
-    if (entry === ".kiro") continue;
+    if (["node_modules", ".git", "__snapshots__"].includes(entry)) continue;
     const full = path.join(dir, entry);
     if (statSync(full).isDirectory()) {
       walk(full, files);

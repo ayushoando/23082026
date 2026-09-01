@@ -1,7 +1,6 @@
 {
   "scss.lint.emptyRules": "ignore",
   "scss.lint.unknownAtRules": "ignore",
-  "kiroAgent.trust.defaultPattern": "full",
   "markdown.updateLinksOnFileMove.enabled": "always",
   "typescript.updateImportsOnFileMove.enabled": "always",
   "[prompt]": {

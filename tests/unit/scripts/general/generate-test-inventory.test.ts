@@ -21,14 +21,15 @@ describe("generate-test-inventory classification", () => {
     expect(classifyTestInventoryPath(file)).toEqual({ kind, runner });
   });
 
-  it("discovers ordinary tests while ignoring Kiro-owned roots", () => {
+  it("discovers ordinary tests while ignoring external scaffold roots", () => {
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "test-inventory-"));
     try {
       const ordinaryPath = "tests/unit/site/lib/ordinary.test.ts";
-      const nestedKiroPath = "tests/.kiro/specs/example/tests/spec-owned.test.ts";
-      const externalKiroPath = ".kiro/specs/example/tests/spec-owned.test.ts";
+      const nestedExternalPath = "tests/node_modules/example-pkg/tests/spec-owned.test.ts";
+      const hiddenExternalPath = "tests/.git/specs/example/tests/spec-owned.test.ts";
+      const outsideTreePath = ".other-tool/specs/example/tests/spec-owned.test.ts";
 
-      for (const relative of [ordinaryPath, nestedKiroPath, externalKiroPath]) {
+      for (const relative of [ordinaryPath, nestedExternalPath, hiddenExternalPath, outsideTreePath]) {
         const absolute = path.join(tmp, relative);
         fs.mkdirSync(path.dirname(absolute), { recursive: true });
         fs.writeFileSync(absolute, "export {};\n");
@@ -36,7 +37,8 @@ describe("generate-test-inventory classification", () => {
 
       const paths = collectTestInventoryFiles(tmp).map((file) => file.path);
       expect(paths).toEqual([ordinaryPath]);
-      expect(paths.some((file) => file.startsWith(".kiro/"))).toBe(false);
+      expect(paths.some((file) => file.includes("node_modules/"))).toBe(false);
+      expect(paths.some((file) => file.includes(".git/"))).toBe(false);
     } finally {
       fs.rmSync(tmp, { recursive: true, force: true });
     }

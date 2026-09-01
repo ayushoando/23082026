@@ -57,10 +57,10 @@ describe("audit-hollow-tests", () => {
     expect(hits.some((h) => h.reason === "zero-expect")).toBe(true);
   });
 
-  it("ignores Kiro-owned tests outside the external audit root", () => {
-    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "audit-hollow-kiro-"));
+  it("ignores tests under external skip roots outside the audit scope", () => {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "audit-hollow-external-"));
     try {
-      const relativeTestPath = "tests/.kiro/specs/example/tests/sample.test.ts";
+      const relativeTestPath = "tests/node_modules/example-pkg/tests/sample.test.ts";
       const absolute = path.join(tmp, relativeTestPath);
       fs.mkdirSync(path.dirname(absolute), { recursive: true });
       fs.writeFileSync(absolute, "it('empty', () => { const value = 1; });\n");

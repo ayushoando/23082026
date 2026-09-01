@@ -2,7 +2,7 @@
   "auditId": "site-ui-content-links-audit",
   "schemaVersion": "1.0.0",
   "specId": "a1d0ec75-82d5-42af-907f-c43024cb4a1e",
-  "specConfigPath": ".kiro/specs/site-ui-content-links-audit/.config.kiro",
+  "specConfigPath": ".removed-specs/site-ui-content-links-audit/spec-config.json",
   "artifactPaths": {
     "toolingRoot": "scripts/site-ui-content-links-audit",
     "generatedRoot": "results/site-ui-content-links-audit",
