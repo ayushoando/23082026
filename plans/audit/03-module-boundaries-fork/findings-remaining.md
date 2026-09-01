@@ -1,7 +1,6 @@
-# Remaining — Module boundaries & fork discipline
+# Remaining — Module Boundaries & Fork Discipline
+
 **Date:** 2026-09-01
 
-- Plan action 1 (toast a11y drift): backport of aria-live / `role=alert` / dismiss button / PhIcon from `PlannerToast.tsx` to `site/components/Studio/StudioToast.tsx` — in progress, not merged.
-- Plan action 2 (IconButton drift): unify `aria-pressed` coercion (`active` vs `!!active`) and icon size (18 vs 20) between `PlannerIconButton.tsx` and `StudioIconButton.tsx` — in progress, not merged.
-- 3.2: shared-surface → product-namespace edge (`app/(site)/portal/page.tsx:9`, `app/(site)/portal/[id]/page.tsx:4` → `@planner/lib/projectsStore`) — in progress, not merged.
-- 3.3: `site/lib/observability/planner/` (5 files) sits outside the `lib/Planner` namespace the boundary scanner owns — relocation in progress, not merged.
+- 3.1: no action needed (positive finding, re-verified by scan:boundaries after the changes).
+- Fork duplication inventory (~28 component pairs, 6 hook pairs, 7 lib pairs): intentional-by-design; drift reconciliation beyond the Toast/IconButton pairs is accepted tech debt — revisit when touching each pair.

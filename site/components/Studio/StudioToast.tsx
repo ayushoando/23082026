@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useReducer } from "react";
 import { useStudioUIStore } from "@studio/store/studioUiStore";
+import { PhIcon } from "@studio/components/ui/StudioPhIcon";
 
 /** Matches the `toast-out` keyframe duration in `focss/studio/chrome.css`. */
 const EXIT_MS = 180;
@@ -34,6 +35,7 @@ function toastViewReducer(state: ToastViewState, action: ToastViewAction): Toast
 
 export const Toast = () => {
   const toast = useStudioUIStore((s) => s.toast);
+  const dismissToast = useStudioUIStore((s) => s.dismissToast);
   const [{ shown, leaving }, dispatch] = useReducer(toastViewReducer, { shown: toast, leaving: false });
 
   useEffect(() => {
@@ -48,8 +50,25 @@ export const Toast = () => {
 
   if (!shown) return null;
   return (
-    <div className="toast-viewport">
-      <div className={`toast toast--${shown.kind}${leaving ? " toast--leaving" : ""}`}>{shown.message}</div>
+    <div className="toast-viewport" aria-live={shown.kind === "error" ? "assertive" : "polite"}>
+      <div
+        className={`toast toast--${shown.kind}${leaving ? " toast--leaving" : ""}`}
+        role={shown.kind === "error" ? "alert" : "status"}
+        data-state={shown.kind === "error" ? "server-error" : "success"}
+      >
+        <span className="toast__icon" aria-hidden="true">
+          <PhIcon name={shown.kind === "error" ? "warning" : "checkCircle"} size={18} weight="duotone" />
+        </span>
+        <span className="toast__message">{shown.message}</span>
+        <button
+          type="button"
+          className="toast__dismiss"
+          onClick={dismissToast}
+          aria-label="Dismiss notification"
+        >
+          <PhIcon name="x" size={16} />
+        </button>
+      </div>
     </div>
   );
 };

@@ -30,7 +30,7 @@ import {
 } from "@planner/lib/plannerRequestPipeline";
 import {
   observePlannerApiResponseAtCallSite,
-} from "@/lib/observability/planner/plannerObservability.server";
+} from "@/lib/Planner/observability/plannerObservability.server";
 import {
   plannerApiFailure,
   resolvePlannerCorrelationId,

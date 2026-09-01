@@ -32,7 +32,7 @@ function finding(categories: readonly PlannerValidationCategory[], changedPaths:
 describe("Property 27: Authorization-gated validation", () => {
   it("records an outcome only when both exact authorization states permit execution", () => {
     fc.assert(fc.property(userAuthorizationArbitrary, hookPermissionArbitrary, fc.integer(), (userAuthorization, hookPermission, exitStatus) => {
-      const action = derivePlannerValidationManifest([finding(["type"], ["site/lib/observability/planner/plannerObservability.ts"])])[0];
+      const action = derivePlannerValidationManifest([finding(["type"], ["site/lib/Planner/observability/plannerObservability.ts"])])[0];
       const eligible = isValidationExecutionEligible(userAuthorization, hookPermission);
       const record = recordValidationEvidence({
         action,

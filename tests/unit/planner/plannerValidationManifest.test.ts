@@ -128,7 +128,7 @@ describe("Planner task 5.11 validation manifest", () => {
 
   it("records observed exit status, evidence class, output limitation, and unverified behavior only after both permissions are present", () => {
     const action = derivePlannerValidationManifest([
-      finding("finding:type", ["type"], ["site/lib/observability/planner/plannerObservability.ts"]),
+      finding("finding:type", ["type"], ["site/lib/Planner/observability/plannerObservability.ts"]),
     ]).find((candidate) => candidate.id === "validation:w5:typecheck");
 
     if (!action) throw new Error("Expected the typecheck action.");

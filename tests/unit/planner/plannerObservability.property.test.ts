@@ -19,16 +19,16 @@ import {
   type PlannerObservedOperation,
   type PlannerOperationEvent,
   type PlannerObservabilityDependencies,
-} from "@/lib/observability/planner/plannerObservability";
+} from "@/lib/Planner/observability/plannerObservability";
 import {
   observePlannerApiResponse,
   runObservedPlannerPersistence,
-} from "@/lib/observability/planner/plannerObservabilityAdapters";
+} from "@/lib/Planner/observability/plannerObservabilityAdapters";
 
 vi.mock("server-only", () => ({}));
 
 const { plannerFallbackSink, plannerPrometheusExporter } = await import(
-  "@/lib/observability/planner/plannerObservabilityExporter.server"
+  "@/lib/Planner/observability/plannerObservabilityExporter.server"
 );
 
 const PROPERTY_RUNS = 200;

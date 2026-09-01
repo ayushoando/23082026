@@ -23,6 +23,7 @@ type StudioUIStore = {
   toggleGrid: () => void;
   toast: ToastState;
   showToast: (message: string, kind?: ToastKind) => void;
+  dismissToast: () => void;
 };
 
 export const useStudioUIStore = create<StudioUIStore>((set) => ({
@@ -47,4 +48,5 @@ export const useStudioUIStore = create<StudioUIStore>((set) => ({
       2600,
     );
   },
+  dismissToast: () => set({ toast: null }),
 }));

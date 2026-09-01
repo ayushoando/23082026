@@ -22,8 +22,8 @@ import {
 } from "@planner/lib/plannerProjectRepository";
 import {
   runObservedPlannerPersistenceAtCallSite,
-} from "@/lib/observability/planner/plannerObservability.server";
-import type { PlannerPersistenceOperation } from "@/lib/observability/planner/plannerObservability";
+} from "@/lib/Planner/observability/plannerObservability.server";
+import type { PlannerPersistenceOperation } from "@/lib/Planner/observability/plannerObservability";
 import {
   PlannerPersistenceConfigurationError,
   runContextualPlannerPersistenceOperation,

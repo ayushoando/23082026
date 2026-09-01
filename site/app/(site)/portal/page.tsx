@@ -6,7 +6,7 @@ import {
   isPlannerDatabaseConfigured,
   listPlannerDocumentsFromStore,
   type PlannerSaveSummary,
-} from "@planner/lib/projectsStore";
+} from "@/features/site/portal/plannerProjectListing";
 
 /** Cap plan-list wait so portal never paints an infinite loading spinner. */
 const PORTAL_LIST_TIMEOUT_MS = 8_000;
