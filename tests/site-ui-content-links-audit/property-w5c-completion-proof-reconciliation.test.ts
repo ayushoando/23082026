@@ -30,12 +30,17 @@ import type { AuditRunConfiguration } from "../../scripts/site-ui-content-links-
 import {
   AUDIT_SCHEMA_VERSION,
   parseAuditRecord,
+  type AuditRecord,
 } from "../../scripts/site-ui-content-links-audit/schemas";
 import type { ClassifiedRunRecords } from "../../scripts/site-ui-content-links-audit/wave5-reconcile";
 import {
   buildCompletionProof,
   verifyZeroProductMutation,
 } from "../../scripts/site-ui-content-links-audit/wave5-completion-proof";
+
+type MatrixRowFixture = ClassifiedRunRecords["matrixRows"][number];
+type FindingFixture = ClassifiedRunRecords["findings"][number];
+type EvidenceFixture = ClassifiedRunRecords["evidenceRecords"][number];
 
 const CREATED_AT = "2026-08-31T12:00:00.000Z";
 
@@ -87,10 +92,10 @@ function emptyClassified(): ClassifiedRunRecords {
 
 function buildConsistentRecords(count: number): ClassifiedRunRecords {
   const records = emptyClassified();
-  const matrixRows: object[] = [];
-  const findings: object[] = [];
-  const evidenceRecords: object[] = [];
-  const inventoryRecords: object[] = [];
+  const matrixRows: MatrixRowFixture[] = [];
+  const findings: FindingFixture[] = [];
+  const evidenceRecords: EvidenceFixture[] = [];
+  const inventoryRecords: AuditRecord[] = [];
   for (let index = 0; index < count; index += 1) {
     const occurrenceId = `occurrence.w5c.${index}`;
     const findingId = `finding.w5c.${index}`;
@@ -178,10 +183,9 @@ function buildConsistentRecords(count: number): ClassifiedRunRecords {
   }
   return {
     ...records,
-    matrixRows: matrixRows as ClassifiedRunRecords["matrixRows"],
-    findings: findings as ClassifiedRunRecords["findings"],
-    evidenceRecords:
-      evidenceRecords as ClassifiedRunRecords["evidenceRecords"],
+    matrixRows,
+    findings,
+    evidenceRecords,
     inventoryRecords,
   };
 }
@@ -268,23 +272,20 @@ describe(
 
               switch (drift) {
                 case "extra-evidence": {
-                  const extra = {
-                    ...(records.evidenceRecords[0] as object),
+                  const extra: EvidenceFixture = {
+                    ...records.evidenceRecords[0]!,
                     recordId: "record.evidence.w5c.extra",
                     evidenceId: "evidence.w5c.extra",
                   };
                   mutated = {
                     ...records,
-                    evidenceRecords: [
-                      ...records.evidenceRecords,
-                      extra,
-                    ] as ClassifiedRunRecords["evidenceRecords"],
+                    evidenceRecords: [...records.evidenceRecords, extra],
                   };
                   break;
                 }
                 case "defect-without-severity": {
-                  const defect = {
-                    ...(records.findings[0] as object),
+                  const defect: FindingFixture = {
+                    ...records.findings[0]!,
                     recordId: "record.finding.w5c.defect",
                     findingId: "finding.w5c.defect",
                     occurrenceId: "occurrence.w5c.defect",
@@ -292,8 +293,8 @@ describe(
                     severityAssessmentId: "severity.w5c.missing",
                     evidenceIds: ["evidence.w5c.0"],
                   };
-                  const defectRow = {
-                    ...(records.matrixRows[0] as object),
+                  const defectRow: MatrixRowFixture = {
+                    ...records.matrixRows[0]!,
                     recordId: "record.row.w5c.defect",
                     occurrenceId: "occurrence.w5c.defect",
                     findingId: "finding.w5c.defect",
@@ -301,20 +302,14 @@ describe(
                   };
                   mutated = {
                     ...records,
-                    findings: [
-                      ...records.findings,
-                      defect,
-                    ] as ClassifiedRunRecords["findings"],
-                    matrixRows: [
-                      ...records.matrixRows,
-                      defectRow,
-                    ] as ClassifiedRunRecords["matrixRows"],
+                    findings: [...records.findings, defect],
+                    matrixRows: [...records.matrixRows, defectRow],
                   };
                   break;
                 }
                 case "pending-row": {
-                  const pending = {
-                    ...(records.matrixRows[0] as object),
+                  const pending: MatrixRowFixture = {
+                    ...records.matrixRows[0]!,
                     recordId: "record.row.w5c.pending",
                     occurrenceId: "occurrence.w5c.pending",
                     status: "pending",
@@ -322,10 +317,7 @@ describe(
                   };
                   mutated = {
                     ...records,
-                    matrixRows: [
-                      ...records.matrixRows,
-                      pending,
-                    ] as ClassifiedRunRecords["matrixRows"],
+                    matrixRows: [...records.matrixRows, pending],
                   };
                   break;
                 }

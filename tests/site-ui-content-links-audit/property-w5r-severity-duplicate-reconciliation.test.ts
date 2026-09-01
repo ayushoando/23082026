@@ -51,6 +51,13 @@ import {
 
 const CREATED_AT = "2026-08-31T12:00:00.000Z";
 
+type MatrixRowFixture = ClassifiedRunRecords["matrixRows"][number];
+type FindingFixture = ClassifiedRunRecords["findings"][number];
+type EvidenceFixture = ClassifiedRunRecords["evidenceRecords"][number];
+type SeverityFixture = ClassifiedRunRecords["severityAssessments"][number];
+/** Evidence severities exclude the reconciliation bottom `not-applicable`. */
+type SpecSeverity = Exclude<(typeof SEVERITY_ORDER)[number], "not-applicable">;
+
 type Surface = "marketing" | "administration" | "planner" | "studio";
 
 const SURFACES: readonly Surface[] = [
@@ -82,10 +89,10 @@ function envelope(recordId: string) {
 }
 
 interface Fixture {
-  readonly rows: readonly object[];
-  readonly findings: readonly object[];
-  readonly evidence: readonly object[];
-  readonly severities: readonly object[];
+  readonly rows: readonly MatrixRowFixture[];
+  readonly findings: readonly FindingFixture[];
+  readonly evidence: readonly EvidenceFixture[];
+  readonly severities: readonly SeverityFixture[];
 }
 
 interface OccurrenceSpec {
@@ -93,16 +100,16 @@ interface OccurrenceSpec {
   readonly surface: Surface;
   readonly waves: readonly number[];
   readonly nonconforming: boolean;
-  readonly severity: (typeof SEVERITY_ORDER)[number];
+  readonly severity: SpecSeverity;
   readonly ownerDecision: boolean;
   readonly dimension: string;
 }
 
 function buildFixtures(specs: readonly OccurrenceSpec[]): Fixture {
-  const rows: object[] = [];
-  const findings: object[] = [];
-  const evidence: object[] = [];
-  const severities: object[] = [];
+  const rows: MatrixRowFixture[] = [];
+  const findings: FindingFixture[] = [];
+  const evidence: EvidenceFixture[] = [];
+  const severities: SeverityFixture[] = [];
   for (const spec of specs) {
     const occurrenceId = `occurrence.w5r.${spec.key}`;
     const findingId = `finding.w5r.${spec.key}`;
@@ -110,14 +117,16 @@ function buildFixtures(specs: readonly OccurrenceSpec[]): Fixture {
     const assessmentId = `severity.w5r.${spec.key}`;
     for (const waveId of spec.waves) {
       const evidenceId = `evidence.w5r.${spec.key}.${waveId}`;
-      const resultClassification = spec.ownerDecision
-        ? "requires-owner-decision"
-        : spec.nonconforming
-          ? "nonconforming"
-          : "conforming";
-      const status = resultClassification === "requires-owner-decision"
-        ? "requires-owner-decision"
-        : resultClassification;
+      const resultClassification: FindingFixture["resultClassification"] =
+        spec.ownerDecision
+          ? "requires-owner-decision"
+          : spec.nonconforming
+            ? "nonconforming"
+            : "conforming";
+      const status: MatrixRowFixture["status"] =
+        resultClassification === "requires-owner-decision"
+          ? "requires-owner-decision"
+          : resultClassification;
       evidence.push({
         ...envelope(`record.${evidenceId}`),
         recordType: "evidence",
@@ -236,24 +245,37 @@ function buildFixtures(specs: readonly OccurrenceSpec[]): Fixture {
 
 function buildWaveSet(specs: readonly OccurrenceSpec[]): readonly WaveRecordSet[] {
   const fixtures = buildFixtures(specs);
-  const byWave = new Map<number, { rows: object[]; findings: object[]; evidence: object[]; severities: object[] }>();
-  for (const record of fixtures.rows as { recordId: string }[]) {
+  const byWave = new Map<
+    number,
+    {
+      rows: MatrixRowFixture[];
+      findings: FindingFixture[];
+      evidence: EvidenceFixture[];
+      severities: SeverityFixture[];
+    }
+  >();
+  for (const record of fixtures.rows) {
     const waveId = Number(record.recordId.split(".").pop());
-    const bucket = byWave.get(waveId) ?? { rows: [], findings: [], evidence: [], severities: [] };
+    const bucket = byWave.get(waveId) ?? {
+      rows: [],
+      findings: [],
+      evidence: [],
+      severities: [],
+    };
     bucket.rows.push(record);
     byWave.set(waveId, bucket);
   }
-  for (const record of fixtures.findings as { recordId: string }[]) {
+  for (const record of fixtures.findings) {
     const waveId = Number(record.recordId.split(".").pop()?.replace("w", ""));
     const bucket = byWave.get(waveId);
     if (bucket) bucket.findings.push(record);
   }
-  for (const record of fixtures.evidence as { evidenceId: string }[]) {
+  for (const record of fixtures.evidence) {
     const waveId = Number(record.evidenceId.split(".").pop());
     const bucket = byWave.get(waveId);
     if (bucket) bucket.evidence.push(record);
   }
-  for (const record of fixtures.severities as { assessmentId: string }[]) {
+  for (const record of fixtures.severities) {
     const waveId = Number(record.assessmentId.split(".").pop());
     const bucket = byWave.get(waveId);
     if (bucket) bucket.severities.push(record);
@@ -261,14 +283,13 @@ function buildWaveSet(specs: readonly OccurrenceSpec[]): readonly WaveRecordSet[
   return [...byWave.entries()]
     .sort((left, right) => left[0] - right[0])
     .map(
-      ([waveId, bucket]) =>
-        ({
-          waveId,
-          matrixRows: bucket.rows,
-          findings: bucket.findings,
-          evidenceRecords: bucket.evidence,
-          severityAssessments: bucket.severities,
-        }) as unknown as WaveRecordSet,
+      ([waveId, bucket]): WaveRecordSet => ({
+        waveId,
+        matrixRows: bucket.rows,
+        findings: bucket.findings,
+        evidenceRecords: bucket.evidence,
+        severityAssessments: bucket.severities,
+      }),
     );
 }
 
@@ -278,7 +299,7 @@ const arbSeverity = fc.constantFrom(
   "medium",
   "low",
   "advisory",
-) as fc.Arbitrary<(typeof SEVERITY_ORDER)[number]>;
+) as fc.Arbitrary<SpecSeverity>;
 
 const arbKey = fc.stringMatching(/^[a-z][a-z0-9]{1,8}$/);
 
@@ -446,7 +467,7 @@ describe(
               );
 
               // Cross-wave merge: one occurrence, two waves, two assessments.
-              const lower: (typeof SEVERITY_ORDER)[number] =
+              const lower: SpecSeverity =
                 maxSeverity(severities) === "critical" ? "low" : "critical";
               const specs: readonly OccurrenceSpec[] = [
                 {

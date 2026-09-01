@@ -23,6 +23,7 @@ import type { PlannerEndpointDescriptor } from "@planner/lib/plannerEndpointCont
 import {
   processPlannerRequest,
   type PlannerOperationContext,
+  type PlannerOperationResult,
   type PlannerEndpointOperationPort,
   type PlannerRequestPipelineDependencies,
 } from "@planner/lib/plannerRequestPipeline";
@@ -159,10 +160,14 @@ function captureOperation(): {
 } {
   const contexts: PlannerOperationContext[] = [];
   const operation: PlannerEndpointOperationPort<Record<string, string>> = {
-    invoke: vi.fn(async (context) => {
-      contexts.push(context);
-      return { ok: true, status: 201, data: { id: "created" } };
-    }),
+    invoke: vi.fn(
+      async (
+        context: PlannerOperationContext,
+      ): Promise<PlannerOperationResult<Record<string, string>>> => {
+        contexts.push(context);
+        return { ok: true, status: 201, data: { id: "created" } };
+      },
+    ),
   };
   return { operation, contexts };
 }

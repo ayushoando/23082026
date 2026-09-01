@@ -169,12 +169,11 @@ function installStubIndexedDB(options: InstallOptions = {}): StubHandle {
           fire(req.onerror);
           return;
         }
-        let stores = registry.get(name);
-        const isNew = stores === undefined;
-        if (isNew) {
-          stores = new Map();
-          registry.set(name, stores);
-        }
+        const existing = registry.get(name);
+        const isNew = existing === undefined;
+        const stores: Map<string, Map<string, Record<string, unknown>>> =
+          existing ?? new Map();
+        if (isNew) registry.set(name, stores);
         req.result = makeDatabase(stores);
         if (isNew) fire(req.onupgradeneeded);
         fire(req.onsuccess);
