@@ -113,6 +113,8 @@ export interface CompletionProofBuildInput {
   readonly changedPathManifestReference: string;
   readonly waveCheckpointIds: readonly string[];
   readonly config: AuditRunConfiguration;
+  /** Coverage-gap payloads that failed schema validation during ingestion. */
+  readonly unclassifiedCoverageGaps?: number;
 }
 
 export interface CompletionProofBuildResult {
@@ -282,7 +284,7 @@ export function buildCompletionProof(
     exclusions: inventory.exclusions.length,
     unclassifiedInventory: unclassifiedInventoryCount(inventory.canonical),
     coverageGaps: inventory.coverageGaps.length,
-    unclassifiedCoverageGaps: 0,
+    unclassifiedCoverageGaps: input.unclassifiedCoverageGaps ?? 0,
     pendingOperations: pendingOperationKeys.size,
     quarantine: validation.quarantined.length,
     nonTerminalRows: matrixRows.filter(
@@ -300,6 +302,7 @@ export function buildCompletionProof(
     severityRationaleClosure: totals.defects === totals.severityRationales,
     handoffClosure: totals.handoffSubjects === totals.handoffs,
     zeroUnclassifiedInventory: totals.unclassifiedInventory === 0,
+    zeroUnclassifiedCoverageGaps: totals.unclassifiedCoverageGaps === 0,
     zeroQuarantine: totals.quarantine === 0,
     zeroNonTerminalRows: totals.nonTerminalRows === 0,
     zeroProductMutation:
@@ -428,6 +431,12 @@ export async function runWave5CompletionProof(
   );
   const rawRecords = await readNdjsonRecords(runDirectory);
   const classified = classifyRunRecords(rawRecords);
+  const unclassifiedCoverageGaps = rawRecords.filter(
+    (record) =>
+      isRecord(record) &&
+      record.recordType === "coverage-gap" &&
+      !parseAuditRecord(record).success,
+  ).length;
 
   const manifestRelative = runManifestPath(
     repositoryRoot,
@@ -484,6 +493,7 @@ export async function runWave5CompletionProof(
     changedPaths,
     changedPathManifestReference: changedPathManifestRelative,
     waveCheckpointIds,
+    unclassifiedCoverageGaps,
     config,
   });
 
