@@ -66,7 +66,6 @@ site/public/assets/others/misc/from-recovery/
 
 # Wrangler / Miniflare local dev state (transient SQLite cache, R2 blobs)
 workers/**/.wrangler/
--
 
 # Python cache (never commit compiled bytecode)
 __pycache__/

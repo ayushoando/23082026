@@ -7,6 +7,7 @@ import { render, screen } from "@testing-library/react";
 
 import Home, { metadata } from "@/app/(site)/page";
 import { HomeMarketingLayout } from "@/components/home/layout";
+import { SITE_BRAND } from "@/features/site/data/brand";
 
 vi.mock("@/components/home/HomepageHero", () => ({
   HomepageHero: () => <div data-testid="HomepageHero" />,
@@ -43,35 +44,25 @@ vi.mock("@/components/shared/ContactTeaser", () => ({
   ContactTeaser: () => <div data-testid="ContactTeaser" />,
 }));
 
-vi.mock("@/lib/analytics/seo", () => ({
-  SITE_BRAND: {
-    defaultTitle: "Oando Office",
-    description: "Workplace solutions",
-    brandKeywords: [],
-  },
-  buildPageMetadata: (
-    _base: string,
-    opts: { title: string; description: string; path: string },
-  ) => ({
-    title: opts.title,
-    description: opts.description,
-    path: opts.path,
-  }),
-  buildPageJsonLd: () => ({ "@type": "WebPage" }),
-}));
-
-vi.mock("@/features/site/data/seo", () => ({
-  buildLocalBusinessJsonLd: () => ({ "@type": "LocalBusiness" }),
-}));
+vi.mock("@/features/site/data/seo", async (importOriginal) => {
+  const actual = await importOriginal<
+    typeof import("@/features/site/data/seo")
+  >();
+  return {
+    ...actual,
+    buildLocalBusinessJsonLd: () => ({ "@type": "LocalBusiness" }),
+  };
+});
 
 vi.mock("@/lib/security/sanitize", () => ({
   sanitizeJsonForScript: (data: unknown) => JSON.stringify(data),
 }));
 
 describe("app/(site)/page.tsx", () => {
-  it("exports homepage metadata", () => {
-    expect(metadata.title).toBe("Oando Office");
-    expect(metadata.description).toBe("Workplace solutions");
+  it("exports homepage metadata built from the real brand + canonical SEO factory", () => {
+    const title = metadata.title as { absolute?: string };
+    expect(title.absolute).toBe(SITE_BRAND.defaultTitle);
+    expect(metadata.description).toBe(SITE_BRAND.description);
   });
 
   it("renders marketing shell with homepage sections and stats", async () => {

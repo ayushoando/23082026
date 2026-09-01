@@ -1,7 +1,5 @@
 # Remaining — CSS system (FOCSS)
 **Date:** 2026-09-01
 
-- 14.1 (Med): single-entry marketing CSS bundle ships all route CSS on every marketing page (3–4× over-ship) — decision/fix open, not started.
-- 14.2: three sheets within 4–35 lines of the 800-line cap (`planner/workspace.css` 796, `home-layout.css` 779, `home-base.css` 767) — open, not started.
-- 14.3: `@import "./shell-main.css"` after 600+ lines of rules in `shell.css` (spec-invalid without bundler hoisting) — open, not started.
-- 14.4: `missing-components.css` (233 lines) still a permanent shared-barrel resident — open, not started.
+- 14.4 (partial): `site/focss/site/components/shared/missing-components.css` (233 lines, debt-marker name) remains a resident of the shared barrel. Header comment now describes its actual content, but the plan's rename/split-out needs a file rename or deletion — **file deletions/moves require user confirmation** (hard rule). Removing it from the barrel without relocating its consumers (`.product-gallery` etc. are used outside route bundles) risks style regressions that cannot be verified here because visual baselines must not be regenerated (policy requires review).
+- 14.1 (future work, not required): per-route marketing CSS entry chains — formally declined for now; documented in `site/focss/site/components/index.css` header. Revisit only if a bundle budget flags marketing CSS weight.

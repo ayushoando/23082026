@@ -7,7 +7,7 @@ import {
   isPlannerFeatureSlug,
 } from "@/features/site/planner/landing/plannerFeaturePages";
 import { SITE_URL } from "@/lib/siteUrl";
-import { buildBreadcrumbJsonLd, buildPageJsonLd, buildPageMetadata } from "@/lib/helpers/seo";
+import { buildBreadcrumbJsonLd, buildPageJsonLd, buildPageMetadata } from "@/features/site/data/seo";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
 type PageProps = {

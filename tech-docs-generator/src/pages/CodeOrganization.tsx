@@ -5,7 +5,7 @@ import { keyValueRowsFromDomain, LiveRepoSection } from '../components/LiveRepoS
 import { codeOrganizationRecords } from '../data/codeOrganizationData'
 import { Folder, FileCode, Gear as Settings, TestTube, Database } from "@phosphor-icons/react";function getTopDirs() {
   return [
-    { name: 'site/', desc: 'Next.js product app (app, components, features, lib, focss, platform, i18n, data/storage)', icon: FileCode, color: 'text-brand-400' },
+    { name: 'site/', desc: 'Next.js product app (app, components, features, lib, focss, platform, i18n)', icon: FileCode, color: 'text-brand-400' },
     { name: 'site/app/', desc: 'App Router routes: (site), admin, oostudio, ooplanner, api/*', icon: FileCode, color: 'text-brand-400' },
     { name: 'site/components/', desc: 'UI trees: Studio, Planner, site marketing, admin ui/*', icon: Folder, color: 'text-accent-400' },
     { name: 'site/features/', desc: 'Feature modules: Studio, Planner, site, admin, crm, ops, shared', icon: Folder, color: 'text-accent-400' },
@@ -16,7 +16,7 @@ import { Folder, FileCode, Gear as Settings, TestTube, Database } from "@phospho
     { name: 'tests/', desc: 'Vitest unit tests + Playwright E2E specs (repo root)', icon: TestTube, color: 'text-yellow-400' },
     { name: 'scripts/', desc: 'Root operational scripts: seed, migrations, CDN, audits, docs gates', icon: FileCode, color: 'text-warning-400' },
     { name: 'tech-docs-generator/', desc: 'Optional Vite inventory SPA (dev :3001)', icon: Folder, color: 'text-docs-text-muted' },
-    { name: 'site/data/storage/', desc: 'Disk store for Studio/Planner projects and catalogs', icon: Database, color: 'text-danger-400' },
+    { name: 'site/platform/', desc: 'Live disk store for Studio/Planner projects, uploads and shared furniture library', icon: Database, color: 'text-danger-400' },
   ]
 }
 
@@ -26,7 +26,7 @@ function getPlannerStructure() {
 ├── components/Planner/      # Dock shell, canvas chrome, UI
 ├── features/Planner/        # Feature modules for Planner
 ├── lib/Planner/             # Planner domain helpers / handoff
-└── data/storage/            # Disk-backed projects (not lib/supabase)
+└── platform/                # Disk-backed projects (Planner/data/projects; not lib/supabase)
 
 Related residual:
 ├── platform/supabase/       # Auth + residual DB clients (shared)

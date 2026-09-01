@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
 import Planner from "@planner/components/Planner";
 import { buildAccessRedirect } from "@/lib/auth/plannerRedirect";
@@ -11,10 +12,13 @@ export interface PlannerEntryProps {
   projectStartIntent?: PlannerProjectStartIntent;
 }
 
-export function PlannerEntry({
+export async function PlannerEntry({
   accessMode,
   projectStartIntent = "resume",
 }: PlannerEntryProps) {
+  // Workspace chrome strings live in the shared `workspace` namespace so hi
+  // users do not get English-only planner entry chrome.
+  const t = await getTranslations("workspace");
   const isGuest = accessMode === "guest";
 
   return (
@@ -24,17 +28,19 @@ export function PlannerEntry({
     >
       <section
         className="planner-access-status flex flex-wrap items-center justify-between gap-2 px-4 py-2 text-xs sm:px-6"
-        aria-label="Planner access status"
+        aria-label={t("plannerEntry.accessStatusLabel")}
         role="status"
       >
         <p className="m-0">
           <strong className="planner-access-status__label font-semibold">
-            {isGuest ? "Guest workspace" : "Signed-in workspace"}
+            {isGuest
+              ? t("plannerEntry.guestLabel")
+              : t("plannerEntry.signedInLabel")}
           </strong>{" "}
           <span>
             {isGuest
-              ? "Browse the catalog and prepare a layout. Sign in when you want to save or open plans."
-              : "Your saved plans are available from the project list."}
+              ? t("plannerEntry.guestHint")
+              : t("plannerEntry.signedInHint")}
           </span>
         </p>
         <Link
@@ -43,7 +49,7 @@ export function PlannerEntry({
             isGuest ? buildAccessRedirect("/ooplanner") : "/ooplanner/projects"
           }
         >
-          {isGuest ? "Sign in to save" : "View saved plans"}
+          {isGuest ? t("plannerEntry.signInToSave") : t("plannerEntry.viewSavedPlans")}
         </Link>
       </section>
       <Planner

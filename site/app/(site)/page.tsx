@@ -6,8 +6,8 @@ import { HomeDeferredSections } from "@/components/home/HomeDeferredSections";
 import { HomeMarketingLayout } from "@/components/home/layout";
 import { Collections } from "@/components/home/Collections";
 
-import { SITE_BRAND } from "@/lib/analytics/seo";
-import { buildPageJsonLd, buildPageMetadata } from "@/lib/analytics/seo";
+import { SITE_BRAND } from "@/features/site/data/brand";
+import { buildPageJsonLd, buildPageMetadata } from "@/features/site/data/seo";
 import { SITE_URL } from "@/lib/siteUrl";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 

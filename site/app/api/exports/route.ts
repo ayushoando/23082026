@@ -12,7 +12,7 @@ import {
 } from "../_lib/exportsStore";
 import { withAuth, type AuthContext } from "@/features/shared/api/withAuth";
 import { ApiError } from "@/features/shared/api/ApiError";
-import { isDevAuthBypassEnabled } from "@/lib/auth/devAuthBypass";
+import { isDevAuthBypassActiveForRequest } from "@/lib/auth/devAuthBypass";
 
 /**
  * POST /api/exports — create an export file (PNG/SVG/PDF) from a data URL.
@@ -44,7 +44,11 @@ export const POST = withAuth(
 );
 
 async function createExport(request: Request) {
-  if (!isDevAuthBypassEnabled()) {
+  const bypassHost =
+    request.headers.get("x-forwarded-host")?.split(",")[0]?.trim() ||
+    request.headers.get("host");
+  // 7.1: dev-only export storage also honors the allowed-host guard.
+  if (!isDevAuthBypassActiveForRequest(bypassHost)) {
     // Production filesystem is read-only — refuse instead of raw-writing.
     throw new ApiError(
       503,

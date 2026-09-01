@@ -1,7 +1,7 @@
 import { PlannerHelpPage } from "@/features/site/planner/help/PlannerHelpPage";
 import { PLANNER_HELP_FAQ_ITEMS } from "@/features/site/planner/help/helpSections";
 import { PLANNER_HELP_PAGE_METADATA } from "@/features/site/data/routeMetadata";
-import { buildBreadcrumbJsonLd, buildFAQJsonLd, buildPageJsonLd } from "@/lib/helpers/seo";
+import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildPageJsonLd } from "@/features/site/data/seo";
 import { SITE_URL } from "@/lib/siteUrl";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
@@ -19,7 +19,7 @@ const BREADCRUMB_JSON_LD = buildBreadcrumbJsonLd(SITE_URL, [
   { name: "Help", path: "/planner/help" },
 ]);
 
-const FAQ_JSON_LD = buildFAQJsonLd(PLANNER_HELP_FAQ_ITEMS);
+const FAQ_JSON_LD = buildFaqJsonLd(SITE_URL, "/planner/help", PLANNER_HELP_FAQ_ITEMS);
 
 export default function PlannerHelpRoute() {
   return (

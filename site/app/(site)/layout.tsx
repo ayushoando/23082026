@@ -3,7 +3,7 @@ import { NextIntlClientProvider } from "next-intl";
 import "./globals.css";
 import QueryProvider from "@/app/(site)/providers/QueryProvider";
 import { SITE_URL } from "@/lib/siteUrl";
-import { buildGlobalJsonLd, buildSiteMetadata } from "@/lib/analytics/seo";
+import { buildGlobalJsonLd, buildSiteMetadata } from "@/features/site/data/seo";
 import { SITE_VIEWPORT } from "@/lib/siteViewport";
 import { MobileAppShell } from "@/components/site/MobileAppShell";
 import { QuoteCartChrome } from "@/components/site/QuoteCartChrome";

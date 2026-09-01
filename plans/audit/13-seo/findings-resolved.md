@@ -1,4 +1,11 @@
 # Resolved — SEO
 **Date:** 2026-09-01
 
-None yet — no remediation for this area as of 2026-09-01.
+- **13.1** — Callers migrated to the canonical module `@/features/site/data/seo`; the `lib/helpers/seo.ts` / `lib/analytics/seo.ts` shims now have zero app-layer callers and carry a "DEPRECATED re-export shim" header. Files: `site/app/(site)/layout.tsx`, `site/app/(site)/page.tsx` (SITE_BRAND now from `@/features/site/data/brand`), `site/app/(site)/planner/page.tsx`, `site/app/(site)/planner/features/page.tsx`, `site/app/(site)/planner/features/[slug]/page.tsx`, `site/app/(site)/planner/help/page.tsx` (switched from helpers' `buildFAQJsonLd(items)` to canonical `buildFaqJsonLd(SITE_URL, "/planner/help", items)` — richer output adds `@id`). PDP already imported canonical.
+- **13.2** — `site/app/sitemap.ts` catch now logs `console.warn("[sitemap] catalog fetch failed — serving static-only sitemap", error)`; fallback behavior unchanged.
+- **13.3** — Removed the non-standard Yandex-only `host` emission from `site/app/robots.ts` (Google/Bing discover origin via sitemap URL). Name-mirror tests updated to assert `config.host` is undefined: `tests/unit/app/robots.test.ts`, `tests/unit/app/(site)/robots.test.ts`.
+- **13.4** — Added page-level titles (noindex still inherited from layouts): `site/app/ooplanner/projects/page.tsx` → "Planner — Projects", `site/app/ooplanner/projects/[id]/page.tsx` → "Planner — Project", `site/app/oostudio/page.tsx` → "Studio — Workspace".
+
+**Verification (real, 2026-09-01):** `pnpm exec vitest run --config tests/vitest.config.ts "unit/app/robots" "unit/app/(site)/robots" "unit/app/sitemap" "unit/app/(site)/page.test" "features/site/data/seo" "unit/lib/helpers" "unit/lib/analytics" "integration/app/sitemap"` → 20 files / 174 tests passed, incl. `seoStandardsAudit.test.ts`, `siteSeoAcceptance.test.ts`, robots (host-undefined assertions), sitemap (warn log visible in stderr on the catalog-offline path), homepage metadata (now real brand values).
+
+**Test edits required by 13.1/13.3:** `tests/unit/app/(site)/page.test.tsx` previously mocked `@/lib/analytics/seo` (module the page no longer imports); mock switched to `@/features/site/data/seo` (importOriginal + LocalBusiness override) and metadata assertions now use real `SITE_BRAND` values.

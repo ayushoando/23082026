@@ -94,8 +94,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         ...(categoryLastMod ? { lastModified: categoryLastMod } : {}),
       });
     }
-  } catch {
-    // Keep static sitemap if catalog fetch fails.
+  } catch (error) {
+    // Keep static sitemap if catalog fetch fails — but never swallow silently.
+    console.warn(
+      "[sitemap] catalog fetch failed — serving static-only sitemap",
+      error,
+    );
   }
 
   // Dedupe by canonical URL (static lists can overlap; catalog may re-emit categories).

@@ -1,4 +1,13 @@
-/* Site zone components — chrome, homepage, marketing pages (local only) */
+/* Site zone components — chrome, homepage, marketing pages (local only).
+ *
+ * Single-entry trade-off (accepted 2026-09-01): every marketing route ships
+ * the CSS of all routes below via site/entry.css — roughly 3–4x the
+ * page-specific CSS on any given route. Accepted deliberately: one entry
+ * chain keeps the FOCSS verifier contract simple, guarantees no
+ * route-landing styles are missing after route changes, and the bundle is
+ * static + cacheable across marketing navigation. Per-route entry chains
+ * stay documented as future work only if marketing CSS weight becomes a
+ * measured problem (bundle budget), not as a default optimization. */
 @import "./chrome/index.css";
 @import "./homepage/index.css";
 

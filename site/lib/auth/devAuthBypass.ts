@@ -48,3 +48,63 @@ export function isDevAuthBypassEnabled(
   }
   return bypass === "1";
 }
+
+/**
+ * Allowlist escape hatch for 7.1: comma-separated request hosts that may use
+ * the bypass on an explicitly non-loopback dev host (e.g. `DEV_AUTH_BYPASS_ALLOW_HOSTS=staging.internal:3000`).
+ * Loopback hosts are always allowed when the env flag is set; anything else
+ * must appear here verbatim (host, port ignored).
+ */
+export const DEV_AUTH_BYPASS_ALLOW_HOSTS_ENV = "DEV_AUTH_BYPASS_ALLOW_HOSTS" as const;
+
+/** True for loopback-style request hosts: `localhost`, `*.localhost`, `127.0.0.0/8`, `::1` (port ignored). */
+export function isLoopbackHost(host: string | null | undefined): boolean {
+  if (!host) {
+    return false;
+  }
+  const bare = host.trim().toLowerCase().replace(/:\d+$/, "").replace(/^\[|\]$/g, "");
+  if (!bare) {
+    return false;
+  }
+  if (bare === "localhost" || bare.endsWith(".localhost")) {
+    return true;
+  }
+  if (bare === "::1") {
+    return true;
+  }
+  return /^127\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(bare);
+}
+
+/**
+ * 7.1 allowed-host guard: even with `DEV_AUTH_BYPASS=1` set in a
+ * non-production environment, only loopback request hosts (or hosts listed in
+ * `DEV_AUTH_BYPASS_ALLOW_HOSTS`) may exercise the synthetic admin. Deployed
+ * non-production hosts (staging containers, networked `next dev`) therefore
+ * fail closed instead of granting `DEV_BYPASS_USER` full admin access.
+ */
+export function isDevAuthBypassRequestAllowed(
+  host: string | null | undefined,
+  env: NodeJS.ProcessEnv = process.env,
+): boolean {
+  if (isLoopbackHost(host)) {
+    return true;
+  }
+  const allow = readFlag(env, DEV_AUTH_BYPASS_ALLOW_HOSTS_ENV) ?? "";
+  const bareHost = (host ?? "").trim().toLowerCase().replace(/:\d+$/, "").replace(/^\[|\]$/g, "");
+  if (!bareHost) {
+    return false;
+  }
+  return allow
+    .split(",")
+    .map((entry) => entry.trim().toLowerCase().replace(/:\d+$/, ""))
+    .filter(Boolean)
+    .includes(bareHost);
+}
+
+/** Combined env + request-host decision for the dev bypass (fail closed). */
+export function isDevAuthBypassActiveForRequest(
+  host: string | null | undefined,
+  env: NodeJS.ProcessEnv = process.env,
+): boolean {
+  return isDevAuthBypassEnabled(env) && isDevAuthBypassRequestAllowed(host, env);
+}

@@ -1,6 +1,7 @@
 /**
  * Name-mirror: site/app/robots.ts
- * Host must follow SITE_URL / env — never hardcoded localhost.
+ * Sitemap must follow SITE_URL / env — never hardcoded localhost.
+ * `host` was removed (Yandex-only non-standard field): it must stay absent.
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ROBOTS_DISALLOW_PREFIXES } from "@/features/site/data/routeClassification";
@@ -23,15 +24,13 @@ describe("app/robots.ts", () => {
 
     const robots = (await import("@/app/robots")).default;
     const config = robots();
-    const host = String(config.host ?? "");
     const sitemap = String(config.sitemap?.[0] ?? "");
     const rules = Array.isArray(config.rules) ? config.rules : [config.rules];
     const firstRule = rules[0];
     expect(firstRule?.userAgent).toBe("*");
     expect(firstRule?.disallow).toEqual([...ROBOTS_DISALLOW_PREFIXES]);
-    expect(host).toBe("https://oando.co.in");
+    expect(config.host).toBeUndefined();
     expect(sitemap).toBe("https://oando.co.in/sitemap.xml");
-    expect(host).not.toMatch(/localhost|127\.0\.0\.1/i);
     expect(sitemap).not.toMatch(/localhost|127\.0\.0\.1/i);
   });
 
@@ -41,12 +40,10 @@ describe("app/robots.ts", () => {
 
     const robots = (await import("@/app/robots")).default;
     const config = robots();
-    const host = String(config.host ?? "");
     const sitemap = String(config.sitemap?.[0] ?? "");
 
-    expect(host).toBe("https://seo-host.example.com");
+    expect(config.host).toBeUndefined();
     expect(sitemap).toBe("https://seo-host.example.com/sitemap.xml");
-    expect(host).not.toMatch(/localhost|127\.0\.0\.1/i);
   });
 
   it("falls back to production origin for vercel.app preview domains", async () => {
@@ -56,7 +53,7 @@ describe("app/robots.ts", () => {
     const robots = (await import("@/app/robots")).default;
     const config = robots();
 
-    expect(String(config.host ?? "")).toBe("https://oando.co.in");
+    expect(config.host).toBeUndefined();
     expect(String(config.sitemap?.[0] ?? "")).toBe("https://oando.co.in/sitemap.xml");
   });
 
@@ -67,7 +64,8 @@ describe("app/robots.ts", () => {
     const robots = (await import("@/app/robots")).default;
     const config = robots();
 
-    expect(String(config.host ?? "")).toBe("https://oando.co.in");
+    expect(config.host).toBeUndefined();
+    expect(String(config.sitemap?.[0] ?? "")).toBe("https://oando.co.in/sitemap.xml");
     expect(String(config.sitemap?.[0] ?? "")).not.toMatch(/localhost|127\.0\.0\.1/i);
   });
 });

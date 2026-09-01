@@ -1143,7 +1143,16 @@
   "workspace": {
     "backToHome": "Back to Home",
     "accessPanelTitle": "Precision in Planning",
-    "accessPanelDescription": "Experience the Oando Suite. Our architectural tools are designed for accuracy, performance, and clear collaboration across teams."
+    "accessPanelDescription": "Experience the Oando Suite. Our architectural tools are designed for accuracy, performance, and clear collaboration across teams.",
+    "plannerEntry": {
+      "accessStatusLabel": "Planner access status",
+      "guestLabel": "Guest workspace",
+      "signedInLabel": "Signed-in workspace",
+      "guestHint": "Browse the catalog and prepare a layout. Sign in when you want to save or open plans.",
+      "signedInHint": "Your saved plans are available from the project list.",
+      "signInToSave": "Sign in to save",
+      "viewSavedPlans": "View saved plans"
+    }
   },
   "marketing": {
     "chrome": {

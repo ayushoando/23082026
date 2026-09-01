@@ -1,3 +1,8 @@
+/**
+ * DEPRECATED re-export shim — canonical SEO module is `@/features/site/data/seo`.
+ * Kept only for back-compat with older call sites and name-mirror tests
+ * (tests/unit/lib/helpers/seo.test.ts). Do not add new imports from here.
+ */
 export {
   buildBreadcrumbJsonLd,
   buildCanonicalUrl,

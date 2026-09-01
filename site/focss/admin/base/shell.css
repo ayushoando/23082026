@@ -1,4 +1,9 @@
 /* Admin app shell owns the viewport Ã¢â‚¬â€ do not let body scroll behind it. */
+/* Admin shell — main pane / inventory scroll sheet (shell-main.css) is
+   imported first so the @import sits at a spec-valid position (before all
+   rules) instead of relying on bundler hoisting. */
+@import "./shell-main.css";
+
 html:has(.shell-admin-layout),
 html:has(.shell-admin-layout) body {
   height: 100% !important;
@@ -628,7 +633,3 @@ html:has(.shell-admin-layout) body .shell-admin-layout {
 [data-admin-layout] .shell-admin-nav-link--active .shell-admin-nav-link__hint {
   color: color-mix(in srgb, var(--color-primary) 70%, var(--text-subtle));
 }
-
-/* Admin shell Ã¢â‚¬â€ main pane / inventory scroll (split from shell.css) */
-
-@import "./shell-main.css";

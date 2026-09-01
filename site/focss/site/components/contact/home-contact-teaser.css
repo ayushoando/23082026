@@ -354,7 +354,7 @@
 @utility contact-teaser__footer-chip {
   display: inline-flex;
   align-items: center;
-  border-radius: 9999px /* TODO: migrate to Tailwind rounded-full */;
+  border-radius: 9999px;
   border: 1px solid var(--border-accent);
   background: var(--surface-panel-strong);
   padding: 0.375rem 0.75rem;

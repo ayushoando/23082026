@@ -1,0 +1,527 @@
+/* Planner workspace canvas-overlay UI — draw-side cards, dock toggles,
+   overlay toggles, AI float/command palette, topbar project, step bar.
+   Split from workspace.css for the 800-line FOCSS cap; workspace.css
+   imports this file first, so cascade order is unchanged and the
+   planner/entry.css exact-entry contract is untouched. */
+
+
+.ooplanner-root .draw-side-stack {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+}
+
+.ooplanner-root .draw-side-stack .dock-panel {
+  padding: 0;
+}
+
+.ooplanner-root .draw-side-card {
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--surface-panel);
+  overflow: hidden;
+}
+
+.ooplanner-root .draw-side-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border-soft);
+  background: var(--surface-muted);
+}
+
+.ooplanner-root .draw-side-card__title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.ooplanner-root .draw-side-card__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.ooplanner-root .draw-side-card__close:hover {
+  background: var(--surface-panel);
+  color: var(--text-strong);
+}
+/* Requirement 7.5 — focus indicator for panel close buttons. */
+.ooplanner-root .draw-side-card__close:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 1px;
+}
+
+.ooplanner-root .draw-side-card__body {
+  padding: 10px 12px 12px;
+}
+
+.ooplanner-root .draw-side-empty {
+  margin: auto 0;
+  padding: 16px;
+  text-align: center;
+  color: var(--text-subtle);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* Dock tab strip in the canvas overlay (DockPanelButtons). */
+.ooplanner-root .dock-panel-toggles {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  flex-wrap: nowrap;
+}
+
+/* 3D scene container — PlannerScene3D sets its own height inline. */
+.ooplanner-root .three-viewer {
+  position: relative;
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border-soft);
+  background: var(--scene-bg-draft);
+}
+
+/* Inline helper text under the AI dock prompt. */
+.ooplanner-root .ai-hint {
+  font-size: 11px;
+  color: var(--text-subtle);
+  font-style: italic;
+}
+
+.ooplanner-root .overlay-toggle-group {
+  display: inline-flex;
+  align-items: stretch;
+  padding: 2px;
+  border-radius: 8px;
+  border: 1px solid var(--border-soft);
+  background: var(--surface-muted);
+  gap: 1px;
+}
+
+.ooplanner-root .overlay-toggle-group__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 26px;
+  padding: 3px 9px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.ooplanner-root .overlay-toggle-group__btn:hover {
+  color: var(--text-strong);
+}
+
+.ooplanner-root .overlay-toggle-group__btn[data-active="true"] {
+  background: var(--color-white-50);
+  color: var(--text-strong);
+  box-shadow: var(--shadow-segment-active);
+}
+
+/* Snap status text (from @planner/lib/plannerSnapStatusLabel) */
+.ooplanner-root .overlay-toggle-group__status {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.ooplanner-root .overlay-toggle-group__status[data-active="true"] {
+  color: var(--text-strong);
+}
+
+.ooplanner-root .planner-unit-pill {
+  display: inline-flex;
+  padding: 2px;
+  border-radius: 8px;
+  border: 1px solid var(--border-soft);
+  background: var(--surface-muted);
+  gap: 1px;
+}
+
+.ooplanner-root .planner-unit-pill button {
+  min-width: 24px;
+  min-height: 24px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-numeric);
+  font-variant-numeric: var(--numeric-figures);
+}
+
+.ooplanner-root .planner-unit-pill button[data-active="true"] {
+  background: var(--color-white-50);
+  color: var(--text-strong);
+  box-shadow: var(--shadow-segment-active);
+}
+
+.ooplanner-root .planner-ai-anchor {
+  position: absolute;
+  top: 52px;
+  right: 12px;
+  z-index: 12;
+  width: min(320px, calc(100% - 24px));
+}
+
+/* Command palette now mounts independently of the AI panel (fixed 3b —
+   it previously only rendered inside .planner-ai-anchor, so it never
+   appeared unless the AI panel was open). Fixed-position modal so it
+   still reads as an intentional overlay rather than bare unstyled text. */
+
+/* Scrim behind command palette — blocks pointer events to canvas so the
+   aria-modal semantic is backed by a real inert backdrop (Req 7.6, 8.1). */
+.ooplanner-root .planner-command-palette-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 149;
+  background: color-mix(in srgb, var(--color-midnight-900) 28%, transparent);
+  /* Allow pointer events only on the scrim itself so clicking it closes the
+     palette; the palette panel above (z-index: 150) receives its own events. */
+}
+
+.ooplanner-root .planner-command-palette {
+  position: fixed;
+  top: 15vh;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 150;
+  width: min(420px, calc(100vw - 32px));
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  background: var(--surface-panel);
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  box-shadow: var(--shadow-lift);
+}
+.ooplanner-root .planner-command-palette ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 300px;
+  overflow: auto;
+}
+
+.ooplanner-root .planner-ai-float {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid var(--border-soft);
+  background: color-mix(in srgb, var(--color-white-50) 94%, transparent);
+  backdrop-filter: blur(8px);
+  box-shadow: var(--shadow-lift);
+}
+
+.ooplanner-root .planner-ai-float__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ooplanner-root .planner-ai-float__head strong {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.ooplanner-root .planner-ai-float__close {
+  display: inline-flex;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.ooplanner-root .planner-ai-float__prompt {
+  width: 100%;
+  min-height: 72px;
+  resize: vertical;
+}
+
+.ooplanner-root .planner-ai-float__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.ooplanner-root .planner-ai-float__chip {
+  min-height: 24px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border-soft);
+  background: var(--surface-muted);
+  color: var(--text-muted);
+  font-size: 11px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.ooplanner-root .planner-ai-float__chip:hover {
+  color: var(--text-strong);
+  border-color: var(--border-accent);
+}
+
+.ooplanner-root .planner-ai-float__sketch {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-soft);
+}
+
+.ooplanner-root .topbar__project {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.ooplanner-root .topbar__project-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+
+.ooplanner-root .topbar__project-input {
+  width: min(180px, 22vw);
+}
+
+.ooplanner-root .pw-step-bar__step {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.ooplanner-root .pw-step-bar__rail {
+  position: absolute;
+  left: -4px;
+  width: 8px;
+  height: 1px;
+  background: var(--border-soft);
+  pointer-events: none;
+}
+
+.ooplanner-root .pw-step-bar__next {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.ooplanner-root .planner-stack {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.ooplanner-root
+  .planner-stack[data-planner-step="draw"]
+  .side-panel--dock:not(.side-panel--left) {
+  width: 0 !important;
+  min-width: 0;
+  border: none;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ooplanner-root
+  .planner-stack[data-planner-step="draw"]
+  .side-panel--dock:not(.side-panel--left)
+  .side-panel__resize {
+  display: none;
+}
+
+.ooplanner-root .planner-stack[data-planner-step="review"] .side-panel--left {
+  width: 0 !important;
+  min-width: 0;
+  border: none;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ooplanner-root
+  .planner-stack[data-planner-step="review"]
+  .side-panel--left
+  .side-panel__resize {
+  display: none;
+}
+
+.ooplanner-root .pw-step-bar {
+  position: relative;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: var(--surface-panel);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.ooplanner-root .pw-step-bar__steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  max-width: 72rem;
+  flex: 1 1 auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ooplanner-root .pw-step-bar__step {
+  min-width: 0;
+}
+
+.ooplanner-root .pw-step-bar__btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 40px;
+  padding: 4px 8px;
+  text-align: left;
+  color: var(--text-muted);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.ooplanner-root .pw-step-bar__btn:hover {
+  background: var(--surface-muted);
+  color: var(--text-strong);
+}
+
+.ooplanner-root .pw-step-bar__btn:active,
+.ooplanner-root .pw-step-bar__btn[data-pressed] {
+  background: var(--color-primary-soft);
+}
+
+.ooplanner-root .pw-step-bar__btn:focus-visible,
+.ooplanner-root .pw-step-bar__btn[data-focus-visible] {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 1px;
+}
+
+.ooplanner-root .pw-step-bar__btn[data-active="true"],
+.ooplanner-root .pw-step-bar__btn[aria-current="step"] {
+  color: var(--text-strong);
+  background: var(--color-primary-soft);
+  border-color: var(--border-accent);
+  box-shadow: var(--shadow-segment-active);
+}
+
+.ooplanner-root .pw-step-bar__num {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--text-muted);
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+}
+
+.ooplanner-root .pw-step-bar__btn[data-active="true"] .pw-step-bar__num,
+.ooplanner-root
+  .pw-step-bar__btn[data-completion="complete"]
+  .pw-step-bar__num {
+  color: var(--color-white-50);
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.ooplanner-root .pw-step-bar__copy {
+  display: grid;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.ooplanner-root .pw-step-bar__copy strong {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.ooplanner-root .pw-step-bar__copy small {
+  overflow: hidden;
+  color: var(--text-subtle);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ooplanner-root .pw-step-bar__done {
+  color: var(--color-primary);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.ooplanner-root .pw-step-bar__warn {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  top: calc(100% + 4px);
+  right: 16px;
+  max-width: min(34rem, calc(100vw - 32px));
+  margin: 0;
+  padding: 8px 12px;
+  color: var(--text-body);
+  background: var(--surface-panel);
+  border: 1px solid var(--border-soft);
+  border-radius: 8px;
+  box-shadow: var(--shadow-soft);
+  font-size: 12px;
+  line-height: 1.4;
+}
+

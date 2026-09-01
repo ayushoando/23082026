@@ -1,6 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
+import "@/tests/helpers/nextIntlServerEnMock";
+
 vi.mock("@planner/components/Planner", () => ({
   default: ({
     accessMode,
@@ -20,10 +22,14 @@ vi.mock("@planner/components/Planner", () => ({
 import { PlannerEntry } from "@/components/Planner/PlannerEntry";
 
 describe("PlannerEntry", () => {
-  it("keeps guest catalog workflow reachable and offers sign-in for project operations", () => {
-    render(<PlannerEntry accessMode="guest" />);
+  it("keeps guest catalog workflow reachable and offers sign-in for project operations", async () => {
+    const jsx = await PlannerEntry({ accessMode: "guest" });
+    render(jsx);
 
     expect(screen.getByText("Guest workspace")).toBeInTheDocument();
+    expect(
+      screen.getByRole("status", { name: "Planner access status" }),
+    ).toBeInTheDocument();
     expect(screen.getByTestId("planner")).toHaveAttribute("data-access-mode", "guest");
     expect(screen.getByTestId("planner")).toHaveAttribute(
       "data-project-start-intent",
@@ -35,8 +41,12 @@ describe("PlannerEntry", () => {
     );
   });
 
-  it("passes a requested new-project intent into the authenticated workspace", () => {
-    render(<PlannerEntry accessMode="authenticated" projectStartIntent="new" />);
+  it("passes a requested new-project intent into the authenticated workspace", async () => {
+    const jsx = await PlannerEntry({
+      accessMode: "authenticated",
+      projectStartIntent: "new",
+    });
+    render(jsx);
 
     expect(screen.getByText("Signed-in workspace")).toBeInTheDocument();
     expect(screen.getByTestId("planner")).toHaveAttribute(

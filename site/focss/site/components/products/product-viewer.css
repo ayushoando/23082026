@@ -114,7 +114,7 @@
 @utility pdp-chip {
   display: inline-flex;
   align-items: center;
-  border-radius: 9999px /* TODO: migrate to Tailwind rounded-full */;
+  border-radius: 9999px;
   border-width: 1px;
   padding: 0.25rem 0.75rem;
   font-size: var(--type-body-size);

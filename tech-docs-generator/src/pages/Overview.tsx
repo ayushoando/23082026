@@ -102,7 +102,7 @@ export function Overview() {
             The centerpiece workspaces are <strong className="text-docs-text">Furniture Studio</strong> and <strong className="text-docs-text">Floor Planner</strong>
             — dockview shells with <Tooltip content="2D canvas library for interactive object rendering"><strong className="text-docs-text">Fabric.js</strong></Tooltip> for plan editing,
             plus <Tooltip content="3D library; R3F residual surfaces also declared"><strong className="text-docs-text">Three.js</strong></Tooltip>.
-            Catalog and projects can use disk store under <code className="text-brand-400 bg-docs-surface px-1 rounded">site/data/storage</code>; residual CRM/admin may use
+            Catalog and projects use the disk store under <code className="text-brand-400 bg-docs-surface px-1 rounded">site/platform</code> (legacy <code className="text-docs-text-muted bg-docs-surface px-1 rounded">site/data/storage</code> is retired); residual CRM/admin may use
             <Tooltip content="PostgreSQL + auth platform"><strong className="text-docs-text"> Supabase</strong></Tooltip> / Drizzle.
           </p>
           <p>

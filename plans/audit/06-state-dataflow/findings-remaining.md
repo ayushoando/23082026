@@ -1,5 +1,5 @@
 # Remaining — State management & data flow
 **Date:** 2026-09-01
 
-- react-query over-provisioning: `site/app/(site)/providers/QueryProvider.tsx` wraps the whole marketing tree for exactly one consumer (`features/site/catalog/FilterGridInner.tsx`) — drop or extend usage; open, not started.
-- No other action items: zustand stores, server actions, forked server stores, and nuqs admin URL-state were verified coherent.
+- **react-query over-provisioning** — still reproduces: `QueryProvider` mounted at `site/app/(site)/layout.tsx:4,38` (wrapper closes at `:69`); exactly one `useQuery` consumer at `site/features/site/catalog/FilterGridInner.tsx:132`. Reason not fixed: both remediation branches are design choices on the live catalog data layer — the "drop" branch requires rewriting `FilterGridInner`'s query semantics (staleTime/gcTime cache, abort, isFetching states), deleting `QueryProvider.tsx` (file deletions prohibited this pass) and removing the `@tanstack/react-query` dep; `tests/unit/app/(site)/products/[category]/FilterGridInner.test.tsx` mocks `useQuery` outright, so it cannot validate a replacement; and `pnpm run typecheck` is prohibited this pass. Needs owner go-ahead with typecheck available.
+- No other action items: zustand stores, server actions, forked server stores, and nuqs admin URL-state verified coherent (unchanged from findings.md).

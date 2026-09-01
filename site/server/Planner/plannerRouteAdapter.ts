@@ -41,7 +41,7 @@ import {
   detectClientOwnerIdentifiers,
 } from "@planner/lib/plannerOwnerScope";
 import {
-  isDevAuthBypassEnabled,
+  isDevAuthBypassActiveForRequest,
   DEV_BYPASS_USER,
 } from "@/lib/auth/devAuthBypass";
 import { createAuthServerClient } from "@/platform/supabase/server";
@@ -59,6 +59,14 @@ function getClientIp(request: Request): string {
   return normalizeClientIp(raw);
 }
 
+/** Request host for the 7.1 dev-bypass allowed-host guard (fails closed when absent). */
+function requestHostOf(request: Request): string | null {
+  return (
+    request.headers.get("x-forwarded-host")?.split(",")[0]?.trim() ||
+    request.headers.get("host")
+  );
+}
+
 const defaultDependencies: PlannerRequestPipelineDependencies = {
   async checkQuota({ request, descriptor }) {
     const ip = getClientIp(request);
@@ -71,18 +79,19 @@ const defaultDependencies: PlannerRequestPipelineDependencies = {
   },
 
   verifyOrigin(request: Request) {
-    if (isDevAuthBypassEnabled()) return true;
+    // 7.1: dev bypass (and its origin-check skip) only for allowed hosts.
+    if (isDevAuthBypassActiveForRequest(requestHostOf(request))) return true;
     return verifySameOrigin(request);
   },
 
   async verifyCsrf(request: Request) {
-    if (isDevAuthBypassEnabled()) return true;
+    if (isDevAuthBypassActiveForRequest(requestHostOf(request))) return true;
     const { validateCsrfRequest } = await import("@/lib/security/csrf");
     return validateCsrfRequest(request);
   },
 
-  async verifySession() {
-    if (isDevAuthBypassEnabled()) {
+  async verifySession(request: Request) {
+    if (isDevAuthBypassActiveForRequest(requestHostOf(request))) {
       return { ownerId: DEV_BYPASS_USER.id, isAdmin: true };
     }
     try {

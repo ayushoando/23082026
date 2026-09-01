@@ -89,11 +89,12 @@ vi.mock('../../site/lib/auth/devAuthBypass', async (importOriginal) => {
   return {
     ...actual,
     isDevAuthBypassEnabled: vi.fn(actual.isDevAuthBypassEnabled),
+    isDevAuthBypassActiveForRequest: vi.fn(actual.isDevAuthBypassActiveForRequest),
   };
 });
 
 import { isMaintenanceReadonly } from '../../site/lib/platform/maintenanceMode';
-import { isDevAuthBypassEnabled } from '../../site/lib/auth/devAuthBypass';
+import { isDevAuthBypassActiveForRequest } from '../../site/lib/auth/devAuthBypass';
 
 describe('proxy.ts', () => {
   describe('guest product surfaces', () => {
@@ -524,7 +525,7 @@ describe('proxy.ts', () => {
 
     it('allows /admin during maintenance when dev auth bypass is enabled', async () => {
       vi.mocked(isMaintenanceReadonly).mockReturnValueOnce(true);
-      vi.mocked(isDevAuthBypassEnabled).mockReturnValueOnce(true);
+      vi.mocked(isDevAuthBypassActiveForRequest).mockReturnValueOnce(true);
       const request = new NextRequest('http://localhost/admin/');
       const response = await proxy(request as unknown as NextRequest);
       expect(response.status).toBe(200);

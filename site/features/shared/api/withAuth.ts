@@ -22,6 +22,7 @@
 
 import type { NextRequest } from "next/server";
 import type { NextResponse } from "next/server";
+import { headers } from "next/headers";
 import { createAuthServerClient } from "@/platform/supabase/server";
 import { rateLimit } from "@/lib/rateLimit";
 import { ApiError, API_ERROR_CODES, toApiError } from "./ApiError";
@@ -30,6 +31,8 @@ import { isAppAdmin, readAppRole } from "@/lib/auth/roles";
 import {
   DEV_BYPASS_USER,
   isDevAuthBypassEnabled,
+  isDevAuthBypassActiveForRequest,
+  isDevAuthBypassRequestAllowed,
 } from "@/lib/auth/devAuthBypass";
 import { normalizeClientIp } from "@/lib/clientIp";
 import { validateCsrfRequest } from "@/lib/security/csrf";
@@ -76,23 +79,78 @@ function getClientIp(req: NextRequest | Request): string {
 }
 
 /**
+ * Request host for the 7.1 dev-bypass guard (x-forwarded-host first, then host,
+ * then the URL hostname). `null` when absent — the guard then fails closed.
+ */
+function requestHost(req: NextRequest | Request): string | null {
+  return (
+    req.headers.get("x-forwarded-host")?.split(",")[0]?.trim() ||
+    req.headers.get("host") ||
+    safeUrlHost(req.url)
+  );
+}
+
+function safeUrlHost(url: string): string | null {
+  try {
+    return new URL(url).host || null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Request host when `resolveAuthContext` is called without an explicit one
+ * (e.g. from server actions / admin guards). Fails closed (`null`) outside a
+ * request scope.
+ */
+async function requestScopeHost(): Promise<string | null> {
+  try {
+    const h = await headers();
+    return (
+      h.get("x-forwarded-host")?.split(",")[0]?.trim() || h.get("host") || null
+    );
+  } catch {
+    return null;
+  }
+}
+
+/** Options for {@link resolveAuthContext}. */
+export type ResolveAuthContextOptions = {
+  /**
+   * Request host for the 7.1 dev-bypass allowed-host guard. When omitted, the
+   * host is read from `next/headers` (fail-closed outside a request scope).
+   */
+  requestHost?: string | null;
+};
+
+/**
  * Resolve the Supabase session into an {@link AuthContext}. Throws
  * {@link ApiError} (AUTH_REQUIRED / INSUFFICIENT_PERMISSIONS) when the
  * required role is not satisfied.
  */
 export async function resolveAuthContext(
   requiredRole: AuthRole,
+  options?: ResolveAuthContextOptions,
 ): Promise<AuthContext> {
   if (isDevAuthBypassEnabled()) {
-    return {
-      user: {
-        id: DEV_BYPASS_USER.id,
-        email: DEV_BYPASS_USER.email,
-        role: DEV_BYPASS_USER.role,
-      },
-      isAdmin: true,
-      requiredRole,
-    };
+    // 7.1 allowed-host guard: the synthetic admin is only granted for
+    // loopback request hosts (or explicit DEV_AUTH_BYPASS_ALLOW_HOSTS
+    // entries). Anything else falls through to the real session check.
+    const host =
+      options?.requestHost !== undefined
+        ? options.requestHost
+        : await requestScopeHost();
+    if (isDevAuthBypassRequestAllowed(host)) {
+      return {
+        user: {
+          id: DEV_BYPASS_USER.id,
+          email: DEV_BYPASS_USER.email,
+          role: DEV_BYPASS_USER.role,
+        },
+        isAdmin: true,
+        requiredRole,
+      };
+    }
   }
 
   if (requiredRole === "guest") {
@@ -227,10 +285,13 @@ export function withAuth(
     const limited = await enforceRateLimit(req, options);
     if (limited) {return limited;}
 
+    const host = requestHost(req);
+    // 7.1: bypass (including the CSRF skip it enables) only for allowed hosts.
+    const bypassActive = isDevAuthBypassActiveForRequest(host);
     const method = req.method.toUpperCase();
     if (
       options.requireCsrf &&
-      !isDevAuthBypassEnabled() &&
+      !bypassActive &&
       ["POST", "PUT", "PATCH", "DELETE"].includes(method)
     ) {
       const csrfValid = await validateCsrfRequest(req);
@@ -247,7 +308,7 @@ export function withAuth(
     }
 
     try {
-      const auth = await resolveAuthContext(requiredRole);
+      const auth = await resolveAuthContext(requiredRole, { requestHost: host });
       // Next.js App Router always supplies context for dynamic routes; tests may omit it.
       return await handler(req, auth, context);
     } catch (err) {

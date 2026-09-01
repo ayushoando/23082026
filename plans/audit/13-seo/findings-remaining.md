@@ -1,7 +1,4 @@
 # Remaining — SEO
 **Date:** 2026-09-01
 
-- 13.1: triple re-export chain to one SEO module (drift/ambiguity risk) — open, not started.
-- 13.2: sitemap catalog-fetch failure silently swallowed (`app/sitemap.ts:97-99`) — open, not started.
-- 13.3: non-standard Yandex-only `host` in `robots.ts:19` — open, not started.
-- 13.4: workspace routes inherit generic "Planner"/"Studio" titles (noindex, cosmetic) — open, not started.
+- 13.1 (residual): delete the now-unused deprecated shims `site/lib/helpers/seo.ts` + `site/lib/analytics/seo.ts` (and their name-mirror tests `tests/unit/lib/helpers/seo.test.ts`, `tests/unit/lib/analytics/seo.test.ts`) — **file deletions require user confirmation** (hard rule: no deletions). Shims are marked deprecated and have no app callers.

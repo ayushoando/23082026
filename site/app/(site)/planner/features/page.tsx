@@ -1,6 +1,6 @@
 import { PlannerFeaturesHubPage } from "@/features/site/planner/landing/PlannerFeaturesHubPage";
 import { PLANNER_FEATURES_PAGE_METADATA } from "@/features/site/data/routeMetadata";
-import { buildBreadcrumbJsonLd, buildPageJsonLd } from "@/lib/helpers/seo";
+import { buildBreadcrumbJsonLd, buildPageJsonLd } from "@/features/site/data/seo";
 import { SITE_URL } from "@/lib/siteUrl";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 

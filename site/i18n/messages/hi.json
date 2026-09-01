@@ -531,7 +531,7 @@
     "deliveryTitle": "विश्वसनीय वितरण",
     "deliveryDescription": "स्पष्ट दायरा, व्यावहारिक योजना और जवाबदेह स्थापना।",
     "deliveryMedia": {
-      "src": "/assets/marketing/projects/DMRC/dmrc-1.webp",
+      "src": "/assets/marketing/hero/pages/about-oneandonly-bright.webp",
       "alt": "कार्यक्षेत्र योजना और वितरण"
     },
     "stats": [
@@ -597,7 +597,16 @@
   "workspace": {
     "backToHome": "होम पर वापस जाएं",
     "accessPanelTitle": "योजना में सटीकता",
-    "accessPanelDescription": "ओएंडओ सूट का अनुभव करें। हमारे उपकरण टीमों में सटीकता, प्रदर्शन और स्पष्ट सहयोग के लिए डिज़ाइन किए गए हैं।"
+    "accessPanelDescription": "ओएंडओ सूट का अनुभव करें। हमारे उपकरण टीमों में सटीकता, प्रदर्शन और स्पष्ट सहयोग के लिए डिज़ाइन किए गए हैं।",
+    "plannerEntry": {
+      "accessStatusLabel": "प्लानर एक्सेस स्थिति",
+      "guestLabel": "अतिथि वर्कस्पेस",
+      "signedInLabel": "साइन-इन वर्कस्पेस",
+      "guestHint": "कैटलॉग देखें और लेआउट तैयार करें। प्लान सहेजने या खोलने के लिए साइन इन करें।",
+      "signedInHint": "आपके सहेजे गए प्लान प्रोजेक्ट सूची में उपलब्ध हैं।",
+      "signInToSave": "सहेजने के लिए साइन इन करें",
+      "viewSavedPlans": "सहेजे गए प्लान देखें"
+    }
   },
   "news": {
     "heroTitle": "समाचार और अपडेट",

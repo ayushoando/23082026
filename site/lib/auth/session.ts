@@ -4,6 +4,7 @@
  */
 import "server-only";
 
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createAuthServerClient } from "@/platform/supabase/server";
 import { hasAuthSupabaseEnv } from "@/platform/supabase/env";
@@ -13,6 +14,7 @@ import { isAppAdmin } from "@/lib/auth/roles";
 import {
   DEV_BYPASS_USER,
   isDevAuthBypassEnabled,
+  isDevAuthBypassRequestAllowed,
 } from "@/lib/auth/devAuthBypass";
 
 function isNextDynamicServerUsageError(error: unknown): boolean {
@@ -30,8 +32,27 @@ function isNextDynamicServerUsageError(error: unknown): boolean {
   );
 }
 
+/**
+ * 7.1 allowed-host guard: the dev bypass is only honored for loopback request
+ * hosts (or explicit `DEV_AUTH_BYPASS_ALLOW_HOSTS` entries). Outside a request
+ * scope (static probing, tests without a request) this fails closed.
+ */
+async function isDevBypassActiveForThisRequest(): Promise<boolean> {
+  if (!isDevAuthBypassEnabled()) {
+    return false;
+  }
+  try {
+    const h = await headers();
+    const host =
+      h.get("x-forwarded-host")?.split(",")[0]?.trim() || h.get("host");
+    return isDevAuthBypassRequestAllowed(host);
+  } catch {
+    return false;
+  }
+}
+
 export async function getOptionalUser(): Promise<SharedSessionUser | null> {
-  if (isDevAuthBypassEnabled()) {
+  if (await isDevBypassActiveForThisRequest()) {
     return {
       id: DEV_BYPASS_USER.id,
       email: DEV_BYPASS_USER.email,
@@ -81,7 +102,7 @@ export async function requireAuthUser(
   nextPath: string,
   surface: "planner" | "configurator" | "crm" | "ops" | "admin" = "planner"
 ): Promise<SharedSessionUser> {
-  if (isDevAuthBypassEnabled()) {
+  if (await isDevBypassActiveForThisRequest()) {
     return {
       id: DEV_BYPASS_USER.id,
       email: DEV_BYPASS_USER.email,

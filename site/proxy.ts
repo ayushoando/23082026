@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { PLANNER_GUEST_COOKIE } from "./lib/auth/constants";
-import { isDevAuthBypassEnabled } from "./lib/auth/devAuthBypass";
+import { isDevAuthBypassActiveForRequest } from "./lib/auth/devAuthBypass";
 import { sanitizeNextPath } from "./lib/auth/plannerRedirect";
 import { isMaintenanceReadonly } from "./lib/platform/maintenanceMode";
 import { SITE_URL } from "./lib/siteUrl";
@@ -350,7 +350,13 @@ function applySecurityHeaders(
 export async function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
   const nonce = createCspNonce();
-  const devAuthBypass = isDevAuthBypassEnabled();
+  // 7.1 allowed-host guard: dev bypass unlocks protected paths only for
+  // loopback request hosts (or explicit DEV_AUTH_BYPASS_ALLOW_HOSTS entries).
+  const devAuthBypass = isDevAuthBypassActiveForRequest(
+    request.headers.get("x-forwarded-host")?.split(",")[0]?.trim() ||
+      request.headers.get("host") ||
+      request.nextUrl.host,
+  );
   // Workstation .env often copies prod maintenance=readonly; local dev bypass must
   // still reach /admin for catalog/CRM work (pnpm dev sets DEV_AUTH_BYPASS=1).
   const maintenanceReadonly = isMaintenanceReadonly() && !devAuthBypass;

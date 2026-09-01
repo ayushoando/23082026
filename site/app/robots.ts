@@ -16,7 +16,8 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow,
     })),
-    host: sitemapHost,
+    // No `host` emission: it is a Yandex-only, non-standard hint. Google and
+    // Bing discover the origin from the sitemap URL below.
     sitemap: [`${sitemapHost}/sitemap.xml`],
   };
 }

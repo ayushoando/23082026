@@ -53,18 +53,16 @@ describe("robots.ts (stable import)", () => {
     expect(disallowList).not.toContain("/products/");
   });
 
-  it("uses SITE_URL host (never hardcoded localhost) for sitemap and host", () => {
+  it("uses SITE_URL host for sitemap and emits no non-standard host field", () => {
     const config = robots();
-    const host = String(config.host ?? "");
     const sitemaps = Array.isArray(config.sitemap)
       ? config.sitemap
       : config.sitemap
         ? [config.sitemap]
         : [];
     const sitemap = String(sitemaps[0] ?? "");
-    expect(host).toBe(SITE_URL.replace(/\/+$/, ""));
+    expect(config.host).toBeUndefined();
     expect(sitemap).toBe(`${SITE_URL.replace(/\/+$/, "")}/sitemap.xml`);
-    expect(host).not.toMatch(/localhost|127\.0\.0\.1/i);
     expect(sitemap).not.toMatch(/localhost|127\.0\.0\.1/i);
   });
 });

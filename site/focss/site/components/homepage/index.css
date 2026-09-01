@@ -3,8 +3,10 @@
  */
 
 @import "./home-base.css";
+@import "./home-tool-cards.css";
 @import "./home-type.css";
 @import "./home-layout.css";
+@import "./home-tool-cards-fallback.css";
 @import "./home-sections.css";
 @import "./home-extras.css";
 @import "./home-projects.css";
