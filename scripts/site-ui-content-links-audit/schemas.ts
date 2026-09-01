@@ -1014,7 +1014,7 @@ export const WaveCheckpointSchema = z
     }
   });
 
-const PartitionManifestSchema = z
+export const PartitionManifestSchema = z
   .object({
     partitionId: NonEmptyStringSchema,
     path: NonEmptyStringSchema,
@@ -1025,6 +1025,8 @@ const PartitionManifestSchema = z
     supersedesPartitionId: NonEmptyStringSchema.optional(),
   })
   .strict();
+
+export type PartitionManifestEntry = z.infer<typeof PartitionManifestSchema>;
 
 export const RunManifestSchema = z
   .object({

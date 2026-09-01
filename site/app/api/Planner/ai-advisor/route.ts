@@ -29,7 +29,9 @@ import {
 } from "@/lib/ai/mastra";
 import { sanitizeUserInput } from "@/lib/ai/sanitizeUserInput";
 import { PlannerAdvisorRequestSchema } from "@/features/shared/api/schemas";
+import { normalizeClientIp } from "@/lib/clientIp";
 import { withAiObservability } from "@/lib/observability/aiMetrics";
+import { rateLimit } from "@/lib/rateLimit";
 import {
  createPlannerHandler,
  createPlannerRejectedMethodHandler,
@@ -237,9 +239,41 @@ function buildMessages(
 // Core operation
 // ---------------------------------------------------------------------------
 
+/** Guest inner limit (PLN-FIX-04): 2 advisor requests per minute per IP. */
+const GUEST_ADVISOR_MAX_REQUESTS = 2;
+const GUEST_ADVISOR_WINDOW_MS = 60_000;
+
 async function handlePlannerAdvisor(
  context: PlannerOperationContext,
 ): Promise<PlannerOperationResult<unknown>> {
+ // --- 0. Guests get a tighter 2/min inner limit on top of the outer 5/min ---
+ // so authenticated members retain higher throughput (PLN-FIX-04).
+ if (!context.session) {
+  const ip = normalizeClientIp(
+   context.request.headers["cf-connecting-ip"] ||
+    context.request.headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
+    "127.0.0.1",
+  );
+  const guestLimit = await rateLimit(
+   `planner-ai-advisor-guest:${ip}`,
+   GUEST_ADVISOR_MAX_REQUESTS,
+   GUEST_ADVISOR_WINDOW_MS,
+  );
+  if (!guestLimit.success) {
+   const retryAfterSeconds = Math.max(
+    0,
+    Math.ceil((guestLimit.reset - Date.now()) / 1000),
+   );
+   return {
+    ok: false,
+    status: 429,
+    code: "RATE_LIMITED",
+    metadata: { retryAfterSeconds },
+    headers: { "Retry-After": String(retryAfterSeconds) },
+   };
+  }
+ }
+
  // --- 1. Parse and validate body with Zod for trimming/min-max enforcement ---
  const parsed = PlannerAdvisorRequestSchema.safeParse(context.request.body);
  if (!parsed.success) {
@@ -346,7 +380,8 @@ async function handlePlannerAdvisor(
  *
  * Auth: guest (anonymous users may use the planner).
  * CSRF: required for mutating POST.
- * Rate limit: 5 requests per window per IP under the "planner-advisor" scope.
+ * Rate limit: 5 requests per window per IP under the "planner-advisor" scope,
+ * plus a 2 req/min guest inner limit (PLN-FIX-04).
  */
 export const POST = createPlannerHandler({
  endpointId: "planner.ai-advisor",

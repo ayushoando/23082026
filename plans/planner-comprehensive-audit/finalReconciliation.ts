@@ -53,8 +53,10 @@ const WORKSTREAM_1_PATHS = [
   "plans/planner-comprehensive-audit/findingRegistry.ts",
   "plans/planner-comprehensive-audit/workflowTraceBuilder.ts",
   FINAL_RECONCILIATION_PATH,
-  ".kiro/specs/planner-comprehensive-audit/tasks.md",
-  ".kiro/specs/planner-comprehensive-audit/tasks.meta.json",
+  // Corrected 2026-09-01: the plan artifacts moved from `.kiro/specs/**`
+  // (removed) to `plans/planner-comprehensive-audit/`.
+  "plans/planner-comprehensive-audit/tasks.md",
+  "plans/planner-comprehensive-audit/handover.md",
 ] as const;
 
 const WORKSTREAM_2_PATHS = [
@@ -70,7 +72,9 @@ const WORKSTREAM_3_PATHS = [
   "site/lib/Planner/commands/useCanvasActions.ts",
   "site/lib/Planner/handoff/createPlannerHandoff.ts",
   "site/components/Planner/Planner.tsx",
-  "site/lib/Planner/plannerLoadState.ts",
+  // Corrected 2026-09-01: the module lives under components/Planner (the
+  // stale lib/ path was caught by the new existence test).
+  "site/components/Planner/plannerLoadState.ts",
   "site/components/Planner/PlannerProjectLoadState.tsx",
   "tests/unit/planner/plannerFocusAndTouch.test.tsx",
 ] as const;
@@ -561,15 +565,17 @@ export const FINAL_PENDING_VALIDATION_COMMANDS = uniqueSorted(
 );
 
 export const FINAL_PRESERVED_UNRELATED_PATHS = [
-  ".kiro/specs/ai-package-remediation/decision-record.md",
-  ".kiro/specs/ai-package-remediation/tasks.md",
-  ".kiro/specs/ai-package-remediation/tasks.meta.json",
-  ".kiro/specs/ai-package-remediation/validation-matrix.md",
+  // Corrected 2026-09-01: the ai-package-remediation spec folder
+  // (`.kiro/specs/**`, removed) lives on as `plans/packages/`.
+  "plans/packages/package-audit-report.md",
+  "plans/packages/remedy-plan.md",
   "tests/unit/lib/ai/mastra/catalogRetrieval.test.ts",
 ] as const;
 
 export const FINAL_PRESERVED_OUT_OF_SCOPE_PATHS = [
-  ".kiro/specs/ai-implementation-audit/tasks.md",
+  // Corrected 2026-09-01: the ai-implementation-audit spec folder
+  // (`.kiro/specs/**`, removed) lives on as `plans/ai-audit/`.
+  "plans/ai-audit/remedy-plan.md",
   "scripts/AsNeeded/verify-focss.mjs",
   "site/components/Planner/PlannerAlignBar.tsx",
   "site/components/Planner/PlannerAutoArrangeDialog.tsx",

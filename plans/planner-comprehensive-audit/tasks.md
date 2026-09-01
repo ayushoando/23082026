@@ -37,7 +37,7 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
 
 ## Tasks
 
-- [ ] 1. Workstream 1 — Maintain audit foundation, findings, and serial reconciliation
+- [x] 1. Workstream 1 — Maintain audit foundation, findings, and serial reconciliation
   - [x] 1.1 Implement typed coverage, workflow-trace, evidence, validation, and finding models plus deterministic validators in the approved audit workstream
     - Represent routes, APIs, Planner-owned and reachable shared sources, FOCSS, tests, viewport/input/state/security/persistence coverage, evidence classes, lifecycle states, and requirement links.
     - Keep generated machine evidence under a purpose-specific `results/planner-comprehensive-audit/**` path and authored audit records in the repository-approved plan-owned workstream; do not place reports in `site/`.
@@ -305,24 +305,24 @@ Up to five agents may execute concurrently, one per workstream. An agent may wri
     - Cover representative desktop/tablet/phone layouts, resize/orientation context, touch/keyboard parity, focus movement/restoration, dialogs, 200% reflow, reduced motion, contrast/visual states, offline/conflict recovery, accessibility, and required performance profiles.
     - Author tests only; execution remains protected validation.
     - _Requirements: 5.1-5.8, 6.1-6.7, 7.1-7.7, 8.1-8.8, 9.2-9.6, 16.1-16.7, 18.5_
-  - [ ] 5.11 Implement the change-derived validation manifest and evidence recorder
+  - [x] 5.11 Implement the change-derived validation manifest and evidence recorder
     - Derive the narrowest applicable exact repository-root commands from the frozen changed paths/findings, including fork, FOCSS, UI lint/token, typecheck, targeted Vitest/Playwright/accessibility/performance, migration dry-run/types, and full gate only when applicable.
     - Exclude `typecheck:scripts`; store authorization, hook decision, exit status, output limitation, evidence class, and unverified behavior, and leave every unexecuted command without pass/fail.
     - _Requirements: 18.1-18.9, 19.4-19.6_
-  - [ ] 5.12 Write property-based test for authorization-gated validation
+  - [x] 5.12 Write property-based test for authorization-gated validation
     - **Property 27: Authorization-gated validation**
     - Generate protected/hosted actions and authorization/hook states and verify execution eligibility only when both permissions exist, otherwise exact pending action and no result claim.
     - **Validates: Requirements 14.10, 18.2, 18.3, 18.4, 18.9, 19.5, 19.6**
-  - [ ] 5.13 Write property-based test for change-derived validation planning
+  - [x] 5.13 Write property-based test for change-derived validation planning
     - **Property 28: Change-derived validation plan**
     - Generate finding categories and changed paths and verify all narrow triggered checks, fork/FOCSS/type rules, and exclusion of `typecheck:scripts`.
     - **Validates: Requirements 18.1, 18.5, 18.6, 18.7, 18.8**
-  - [ ] 5.14 Write property-based test for evidence-class separation
+  - [x] 5.14 Write property-based test for evidence-class separation
     - **Property 29: Evidence-class separation**
     - Generate evidence records and verify exactly one repository/browser/integration/hosted/deployment class with no promotion from static evidence.
     - **Validates: Requirements 17.7, 19.4**
 
-- [ ] 6. Final checkpoint
+- [x] 6. Final checkpoint
   - Reconcile observed results only for exact checks authorized in the current session and permitted by the enabled hook; list every unauthorized or unexecuted check as pending without a pass/fail claim.
   - Confirm every required task, property test, remediation handback, ownership transfer, and contract handoff is closed or carries the exact permitted pending/blocker classification before generating the final completion record.
   - Keep hosted operations separate from repository validation and leave them unexecuted unless the repository owner separately authorizes the exact action.

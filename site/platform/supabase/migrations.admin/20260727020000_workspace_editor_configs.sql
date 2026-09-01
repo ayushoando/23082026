@@ -130,3 +130,10 @@ revoke all on function public.mutate_workspace_editor_configuration(
 grant execute on function public.mutate_workspace_editor_configuration(
   text, text, text, bigint, text, integer, jsonb, boolean
 ) to service_role;
+
+-- rollback:
+-- drop trigger if exists workspace_editor_config_audit_immutable on public.workspace_editor_config_audit;
+-- drop function if exists public.mutate_workspace_editor_configuration(text, text, text, bigint, text, integer, jsonb, boolean);
+-- drop function if exists public.reject_workspace_editor_config_audit_mutation();
+-- drop table if exists public.workspace_editor_config_audit cascade;
+-- drop table if exists public.workspace_editor_configs cascade;

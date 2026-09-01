@@ -55,7 +55,7 @@ export default function PlannerLandingRoute() {
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: SOFTWARE_APP_JSON_LD }}
+        dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(SOFTWARE_APP_JSON_LD) }}
       />
       <PlannerLandingPage />
     </>

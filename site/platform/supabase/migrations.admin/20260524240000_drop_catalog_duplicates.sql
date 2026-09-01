@@ -16,3 +16,13 @@ drop table if exists public.catalog_categories      cascade;
 drop table if exists public.series                  cascade;
 
 drop table if exists public.__drizzle_migrations    cascade;
+
+-- rollback:
+-- Destructive migration: it drops stale duplicate copies of the catalog
+-- domain. To undo, re-create the affected tables from the Products DB
+-- (source of truth) or from backups/pre-split-admin-*.sql referenced above:
+--   product_images, product_specs, products, categories, catalog_product_images,
+--   catalog_product_specs, catalog_products, catalog_items, catalog_categories,
+--   series, __drizzle_migrations
+-- No admin runtime reads these tables; re-creating them is only required if
+-- the split decision itself is reverted.

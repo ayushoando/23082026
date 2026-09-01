@@ -1,6 +1,7 @@
 import {
   FINDING_TRANSITIONS,
   PLANNER_AUDIT_AUTHORED_ROOT,
+  PLANNER_AUDIT_AUTHORED_TEST_ROOT,
   PLANNER_AUDIT_MACHINE_EVIDENCE_ROOT,
   WORKFLOW_STAGE_ORDER,
 } from "./auditModel";
@@ -181,22 +182,26 @@ function validateEvidenceArtifact(
   path: string,
   issues: ValidationIssue[],
 ): void {
-  const expectedRoot =
+  // Authored artifacts live under the plan folder; the plan-owned property
+  // and example tests live under tests/unit/planner/ (see auditModel.ts).
+  const allowedRoots =
     artifact.authorship === "authored"
-      ? PLANNER_AUDIT_AUTHORED_ROOT
-      : PLANNER_AUDIT_MACHINE_EVIDENCE_ROOT;
+      ? [PLANNER_AUDIT_AUTHORED_ROOT, PLANNER_AUDIT_AUTHORED_TEST_ROOT]
+      : [PLANNER_AUDIT_MACHINE_EVIDENCE_ROOT];
 
-  if (
-    !isSafeRelativeAuditPath(artifact.path) ||
-    !artifact.path.startsWith(expectedRoot) ||
-    artifact.path === expectedRoot ||
-    artifact.path.startsWith("site/")
-  ) {
+  const inAllowedRoot = allowedRoots.some(
+    (root) =>
+      artifact.path.startsWith(root) &&
+      artifact.path !== root &&
+      !artifact.path.startsWith("site/"),
+  );
+
+  if (!isSafeRelativeAuditPath(artifact.path) || !inAllowedRoot) {
     addIssue(
       issues,
       "invalid-artifact-path",
       `${path}.path`,
-      `${artifact.authorship} artifacts must be non-root files under ${expectedRoot}`,
+      `${artifact.authorship} artifacts must be non-root files under ${allowedRoots.join(" or ")}`,
     );
   }
 }

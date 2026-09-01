@@ -5,6 +5,9 @@ import {
   shouldCacheResponse,
 } from './cachePolicy.js';
 
+/** Applied to every worker-served response; apex is HTTPS-only. */
+const HSTS_HEADER = 'max-age=31536000; includeSubDomains; preload';
+
 /** RFC 9116 security.txt - served at edge so scanners pass before Next deploy. */
 const SECURITY_TXT = `# One&Only (oando.co.in) - security disclosure contact (RFC 9116)
 # Prefer responsible disclosure for security issues only (not sales or support).
@@ -25,6 +28,7 @@ function securityTxtResponse() {
       'content-type': 'text/plain; charset=utf-8',
       'cache-control': 'public, max-age=86400',
       'x-content-type-options': 'nosniff',
+      'strict-transport-security': HSTS_HEADER,
       'x-oando-proxy': 'security-txt',
     },
   });
@@ -42,8 +46,7 @@ export default {
         headers: {
           location: apexLocation,
           'cache-control': 'public, max-age=3600',
-          'strict-transport-security':
-            'max-age=31536000; includeSubDomains; preload',
+          'strict-transport-security': HSTS_HEADER,
           'x-oando-proxy': 'www-to-apex',
         },
       });
@@ -139,6 +142,7 @@ export default {
           object.writeHttpMetadata(headers);
           headers.set('etag', object.httpEtag);
           headers.set('cache-control', 'public, max-age=31536000, immutable');
+          headers.set('strict-transport-security', HSTS_HEADER);
           headers.set('x-oando-proxy', 'r2');
           
           return new Response(object.body, {
@@ -163,6 +167,7 @@ export default {
           fallback.writeHttpMetadata(headers);
           headers.set('etag', fallback.httpEtag);
           headers.set('cache-control', 'public, max-age=300');
+          headers.set('strict-transport-security', HSTS_HEADER);
           headers.set('x-oando-proxy', 'r2-fallback');
           return new Response(fallback.body, { headers });
         }
@@ -171,7 +176,11 @@ export default {
       }
       return new Response('Not Found', {
         status: 404,
-        headers: { 'content-type': 'text/plain; charset=utf-8', 'x-oando-proxy': 'r2-miss' },
+        headers: {
+          'content-type': 'text/plain; charset=utf-8',
+          'strict-transport-security': HSTS_HEADER,
+          'x-oando-proxy': 'r2-miss',
+        },
       });
     }
 
@@ -252,10 +261,7 @@ export default {
       responseHeaders.set('cache-control', cacheControlForPath(pathname));
     }
 
-    responseHeaders.set(
-      'strict-transport-security',
-      'max-age=31536000; includeSubDomains; preload',
-    );
+    responseHeaders.set('strict-transport-security', HSTS_HEADER);
     
     return new Response(upstreamResponse.body, {
       status: upstreamResponse.status,

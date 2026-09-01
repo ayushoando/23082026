@@ -65,3 +65,8 @@ $$;
 
 revoke all on function public.save_product_studio_draft(text, integer, jsonb, bigint, text) from public;
 grant execute on function public.save_product_studio_draft(text, integer, jsonb, bigint, text) to service_role;
+
+-- rollback:
+-- drop function if exists public.save_product_studio_draft(text, integer, jsonb, bigint, text);
+-- drop policy if exists product_studio_drafts_service_role_all on public.product_studio_drafts;
+-- drop table if exists public.product_studio_drafts cascade;

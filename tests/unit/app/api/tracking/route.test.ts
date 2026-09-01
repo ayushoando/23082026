@@ -1,6 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { NextRequest } from "next/server";
-import { createSupabaseAuthAdminClient } from "@/platform/supabase/auth-admin";
+import {
+  createSupabaseAuthAdminClient,
+  createSupabaseAuthAnonClient,
+} from "@/platform/supabase/auth-admin";
 import { rateLimit } from "@/lib/rateLimit";
 import { createAnonymousUserId } from "@/lib/tracking/anonymousUserId";
 import { TRACKING_ANON_COOKIE } from "@/lib/tracking/trackingCookie";
@@ -16,6 +19,7 @@ vi.mock("next/headers", () => ({
 
 vi.mock("@/platform/supabase/auth-admin", () => ({
   createSupabaseAuthAdminClient: vi.fn(),
+  createSupabaseAuthAnonClient: vi.fn(),
 }));
 
 vi.mock("@/lib/rateLimit", () => ({
@@ -49,6 +53,9 @@ describe("Tracking API Route", () => {
   let mockSupabaseAdmin: {
     auth: { getUser: ReturnType<typeof vi.fn> };
   };
+  let mockSupabaseAnon: {
+    auth: { getUser: ReturnType<typeof vi.fn> };
+  };
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -58,7 +65,13 @@ describe("Tracking API Route", () => {
         getUser: vi.fn().mockResolvedValue({ data: { user: null }, error: null }),
       },
     };
+    mockSupabaseAnon = {
+      auth: {
+        getUser: vi.fn().mockResolvedValue({ data: { user: null }, error: null }),
+      },
+    };
     vi.mocked(createSupabaseAuthAdminClient).mockReturnValue(mockSupabaseAdmin as never);
+    vi.mocked(createSupabaseAuthAnonClient).mockReturnValue(mockSupabaseAnon as never);
     vi.mocked(rateLimit).mockResolvedValue(rateLimitResult({ success: true, reset: Date.now() + 60000  }));
     vi.mocked(fetchViewedProducts).mockResolvedValue([]);
     vi.mocked(upsertViewedProducts).mockResolvedValue({ ok: true, missingTable: false });
@@ -93,7 +106,7 @@ describe("Tracking API Route", () => {
   });
 
   it("should use bearer token user id if valid", async () => {
-    mockSupabaseAdmin.auth.getUser.mockResolvedValue({
+    mockSupabaseAnon.auth.getUser.mockResolvedValue({
       data: { user: { id: "resolved-auth-user" } },
       error: null,
     });
@@ -104,7 +117,11 @@ describe("Tracking API Route", () => {
     const data = await res.json();
     expect(data.success).toBe(true);
     expect(data.userId).toBe("resolved-auth-user");
-    expect(fetchViewedProducts).toHaveBeenCalledWith(mockSupabaseAdmin, "resolved-auth-user");
+    // SEC-R08: authenticated persistence runs on the anon-key client scoped
+    // to the caller's own bearer token, never the service-role client.
+    expect(createSupabaseAuthAnonClient).toHaveBeenCalledWith("auth-token-xyz");
+    expect(fetchViewedProducts).toHaveBeenCalledWith(mockSupabaseAnon, "resolved-auth-user");
+    expect(createSupabaseAuthAdminClient).not.toHaveBeenCalled();
   });
 
   it("should handle invalid request JSON body gracefully", async () => {

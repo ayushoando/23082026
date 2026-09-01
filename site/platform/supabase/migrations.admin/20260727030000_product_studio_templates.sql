@@ -138,3 +138,11 @@ revoke all on function public.mutate_product_studio_template(
 grant execute on function public.mutate_product_studio_template(
   uuid, text, bigint, text, text, text, text[]
 ) to service_role;
+
+-- rollback:
+-- drop trigger if exists product_studio_template_audit_immutable on public.product_studio_template_audit;
+-- drop function if exists public.mutate_product_studio_template(uuid, text, bigint, text, text, text, text[]);
+-- drop function if exists public.create_product_studio_template(text, text, text[], jsonb, integer, bigint, text);
+-- drop function if exists public.reject_product_studio_template_audit_mutation();
+-- drop table if exists public.product_studio_template_audit cascade;
+-- drop table if exists public.product_studio_templates cascade;

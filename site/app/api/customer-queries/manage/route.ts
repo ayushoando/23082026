@@ -1,4 +1,3 @@
-import { timingSafeEqual } from "crypto";
 import type { NextRequest} from "next/server";
 import { createSupabaseAuthAdminClient } from '@/platform/supabase/auth-admin';
 import { getClientIp } from "@/platform/supabase/adminServer";
@@ -6,6 +5,11 @@ import { createAuthServerClient } from "@/platform/supabase/server";
 import { rateLimit } from "@/lib/rateLimit";
 import { validateCsrfRequest } from "@/lib/security/csrf";
 import { CSRF_REJECTION_HEADER_NAME } from "@/lib/security/csrfConstants";
+import {
+  acceptedStaticAdminTokens,
+  matchesStaticAdminToken,
+  warnStaticAdminTokenUsage,
+} from "@/lib/security/staticAdminToken";
 import { isAppAdmin } from "@/lib/auth/roles";
 import { success, error, rateLimitedError } from "@/features/shared/api/apiResponse";
 import { ApiError, API_ERROR_CODES } from "@/features/shared/api/ApiError";
@@ -34,12 +38,7 @@ function normalizeText(value: unknown, max = 5000): string {
   return value.trim().slice(0, max);
 }
 
-function safeTokenEquals(provided: string, required: string): boolean {
-  const providedBytes = Buffer.from(provided);
-  const requiredBytes = Buffer.from(required);
-  if (providedBytes.length !== requiredBytes.length) {return false;}
-  return timingSafeEqual(providedBytes, requiredBytes);
-}
+
 
 async function hasAdminSession(): Promise<boolean> {
   try {
@@ -60,11 +59,17 @@ async function hasAdminSession(): Promise<boolean> {
 async function isAuthorized(req: NextRequest): Promise<boolean> {
   if (await hasAdminSession()) {return true;}
 
-  const required = process.env.CUSTOMER_QUERIES_ADMIN_TOKEN?.trim();
-  if (!required) {return false;}
+  // SEC-R07: deprecated static-token fallback (session auth is the supported
+  // path; removal scheduled via staticAdminToken.ts sunset date).
+  const accepted = acceptedStaticAdminTokens();
+  if (accepted.length === 0) {return false;}
 
   const provided = req.headers.get("x-admin-token")?.trim() || "";
-  return provided.length > 0 && safeTokenEquals(provided, required);
+  if (provided.length === 0) {return false;}
+  if (!matchesStaticAdminToken(provided, accepted)) {return false;}
+
+  warnStaticAdminTokenUsage("customer-queries/manage", provided);
+  return true;
 }
 
 async function ensureAuthorized(req: NextRequest) {

@@ -50,3 +50,13 @@ drop policy if exists audit_events_service_role_all on public.audit_events;
 create policy audit_events_service_role_all
   on public.audit_events for all
   to service_role using (true) with check (true);
+
+-- rollback:
+-- WARNING: public.oando_plans holds live user plan data; rollback requires a
+-- verified backup of the table first. Later migrations
+-- (20260823090000_planner_revision_idempotency.sql and successors) extend
+-- this table and must be reverted before this one.
+-- drop policy if exists audit_events_service_role_all on public.audit_events;
+-- drop policy if exists oando_plans_service_role_all on public.oando_plans;
+-- drop table if exists public.audit_events cascade;
+-- drop table if exists public.oando_plans cascade;

@@ -37,3 +37,9 @@ drop policy if exists price_book_versions_service_role_all on public.price_book_
 create policy price_book_versions_service_role_all
   on public.price_book_versions for all
   to service_role using (true) with check (true);
+
+-- rollback:
+-- drop policy if exists price_book_versions_service_role_all on public.price_book_versions;
+-- drop policy if exists price_books_service_role_all on public.price_books;
+-- drop table if exists public.price_book_versions cascade;
+-- drop table if exists public.price_books cascade;

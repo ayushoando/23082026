@@ -717,18 +717,38 @@ export function getPublishedRecords(): ClientRecord[] {
   return CLIENT_REGISTRY.filter((record) => record.published);
 }
 
-export function getGroupedRecords(): Record<SectorTabId, ClientRecord[]> {
+/**
+ * Pure grouping core: sorts by `displayName` with `en-IN` collation
+ * (`canonicalId` tiebreaker), keeps at most one entry per `canonicalId`, and
+ * always returns all four sector keys. Exported so property tests can drive
+ * it with generated records; callers should use `getGroupedRecords()`.
+ */
+export function groupPublishedRecords(
+  records: readonly ClientRecord[],
+): Record<SectorTabId, ClientRecord[]> {
   const collator = new Intl.Collator("en-IN");
   const grouped = {} as Record<SectorTabId, ClientRecord[]>;
 
   for (const tab of SECTOR_TABS) {
-    grouped[tab.id] = getPublishedRecords()
-      .filter((record) => record.sectorTab === tab.id)
+    const seen = new Set<string>();
+    grouped[tab.id] = records
+      .filter((record) => record.published && record.sectorTab === tab.id)
       .sort((left, right) => {
         const nameOrder = collator.compare(left.displayName, right.displayName);
         return nameOrder || left.canonicalId.localeCompare(right.canonicalId);
+      })
+      .filter((record) => {
+        if (seen.has(record.canonicalId)) {
+          return false;
+        }
+        seen.add(record.canonicalId);
+        return true;
       });
   }
 
   return grouped;
+}
+
+export function getGroupedRecords(): Record<SectorTabId, ClientRecord[]> {
+  return groupPublishedRecords(getPublishedRecords());
 }

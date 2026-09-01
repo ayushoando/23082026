@@ -9,12 +9,19 @@ import {
 } from "@studio/server/studioStore";
 import { withAuth } from "@/features/shared/api/withAuth";
 import { getFurnitureCatalogMode } from "@/lib/catalog/furnitureCatalogMode";
-import { isOversizedUpload } from "@/lib/security/uploadLimits";
+import {
+  isOversizedRequestBody,
+  isOversizedUpload,
+} from "@/lib/security/uploadLimits";
 
 export const POST = withAuth(
   async (request) => {
     if (getFurnitureCatalogMode() === "disk") {
       await ensureStorageDirs();
+    }
+    // SEC-R09: reject declared-oversize bodies before formData() reads them.
+    if (isOversizedRequestBody(request.headers)) {
+      return NextResponse.json({ detail: "File too large" }, { status: 413 });
     }
     let form: FormData;
     try {

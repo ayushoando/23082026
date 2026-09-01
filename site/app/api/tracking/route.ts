@@ -1,7 +1,11 @@
 import type { NextRequest, NextResponse } from "next/server";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import { getPublicApiIp } from "@/app/api/_lib/public";
-import { createSupabaseAuthAdminClient } from '@/platform/supabase/auth-admin';
+import {
+  createSupabaseAuthAdminClient,
+  createSupabaseAuthAnonClient,
+} from '@/platform/supabase/auth-admin';
 import { ApiError, API_ERROR_CODES } from "@/features/shared/api/ApiError";
 import { success, error, rateLimitedError } from "@/features/shared/api/apiResponse";
 import { rateLimit } from '@/lib/rateLimit';
@@ -72,17 +76,25 @@ function withAnonCookie(
   return response;
 }
 
-async function resolveUserId(req: NextRequest): Promise<{
+type ResolvedTrackingIdentity = {
   userId: string;
   newAnonId: string | null;
-}> {
+  /** The verified bearer token, when the visitor resolved to a real session. */
+  accessToken: string | null;
+};
+
+async function resolveUserId(req: NextRequest): Promise<ResolvedTrackingIdentity> {
   const token = getBearerToken(req);
   if (token) {
     try {
-      const authClient = createSupabaseAuthAdminClient();
+      // SEC-R08: token verification runs on the anon-key client (auth.getUser
+      // validates the caller's own JWT) instead of the service-role key.
+      const authClient = createSupabaseAuthAnonClient(token);
       const { data: authData } = await authClient.auth.getUser(token);
       const authUserId = normalizeId(authData?.user?.id);
-      if (authUserId) {return { userId: authUserId, newAnonId: null };}
+      if (authUserId) {
+        return { userId: authUserId, newAnonId: null, accessToken: token };
+      }
     } catch {
       // fall through to cookie-bound anonymous id
     }
@@ -92,11 +104,11 @@ async function resolveUserId(req: NextRequest): Promise<{
   const cookieValue = cookieStore.get(TRACKING_ANON_COOKIE)?.value;
   const cookieAnonId = normalizeAnonymousUserId(cookieValue);
   if (cookieAnonId) {
-    return { userId: cookieAnonId, newAnonId: null };
+    return { userId: cookieAnonId, newAnonId: null, accessToken: null };
   }
 
   const newAnonId = createAnonymousUserId();
-  return { userId: newAnonId, newAnonId };
+  return { userId: newAnonId, newAnonId, accessToken: null };
 }
 
 export async function POST(req: NextRequest) {
@@ -118,26 +130,35 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { userId, newAnonId } = await resolveUserId(req);
-    let supabaseAdmin: ReturnType<typeof createSupabaseAuthAdminClient>;
+    const { userId, newAnonId, accessToken } = await resolveUserId(req);
+    // Both clients share the repository's SupabaseClient contract; the
+    // anon/session variant only changes which RLS role PostgREST sees.
+    let persistenceClient: SupabaseClient;
 
     try {
-      supabaseAdmin = createSupabaseAuthAdminClient();
+      // SEC-R08: authenticated visitors persist through their own session
+      // (anon key + bearer token) so the owner-scoped RLS policy on
+      // user_history enforces row ownership. Cookie-only anonymous visitors
+      // have no JWT to prove ownership, so their writes remain server-mediated
+      // via the service-role key.
+      persistenceClient = accessToken
+        ? createSupabaseAuthAnonClient(accessToken)
+        : createSupabaseAuthAdminClient();
     } catch (error) {
       if (process.env.NODE_ENV === "development") {
         console.warn(
-          "[tracking] Supabase admin client unavailable; skipping history write.",
+          "[tracking] Supabase client unavailable; skipping history write.",
           error,
         );
       }
       return withAnonCookie(trackingNoopResponse(userId, productId), newAnonId);
     }
 
-    const existing = await fetchViewedProducts(supabaseAdmin, userId);
+    const existing = await fetchViewedProducts(persistenceClient, userId);
     const withoutDuplicate = existing.filter((item) => item !== productId);
     const viewedProducts = [...withoutDuplicate, productId].slice(-10);
 
-    const upsertResult = await upsertViewedProducts(supabaseAdmin, userId, viewedProducts);
+    const upsertResult = await upsertViewedProducts(persistenceClient, userId, viewedProducts);
     if (!upsertResult.ok) {
       return withAnonCookie(trackingNoopResponse(userId, productId, viewedProducts), newAnonId);
     }

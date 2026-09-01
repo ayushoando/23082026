@@ -1,5 +1,6 @@
 import { ClientsCaseStudies } from "@/components/clients/ClientsCaseStudies";
 import { ClientsHero } from "@/components/clients/ClientsHero";
+import { ClientShowcaseSection } from "@/components/site/clients/ClientShowcaseSection";
 import {
   HomeMarketingLayout,
   HomeSection,
@@ -32,8 +33,10 @@ async function loadClientsCopy() {
 }
 
 /**
- * Hero → editorial proof strip → case studies → bronze pull quotes → CTA → ContactTeaser.
- * Photography-forward proof — no client logo wall, no centered KPI grid.
+ * Hero → editorial proof strip → case studies → sector showcase tabs →
+ * bronze pull quotes → CTA → ContactTeaser.
+ * Photography-forward proof with the published-curator sector showcase
+ * (plans/client-showcase-tabs; owner re-approved 2026-09-01).
  */
 export async function ClientsPageView() {
   const [{ stats, source }, clientWork, copy] = await Promise.all([
@@ -110,6 +113,12 @@ export async function ClientsPageView() {
           ) : (
             <ClientsCaseStudies clients={clientWork} />
           )}
+        </HomeSectionInner>
+      </HomeSection>
+
+      <HomeSection variant="white" spacing="sm">
+        <HomeSectionInner>
+          <ClientShowcaseSection />
         </HomeSectionInner>
       </HomeSection>
 

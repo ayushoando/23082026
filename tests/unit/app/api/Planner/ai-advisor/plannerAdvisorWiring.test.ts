@@ -28,6 +28,7 @@ const resolveAdvisorModelChain = vi.hoisted(() => vi.fn());
 const requestAdvisorMessages = vi.hoisted(() => vi.fn());
 const requestCount = vi.hoisted(() => ({ value: 0 }));
 const rateLimitScopes = vi.hoisted(() => vi.fn());
+const guestRateLimit = vi.hoisted(() => vi.fn());
 const mockCounterInc = vi.hoisted(() => vi.fn());
 const mockHistogramObserve = vi.hoisted(() => vi.fn());
 const mockGaugeInc = vi.hoisted(() => vi.fn());
@@ -35,6 +36,13 @@ const mockGaugeInc = vi.hoisted(() => vi.fn());
 vi.mock("@/lib/ai/mastra", () => ({
   resolveAdvisorModelChain,
   requestAdvisorMessages,
+}));
+
+// The route's guest inner limiter (PLN-FIX-04) is injected so the outer
+// 5/min quota simulation in the mocked adapter stays the only rate gate for
+// the existing cases; a dedicated test below drives the guest path to 429.
+vi.mock("@/lib/rateLimit", () => ({
+  rateLimit: guestRateLimit,
 }));
 
 vi.mock("server-only", () => ({}));
@@ -133,12 +141,17 @@ vi.mock("@planner/server/plannerRouteAdapter", () => ({
           );
         }
 
+        const headers: Record<string, string> = {};
+        req.headers.forEach((value, name) => {
+          headers[name.toLowerCase()] = value;
+        });
+
         const context = {
           correlationId,
           // Guest access is intentional for the advisor endpoint.
           session: null,
           ownerScope: null,
-          request: { body, path: {}, query: {}, headers: {} },
+          request: { body, path: {}, query: {}, headers },
         };
 
         try {
@@ -249,6 +262,12 @@ beforeEach(() => {
     { provider: "gemini", label: "Gemini" },
   ]);
   requestAdvisorMessages.mockResolvedValue("Use a 1200 mm primary aisle.");
+  guestRateLimit.mockResolvedValue({
+    success: true,
+    limit: 2,
+    remaining: 1,
+    reset: Date.now() + 60_000,
+  });
 });
 
 describe("POST /api/planner/ai-advisor route wiring", () => {
@@ -265,6 +284,46 @@ describe("POST /api/planner/ai-advisor route wiring", () => {
     });
     expect(requestAdvisorMessages).toHaveBeenCalledOnce();
     expect(rateLimitScopes).toHaveBeenCalledWith("planner-ai-advisor");
+    // PLN-FIX-04: guests enter the inner 2 req/min limiter.
+    expect(guestRateLimit).toHaveBeenCalledWith(
+      "planner-ai-advisor-guest:localhost",
+      2,
+      60_000,
+    );
+  });
+
+  it("returns 429 from the guest inner limiter before any provider call", async () => {
+    guestRateLimit.mockResolvedValueOnce({
+      success: false,
+      limit: 2,
+      remaining: 0,
+      reset: Date.now() + 30_000,
+    });
+
+    const request = new NextRequest(
+      "http://localhost/api/planner/ai-advisor",
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-csrf-token": "test-csrf",
+          "cf-connecting-ip": "203.0.113.9",
+        },
+        body: JSON.stringify(validBody),
+      },
+    );
+    const response = await invokePost(request);
+    const body = await response.json();
+
+    expect(response.status).toBe(429);
+    expect(body.success).toBe(false);
+    expect(body.error.code).toBe("RATE_LIMITED");
+    expect(guestRateLimit).toHaveBeenCalledWith(
+      "planner-ai-advisor-guest:203.0.113.9",
+      2,
+      60_000,
+    );
+    expect(requestAdvisorMessages).not.toHaveBeenCalled();
   });
 
   it("rejects a POST with missing CSRF as non-200 before invoking the advisor", async () => {

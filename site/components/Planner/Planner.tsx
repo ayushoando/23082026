@@ -134,7 +134,12 @@ import {
   transientErrorState,
 } from "./plannerLoadState";
 import { buildAccessRedirect } from "@/lib/auth/plannerRedirect";
-import { saveLocalBackup, clearLocalBackup } from "@/lib/Planner/plannerLocalBackup";
+import {
+  saveLocalBackup,
+  loadLocalBackup,
+  clearLocalBackup,
+  type PlannerLocalBackupEntry,
+} from "@/lib/Planner/plannerLocalBackup";
 import { PlannerProjectLoadState } from "./PlannerProjectLoadState";
 import { serializeFabricCanvas } from "@planner/lib/plannerFabricSerialize";
 import { useRuntimeFeatureFlags } from "@/lib/hooks/useRuntimeFeatureFlags";
@@ -1724,16 +1729,66 @@ const Planner = ({
 
   // IndexedDB local backup every 30 s when there are unsaved changes.
   // Independent of network — fires for both guest and authenticated.
+  //
+  // The persisted payload strips grid/sheet decoration objects so the backup
+  // matches the server canvas contract; hydration re-adds them via
+  // drawGridAndSheet(). Without this the backup would capture the decorations
+  // and a later restore would double-draw them.
   useEffect(() => {
     if (!hasUnsavedChanges) return;
     const timer = setInterval(() => {
       const c = fabricRef.current;
       if (!c) return;
-      const canvasJson = serializeFabricCanvas(c, ["data"]);
+      const canvasJson = serializeFabricCanvas(c, ["data"]) as FabricCanvasJson;
+      canvasJson.objects = (canvasJson.objects || []).filter(
+        (object) => !object.data?.isGridLine && !object.data?.isSheet,
+      );
       void saveLocalBackup(projectId, canvasJson, sheetRef.current);
     }, 30_000);
     return () => clearInterval(timer);
-  }, [hasUnsavedChanges, projectId]);
+  }, [fabricRef, hasUnsavedChanges, projectId]);
+
+  /**
+   * PLN-FIX-01: Hydrate the canvas from a newer IndexedDB backup entry.
+   * The stored payload follows the server canvas contract (no decorations),
+   * so drawGridAndSheet() re-adds them. The restored document is marked
+   * dirty so the next save syncs it; the backup is cleared on save success.
+   */
+  const applyLocalBackup = useCallback(
+    async (
+      entry: PlannerLocalBackupEntry,
+      signal: AbortSignal,
+    ): Promise<boolean> => {
+      const c = fabricRef.current;
+      if (!c) return false;
+      try {
+        hydratingOrResettingRef.current = true;
+        await c.loadFromJSON(
+          entry.canvasJson as FabricCanvasJson,
+          undefined,
+          { signal },
+        );
+        if (signal.aborted) return false;
+        setSheet({
+          ...DEFAULT_SHEET,
+          ...(entry.sheet as Partial<PlannerSheet> | null),
+        });
+        drawGridAndSheet();
+        c.requestRenderAll();
+        refreshLayers();
+        setSceneVersion((version) => version + 1);
+        setHasUnsavedChanges(true);
+        showToast("Restored newer unsaved local changes. Save to sync them.");
+        return true;
+      } catch {
+        // A malformed or legacy backup must never block the normal load.
+        return false;
+      } finally {
+        hydratingOrResettingRef.current = false;
+      }
+    },
+    [drawGridAndSheet, fabricRef, refreshLayers, showToast],
+  );
 
   // Load project by URL id, falling back to the last-saved project id from
   // localStorage. The URL is the primary binding (shareable, matches the
@@ -1887,6 +1942,27 @@ const Planner = ({
     if (!effectiveId) {
       allowRemoteReplacementRef.current = false;
       dispatchLoadState(DRAFT);
+
+      // PLN-FIX-01: crash recovery for a guest draft — restore the
+      // "__draft__" backup only on a plain entry, never on an explicit
+      // "new plan" request, and never over a canvas with user content.
+      const draftCanvas = fabricRef.current;
+      const isBlankDraft =
+        !!draftCanvas &&
+        !documentStateRef.current.hasUnsavedChanges &&
+        draftCanvas
+          .getObjects()
+          .every(
+            (object) =>
+              asOo(object).data?.isGridLine || asOo(object).data?.isSheet,
+          );
+      if (projectStartIntent !== "new" && isBlankDraft && draftCanvas) {
+        void (async () => {
+          const backup = await loadLocalBackup(null);
+          if (!backup || projectIdRef.current) return;
+          await applyLocalBackup(backup, new AbortController().signal);
+        })();
+      }
       return;
     }
 
@@ -2013,6 +2089,21 @@ const Planner = ({
         // authenticated session (Req 8.8).
         setSessionExpiring(false);
         resetSessionTimerRef.current?.();
+
+        // PLN-FIX-01: offer the local backup when it is newer than the
+        // server copy just hydrated (module contract: the backup is only
+        // read on load when the server copy is absent or older).
+        const backup = await loadLocalBackup(proj.id);
+        const serverSavedAt = Date.parse(proj.updated_at ?? "");
+        if (
+          backup &&
+          !controller.signal.aborted &&
+          requestKeyRef.current === key &&
+          Number.isFinite(serverSavedAt) &&
+          backup.savedAt > serverSavedAt
+        ) {
+          await applyLocalBackup(backup, controller.signal);
+        }
       } catch (e) {
         // Aborted — silent cancellation, not a visible error.
         if (controller.signal.aborted || isAbortError(e)) return;
@@ -2104,6 +2195,7 @@ const Planner = ({
     drawGridAndSheet,
     refreshLayers,
     retryCount,
+    applyLocalBackup,
   ]);
 
   const newProject = () => {
@@ -2148,6 +2240,9 @@ const Planner = ({
     setPlannerStep("draw");
     setTool("wall");
     dispatchLoadState(DRAFT);
+    // Explicit "New plan" supersedes any guest draft backup so the discarded
+    // canvas is not offered for restore on the next entry (PLN-FIX-01).
+    void clearLocalBackup(null);
     try {
       localStorage.removeItem(PLANNER_LAST_PROJECT_KEY);
     } catch {

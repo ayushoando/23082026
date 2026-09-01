@@ -1,4 +1,5 @@
 import { isValidPlannerIdempotencyKey } from "@planner/lib/plannerProjectRepository";
+import { isOversizedRequestBody } from "@/lib/security/uploadLimits";
 import type {
   PlannerEndpointDescriptor,
   PlannerParameterDescriptor,
@@ -253,6 +254,16 @@ async function readRequestBody(
   try {
     if (descriptor.request.contentType === "application/json") {
       return { value: await request.json() };
+    }
+    // SEC-R09: fail fast on a declared body size above the upload budget so
+    // formData() never materializes an oversized multipart payload. The
+    // post-parse isOversizedUpload check in the operation remains the
+    // backstop for chunked (header-less) requests.
+    if (isOversizedRequestBody(request.headers)) {
+      return {
+        value: null,
+        issue: issue("body.file", "File too large"),
+      };
     }
     const form = await request.formData();
     const body: Record<string, unknown> = {};

@@ -153,3 +153,20 @@ begin
     );
   end loop;
 end$$;
+
+-- rollback:
+-- drop policy if exists "customer_queries_insert_public" on public.customer_queries;
+-- drop policy if exists "customer_queries_service_all" on public.customer_queries;
+-- drop policy if exists user_history_service_role_all on public.user_history;
+-- drop policy if exists profiles_service_role_all on public.profiles;
+-- drop policy if exists teams_service_role_all on public.teams;
+-- drop policy if exists team_members_service_role_all on public.team_members;
+-- drop policy if exists invites_service_role_all on public.invites;
+-- drop policy if exists offices_service_role_all on public.offices;
+-- drop table if exists public.offices         cascade;
+-- drop table if exists public.invites         cascade;
+-- drop table if exists public.team_members    cascade;
+-- drop table if exists public.teams           cascade;
+-- drop table if exists public.profiles        cascade;
+-- drop table if exists public.customer_queries cascade;
+-- drop table if exists public.user_history    cascade;

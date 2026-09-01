@@ -1,0 +1,146 @@
+/* plans/client-showcase-tabs — /clients sector showcase presentation.
+   Structure lives in site/components/site/clients/*.tsx (TSX = structure,
+   CSS = presentation); colour and density come from semantic tokens only. */
+
+/* ---- tab strip --------------------------------------------------------- */
+
+.clients-showcase__tabs {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+}
+
+@media (min-width: 48rem) {
+  .clients-showcase__tabs {
+    flex-wrap: wrap;
+    overflow: visible;
+  }
+}
+
+.clients-showcase__tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* WCAG 2.5.5 minimum touch target — intentionally not a scale step. */
+  min-height: 44px;
+  min-width: 44px;
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  white-space: nowrap;
+  border: 0;
+  border-radius: 9999px;
+  padding-block: 0.625rem;
+  padding-inline: 1rem;
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-copy-semibold);
+  background: var(--surface-muted);
+  color: var(--text-strong);
+  transition:
+    background-color var(--motion-fast),
+    color var(--motion-fast),
+    opacity var(--motion-fast);
+}
+
+.clients-showcase__tab:hover {
+  opacity: 0.8;
+}
+
+.clients-showcase__tab:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.clients-showcase__tab--selected,
+.clients-showcase__tab--selected:hover {
+  background: var(--color-primary);
+  color: var(--text-inverse);
+  opacity: 1;
+}
+
+/* ---- panels ------------------------------------------------------------ */
+
+.clients-showcase__panel {
+  padding-top: var(--space-6);
+}
+
+.clients-showcase__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--space-4);
+}
+
+@media (min-width: 48rem) {
+  .clients-showcase__grid {
+    gap: var(--space-6);
+  }
+}
+
+.clients-showcase__empty {
+  padding-block: var(--space-10);
+  text-align: center;
+  color: var(--text-muted);
+}
+
+/* ---- cards -------------------------------------------------------------- */
+
+.clients-showcase__card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  background: var(--surface-card);
+  transition: box-shadow var(--motion-fast);
+}
+
+.clients-showcase__card:hover {
+  box-shadow: var(--shadow-lift);
+}
+
+.clients-showcase__card-name {
+  margin: 0;
+  padding-block: 0.625rem;
+  padding-inline: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-medium);
+  color: var(--text-strong);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---- logo area ----------------------------------------------------------- */
+
+.clients-showcase__logo {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+}
+
+.clients-showcase__logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.clients-showcase__logo-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: var(--surface-muted);
+}
+
+.clients-showcase__logo-initials {
+  font-size: 1.5rem;
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-muted);
+}
+
+/* ---- section ----------------------------------------------------------- */
+
+.clients-showcase {
+  width: 100%;
+  overflow-x: hidden;
+}
