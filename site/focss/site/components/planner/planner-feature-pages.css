@@ -167,6 +167,20 @@
   box-shadow: var(--shadow-soft);
 }
 
+.pfp-feature-pill:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* Stagger entry wrapper for pills (framer-motion animates this, not the link) */
+.pfp-feature-pill-entry {
+  display: flex;
+}
+
+.pfp-feature-pill-entry .pfp-feature-pill {
+  flex: 1;
+}
+
 .pfp-feature-pill__icon {
   display: inline-flex;
   height: 2.25rem;
@@ -178,7 +192,8 @@
   color: var(--color-primary);
 }
 
-/* ── Capability / help cards ── */
+/* ── Capability / help cards ──
+   UI-016: /planner/help intentionally shares these pfp-* rules; no dedicated help stylesheet. */
 .pfp-card {
   display: flex;
   min-height: 100%;
@@ -270,40 +285,43 @@
 
 /* ── SVG demo animations.
       Base (un-animated) state is the finished frame, so reduced-motion
-      users and non-supporting browsers see the complete illustration. ── */
+      users and non-supporting browsers see the complete illustration.
+      --pfp-demo-enter offsets every demo animation until the detail-page
+      hero/demo entry reveal has settled, so the demo enters with the
+      page instead of firing abruptly on load. ── */
 .pfp-anim-draw {
   stroke-dasharray: 1;
   stroke-dashoffset: 0;
-  animation: pfp-draw 1.2s var(--ease-standard) both;
+  animation: pfp-draw 1.2s var(--ease-standard) var(--pfp-demo-enter, 0s) both;
 }
 .pfp-anim-pop {
   transform-box: fill-box;
   transform-origin: center;
-  animation: pfp-pop 0.5s var(--ease-standard) both;
+  animation: pfp-pop 0.5s var(--ease-standard) var(--pfp-demo-enter, 0s) both;
 }
 .pfp-anim-rise {
-  animation: pfp-rise 0.7s var(--ease-standard) both;
+  animation: pfp-rise 0.7s var(--ease-standard) var(--pfp-demo-enter, 0s) both;
 }
 .pfp-anim-slide {
-  animation: pfp-slide 0.6s var(--ease-standard) both;
+  animation: pfp-slide 0.6s var(--ease-standard) var(--pfp-demo-enter, 0s) both;
 }
 .pfp-anim-fade {
-  animation: pfp-fade 0.6s var(--ease-out) both;
+  animation: pfp-fade 0.6s var(--ease-out) var(--pfp-demo-enter, 0s) both;
 }
 .pfp-anim-pulse {
   transform-box: fill-box;
   transform-origin: center;
-  animation: pfp-pulse 2.6s ease-in-out infinite;
+  animation: pfp-pulse 2.6s ease-in-out var(--pfp-demo-enter, 0s) infinite;
 }
 
-.pfp-delay-1 { animation-delay: 0.25s; }
-.pfp-delay-2 { animation-delay: 0.5s; }
-.pfp-delay-3 { animation-delay: 0.75s; }
-.pfp-delay-4 { animation-delay: 1s; }
-.pfp-delay-5 { animation-delay: 1.25s; }
-.pfp-delay-6 { animation-delay: 1.5s; }
-.pfp-delay-7 { animation-delay: 1.75s; }
-.pfp-delay-8 { animation-delay: 2s; }
+.pfp-delay-1 { animation-delay: calc(0.25s + var(--pfp-demo-enter, 0s)); }
+.pfp-delay-2 { animation-delay: calc(0.5s + var(--pfp-demo-enter, 0s)); }
+.pfp-delay-3 { animation-delay: calc(0.75s + var(--pfp-demo-enter, 0s)); }
+.pfp-delay-4 { animation-delay: calc(1s + var(--pfp-demo-enter, 0s)); }
+.pfp-delay-5 { animation-delay: calc(1.25s + var(--pfp-demo-enter, 0s)); }
+.pfp-delay-6 { animation-delay: calc(1.5s + var(--pfp-demo-enter, 0s)); }
+.pfp-delay-7 { animation-delay: calc(1.75s + var(--pfp-demo-enter, 0s)); }
+.pfp-delay-8 { animation-delay: calc(2s + var(--pfp-demo-enter, 0s)); }
 
 @keyframes pfp-draw {
   from { stroke-dashoffset: 1; }
@@ -368,6 +386,7 @@
 }
 
 .pfp-demo-shell {
+  --pfp-demo-enter: 1s;
   border-radius: var(--radius-xl);
   border: 1px solid var(--border-soft);
   box-shadow: var(--shadow-soft);

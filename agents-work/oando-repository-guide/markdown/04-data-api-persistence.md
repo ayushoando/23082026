@@ -4,14 +4,14 @@
 
 ## Choose the data owner before tracing or changing data
 
-The repository has two Supabase databases. Select the owner before discussing a table, API, migration, furniture record, descriptor, catalog item, configurator state, plan, or theme. A path or Drizzle definition is not proof that the corresponding hosted workflow is wired.
+The repository has two Supabase databases. Select the owner before discussing a table, API, migration, furniture record, descriptor, catalog item, configurator state, plan, or theme; a path or Drizzle definition is not proof the hosted workflow is wired. Database/schema work reads as the user-global `oando-databases` skill, fork-boundary work follows `AGENTS.md` §3 plus `pnpm run scan:boundaries`, and validation remains subject to the `AGENTS.md` current-session authorization floor.
 
 | Database | Ref | Owns | Deployable migrations | Runtime boundary |
 |---|---|---|---|---|
 | **Products** | `erpweaiypimorcunaimz` | Marketing catalog, configurator, feature flags, and themes | `site/platform/supabase/migrations/` | Marketing catalog/configurator data remains Products-owned; do not move it to Admin because a route or shared helper is convenient. |
 | **Admin** | `rxzpznmxbaoxpikowmfc` | Staff, customers, plans, furniture, descriptors, price books, audit data, and `customer_queries` | `site/platform/supabase/migrations.admin/` | Staff/customer, plan, furniture, descriptor, price-book, audit, and customer-query persistence is Admin-owned. |
 
-`site/platform/drizzle/schema/` is schema support and inspection material. Supabase SQL migrations in the correct database directory are the deployable schema-change path. Database ownership is a routing decision, not a claim that the route, hosted table, or persistence workflow has been observed end to end.
+`site/platform/drizzle/schema/` is the Drizzle query layer: a TypeScript table map for typed queries and schema reasoning, not the deployable schema. Supabase SQL migrations in the correct database directory are the deployable schema-change path. Database ownership is a routing decision, not proof that the route, hosted table, or persistence workflow has been observed end to end.
 
 ### Ownership decision record
 
@@ -29,27 +29,27 @@ Do not use a shared name, a generated type, or an old document to override live 
 ## Application API surface
 
 - **Route handlers:** `site/app/api/**/route.ts`.
-- **Route inventory:** `docs/architecture/routes.md` and `site/lib/apiCatalog.ts`; the live route and handler remain authoritative when they differ from an inventory.
-- **Edge boundary:** `site/proxy.ts` owns the observed security-header, protected-route, maintenance, and related edge behavior.
-- **Database access:** Supabase queries go through server-side helpers under `site/lib/`; do not put raw SQL in `site/app/**/page.tsx` or `site/components/`.
-- **Product routes:** marketing products/categories, configurator, quote/cart, search/filter, theme, discovery, tracking, exports/files, and health routes.
+- **Route inventory:** `docs/architecture/routes.md` and `site/lib/apiCatalog.ts`; the live route and handler remain authoritative when they differ.
+- **Edge boundary:** `site/proxy.ts` owns the observed security-header, protected-route, and maintenance behavior.
+- **Database access:** Supabase queries go through server-side helpers under `site/lib/`; no raw SQL in `site/app/**/page.tsx` or `site/components/`.
+- **Product routes:** marketing products/categories, configurator, quote/cart, search/filter, theme, discovery, tracking, exports/files, and health.
 - **Admin routes:** catalog, plans, price books, themes, analytics, customer-query operations, and other internal handlers.
-- **Planner routes:** `/api/Planner/*` for catalog, projects, sketch-to-plan, and handoff behavior.
+- **Planner routes:** `/api/Planner/*` for catalog, projects, sketch-to-plan, and handoff.
 - **Studio routes:** `/api/Studio/*` for furniture CRUD, upload, publish, and AI-helper behavior.
-- **Security/public routes:** CSRF, auth-related boundaries, health, discovery, and public contracts.
+- **Security/public routes:** CSRF, auth boundaries, health, discovery, and public contracts.
 
-A route entry, API catalog row, or configured client proves configuration or source presence only. It does not prove authorization, CSRF/rate-limit behavior, database access, hosted persistence, or a successful request.
+A route entry, API catalog row, or configured client proves configuration or source presence only — not authorization, CSRF/rate-limit behavior, database access, hosted persistence, or a successful request.
 
 ## Persistence modes
 
-Mode-aware persistence selects exactly one storage boundary for a runtime. It must not write to disk and Supabase for the same operation.
+Mode-aware persistence selects exactly one storage boundary for a runtime; it must not write to disk and Supabase for the same operation.
 
 | Runtime | Plans | Furniture and descriptors |
 |---|---|---|
 | Local non-production with `DEV_AUTH_BYPASS=1` | Approved Planner disk stores under `site/platform/Planner/data/` | Approved shared/Studio disk stores under `site/platform/shared/data/furniture/` and `site/inventory/descriptors/` |
 | CI, production, or any other runtime | Admin Supabase `oando_plans` | Admin Supabase furniture catalog and descriptor records |
 
-Use the existing selectors and wrappers, including `site/lib/Planner/plannerPersistenceMode.ts` and `site/lib/catalog/furnitureCatalogMode.ts`, and write through helpers such as `writeFurnitureItem`. Production filesystem access is read-only. Never use raw disk helpers from request handlers, never write `site/data/storage/`, and never dual-write disk plus Supabase. This mode contract concerns plans, furniture, and descriptors; Products-owned marketing catalog/configurator/flags/themes still use the Products database.
+Use the existing selectors and wrappers, including `site/lib/Planner/plannerPersistenceMode.ts` and `site/lib/catalog/furnitureCatalogMode.ts`, and write through helpers such as `writeFurnitureItem`. Production filesystem access is read-only; never use raw disk helpers from request handlers, never write `site/data/storage/`, and never dual-write. This contract concerns plans, furniture, and descriptors; Products-owned marketing catalog/configurator/flags/themes still use the Products database.
 
 ## D03 — Auth, security, and secrets
 
@@ -61,9 +61,7 @@ Use the existing selectors and wrappers, including `site/lib/Planner/plannerPers
 - **Forbidden Actions:** Printing or committing secrets, exposing `SUPABASE_SERVICE_ROLE_KEY` to client code, bypassing RLS from a client, changing security controls by assumption, or making hosted calls without approval.
 - **Risk:** Credentials, authorization, data access, and release risk.
 - **Expected Evidence:** Auth source, secret boundary, database owner, access-control boundary, and unverified hosted behavior.
-- **Next Decision:** Select `db-migrations` when schema/RLS/grants/ownership are implicated; add `graph-impact` only when shared security code or dependency impact is evidenced.
-
-Secrets belong only in local `.env.local`/`site/.env.local` or provider secret stores; `.env.example` documents shape, not secret values. Static inspection cannot establish the effective production secret configuration or hosted authorization result.
+- **Next Decision:** Select `oando-databases` when schema/RLS/grants/ownership are implicated; shared security-code impact uses Local Evidence.
 
 ## D05 — APIs and data boundaries
 
@@ -75,7 +73,7 @@ Secrets belong only in local `.env.local`/`site/.env.local` or provider secret s
 - **Forbidden Actions:** Treating route presence as behavior proof, making hosted requests by assumption, applying migrations, exposing secrets, or bypassing mode-aware helpers.
 - **Risk:** API contract, authentication, data ownership, persistence, and release risk.
 - **Expected Evidence:** Route source, auth/CSRF/rate-limit boundary, Products/Admin owner, persistence helper, matching skills, and exact hosted-proof limitation.
-- **Next Decision:** Select `db-migrations` when schema ownership or RLS/grants is implicated; select `graph-impact` only for evidenced shared API dependency or blast-radius work.
+- **Next Decision:** Select `oando-databases` when schema ownership or RLS/grants is implicated; shared API dependency or blast-radius work uses Local Evidence.
 
 ## D14 — Databases, RLS, grants, rollback, and mode-aware persistence
 
@@ -87,28 +85,21 @@ Secrets belong only in local `.env.local`/`site/.env.local` or provider secret s
 - **Forbidden Actions:** Direct hosted schema changes, a migration without `-- rollback`, missing grants or RLS policies, cross-database ownership drift, dual-write, production disk writes, or unapproved apply/type/seed actions.
 - **Risk:** Data loss, access control, persistence, migration, and release risk.
 - **Expected Evidence:** Products/Admin owner, exact migration directory, rollback section, RLS policies, grants, mode selector, and pending dry-run/hosted evidence.
-- **Next Decision:** Route to `db-migrations`; add `planner-studio` and `fork-boundaries` when Planner/Studio fork persistence is implicated.
+- **Next Decision:** Route schema/RLS/ownership work to `oando-databases` (dry runs via `/db-dry`); Planner/Studio fork persistence follows `AGENTS.md` §3 plus `pnpm run scan:boundaries`.
 
 ## Migration, RLS, grants, and rollback contract
 
-Deployable database changes use raw SQL migrations in the selected Supabase directory. Each migration must make the intended owner explicit and include:
+Deployable database changes use raw SQL migrations in the selected Supabase directory. Each migration must make the intended owner explicit and include RLS policies for the rows and roles involved; grants appropriate to the actual runtime roles, not merely table creation; a clearly labelled `-- rollback` section; generated-type, API-contract, application, seed, asset, and persistence-mode impact notes; and the required dry run before any apply action.
 
-- RLS policies that protect the rows and roles involved;
-- grants appropriate to the actual runtime roles, not merely table creation;
-- a clearly labelled `-- rollback` section that reverses the forward change safely;
-- generated-type, API-contract, application, seed, asset, and persistence-mode impact notes; and
-- the required dry run before any apply action.
+The named root commands are protected operations: Products uses `pnpm run db:apply -- --dry` before `pnpm run db:apply`, Admin uses `pnpm run db:apply:admin -- --dry` before `pnpm run db:apply:admin`. Type generation (`pnpm run db:types` / `db:types:admin`), seeds, remote inspection, and apply actions are also owner-controlled; this chapter does not authorize or run any of them.
 
-The named root commands are protected operations: Products uses `pnpm run db:apply -- --dry` before `pnpm run db:apply`, while Admin uses `pnpm run db:apply:admin -- --dry` before `pnpm run db:apply:admin`. Type generation (`pnpm run db:types` or `pnpm run db:types:admin`), seeds, remote inspection, and apply actions are also owner-controlled. This chapter does not authorize or run any of them.
-
-`site/platform/drizzle/schema/` may support schema reasoning and type generation, but it is not a substitute for the deployable Supabase migration. Do not claim a migration is applied, a policy is effective, or hosted data is persistent from SQL text or a local file alone.
+A `pgTable` definition is not a migration and no substitute for the deployable Supabase migration. Do not claim a migration is applied, a policy is effective, or hosted data is persistent from SQL text or a local file alone.
 
 ## Security, auth, and environment
 
-- **Edge:** `site/proxy.ts` owns CSP/security headers, protected-route behavior, maintenance write blocking, and related edge rules.
+- **Edge:** `site/proxy.ts` owns CSP/security headers, protected-route behavior, maintenance write blocking, and related rules.
 - **Handlers:** use existing server-side auth, CSRF, rate limiting, RLS, and mode-aware wrappers.
-- **Secrets:** only in local `.env.local`/`site/.env.local` or provider secret stores; never committed or client-side.
-- **Environment template:** `.env.example` documents the non-secret shape.
+- **Secrets:** only in local `.env.local`/`site/.env.local` or provider secret stores; never committed or client-side. `.env.example` documents the non-secret shape only; static inspection cannot establish effective production configuration or hosted authorization results.
 
 ## i18n, SEO, and public contracts
 
@@ -130,10 +121,10 @@ required dry-run. Classify every command and do not apply or connect to a databa
 
 ## Data/API response boundary
 
-Use the Plain-Language Response Contract in every update. Distinguish configured routes from observed behavior, static SQL from an applied migration, disk evidence from hosted persistence, and a reviewed migration from a deployed migration. A missing authorized command result is `pending-user-authorization`, `blocked-by-hook`, or `not-run`, never a pass.
+Use the Plain-Language Response Contract in every update. Distinguish configured routes from observed behavior, static SQL from an applied migration, disk evidence from hosted persistence, and a reviewed migration from a deployed one; a missing authorized command result is `pending-user-authorization`, `blocked-by-hook`, or `not-run`, never a pass.
 
 ## Separate Approval Work
 
-The following remain separate from this guidance lane: SQL or migration writes outside the explicitly owned documentation path; database apply, dry-run, type-generation, seed, remote inspection, or hosted mutation; changes to RLS/grants in a live database; secret or auth-control changes; application/runtime changes; package installation; deployment, backup, or external service actions; and any generated or HTML projection update without its own provenance and write scope.
+Remain separate from this guidance lane: SQL or migration writes outside the owned documentation path; database apply, dry-run, type-generation, seed, remote inspection, or hosted mutation; live-database RLS/grant changes; secret or auth-control changes; application/runtime changes; package installation; deployment, backup, or external service actions; and any generated-output update without its own provenance and write scope.
 
 Next: [Tooling, CI, and tech docs](./05-tooling-ci-tech-docs.md).

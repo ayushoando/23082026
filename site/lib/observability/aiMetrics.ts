@@ -84,6 +84,7 @@ interface AiAdvisorMetrics {
   readonly latency: Histogram<"surface" | "provider">;
   readonly errors: Counter<"surface" | "error_class">;
   readonly retrievalSources: Gauge<"surface" | "source">;
+  readonly retrievalContributions: Counter<"surface" | "source">;
   readonly schemaValid: Counter<"surface">;
   readonly schemaInvalid: Counter<"surface">;
 }
@@ -127,6 +128,12 @@ function createAiAdvisorMetrics(registry: Registry): AiAdvisorMetrics {
     retrievalSources: new Gauge({
       name: "oando_ai_advisor_retrieval_sources",
       help: "Retrieval source contribution counts by surface and source type",
+      labelNames: ["surface", "source"] as const,
+      registers,
+    }),
+    retrievalContributions: new Counter({
+      name: "oando_ai_retrieval_source_contributions_total",
+      help: "Catalog retrieval funnel contributions — one increment per contributing source per retrieval run",
       labelNames: ["surface", "source"] as const,
       registers,
     }),
@@ -206,6 +213,28 @@ export function recordAdvisorRequest(input: RecordAdvisorRequestInput): void {
     metrics.schemaValid.inc({ surface: input.surface });
   } else if (input.schemaValid === false) {
     metrics.schemaInvalid.inc({ surface: input.surface });
+  }
+}
+
+/**
+ * Records one privacy-safe counter increment per contributing retrieval
+ * source for a single retrieval funnel run (remediation AI-FIX-10).
+ *
+ * Labels use the pre-approved `AiSurface` / `AiRetrievalSource` unions only —
+ * never query text, product content, or session identifiers. Best-effort:
+ * metric failures are swallowed and must never break retrieval.
+ */
+export function recordRetrievalSourceContributions(
+  surface: AiSurface,
+  sources: readonly AiRetrievalSource[],
+): void {
+  try {
+    const metrics = getAiAdvisorMetrics();
+    for (const source of sources) {
+      metrics.retrievalContributions.inc({ surface, source });
+    }
+  } catch {
+    // intentionally swallowed — observability must not affect retrieval
   }
 }
 

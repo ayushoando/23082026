@@ -5,7 +5,7 @@ import { createNormalizedRecord } from './normalized-record.mjs'
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url))
 const defaultRepoRoot = path.resolve(scriptDir, '..', '..')
-const PROVIDER_CHAIN_PATH = 'site/lib/ai/mastra/providerFetch.ts'
+const PROVIDER_CHAIN_PATH = 'site/lib/ai/mastra/providers.ts'
 
 /**
  * @param {{ repoRoot?: string, api?: unknown[] }} [opts]
@@ -22,7 +22,7 @@ export function extractAiRecords({ repoRoot = defaultRepoRoot, api = [] } = {}) 
       value: PROVIDER_CHAIN_PATH,
       sourcePath: PROVIDER_CHAIN_PATH,
       sourceKind: 'source-module',
-      sourcePointer: 'resolveProviderChain',
+      sourcePointer: 'resolveAdvisorModelChain',
     }),
   )
 
@@ -57,7 +57,7 @@ export function extractAiRecords({ repoRoot = defaultRepoRoot, api = [] } = {}) 
         value: 'Primary key first, backup key second when both are configured',
         sourcePath: PROVIDER_CHAIN_PATH,
         sourceKind: 'source-module',
-        sourcePointer: 'resolveProviderChain',
+        sourcePointer: 'resolveAdvisorModelChain',
       }),
     )
   }

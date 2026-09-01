@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { SITE_BRAND } from "@/features/site/data/brand";
-import { SITE_CONTACT } from "@/features/site/data/contact";
+import { SITE_CONTACT, googleMapsOpenHref } from "@/features/site/data/contact";
 import { locales, defaultLocale, type Locale } from "@/i18n/config";
 import { routing } from "@/i18n/routing";
 
@@ -707,5 +707,31 @@ export function buildLocalBusinessJsonLd(siteUrl: string) {
     priceRange: SITE_CONTACT.priceRange,
     areaServed: SITE_CONTACT.areaServed,
     sameAs: SITE_CONTACT.socialLinks.map((link) => link.href),
+  };
+}
+
+/**
+ * Showrooms-route LocalBusiness node (UI-011). The sitewide
+ * `buildGlobalJsonLd()` graph already defines the full FurnitureStore entity
+ * on this route, so this node shares its `@id` — consumers merge it with the
+ * global entity instead of creating a duplicate — and carries only facts
+ * verified in the brand/contact modules (name, url, telephone, address,
+ * openingHours) plus the route differentiator `hasMap`, derived from the
+ * public office address. No invented hours, geo, or priceRange.
+ */
+export function buildShowroomsLocalBusinessJsonLd(siteUrl: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FurnitureStore",
+    "@id": `${siteUrl}#localbusiness`,
+    name: SITE_BRAND.companyName,
+    url: siteUrl,
+    telephone: SITE_CONTACT.salesPhone,
+    address: {
+      "@type": "PostalAddress",
+      ...SITE_CONTACT.address,
+    },
+    openingHours: SITE_CONTACT.openingHours,
+    hasMap: googleMapsOpenHref(),
   };
 }

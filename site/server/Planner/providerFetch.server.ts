@@ -1,3 +1,12 @@
+/**
+ * Raw OpenAI-compatible provider fetch for sketch-to-plan (multimodal
+ * image_url parts), which the Mastra text-agent path cannot serve.
+ *
+ * Relocated here from the legacy shared `site/lib/ai/mastra/providerFetch.ts`
+ * during AI-FIX-11 (legacy removal): sketch-to-plan was the only remaining
+ * consumer, so the module is now Planner-server-private instead of a public
+ * AI surface.
+ */
 import "server-only";
 
 import { env } from "@/lib/env.server";
@@ -11,8 +20,6 @@ export type ServerChatMessage = {
   role: "system" | "user" | "assistant";
   content: string | ServerChatMessageContentPart[];
 };
-
-export type ProviderId = "openrouter" | "gemini";
 
 type OpenRouterProvider = {
   provider: "openrouter";
@@ -41,10 +48,6 @@ type RequestProviderTextOptions = {
 };
 
 const DEFAULT_OPENROUTER_MODEL = env.OPENROUTER_MODEL || "openrouter/auto";
-
-export function getBedrockMantleBaseUrl(region: string): string {
-  return `https://bedrock-mantle.${region}.api.aws/v1`;
-}
 
 export function resolveProviderChain(): ResolvedProvider[] {
   const providers: ResolvedProvider[] = [];

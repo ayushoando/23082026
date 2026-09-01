@@ -1,9 +1,293 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Oando product domain map for Marketing, Admin, Planner, Studio, catalog, UI, and AI."><title>Product domains · Oando repository guide</title><link rel="stylesheet" href="guide.css"></head>
-<body><div class="site-header"><div class="shell"><p class="eyebrow">Oando complete repository guide</p><h1>Product domains</h1><p class="subtitle">Where the product’s user-facing features live and how the domain boundaries work.</p></div></div><div class="shell"><nav class="tabs-wrap" aria-label="Guide sections"><div class="tabs"><a href="index.html">Start</a><a href="repository-map.html">Full map</a><a href="application-architecture.html">Application</a><a href="product-domains.html" aria-current="page">Domains</a><a href="data-api-persistence.html">Data &amp; APIs</a><a href="tooling-ci-tech-docs.html">Tooling &amp; CI</a><a href="operations-infrastructure.html">Operations</a><a href="docs-governance-planning.html">Docs &amp; governance</a><a href="kiro-workspace.html">Kiro workspace</a><a href="local-generated-environment.html">Local &amp; generated</a><a href="quality-and-validation.html">Quality</a><a href="working-with-kiro.html">Kiro workflow</a></div></nav>
-<main><p class="breadcrumb"><a href="index.html">Start</a> / Product domains</p><section><h2>Surface ownership</h2><div class="table-wrap"><table><thead><tr><th>Domain</th><th>Roots</th><th>Owns</th></tr></thead><tbody>
-<tr><td>Marketing</td><td><code>app/(site)/</code>, <code>features/site/</code>, <code>components/home/</code></td><td>Discovery, SEO, catalog browsing, contact, portal, quotes, legal/marketing content.</td></tr><tr><td>Admin / CRM / Ops</td><td><code>app/admin/</code>, <code>features/admin/</code>, <code>features/crm/</code>, <code>features/ops/</code></td><td>Catalog/inventory/plans/price books/themes/analytics/customer-query and staff workflows.</td></tr><tr><td>Floor Planner</td><td><code>app/ooplanner/</code>, Planner feature/component/lib/hook/store/server trees</td><td>Layout, placement, projects, exports, handoff.</td></tr><tr><td>Furniture Studio</td><td><code>app/oostudio/</code>, Studio feature/component/lib/hook/store/server trees</td><td>Furniture authoring, assets, descriptor publishing, Studio AI helpers.</td></tr>
-</tbody></table></div></section><section><h2>Planner and Studio fork boundary</h2><div class="callout warn"><strong>They are separate applications.</strong> They may meet through approved backing data/API contracts but never import each other. They have separate canvas scales, state, UI, and persistence assumptions.</div><pre><code>Decide whether [capability] belongs in site/platform/shared/. Do not cross-import
-Planner and Studio or duplicate code before comparing both forks.</code></pre></section><section><h2>UI and product support</h2><div class="grid"><article class="card"><h3>Styling</h3><p>Tailwind v4 plus FOCSS zones: site, admin, Planner, Studio. Use semantic tokens and do not cross zones.</p></article><article class="card"><h3>Catalog/assets</h3><p>Start in <code>site/lib/catalog/</code>, plan symbol contract, and catalog asset storage helper.</p></article><article class="card"><h3>AI/search</h3><p>Start in <code>site/lib/ai/mastra/</code>; retrieval uses Bedrock, LanceDB, Orama, and Fuse.</p></article></div></section><section><h2>Safe prompts</h2><pre><code>Change [canvas/panel/project/catalog] behavior in Planner. Trace UI, API, store,
-persistence, and tests. Do not import Studio.</code></pre><pre><code>In Admin, add [workflow]. Trace page, feature, API, auth, and Products-vs-Admin
-ownership before editing. Do not expose server credentials.</code></pre></section><div class="next-links"><a href="application-architecture.html">← Application</a><a href="data-api-persistence.html">Next: data &amp; APIs →</a></div></main><footer>Use FOCSS/fork skills for UI or Planner/Studio work, and data guidance before changing ownership/persistence.</footer></div></body></html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>03 · Product domains - Oando repository guide</title>
+<link rel="stylesheet" href="./guide.css">
+</head>
+<body>
+<header class="g-header"><a class="g-brand" href="./index.html">Oando repository guide</a>
+<nav class="g-nav"><a href="./index.html">Start</a><a href="./repository-map.html">01 · Full repository map</a><a href="./application-architecture.html">02 · Application architecture</a><a href="./product-domains.html" class="active" aria-current="page">03 · Product domains</a><a href="./data-api-persistence.html">04 · Data, API, and persistence</a><a href="./tooling-ci-tech-docs.html">05 · Tooling, CI, and tech docs</a><a href="./operations-infrastructure.html">06 · Operations and infrastructure</a><a href="./docs-governance-planning.html">07 · Docs, governance, and planning</a><a href="./agent-workspace.html">8 · Agent workspace</a><a href="./local-generated-environment.html">09 · Local, generated, and environment areas</a><a href="./quality-validation.html">10 · Quality and validation</a><a href="./agent-workflows.html">11 · Agent workflows</a></nav></header>
+<main><h1 id="03-product-domains">03 · Product domains</h1>
+<p><a href="./application-architecture.html">← Application architecture</a> · <a href="./data-api-persistence.html">Next: data, API, and persistence →</a></p>
+<p>This chapter maps Product Surfaces to their route, feature, UI, persistence, and evidence boundaries. A route or import is static evidence only; it does not prove an end-to-end workflow, hosted persistence, deployment, or evaluated AI behavior. Every task begins at the root <code>AGENTS.md</code> process floor; conditional skills in the cards are the user-global opencode skills mapped in the Routing baseline in <a href="./repository-map.html">chapter 01</a>.</p>
+<h2 id="marketing-site">Marketing site</h2>
+<ul>
+<li><strong>Route roots:</strong> <code>./site/app/(site)/</code></li>
+<li><strong>Behavior:</strong> <code>./site/features/site/</code></li>
+<li><strong>UI:</strong> <code>./site/components/home/</code> and domain/shared components</li>
+<li><strong>FOCSS:</strong> <code>./site/focss/site/</code></li>
+<li><strong>Owns:</strong> product discovery, catalog browsing, SEO, contact, portal, quote, planning marketing, and legal content.</li>
+<li><strong>Boundary:</strong> marketing <code>/planner*</code> pages are distinct from the interactive <code>/ooplanner</code> application.</li>
+</ul>
+<pre><code class="language-text">Update [page/component] to [outcome]. Reuse nearby components and FOCSS tokens,
+keep it responsive, trace metadata/SEO if discovery changes, and report rendered
+or hosted proof only when that proof was actually observed.
+</code></pre>
+<h2 id="admin-crm-and-operations">Admin, CRM, and operations</h2>
+<ul>
+<li><strong>Route roots:</strong> <code>./site/app/admin/</code></li>
+<li><strong>Behavior:</strong> <code>./site/features/admin/</code>, <code>./site/features/crm/</code>, <code>./site/features/ops/</code></li>
+<li><strong>UI/helpers:</strong> <code>./site/components/</code> and <code>./site/lib/admin/</code></li>
+<li><strong>Owns:</strong> catalog, inventory, plans, price books, themes, analytics, customer queries, and CRM/operations views.</li>
+<li><strong>CRM status:</strong> the browser CRM workspace is <code>demo/local-only</code>; its observed Zustand/browser persistence key is <code>oando-crm-storage</code>. Do not describe that demo as Admin Database-backed without end-to-end evidence.</li>
+<li><strong>Customer-query boundary:</strong> <code>./site/app/admin/customer-queries/</code> and <code>./site/app/api/customer-queries/</code> are separate Admin Database-backed operations with their own evidence assessment.</li>
+</ul>
+<pre><code class="language-text">In Admin, add [workflow]. Trace the route, feature, API, auth requirement, and
+Products-vs-Admin data ownership before editing. Keep the CRM demo separate from
+customer-query operations and never expose server credentials.
+</code></pre>
+<h2 id="floor-planner-fork">Floor Planner fork</h2>
+<ul>
+<li><strong>Route:</strong> <code>/ooplanner</code></li>
+<li><strong>Route/API roots:</strong> <code>./site/app/ooplanner/</code>; <code>./site/app/api/Planner/</code></li>
+<li><strong>Fork roots:</strong> <code>./site/features/Planner/</code>; <code>./site/components/Planner/</code>; <code>./site/lib/Planner/</code>; <code>./site/hooks/Planner/</code>; <code>./site/store/Planner/</code>; <code>./site/server/Planner/</code>; <code>./site/platform/Planner/</code></li>
+<li><strong>Owns:</strong> floor layout, furniture placement, project persistence, exports, and handoff.</li>
+<li><strong>Persistence:</strong> use <code>./site/lib/Planner/plannerPersistenceMode.ts</code>; disk is non-production <code>DEV_AUTH_BYPASS=1</code>, otherwise Supabase. Never dual-write or use <code>./site/data/storage/</code>.</li>
+<li><strong>Technology:</strong> Fabric.js, dockview-react, Planner-local state, and a Planner canvas scale distinct from Studio.</li>
+</ul>
+<pre><code class="language-text">Change [canvas/panel/project/catalog] behavior in Planner. Trace the Planner-only
+UI, API, store, persistence, and proof path. Do not import Studio, copy Studio
+geometry/state behavior blindly, or claim hosted persistence from disk evidence.
+</code></pre>
+<h2 id="furniture-studio-fork">Furniture Studio fork</h2>
+<ul>
+<li><strong>Route:</strong> <code>/oostudio</code></li>
+<li><strong>Route/API roots:</strong> <code>./site/app/oostudio/</code>; <code>./site/app/api/Studio/</code></li>
+<li><strong>Fork roots:</strong> <code>./site/features/Studio/</code>; <code>./site/components/Studio/</code>; <code>./site/lib/Studio/</code>; <code>./site/hooks/Studio/</code>; <code>./site/store/Studio/</code>; <code>./site/server/Studio/</code>; <code>./site/platform/Studio/</code></li>
+<li><strong>Owns:</strong> furniture authoring, furniture assets, descriptor publishing, and Studio AI helpers.</li>
+<li><strong>Persistence/release:</strong> furniture and descriptors use mode-aware wrappers; dev records include <code>./site/inventory/descriptors/</code>, while production records belong to Admin Supabase. Do not infer release authority from a local JSON file.</li>
+<li><strong>Technology:</strong> Fabric.js, dockview-react, Studio-local state, and a canvas scale distinct from Planner.</li>
+</ul>
+<pre><code class="language-text">Change [furniture/catalog/publish/canvas] behavior in Studio. Trace Studio-only
+UI, API/store, release path, and proof. Do not import Planner, copy Planner
+behavior blindly, call an external provider, or claim publish/deployment success
+without the corresponding evidence.
+</code></pre>
+<h2 id="shared-boundaries">Shared boundaries</h2>
+<p>Planner and Studio are fully forked. They share approved backing data and API contracts, not modules. No <code>@studio/*</code> import belongs in a Planner file, no <code>@planner/*</code> import belongs in a Studio file, and no fork may import the other’s <code>components</code>, <code>lib</code>, <code>hooks</code>, <code>store</code>, <code>server</code>, or platform modules. Geometry helpers must not be copied without accounting for the different canvas scales. If a capability truly belongs in shared code, use an approved <code>./site/platform/shared/</code> pattern only after comparing both forks’ scale, state, and persistence assumptions.</p>
+<p>Planner talks to <code>/api/Planner/*</code>; Studio talks to <code>/api/Studio/*</code>; the case-sensitive namespaces and route roots above are separate evidence paths. A boundary check or Fork Tree change routes to <code>AGENTS.md</code> §3 plus <code>pnpm run scan:boundaries</code> (<code>scripts/scan-boundaries.mjs</code>); Planner/Studio feature work begins from the <code>AGENTS.md</code> fork rules with <code>oando-repo-map</code> for discovery.</p>
+<h2 id="styling-and-design-system">Styling and design system</h2>
+<table>
+<thead><tr><th>Surface</th><th>FOCSS zone</th></tr></thead>
+<tbody>
+<tr><td>Marketing</td><td><code>./site/focss/site/</code></td></tr>
+<tr><td>Admin</td><td><code>./site/focss/admin/</code></td></tr>
+<tr><td>Planner</td><td><code>./site/focss/planner/</code></td></tr>
+<tr><td>Studio</td><td><code>./site/focss/studio/</code></td></tr>
+</tbody>
+</table>
+<p>Use semantic tokens, existing components, explicit loading/empty/error states, accessible keyboard interaction, and <code>oando-focss-css</code> guidance. Do not introduce a new CSS system, use inline SVG/Lucide in place of the existing Phosphor abstraction, or create cross-zone imports.</p>
+<h2 id="catalog-assets-ai-and-search">Catalog, assets, AI, and search</h2>
+<table>
+<thead><tr><th>Concern</th><th>Start at</th></tr></thead>
+<tbody>
+<tr><td>Catalog adapters and ownership</td><td><code>./site/lib/catalog/</code></td></tr>
+<tr><td>Plan symbol contract</td><td><code>./site/lib/catalog/planSymbolPngContract.ts</code></td></tr>
+<tr><td>Catalog asset storage</td><td><code>./site/features/shared/catalog/catalogAssetStorage.server.ts</code></td></tr>
+<tr><td>AI/retrieval</td><td><code>./site/lib/ai/mastra/</code></td></tr>
+<tr><td>Fuzzy/full-text/vector retrieval</td><td>Fuse.js, Orama, and LanceDB via server-side catalog/AI code</td></tr>
+</tbody>
+</table>
+<p>Use <a href="./data-api-persistence.html">Data/API</a> for exact data ownership, migrations, RLS, release, and persistence rules.</p>
+<h2 id="coverage-audited-product-task-cards">Coverage-audited product task cards</h2>
+<p>Every card uses this evidence order: (1) read authority sources, (2) inspect the listed paths, (3) compare documentation with live evidence, (4) classify Surface Status and operational risk, (5) record evidence, gaps, route, artifact/gate state, and next decision. The cards are routing guidance, not runtime discovery.</p>
+<h3 id="d07-polish-ui-icons-alignment-motion-or-assets">D07 — Polish UI, icons, alignment, motion, or assets</h3>
+<ul>
+<li><strong>Goal:</strong> Complete a bounded visual improvement using existing icon, token, asset, and motion patterns for the named Product Surface.</li>
+<li><strong>Start Paths:</strong> <code>./site/components/</code>; <code>./site/focss/</code>; <code>./site/public/</code>; <code>./scripts/generate-svg/</code>; <code>./docs/architecture/css.md</code>; <code>./docs/architecture/stack.md</code>; <code>./agents-work/oando-repository-guide/markdown/03-product-domains.md</code>.</li>
+<li><strong>Scope:</strong> Existing Phosphor abstraction, icon and adjacent-control alignment, spacing, responsive layout, loading/empty/error states, keyboard/focus access, reduced motion, licensing, asset ownership, and existing generation paths.</li>
+<li><strong>Evidence Steps:</strong>
+<ol>
+<li>Read the root <code>./AGENTS.md</code> process floor, the other authority sources, and the applicable surface guidance.</li>
+<li>Inspect the route/component, FOCSS zone, Phosphor map/abstraction, public asset, and generation paths listed above.</li>
+<li>Compare design/documentation claims with the neighboring implementation; identify the owner and whether an asset is source, generated, legacy, or external.</li>
+<li>Classify UI consistency, accessibility, licensing, motion, shared-code, and release risk; record Surface Status or a Coverage-Gap Admission.</li>
+<li>Record the Visual Detail Checklist, selected/rejected skills, Artifact Class/gates, evidence limitation, and next decision.</li>
+</ol></li>
+<li><strong>Conditional Skills:</strong> Select <code>oando-repo-map</code> for orientation and <code>oando-focss-css</code> for styling, tokens, icons, motion, or FOCSS evidence. Add <code>oando-testing</code> only for an explicitly authorized and hook-permitted UI/static check; otherwise reject it as pending. Fork Tree evidence follows <code>AGENTS.md</code> §3; shared-component impact uses Local Evidence.</li>
+<li><strong>Allowed Actions:</strong> Reuse existing icons, components, semantic tokens, and approved asset-generation paths; write only after the Site Write Gate classifies an exact Core Product Write.</li>
+<li><strong>Forbidden Actions:</strong> New icon libraries, inline SVG/Lucide replacements, custom CSS systems, unreviewed external assets, unlicensed media, skipped states, or rendered claims from static inspection.</li>
+<li><strong>Artifact / Workspace Boundary:</strong> Authoring goes to <code>./agents-work/&lt;workstream&gt;/&lt;report-type&gt;/</code>, command evidence to <code>./results/&lt;purpose&gt;/</code>, tech-docs to <code>./generated-documents/</code>; <code>./site/</code> only for an exact approved Core Product path.</li>
+<li><strong>Locked Path / Site Write Gates:</strong> <code>./docs/</code>, <code>./Agents/</code>, and direct root files are Locked evidence unless the exact file is authorized. Before a <code>./site/</code> write, name the exact product outcome, owned paths, matching skills, and expected evidence; otherwise keep the work read-only.</li>
+<li><strong>Risk:</strong> UI consistency, accessibility, asset licensing, motion, and release risk.</li>
+<li><strong>Expected Evidence:</strong> Existing <code>PhIcon</code>/<code>phIconMap</code> abstraction, icon/adjacent-control alignment, spacing/tokens, responsive behavior, loading/empty/error states, keyboard/focus behavior, reduced-motion review, asset owner/source/license, and exact static-versus-rendered proof limitation.</li>
+<li><strong>Next Decision:</strong> Select the surface card or request one bounded, owner-approved visual proof.</li>
+</ul>
+<h3 id="d08-work-in-admin">D08 — Work in Admin</h3>
+<ul>
+<li><strong>Goal:</strong> Trace an Admin outcome through its internal route, feature, authorization, data owner, and operational risk.</li>
+<li><strong>Start Paths:</strong> <code>./site/app/admin/</code>; <code>./site/features/admin/</code>; <code>./site/components/</code>; <code>./site/lib/admin/</code>; <code>./docs/architecture/routes.md</code>; <code>./docs/architecture/product-map.md</code>.</li>
+<li><strong>Scope:</strong> Admin routes, roles, catalog/inventory/plans/price books/themes, CRM/operations boundaries, and Products versus Admin ownership.</li>
+<li><strong>Evidence Steps:</strong>
+<ol>
+<li>Read authority sources and state whether the outcome is an Admin route, an Admin data workflow, or a neighboring CRM/operations surface.</li>
+<li>Inspect the route, feature, shared component, auth helper, API, and data paths listed above.</li>
+<li>Compare route and ownership documentation with live source; distinguish static route presence from authorization and hosted behavior.</li>
+<li>Classify authorization, data, operational, UI, and shared-code risk; assign Surface Status or a gap record.</li>
+<li>Record the Route Record, conditional skills, artifact/gate state, proof limitation, and next decision.</li>
+</ol></li>
+<li><strong>Conditional Skills:</strong> Select <code>oando-repo-map</code> for route discovery, <code>oando-focss-css</code> for Admin styling/tokens/icons, and <code>oando-databases</code> for schema, RLS, grants, rollback, or Admin/Products ownership. Add <code>oando-testing</code> only for explicit protected validation authorized this session; otherwise reject it as pending. Shared-code impact uses Local Evidence.</li>
+<li><strong>Allowed Actions:</strong> Read-only mapping or an exact approved product-source change after the correct owner and Site Write Gate are recorded.</li>
+<li><strong>Forbidden Actions:</strong> Service-role exposure, remote mutations, migrations without their own authorization, or describing demo/local state as hosted Admin data.</li>
+<li><strong>Artifact / Workspace Boundary:</strong> Source writes are Core Product Writes only in owned <code>./site/</code> paths; reports/handoffs stay in <code>./agents-work/&lt;workstream&gt;/&lt;report-type&gt;/</code>, Machine Evidence in <code>./results/&lt;purpose&gt;/</code>, tech-docs in <code>./generated-documents/</code>.</li>
+<li><strong>Locked Path / Site Write Gates:</strong> Protected docs/root/Agents files require exact current-request authorization; any <code>./site/</code> write requires the exact outcome, paths, skills, and expected evidence. Non-Core artifacts are redirected.</li>
+<li><strong>Risk:</strong> Admin authorization, data ownership, customer/operational impact, and release risk.</li>
+<li><strong>Expected Evidence:</strong> Route, role/auth source, Products/Admin owner, Surface Status or gap, selected/rejected skills, and explicit hosted-behavior limitation.</li>
+<li><strong>Next Decision:</strong> Select <code>oando-databases</code> or <code>oando-focss-css</code> only when its trigger is evidenced; shared-code impact uses Local Evidence; otherwise continue Local Evidence.</li>
+</ul>
+<h3 id="d09-assess-crm-demo-versus-customer-query-operations">D09 — Assess CRM demo versus customer-query operations</h3>
+<ul>
+<li><strong>Goal:</strong> Keep the local CRM browser workspace separate from Admin Database-backed customer-query operations and report each Surface Status honestly.</li>
+<li><strong>Start Paths:</strong> <code>./site/app/admin/crm/</code>; <code>./site/features/crm/</code>; <code>./site/app/admin/customer-queries/</code>; <code>./site/app/api/customer-queries/</code>; <code>./site/features/ops/</code>; <code>./docs/architecture/product-map.md</code>; <code>./docs/architecture/routes.md</code>.</li>
+<li><strong>Scope:</strong> CRM Zustand/local browser persistence, the <code>oando-crm-storage</code> key, customer-query API/data flow, ownership, operational risk, and missing end-to-end proof. It excludes combining the two workflows.</li>
+<li><strong>Evidence Steps:</strong>
+<ol>
+<li>Read authority sources and define whether the request concerns the CRM demo, customer queries, or both.</li>
+<li>Inspect the CRM and customer-query routes, features, API handlers, persistence helpers, and architecture references separately.</li>
+<li>Compare local persistence and Admin Database claims with live source; do not transfer one workflow’s status to the other.</li>
+<li>Classify data, customer-operations, authorization, and overclaim risk; record two separate Surface Status entries or a gap for each unresolved path.</li>
+<li>Record selected/rejected skills, artifact/gate state, evidence limitations, owner actions, and next decision.</li>
+</ol></li>
+<li><strong>Conditional Skills:</strong> Select <code>oando-repo-map</code> for orientation and <code>oando-databases</code> when customer-query schema, RLS, grants, or Admin ownership evidence is involved. Add <code>oando-testing</code> only for explicitly authorized protected validation. Shared API/helper impact uses Local Evidence; operations vocabulary alone is not a trigger.</li>
+<li><strong>Allowed Actions:</strong> Read-only comparison and a Coverage-Gap Admission when end-to-end proof is missing.</li>
+<li><strong>Forbidden Actions:</strong> Combining workflows, calling the CRM demo Admin Database-backed, making remote mutations, or claiming customer-query behavior from a browser key or route name alone.</li>
+<li><strong>Artifact / Workspace Boundary:</strong> Author the assessment/gap under <code>./agents-work/&lt;workstream&gt;/&lt;report-type&gt;/</code>; only tool-generated evidence in <code>./results/&lt;purpose&gt;/</code>; never audits or temporary files under <code>./site/</code> or <code>./results/</code> root.</li>
+<li><strong>Locked Path / Site Write Gates:</strong> Locked evidence remains read-only without exact authorization. This card is assessment-only by default; any <code>./site/</code> write needs its own Core Product outcome, owned path, matching skills, and Site Write Gate record.</li>
+<li><strong>Risk:</strong> Customer data, operations, authorization, persistence ownership, and overclaim risk.</li>
+<li><strong>Expected Evidence:</strong> CRM <code>demo/local-only</code> with evidence source <code>oando-crm-storage</code>, a separately classified customer-query surface with its Admin Database owner, limitations, next evidence source, and owner action.</li>
+<li><strong>Next Decision:</strong> Keep a surface <code>present-but-unverified</code> or <code>unwired/absent</code> until End-to-End Evidence exists; never upgrade the CRM demo because the query path is wired.</li>
+</ul>
+<h3 id="d10-trace-catalog-configurator-quotes-or-inventory">D10 — Trace catalog, configurator, quotes, or inventory</h3>
+<ul>
+<li><strong>Goal:</strong> Trace catalog-facing work to the correct Products/Admin owner, asset path, and release/persistence boundary.</li>
+<li><strong>Start Paths:</strong> <code>./site/lib/catalog/</code>; <code>./site/features/shared/catalog/</code>; <code>./site/app/(site)/products/</code>; <code>./site/app/(site)/quote-cart/</code>; <code>./site/app/admin/catalog/</code>; <code>./site/app/admin/inventory/</code>; <code>./site/app/api/configurator/</code>; <code>./site/platform/supabase/migrations/</code>.</li>
+<li><strong>Scope:</strong> Marketing catalog, configurator, quote cart, inventory, pricing, catalog assets, publish paths, and database ownership.</li>
+<li><strong>Evidence Steps:</strong>
+<ol>
+<li>Read authority sources and state whether the outcome is marketing catalog/configurator, Admin inventory, quote handling, or a shared catalog boundary.</li>
+<li>Inspect route, feature, catalog adapter, API, asset-storage, and migration paths listed above.</li>
+<li>Compare Products/Admin ownership, release, and persistence claims with live helpers and migrations; distinguish source from local mirror.</li>
+<li>Classify product-data, pricing, inventory, asset, release, and database risk; assign status or a gap.</li>
+<li>Record the Route Record, conditional skills, artifact/gate state, hosted-proof limitation, and next decision.</li>
+</ol></li>
+<li><strong>Conditional Skills:</strong> Select <code>oando-repo-map</code> for path discovery, <code>oando-databases</code> for ownership/schema/RLS/grants/rollback, and <code>oando-focss-css</code> for catalog UI styling or tokens. Add <code>oando-testing</code> only for explicit protected validation. Fork-contract evidence follows <code>AGENTS.md</code> §3; shared catalog dependencies use Local Evidence.</li>
+<li><strong>Allowed Actions:</strong> Read-only mapping or an approved source change after selecting Products versus Admin and completing the relevant Site Write Gate.</li>
+<li><strong>Forbidden Actions:</strong> Seed, publish, storage, migration, remote database, or external asset actions without the required authorization; never treat a legacy public mirror as release authority.</li>
+<li><strong>Artifact / Workspace Boundary:</strong> Product source/assets may target only an exact approved <code>./site/</code> Core Product path; authored reports use <code>./agents-work/&lt;workstream&gt;/&lt;report-type&gt;/</code>, generated evidence <code>./results/&lt;purpose&gt;/</code>, tech-docs <code>./generated-documents/</code>; <code>./results/site/</code> is not a source destination.</li>
+<li><strong>Locked Path / Site Write Gates:</strong> Protected root/docs/Agents paths require exact authorization. A <code>./site/</code> write must name outcome, paths, skills, and expected evidence; Non-Core outputs are rejected and redirected.</li>
+<li><strong>Risk:</strong> Catalog data, pricing, inventory, release, asset, database, and customer-facing risk.</li>
+<li><strong>Expected Evidence:</strong> Products versus Admin owner, migration/storage/release path, selected/rejected skills, Surface Status/gap, and pending hosted proof.</li>
+<li><strong>Next Decision:</strong> Select <code>oando-databases</code> for schema/ownership or <code>oando-focss-css</code> for styling; fork concerns follow <code>AGENTS.md</code> §3.</li>
+</ul>
+<h3 id="d11-change-planner-safely">D11 — Change Planner safely</h3>
+<ul>
+<li><strong>Goal:</strong> Change or assess Planner behavior while preserving its independent route, canvas scale, state, persistence, and handoff contract.</li>
+<li><strong>Start Paths:</strong> <code>./site/app/ooplanner/</code>; <code>./site/features/Planner/</code>; <code>./site/components/Planner/</code>; <code>./site/lib/Planner/</code>; <code>./site/hooks/Planner/</code>; <code>./site/store/Planner/</code>; <code>./site/server/Planner/</code>; <code>./site/platform/Planner/</code>; <code>./site/app/api/Planner/</code>; <code>./agents-work/oando-repository-guide/markdown/03-product-domains.md</code>.</li>
+<li><strong>Scope:</strong> Planner route, dockview/Fabric canvas, projects, furniture placement, catalog rail, mode-aware persistence, exports, and handoff. It excludes Studio modules and assumptions.</li>
+<li><strong>Evidence Steps:</strong>
+<ol>
+<li>Read authority sources and identify the user-facing <code>/ooplanner</code> outcome.</li>
+<li>Inspect Planner-only route, feature, component, lib, hook, store, server, platform, API, and persistence paths.</li>
+<li>Compare route, canvas, scale, state, and persistence documentation with live Planner source; check the backing-data/API boundary without importing Studio.</li>
+<li>Classify fork, canvas, persistence, data, accessibility, and release risk; record Surface Status or a Coverage-Gap Admission.</li>
+<li>Record exact owned paths, conditional skills, Site/Locked Path gates, proof limitation, and next decision.</li>
+</ol></li>
+<li><strong>Conditional Skills:</strong> Begin from the <code>AGENTS.md</code> §3 fork rules with <code>oando-repo-map</code> for Planner discovery. Add <code>oando-databases</code> for schema/RLS/ownership and <code>oando-focss-css</code> for Planner-zone styling. Add <code>oando-testing</code> (or <code>/boundaries</code> for boundary scans) only for an explicitly authorized and hook-permitted boundary, browser, test, or type check; otherwise keep it pending. Cross-import evaluation uses Local Evidence.</li>
+<li><strong>Allowed Actions:</strong> Exact Planner-owned Core Product Write only after route, ownership, fork boundary, and Site Write Gate approval; otherwise read-only mapping.</li>
+<li><strong>Forbidden Actions:</strong> Studio imports, cross-fork copying, shared geometry/state helpers without scale review, persistence changes without the mode-aware path, or unapproved boundary/browser/persistence checks.</li>
+<li><strong>Artifact / Workspace Boundary:</strong> Planner product source remains in the exact owned <code>./site/</code> Fork Tree; analysis uses <code>./agents-work/&lt;workstream&gt;/&lt;report-type&gt;/</code>, evidence <code>./results/&lt;purpose&gt;/</code>, tech-docs <code>./generated-documents/</code>. No report or plan is a <code>./site/</code> artifact.</li>
+<li><strong>Locked Path / Site Write Gates:</strong> Locked docs/root/Agents evidence requires exact authorization. Before any Planner <code>./site/</code> write, state the exact outcome, owned paths, matching skills, and expected evidence; a Non-Core Artifact is redirected.</li>
+<li><strong>Risk:</strong> Fork boundary, canvas geometry, persistence, data, accessibility, and release risk.</li>
+<li><strong>Expected Evidence:</strong> Planner-only source/persistence/API evidence, no cross-import claim, selected/rejected skills, Surface Status/gap, and a statement that <code>scan:boundaries</code>, browser, persistence, and test evidence remain pending unless explicitly authorized and observed.</li>
+<li><strong>Next Decision:</strong> Continue with the narrowest Planner-owned source path or request one exact owner-approved proof.</li>
+</ul>
+<h3 id="d12-change-studio-safely">D12 — Change Studio safely</h3>
+<ul>
+<li><strong>Goal:</strong> Change or assess Studio behavior while preserving its independent furniture, descriptor, state, canvas, and release assumptions.</li>
+<li><strong>Start Paths:</strong> <code>./site/app/oostudio/</code>; <code>./site/features/Studio/</code>; <code>./site/components/Studio/</code>; <code>./site/lib/Studio/</code>; <code>./site/hooks/Studio/</code>; <code>./site/store/Studio/</code>; <code>./site/server/Studio/</code>; <code>./site/platform/Studio/</code>; <code>./site/app/api/Studio/</code>; <code>./agents-work/oando-repository-guide/markdown/03-product-domains.md</code>.</li>
+<li><strong>Scope:</strong> Furniture authoring, asset upload, descriptor publishing, Studio AI helpers, dockview/Fabric canvas, mode-aware persistence, and release. It excludes Planner modules and behavior.</li>
+<li><strong>Evidence Steps:</strong>
+<ol>
+<li>Read authority sources and identify the user-facing <code>/oostudio</code> outcome.</li>
+<li>Inspect Studio-only route, feature, component, lib, hook, store, server, platform, API, asset, and descriptor paths.</li>
+<li>Compare furniture, descriptor, release, state, scale, and persistence claims with live Studio source; do not infer Planner behavior.</li>
+<li>Classify fork, furniture-data, descriptor-release, credential, AI-advisory, accessibility, and deployment risk; record status or a gap.</li>
+<li>Record exact owned paths, conditional skills, artifact/gate state, proof limitation, and next decision.</li>
+</ol></li>
+<li><strong>Conditional Skills:</strong> Begin from the <code>AGENTS.md</code> §3 fork rules with <code>oando-repo-map</code> for Studio discovery. Add <code>oando-databases</code> for furniture/descriptors schema, RLS, ownership, or rollback and <code>oando-focss-css</code> for Studio-zone styling. Add <code>oando-testing</code> only for an explicitly authorized and hook-permitted check; otherwise keep it pending. Cross-import evaluation uses Local Evidence.</li>
+<li><strong>Allowed Actions:</strong> Exact Studio-owned Core Product Write only after route, ownership, fork-boundary, and Site Write Gate approval; otherwise use Local Evidence.</li>
+<li><strong>Forbidden Actions:</strong> Planner imports, cross-fork copying, remote publish, provider calls, unsupported AI/deployment claims, or persistence changes outside approved mode-aware wrappers.</li>
+<li><strong>Artifact / Workspace Boundary:</strong> Studio source/assets may target only an exact approved <code>./site/</code> Core Product path; guidance uses <code>./agents-work/&lt;workstream&gt;/&lt;report-type&gt;/</code>, evidence <code>./results/&lt;purpose&gt;/</code>, tech-docs <code>./generated-documents/</code>. Reports are never placed under <code>./site/</code>.</li>
+<li><strong>Locked Path / Site Write Gates:</strong> Locked paths require exact current-request authorization. Before any Studio <code>./site/</code> write, state the exact outcome, owned paths, matching skills, and expected evidence; reject Non-Core Artifacts and redirect them.</li>
+<li><strong>Risk:</strong> Fork boundary, furniture data, descriptor release, credential, AI advisory, and deployment risk.</li>
+<li><strong>Expected Evidence:</strong> Studio-only source/release evidence, no cross-import claim, selected/rejected skills, Surface Status/gap, and an explicit statement that hosted persistence and provider/deployment behavior remain unverified without matching proof.</li>
+<li><strong>Next Decision:</strong> Continue with the narrowest Studio-owned source path or request one exact owner-approved proof.</li>
+</ul>
+<h3 id="d13-assess-ai-and-retrieval">D13 — Assess AI and retrieval</h3>
+<ul>
+<li><strong>Goal:</strong> Assess server-side AI/retrieval behavior as advisory output without overstating provider, evaluation, deployment, or persistence evidence.</li>
+<li><strong>Start Paths:</strong> <code>./site/lib/ai/mastra/</code>; <code>./site/app/api/ai-advisor/</code>; <code>./site/app/api/Studio/ai/</code>; <code>./site/features/Studio/</code>; <code>./docs/architecture/stack.md</code>; <code>./agents-work/oando-repository-guide/markdown/03-product-domains.md</code>.</li>
+<li><strong>Scope:</strong> Mastra, Amazon Bedrock, LanceDB, Orama, Fuse.js, embeddings, providers, route boundaries, credentials, customer-data handling, and user-applied advisory output. It excludes provider calls, package installation, and deployment.</li>
+<li><strong>Evidence Steps:</strong>
+<ol>
+<li>Read authority sources and state whether the outcome is catalog retrieval, the advisor route, or Studio AI assistance.</li>
+<li>Inspect server-only AI/retrieval modules, listed routes, Studio integration, configuration, and data boundaries.</li>
+<li>Compare configured/imported/provider claims with live source; distinguish a route/import from a connected provider or evaluated workflow.</li>
+<li>Classify credential, external-provider, customer-data, retrieval, advisory, and release risk; assign Surface Status or a Coverage-Gap Admission.</li>
+<li>Record advisory wording, selected/rejected skills, artifact/gate state, exact provider/retrieval limitation, and next decision.</li>
+</ol></li>
+<li><strong>Conditional Skills:</strong> Select <code>oando-repo-map</code> for AI path discovery. No dedicated AI/retrieval skill exists, so record the gap and use Local Evidence plus every other matching skill. Add <code>oando-databases</code> for data/schema/RLS evidence and <code>oando-focss-css</code> only for a UI styling concern; fork evidence follows <code>AGENTS.md</code> §3. Add <code>oando-testing</code> only for explicit protected validation authorized this session per <code>AGENTS.md</code>; otherwise reject it as pending.</li>
+<li><strong>Allowed Actions:</strong> Local-Evidence-first source mapping and approved prose guidance; source writes require their own exact Core Product Write and Site Write Gate.</li>
+<li><strong>Forbidden Actions:</strong> Provider calls, external capability activation, package installation, credential exposure, autonomous application of advisory output, or claims of deployed/evaluated AI from static imports or route presence.</li>
+<li><strong>Artifact / Workspace Boundary:</strong> AI assessments and handoffs use <code>./agents-work/&lt;workstream&gt;/&lt;report-type&gt;/</code>; command evidence uses <code>./results/&lt;purpose&gt;/</code>; tech-docs use <code>./generated-documents/</code>; no report, prompt, skill, or audit belongs under <code>./site/</code>.</li>
+<li><strong>Locked Path / Site Write Gates:</strong> Protected root/docs/Agents paths remain read-only without exact authorization. Any <code>./site/</code> source write must be a Core Product Write with exact outcome, paths, skills, and expected evidence; Non-Core AI reports are redirected.</li>
+<li><strong>Risk:</strong> Credentials, external providers, customer data, retrieval correctness, advisory overreach, and unsupported-claim risk.</li>
+<li><strong>Expected Evidence:</strong> Retrieval/provider source, route/data boundary, advisory-only wording, the recorded no-dedicated-retrieval-skill gap, Surface Status/gap, and no-deployment/no-evaluation limitation.</li>
+<li><strong>Next Decision:</strong> Keep the output advisory and request the smallest owner-approved diagnostic or separately approved provider/evaluation work.</li>
+</ul>
+<h2 id="visual-detail-checklist">Visual Detail Checklist</h2>
+<p>Before reporting a product-interface change complete, review each applicable item and record the evidence or limitation:</p>
+<ul>
+<li>[ ] Use the existing Phosphor abstraction and <code>phIconMap</code>; do not add a new icon library, inline SVG, or Lucide substitute.</li>
+<li>[ ] Check icon alignment and the alignment of adjacent controls, labels, hit areas, and focus indicators.</li>
+<li>[ ] Check spacing, semantic tokens, FOCSS zone, density, and overflow at the target surface.</li>
+<li>[ ] Check responsive layout, wrapping, clipping, and keyboard-reachable alternatives to pointer or drag-only interaction.</li>
+<li>[ ] Check loading, empty, error, disabled, and success states where the surface can reach them.</li>
+<li>[ ] Check keyboard reachability, focus visibility/order, and accessible names; do not treat mouse-only canvas behavior as keyboard proof.</li>
+<li>[ ] Check reduced-motion behavior when animation or transition applies; preserve the existing GSAP/Framer and motion-preference patterns.</li>
+<li>[ ] For image or animation work, check owner/source, existing <code>./scripts/generate-svg/</code> or asset path, licensing, alt/metadata, and the intended output home before writing.</li>
+</ul>
+<p>Static source evidence can establish that a checklist was reviewed, but it cannot establish rendered alignment, browser accessibility, animation behavior, or production asset delivery without the matching authorized observation.</p>
+<h2 id="surface-status-and-coverage-gap-rules">Surface Status and Coverage-Gap rules</h2>
+<p>Use only these Surface Status values: <code>wired</code>, <code>demo/local-only</code>, <code>present-but-unverified</code>, <code>unwired/absent</code>, and <code>legacy</code>. Every status record includes <strong>Evidence Source(s)</strong>, <strong>Current Owner</strong>, <strong>Next Action</strong>, and <strong>Evidence Limitation</strong>.</p>
+<ul>
+<li><strong><code>wired</code>:</strong> current end-to-end evidence covers the route/interface, relevant behavior, data flow, and required persistence or external boundary. Static path presence alone is insufficient.</li>
+<li><strong><code>demo/local-only</code>:</strong> an intentionally local/demo workflow is evidenced but is not a hosted or production-backed surface. The CRM browser workspace is this status, with the observed key <code>oando-crm-storage</code>.</li>
+<li><strong><code>present-but-unverified</code>:</strong> a route, module, or declared integration is present, but the required runtime, authorization, browser, hosted, or persistence proof is not observed.</li>
+<li><strong><code>unwired/absent</code>:</strong> the named route or complete interface/data flow is not evidenced as a live end-to-end surface. <code>/admin/product-studio</code> and the interactive legacy <code>/planner/*</code> app tree remain examples until current route evidence changes them; marketing <code>/planner*</code> pages are separate.</li>
+<li><strong><code>legacy</code>:</strong> an older path may be present but is not a current implementation owner; <code>./site/data/storage/</code> and legacy public mirrors require explicit review before any new behavior.</li>
+</ul>
+<p>Do not transfer a status between Planner and Studio, between the CRM demo and customer queries, or between a local disk path and hosted Supabase. A Coverage-Gap Admission is required whenever the evidence needed to choose a status is missing, contradictory, or outside the approved scope.</p>
+<pre><code class="language-text">Coverage-Gap Admission Card
+Named Area or Capability:
+Status:
+Evidence Source(s) Checked:
+Evidence Limitation:
+Next Evidence Source:
+Owner Action:
+Scope Boundary:
+Next Decision:
+</code></pre>
+<p>Propagate the gap card to the Route Record, progress/handoff response, and Completion Record. A gap is not a failure; it prevents an absent or unverified surface from being reported as wired.</p>
+<h2 id="artifact-workspace-locked-path-and-site-write-rules">Artifact, workspace, Locked Path, and Site Write rules</h2>
+<p>For every Output-Producing Task, record Artifact Class, exact Workstream or Purpose Subfolder, filename pattern, owning source or script, authored-or-generated state, and rejected placements. Authored work goes to <code>./agents-work/&lt;workstream&gt;/&lt;report-type&gt;/</code>, Machine Evidence to <code>./results/&lt;purpose&gt;/</code>, tech-docs to <code>./generated-documents/</code>, active plans to <code>./plans/&lt;name&gt;/</code>, and evidenced True Blockers only to <code>./Failures.md</code>. Keep <code>./tech-docs-generator/</code> a root-level sibling of <code>./site/</code> and <code>./results/site/</code> separate from the source tree.</p>
+<p>The Locked Path Gate classifies a target as <code>Locked</code>, <code>explicitly owner-authorized</code>, or <code>writable</code> before any write. Every direct root file, <code>./docs/**</code>, and <code>./Agents/**</code> is Locked by default; reading a path does not grant write/delete permission, naming one file does not unlock its neighbors, and a substitute copy never proves a protected source changed.</p>
+<p>The Site Write Gate applies before any <code>./site/</code> write and requires the exact Core Product outcome, owned paths, matching skills, and expected evidence. Reports, audits, prompts, plans, skills, generated files, temporary files, debug files, and other Non-Core Artifacts are rejected from <code>./site/</code> and redirected to their approved homes.</p>
+<h2 id="product-task-response-boundary">Product-task response boundary</h2>
+<p>Use the Plain-Language Response Contract for every task start, progress update, handoff, pause, and completion in this order: <strong>Outcome; Known; Unverified; Exact First Evidence Locations; Selected Skills; Rejected Skills and Reasons; Numbered Next Actions; Likely Files or Areas; Risk; Allowed Checks; Protected or Pending Checks; Exact Completion Proof; Unavoidable Owner Decisions.</strong> For Output-Producing Tasks, also include the artifact/workspace fields, rejected placements, and both gate states without changing the 13-field order.</p>
+<p>AI output is advisory and requires explicit user application. Static imports, a route, a local model configuration, a browser key, or a schema do not prove provider connection, evaluation, deployment, hosted persistence, or runtime loading. A Completion Record names exact changed files, observed evidence, pending checks, status/gap admissions, Separate Approval Work, and True Blockers; it never promotes unobserved behavior to complete.</p></main>
+<footer class="g-footer">Generated from agents-work/oando-repository-guide/03-product-domains.md by render-repository-guide.mjs - edit the Markdown source, not this page.</footer>
+</body>
+</html>

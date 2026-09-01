@@ -19,11 +19,40 @@ import "server-only";
  */
 
 import {
+  recordRetrievalSourceContributions,
+  type AiRetrievalSource,
+} from "@/lib/observability/aiMetrics";
+
+import {
   createCatalogSearchIndex,
   searchCatalogDocuments,
   type CatalogSearchDocument,
 } from "./catalogLocalSearch";
 import { searchCatalogVectors } from "./catalogRag";
+
+/** The three funnel layers, in contribution order. */
+type RetrievalLayer = "vector" | "lexical" | "catalog-order";
+
+/** Maps funnel layers onto the pre-approved observability label union. */
+const RETRIEVAL_LAYER_METRIC_LABEL: Record<RetrievalLayer, AiRetrievalSource> = {
+  vector: "vector",
+  lexical: "lexical",
+  "catalog-order": "catalog_order",
+};
+
+/**
+ * AI-FIX-10: privacy-safe per-source contribution counter once the funnel
+ * resolves. Labels carry layer names only — never the query or product data.
+ */
+function recordRetrievalContributions(sources: readonly RetrievalLayer[]): void {
+  if (sources.length === 0) {
+    return;
+  }
+  recordRetrievalSourceContributions(
+    "catalog",
+    sources.map((source) => RETRIEVAL_LAYER_METRIC_LABEL[source]),
+  );
+}
 
 /** Minimal product shape the retrieval layer reads (subset of catalog `Product`). */
 export interface RetrievableProduct {
@@ -109,7 +138,9 @@ export async function retrieveCatalogProducts<T extends RetrievableProduct>(
     return { products: [], sources: [] };
   }
   if (trimmed.length < 2) {
-    return { products: products.slice(0, limit), sources: ["catalog-order"] };
+    const sources: RetrievalLayer[] = ["catalog-order"];
+    recordRetrievalContributions(sources);
+    return { products: products.slice(0, limit), sources };
   }
 
   const bySlug = new Map(products.map((product) => [product.slug, product]));
@@ -122,9 +153,9 @@ export async function retrieveCatalogProducts<T extends RetrievableProduct>(
 
   const picked: T[] = [];
   const seen = new Set<string>();
-  const sources: ("vector" | "lexical" | "catalog-order")[] = [];
+  const sources: RetrievalLayer[] = [];
 
-  const push = (product: T | undefined, source: "vector" | "lexical" | "catalog-order") => {
+  const push = (product: T | undefined, source: RetrievalLayer) => {
     if (!product || seen.has(product.slug) || picked.length >= limit) {
       return;
     }
@@ -145,5 +176,6 @@ export async function retrieveCatalogProducts<T extends RetrievableProduct>(
     push(product, "catalog-order");
   }
 
+  recordRetrievalContributions(sources);
   return { products: picked, sources };
 }

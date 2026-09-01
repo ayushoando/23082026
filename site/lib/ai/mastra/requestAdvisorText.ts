@@ -2,6 +2,8 @@ import "server-only";
 
 import type { Agent } from "@mastra/core/agent";
 
+import { sanitizeUserInput } from "@/lib/ai/sanitizeUserInput";
+
 import { getAdvisorAgent } from "./advisorAgent";
 import { resolveAdvisorModelChain, toMastraModel, type AdvisorModelTarget } from "./providers";
 
@@ -111,12 +113,19 @@ export async function requestAdvisorMessages(
   const targetIndex = chain.findIndex((t) => t.label === target.label);
   const remainingChain = targetIndex >= 0 ? chain.slice(targetIndex) : chain;
 
+  // AI-FIX-08: user-role content is interpolated into the model prompt.
+  const safeMessages = messages.map((message) =>
+    message.role === "user"
+      ? { ...message, content: sanitizeUserInput(message.content) }
+      : message,
+  );
+
   const agent = await getAdvisorAgent("workspace");
   let lastError: unknown;
 
   for (const t of remainingChain) {
     try {
-      return await requestAgentText(agent, t, messages, options);
+      return await requestAgentText(agent, t, safeMessages, options);
     } catch (err) {
       if (isAbortLikeError(err)) throw err;
       lastError = err;
@@ -147,7 +156,8 @@ export async function requestAdvisorText(
         t,
         [
           { role: "system", content: systemPrompt },
-          { role: "user", content: query },
+          // AI-FIX-08: the query is user-supplied and enters the prompt directly.
+          { role: "user", content: sanitizeUserInput(query) },
         ],
         { ...options, jsonMode: options.jsonMode ?? true },
       );

@@ -1,9 +1,19 @@
 {
   "mode": "circles",
-  "files": 1283,
-  "edges": 2401,
-  "cycleCount": 0,
-  "reportedCycleCount": 0,
+  "files": 1356,
+  "edges": 2644,
+  "cycleCount": 1,
+  "reportedCycleCount": 1,
   "truncated": false,
-  "cycles": []
+  "cycles": [
+    {
+      "members": [
+        "site/lib/Planner/fabricGeometryBridge.ts",
+        "site/lib/Planner/plannerGeometryContract.ts"
+      ],
+      "domains": [
+        "planner"
+      ]
+    }
+  ]
 }

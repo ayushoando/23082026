@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>11 · Agent workflows - Oando repository guide</title>
+<link rel="stylesheet" href="./guide.css">
+</head>
+<body>
+<header class="g-header"><a class="g-brand" href="./index.html">Oando repository guide</a>
+<nav class="g-nav"><a href="./index.html">Start</a><a href="./repository-map.html">01 · Full repository map</a><a href="./application-architecture.html">02 · Application architecture</a><a href="./product-domains.html">03 · Product domains</a><a href="./data-api-persistence.html">04 · Data, API, and persistence</a><a href="./tooling-ci-tech-docs.html">05 · Tooling, CI, and tech docs</a><a href="./operations-infrastructure.html">06 · Operations and infrastructure</a><a href="./docs-governance-planning.html">07 · Docs, governance, and planning</a><a href="./agent-workspace.html">8 · Agent workspace</a><a href="./local-generated-environment.html">09 · Local, generated, and environment areas</a><a href="./quality-validation.html">10 · Quality and validation</a><a href="./agent-workflows.html" class="active" aria-current="page">11 · Agent workflows</a></nav></header>
+<main><h1 id="11-agent-workflows">11 · Agent workflows</h1>
+<p><a href="./quality-validation.html">← Quality and validation</a> · <a href="./index.html">Back to start</a></p>
+<p>How to drive repository work: plain-language in, routed and evidenced out.</p>
+<h2 id="modes">Modes</h2>
+<table>
+<thead><tr><th>Mode</th><th>Use</th></tr></thead>
+<tbody>
+<tr><td>Vibe</td><td>read-only questions, tiny prose fixes</td></tr>
+<tr><td>Plan</td><td>multi-step changes, write nothing</td></tr>
+<tr><td>Spec</td><td>requirements -&gt; design -&gt; tasks work</td></tr>
+<tr><td>Autopilot</td><td>route selected, user approves each protected step</td></tr>
+<tr><td>Supervised</td><td>mandatory for DB applies, deploys, security/auth, secrets, deletes, backups, unfamiliar areas</td></tr>
+</tbody>
+</table>
+<h2 id="start-a-task-from-an-outcome">Start a task from an outcome</h2>
+<p>State one ordinary-language sentence. The agent then, before modifying anything:</p>
+<ol>
+<li>Applies the authority order (user &gt; live code &gt; <code>AGENTS.md</code> &gt; <code>Agents/</code> &gt; <code>docs/</code>).</li>
+<li>Restates the outcome with an action verb and the inferred surface/domain.</li>
+<li>Picks exact first-evidence paths; never guesses paths.</li>
+<li>Selects one D01-D22 card (D22 when unfamiliar) from the <a href="./index.html">guide index</a>.</li>
+<li>Loads matching <code>oando-*</code> skills (repo-map, testing, focss-css, databases, browser-ui); records rejected/no-match reasons; uses Local Evidence when nothing matches.</li>
+<li>Chooses a mode from risk and scope.</li>
+<li>Classifies every proposed command (table below).</li>
+<li>For output-producing work: declares Artifact Class, target subfolder, filename pattern, owning source, authored-or-generated, rejected placements; applies the Locked Path Gate to every write and the Site Write Gate to <code>./site/</code> targets.</li>
+<li>Asks only unavoidable Owner Decisions.</li>
+</ol>
+<h2 id="command-classes">Command classes</h2>
+<table>
+<thead><tr><th>Class</th><th>Rule</th></tr></thead>
+<tbody>
+<tr><td>read-only inspection</td><td>free</td></tr>
+<tr><td>Normal-Agent Eligible Check</td><td>exact named non-mutating check (<code>check:layout</code>, <code>scan:boundaries</code>, <code>verify:focss</code>, dry-runs) - only when the user authorized it this session</td></tr>
+<tr><td>Protected Command</td><td>gates, tests, coverage, builds, browser runners, DB actions, deploys, backups, local services - needs exact current-session authorization; <code>pnpm run gate</code> is never a default</td></tr>
+<tr><td>no-run pending authorization</td><td>anything lacking the above - report pending with the exact command</td></tr>
+</tbody>
+</table>
+<p>A refused command is final: never retry, bypass, or weaken; hand the exact command to the user.</p>
+<h2 id="records">Records</h2>
+<p>Route Record (before modification): Outcome · Domain card · First evidence paths + reasons · Candidate paths · Skills selected/rejected + reasons · Mode · Risk · Command classification · Artifact placement · Locked Path / Site Write Gate states · Validation state · Owner decisions · Next action.</p>
+<p>Response contract (every start, update, handoff, completion), in order: Outcome; Known; Unverified; Exact First Evidence Locations; Selected Skills; Rejected Skills and Reasons; Numbered Next Actions; Likely Files.</p>
+<p>Surface Status values: <code>wired</code>, <code>demo/local-only</code>, <code>present-but-unverified</code>, <code>unwired/absent</code>, <code>legacy</code>; add a Coverage-Gap Admission when end-to-end proof is absent. A unit result is not browser proof; disk evidence is not hosted persistence; one vitest lane is not the suite.</p>
+<h2 id="prompt-recipes">Prompt recipes</h2>
+<p>Append nothing - the rules above already apply.</p>
+<pre><code class="language-text">Map [feature] from its user-facing route through UI, logic, API, persistence,
+tests, and operational risks. Do not change code yet.
+</code></pre>
+<pre><code class="language-text">Fix [outcome] in [surface]. Route through AGENTS.md, show the Route Record,
+classify commands, stop before any Protected Command.
+</code></pre>
+<pre><code class="language-text">You may run only `pnpm run [exact-script]` from the repository root and report
+the result. Run nothing else.
+</code></pre>
+<pre><code class="language-text">Plan the migration for [schema change]: which database owns it, rollback,
+grants/policies, types regeneration. Dry-run commands only, preview first.
+</code></pre>
+<pre><code class="language-text">Review this change set for boundary violations and style-token drift, read-only,
+report findings with file:line.
+</code></pre>
+<pre><code class="language-text">[Result/audit task] Write outputs only under ./results/[purpose]/ or the approved
+agents-work subfolder; state Artifact Class before writing.
+</code></pre></main>
+<footer class="g-footer">Generated from agents-work/oando-repository-guide/11-agent-workflows.md by render-repository-guide.mjs - edit the Markdown source, not this page.</footer>
+</body>
+</html>

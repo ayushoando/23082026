@@ -27,6 +27,7 @@ import {
  resolveAdvisorModelChain,
  type AdvisorChatMessage,
 } from "@/lib/ai/mastra";
+import { sanitizeUserInput } from "@/lib/ai/sanitizeUserInput";
 import { PlannerAdvisorRequestSchema } from "@/features/shared/api/schemas";
 import { withAiObservability } from "@/lib/observability/aiMetrics";
 import {
@@ -211,6 +212,10 @@ function isAbortError(err: unknown): boolean {
 /**
  * Build the full message list for the Mastra agent call by prepending the
  * system prompt ahead of the caller-supplied messages.
+ *
+ * AI-FIX-08: user-role content is interpolated into the model prompt, so it
+ * passes through the prompt-injection guard here as well as at the shared
+ * `requestAdvisorMessages` chokepoint.
  */
 function buildMessages(
  callerMessages: Array<{
@@ -220,7 +225,11 @@ function buildMessages(
 ): AdvisorChatMessage[] {
  return [
   { role: "system", content: PLANNER_ADVISOR_SYSTEM_PROMPT },
-  ...callerMessages,
+  ...callerMessages.map((message) =>
+   message.role === "user"
+    ? { ...message, content: sanitizeUserInput(message.content) }
+    : message,
+  ),
  ];
 }
 

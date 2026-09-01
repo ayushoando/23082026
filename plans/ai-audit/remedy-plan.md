@@ -4,6 +4,24 @@
 **Source:** [`ai-audit-report.md`](./ai-audit-report.md)
 **Priority:** Ordered by production impact
 
+## Completion status - closed 2026-09-01 (all 11 fixes applied and verified)
+
+| Fix | Status | Evidence |
+|---|---|---|
+| AI-FIX-01 Cloudflare Vectorize | Done | `site/lib/ai/mastra/vectorizeCatalogStore.ts`; LanceDB path deleted |
+| AI-FIX-02 Merge agent singletons | Done | `advisorAgent.ts` `getAdvisorAgent(role)`; duplicate deleted |
+| AI-FIX-03 Provider failover | Done | `requestAdvisorText.ts` iterates full allowlisted chain |
+| AI-FIX-04 Enrich embedding text | Done | `catalogRag.ts` `buildEmbeddingText` (name, description<=300, category, features, tags) |
+| AI-FIX-05 Shared advisor infra | Done | both advisor routes via `requestAdvisorText.ts` |
+| AI-FIX-06 Memory (Option B) | Done | `advisorMemory.ts` documents InMemoryStore as intentional |
+| AI-FIX-07 Nav-search re-rank | Done | removed; no re-rank code remains |
+| AI-FIX-08 Prompt injection guards | Done | `site/lib/ai/sanitizeUserInput.ts` at all prompt chokepoints |
+| AI-FIX-09 Batch embeddings | Done | `embedTexts` chunked at 20, order preserved |
+| AI-FIX-10 Retrieval source metrics | Done | `oando_ai_retrieval_source_contributions_total` in `aiMetrics.ts` |
+| AI-FIX-11 Remove legacy providerFetch | Done | deleted with `providerChain.ts`; Planner multimodal fetch relocated to `site/server/Planner/providerFetch.server.ts` |
+
+Verification: `pnpm run typecheck` clean; `tests/unit/lib/ai` lane 15 files / 124 tests pass; tech-docs AI extractor repointed to `providers.ts`. Open operational blocker unchanged: CF-TOKEN-01 (`Failures.md`) gates the live Vectorize index.
+
 ---
 
 ## Wave 1: Critical Fixes (Week 1) — Est. 8-12 hours

@@ -33,7 +33,7 @@
   margin: 0;
   max-width: 36rem;
   color: var(--text-body);
-  line-height: 1.55;
+  line-height: var(--type-leading-copy);
 }
 
 .downloads-process {
@@ -78,7 +78,7 @@
   margin: 0;
   max-width: 38rem;
   color: var(--text-inverse-body);
-  line-height: 1.55;
+  line-height: var(--type-leading-copy);
 }
 
 @media (min-width: 48rem) {
@@ -107,7 +107,7 @@
   gap: 0.75rem;
   align-items: start;
   color: var(--text-body);
-  line-height: 1.55;
+  line-height: var(--type-leading-copy);
 }
 
 .downloads-note__bullet {

@@ -1,6 +1,7 @@
 import type { NextRequest} from "next/server";
 import type { NextResponse } from "next/server";
 import { getProductsFresh } from '@/lib/catalog/site/getProducts';
+import { sanitizeUserInput } from '@/lib/ai/sanitizeUserInput';
 import { createSupabaseAuthAdminClient } from '@/platform/supabase/auth-admin';
 import { normalizeRequestedCategoryId } from '@/lib/catalog/site/categories';
 import {
@@ -558,6 +559,9 @@ async function handleCatalogAdvisor(
   }
 
   const { query, context, stream } = parsedBody;
+  // AI-FIX-08: the raw query is interpolated into the advisor prompt; use a
+  // sanitized copy for everything model-facing, the original for heuristics.
+  const promptQuery = sanitizeUserInput(query);
   const products = await getProductsFresh();
   if (!products || products.length === 0) {
     const unavailable = buildUnavailableCatalogResponse(context);
@@ -610,7 +614,7 @@ async function handleCatalogAdvisor(
           const raw = await requestAdvisorRawResponse(
             advisorClient,
             systemPrompt,
-            query,
+            promptQuery,
             true,
             (delta) => {
               streamedAnyData = true;
@@ -657,7 +661,7 @@ async function handleCatalogAdvisor(
       const raw = await requestAdvisorRawResponse(
         advisorClient,
         systemPrompt,
-        query,
+        promptQuery,
         false,
       );
       const parsed = parseAdvisorJson(raw);

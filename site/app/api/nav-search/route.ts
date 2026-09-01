@@ -2,6 +2,7 @@ import type { NextRequest} from "next/server";
 import { NextResponse } from "next/server";
 import { getPublicApiIp } from "@/app/api/_lib/public";
 import { getCatalog } from '@/lib/catalog/site/getProducts';
+import { sanitizeUserInput } from '@/lib/ai/sanitizeUserInput';
 import { buildRequestedCategoryCatalog } from '@/lib/catalog/site/categories';
 import {
   createCatalogSearchIndex,
@@ -176,7 +177,8 @@ async function aiRank(
     const content = await requestAdvisorText(
       chain[0],
       "Rank navigation results for furniture website intent. Return strict JSON only: {\"ids\":[\"...\"]}",
-      `Context: ${context}\nQuery: ${query}\nCandidates:\n${compact}`,
+      // AI-FIX-08: sanitize the user query at the prompt interpolation point.
+      `Context: ${context}\nQuery: ${sanitizeUserInput(query)}\nCandidates:\n${compact}`,
       { jsonMode: true, signal: controller.signal },
     );
     const parsed = JSON.parse(content) as { ids?: string[] };

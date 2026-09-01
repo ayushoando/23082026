@@ -18,6 +18,9 @@ export function getAdvisorMemory(): Memory {
   const vectorEnabled = isVectorRecallEnabled();
 
   advisorMemory = new Memory({
+    // Intentional (AI-FIX-06 Option B): both advisor routes resend the full
+    // message history on every request, so this store is request-scoped agent
+    // glue only — durable (Postgres) conversation storage is not required.
     storage: new InMemoryStore({ id: "advisor-memory-storage" }),
     ...(vectorEnabled && embeddingModel
       ? {

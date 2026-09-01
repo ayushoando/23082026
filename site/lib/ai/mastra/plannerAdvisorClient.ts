@@ -1,4 +1,5 @@
 import { browserApiFetch } from "@/lib/api/browserApi";
+import { sanitizeUserInput } from "@/lib/ai/sanitizeUserInput";
 
 export const PLANNER_ADVISOR_API_PATH = "/api/planner/ai-advisor";
 
@@ -107,10 +108,21 @@ export async function callPlannerAdvisor(
   request: PlannerAdvisorRequest,
   init: RequestInit = {},
 ): Promise<PlannerAdvisorResponse> {
+  // AI-FIX-08: guard user-role content before it leaves the browser; the
+  // server-side route and requestAdvisorMessages re-apply the same guard.
+  const payload: PlannerAdvisorRequest = {
+    ...request,
+    messages: request.messages.map((message) =>
+      message.role === "user"
+        ? { ...message, content: sanitizeUserInput(message.content) }
+        : message,
+    ),
+  };
+
   const response = await browserApiFetch(PLANNER_ADVISOR_API_PATH, {
     method: "POST",
     headers: { "Content-Type": "application/json", ...init.headers },
-    body: JSON.stringify(request),
+    body: JSON.stringify(payload),
     ...init,
   });
 

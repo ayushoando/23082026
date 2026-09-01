@@ -5,10 +5,11 @@
 
 import "server-only";
 
+import { sanitizeUserInput } from "@/lib/ai/sanitizeUserInput";
 import {
   requestProviderText,
   resolveProviderChain,
-} from "@/lib/ai/mastra";
+} from "./providerFetch.server";
 import {
   SKETCH_TO_PLAN_SYSTEM_PROMPT,
   SketchToPlanResponseSchema,
@@ -38,8 +39,10 @@ function buildUserContent(request: SketchToPlanRequest) {
     {
       type: "text" as const,
       text: [
-        `Sketch file: ${request.fileName}`,
-        `User prompt: ${request.prompt}`,
+        // AI-FIX-08: fileName and prompt are user-supplied and interpolated
+        // into the model prompt.
+        `Sketch file: ${sanitizeUserInput(request.fileName)}`,
+        `User prompt: ${sanitizeUserInput(request.prompt)}`,
         `Include rooms: ${request.includeRooms ? "yes" : "no"}`,
         "Convert the sketch into editable walls and rooms in millimetres.",
         "Use the simplest geometry that preserves the sketch intent.",

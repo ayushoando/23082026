@@ -23,7 +23,7 @@ This document preserves programme direction and architectural decisions without 
 | Styling | FOCSS on Tailwind CSS v4 owns semantic tokens and zones; React Aria supplies selected behavior primitives. | Current architecture; see [FOCSS architecture](../architecture/css.md). |
 | Icons | Product icon use follows the repository's Phosphor policy. | Configured; current compliance requires an authorized check. |
 | State | Each workspace owns its runtime store; normalized application data, not raw package state, is persistence authority. | Retained design constraint. |
-| AI | Mastra, LanceDB, and Orama remain server-side advisory infrastructure; suggestions require explicit user application. | Configured; runtime effectiveness is unverified here. |
+| AI | Mastra, Cloudflare Vectorize, and Orama remain server-side advisory infrastructure; suggestions require explicit user application. | Configured; runtime effectiveness is unverified here. |
 | Product truth | Missing prices, failed releases, and unsupported capabilities remain explicit rather than guessed or hidden. | Current product constraint. |
 | Accessibility | Required actions remain keyboard reachable; reduced motion, forced colors, and responsive browser use are explicit design targets. | Target only; no conformance claim. |
 

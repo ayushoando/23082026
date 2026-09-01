@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, BookOpen, Check } from "@phosphor-icons/react";
+import { motion } from "framer-motion";
 
 import {
   HomeMarketingLayout,
@@ -9,6 +10,12 @@ import {
   HomeSectionInner,
 } from "@/components/home/layout";
 import { RouteCtaBand } from "@/components/shared/RouteCtaBand";
+import {
+  MOTION_EASE,
+  MOTION_TOKENS,
+  staggerContainer,
+  staggerItem,
+} from "@/lib/helpers/motion";
 import { PlannerBreadcrumbs } from "./PlannerBreadcrumbs";
 import { PlannerFeatureDemo } from "./PlannerFeatureDemo";
 import {
@@ -42,14 +49,28 @@ export function PlannerFeaturePageView({ slug }: { slug: PlannerFeatureSlug }) {
           />
 
           <header className="pfp-feature-header-grid gap-10">
-            <div className="max-w-2xl">
-              <div className="pfp-icon-badge mb-6 h-14 w-14 rounded-2xl">
+            <motion.div
+              className="max-w-2xl"
+              variants={staggerContainer}
+              initial="hidden"
+              animate="visible"
+            >
+              <motion.div
+                variants={staggerItem}
+                className="pfp-icon-badge mb-6 h-14 w-14 rounded-2xl"
+              >
                 <Icon className="h-6 w-6" aria-hidden="true" />
-              </div>
-              <p className="typ-eyebrow text-bronze">{feature.tagline}</p>
-              <h1 className="home-heading mt-3">{feature.title}</h1>
-              <p className="page-copy-sm text-muted">{feature.summary}</p>
-              <div className="mt-8 flex flex-wrap gap-3">
+              </motion.div>
+              <motion.p variants={staggerItem} className="typ-eyebrow text-bronze">
+                {feature.tagline}
+              </motion.p>
+              <motion.h1 variants={staggerItem} className="home-heading mt-3">
+                {feature.title}
+              </motion.h1>
+              <motion.p variants={staggerItem} className="page-copy-sm text-muted">
+                {feature.summary}
+              </motion.p>
+              <motion.div variants={staggerItem} className="mt-8 flex flex-wrap gap-3">
                 <Link
                   href={feature.tryPath}
                   className="btn-primary typ-cta inline-flex gap-2 px-6 py-3"
@@ -60,16 +81,29 @@ export function PlannerFeaturePageView({ slug }: { slug: PlannerFeatureSlug }) {
                 <Link href={feature.memberPath} className="btn-outline typ-cta px-6 py-3">
                   {PLANNER_HERO.secondaryCta.label}
                 </Link>
-              </div>
-              <Link
-                href={`/planner/help/#${feature.helpSectionId}`}
-                className="pfp-card-link typ-label mt-5 inline-flex"
-              >
-                <BookOpen className="h-4 w-4" aria-hidden="true" />
-                Read the help article
-              </Link>
-            </div>
-            <PlannerFeatureDemo slug={slug} />
+              </motion.div>
+              <motion.div variants={staggerItem} className="mt-5">
+                <Link
+                  href={`/planner/help/#${feature.helpSectionId}`}
+                  className="pfp-card-link typ-label inline-flex"
+                >
+                  <BookOpen className="h-4 w-4" aria-hidden="true" />
+                  Read the help article
+                </Link>
+              </motion.div>
+            </motion.div>
+            <motion.div
+              className="pfp-feature-demo-entry"
+              initial={{ y: MOTION_TOKENS.distanceLg }}
+              animate={{ y: 0 }}
+              transition={{
+                delay: 0.35,
+                duration: MOTION_TOKENS.slow,
+                ease: MOTION_EASE,
+              }}
+            >
+              <PlannerFeatureDemo slug={slug} />
+            </motion.div>
           </header>
 
           <section aria-labelledby="feature-capabilities" className="py-12">

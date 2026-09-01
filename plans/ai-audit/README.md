@@ -1,7 +1,7 @@
 # AI Implementation Audit Plan
 
 **Created:** 2026-08-31
-**Status:** Audit complete, 3-wave remedy plan ready
+**Status:** Closed - all 11 remedy fixes applied and verified (2026-09-01)
 **Owner:** Repository owner
 
 ## Documents
@@ -33,6 +33,8 @@
 - Proper abort/timeout handling with cleanup
 
 ## Architecture
+
+Audit-time state (2026-08-31). Closed 2026-09-01: LanceDB replaced by Cloudflare Vectorize, `providerFetch`/`providerChain` retired - see [remedy-plan](./remedy-plan.md).
 
 ```
 Provider Chain: Gemini → OpenRouter → OpenRouter-backup → OpenAI → Bedrock

@@ -1,5 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { existsSync, readdirSync, statSync } from "node:fs";
+import { createHash } from "node:crypto";
 import path from "node:path";
 import { extractRouteRecords } from "../tech-docs-generator/scripts/extract-routes.mjs";
 
@@ -198,8 +199,12 @@ const routeDirectImports = routeRecords.map((record) => ({
     kind: nodeKind(sourcePath, routeSources),
   })),
 }));
+const graphContentHash = createHash("sha256")
+  .update(JSON.stringify({ nodes, edges }))
+  .digest("hex")
+  .slice(0, 16);
 const graph = {
-  generatedAt: new Date().toISOString(),
+  generatedAt: `sha256:${graphContentHash}`,
   source: "site/app/**/page.tsx + local repository imports",
   routeCount: routeRecords.length,
   nodeCount: nodes.length,

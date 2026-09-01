@@ -1,12 +1,15 @@
 import path from 'node:path'
 import { rm } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
+import { execFile } from 'node:child_process'
+import { promisify } from 'node:util'
 import { canonicalJsonString } from './filesystem.mjs'
 import { generateDocs } from './generate.mjs'
 import { emitRendererData } from './emit-renderer-data.mjs'
 import { buildGeneratorModel } from './model.mjs'
 import { validateGeneratedSurface } from './publish-generated-tree.mjs'
 import { PARITY_DATA_FILES } from './renderer-data.mjs'
+import { writeGuidePages } from './render-repository-guide.mjs'
 import {
   getDocumentsRoot,
   getGeneratedRoot,
@@ -37,8 +40,17 @@ let generateAllQueue = Promise.resolve()
  * 1. delete `generated-documents/` entirely
  * 2. write fresh docs + data directly (throws on failure → gate fails)
  * 3. validate parity + manifests
+ * 4. regenerate repository-graph stats/cycles + page-component graph,
+ *    then render the agents-work guide Markdown to its html/ projection
+ *    (deterministic outputs under agents-work/; the wipe never touches them)
  * (site is rebuilt afterward by `vite build`)
  */
+const execFileAsync = promisify(execFile)
+
+async function runRepositoryScript(repoRoot, scriptPath, args) {
+  await execFileAsync(process.execPath, [scriptPath, ...args], { cwd: repoRoot })
+}
+
 export async function generateAll({ repoRoot = defaultRepoRoot } = {}) {
   const run = async () => {
     await wipeDisposableGeneratedOutputs(repoRoot)
@@ -55,6 +67,12 @@ export async function generateAll({ repoRoot = defaultRepoRoot } = {}) {
     }
     await validateGeneratedSurface({ root: getDocumentsRoot(repoRoot), surface: 'docs' })
     await validateGeneratedSurface({ root: getRendererDataRoot(repoRoot), surface: 'data' })
+    console.log('generate: repository graph + guide projection')
+    await runRepositoryScript(repoRoot, 'scripts/graph-impact.mjs', ['--stats'])
+    await runRepositoryScript(repoRoot, 'scripts/graph-impact.mjs', ['--circles'])
+    await runRepositoryScript(repoRoot, 'scripts/generate-page-component-graph.mjs', [])
+    const guide = writeGuidePages({ repoRoot })
+    console.log(`generate: guide projection wrote ${guide.written} files`)
     return { model, docs, data, publication: { published: ['docs', 'data'], preserved: [] } }
   }
 

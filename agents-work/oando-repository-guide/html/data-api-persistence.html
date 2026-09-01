@@ -1,10 +1,127 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Oando database, API, persistence, security, and i18n map."><title>Data and APIs · Oando repository guide</title><link rel="stylesheet" href="guide.css"></head>
-<body><div class="site-header"><div class="shell"><p class="eyebrow">Oando complete repository guide</p><h1>Data, APIs, and persistence</h1><p class="subtitle">Database ownership, API route categories, runtime persistence modes, security, i18n, and public contracts.</p></div></div><div class="shell"><nav class="tabs-wrap" aria-label="Guide sections"><div class="tabs"><a href="index.html">Start</a><a href="repository-map.html">Full map</a><a href="application-architecture.html">Application</a><a href="product-domains.html">Domains</a><a href="data-api-persistence.html" aria-current="page">Data &amp; APIs</a><a href="tooling-ci-tech-docs.html">Tooling &amp; CI</a><a href="operations-infrastructure.html">Operations</a><a href="docs-governance-planning.html">Docs &amp; governance</a><a href="kiro-workspace.html">Kiro workspace</a><a href="local-generated-environment.html">Local &amp; generated</a><a href="quality-and-validation.html">Quality</a><a href="working-with-kiro.html">Kiro workflow</a></div></nav>
-<main><p class="breadcrumb"><a href="index.html">Start</a> / Data &amp; APIs</p><section><h2>Database ownership</h2><div class="table-wrap"><table><thead><tr><th>Database</th><th>Reference</th><th>Owns</th><th>Migration folder</th></tr></thead><tbody><tr><td>Products</td><td><code>erpweaiypimorcunaimz</code></td><td>Marketing catalog, configurator, flags, themes</td><td><code>site/platform/supabase/migrations/</code></td></tr><tr><td>Admin</td><td><code>rxzpznmxbaoxpikowmfc</code></td><td>Staff, customers, plans, furniture, descriptors, price books, audit, queries</td><td><code>site/platform/supabase/migrations.admin/</code></td></tr></tbody></table></div><p>Drizzle support is in <code>site/platform/drizzle/schema/</code>; deployable schema changes are Supabase SQL migrations with grants, RLS, and rollback.</p></section>
-<section><h2>API map</h2><div class="table-wrap"><table><thead><tr><th>API area</th><th>Purpose</th></tr></thead><tbody><tr><td><code>/api/admin/*</code></td><td>Catalog, plans, price books, themes, analytics.</td></tr><tr><td><code>/api/Planner/*</code></td><td>Catalog, projects, sketch-to-plan, handoff.</td></tr><tr><td><code>/api/Studio/*</code></td><td>Furniture CRUD/upload/publish and Studio AI.</td></tr><tr><td>Shared/public APIs</td><td>Products/categories/configurator/AI advisor/CSRF/files/exports/search/filter/tracking/theme/health.</td></tr></tbody></table></div><p>Inventory: <code>docs/architecture/routes.md</code> and <code>site/lib/apiCatalog.ts</code>; live source is authoritative.</p></section>
-<section><h2>Persistence modes</h2><div class="table-wrap"><table><thead><tr><th>Runtime</th><th>Plans</th><th>Furniture/descriptors</th></tr></thead><tbody><tr><td>Local non-production with <code>DEV_AUTH_BYPASS=1</code></td><td>Approved disk store</td><td>Approved disk store</td></tr><tr><td>CI, production, other mode</td><td>Admin Supabase <code>oando_plans</code></td><td>Admin Supabase catalog/descriptor records</td></tr></tbody></table></div><div class="callout warn">Production filesystem is read-only. Never raw-write a request path, never use <code>site/data/storage/</code>, and never dual-write disk plus Supabase.</div></section>
-<section><h2>Security, i18n, public contract</h2><div class="grid"><article class="card"><h3>Security</h3><p><code>site/proxy.ts</code>, server auth helpers, CSRF, rate limits, RLS, server-only secrets.</p></article><article class="card"><h3>i18n</h3><p><code>site/i18n/</code> holds messages/config; root <code>i18n/request.ts</code> is the resolver shim; runtime currently loads English.</p></article><article class="card"><h3>Public assets/discovery</h3><p><code>site/public/</code>, robots/sitemap/security/discovery routes and metadata.</p></article></div></section>
-<section><h2>Safe migration prompt</h2><pre><code>Use the database-migration workflow for [change]. Decide Products versus Admin.
-Draft grants, RLS, and -- rollback. Identify types, API contracts, application code,
-tests, and the dry-run. Do not apply it.</code></pre></section><div class="next-links"><a href="product-domains.html">← Domains</a><a href="tooling-ci-tech-docs.html">Next: tooling &amp; CI →</a></div></main><footer>Choose ownership before implementation; a correct table in the wrong database is still wrong.</footer></div></body></html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>04 · Data, API, and persistence - Oando repository guide</title>
+<link rel="stylesheet" href="./guide.css">
+</head>
+<body>
+<header class="g-header"><a class="g-brand" href="./index.html">Oando repository guide</a>
+<nav class="g-nav"><a href="./index.html">Start</a><a href="./repository-map.html">01 · Full repository map</a><a href="./application-architecture.html">02 · Application architecture</a><a href="./product-domains.html">03 · Product domains</a><a href="./data-api-persistence.html" class="active" aria-current="page">04 · Data, API, and persistence</a><a href="./tooling-ci-tech-docs.html">05 · Tooling, CI, and tech docs</a><a href="./operations-infrastructure.html">06 · Operations and infrastructure</a><a href="./docs-governance-planning.html">07 · Docs, governance, and planning</a><a href="./agent-workspace.html">8 · Agent workspace</a><a href="./local-generated-environment.html">09 · Local, generated, and environment areas</a><a href="./quality-validation.html">10 · Quality and validation</a><a href="./agent-workflows.html">11 · Agent workflows</a></nav></header>
+<main><h1 id="04-data-api-and-persistence">04 · Data, API, and persistence</h1>
+<p><a href="./product-domains.html">← Product domains</a> · <a href="./tooling-ci-tech-docs.html">Next: tooling, CI, and tech docs →</a></p>
+<h2 id="choose-the-data-owner-before-tracing-or-changing-data">Choose the data owner before tracing or changing data</h2>
+<p>The repository has two Supabase databases. Select the owner before discussing a table, API, migration, furniture record, descriptor, catalog item, configurator state, plan, or theme; a path or Drizzle definition is not proof the hosted workflow is wired. Database/schema work reads as the user-global <code>oando-databases</code> skill, fork-boundary work follows <code>AGENTS.md</code> §3 plus <code>pnpm run scan:boundaries</code>, and validation remains subject to the <code>AGENTS.md</code> current-session authorization floor.</p>
+<table>
+<thead><tr><th>Database</th><th>Ref</th><th>Owns</th><th>Deployable migrations</th><th>Runtime boundary</th></tr></thead>
+<tbody>
+<tr><td><strong>Products</strong></td><td><code>erpweaiypimorcunaimz</code></td><td>Marketing catalog, configurator, feature flags, and themes</td><td><code>site/platform/supabase/migrations/</code></td><td>Marketing catalog/configurator data remains Products-owned; do not move it to Admin because a route or shared helper is convenient.</td></tr>
+<tr><td><strong>Admin</strong></td><td><code>rxzpznmxbaoxpikowmfc</code></td><td>Staff, customers, plans, furniture, descriptors, price books, audit data, and <code>customer_queries</code></td><td><code>site/platform/supabase/migrations.admin/</code></td><td>Staff/customer, plan, furniture, descriptor, price-book, audit, and customer-query persistence is Admin-owned.</td></tr>
+</tbody>
+</table>
+<p><code>site/platform/drizzle/schema/</code> is the Drizzle query layer: a TypeScript table map for typed queries and schema reasoning, not the deployable schema. Supabase SQL migrations in the correct database directory are the deployable schema-change path. Database ownership is a routing decision, not proof that the route, hosted table, or persistence workflow has been observed end to end.</p>
+<h3 id="ownership-decision-record">Ownership decision record</h3>
+<p>Before proposing a data change, record:</p>
+<ol>
+<li><strong>Owner:</strong> Products or Admin, with the table/domain reason.</li>
+<li><strong>Migration path:</strong> the exact Products or Admin migration directory.</li>
+<li><strong>Application boundary:</strong> route handler, helper, server module, or mode-aware wrapper that reads or writes the data.</li>
+<li><strong>Access controls:</strong> RLS policies and grants required for the operation.</li>
+<li><strong>Recovery:</strong> a <code>-- rollback</code> section, backup/recovery implications, and the smallest authorized diagnostic or dry run.</li>
+<li><strong>Proof limit:</strong> whether the evidence is only static, local, configured, or actually authorized hosted evidence.</li>
+</ol>
+<p>Do not use a shared name, a generated type, or an old document to override live ownership evidence.</p>
+<h2 id="application-api-surface">Application API surface</h2>
+<ul>
+<li><strong>Route handlers:</strong> <code>site/app/api/**/route.ts</code>.</li>
+<li><strong>Route inventory:</strong> <code>docs/architecture/routes.md</code> and <code>site/lib/apiCatalog.ts</code>; the live route and handler remain authoritative when they differ.</li>
+<li><strong>Edge boundary:</strong> <code>site/proxy.ts</code> owns the observed security-header, protected-route, and maintenance behavior.</li>
+<li><strong>Database access:</strong> Supabase queries go through server-side helpers under <code>site/lib/</code>; no raw SQL in <code>site/app/**/page.tsx</code> or <code>site/components/</code>.</li>
+<li><strong>Product routes:</strong> marketing products/categories, configurator, quote/cart, search/filter, theme, discovery, tracking, exports/files, and health.</li>
+<li><strong>Admin routes:</strong> catalog, plans, price books, themes, analytics, customer-query operations, and other internal handlers.</li>
+<li><strong>Planner routes:</strong> <code>/api/Planner/*</code> for catalog, projects, sketch-to-plan, and handoff.</li>
+<li><strong>Studio routes:</strong> <code>/api/Studio/*</code> for furniture CRUD, upload, publish, and AI-helper behavior.</li>
+<li><strong>Security/public routes:</strong> CSRF, auth boundaries, health, discovery, and public contracts.</li>
+</ul>
+<p>A route entry, API catalog row, or configured client proves configuration or source presence only — not authorization, CSRF/rate-limit behavior, database access, hosted persistence, or a successful request.</p>
+<h2 id="persistence-modes">Persistence modes</h2>
+<p>Mode-aware persistence selects exactly one storage boundary for a runtime; it must not write to disk and Supabase for the same operation.</p>
+<table>
+<thead><tr><th>Runtime</th><th>Plans</th><th>Furniture and descriptors</th></tr></thead>
+<tbody>
+<tr><td>Local non-production with <code>DEV_AUTH_BYPASS=1</code></td><td>Approved Planner disk stores under <code>site/platform/Planner/data/</code></td><td>Approved shared/Studio disk stores under <code>site/platform/shared/data/furniture/</code> and <code>site/inventory/descriptors/</code></td></tr>
+<tr><td>CI, production, or any other runtime</td><td>Admin Supabase <code>oando_plans</code></td><td>Admin Supabase furniture catalog and descriptor records</td></tr>
+</tbody>
+</table>
+<p>Use the existing selectors and wrappers, including <code>site/lib/Planner/plannerPersistenceMode.ts</code> and <code>site/lib/catalog/furnitureCatalogMode.ts</code>, and write through helpers such as <code>writeFurnitureItem</code>. Production filesystem access is read-only; never use raw disk helpers from request handlers, never write <code>site/data/storage/</code>, and never dual-write. This contract concerns plans, furniture, and descriptors; Products-owned marketing catalog/configurator/flags/themes still use the Products database.</p>
+<h2 id="d03-auth-security-and-secrets">D03 — Auth, security, and secrets</h2>
+<ul>
+<li><strong>Goal:</strong> Trace authentication, authorization, and secret boundaries without exposing credentials or weakening controls.</li>
+<li><strong>Start Paths:</strong> <code>./site/proxy.ts</code>; <code>./site/lib/security/</code>; <code>./site/platform/supabase/</code>; <code>./.env.example</code>; <code>./.env.local</code>; <code>./site/.env.local</code>; <code>./docs/architecture/stack.md</code>.</li>
+<li><strong>Scope:</strong> Edge rules, server auth, CSRF, rate limits, RLS references, secret storage, database ownership, and hosted-proof limits.</li>
+<li><strong>Evidence Steps:</strong> Read authority sources; inspect the listed helpers/configuration; compare claims with live source; classify security/data risk; record the Route Record, selected skills, and evidence limitation.</li>
+<li><strong>Allowed Actions:</strong> Read-only tracing and an explicitly owned guidance/source change; keep credentials private.</li>
+<li><strong>Forbidden Actions:</strong> Printing or committing secrets, exposing <code>SUPABASE_SERVICE_ROLE_KEY</code> to client code, bypassing RLS from a client, changing security controls by assumption, or making hosted calls without approval.</li>
+<li><strong>Risk:</strong> Credentials, authorization, data access, and release risk.</li>
+<li><strong>Expected Evidence:</strong> Auth source, secret boundary, database owner, access-control boundary, and unverified hosted behavior.</li>
+<li><strong>Next Decision:</strong> Select <code>oando-databases</code> when schema/RLS/grants/ownership are implicated; shared security-code impact uses Local Evidence.</li>
+</ul>
+<h2 id="d05-apis-and-data-boundaries">D05 — APIs and data boundaries</h2>
+<ul>
+<li><strong>Goal:</strong> Trace an API from its route handler through request controls, database ownership, persistence mode, and completion proof.</li>
+<li><strong>Start Paths:</strong> <code>./site/app/api/</code>; <code>./site/lib/apiCatalog.ts</code>; <code>./site/proxy.ts</code>; <code>./docs/architecture/routes.md</code>; <code>./agents-work/oando-repository-guide/markdown/04-data-api-persistence.md</code>.</li>
+<li><strong>Scope:</strong> Admin, Planner, Studio, catalog, configurator, AI, security, files, plans, tracking, and public handlers.</li>
+<li><strong>Evidence Steps:</strong> Read authority sources; inspect route, catalog, proxy, helper, and persistence sources; compare route inventory with live handlers; classify API/data/release risk; record exact evidence and the next action.</li>
+<li><strong>Allowed Actions:</strong> Read-only mapping or an explicitly approved edit in the owned source path; preserve auth and data-owner boundaries.</li>
+<li><strong>Forbidden Actions:</strong> Treating route presence as behavior proof, making hosted requests by assumption, applying migrations, exposing secrets, or bypassing mode-aware helpers.</li>
+<li><strong>Risk:</strong> API contract, authentication, data ownership, persistence, and release risk.</li>
+<li><strong>Expected Evidence:</strong> Route source, auth/CSRF/rate-limit boundary, Products/Admin owner, persistence helper, matching skills, and exact hosted-proof limitation.</li>
+<li><strong>Next Decision:</strong> Select <code>oando-databases</code> when schema ownership or RLS/grants is implicated; shared API dependency or blast-radius work uses Local Evidence.</li>
+</ul>
+<h2 id="d14-databases-rls-grants-rollback-and-mode-aware-persistence">D14 — Databases, RLS, grants, rollback, and mode-aware persistence</h2>
+<ul>
+<li><strong>Goal:</strong> Select Products or Admin ownership and preserve deployable migration, access-control, rollback, and persistence-mode boundaries.</li>
+<li><strong>Start Paths:</strong> <code>./site/platform/supabase/migrations/</code>; <code>./site/platform/supabase/migrations.admin/</code>; <code>./site/platform/drizzle/schema/</code>; <code>./site/lib/Planner/plannerPersistenceMode.ts</code>; <code>./site/lib/catalog/furnitureCatalogMode.ts</code>; <code>./site/platform/Planner/data/</code>; <code>./site/platform/shared/data/furniture/</code>; <code>./site/inventory/descriptors/</code>; <code>./docs/database/schema.md</code>; <code>./docs/database/ops.md</code>; <code>./docs/database/drizzle.md</code>.</li>
+<li><strong>Scope:</strong> Products (<code>erpweaiypimorcunaimz</code>) marketing catalog/configurator/flags/themes; Admin (<code>rxzpznmxbaoxpikowmfc</code>) staff/customers/plans/furniture/descriptors/price books/audit/queries; deployable SQL; RLS and grants; rollback; and mode selectors.</li>
+<li><strong>Evidence Steps:</strong> Read authority sources; inspect ownership, migration, schema, and selector paths; compare docs with live source; classify data-loss/access/persistence risk; record owner, migration path, policies/grants, rollback, mode, and next decision.</li>
+<li><strong>Allowed Actions:</strong> Read-only schema planning or an explicitly approved migration edit in the correct database directory.</li>
+<li><strong>Forbidden Actions:</strong> Direct hosted schema changes, a migration without <code>-- rollback</code>, missing grants or RLS policies, cross-database ownership drift, dual-write, production disk writes, or unapproved apply/type/seed actions.</li>
+<li><strong>Risk:</strong> Data loss, access control, persistence, migration, and release risk.</li>
+<li><strong>Expected Evidence:</strong> Products/Admin owner, exact migration directory, rollback section, RLS policies, grants, mode selector, and pending dry-run/hosted evidence.</li>
+<li><strong>Next Decision:</strong> Route schema/RLS/ownership work to <code>oando-databases</code> (dry runs via <code>/db-dry</code>); Planner/Studio fork persistence follows <code>AGENTS.md</code> §3 plus <code>pnpm run scan:boundaries</code>.</li>
+</ul>
+<h2 id="migration-rls-grants-and-rollback-contract">Migration, RLS, grants, and rollback contract</h2>
+<p>Deployable database changes use raw SQL migrations in the selected Supabase directory. Each migration must make the intended owner explicit and include RLS policies for the rows and roles involved; grants appropriate to the actual runtime roles, not merely table creation; a clearly labelled <code>-- rollback</code> section; generated-type, API-contract, application, seed, asset, and persistence-mode impact notes; and the required dry run before any apply action.</p>
+<p>The named root commands are protected operations: Products uses <code>pnpm run db:apply -- --dry</code> before <code>pnpm run db:apply</code>, Admin uses <code>pnpm run db:apply:admin -- --dry</code> before <code>pnpm run db:apply:admin</code>. Type generation (<code>pnpm run db:types</code> / <code>db:types:admin</code>), seeds, remote inspection, and apply actions are also owner-controlled; this chapter does not authorize or run any of them.</p>
+<p>A <code>pgTable</code> definition is not a migration and no substitute for the deployable Supabase migration. Do not claim a migration is applied, a policy is effective, or hosted data is persistent from SQL text or a local file alone.</p>
+<h2 id="security-auth-and-environment">Security, auth, and environment</h2>
+<ul>
+<li><strong>Edge:</strong> <code>site/proxy.ts</code> owns CSP/security headers, protected-route behavior, maintenance write blocking, and related rules.</li>
+<li><strong>Handlers:</strong> use existing server-side auth, CSRF, rate limiting, RLS, and mode-aware wrappers.</li>
+<li><strong>Secrets:</strong> only in local <code>.env.local</code>/<code>site/.env.local</code> or provider secret stores; never committed or client-side. <code>.env.example</code> documents the non-secret shape only; static inspection cannot establish effective production configuration or hosted authorization results.</li>
+</ul>
+<h2 id="i18n-seo-and-public-contracts">i18n, SEO, and public contracts</h2>
+<table>
+<thead><tr><th>Area</th><th>Location / rule</th></tr></thead>
+<tbody>
+<tr><td>Marketing i18n</td><td><code>site/i18n/</code> with <code>en</code>/<code>hi</code>; runtime validates <code>NEXT_LOCALE</code>, defaults to <code>en</code>, and loads the selected bundle</td></tr>
+<tr><td>Root next-intl shim</td><td><code>i18n/request.ts</code></td></tr>
+<tr><td>SEO/discovery</td><td>Marketing routes, metadata, robots/sitemap, public <code>.well-known</code>/security files</td></tr>
+<tr><td>Static public files</td><td><code>site/public/</code></td></tr>
+</tbody>
+</table>
+<h2 id="safe-migration-request">Safe migration request</h2>
+<pre><code class="language-text">Use the database-migration workflow for [change]. Decide Products versus Admin and name the reason.
+Draft the SQL with RLS policies, grants, and a -- rollback section. Identify generated types,
+API contracts, application code, tests, seed/storage impact, mode-aware persistence, and the
+required dry-run. Classify every command and do not apply or connect to a database.
+</code></pre>
+<h2 id="dataapi-response-boundary">Data/API response boundary</h2>
+<p>Use the Plain-Language Response Contract in every update. Distinguish configured routes from observed behavior, static SQL from an applied migration, disk evidence from hosted persistence, and a reviewed migration from a deployed one; a missing authorized command result is <code>pending-user-authorization</code>, <code>blocked-by-hook</code>, or <code>not-run</code>, never a pass.</p>
+<h2 id="separate-approval-work">Separate Approval Work</h2>
+<p>Remain separate from this guidance lane: SQL or migration writes outside the owned documentation path; database apply, dry-run, type-generation, seed, remote inspection, or hosted mutation; live-database RLS/grant changes; secret or auth-control changes; application/runtime changes; package installation; deployment, backup, or external service actions; and any generated-output update without its own provenance and write scope.</p>
+<p>Next: <a href="./tooling-ci-tech-docs.html">Tooling, CI, and tech docs</a>.</p></main>
+<footer class="g-footer">Generated from agents-work/oando-repository-guide/04-data-api-persistence.md by render-repository-guide.mjs - edit the Markdown source, not this page.</footer>
+</body>
+</html>

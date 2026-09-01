@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const mockRequestProviderText = vi.hoisted(() => vi.fn());
 const mockResolveProviderChain = vi.hoisted(() => vi.fn());
 
-vi.mock("@/lib/ai/mastra", () => ({
+vi.mock("@/server/Planner/providerFetch.server", () => ({
   resolveProviderChain: mockResolveProviderChain,
   requestProviderText: mockRequestProviderText,
 }));

@@ -57,8 +57,8 @@
       "target": "site"
     }
   ],
-  "files": 1283,
-  "edges": 2401,
+  "files": 1356,
+  "edges": 2644,
   "unresolvedLocalSpecifiers": 34,
   "unresolvedExamples": [
     {
@@ -222,39 +222,39 @@
   ],
   "domains": {
     "admin-ops": {
-      "files": 101,
-      "edges": 274
+      "files": 102,
+      "edges": 275
     },
     "ai-retrieval": {
       "files": 17,
-      "edges": 37
+      "edges": 33
     },
     "database-platform": {
       "files": 16,
       "edges": 17
     },
     "focss": {
-      "files": 143,
-      "edges": 148
+      "files": 146,
+      "edges": 151
     },
     "marketing": {
       "files": 130,
-      "edges": 445
+      "edges": 448
     },
     "planner": {
-      "files": 124,
-      "edges": 261
+      "files": 153,
+      "edges": 352
     },
     "scripts/AsNeeded": {
-      "files": 11,
-      "edges": 3
+      "files": 7,
+      "edges": 2
     },
     "scripts/codemods": {
       "files": 1,
       "edges": 1
     },
     "scripts/general": {
-      "files": 45,
+      "files": 46,
       "edges": 12
     },
     "scripts/generate-svg": {
@@ -265,17 +265,25 @@
       "files": 11,
       "edges": 5
     },
+    "scripts/operations-review": {
+      "files": 14,
+      "edges": 43
+    },
     "scripts/root": {
       "files": 101,
       "edges": 91
     },
+    "scripts/site-ui-content-links-audit": {
+      "files": 20,
+      "edges": 85
+    },
     "site/app": {
       "files": 63,
-      "edges": 213
+      "edges": 219
     },
     "site/components": {
       "files": 99,
-      "edges": 268
+      "edges": 270
     },
     "site/features": {
       "files": 41,
@@ -286,8 +294,8 @@
       "edges": 2
     },
     "site/lib": {
-      "files": 178,
-      "edges": 187
+      "files": 186,
+      "edges": 199
     },
     "site/platform": {
       "files": 2,
@@ -303,11 +311,11 @@
     },
     "studio": {
       "files": 78,
-      "edges": 165
+      "edges": 166
     },
     "tech-docs": {
-      "files": 109,
-      "edges": 210
+      "files": 110,
+      "edges": 211
     },
     "worker": {
       "files": 2,
@@ -322,12 +330,12 @@
     },
     {
       "file": "site/lib/siteUrl.ts",
-      "count": 43,
+      "count": 44,
       "domain": "site/lib"
     },
     {
       "file": "site/features/shared/api/withAuth.ts",
-      "count": 38,
+      "count": 33,
       "domain": "site/features"
     },
     {
@@ -337,7 +345,7 @@
     },
     {
       "file": "site/features/site/data/seo.ts",
-      "count": 30,
+      "count": 31,
       "domain": "marketing"
     },
     {
@@ -357,13 +365,8 @@
     },
     {
       "file": "scripts/general/loadEnvLocal.cjs",
-      "count": 24,
-      "domain": "scripts/general"
-    },
-    {
-      "file": "site/features/shared/api/ApiError.ts",
       "count": 23,
-      "domain": "site/features"
+      "domain": "scripts/general"
     },
     {
       "file": "site/lib/Planner/plannerTypes.ts",
@@ -376,11 +379,6 @@
       "domain": "site/lib"
     },
     {
-      "file": "site/features/site/data/routeMetadata.ts",
-      "count": 22,
-      "domain": "marketing"
-    },
-    {
       "file": "site/lib/catalog/site/categories.ts",
       "count": 22,
       "domain": "site/lib"
@@ -391,7 +389,12 @@
       "domain": "tech-docs"
     },
     {
-      "file": "site/features/shared/api/apiResponse.ts",
+      "file": "site/components/Planner/ui/PlannerPhIcon.tsx",
+      "count": 21,
+      "domain": "planner"
+    },
+    {
+      "file": "site/features/shared/api/ApiError.ts",
       "count": 21,
       "domain": "site/features"
     },
@@ -411,15 +414,20 @@
       "domain": "site/components"
     },
     {
-      "file": "site/components/Planner/ui/PlannerPhIcon.tsx",
+      "file": "site/features/shared/api/apiResponse.ts",
+      "count": 19,
+      "domain": "site/features"
+    },
+    {
+      "file": "site/components/shared/ContactTeaser.tsx",
       "count": 18,
-      "domain": "planner"
+      "domain": "site/components"
     }
   ],
   "highestFanOut": [
     {
       "file": "site/components/Planner/Planner.tsx",
-      "count": 51,
+      "count": 58,
       "domain": "planner"
     },
     {
@@ -473,6 +481,16 @@
       "domain": "focss"
     },
     {
+      "file": "scripts/operations-review/index.ts",
+      "count": 13,
+      "domain": "scripts/operations-review"
+    },
+    {
+      "file": "scripts/site-ui-content-links-audit/wave1-static-batch.ts",
+      "count": 13,
+      "domain": "scripts/site-ui-content-links-audit"
+    },
+    {
       "file": "site/app/(site)/products/[category]/[product]/page.tsx",
       "count": 13,
       "domain": "marketing"
@@ -488,6 +506,11 @@
       "domain": "marketing"
     },
     {
+      "file": "site/focss/planner/entry.css",
+      "count": 13,
+      "domain": "focss"
+    },
+    {
       "file": "site/focss/site/components/homepage/index.css",
       "count": 13,
       "domain": "focss"
@@ -498,24 +521,9 @@
       "domain": "focss"
     },
     {
-      "file": "site/app/(site)/layout.tsx",
+      "file": "scripts/site-ui-content-links-audit/index.ts",
       "count": 12,
-      "domain": "marketing"
-    },
-    {
-      "file": "site/components/Planner/dock/PlannerDockPanels.tsx",
-      "count": 12,
-      "domain": "planner"
-    },
-    {
-      "file": "site/features/admin/catalog/AdminCatalogManager.tsx",
-      "count": 12,
-      "domain": "admin-ops"
-    },
-    {
-      "file": "site/features/crm/ProjectDetailView.tsx",
-      "count": 11,
-      "domain": "admin-ops"
+      "domain": "scripts/site-ui-content-links-audit"
     }
   ]
 }

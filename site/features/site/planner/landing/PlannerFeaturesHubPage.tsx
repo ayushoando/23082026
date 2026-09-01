@@ -11,7 +11,7 @@ import {
   HomeSectionInner,
 } from "@/components/home/layout";
 import { RouteCtaBand } from "@/components/shared/RouteCtaBand";
-import { MOTION_EASE } from "@/lib/helpers/motion";
+import { MOTION_EASE, staggerContainer, staggerItem } from "@/lib/helpers/motion";
 import { Z } from "@/lib/z-index";
 import { PlannerBreadcrumbs } from "./PlannerBreadcrumbs";
 import { PlannerHeroDemo } from "@/components/home/PlannerHeroDemo";
@@ -47,16 +47,27 @@ export function PlannerFeaturesHubPage() {
             />
 
             <div className="pfp-hero-layout">
-              <div className="pfp-hero-copy">
-                <h1 className="home-hero-title-homepage mt-3 text-inverse">
+              <motion.div
+                className="pfp-hero-copy"
+                variants={staggerContainer}
+                initial="hidden"
+                animate="visible"
+              >
+                <motion.h1
+                  variants={staggerItem}
+                  className="home-hero-title-homepage mt-3 text-inverse"
+                >
                   {PLANNER_HERO.titleLead}{" "}
                   <span className="text-accent-italic-on-dark">{PLANNER_HERO.titleAccent}</span>
-                </h1>
-                <p className="hero-subtitle mt-5 max-w-xl text-inverse-body">
+                </motion.h1>
+                <motion.p
+                  variants={staggerItem}
+                  className="hero-subtitle mt-5 max-w-xl text-inverse-body"
+                >
                   {PLANNER_HERO.description}
-                </p>
+                </motion.p>
 
-                <div className="mt-8 flex flex-wrap gap-3">
+                <motion.div variants={staggerItem} className="mt-8 flex flex-wrap gap-3">
                   <Link
                     href={PLANNER_HERO.primaryCta.href}
                     className="btn-hero-primary btn-primary typ-cta inline-flex gap-2 px-6 py-3"
@@ -70,26 +81,26 @@ export function PlannerFeaturesHubPage() {
                   >
                     {PLANNER_HERO.secondaryCta.label}
                   </Link>
-                </div>
+                </motion.div>
 
-                <div className="planner-landing-hero-proof">
+                <motion.div variants={staggerItem} className="planner-landing-hero-proof">
                   {PLANNER_PROOF.map((item) => (
                     <div key={item.label}>
                       <p className="planner-landing-proof__value">{item.value}</p>
                       <p className="planner-landing-proof__label">{item.label}</p>
                     </div>
                   ))}
-                </div>
+                </motion.div>
 
-                <div className="mt-6 flex flex-wrap gap-4 text-sm">
+                <motion.div variants={staggerItem} className="mt-6 flex flex-wrap gap-4 text-sm">
                   <Link href={PLANNER_HERO.featuresCta.href} className="pfp-inline-link pfp-inline-link--inverse">
                     {PLANNER_HERO.featuresCta.label}
                   </Link>
                   <Link href={PLANNER_HERO.helpCta.href} className="pfp-inline-link pfp-inline-link--inverse">
                     {PLANNER_HERO.helpCta.label}
                   </Link>
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
 
               <motion.div
                 className="pfp-hero-demo-wrap"
@@ -107,29 +118,40 @@ export function PlannerFeaturesHubPage() {
 
       <HomeSection variant="white" spacing="sm" className="border-t-0 py-8">
         <HomeSectionInner>
-          <div className="pfp-feature-strip">
+          <motion.div
+            className="pfp-feature-strip"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-60px" }}
+          >
             {PLANNER_FEATURE_PAGES.map((feature) => {
               const Icon = feature.icon;
               return (
-                <Link
+                <motion.div
                   key={feature.slug}
-                  href={`/planner/features/${feature.slug}/`}
-                  className="pfp-feature-pill group"
+                  variants={staggerItem}
+                  className="pfp-feature-pill-entry"
                 >
-                  <div className="flex items-start gap-3">
-                    <span className="pfp-feature-pill__icon">
-                      <Icon className="h-4 w-4" aria-hidden="true" />
-                    </span>
-                    <h2 className="typ-h3 text-strong">{feature.tagline}</h2>
-                  </div>
-                  <ArrowRight
-                    className="h-4 w-4 shrink-0 text-muted transition-transform group-hover:translate-x-1"
-                    aria-hidden="true"
-                  />
-                </Link>
+                  <Link
+                    href={`/planner/features/${feature.slug}/`}
+                    className="pfp-feature-pill group"
+                  >
+                    <div className="flex items-start gap-3">
+                      <span className="pfp-feature-pill__icon">
+                        <Icon className="h-4 w-4" aria-hidden="true" />
+                      </span>
+                      <h2 className="typ-h3 text-strong">{feature.tagline}</h2>
+                    </div>
+                    <ArrowRight
+                      className="h-4 w-4 shrink-0 text-muted transition-transform group-hover:translate-x-1"
+                      aria-hidden="true"
+                    />
+                  </Link>
+                </motion.div>
               );
             })}
-          </div>
+          </motion.div>
         </HomeSectionInner>
       </HomeSection>
 

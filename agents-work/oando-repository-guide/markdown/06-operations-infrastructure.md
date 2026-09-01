@@ -34,7 +34,7 @@ The exact order can depend on compatibility and the approved runbook, but every 
 | Vercel | preview/production deployment | Protected Command |
 | Worker | local dev, deploy, tail/logs | Protected Command; local-service or external action as applicable |
 | R2 | backups, catalog snapshots, repository backup, bucket/count operations | Protected Command |
-| Ops registry | long-tail operational commands through `pnpm run ops:list` | Read-only listing only until the selected operation is classified; execution is protected when it mutates data/infrastructure |
+| Ops registry | long-tail operational commands; dispatcher `scripts/run-ops.mjs`, ~137 commands via `pnpm run ops:list` | Read-only listing only until the selected operation is classified; execution is protected when it mutates data/infrastructure |
 | Observability | Prometheus/Grafana start/stop/logs | Protected local-service command |
 
 Commands are user-authorized and may be high impact. Do not treat this guide as approval to run them. Classify every command as `read-only inspection`, `Normal-Agent Eligible Check`, `Protected Command`, or `no-run pending authorization` before proposal or execution, and record the repository-root working directory.
@@ -68,7 +68,7 @@ and proof limitation. Do not perform external or write actions or claim a cause 
 - **Scope:** Target environment, service/data owner, Products/Admin ownership, operational risk, rollback/recovery, observability, backup, incident evidence, and exact command classification.
 - **Evidence Steps:** Read authority; inspect listed configuration/workflows/scripts; compare current source with durable claims; classify infrastructure/data/release risk; record a read-only plan, proof limitation, and next decision.
 - **Allowed Actions:** Read-only planning and owned guide edits; external actions only under a separately approved Protected Command route.
-- **Forbidden Actions:** Deploy, backup, import/export, Docker/local service, remote mutation, Power/MCP activation, hook/policy change, or a claim about incident cause without authorized output.
+- **Forbidden Actions:** Deploy, backup, import/export, Docker/local service, remote mutation, external MCP activation, hook/policy change, or a claim about incident cause without authorized output.
 - **Risk:** Infrastructure, credentials, data, release, recovery, and external-system risk.
 - **Expected Evidence:** Target, owner, exact command, repository-root cwd, authorization state, Hook Decision, exit status if run, rollback/recovery path, first failed subcommand if applicable, and unverified external behavior.
 - **Next Decision:** Owner authorizes one exact action, requests the smallest diagnostic, or keeps the plan pending.
@@ -97,10 +97,6 @@ If current authorized output is absent, label the cause `unobserved` or `unverif
 
 ## Protected operations contract
 
-Deployments, Worker actions, R2 backups/catalog snapshots, database actions, observability local services, incident commands, and remote import/export are Protected Commands. They require exact current-session Explicit User Authorization and Hook Permission. A route, workflow, script entry, or failure report proves configuration or a reported symptom only; it does not prove execution, target state, recovery, or successful deployment. Use the Plain-Language Response Contract and report pending checks explicitly.
-
-## Separate Approval Work
-
-Deployment, Worker release, R2 backup/restore, database apply or seed, hosted inspection, local observability services, package changes, external MCP/Power actions, hook/policy changes, and runtime enforcement remain separate approval tracks. This guidance lane does not run them, change them, or convert a reported failure into a root cause without current evidence.
+Deployments, Worker actions, R2 backups/catalog snapshots, database actions, observability local services, incident commands, and remote import/export are Protected Commands requiring exact current-session Explicit User Authorization and Hook Permission per `AGENTS.md`. A route, workflow, script entry, or failure report proves configuration or a reported symptom only; it does not prove execution, target state, recovery, or successful deployment. Deployment, Worker release, R2 backup/restore, database apply or seed, hosted inspection, local observability services, package changes, external MCP actions, hook/policy changes, and runtime enforcement remain separate approval tracks; this guidance lane does not run them or convert a reported failure into a root cause without current evidence. Use the Plain-Language Response Contract and report pending checks explicitly.
 
 Next: [Docs, governance, and planning](./07-docs-governance-planning.md).

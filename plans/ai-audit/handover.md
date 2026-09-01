@@ -31,3 +31,9 @@
 ## Ownership confirmation
 
 - Only AI-stack, planner-advisor, observability, schema, and wrangler-binding paths touched; no unrelated files modified.
+
+## Second wave (2026-09-01) - remedy plan fully closed
+
+- AI-FIX-04 enrichment (`buildEmbeddingText` in `catalogRag.ts`), AI-FIX-09 batching (`embedTexts`, chunks of 20), AI-FIX-08 guards (`site/lib/ai/sanitizeUserInput.ts` applied at every prompt chokepoint), AI-FIX-10 metrics (`oando_ai_retrieval_source_contributions_total`), AI-FIX-06 memory documented as Option B, AI-FIX-07 confirmed removed, AI-FIX-11 completed: `providerFetch.ts` + `providerChain.ts` deleted; Planner multimodal fetch relocated to `site/server/Planner/providerFetch.server.ts`.
+- Tech-docs AI extractor repointed to `site/lib/ai/mastra/providers.ts` (`resolveAdvisorModelChain`).
+- Evidence: `pnpm run typecheck` clean; `pnpm exec vitest run --config tests/vitest.config.ts tests/unit/lib/ai` 15 files / 124 tests pass; new unit tests for sanitize + embedding builder/batching.

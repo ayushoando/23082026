@@ -11,6 +11,7 @@ import {
   buildCareerJobsJsonLd,
   buildCanonicalUrl,
   buildLocalBusinessJsonLd,
+  buildShowroomsLocalBusinessJsonLd,
   buildFaqJsonLd,
   canonicalPath,
   sanitizeCanonicalPath,
@@ -20,7 +21,7 @@ import {
   LOCALE_HREFLANG,
 } from '@/features/site/data/seo';
 import { SITE_BRAND } from '@/features/site/data/brand';
-import { SITE_CONTACT } from '@/features/site/data/contact';
+import { SITE_CONTACT, googleMapsOpenHref } from '@/features/site/data/contact';
 
 type OpenGraphFields = {
   type?: string;
@@ -777,6 +778,28 @@ describe('buildLocalBusinessJsonLd', () => {
     expect(ld.priceRange).toBe(SITE_CONTACT.priceRange);
     expect(ld.areaServed).toEqual(SITE_CONTACT.areaServed);
     expect(ld.sameAs).toEqual(SITE_CONTACT.socialLinks.map((link) => link.href));
+  });
+});
+
+describe('buildShowroomsLocalBusinessJsonLd', () => {
+  it('differentiates the route node with verified facts only, sharing the global @id', () => {
+    const ld = buildShowroomsLocalBusinessJsonLd(TEST_SITE_URL);
+    const globalNode = buildGlobalJsonLd(TEST_SITE_URL)['@graph'].find(
+      (node) => node['@type'] === 'FurnitureStore',
+    );
+    expect(ld['@context']).toBe('https://schema.org');
+    expect(ld['@type']).toBe('FurnitureStore');
+    // Same @id as the sitewide FurnitureStore so consumers merge, not duplicate.
+    expect(ld['@id']).toBe(globalNode?.['@id']);
+    expect(ld.name).toBe(SITE_BRAND.companyName);
+    expect(ld.url).toBe(TEST_SITE_URL);
+    expect(ld.telephone).toBe(SITE_CONTACT.salesPhone);
+    expect(ld.address).toEqual({ '@type': 'PostalAddress', ...SITE_CONTACT.address });
+    expect(ld.openingHours).toBe(SITE_CONTACT.openingHours);
+    expect(ld.hasMap).toBe(googleMapsOpenHref());
+    // No guessed or duplicated extras: geo/priceRange stay out of the route node.
+    expect(ld).not.toHaveProperty('geo');
+    expect(ld).not.toHaveProperty('priceRange');
   });
 });
 

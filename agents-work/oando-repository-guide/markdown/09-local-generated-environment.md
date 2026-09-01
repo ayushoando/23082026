@@ -1,6 +1,6 @@
 # 09 · Local, generated, and environment areas
 
-[← Kiro workspace](08-kiro-workspace.md) · [Next: quality and validation →](./10-quality-validation.md)
+[← Agent workspace](08-agent-workspace.md) · [Next: quality and validation →](./10-quality-validation.md)
 
 These paths matter to development but are not normal product feature source.
 
@@ -30,15 +30,14 @@ These paths matter to development but are not normal product feature source.
 | `node_modules/` | Local/package-manager output | Installed dependencies. Do not edit. |
 | `.git/` | Local VCS | Git metadata. |
 | `.vscode/` | Editor configuration | VS Code workspace behavior. |
-| `ltm/` | Local Kiro tooling state | Agent continuity/memory, not product code. |
-| `agent-reports/` | Reference pointer | Agent-report guidance area. |
+| `skills-lock.json` | Inert leftover | Stale root lock file; not active skill state. |
 | `agents-work/` | Working material | Research/work products; includes this guide. |
 
 ## Legacy and absent areas
 
 - `site/data/storage/` is legacy. Do not add runtime writes there.
-- The live repository has no root `supabase/` directory; use `site/platform/supabase/`.
-- The live repository has no root `mcp/` directory; use `.kiro/mcp/`.
+- The live repository has no root `supabase/` directory; Supabase code and migrations live only under `site/platform/supabase/` (`migrations/` and `migrations.admin/`).
+- The live repository has no root `mcp/` directory; agent tooling configuration lives user-globally under `~/.config/opencode/`, not in the checkout.
 - Documentation may refer to archival/local directories that are absent; live filesystem takes precedence.
 
 ## Safe request
@@ -81,7 +80,7 @@ Next: [Quality and validation](./10-quality-validation.md).
 ### D19 — Results, generated documents, agent work, and blocker placement
 
 - **Goal:** Direct each artifact to its producer-owned destination and preserve evidence integrity.
-- **Start Paths:** `./results/`; `./results/tests/`; `./results/site/`; `./results/site-ui/`; `./results/ops/`; `./generated-documents/`; `./agents-work/`; `./plans/`; `./plans/README.md`; `./Failures.md`; `./agent-reports/`; `./agents-work/oando-repository-guide/markdown/09-local-generated-environment.md`.
+- **Start Paths:** `./results/`; `./results/tests/`; `./results/site/`; `./results/site-ui/`; `./results/ops/`; `./generated-documents/`; `./agents-work/`; `./plans/`; `./plans/README.md`; `./Failures.md`; `./agents-work/oando-repository-guide/markdown/09-local-generated-environment.md`.
 - **Scope:** Authored versus generated output, Machine Evidence, active plans, legacy root artifacts, and canonical blockers.
 - **Evidence Steps:** Read placement authorities; inspect proposed path; compare producer/destination; classify evidence risk; record Route/Completion artifact fields and next decision.
 - **Allowed Actions:** Read-only classification and approved guide edits.
@@ -103,19 +102,7 @@ Before an Output-Producing Task writes, its Route Record names the Artifact Clas
 | True Blocker | Root `./Failures.md`; supporting authored analysis may use an approved workstream | Duplicate blocker ledgers in `./results/`, `./agents-work/`, or `./site/` |
 | Core Product Write | Explicitly approved product source, including `./site/` only after its Site Write Gate | `./site/` for reports, prompts, skills, results, plans, handoffs, generated files, or other Non-Core Artifacts |
 
-The exact workspace boundary is preserved: `./tech-docs-generator/` remains a root-level sibling of `./site/`; `./generated-documents/` remains separate generated output; and `./results/site/` is a Machine Evidence Purpose Subfolder, never a source tree or package relocation target. A move or relationship change is a separate Workspace-Boundary Task.
-
-## Exact output and workspace boundaries
-
-- Agent-authored reports and work products use `./agents-work/<workstream>/<report-type>/` or an existing approved guide workstream; the `./agents-work/` root is not a report destination.
-- Machine Evidence from commands, tests, gates, builds, browser runs, coverage, deployments, database actions, backups, or local services uses `./results/<purpose>/`, including `./results/tests/`, `./results/site/`, `./results/site-ui/`, or `./results/ops/`; the `./results/` root is not a publication destination.
-- Tech-docs generator output uses `./generated-documents/`; it is separate from source and is regenerated rather than hand-edited.
-- Active plan material uses `./plans/<name>/` indexed by `./plans/README.md`.
-- A True Blocker uses root `./Failures.md` as the sole canonical ledger, with supporting authored analysis in an approved workstream; without exact owner authorization the locked ledger remains unchanged.
-- `./tech-docs-generator/` remains a root-level sibling of `./site/`; `./results/site/` is Machine Evidence and is distinct from `./site/`; neither is a relocation target.
-- `./site/` is reserved for explicitly approved Core Product Writes. Reports, results, prompts, skills, plans, handoffs, generated files, and other Non-Core Artifacts are redirected elsewhere by the Site Write Gate.
-
-For every Output-Producing Task, the Route Record declares Artifact Class, exact selected Workstream or Purpose Subfolder, filename pattern, owning source/script, authored-or-generated state, rejected placements, and Site Write Gate state when applicable. The Completion Record repeats those fields with observed placement evidence. An existing root artifact without observed purpose assignment is `legacy/owner-review pending`; a placement decision is not a relocation claim.
+The exact workspace boundary is preserved: `./tech-docs-generator/` remains a root-level sibling of `./site/`; `./generated-documents/` remains separate generated output; and `./results/site/` is a Machine Evidence Purpose Subfolder (alongside `tests/`, `site-ui/`, and `ops/`), never a source tree or package relocation target. `./site/` is reserved for explicitly approved Core Product Writes; reports, prompts, skills, plans, handoffs, and generated files are redirected by the Site Write Gate. An existing root artifact without observed purpose assignment is `legacy/owner-review pending`; a placement decision is not a relocation claim. A move or relationship change is a separate Workspace-Boundary Task.
 
 ## Private and generated-state rule
 

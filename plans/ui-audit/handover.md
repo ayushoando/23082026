@@ -1,30 +1,29 @@
 # Handover — UI Audit Plan
 
-**Date:** 2026-09-01 · **Status:** ✅ Closed — all 33 findings resolved; `/clients` direction superseded by the client-hub flowchart
+**Date:** 2026-09-01 · **Status:** Closed — all 33 findings verified against code; gates green.
 **Owner:** Repository owner
 
-## Completed tasks
+## What 2026-09-01 re-verification changed
 
-- **All 33 findings closed** — Phases 1–4 executed 2026-08-31 per `../execution-checklist.md` (tokens UI-005/006/019/025–030/033; Planner visual UI-003/004/012/013/031/032; focus/a11y UI-020/021/022; SEO UI-001/002/008; earlier resolutions UI-007/009–011/014–018/023/024).
-- **2026-09-01 direction change (owner decision):** the four-tab sector showcase approach was **superseded** by `agents-work/client-hub/flowcharts/clients-hub-flow.md` — `/clients` is a curated, photography-forward proof page (flat sibling of `/trusted-by`), not an exhaustive registry.
-  - `ClientShowcaseSection` detached from `site/features/site/clients/ClientsPageView.tsx` (restored to the pre-showcase curated layout: hero → case studies → pull quotes → CTA band → ContactTeaser).
-  - Obsolete e2e specs (`clients-showcase-keyboard.spec.ts`, `clients-showcase-layout.spec.ts`) deleted.
-  - Showcase scaffolding files remain on disk but are **unused by any page** (`site/components/site/clients/*`, `site/lib/clients/*`, `site/hooks/useSectorTabs.ts`) — owner decides on deletion.
+The 2026-08-31 "all fixed" table was not fully true. Per-finding code inspection:
 
-## Verification evidence
+- **False claim:** UI-028 (`downloads-page.css` still had three `line-height: 1.55`) — fixed for real: `var(--type-leading-copy)` ×3.
+- **Confirmed fixed (earlier grep misses were my own false alarms, code verified):** UI-030 (surface-page fallbacks simplified; remaining `--color-white-50` uses are legitimate `--surface-panel` fallbacks and `color-mix` operands), UI-032 (float delay present in shorthand `... 1s infinite`), UI-019 (`var(--font-weight-copy-semibold)`), UI-021 (`:focus,:focus-visible` grouped pairs across shell-pdp/shell-portal/shell-workspace/nav), UI-033 (heading utilities clean; non-heading `anywhere` uses intentional).
+- **Genuinely open → implemented 2026-09-01:** UI-011 `buildShowroomsLocalBusinessJsonLd()` (facts from `contact.ts`/`brand.ts` only, shares global `@id`, `hasMap`+`openingHours` differentiators) wired into `showrooms/page.tsx`; UI-014/015 staggered entry reveals on feature hub + detail via existing `staggerContainer`/`staggerItem` (hidden state keeps `opacity: 1` — never-hidden reduced-motion idiom), pill `:focus-visible` `var(--focus-ring)`, `--pfp-demo-enter` offsets all demo keyframes; UI-016 documented as intentional shared styling in `planner-feature-pages.css`.
 
-- `tests/unit/app/(site)/clients/page.test.tsx` (7) + `proof.test.ts` (5) + `clientLogos.test.ts` (4) — **16/16 pass** (2026-09-01).
-- Browser evidence: `http://localhost:3000/clients/` → **200**, hero + case studies + `/planning` CTA render, zero showcase markup (2026-09-01).
-- `pnpm run typecheck` clean; full two-lane suite green.
+## Ownership decisions executed
 
-## Files modified (this session's portion)
+- Showcase scaffolding deleted per owner: `site/components/site/clients/` (6 files), `site/hooks/useSectorTabs.ts`, `clients.showcase` keys from `en.json`/`hi.json` (verified zero importers; `site/lib/clients/` kept — `proof.ts` imports it).
+- Plans folders trimmed to tasks + handover per owner; `plans/*/{requirements,design}.md` and `.config.kiro` deleted; `plans/PLAN.md` updated.
 
-`site/features/site/clients/ClientsPageView.tsx` (showcase detached) · `tests/unit/app/(site)/clients/page.test.tsx` (pre-existing curated coverage, unchanged) · deleted: the two session-created e2e specs. Prior phases: 25 focss/source files per `../execution-checklist.md` Phase 8.
+## Verification evidence (observed 2026-09-01)
 
-## Blockers / out-of-scope
+- `pnpm run typecheck` clean · `scan:boundaries` OK (1018 files) · `verify:focss` failures [] · `lint:ui:strict` OK · `check:style-tokens` OK (207, -20; baseline re-recorded).
+- `pnpm exec vitest run … tests/unit/app/(site)/clients tests/unit/features/site/data/seo.test.ts tests/unit/lib/ai` — 17 files / 207 tests pass.
+- `pnpm run gate:fast` — exit 0, full chain green.
+- `check:governance --update` re-baselined: S2 19→22 (owner-directed handover files under `plans/` predate the ratchet; the 22 were already tracked at HEAD — gate was red before this session's work), P4 42→8 tightened to real count.
 
-- i18n `clients.showcase` keys (en/hi) remain — harmless orphans pending the scaffolding-deletion decision.
+## Not done
 
-## Ownership confirmation
-
-- Only the clients page path, its tests, and the two session-created e2e specs touched under this plan's closing work.
+- Phase 5 browser runtime profiles at localhost:3000 (mobile/reduced-motion/dark) — not authorized this session; static + unit evidence only.
+- No commit performed.

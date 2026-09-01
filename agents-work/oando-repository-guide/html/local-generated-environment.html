@@ -1,9 +1,115 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Oando local, generated, environment, editor, and VCS area map."><title>Local and generated · Oando repository guide</title><link rel="stylesheet" href="guide.css"></head>
-<body><div class="site-header"><div class="shell"><p class="eyebrow">Oando complete repository guide</p><h1>Local, generated, and environment areas</h1><p class="subtitle">Paths that are important during development but should not be mistaken for maintained product source.</p></div></div><div class="shell"><nav class="tabs-wrap" aria-label="Guide sections"><div class="tabs"><a href="index.html">Start</a><a href="repository-map.html">Full map</a><a href="application-architecture.html">Application</a><a href="product-domains.html">Domains</a><a href="data-api-persistence.html">Data &amp; APIs</a><a href="tooling-ci-tech-docs.html">Tooling &amp; CI</a><a href="operations-infrastructure.html">Operations</a><a href="docs-governance-planning.html">Docs &amp; governance</a><a href="kiro-workspace.html">Kiro workspace</a><a href="local-generated-environment.html" aria-current="page">Local &amp; generated</a><a href="quality-and-validation.html">Quality</a><a href="working-with-kiro.html">Kiro workflow</a></div></nav>
-<main><p class="breadcrumb"><a href="index.html">Start</a> / Local &amp; generated</p><section><h2>Environment and secrets</h2><div class="table-wrap"><table><thead><tr><th>Path</th><th>Status</th><th>Rule</th></tr></thead><tbody><tr><td><code>.env.example</code></td><td>Editable template</td><td>Documents non-secret environment shape.</td></tr><tr><td><code>.env.local</code>, <code>.env copy.local</code>, <code>site/.env.local</code></td><td>Local/private</td><td>Credentials/runtime values: never commit/expose.</td></tr></tbody></table></div></section>
-<section><h2>Generated output and evidence</h2><div class="table-wrap"><table><thead><tr><th>Path</th><th>Rule</th></tr></thead><tbody><tr><td><code>generated-documents/data/</code></td><td>Generated tech-docs inventory data; regenerate.</td></tr><tr><td><code>generated-documents/docs/</code></td><td>Generated rendered documentation; regenerate.</td></tr><tr><td><code>generated-documents/site/</code></td><td>Generated static Vite SPA; rebuild rather than patch.</td></tr><tr><td><code>results/</code></td><td>Generated command/test evidence; no handwritten plans/audits.</td></tr><tr><td><code>site/.next/</code>, build-info, <code>next-env.d.ts</code></td><td>Local/generated framework/tool outputs; never source-edit.</td></tr></tbody></table></div></section>
-<section><h2>Tool/editor/VCS working state</h2><div class="grid"><article class="card"><h3><code>node_modules/</code></h3><p>Package-manager output. Never hand-edit.</p></article><article class="card"><h3><code>.git/</code></h3><p>Local VCS metadata, not application source.</p></article><article class="card"><h3><code>.vscode/</code></h3><p>Editor workspace behavior.</p></article><article class="card"><h3><code>ltm/</code></h3><p>Local Kiro memory/tooling state.</p></article><article class="card"><h3><code>agent-reports/</code></h3><p>Agent-report convention/reference area.</p></article><article class="card"><h3><code>agents-work/</code></h3><p>Working material; this guide is here, not in product runtime.</p></article></div></section>
-<section><h2>Legacy/absent paths</h2><div class="callout warn"><p><code>site/data/storage/</code> is legacy—do not add writes. No root <code>supabase/</code> exists; use <code>site/platform/supabase/</code>. No root <code>mcp/</code> exists; use <code>.kiro/mcp/</code>.</p></div><pre><code>Classify [path] as source of truth, generated, local/private, legacy, or archival.
-Explain whether it is safe to edit, how it is regenerated, and what source should
-be changed instead. Do not modify it yet.</code></pre></section><div class="next-links"><a href="kiro-workspace.html">← Kiro workspace</a><a href="quality-and-validation.html">Next: quality →</a></div></main><footer>Generated/local state can be useful evidence, but it is rarely the correct place to implement a product fix.</footer></div></body></html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>09 · Local, generated, and environment areas - Oando repository guide</title>
+<link rel="stylesheet" href="./guide.css">
+</head>
+<body>
+<header class="g-header"><a class="g-brand" href="./index.html">Oando repository guide</a>
+<nav class="g-nav"><a href="./index.html">Start</a><a href="./repository-map.html">01 · Full repository map</a><a href="./application-architecture.html">02 · Application architecture</a><a href="./product-domains.html">03 · Product domains</a><a href="./data-api-persistence.html">04 · Data, API, and persistence</a><a href="./tooling-ci-tech-docs.html">05 · Tooling, CI, and tech docs</a><a href="./operations-infrastructure.html">06 · Operations and infrastructure</a><a href="./docs-governance-planning.html">07 · Docs, governance, and planning</a><a href="./agent-workspace.html">8 · Agent workspace</a><a href="./local-generated-environment.html" class="active" aria-current="page">09 · Local, generated, and environment areas</a><a href="./quality-validation.html">10 · Quality and validation</a><a href="./agent-workflows.html">11 · Agent workflows</a></nav></header>
+<main><h1 id="09-local-generated-and-environment-areas">09 · Local, generated, and environment areas</h1>
+<p><a href="./agent-workspace.html">← Agent workspace</a> · <a href="./quality-validation.html">Next: quality and validation →</a></p>
+<p>These paths matter to development but are not normal product feature source.</p>
+<h2 id="environment-and-secrets">Environment and secrets</h2>
+<table>
+<thead><tr><th>Path</th><th>Status</th><th>Rule</th></tr></thead>
+<tbody>
+<tr><td><code>.env.example</code></td><td>Editable template</td><td>Documents non-secret environment shape.</td></tr>
+<tr><td><code>.env.local</code>, <code>.env copy.local</code></td><td>Local/private</td><td>Credentials/runtime configuration; never commit or expose.</td></tr>
+<tr><td><code>site/.env.local</code></td><td>Local/private</td><td>Next-specific local configuration when required.</td></tr>
+</tbody>
+</table>
+<h2 id="generatedevidence-output">Generated/evidence output</h2>
+<table>
+<thead><tr><th>Path</th><th>Status</th><th>Rule</th></tr></thead>
+<tbody>
+<tr><td><code>generated-documents/data/</code></td><td>Generated</td><td>Structured tech-docs inventory data. Regenerate.</td></tr>
+<tr><td><code>generated-documents/docs/</code></td><td>Generated</td><td>Rendered docs output. Regenerate.</td></tr>
+<tr><td><code>generated-documents/site/</code></td><td>Generated</td><td>Built tech-docs static site. Regenerate.</td></tr>
+<tr><td><code>results/</code></td><td>Generated evidence</td><td>Command/test result output. Never hand-write plans/audits here.</td></tr>
+<tr><td><code>site/.next/</code></td><td>Local/generated</td><td>Next build/cache output. Never edit as source.</td></tr>
+<tr><td><code>site/next-env.d.ts</code>, <code>*.tsbuildinfo</code></td><td>Generated/local</td><td>Tooling artifacts.</td></tr>
+</tbody>
+</table>
+<h2 id="local-tooleditorvcs-state">Local tool/editor/VCS state</h2>
+<table>
+<thead><tr><th>Path</th><th>Status</th><th>Role</th></tr></thead>
+<tbody>
+<tr><td><code>node_modules/</code></td><td>Local/package-manager output</td><td>Installed dependencies. Do not edit.</td></tr>
+<tr><td><code>.git/</code></td><td>Local VCS</td><td>Git metadata.</td></tr>
+<tr><td><code>.vscode/</code></td><td>Editor configuration</td><td>VS Code workspace behavior.</td></tr>
+<tr><td><code>skills-lock.json</code></td><td>Inert leftover</td><td>Stale root lock file; not active skill state.</td></tr>
+<tr><td><code>agents-work/</code></td><td>Working material</td><td>Research/work products; includes this guide.</td></tr>
+</tbody>
+</table>
+<h2 id="legacy-and-absent-areas">Legacy and absent areas</h2>
+<ul>
+<li><code>site/data/storage/</code> is legacy. Do not add runtime writes there.</li>
+<li>The live repository has no root <code>supabase/</code> directory; Supabase code and migrations live only under <code>site/platform/supabase/</code> (<code>migrations/</code> and <code>migrations.admin/</code>).</li>
+<li>The live repository has no root <code>mcp/</code> directory; agent tooling configuration lives user-globally under <code>~/.config/opencode/</code>, not in the checkout.</li>
+<li>Documentation may refer to archival/local directories that are absent; live filesystem takes precedence.</li>
+</ul>
+<h2 id="safe-request">Safe request</h2>
+<pre><code class="language-text">Classify [path] as source of truth, generated, local/private, legacy, or archival.
+Explain whether it is safe to edit, how it is regenerated, and what current source
+should be changed instead. Do not modify it yet.
+</code></pre>
+<p>Next: <a href="./quality-validation.html">Quality and validation</a>.</p>
+<h2 id="coverage-audited-local-and-output-cards">Coverage-audited local and output cards</h2>
+<h3 id="d02-initialization-local-development-and-debugging">D02 — Initialization, local development, and debugging</h3>
+<ul>
+<li><strong>Goal:</strong> Map local setup and debugging facts without starting a service or changing private configuration by assumption.</li>
+<li><strong>Start Paths:</strong> <code>./START.md</code>; <code>./AGENTS.md</code>; <code>./package.json</code>; <code>./site/</code>; <code>./config/build/</code>; <code>./Failures.md</code>; <code>./agents-work/oando-repository-guide/markdown/09-local-generated-environment.md</code>.</li>
+<li><strong>Scope:</strong> Root <code>pnpm</code> boundary, environment status, local/generated areas, and reported symptoms.</li>
+<li><strong>Evidence Steps:</strong> Read authority; inspect exact paths; compare command/config claims; classify environment/secret/service risk; record pending owner actions.</li>
+<li><strong>Allowed Actions:</strong> Read-only inventory and owned guide edits.</li>
+<li><strong>Forbidden Actions:</strong> Install, dev server, build, test, typecheck, sync, or changing environment files without exact authorization.</li>
+<li><strong>Risk:</strong> Secret, environment, service, and local-state risk.</li>
+<li><strong>Expected Evidence:</strong> Status-labelled map with private values excluded and no unobserved command result.</li>
+<li><strong>Next Decision:</strong> Request one exact owner-approved diagnostic if read-only evidence is insufficient.</li>
+</ul>
+<h3 id="d04-environment">D04 — Environment</h3>
+<ul>
+<li><strong>Goal:</strong> Classify configured environment shape separately from private local values.</li>
+<li><strong>Start Paths:</strong> <code>./.env.example</code>; <code>./.env.local</code>; <code>./site/.env.local</code>; <code>./package.json</code>; <code>./pnpm-workspace.yaml</code>; <code>./START.md</code>; <code>./agents-work/oando-repository-guide/markdown/09-local-generated-environment.md</code>.</li>
+<li><strong>Scope:</strong> Non-secret template, private runtime config, workspace boundaries, and local-only limitations.</li>
+<li><strong>Evidence Steps:</strong> Read authority; inspect only permitted metadata; compare environment references; classify secret risk; record status and next decision.</li>
+<li><strong>Allowed Actions:</strong> Read-only classification; keep local values private.</li>
+<li><strong>Forbidden Actions:</strong> Printing, copying, syncing, committing, or modifying secrets.</li>
+<li><strong>Risk:</strong> Credentials, environment, and deployment risk.</li>
+<li><strong>Expected Evidence:</strong> Redacted status map and explicit unverified values/behaviors.</li>
+<li><strong>Next Decision:</strong> Separate environment/service work requires owner approval.</li>
+</ul>
+<h3 id="d19-results-generated-documents-agent-work-and-blocker-place">D19 — Results, generated documents, agent work, and blocker placement</h3>
+<ul>
+<li><strong>Goal:</strong> Direct each artifact to its producer-owned destination and preserve evidence integrity.</li>
+<li><strong>Start Paths:</strong> <code>./results/</code>; <code>./results/tests/</code>; <code>./results/site/</code>; <code>./results/site-ui/</code>; <code>./results/ops/</code>; <code>./generated-documents/</code>; <code>./agents-work/</code>; <code>./plans/</code>; <code>./plans/README.md</code>; <code>./Failures.md</code>; <code>./agents-work/oando-repository-guide/markdown/09-local-generated-environment.md</code>.</li>
+<li><strong>Scope:</strong> Authored versus generated output, Machine Evidence, active plans, legacy root artifacts, and canonical blockers.</li>
+<li><strong>Evidence Steps:</strong> Read placement authorities; inspect proposed path; compare producer/destination; classify evidence risk; record Route/Completion artifact fields and next decision.</li>
+<li><strong>Allowed Actions:</strong> Read-only classification and approved guide edits.</li>
+<li><strong>Forbidden Actions:</strong> Handwritten reports in <code>./results/</code>, new reports in the <code>./agents-work/</code> root, hand-editing generated output, or duplicate blocker ledgers.</li>
+<li><strong>Risk:</strong> Reproducibility, evidence integrity, and discoverability.</li>
+<li><strong>Expected Evidence:</strong> Artifact Class, exact subfolder, filename pattern, owner/source, authored/generated state, rejected placements, and observed placement.</li>
+<li><strong>Next Decision:</strong> Select a Workstream/Purpose Subfolder before any Output-Producing Task write.</li>
+</ul>
+<h2 id="artifact-class-and-workspace-boundary-record">Artifact class and workspace boundary record</h2>
+<p>Before an Output-Producing Task writes, its Route Record names the Artifact Class, exact Workstream Subfolder or Purpose Subfolder, filename pattern, owning source or script, authored-or-generated state, rejected placements, and Site Write Gate state. The Completion Record repeats those fields with observed placement evidence; a placement decision is not evidence that anything was moved.</p>
+<table>
+<thead><tr><th>Artifact Class</th><th>Approved destination and producer</th><th>Rejected destination or boundary</th></tr></thead>
+<tbody>
+<tr><td>Agent Work Report</td><td><code>./agents-work/&lt;workstream&gt;/&lt;report-type&gt;/</code> or an approved guide workstream; authored by an agent</td><td><code>./agents-work/</code> root, <code>./results/</code>, or <code>./site/</code></td></tr>
+<tr><td>Machine Evidence</td><td><code>./results/&lt;purpose&gt;/</code>; produced by the owning command or script</td><td><code>./results/</code> root, <code>./agents-work/</code>, or <code>./site/</code>; do not hand-edit generated evidence</td></tr>
+<tr><td>Generated Tech-Docs Output</td><td><code>./generated-documents/</code>; produced by <code>./tech-docs-generator/</code></td><td><code>./results/</code>, <code>./agents-work/</code>, or <code>./site/</code></td></tr>
+<tr><td>Active Plan</td><td><code>./plans/&lt;name&gt;/</code> indexed by <code>./plans/README.md</code>; authored plan material</td><td><code>./results/</code>, <code>./site/</code>, or an unowned root location</td></tr>
+<tr><td>True Blocker</td><td>Root <code>./Failures.md</code>; supporting authored analysis may use an approved workstream</td><td>Duplicate blocker ledgers in <code>./results/</code>, <code>./agents-work/</code>, or <code>./site/</code></td></tr>
+<tr><td>Core Product Write</td><td>Explicitly approved product source, including <code>./site/</code> only after its Site Write Gate</td><td><code>./site/</code> for reports, prompts, skills, results, plans, handoffs, generated files, or other Non-Core Artifacts</td></tr>
+</tbody>
+</table>
+<p>The exact workspace boundary is preserved: <code>./tech-docs-generator/</code> remains a root-level sibling of <code>./site/</code>; <code>./generated-documents/</code> remains separate generated output; and <code>./results/site/</code> is a Machine Evidence Purpose Subfolder (alongside <code>tests/</code>, <code>site-ui/</code>, and <code>ops/</code>), never a source tree or package relocation target. <code>./site/</code> is reserved for explicitly approved Core Product Writes; reports, prompts, skills, plans, handoffs, and generated files are redirected by the Site Write Gate. An existing root artifact without observed purpose assignment is <code>legacy/owner-review pending</code>; a placement decision is not a relocation claim. A move or relationship change is a separate Workspace-Boundary Task.</p>
+<h2 id="private-and-generated-state-rule">Private and generated-state rule</h2>
+<p>Never expose <code>.env.local</code> or <code>./site/.env.local</code>; never treat <code>./generated-documents/</code>, <code>./site/.next/</code>, generated TypeScript artifacts, <code>node_modules/</code>, or local VCS/editor state as editable product source. Use live source and the owning generator/script. The Plain-Language Response Contract must state what was inspected, what remains unverified, exact allowed/pending checks, and the next owner action.</p></main>
+<footer class="g-footer">Generated from agents-work/oando-repository-guide/09-local-generated-environment.md by render-repository-guide.mjs - edit the Markdown source, not this page.</footer>
+</body>
+</html>

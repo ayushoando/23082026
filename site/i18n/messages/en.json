@@ -934,11 +934,7 @@
     "heroSubtitleTemplate": "{clients} organisations across government, finance, energy, manufacturing, and more.",
     "featuredLabel": "Selected organisations",
     "featuredTitle": "Client roster",
-    "allLabel": "Sector breakdown",
-    "showcase": {
-      "sectionHeading": "Our Clients",
-      "emptySector": "No published clients in {sector} yet."
-    }
+    "allLabel": "Sector breakdown"
   },
   "service": {
     "heroTitle": "Service and Support",

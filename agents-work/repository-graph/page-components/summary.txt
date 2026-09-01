@@ -1,11 +1,11 @@
-generatedAt=2026-08-29T03:37:21.378Z
+generatedAt=sha256:c677329989097cc1
 routes=61
-nodes=590
-edges=1348
+nodes=619
+edges=1429
 routeNodes=61
 pageNodes=61
-componentNodes=280
-moduleNodes=187
+componentNodes=286
+moduleNodes=210
 styleNodes=1
 json=page-component-graph.json
 html=page-component-graph.html

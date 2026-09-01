@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-08-29T03:37:21.378Z",
+  "generatedAt": "sha256:c677329989097cc1",
   "source": "site/app/**/page.tsx + local repository imports",
   "routeCount": 61,
-  "nodeCount": 590,
-  "edgeCount": 1348,
+  "nodeCount": 619,
+  "edgeCount": 1429,
   "countsByKind": {
     "route": 61,
     "page": 61,
-    "component": 280,
-    "module": 187,
+    "component": 286,
+    "module": 210,
     "style": 1
   },
   "nodes": [
@@ -1159,6 +1159,12 @@
       "sourcePath": "site/features/site/data/clientLogos.ts"
     },
     {
+      "id": "file:site/features/site/data/proof.ts",
+      "kind": "component",
+      "label": "proof.ts",
+      "sourcePath": "site/features/site/data/proof.ts"
+    },
+    {
       "id": "file:site/features/site/data/routeCopy.ts",
       "kind": "component",
       "label": "routeCopy.ts",
@@ -1175,6 +1181,18 @@
       "kind": "module",
       "label": "assetPaths.ts",
       "sourcePath": "site/lib/assetPaths.ts"
+    },
+    {
+      "id": "file:site/lib/clients/clientRegistry.ts",
+      "kind": "module",
+      "label": "clientRegistry.ts",
+      "sourcePath": "site/lib/clients/clientRegistry.ts"
+    },
+    {
+      "id": "file:site/lib/clients/clientTypes.ts",
+      "kind": "module",
+      "label": "clientTypes.ts",
+      "sourcePath": "site/lib/clients/clientTypes.ts"
     },
     {
       "id": "file:site/app/(site)/access/AccessForm.tsx",
@@ -1471,10 +1489,28 @@
       "sourcePath": "site/features/shared/api/withAuth.ts"
     },
     {
+      "id": "file:site/lib/Planner/ai/sketchToPlanShared.ts",
+      "kind": "module",
+      "label": "sketchToPlanShared.ts",
+      "sourcePath": "site/lib/Planner/ai/sketchToPlanShared.ts"
+    },
+    {
+      "id": "file:site/lib/Planner/handoff/handoffSchema.ts",
+      "kind": "module",
+      "label": "handoffSchema.ts",
+      "sourcePath": "site/lib/Planner/handoff/handoffSchema.ts"
+    },
+    {
       "id": "file:site/lib/Planner/plannerApi.ts",
       "kind": "module",
       "label": "plannerApi.ts",
       "sourcePath": "site/lib/Planner/plannerApi.ts"
+    },
+    {
+      "id": "file:site/lib/Planner/plannerEndpointContract.ts",
+      "kind": "module",
+      "label": "plannerEndpointContract.ts",
+      "sourcePath": "site/lib/Planner/plannerEndpointContract.ts"
     },
     {
       "id": "file:site/lib/Planner/plannerTypes.ts",
@@ -1687,16 +1723,40 @@
       "sourcePath": "site/features/site/data/productSuite.ts"
     },
     {
+      "id": "file:site/lib/Planner/fabricGeometryBridge.ts",
+      "kind": "module",
+      "label": "fabricGeometryBridge.ts",
+      "sourcePath": "site/lib/Planner/fabricGeometryBridge.ts"
+    },
+    {
       "id": "file:site/lib/Planner/plannerDocument.ts",
       "kind": "module",
       "label": "plannerDocument.ts",
       "sourcePath": "site/lib/Planner/plannerDocument.ts"
     },
     {
+      "id": "file:site/lib/Planner/plannerGeometryContract.ts",
+      "kind": "module",
+      "label": "plannerGeometryContract.ts",
+      "sourcePath": "site/lib/Planner/plannerGeometryContract.ts"
+    },
+    {
       "id": "file:site/lib/Planner/plannerPersistenceMode.ts",
       "kind": "module",
       "label": "plannerPersistenceMode.ts",
       "sourcePath": "site/lib/Planner/plannerPersistenceMode.ts"
+    },
+    {
+      "id": "file:site/lib/Planner/plannerProjectOperations.ts",
+      "kind": "module",
+      "label": "plannerProjectOperations.ts",
+      "sourcePath": "site/lib/Planner/plannerProjectOperations.ts"
+    },
+    {
+      "id": "file:site/lib/Planner/plannerProjectRepository.ts",
+      "kind": "module",
+      "label": "plannerProjectRepository.ts",
+      "sourcePath": "site/lib/Planner/plannerProjectRepository.ts"
     },
     {
       "id": "file:site/lib/Planner/projectIndex.ts",
@@ -1729,6 +1789,36 @@
       "sourcePath": "site/lib/catalog/furnitureCatalogStore.supabase.ts"
     },
     {
+      "id": "file:site/lib/observability/metrics.ts",
+      "kind": "module",
+      "label": "metrics.ts",
+      "sourcePath": "site/lib/observability/metrics.ts"
+    },
+    {
+      "id": "file:site/lib/observability/planner/plannerObservability.server.ts",
+      "kind": "module",
+      "label": "plannerObservability.server.ts",
+      "sourcePath": "site/lib/observability/planner/plannerObservability.server.ts"
+    },
+    {
+      "id": "file:site/lib/observability/planner/plannerObservability.ts",
+      "kind": "module",
+      "label": "plannerObservability.ts",
+      "sourcePath": "site/lib/observability/planner/plannerObservability.ts"
+    },
+    {
+      "id": "file:site/lib/observability/planner/plannerObservabilityAdapters.ts",
+      "kind": "module",
+      "label": "plannerObservabilityAdapters.ts",
+      "sourcePath": "site/lib/observability/planner/plannerObservabilityAdapters.ts"
+    },
+    {
+      "id": "file:site/lib/observability/planner/plannerObservabilityExporter.server.ts",
+      "kind": "module",
+      "label": "plannerObservabilityExporter.server.ts",
+      "sourcePath": "site/lib/observability/planner/plannerObservabilityExporter.server.ts"
+    },
+    {
       "id": "file:site/lib/paths/sitePackageRoot.ts",
       "kind": "module",
       "label": "sitePackageRoot.ts",
@@ -1739,6 +1829,18 @@
       "kind": "module",
       "label": "assertDevDiskWritable.ts",
       "sourcePath": "site/lib/persistence/assertDevDiskWritable.ts"
+    },
+    {
+      "id": "file:site/server/Planner/plannerProjectDiskAdapter.ts",
+      "kind": "module",
+      "label": "plannerProjectDiskAdapter.ts",
+      "sourcePath": "site/server/Planner/plannerProjectDiskAdapter.ts"
+    },
+    {
+      "id": "file:site/server/Planner/plannerProjectSupabaseAdapter.ts",
+      "kind": "module",
+      "label": "plannerProjectSupabaseAdapter.ts",
+      "sourcePath": "site/server/Planner/plannerProjectSupabaseAdapter.ts"
     },
     {
       "id": "file:site/server/Planner/plannerStore.ts",
@@ -2335,6 +2437,12 @@
       "sourcePath": "site/components/Planner/PlannerDockShell.tsx"
     },
     {
+      "id": "file:site/components/Planner/PlannerEntry.tsx",
+      "kind": "component",
+      "label": "PlannerEntry.tsx",
+      "sourcePath": "site/components/Planner/PlannerEntry.tsx"
+    },
+    {
       "id": "file:site/components/Planner/PlannerHandoffDialog.tsx",
       "kind": "component",
       "label": "PlannerHandoffDialog.tsx",
@@ -2381,6 +2489,12 @@
       "kind": "component",
       "label": "PlannerSheetSettings.tsx",
       "sourcePath": "site/components/Planner/PlannerSheetSettings.tsx"
+    },
+    {
+      "id": "file:site/components/Planner/PlannerTabletPanelScrim.tsx",
+      "kind": "component",
+      "label": "PlannerTabletPanelScrim.tsx",
+      "sourcePath": "site/components/Planner/PlannerTabletPanelScrim.tsx"
     },
     {
       "id": "file:site/components/Planner/PlannerToolRail.tsx",
@@ -2449,6 +2563,12 @@
       "sourcePath": "site/components/Planner/ui/PlannerDockPanelButtons.tsx"
     },
     {
+      "id": "file:site/components/Planner/ui/PlannerDockTab.tsx",
+      "kind": "component",
+      "label": "PlannerDockTab.tsx",
+      "sourcePath": "site/components/Planner/ui/PlannerDockTab.tsx"
+    },
+    {
       "id": "file:site/components/Planner/ui/PlannerDraggableCanvasOverlay.tsx",
       "kind": "component",
       "label": "PlannerDraggableCanvasOverlay.tsx",
@@ -2509,6 +2629,12 @@
       "sourcePath": "site/components/Planner/ui/PlannerSidePanelResizeHandle.tsx"
     },
     {
+      "id": "file:site/components/Planner/ui/PlannerStateSurface.tsx",
+      "kind": "component",
+      "label": "PlannerStateSurface.tsx",
+      "sourcePath": "site/components/Planner/ui/PlannerStateSurface.tsx"
+    },
+    {
       "id": "file:site/components/Planner/ui/plannerExportMenuTypes.ts",
       "kind": "component",
       "label": "plannerExportMenuTypes.ts",
@@ -2551,6 +2677,12 @@
       "sourcePath": "site/hooks/Planner/usePlannerFabric.ts"
     },
     {
+      "id": "file:site/hooks/Planner/usePlannerFocusManager.ts",
+      "kind": "module",
+      "label": "usePlannerFocusManager.ts",
+      "sourcePath": "site/hooks/Planner/usePlannerFocusManager.ts"
+    },
+    {
       "id": "file:site/hooks/Planner/usePlannerHistory.ts",
       "kind": "module",
       "label": "usePlannerHistory.ts",
@@ -2563,16 +2695,28 @@
       "sourcePath": "site/hooks/Planner/usePlannerKeyboardShortcuts.ts"
     },
     {
+      "id": "file:site/hooks/Planner/usePlannerSessionWarning.ts",
+      "kind": "module",
+      "label": "usePlannerSessionWarning.ts",
+      "sourcePath": "site/hooks/Planner/usePlannerSessionWarning.ts"
+    },
+    {
+      "id": "file:site/hooks/Planner/usePlannerTouchGestures.ts",
+      "kind": "module",
+      "label": "usePlannerTouchGestures.ts",
+      "sourcePath": "site/hooks/Planner/usePlannerTouchGestures.ts"
+    },
+    {
+      "id": "file:site/hooks/Planner/usePlannerViewport.ts",
+      "kind": "module",
+      "label": "usePlannerViewport.ts",
+      "sourcePath": "site/hooks/Planner/usePlannerViewport.ts"
+    },
+    {
       "id": "file:site/lib/Planner/ai/applySuggestedLayout.ts",
       "kind": "module",
       "label": "applySuggestedLayout.ts",
       "sourcePath": "site/lib/Planner/ai/applySuggestedLayout.ts"
-    },
-    {
-      "id": "file:site/lib/Planner/ai/sketchToPlanShared.ts",
-      "kind": "module",
-      "label": "sketchToPlanShared.ts",
-      "sourcePath": "site/lib/Planner/ai/sketchToPlanShared.ts"
     },
     {
       "id": "file:site/lib/Planner/ai/spaceSuggest.ts",
@@ -2617,16 +2761,22 @@
       "sourcePath": "site/lib/Planner/buildValidationFloor.ts"
     },
     {
+      "id": "file:site/lib/Planner/commands/canvasCommands.ts",
+      "kind": "module",
+      "label": "canvasCommands.ts",
+      "sourcePath": "site/lib/Planner/commands/canvasCommands.ts"
+    },
+    {
       "id": "file:site/lib/Planner/commands/registry.ts",
       "kind": "module",
       "label": "registry.ts",
       "sourcePath": "site/lib/Planner/commands/registry.ts"
     },
     {
-      "id": "file:site/lib/Planner/fabricGeometryBridge.ts",
+      "id": "file:site/lib/Planner/commands/useCanvasActions.ts",
       "kind": "module",
-      "label": "fabricGeometryBridge.ts",
-      "sourcePath": "site/lib/Planner/fabricGeometryBridge.ts"
+      "label": "useCanvasActions.ts",
+      "sourcePath": "site/lib/Planner/commands/useCanvasActions.ts"
     },
     {
       "id": "file:site/lib/Planner/geometry/alignDistribute.ts",
@@ -2639,6 +2789,12 @@
       "kind": "module",
       "label": "openingPlacement.ts",
       "sourcePath": "site/lib/Planner/geometry/openingPlacement.ts"
+    },
+    {
+      "id": "file:site/lib/Planner/handoff/handoffRecovery.ts",
+      "kind": "module",
+      "label": "handoffRecovery.ts",
+      "sourcePath": "site/lib/Planner/handoff/handoffRecovery.ts"
     },
     {
       "id": "file:site/lib/Planner/plannerAutoArrange.ts",
@@ -2675,6 +2831,12 @@
       "kind": "module",
       "label": "plannerFabricSerialize.ts",
       "sourcePath": "site/lib/Planner/plannerFabricSerialize.ts"
+    },
+    {
+      "id": "file:site/lib/Planner/plannerLocalBackup.ts",
+      "kind": "module",
+      "label": "plannerLocalBackup.ts",
+      "sourcePath": "site/lib/Planner/plannerLocalBackup.ts"
     },
     {
       "id": "file:site/lib/Planner/plannerPalette.ts",
@@ -2779,6 +2941,12 @@
       "sourcePath": "site/lib/Planner/wallEndpointGrips.ts"
     },
     {
+      "id": "file:site/lib/auth/plannerSession.ts",
+      "kind": "module",
+      "label": "plannerSession.ts",
+      "sourcePath": "site/lib/auth/plannerSession.ts"
+    },
+    {
       "id": "file:site/lib/catalog/svg/sha256.ts",
       "kind": "module",
       "label": "sha256.ts",
@@ -2803,10 +2971,22 @@
       "sourcePath": "site/store/Planner/plannerUiStore.ts"
     },
     {
+      "id": "file:site/components/Planner/PlannerProjectAccessState.tsx",
+      "kind": "component",
+      "label": "PlannerProjectAccessState.tsx",
+      "sourcePath": "site/components/Planner/PlannerProjectAccessState.tsx"
+    },
+    {
       "id": "file:site/components/Planner/PlannerProjectsList.tsx",
       "kind": "component",
       "label": "PlannerProjectsList.tsx",
       "sourcePath": "site/components/Planner/PlannerProjectsList.tsx"
+    },
+    {
+      "id": "file:site/components/Planner/plannerProjectsListState.ts",
+      "kind": "component",
+      "label": "plannerProjectsListState.ts",
+      "sourcePath": "site/components/Planner/plannerProjectsListState.ts"
     },
     {
       "id": "file:site/features/Planner/projects/page.tsx",
@@ -3539,12 +3719,6 @@
       "kind": "component",
       "label": "TrustedByPageView.tsx",
       "sourcePath": "site/components/trusted-by/TrustedByPageView.tsx"
-    },
-    {
-      "id": "file:site/features/site/data/proof.ts",
-      "kind": "component",
-      "label": "proof.ts",
-      "sourcePath": "site/features/site/data/proof.ts"
     },
     {
       "id": "file:site/features/site/data/trustedByPage.ts",
@@ -4575,6 +4749,30 @@
       "to": "file:site/lib/utils.ts"
     },
     {
+      "id": "imports:file:site/features/site/data/proof.ts->file:site/components/ClientBadge.tsx",
+      "kind": "imports",
+      "from": "file:site/features/site/data/proof.ts",
+      "to": "file:site/components/ClientBadge.tsx"
+    },
+    {
+      "id": "imports:file:site/features/site/data/proof.ts->file:site/features/site/data/clientLogos.ts",
+      "kind": "imports",
+      "from": "file:site/features/site/data/proof.ts",
+      "to": "file:site/features/site/data/clientLogos.ts"
+    },
+    {
+      "id": "imports:file:site/features/site/data/proof.ts->file:site/lib/clients/clientRegistry.ts",
+      "kind": "imports",
+      "from": "file:site/features/site/data/proof.ts",
+      "to": "file:site/lib/clients/clientRegistry.ts"
+    },
+    {
+      "id": "imports:file:site/features/site/data/proof.ts->file:site/lib/clients/clientTypes.ts",
+      "kind": "imports",
+      "from": "file:site/features/site/data/proof.ts",
+      "to": "file:site/lib/clients/clientTypes.ts"
+    },
+    {
       "id": "imports:file:site/features/site/data/routeCopy.ts->file:site/components/ClientBadge.tsx",
       "kind": "imports",
       "from": "file:site/features/site/data/routeCopy.ts",
@@ -4591,6 +4789,12 @@
       "kind": "imports",
       "from": "file:site/features/site/data/routeCopy.ts",
       "to": "file:site/features/site/data/contact.ts"
+    },
+    {
+      "id": "imports:file:site/features/site/data/routeCopy.ts->file:site/features/site/data/proof.ts",
+      "kind": "imports",
+      "from": "file:site/features/site/data/routeCopy.ts",
+      "to": "file:site/features/site/data/proof.ts"
     },
     {
       "id": "imports:file:site/features/site/data/routeMetadata.ts->file:site/features/site/data/brand.ts",
@@ -4621,6 +4825,12 @@
       "kind": "imports",
       "from": "file:site/lib/assetPaths.ts",
       "to": "file:site/lib/catalog/site/catalogProductFilters.ts"
+    },
+    {
+      "id": "imports:file:site/lib/clients/clientRegistry.ts->file:site/lib/clients/clientTypes.ts",
+      "kind": "imports",
+      "from": "file:site/lib/clients/clientRegistry.ts",
+      "to": "file:site/lib/clients/clientTypes.ts"
     },
     {
       "id": "imports:file:site/app/(site)/access/AccessForm.tsx->file:site/lib/auth/constants.ts",
@@ -5337,6 +5547,24 @@
       "to": "file:site/platform/supabase/server.ts"
     },
     {
+      "id": "imports:file:site/lib/Planner/plannerApi.ts->file:site/lib/Planner/ai/sketchToPlanShared.ts",
+      "kind": "imports",
+      "from": "file:site/lib/Planner/plannerApi.ts",
+      "to": "file:site/lib/Planner/ai/sketchToPlanShared.ts"
+    },
+    {
+      "id": "imports:file:site/lib/Planner/plannerApi.ts->file:site/lib/Planner/handoff/handoffSchema.ts",
+      "kind": "imports",
+      "from": "file:site/lib/Planner/plannerApi.ts",
+      "to": "file:site/lib/Planner/handoff/handoffSchema.ts"
+    },
+    {
+      "id": "imports:file:site/lib/Planner/plannerApi.ts->file:site/lib/Planner/plannerEndpointContract.ts",
+      "kind": "imports",
+      "from": "file:site/lib/Planner/plannerApi.ts",
+      "to": "file:site/lib/Planner/plannerEndpointContract.ts"
+    },
+    {
       "id": "imports:file:site/lib/Planner/plannerApi.ts->file:site/lib/Planner/plannerTypes.ts",
       "kind": "imports",
       "from": "file:site/lib/Planner/plannerApi.ts",
@@ -5781,10 +6009,64 @@
       "to": "file:site/features/site/data/productSuite.ts"
     },
     {
+      "id": "imports:file:site/lib/Planner/fabricGeometryBridge.ts->file:site/lib/Planner/plannerGeometryContract.ts",
+      "kind": "imports",
+      "from": "file:site/lib/Planner/fabricGeometryBridge.ts",
+      "to": "file:site/lib/Planner/plannerGeometryContract.ts"
+    },
+    {
+      "id": "imports:file:site/lib/Planner/plannerGeometryContract.ts->file:site/lib/Planner/fabricGeometryBridge.ts",
+      "kind": "imports",
+      "from": "file:site/lib/Planner/plannerGeometryContract.ts",
+      "to": "file:site/lib/Planner/fabricGeometryBridge.ts"
+    },
+    {
       "id": "imports:file:site/lib/Planner/plannerPersistenceMode.ts->file:site/lib/auth/devAuthBypass.ts",
       "kind": "imports",
       "from": "file:site/lib/Planner/plannerPersistenceMode.ts",
       "to": "file:site/lib/auth/devAuthBypass.ts"
+    },
+    {
+      "id": "imports:file:site/lib/Planner/plannerProjectOperations.ts->file:site/lib/Planner/plannerPersistenceMode.ts",
+      "kind": "imports",
+      "from": "file:site/lib/Planner/plannerProjectOperations.ts",
+      "to": "file:site/lib/Planner/plannerPersistenceMode.ts"
+    },
+    {
+      "id": "imports:file:site/lib/Planner/plannerProjectOperations.ts->file:site/lib/Planner/plannerProjectRepository.ts",
+      "kind": "imports",
+      "from": "file:site/lib/Planner/plannerProjectOperations.ts",
+      "to": "file:site/lib/Planner/plannerProjectRepository.ts"
+    },
+    {
+      "id": "imports:file:site/lib/Planner/plannerProjectOperations.ts->file:site/lib/observability/planner/plannerObservability.server.ts",
+      "kind": "imports",
+      "from": "file:site/lib/Planner/plannerProjectOperations.ts",
+      "to": "file:site/lib/observability/planner/plannerObservability.server.ts"
+    },
+    {
+      "id": "imports:file:site/lib/Planner/plannerProjectOperations.ts->file:site/lib/observability/planner/plannerObservability.ts",
+      "kind": "imports",
+      "from": "file:site/lib/Planner/plannerProjectOperations.ts",
+      "to": "file:site/lib/observability/planner/plannerObservability.ts"
+    },
+    {
+      "id": "imports:file:site/lib/Planner/plannerProjectRepository.ts->file:site/lib/Planner/fabricGeometryBridge.ts",
+      "kind": "imports",
+      "from": "file:site/lib/Planner/plannerProjectRepository.ts",
+      "to": "file:site/lib/Planner/fabricGeometryBridge.ts"
+    },
+    {
+      "id": "imports:file:site/lib/Planner/plannerProjectRepository.ts->file:site/lib/Planner/plannerGeometryContract.ts",
+      "kind": "imports",
+      "from": "file:site/lib/Planner/plannerProjectRepository.ts",
+      "to": "file:site/lib/Planner/plannerGeometryContract.ts"
+    },
+    {
+      "id": "imports:file:site/lib/Planner/projectsStore.supabase.ts->file:site/lib/Planner/plannerProjectRepository.ts",
+      "kind": "imports",
+      "from": "file:site/lib/Planner/projectsStore.supabase.ts",
+      "to": "file:site/lib/Planner/plannerProjectRepository.ts"
     },
     {
       "id": "imports:file:site/lib/Planner/projectsStore.supabase.ts->file:site/platform/supabase/auth-admin.ts",
@@ -5811,10 +6093,34 @@
       "to": "file:site/lib/Planner/plannerPersistenceMode.ts"
     },
     {
+      "id": "imports:file:site/lib/Planner/projectsStore.ts->file:site/lib/Planner/plannerProjectOperations.ts",
+      "kind": "imports",
+      "from": "file:site/lib/Planner/projectsStore.ts",
+      "to": "file:site/lib/Planner/plannerProjectOperations.ts"
+    },
+    {
+      "id": "imports:file:site/lib/Planner/projectsStore.ts->file:site/lib/Planner/plannerProjectRepository.ts",
+      "kind": "imports",
+      "from": "file:site/lib/Planner/projectsStore.ts",
+      "to": "file:site/lib/Planner/plannerProjectRepository.ts"
+    },
+    {
       "id": "imports:file:site/lib/Planner/projectsStore.ts->file:site/lib/Planner/projectsStore.supabase.ts",
       "kind": "imports",
       "from": "file:site/lib/Planner/projectsStore.ts",
       "to": "file:site/lib/Planner/projectsStore.supabase.ts"
+    },
+    {
+      "id": "imports:file:site/lib/Planner/projectsStore.ts->file:site/server/Planner/plannerProjectDiskAdapter.ts",
+      "kind": "imports",
+      "from": "file:site/lib/Planner/projectsStore.ts",
+      "to": "file:site/server/Planner/plannerProjectDiskAdapter.ts"
+    },
+    {
+      "id": "imports:file:site/lib/Planner/projectsStore.ts->file:site/server/Planner/plannerProjectSupabaseAdapter.ts",
+      "kind": "imports",
+      "from": "file:site/lib/Planner/projectsStore.ts",
+      "to": "file:site/server/Planner/plannerProjectSupabaseAdapter.ts"
     },
     {
       "id": "imports:file:site/lib/Planner/projectsStore.ts->file:site/server/Planner/plannerStore.ts",
@@ -5841,10 +6147,118 @@
       "to": "file:site/platform/supabase/auth-admin.ts"
     },
     {
+      "id": "imports:file:site/lib/observability/planner/plannerObservability.server.ts->file:site/lib/observability/planner/plannerObservabilityAdapters.ts",
+      "kind": "imports",
+      "from": "file:site/lib/observability/planner/plannerObservability.server.ts",
+      "to": "file:site/lib/observability/planner/plannerObservabilityAdapters.ts"
+    },
+    {
+      "id": "imports:file:site/lib/observability/planner/plannerObservability.server.ts->file:site/lib/observability/planner/plannerObservabilityExporter.server.ts",
+      "kind": "imports",
+      "from": "file:site/lib/observability/planner/plannerObservability.server.ts",
+      "to": "file:site/lib/observability/planner/plannerObservabilityExporter.server.ts"
+    },
+    {
+      "id": "imports:file:site/lib/observability/planner/plannerObservability.ts->file:site/lib/Planner/plannerEndpointContract.ts",
+      "kind": "imports",
+      "from": "file:site/lib/observability/planner/plannerObservability.ts",
+      "to": "file:site/lib/Planner/plannerEndpointContract.ts"
+    },
+    {
+      "id": "imports:file:site/lib/observability/planner/plannerObservability.ts->file:site/lib/Planner/plannerPersistenceMode.ts",
+      "kind": "imports",
+      "from": "file:site/lib/observability/planner/plannerObservability.ts",
+      "to": "file:site/lib/Planner/plannerPersistenceMode.ts"
+    },
+    {
+      "id": "imports:file:site/lib/observability/planner/plannerObservabilityAdapters.ts->file:site/lib/Planner/plannerEndpointContract.ts",
+      "kind": "imports",
+      "from": "file:site/lib/observability/planner/plannerObservabilityAdapters.ts",
+      "to": "file:site/lib/Planner/plannerEndpointContract.ts"
+    },
+    {
+      "id": "imports:file:site/lib/observability/planner/plannerObservabilityAdapters.ts->file:site/lib/Planner/plannerPersistenceMode.ts",
+      "kind": "imports",
+      "from": "file:site/lib/observability/planner/plannerObservabilityAdapters.ts",
+      "to": "file:site/lib/Planner/plannerPersistenceMode.ts"
+    },
+    {
+      "id": "imports:file:site/lib/observability/planner/plannerObservabilityAdapters.ts->file:site/lib/observability/planner/plannerObservability.ts",
+      "kind": "imports",
+      "from": "file:site/lib/observability/planner/plannerObservabilityAdapters.ts",
+      "to": "file:site/lib/observability/planner/plannerObservability.ts"
+    },
+    {
+      "id": "imports:file:site/lib/observability/planner/plannerObservabilityExporter.server.ts->file:site/lib/observability/metrics.ts",
+      "kind": "imports",
+      "from": "file:site/lib/observability/planner/plannerObservabilityExporter.server.ts",
+      "to": "file:site/lib/observability/metrics.ts"
+    },
+    {
+      "id": "imports:file:site/lib/observability/planner/plannerObservabilityExporter.server.ts->file:site/lib/observability/planner/plannerObservability.ts",
+      "kind": "imports",
+      "from": "file:site/lib/observability/planner/plannerObservabilityExporter.server.ts",
+      "to": "file:site/lib/observability/planner/plannerObservability.ts"
+    },
+    {
       "id": "imports:file:site/lib/persistence/assertDevDiskWritable.ts->file:site/lib/auth/devAuthBypass.ts",
       "kind": "imports",
       "from": "file:site/lib/persistence/assertDevDiskWritable.ts",
       "to": "file:site/lib/auth/devAuthBypass.ts"
+    },
+    {
+      "id": "imports:file:site/server/Planner/plannerProjectDiskAdapter.ts->file:site/lib/Planner/plannerProjectOperations.ts",
+      "kind": "imports",
+      "from": "file:site/server/Planner/plannerProjectDiskAdapter.ts",
+      "to": "file:site/lib/Planner/plannerProjectOperations.ts"
+    },
+    {
+      "id": "imports:file:site/server/Planner/plannerProjectDiskAdapter.ts->file:site/lib/Planner/plannerProjectRepository.ts",
+      "kind": "imports",
+      "from": "file:site/server/Planner/plannerProjectDiskAdapter.ts",
+      "to": "file:site/lib/Planner/plannerProjectRepository.ts"
+    },
+    {
+      "id": "imports:file:site/server/Planner/plannerProjectDiskAdapter.ts->file:site/lib/persistence/assertDevDiskWritable.ts",
+      "kind": "imports",
+      "from": "file:site/server/Planner/plannerProjectDiskAdapter.ts",
+      "to": "file:site/lib/persistence/assertDevDiskWritable.ts"
+    },
+    {
+      "id": "imports:file:site/server/Planner/plannerProjectDiskAdapter.ts->file:site/server/Planner/plannerStore.ts",
+      "kind": "imports",
+      "from": "file:site/server/Planner/plannerProjectDiskAdapter.ts",
+      "to": "file:site/server/Planner/plannerStore.ts"
+    },
+    {
+      "id": "imports:file:site/server/Planner/plannerProjectSupabaseAdapter.ts->file:site/lib/Planner/plannerProjectOperations.ts",
+      "kind": "imports",
+      "from": "file:site/server/Planner/plannerProjectSupabaseAdapter.ts",
+      "to": "file:site/lib/Planner/plannerProjectOperations.ts"
+    },
+    {
+      "id": "imports:file:site/server/Planner/plannerProjectSupabaseAdapter.ts->file:site/lib/Planner/plannerProjectRepository.ts",
+      "kind": "imports",
+      "from": "file:site/server/Planner/plannerProjectSupabaseAdapter.ts",
+      "to": "file:site/lib/Planner/plannerProjectRepository.ts"
+    },
+    {
+      "id": "imports:file:site/server/Planner/plannerProjectSupabaseAdapter.ts->file:site/lib/Planner/projectsStore.supabase.ts",
+      "kind": "imports",
+      "from": "file:site/server/Planner/plannerProjectSupabaseAdapter.ts",
+      "to": "file:site/lib/Planner/projectsStore.supabase.ts"
+    },
+    {
+      "id": "imports:file:site/server/Planner/plannerProjectSupabaseAdapter.ts->file:site/platform/supabase/auth-admin.ts",
+      "kind": "imports",
+      "from": "file:site/server/Planner/plannerProjectSupabaseAdapter.ts",
+      "to": "file:site/platform/supabase/auth-admin.ts"
+    },
+    {
+      "id": "imports:file:site/server/Planner/plannerProjectSupabaseAdapter.ts->file:site/platform/supabase/types.ts",
+      "kind": "imports",
+      "from": "file:site/server/Planner/plannerProjectSupabaseAdapter.ts",
+      "to": "file:site/platform/supabase/types.ts"
     },
     {
       "id": "imports:file:site/server/Planner/plannerStore.ts->file:site/lib/catalog/furnitureCatalogMode.ts",
@@ -7521,16 +7935,16 @@
       "to": "file:site/components/shared/ContactTeaser.tsx"
     },
     {
+      "id": "imports:file:site/app/(site)/downloads/page.tsx->file:site/features/site/data/downloadsPage.ts",
+      "kind": "imports",
+      "from": "file:site/app/(site)/downloads/page.tsx",
+      "to": "file:site/features/site/data/downloadsPage.ts"
+    },
+    {
       "id": "imports:file:site/app/(site)/downloads/page.tsx->file:site/features/site/data/routeCopy.ts",
       "kind": "imports",
       "from": "file:site/app/(site)/downloads/page.tsx",
       "to": "file:site/features/site/data/routeCopy.ts"
-    },
-    {
-      "id": "imports:file:site/app/(site)/downloads/page.tsx->file:site/features/site/data/routeMetadata.ts",
-      "kind": "imports",
-      "from": "file:site/app/(site)/downloads/page.tsx",
-      "to": "file:site/features/site/data/routeMetadata.ts"
     },
     {
       "id": "imports:file:site/app/(site)/downloads/page.tsx->file:site/features/site/data/seo.ts",
@@ -7719,6 +8133,12 @@
       "to": "file:site/components/Planner/PlannerRulers.tsx"
     },
     {
+      "id": "imports:file:site/components/Planner/Planner.tsx->file:site/components/Planner/PlannerTabletPanelScrim.tsx",
+      "kind": "imports",
+      "from": "file:site/components/Planner/Planner.tsx",
+      "to": "file:site/components/Planner/PlannerTabletPanelScrim.tsx"
+    },
+    {
       "id": "imports:file:site/components/Planner/Planner.tsx->file:site/components/Planner/PlannerTopToolbar.tsx",
       "kind": "imports",
       "from": "file:site/components/Planner/Planner.tsx",
@@ -7821,6 +8241,24 @@
       "to": "file:site/hooks/Planner/usePlannerKeyboardShortcuts.ts"
     },
     {
+      "id": "imports:file:site/components/Planner/Planner.tsx->file:site/hooks/Planner/usePlannerSessionWarning.ts",
+      "kind": "imports",
+      "from": "file:site/components/Planner/Planner.tsx",
+      "to": "file:site/hooks/Planner/usePlannerSessionWarning.ts"
+    },
+    {
+      "id": "imports:file:site/components/Planner/Planner.tsx->file:site/hooks/Planner/usePlannerTouchGestures.ts",
+      "kind": "imports",
+      "from": "file:site/components/Planner/Planner.tsx",
+      "to": "file:site/hooks/Planner/usePlannerTouchGestures.ts"
+    },
+    {
+      "id": "imports:file:site/components/Planner/Planner.tsx->file:site/hooks/Planner/usePlannerViewport.ts",
+      "kind": "imports",
+      "from": "file:site/components/Planner/Planner.tsx",
+      "to": "file:site/hooks/Planner/usePlannerViewport.ts"
+    },
+    {
       "id": "imports:file:site/components/Planner/Planner.tsx->file:site/lib/Planner/ai/applySuggestedLayout.ts",
       "kind": "imports",
       "from": "file:site/components/Planner/Planner.tsx",
@@ -7833,10 +8271,22 @@
       "to": "file:site/lib/Planner/ai/sketchToPlanShared.ts"
     },
     {
+      "id": "imports:file:site/components/Planner/Planner.tsx->file:site/lib/Planner/commands/canvasCommands.ts",
+      "kind": "imports",
+      "from": "file:site/components/Planner/Planner.tsx",
+      "to": "file:site/lib/Planner/commands/canvasCommands.ts"
+    },
+    {
       "id": "imports:file:site/components/Planner/Planner.tsx->file:site/lib/Planner/commands/registry.ts",
       "kind": "imports",
       "from": "file:site/components/Planner/Planner.tsx",
       "to": "file:site/lib/Planner/commands/registry.ts"
+    },
+    {
+      "id": "imports:file:site/components/Planner/Planner.tsx->file:site/lib/Planner/commands/useCanvasActions.ts",
+      "kind": "imports",
+      "from": "file:site/components/Planner/Planner.tsx",
+      "to": "file:site/lib/Planner/commands/useCanvasActions.ts"
     },
     {
       "id": "imports:file:site/components/Planner/Planner.tsx->file:site/lib/Planner/fabricGeometryBridge.ts",
@@ -7891,6 +8341,12 @@
       "kind": "imports",
       "from": "file:site/components/Planner/Planner.tsx",
       "to": "file:site/lib/Planner/plannerFabricSerialize.ts"
+    },
+    {
+      "id": "imports:file:site/components/Planner/Planner.tsx->file:site/lib/Planner/plannerLocalBackup.ts",
+      "kind": "imports",
+      "from": "file:site/components/Planner/Planner.tsx",
+      "to": "file:site/lib/Planner/plannerLocalBackup.ts"
     },
     {
       "id": "imports:file:site/components/Planner/Planner.tsx->file:site/lib/Planner/plannerPalette.ts",
@@ -8121,6 +8577,12 @@
       "to": "file:site/components/Planner/ui/PlannerPhIcon.tsx"
     },
     {
+      "id": "imports:file:site/components/Planner/PlannerCatalogRail.tsx->file:site/hooks/Planner/usePlannerFocusManager.ts",
+      "kind": "imports",
+      "from": "file:site/components/Planner/PlannerCatalogRail.tsx",
+      "to": "file:site/hooks/Planner/usePlannerFocusManager.ts"
+    },
+    {
       "id": "imports:file:site/components/Planner/PlannerCatalogRail.tsx->file:site/lib/Planner/plannerApi.ts",
       "kind": "imports",
       "from": "file:site/components/Planner/PlannerCatalogRail.tsx",
@@ -8205,10 +8667,34 @@
       "to": "file:site/components/Planner/ui/PlannerDockFloatHeaderActions.tsx"
     },
     {
+      "id": "imports:file:site/components/Planner/PlannerDockShell.tsx->file:site/components/Planner/ui/PlannerDockTab.tsx",
+      "kind": "imports",
+      "from": "file:site/components/Planner/PlannerDockShell.tsx",
+      "to": "file:site/components/Planner/ui/PlannerDockTab.tsx"
+    },
+    {
       "id": "imports:file:site/components/Planner/PlannerDockShell.tsx->file:site/lib/Planner/plannerTypes.ts",
       "kind": "imports",
       "from": "file:site/components/Planner/PlannerDockShell.tsx",
       "to": "file:site/lib/Planner/plannerTypes.ts"
+    },
+    {
+      "id": "imports:file:site/components/Planner/PlannerEntry.tsx->file:site/components/Planner/Planner.tsx",
+      "kind": "imports",
+      "from": "file:site/components/Planner/PlannerEntry.tsx",
+      "to": "file:site/components/Planner/Planner.tsx"
+    },
+    {
+      "id": "imports:file:site/components/Planner/PlannerEntry.tsx->file:site/lib/auth/plannerRedirect.ts",
+      "kind": "imports",
+      "from": "file:site/components/Planner/PlannerEntry.tsx",
+      "to": "file:site/lib/auth/plannerRedirect.ts"
+    },
+    {
+      "id": "imports:file:site/components/Planner/PlannerHandoffDialog.tsx->file:site/hooks/Planner/usePlannerFocusManager.ts",
+      "kind": "imports",
+      "from": "file:site/components/Planner/PlannerHandoffDialog.tsx",
+      "to": "file:site/hooks/Planner/usePlannerFocusManager.ts"
     },
     {
       "id": "imports:file:site/components/Planner/PlannerHandoffDialog.tsx->file:site/lib/Planner/boq/types.ts",
@@ -8217,10 +8703,22 @@
       "to": "file:site/lib/Planner/boq/types.ts"
     },
     {
-      "id": "imports:file:site/components/Planner/PlannerHandoffDialog.tsx->file:site/lib/api/browserApi.ts",
+      "id": "imports:file:site/components/Planner/PlannerHandoffDialog.tsx->file:site/lib/Planner/handoff/handoffRecovery.ts",
       "kind": "imports",
       "from": "file:site/components/Planner/PlannerHandoffDialog.tsx",
-      "to": "file:site/lib/api/browserApi.ts"
+      "to": "file:site/lib/Planner/handoff/handoffRecovery.ts"
+    },
+    {
+      "id": "imports:file:site/components/Planner/PlannerHandoffDialog.tsx->file:site/lib/Planner/handoff/handoffSchema.ts",
+      "kind": "imports",
+      "from": "file:site/components/Planner/PlannerHandoffDialog.tsx",
+      "to": "file:site/lib/Planner/handoff/handoffSchema.ts"
+    },
+    {
+      "id": "imports:file:site/components/Planner/PlannerHandoffDialog.tsx->file:site/lib/Planner/plannerApi.ts",
+      "kind": "imports",
+      "from": "file:site/components/Planner/PlannerHandoffDialog.tsx",
+      "to": "file:site/lib/Planner/plannerApi.ts"
     },
     {
       "id": "imports:file:site/components/Planner/PlannerIconButton.tsx->file:site/components/Planner/ui/PlannerPhIcon.tsx",
@@ -8251,6 +8749,12 @@
       "kind": "imports",
       "from": "file:site/components/Planner/PlannerProjectLoadState.tsx",
       "to": "file:site/components/Planner/plannerLoadState.ts"
+    },
+    {
+      "id": "imports:file:site/components/Planner/PlannerProjectLoadState.tsx->file:site/components/Planner/ui/PlannerStateSurface.tsx",
+      "kind": "imports",
+      "from": "file:site/components/Planner/PlannerProjectLoadState.tsx",
+      "to": "file:site/components/Planner/ui/PlannerStateSurface.tsx"
     },
     {
       "id": "imports:file:site/components/Planner/PlannerProjectMenu.tsx->file:site/components/Planner/ui/PlannerPhIcon.tsx",
@@ -8331,6 +8835,12 @@
       "to": "file:site/components/Planner/PlannerIconButton.tsx"
     },
     {
+      "id": "imports:file:site/components/Planner/PlannerToolRail.tsx->file:site/hooks/Planner/usePlannerFocusManager.ts",
+      "kind": "imports",
+      "from": "file:site/components/Planner/PlannerToolRail.tsx",
+      "to": "file:site/hooks/Planner/usePlannerFocusManager.ts"
+    },
+    {
       "id": "imports:file:site/components/Planner/PlannerToolRail.tsx->file:site/lib/Planner/plannerTypes.ts",
       "kind": "imports",
       "from": "file:site/components/Planner/PlannerToolRail.tsx",
@@ -8349,10 +8859,22 @@
       "to": "file:site/components/Planner/ui/plannerPhIconMap.ts"
     },
     {
+      "id": "imports:file:site/components/Planner/PlannerTopToolbar.tsx->file:site/hooks/Planner/usePlannerFocusManager.ts",
+      "kind": "imports",
+      "from": "file:site/components/Planner/PlannerTopToolbar.tsx",
+      "to": "file:site/hooks/Planner/usePlannerFocusManager.ts"
+    },
+    {
       "id": "imports:file:site/components/Planner/PlannerUnitPill.tsx->file:site/store/Planner/plannerUiStore.ts",
       "kind": "imports",
       "from": "file:site/components/Planner/PlannerUnitPill.tsx",
       "to": "file:site/store/Planner/plannerUiStore.ts"
+    },
+    {
+      "id": "imports:file:site/components/Planner/PlannerValidationPanel.tsx->file:site/components/Planner/ui/PlannerPhIcon.tsx",
+      "kind": "imports",
+      "from": "file:site/components/Planner/PlannerValidationPanel.tsx",
+      "to": "file:site/components/Planner/ui/PlannerPhIcon.tsx"
     },
     {
       "id": "imports:file:site/components/Planner/PlannerValidationPanel.tsx->file:site/hooks/Planner/usePlannerDockBridge.ts",
@@ -8541,10 +9063,22 @@
       "to": "file:site/components/Planner/ui/usePlannerPanelResize.ts"
     },
     {
-      "id": "imports:file:site/features/Planner/page.tsx->file:site/components/Planner/Planner.tsx",
+      "id": "imports:file:site/components/Planner/ui/PlannerStateSurface.tsx->file:site/components/Planner/ui/PlannerPhIcon.tsx",
+      "kind": "imports",
+      "from": "file:site/components/Planner/ui/PlannerStateSurface.tsx",
+      "to": "file:site/components/Planner/ui/PlannerPhIcon.tsx"
+    },
+    {
+      "id": "imports:file:site/features/Planner/page.tsx->file:site/components/Planner/PlannerEntry.tsx",
       "kind": "imports",
       "from": "file:site/features/Planner/page.tsx",
-      "to": "file:site/components/Planner/Planner.tsx"
+      "to": "file:site/components/Planner/PlannerEntry.tsx"
+    },
+    {
+      "id": "imports:file:site/features/Planner/page.tsx->file:site/lib/auth/plannerSession.ts",
+      "kind": "imports",
+      "from": "file:site/features/Planner/page.tsx",
+      "to": "file:site/lib/auth/plannerSession.ts"
     },
     {
       "id": "imports:file:site/hooks/Planner/usePlannerCanvasCore.ts->file:site/lib/Planner/plannerPalette.ts",
@@ -8575,6 +9109,12 @@
       "kind": "imports",
       "from": "file:site/hooks/Planner/usePlannerHistory.ts",
       "to": "file:site/lib/Planner/plannerFabricSerialize.ts"
+    },
+    {
+      "id": "imports:file:site/hooks/Planner/usePlannerTouchGestures.ts->file:site/lib/Planner/commands/canvasCommands.ts",
+      "kind": "imports",
+      "from": "file:site/hooks/Planner/usePlannerTouchGestures.ts",
+      "to": "file:site/lib/Planner/commands/canvasCommands.ts"
     },
     {
       "id": "imports:file:site/lib/Planner/ai/applySuggestedLayout.ts->file:site/lib/Planner/ai/validateLayoutSchema.ts",
@@ -8631,10 +9171,28 @@
       "to": "file:site/lib/Planner/validation/types.ts"
     },
     {
+      "id": "imports:file:site/lib/Planner/commands/registry.ts->file:site/lib/Planner/commands/canvasCommands.ts",
+      "kind": "imports",
+      "from": "file:site/lib/Planner/commands/registry.ts",
+      "to": "file:site/lib/Planner/commands/canvasCommands.ts"
+    },
+    {
+      "id": "imports:file:site/lib/Planner/commands/useCanvasActions.ts->file:site/lib/Planner/commands/canvasCommands.ts",
+      "kind": "imports",
+      "from": "file:site/lib/Planner/commands/useCanvasActions.ts",
+      "to": "file:site/lib/Planner/commands/canvasCommands.ts"
+    },
+    {
       "id": "imports:file:site/lib/Planner/geometry/openingPlacement.ts->file:site/lib/Planner/fabricGeometryBridge.ts",
       "kind": "imports",
       "from": "file:site/lib/Planner/geometry/openingPlacement.ts",
       "to": "file:site/lib/Planner/fabricGeometryBridge.ts"
+    },
+    {
+      "id": "imports:file:site/lib/Planner/handoff/handoffRecovery.ts->file:site/lib/Planner/handoff/handoffSchema.ts",
+      "kind": "imports",
+      "from": "file:site/lib/Planner/handoff/handoffRecovery.ts",
+      "to": "file:site/lib/Planner/handoff/handoffSchema.ts"
     },
     {
       "id": "imports:file:site/lib/Planner/plannerAutoArrange.ts->file:site/lib/Planner/plannerPalette.ts",
@@ -8655,6 +9213,12 @@
       "to": "file:site/lib/Planner/plannerTypes.ts"
     },
     {
+      "id": "imports:file:site/lib/Planner/plannerDxfExport.ts->file:site/lib/Planner/plannerGeometryContract.ts",
+      "kind": "imports",
+      "from": "file:site/lib/Planner/plannerDxfExport.ts",
+      "to": "file:site/lib/Planner/plannerGeometryContract.ts"
+    },
+    {
       "id": "imports:file:site/lib/Planner/plannerDxfExport.ts->file:site/lib/Planner/plannerTypes.ts",
       "kind": "imports",
       "from": "file:site/lib/Planner/plannerDxfExport.ts",
@@ -8665,6 +9229,24 @@
       "kind": "imports",
       "from": "file:site/lib/Planner/plannerExporters.ts",
       "to": "file:site/lib/Planner/plannerTypes.ts"
+    },
+    {
+      "id": "imports:file:site/lib/Planner/plannerFabricSerialize.ts->file:site/lib/Planner/fabricGeometryBridge.ts",
+      "kind": "imports",
+      "from": "file:site/lib/Planner/plannerFabricSerialize.ts",
+      "to": "file:site/lib/Planner/fabricGeometryBridge.ts"
+    },
+    {
+      "id": "imports:file:site/lib/Planner/plannerFabricSerialize.ts->file:site/lib/Planner/plannerGeometryContract.ts",
+      "kind": "imports",
+      "from": "file:site/lib/Planner/plannerFabricSerialize.ts",
+      "to": "file:site/lib/Planner/plannerGeometryContract.ts"
+    },
+    {
+      "id": "imports:file:site/lib/Planner/plannerPalette.ts->file:site/lib/Planner/plannerGeometryContract.ts",
+      "kind": "imports",
+      "from": "file:site/lib/Planner/plannerPalette.ts",
+      "to": "file:site/lib/Planner/plannerGeometryContract.ts"
     },
     {
       "id": "imports:file:site/lib/Planner/plannerPalette.ts->file:site/lib/fonts.ts",
@@ -8683,6 +9265,12 @@
       "kind": "imports",
       "from": "file:site/lib/Planner/plannerTokens.ts",
       "to": "file:site/lib/Planner/plannerTypes.ts"
+    },
+    {
+      "id": "imports:file:site/lib/Planner/plannerUnits.ts->file:site/lib/Planner/plannerGeometryContract.ts",
+      "kind": "imports",
+      "from": "file:site/lib/Planner/plannerUnits.ts",
+      "to": "file:site/lib/Planner/plannerGeometryContract.ts"
     },
     {
       "id": "imports:file:site/lib/Planner/plannerUnits.ts->file:site/store/Planner/plannerUiStore.ts",
@@ -8769,6 +9357,30 @@
       "to": "file:site/lib/Planner/validation/types.ts"
     },
     {
+      "id": "imports:file:site/lib/auth/plannerSession.ts->file:site/lib/auth/constants.ts",
+      "kind": "imports",
+      "from": "file:site/lib/auth/plannerSession.ts",
+      "to": "file:site/lib/auth/constants.ts"
+    },
+    {
+      "id": "imports:file:site/lib/auth/plannerSession.ts->file:site/lib/auth/plannerRedirect.ts",
+      "kind": "imports",
+      "from": "file:site/lib/auth/plannerSession.ts",
+      "to": "file:site/lib/auth/plannerRedirect.ts"
+    },
+    {
+      "id": "imports:file:site/lib/auth/plannerSession.ts->file:site/lib/auth/session.ts",
+      "kind": "imports",
+      "from": "file:site/lib/auth/plannerSession.ts",
+      "to": "file:site/lib/auth/session.ts"
+    },
+    {
+      "id": "imports:file:site/lib/auth/plannerSession.ts->file:site/platform/supabase/env.ts",
+      "kind": "imports",
+      "from": "file:site/lib/auth/plannerSession.ts",
+      "to": "file:site/platform/supabase/env.ts"
+    },
+    {
       "id": "imports:file:site/lib/hooks/useRuntimeFeatureFlags.ts->file:site/lib/api/browserApi.ts",
       "kind": "imports",
       "from": "file:site/lib/hooks/useRuntimeFeatureFlags.ts",
@@ -8787,6 +9399,24 @@
       "to": "file:site/features/Planner/projects/page.tsx"
     },
     {
+      "id": "imports:file:site/components/Planner/PlannerProjectAccessState.tsx->file:site/components/Planner/ui/PlannerStateSurface.tsx",
+      "kind": "imports",
+      "from": "file:site/components/Planner/PlannerProjectAccessState.tsx",
+      "to": "file:site/components/Planner/ui/PlannerStateSurface.tsx"
+    },
+    {
+      "id": "imports:file:site/components/Planner/PlannerProjectAccessState.tsx->file:site/lib/auth/plannerRedirect.ts",
+      "kind": "imports",
+      "from": "file:site/components/Planner/PlannerProjectAccessState.tsx",
+      "to": "file:site/lib/auth/plannerRedirect.ts"
+    },
+    {
+      "id": "imports:file:site/components/Planner/PlannerProjectsList.tsx->file:site/components/Planner/plannerProjectsListState.ts",
+      "kind": "imports",
+      "from": "file:site/components/Planner/PlannerProjectsList.tsx",
+      "to": "file:site/components/Planner/plannerProjectsListState.ts"
+    },
+    {
       "id": "imports:file:site/components/Planner/PlannerProjectsList.tsx->file:site/components/Planner/ui/PlannerOoButton.tsx",
       "kind": "imports",
       "from": "file:site/components/Planner/PlannerProjectsList.tsx",
@@ -8797,6 +9427,12 @@
       "kind": "imports",
       "from": "file:site/components/Planner/PlannerProjectsList.tsx",
       "to": "file:site/components/Planner/ui/PlannerPhIcon.tsx"
+    },
+    {
+      "id": "imports:file:site/components/Planner/PlannerProjectsList.tsx->file:site/components/Planner/ui/PlannerStateSurface.tsx",
+      "kind": "imports",
+      "from": "file:site/components/Planner/PlannerProjectsList.tsx",
+      "to": "file:site/components/Planner/ui/PlannerStateSurface.tsx"
     },
     {
       "id": "imports:file:site/components/Planner/PlannerProjectsList.tsx->file:site/lib/Planner/plannerApi.ts",
@@ -8823,10 +9459,28 @@
       "to": "file:site/lib/analytics/conversionContract.ts"
     },
     {
+      "id": "imports:file:site/components/Planner/PlannerProjectsList.tsx->file:site/lib/auth/plannerRedirect.ts",
+      "kind": "imports",
+      "from": "file:site/components/Planner/PlannerProjectsList.tsx",
+      "to": "file:site/lib/auth/plannerRedirect.ts"
+    },
+    {
       "id": "imports:file:site/components/Planner/PlannerProjectsList.tsx->file:site/store/Planner/plannerUiStore.ts",
       "kind": "imports",
       "from": "file:site/components/Planner/PlannerProjectsList.tsx",
       "to": "file:site/store/Planner/plannerUiStore.ts"
+    },
+    {
+      "id": "imports:file:site/components/Planner/plannerProjectsListState.ts->file:site/lib/Planner/plannerApi.ts",
+      "kind": "imports",
+      "from": "file:site/components/Planner/plannerProjectsListState.ts",
+      "to": "file:site/lib/Planner/plannerApi.ts"
+    },
+    {
+      "id": "imports:file:site/features/Planner/projects/page.tsx->file:site/components/Planner/PlannerProjectAccessState.tsx",
+      "kind": "imports",
+      "from": "file:site/features/Planner/projects/page.tsx",
+      "to": "file:site/components/Planner/PlannerProjectAccessState.tsx"
     },
     {
       "id": "imports:file:site/features/Planner/projects/page.tsx->file:site/components/Planner/PlannerProjectsList.tsx",
@@ -8835,10 +9489,16 @@
       "to": "file:site/components/Planner/PlannerProjectsList.tsx"
     },
     {
-      "id": "imports:file:site/lib/Planner/starterProjectTemplate.ts->file:site/lib/Planner/plannerPalette.ts",
+      "id": "imports:file:site/features/Planner/projects/page.tsx->file:site/lib/auth/plannerSession.ts",
+      "kind": "imports",
+      "from": "file:site/features/Planner/projects/page.tsx",
+      "to": "file:site/lib/auth/plannerSession.ts"
+    },
+    {
+      "id": "imports:file:site/lib/Planner/starterProjectTemplate.ts->file:site/lib/Planner/plannerGeometryContract.ts",
       "kind": "imports",
       "from": "file:site/lib/Planner/starterProjectTemplate.ts",
-      "to": "file:site/lib/Planner/plannerPalette.ts"
+      "to": "file:site/lib/Planner/plannerGeometryContract.ts"
     },
     {
       "id": "imports:file:site/app/ooplanner/projects/[id]/page.tsx->file:site/features/Planner/projects/[id]/page.tsx",
@@ -8851,6 +9511,18 @@
       "kind": "imports",
       "from": "file:site/features/Planner/projects/[id]/page.tsx",
       "to": "file:site/components/Planner/Planner.tsx"
+    },
+    {
+      "id": "imports:file:site/features/Planner/projects/[id]/page.tsx->file:site/components/Planner/PlannerProjectAccessState.tsx",
+      "kind": "imports",
+      "from": "file:site/features/Planner/projects/[id]/page.tsx",
+      "to": "file:site/components/Planner/PlannerProjectAccessState.tsx"
+    },
+    {
+      "id": "imports:file:site/features/Planner/projects/[id]/page.tsx->file:site/lib/auth/plannerSession.ts",
+      "kind": "imports",
+      "from": "file:site/features/Planner/projects/[id]/page.tsx",
+      "to": "file:site/lib/auth/plannerSession.ts"
     },
     {
       "id": "imports:file:site/app/oostudio/page.tsx->file:site/features/Studio/page.tsx",
@@ -9099,10 +9771,10 @@
       "to": "file:site/components/Studio/ui/StudioPhIcon.tsx"
     },
     {
-      "id": "imports:file:site/components/Studio/StudioAiPanel.tsx->file:site/lib/Studio/studioApi.ts",
+      "id": "imports:file:site/components/Studio/StudioAiPanel.tsx->file:site/lib/api/browserApi.ts",
       "kind": "imports",
       "from": "file:site/components/Studio/StudioAiPanel.tsx",
-      "to": "file:site/lib/Studio/studioApi.ts"
+      "to": "file:site/lib/api/browserApi.ts"
     },
     {
       "id": "imports:file:site/components/Studio/StudioAiPanel.tsx->file:site/store/Studio/studioUiStore.ts",
@@ -9741,6 +10413,12 @@
       "to": "file:site/features/site/planner/landing/plannerLandingData.ts"
     },
     {
+      "id": "imports:file:site/features/site/planner/landing/PlannerFeaturePageView.tsx->file:site/lib/helpers/motion.ts",
+      "kind": "imports",
+      "from": "file:site/features/site/planner/landing/PlannerFeaturePageView.tsx",
+      "to": "file:site/lib/helpers/motion.ts"
+    },
+    {
       "id": "imports:file:site/app/(site)/planner/help/page.tsx->file:site/features/site/data/routeMetadata.ts",
       "kind": "imports",
       "from": "file:site/app/(site)/planner/help/page.tsx",
@@ -10011,10 +10689,16 @@
       "to": "file:site/features/site/data/contact.ts"
     },
     {
-      "id": "imports:file:site/app/(site)/privacy/page.tsx->file:site/features/site/data/routeMetadata.ts",
+      "id": "imports:file:site/app/(site)/privacy/page.tsx->file:site/features/site/data/seo.ts",
       "kind": "imports",
       "from": "file:site/app/(site)/privacy/page.tsx",
-      "to": "file:site/features/site/data/routeMetadata.ts"
+      "to": "file:site/features/site/data/seo.ts"
+    },
+    {
+      "id": "imports:file:site/app/(site)/privacy/page.tsx->file:site/lib/siteUrl.ts",
+      "kind": "imports",
+      "from": "file:site/app/(site)/privacy/page.tsx",
+      "to": "file:site/lib/siteUrl.ts"
     },
     {
       "id": "imports:file:site/components/legal/LegalBodyReveal.tsx->file:site/lib/helpers/gsapMotion.ts",
@@ -11049,12 +11733,6 @@
       "to": "file:site/features/site/data/routeCopy.ts"
     },
     {
-      "id": "imports:file:site/app/(site)/showrooms/page.tsx->file:site/features/site/data/routeMetadata.ts",
-      "kind": "imports",
-      "from": "file:site/app/(site)/showrooms/page.tsx",
-      "to": "file:site/features/site/data/routeMetadata.ts"
-    },
-    {
       "id": "imports:file:site/app/(site)/showrooms/page.tsx->file:site/features/site/data/seo.ts",
       "kind": "imports",
       "from": "file:site/app/(site)/showrooms/page.tsx",
@@ -11559,12 +12237,6 @@
       "to": "file:site/features/site/data/routeCopy.ts"
     },
     {
-      "id": "imports:file:site/app/(site)/trusted-by/page.tsx->file:site/features/site/data/routeMetadata.ts",
-      "kind": "imports",
-      "from": "file:site/app/(site)/trusted-by/page.tsx",
-      "to": "file:site/features/site/data/routeMetadata.ts"
-    },
-    {
       "id": "imports:file:site/app/(site)/trusted-by/page.tsx->file:site/features/site/data/seo.ts",
       "kind": "imports",
       "from": "file:site/app/(site)/trusted-by/page.tsx",
@@ -11629,18 +12301,6 @@
       "kind": "imports",
       "from": "file:site/components/trusted-by/TrustedByPageView.tsx",
       "to": "file:site/lib/helpers/gsapMotion.ts"
-    },
-    {
-      "id": "imports:file:site/features/site/data/proof.ts->file:site/components/ClientBadge.tsx",
-      "kind": "imports",
-      "from": "file:site/features/site/data/proof.ts",
-      "to": "file:site/components/ClientBadge.tsx"
-    },
-    {
-      "id": "imports:file:site/features/site/data/proof.ts->file:site/features/site/data/clientLogos.ts",
-      "kind": "imports",
-      "from": "file:site/features/site/data/proof.ts",
-      "to": "file:site/features/site/data/clientLogos.ts"
     }
   ],
   "routeDirectImports": [
@@ -12113,11 +12773,11 @@
           "kind": "component"
         },
         {
-          "sourcePath": "site/features/site/data/routeCopy.ts",
+          "sourcePath": "site/features/site/data/downloadsPage.ts",
           "kind": "component"
         },
         {
-          "sourcePath": "site/features/site/data/routeMetadata.ts",
+          "sourcePath": "site/features/site/data/routeCopy.ts",
           "kind": "component"
         },
         {
@@ -12445,8 +13105,12 @@
           "kind": "component"
         },
         {
-          "sourcePath": "site/features/site/data/routeMetadata.ts",
+          "sourcePath": "site/features/site/data/seo.ts",
           "kind": "component"
+        },
+        {
+          "sourcePath": "site/lib/siteUrl.ts",
+          "kind": "module"
         }
       ]
     },
@@ -12725,10 +13389,6 @@
           "kind": "component"
         },
         {
-          "sourcePath": "site/features/site/data/routeMetadata.ts",
-          "kind": "component"
-        },
-        {
           "sourcePath": "site/features/site/data/seo.ts",
           "kind": "component"
         },
@@ -12993,10 +13653,6 @@
           "kind": "component"
         },
         {
-          "sourcePath": "site/features/site/data/routeMetadata.ts",
-          "kind": "component"
-        },
-        {
           "sourcePath": "site/features/site/data/seo.ts",
           "kind": "component"
         },
@@ -13108,6 +13764,7 @@
       "site/features/site/data/contact.ts",
       "site/features/site/data/homepage.ts",
       "site/features/site/data/productsPage.ts",
+      "site/features/site/data/proof.ts",
       "site/features/site/data/routeCopy.ts",
       "site/features/site/data/routeMetadata.ts",
       "site/features/site/data/seo.ts",
@@ -13124,6 +13781,8 @@
       "site/lib/catalog/site/catalogProductFilters.ts",
       "site/lib/catalog/site/categories.ts",
       "site/lib/catalog/types.ts",
+      "site/lib/clients/clientRegistry.ts",
+      "site/lib/clients/clientTypes.ts",
       "site/lib/consent.ts",
       "site/lib/email/sendStaffQueryNotification.ts",
       "site/lib/helpers/gsapMotion.ts",
@@ -13163,6 +13822,7 @@
       "site/features/site/data/careerJobs.ts",
       "site/features/site/data/clientLogos.ts",
       "site/features/site/data/contact.ts",
+      "site/features/site/data/proof.ts",
       "site/features/site/data/routeCopy.ts",
       "site/features/site/data/routeMetadata.ts",
       "site/features/site/data/seo.ts",
@@ -13184,6 +13844,8 @@
       "site/lib/auth/session.ts",
       "site/lib/auth/supabaseServerActions.ts",
       "site/lib/catalog/site/catalogProductFilters.ts",
+      "site/lib/clients/clientRegistry.ts",
+      "site/lib/clients/clientTypes.ts",
       "site/lib/consent.ts",
       "site/lib/email/sendStaffQueryNotification.ts",
       "site/lib/helpers/gsapMotion.ts",
@@ -13261,7 +13923,10 @@
       "site/features/shared/api/apiResponse.ts",
       "site/features/shared/api/schemas.ts",
       "site/features/shared/api/withAuth.ts",
+      "site/lib/Planner/ai/sketchToPlanShared.ts",
+      "site/lib/Planner/handoff/handoffSchema.ts",
       "site/lib/Planner/plannerApi.ts",
+      "site/lib/Planner/plannerEndpointContract.ts",
       "site/lib/Planner/plannerTypes.ts",
       "site/lib/api/browserApi.ts",
       "site/lib/auth/devAuthBypass.ts",
@@ -13365,8 +14030,13 @@
       "site/features/shared/crm/types.ts",
       "site/features/shared/shell/memberSuiteRoutes.ts",
       "site/features/site/data/productSuite.ts",
+      "site/lib/Planner/fabricGeometryBridge.ts",
       "site/lib/Planner/plannerDocument.ts",
+      "site/lib/Planner/plannerEndpointContract.ts",
+      "site/lib/Planner/plannerGeometryContract.ts",
       "site/lib/Planner/plannerPersistenceMode.ts",
+      "site/lib/Planner/plannerProjectOperations.ts",
+      "site/lib/Planner/plannerProjectRepository.ts",
       "site/lib/Planner/projectIndex.ts",
       "site/lib/Planner/projectsStore.supabase.ts",
       "site/lib/Planner/projectsStore.ts",
@@ -13374,6 +14044,11 @@
       "site/lib/auth/devAuthBypass.ts",
       "site/lib/catalog/furnitureCatalogMode.ts",
       "site/lib/catalog/furnitureCatalogStore.supabase.ts",
+      "site/lib/observability/metrics.ts",
+      "site/lib/observability/planner/plannerObservability.server.ts",
+      "site/lib/observability/planner/plannerObservability.ts",
+      "site/lib/observability/planner/plannerObservabilityAdapters.ts",
+      "site/lib/observability/planner/plannerObservabilityExporter.server.ts",
       "site/lib/paths/sitePackageRoot.ts",
       "site/lib/persistence/assertDevDiskWritable.ts",
       "site/lib/security/csrfConstants.ts",
@@ -13381,6 +14056,8 @@
       "site/platform/supabase/auth-admin.ts",
       "site/platform/supabase/types.ts",
       "site/platform/types/database.admin.types.ts",
+      "site/server/Planner/plannerProjectDiskAdapter.ts",
+      "site/server/Planner/plannerProjectSupabaseAdapter.ts",
       "site/server/Planner/plannerStore.ts",
       "site/types/database.admin.types.ts"
     ],
@@ -13496,7 +14173,10 @@
       "site/features/shared/api/apiResponse.ts",
       "site/features/shared/api/schemas.ts",
       "site/features/shared/api/withAuth.ts",
+      "site/lib/Planner/ai/sketchToPlanShared.ts",
+      "site/lib/Planner/handoff/handoffSchema.ts",
       "site/lib/Planner/plannerApi.ts",
+      "site/lib/Planner/plannerEndpointContract.ts",
       "site/lib/Planner/plannerTypes.ts",
       "site/lib/api/browserApi.ts",
       "site/lib/auth/devAuthBypass.ts",
@@ -13646,6 +14326,7 @@
       "site/features/site/data/contact.ts",
       "site/features/site/data/homepage.ts",
       "site/features/site/data/productsPage.ts",
+      "site/features/site/data/proof.ts",
       "site/features/site/data/routeCopy.ts",
       "site/features/site/data/routeMetadata.ts",
       "site/features/site/data/seo.ts",
@@ -13662,6 +14343,8 @@
       "site/lib/catalog/site/catalogProductFilters.ts",
       "site/lib/catalog/site/categories.ts",
       "site/lib/catalog/types.ts",
+      "site/lib/clients/clientRegistry.ts",
+      "site/lib/clients/clientTypes.ts",
       "site/lib/consent.ts",
       "site/lib/email/sendStaffQueryNotification.ts",
       "site/lib/helpers/gsapMotion.ts",
@@ -13702,6 +14385,7 @@
       "site/features/site/data/homepage.ts",
       "site/features/site/data/productSuite.ts",
       "site/features/site/data/productsPage.ts",
+      "site/features/site/data/proof.ts",
       "site/features/site/data/routeCopy.ts",
       "site/features/site/data/routeMetadata.ts",
       "site/features/site/data/seo.ts",
@@ -13721,6 +14405,8 @@
       "site/lib/catalog/site/catalogProductFilters.ts",
       "site/lib/catalog/site/categories.ts",
       "site/lib/catalog/types.ts",
+      "site/lib/clients/clientRegistry.ts",
+      "site/lib/clients/clientTypes.ts",
       "site/lib/consent.ts",
       "site/lib/email/sendStaffQueryNotification.ts",
       "site/lib/helpers/gsapMotion.ts",
@@ -13771,6 +14457,7 @@
       "site/features/site/data/fallbacks.ts",
       "site/features/site/data/homepage.ts",
       "site/features/site/data/productsPage.ts",
+      "site/features/site/data/proof.ts",
       "site/features/site/data/routeCopy.ts",
       "site/features/site/data/routeMetadata.ts",
       "site/features/site/data/seo.ts",
@@ -13792,6 +14479,8 @@
       "site/lib/catalog/site/catalogProductFilters.ts",
       "site/lib/catalog/site/categories.ts",
       "site/lib/catalog/types.ts",
+      "site/lib/clients/clientRegistry.ts",
+      "site/lib/clients/clientTypes.ts",
       "site/lib/consent.ts",
       "site/lib/email/sendStaffQueryNotification.ts",
       "site/lib/helpers/gsapMotion.ts",
@@ -13844,6 +14533,7 @@
       "site/features/site/data/contact.ts",
       "site/features/site/data/fallbacks.ts",
       "site/features/site/data/localCatalogIndex.json",
+      "site/features/site/data/proof.ts",
       "site/features/site/data/routeCopy.ts",
       "site/features/site/data/routeMetadata.ts",
       "site/features/site/data/seo.ts",
@@ -13871,6 +14561,8 @@
       "site/lib/catalog/site/getProducts.ts",
       "site/lib/catalog/sources.ts",
       "site/lib/catalog/types.ts",
+      "site/lib/clients/clientRegistry.ts",
+      "site/lib/clients/clientTypes.ts",
       "site/lib/consent.ts",
       "site/lib/displayText.ts",
       "site/lib/email/sendStaffQueryNotification.ts",
@@ -13927,6 +14619,7 @@
       "site/features/site/data/contactPage.ts",
       "site/features/site/data/homepage.ts",
       "site/features/site/data/productsPage.ts",
+      "site/features/site/data/proof.ts",
       "site/features/site/data/routeCopy.ts",
       "site/features/site/data/routeMetadata.ts",
       "site/features/site/data/seo.ts",
@@ -13943,6 +14636,8 @@
       "site/lib/catalog/site/catalogProductFilters.ts",
       "site/lib/catalog/site/categories.ts",
       "site/lib/catalog/types.ts",
+      "site/lib/clients/clientRegistry.ts",
+      "site/lib/clients/clientTypes.ts",
       "site/lib/consent.ts",
       "site/lib/email/sendStaffQueryNotification.ts",
       "site/lib/helpers/gsapMotion.ts",
@@ -14005,8 +14700,8 @@
       "site/features/site/data/downloadsPage.ts",
       "site/features/site/data/homepage.ts",
       "site/features/site/data/productsPage.ts",
+      "site/features/site/data/proof.ts",
       "site/features/site/data/routeCopy.ts",
-      "site/features/site/data/routeMetadata.ts",
       "site/features/site/data/seo.ts",
       "site/i18n/config.ts",
       "site/i18n/messages/hi.json",
@@ -14022,6 +14717,8 @@
       "site/lib/catalog/site/catalogProductFilters.ts",
       "site/lib/catalog/site/categories.ts",
       "site/lib/catalog/types.ts",
+      "site/lib/clients/clientRegistry.ts",
+      "site/lib/clients/clientTypes.ts",
       "site/lib/consent.ts",
       "site/lib/email/sendStaffQueryNotification.ts",
       "site/lib/helpers/gsapMotion.ts",
@@ -14068,6 +14765,7 @@
       "site/components/Planner/PlannerConstants.ts",
       "site/components/Planner/PlannerContextMenu.tsx",
       "site/components/Planner/PlannerDockShell.tsx",
+      "site/components/Planner/PlannerEntry.tsx",
       "site/components/Planner/PlannerHandoffDialog.tsx",
       "site/components/Planner/PlannerIconButton.tsx",
       "site/components/Planner/PlannerLayersPanel.tsx",
@@ -14076,6 +14774,7 @@
       "site/components/Planner/PlannerPropertiesPanel.tsx",
       "site/components/Planner/PlannerRulers.tsx",
       "site/components/Planner/PlannerSheetSettings.tsx",
+      "site/components/Planner/PlannerTabletPanelScrim.tsx",
       "site/components/Planner/PlannerToolRail.tsx",
       "site/components/Planner/PlannerTopToolbar.tsx",
       "site/components/Planner/PlannerUnitPill.tsx",
@@ -14087,6 +14786,7 @@
       "site/components/Planner/plannerLoadState.ts",
       "site/components/Planner/ui/PlannerDockFloatHeaderActions.tsx",
       "site/components/Planner/ui/PlannerDockPanelButtons.tsx",
+      "site/components/Planner/ui/PlannerDockTab.tsx",
       "site/components/Planner/ui/PlannerDraggableCanvasOverlay.tsx",
       "site/components/Planner/ui/PlannerExportMenu.tsx",
       "site/components/Planner/ui/PlannerHueSlider.tsx",
@@ -14097,15 +14797,21 @@
       "site/components/Planner/ui/PlannerPhIcon.tsx",
       "site/components/Planner/ui/PlannerPropertiesEmptyHint.tsx",
       "site/components/Planner/ui/PlannerSidePanelResizeHandle.tsx",
+      "site/components/Planner/ui/PlannerStateSurface.tsx",
       "site/components/Planner/ui/plannerExportMenuTypes.ts",
       "site/components/Planner/ui/plannerPhIconMap.ts",
       "site/components/Planner/ui/usePlannerPanelResize.ts",
       "site/features/Planner/page.tsx",
+      "site/features/shared/auth/types.ts",
       "site/hooks/Planner/usePlannerCanvasCore.ts",
       "site/hooks/Planner/usePlannerDockBridge.ts",
       "site/hooks/Planner/usePlannerFabric.ts",
+      "site/hooks/Planner/usePlannerFocusManager.ts",
       "site/hooks/Planner/usePlannerHistory.ts",
       "site/hooks/Planner/usePlannerKeyboardShortcuts.ts",
+      "site/hooks/Planner/usePlannerSessionWarning.ts",
+      "site/hooks/Planner/usePlannerTouchGestures.ts",
+      "site/hooks/Planner/usePlannerViewport.ts",
       "site/lib/Planner/ai/applySuggestedLayout.ts",
       "site/lib/Planner/ai/sketchToPlanShared.ts",
       "site/lib/Planner/ai/spaceSuggest.ts",
@@ -14115,17 +14821,24 @@
       "site/lib/Planner/boq/exportBoqJson.ts",
       "site/lib/Planner/boq/types.ts",
       "site/lib/Planner/buildValidationFloor.ts",
+      "site/lib/Planner/commands/canvasCommands.ts",
       "site/lib/Planner/commands/registry.ts",
+      "site/lib/Planner/commands/useCanvasActions.ts",
       "site/lib/Planner/fabricGeometryBridge.ts",
       "site/lib/Planner/geometry/alignDistribute.ts",
       "site/lib/Planner/geometry/openingPlacement.ts",
+      "site/lib/Planner/handoff/handoffRecovery.ts",
+      "site/lib/Planner/handoff/handoffSchema.ts",
       "site/lib/Planner/plannerApi.ts",
       "site/lib/Planner/plannerAutoArrange.ts",
       "site/lib/Planner/plannerCanvasLayers.ts",
       "site/lib/Planner/plannerColorUtils.ts",
       "site/lib/Planner/plannerDxfExport.ts",
+      "site/lib/Planner/plannerEndpointContract.ts",
       "site/lib/Planner/plannerExporters.ts",
       "site/lib/Planner/plannerFabricSerialize.ts",
+      "site/lib/Planner/plannerGeometryContract.ts",
+      "site/lib/Planner/plannerLocalBackup.ts",
       "site/lib/Planner/plannerPalette.ts",
       "site/lib/Planner/plannerSnap.ts",
       "site/lib/Planner/plannerSnapManager.ts",
@@ -14149,25 +14862,43 @@
       "site/lib/analytics/emitTransport.ts",
       "site/lib/analytics/eventQueue.ts",
       "site/lib/api/browserApi.ts",
+      "site/lib/auth/constants.ts",
+      "site/lib/auth/devAuthBypass.ts",
       "site/lib/auth/plannerRedirect.ts",
+      "site/lib/auth/plannerSession.ts",
+      "site/lib/auth/roles.ts",
+      "site/lib/auth/session.ts",
       "site/lib/catalog/svg/sha256.ts",
       "site/lib/consent.ts",
       "site/lib/featureFlags.ts",
       "site/lib/fonts.ts",
       "site/lib/hooks/useRuntimeFeatureFlags.ts",
       "site/lib/security/csrfConstants.ts",
+      "site/platform/supabase/env.ts",
+      "site/platform/supabase/server.ts",
+      "site/platform/supabase/types.ts",
+      "site/platform/types/database.admin.types.ts",
       "site/store/Planner/plannerCatalogStore.ts",
-      "site/store/Planner/plannerUiStore.ts"
+      "site/store/Planner/plannerUiStore.ts",
+      "site/types/database.admin.types.ts"
     ],
     "/ooplanner/projects": [
       "site/app/ooplanner/projects/page.tsx",
+      "site/components/Planner/PlannerProjectAccessState.tsx",
       "site/components/Planner/PlannerProjectsList.tsx",
+      "site/components/Planner/plannerProjectsListState.ts",
       "site/components/Planner/ui/PlannerOoButton.tsx",
       "site/components/Planner/ui/PlannerPhIcon.tsx",
+      "site/components/Planner/ui/PlannerStateSurface.tsx",
       "site/components/Planner/ui/plannerPhIconMap.ts",
       "site/features/Planner/projects/page.tsx",
+      "site/features/shared/auth/types.ts",
+      "site/lib/Planner/ai/sketchToPlanShared.ts",
+      "site/lib/Planner/fabricGeometryBridge.ts",
+      "site/lib/Planner/handoff/handoffSchema.ts",
       "site/lib/Planner/plannerApi.ts",
-      "site/lib/Planner/plannerPalette.ts",
+      "site/lib/Planner/plannerEndpointContract.ts",
+      "site/lib/Planner/plannerGeometryContract.ts",
       "site/lib/Planner/plannerTypes.ts",
       "site/lib/Planner/starterProjectTemplate.ts",
       "site/lib/analytics/conversionContract.ts",
@@ -14175,10 +14906,20 @@
       "site/lib/analytics/emitTransport.ts",
       "site/lib/analytics/eventQueue.ts",
       "site/lib/api/browserApi.ts",
+      "site/lib/auth/constants.ts",
+      "site/lib/auth/devAuthBypass.ts",
+      "site/lib/auth/plannerRedirect.ts",
+      "site/lib/auth/plannerSession.ts",
+      "site/lib/auth/roles.ts",
+      "site/lib/auth/session.ts",
       "site/lib/consent.ts",
-      "site/lib/fonts.ts",
       "site/lib/security/csrfConstants.ts",
-      "site/store/Planner/plannerUiStore.ts"
+      "site/platform/supabase/env.ts",
+      "site/platform/supabase/server.ts",
+      "site/platform/supabase/types.ts",
+      "site/platform/types/database.admin.types.ts",
+      "site/store/Planner/plannerUiStore.ts",
+      "site/types/database.admin.types.ts"
     ],
     "/ooplanner/projects/[id]": [
       "site/app/ooplanner/projects/[id]/page.tsx",
@@ -14196,11 +14937,13 @@
       "site/components/Planner/PlannerHandoffDialog.tsx",
       "site/components/Planner/PlannerIconButton.tsx",
       "site/components/Planner/PlannerLayersPanel.tsx",
+      "site/components/Planner/PlannerProjectAccessState.tsx",
       "site/components/Planner/PlannerProjectLoadState.tsx",
       "site/components/Planner/PlannerProjectMenu.tsx",
       "site/components/Planner/PlannerPropertiesPanel.tsx",
       "site/components/Planner/PlannerRulers.tsx",
       "site/components/Planner/PlannerSheetSettings.tsx",
+      "site/components/Planner/PlannerTabletPanelScrim.tsx",
       "site/components/Planner/PlannerToolRail.tsx",
       "site/components/Planner/PlannerTopToolbar.tsx",
       "site/components/Planner/PlannerUnitPill.tsx",
@@ -14212,6 +14955,7 @@
       "site/components/Planner/plannerLoadState.ts",
       "site/components/Planner/ui/PlannerDockFloatHeaderActions.tsx",
       "site/components/Planner/ui/PlannerDockPanelButtons.tsx",
+      "site/components/Planner/ui/PlannerDockTab.tsx",
       "site/components/Planner/ui/PlannerDraggableCanvasOverlay.tsx",
       "site/components/Planner/ui/PlannerExportMenu.tsx",
       "site/components/Planner/ui/PlannerHueSlider.tsx",
@@ -14222,15 +14966,21 @@
       "site/components/Planner/ui/PlannerPhIcon.tsx",
       "site/components/Planner/ui/PlannerPropertiesEmptyHint.tsx",
       "site/components/Planner/ui/PlannerSidePanelResizeHandle.tsx",
+      "site/components/Planner/ui/PlannerStateSurface.tsx",
       "site/components/Planner/ui/plannerExportMenuTypes.ts",
       "site/components/Planner/ui/plannerPhIconMap.ts",
       "site/components/Planner/ui/usePlannerPanelResize.ts",
       "site/features/Planner/projects/[id]/page.tsx",
+      "site/features/shared/auth/types.ts",
       "site/hooks/Planner/usePlannerCanvasCore.ts",
       "site/hooks/Planner/usePlannerDockBridge.ts",
       "site/hooks/Planner/usePlannerFabric.ts",
+      "site/hooks/Planner/usePlannerFocusManager.ts",
       "site/hooks/Planner/usePlannerHistory.ts",
       "site/hooks/Planner/usePlannerKeyboardShortcuts.ts",
+      "site/hooks/Planner/usePlannerSessionWarning.ts",
+      "site/hooks/Planner/usePlannerTouchGestures.ts",
+      "site/hooks/Planner/usePlannerViewport.ts",
       "site/lib/Planner/ai/applySuggestedLayout.ts",
       "site/lib/Planner/ai/sketchToPlanShared.ts",
       "site/lib/Planner/ai/spaceSuggest.ts",
@@ -14240,17 +14990,24 @@
       "site/lib/Planner/boq/exportBoqJson.ts",
       "site/lib/Planner/boq/types.ts",
       "site/lib/Planner/buildValidationFloor.ts",
+      "site/lib/Planner/commands/canvasCommands.ts",
       "site/lib/Planner/commands/registry.ts",
+      "site/lib/Planner/commands/useCanvasActions.ts",
       "site/lib/Planner/fabricGeometryBridge.ts",
       "site/lib/Planner/geometry/alignDistribute.ts",
       "site/lib/Planner/geometry/openingPlacement.ts",
+      "site/lib/Planner/handoff/handoffRecovery.ts",
+      "site/lib/Planner/handoff/handoffSchema.ts",
       "site/lib/Planner/plannerApi.ts",
       "site/lib/Planner/plannerAutoArrange.ts",
       "site/lib/Planner/plannerCanvasLayers.ts",
       "site/lib/Planner/plannerColorUtils.ts",
       "site/lib/Planner/plannerDxfExport.ts",
+      "site/lib/Planner/plannerEndpointContract.ts",
       "site/lib/Planner/plannerExporters.ts",
       "site/lib/Planner/plannerFabricSerialize.ts",
+      "site/lib/Planner/plannerGeometryContract.ts",
+      "site/lib/Planner/plannerLocalBackup.ts",
       "site/lib/Planner/plannerPalette.ts",
       "site/lib/Planner/plannerSnap.ts",
       "site/lib/Planner/plannerSnapManager.ts",
@@ -14274,15 +15031,25 @@
       "site/lib/analytics/emitTransport.ts",
       "site/lib/analytics/eventQueue.ts",
       "site/lib/api/browserApi.ts",
+      "site/lib/auth/constants.ts",
+      "site/lib/auth/devAuthBypass.ts",
       "site/lib/auth/plannerRedirect.ts",
+      "site/lib/auth/plannerSession.ts",
+      "site/lib/auth/roles.ts",
+      "site/lib/auth/session.ts",
       "site/lib/catalog/svg/sha256.ts",
       "site/lib/consent.ts",
       "site/lib/featureFlags.ts",
       "site/lib/fonts.ts",
       "site/lib/hooks/useRuntimeFeatureFlags.ts",
       "site/lib/security/csrfConstants.ts",
+      "site/platform/supabase/env.ts",
+      "site/platform/supabase/server.ts",
+      "site/platform/supabase/types.ts",
+      "site/platform/types/database.admin.types.ts",
       "site/store/Planner/plannerCatalogStore.ts",
-      "site/store/Planner/plannerUiStore.ts"
+      "site/store/Planner/plannerUiStore.ts",
+      "site/types/database.admin.types.ts"
     ],
     "/oostudio": [
       "site/app/oostudio/page.tsx",
@@ -14369,6 +15136,7 @@
       "site/features/site/data/homepage.ts",
       "site/features/site/data/productSuite.ts",
       "site/features/site/data/productsPage.ts",
+      "site/features/site/data/proof.ts",
       "site/features/site/data/routeCopy.ts",
       "site/features/site/data/routeMetadata.ts",
       "site/features/site/data/seo.ts",
@@ -14389,6 +15157,8 @@
       "site/lib/catalog/site/catalogProductFilters.ts",
       "site/lib/catalog/site/categories.ts",
       "site/lib/catalog/types.ts",
+      "site/lib/clients/clientRegistry.ts",
+      "site/lib/clients/clientTypes.ts",
       "site/lib/consent.ts",
       "site/lib/email/sendStaffQueryNotification.ts",
       "site/lib/helpers/gsapMotion.ts",
@@ -14432,6 +15202,7 @@
       "site/features/site/data/homepage.ts",
       "site/features/site/data/productSuite.ts",
       "site/features/site/data/productsPage.ts",
+      "site/features/site/data/proof.ts",
       "site/features/site/data/routeCopy.ts",
       "site/features/site/data/routeMetadata.ts",
       "site/features/site/data/seo.ts",
@@ -14451,6 +15222,8 @@
       "site/lib/catalog/site/catalogProductFilters.ts",
       "site/lib/catalog/site/categories.ts",
       "site/lib/catalog/types.ts",
+      "site/lib/clients/clientRegistry.ts",
+      "site/lib/clients/clientTypes.ts",
       "site/lib/consent.ts",
       "site/lib/email/sendStaffQueryNotification.ts",
       "site/lib/helpers/gsapMotion.ts",
@@ -14512,6 +15285,7 @@
       "site/lib/consent.ts",
       "site/lib/email/sendStaffQueryNotification.ts",
       "site/lib/helpers/gsapMotion.ts",
+      "site/lib/helpers/motion.ts",
       "site/lib/helpers/seo.ts",
       "site/lib/rateLimit.ts",
       "site/lib/safe-action.ts",
@@ -14547,6 +15321,7 @@
       "site/features/site/data/careerJobs.ts",
       "site/features/site/data/clientLogos.ts",
       "site/features/site/data/contact.ts",
+      "site/features/site/data/proof.ts",
       "site/features/site/data/routeCopy.ts",
       "site/features/site/data/routeMetadata.ts",
       "site/features/site/data/seo.ts",
@@ -14563,6 +15338,8 @@
       "site/lib/analytics/plannerEntry.ts",
       "site/lib/analytics/siteAttribution.ts",
       "site/lib/analytics/siteEvents.ts",
+      "site/lib/clients/clientRegistry.ts",
+      "site/lib/clients/clientTypes.ts",
       "site/lib/consent.ts",
       "site/lib/email/sendStaffQueryNotification.ts",
       "site/lib/helpers/gsapMotion.ts",
@@ -14607,6 +15384,7 @@
       "site/features/site/data/homepage.ts",
       "site/features/site/data/planningPage.ts",
       "site/features/site/data/productsPage.ts",
+      "site/features/site/data/proof.ts",
       "site/features/site/data/routeCopy.ts",
       "site/features/site/data/routeMetadata.ts",
       "site/features/site/data/seo.ts",
@@ -14624,6 +15402,8 @@
       "site/lib/catalog/site/catalogProductFilters.ts",
       "site/lib/catalog/site/categories.ts",
       "site/lib/catalog/types.ts",
+      "site/lib/clients/clientRegistry.ts",
+      "site/lib/clients/clientTypes.ts",
       "site/lib/consent.ts",
       "site/lib/email/sendStaffQueryNotification.ts",
       "site/lib/helpers/gsapMotion.ts",
@@ -14646,8 +15426,13 @@
       "site/features/shared/shell/memberSuiteRoutes.ts",
       "site/features/site/data/productSuite.ts",
       "site/features/site/portal/PortalPageView.tsx",
+      "site/lib/Planner/fabricGeometryBridge.ts",
       "site/lib/Planner/plannerDocument.ts",
+      "site/lib/Planner/plannerEndpointContract.ts",
+      "site/lib/Planner/plannerGeometryContract.ts",
       "site/lib/Planner/plannerPersistenceMode.ts",
+      "site/lib/Planner/plannerProjectOperations.ts",
+      "site/lib/Planner/plannerProjectRepository.ts",
       "site/lib/Planner/projectsStore.supabase.ts",
       "site/lib/Planner/projectsStore.ts",
       "site/lib/auth/devAuthBypass.ts",
@@ -14656,6 +15441,11 @@
       "site/lib/auth/session.ts",
       "site/lib/catalog/furnitureCatalogMode.ts",
       "site/lib/catalog/furnitureCatalogStore.supabase.ts",
+      "site/lib/observability/metrics.ts",
+      "site/lib/observability/planner/plannerObservability.server.ts",
+      "site/lib/observability/planner/plannerObservability.ts",
+      "site/lib/observability/planner/plannerObservabilityAdapters.ts",
+      "site/lib/observability/planner/plannerObservabilityExporter.server.ts",
       "site/lib/paths/sitePackageRoot.ts",
       "site/lib/persistence/assertDevDiskWritable.ts",
       "site/platform/supabase/auth-admin.ts",
@@ -14663,6 +15453,8 @@
       "site/platform/supabase/server.ts",
       "site/platform/supabase/types.ts",
       "site/platform/types/database.admin.types.ts",
+      "site/server/Planner/plannerProjectDiskAdapter.ts",
+      "site/server/Planner/plannerProjectSupabaseAdapter.ts",
       "site/server/Planner/plannerStore.ts",
       "site/types/database.admin.types.ts"
     ],
@@ -14673,8 +15465,13 @@
       "site/features/shared/shell/memberSuiteRoutes.ts",
       "site/features/site/data/productSuite.ts",
       "site/features/site/portal/PortalPlanPageView.tsx",
+      "site/lib/Planner/fabricGeometryBridge.ts",
       "site/lib/Planner/plannerDocument.ts",
+      "site/lib/Planner/plannerEndpointContract.ts",
+      "site/lib/Planner/plannerGeometryContract.ts",
       "site/lib/Planner/plannerPersistenceMode.ts",
+      "site/lib/Planner/plannerProjectOperations.ts",
+      "site/lib/Planner/plannerProjectRepository.ts",
       "site/lib/Planner/projectsStore.supabase.ts",
       "site/lib/Planner/projectsStore.ts",
       "site/lib/auth/devAuthBypass.ts",
@@ -14683,6 +15480,11 @@
       "site/lib/auth/session.ts",
       "site/lib/catalog/furnitureCatalogMode.ts",
       "site/lib/catalog/furnitureCatalogStore.supabase.ts",
+      "site/lib/observability/metrics.ts",
+      "site/lib/observability/planner/plannerObservability.server.ts",
+      "site/lib/observability/planner/plannerObservability.ts",
+      "site/lib/observability/planner/plannerObservabilityAdapters.ts",
+      "site/lib/observability/planner/plannerObservabilityExporter.server.ts",
       "site/lib/paths/sitePackageRoot.ts",
       "site/lib/persistence/assertDevDiskWritable.ts",
       "site/platform/supabase/auth-admin.ts",
@@ -14690,6 +15492,8 @@
       "site/platform/supabase/server.ts",
       "site/platform/supabase/types.ts",
       "site/platform/types/database.admin.types.ts",
+      "site/server/Planner/plannerProjectDiskAdapter.ts",
+      "site/server/Planner/plannerProjectSupabaseAdapter.ts",
       "site/server/Planner/plannerStore.ts",
       "site/types/database.admin.types.ts"
     ],
@@ -14705,7 +15509,6 @@
     ],
     "/privacy": [
       "site/app/(site)/privacy/page.tsx",
-      "site/components/ClientBadge.tsx",
       "site/components/home/layout/HomeCatalogLayout.tsx",
       "site/components/home/layout/HomeMarketingLayout.tsx",
       "site/components/home/layout/HomeSection.tsx",
@@ -14727,14 +15530,10 @@
       "site/features/site/contact/customerQuerySchema.ts",
       "site/features/site/contact/submitContactAction.ts",
       "site/features/site/data/brand.ts",
-      "site/features/site/data/careerJobs.ts",
-      "site/features/site/data/clientLogos.ts",
       "site/features/site/data/contact.ts",
       "site/features/site/data/homepage.ts",
       "site/features/site/data/legalPage.ts",
       "site/features/site/data/productsPage.ts",
-      "site/features/site/data/routeCopy.ts",
-      "site/features/site/data/routeMetadata.ts",
       "site/features/site/data/seo.ts",
       "site/i18n/config.ts",
       "site/i18n/routing.ts",
@@ -14794,6 +15593,7 @@
       "site/features/site/data/homepage.ts",
       "site/features/site/data/localCatalogIndex.json",
       "site/features/site/data/productsPage.ts",
+      "site/features/site/data/proof.ts",
       "site/features/site/data/routeCopy.ts",
       "site/features/site/data/seo.ts",
       "site/i18n/config.ts",
@@ -14821,6 +15621,8 @@
       "site/lib/catalog/site/marketingImages.ts",
       "site/lib/catalog/sources.ts",
       "site/lib/catalog/types.ts",
+      "site/lib/clients/clientRegistry.ts",
+      "site/lib/clients/clientTypes.ts",
       "site/lib/consent.ts",
       "site/lib/email/sendStaffQueryNotification.ts",
       "site/lib/helpers/gsapMotion.ts",
@@ -14878,6 +15680,7 @@
       "site/features/site/data/homepage.ts",
       "site/features/site/data/localCatalogIndex.json",
       "site/features/site/data/productsPage.ts",
+      "site/features/site/data/proof.ts",
       "site/features/site/data/routeCopy.ts",
       "site/features/site/data/seo.ts",
       "site/i18n/config.ts",
@@ -14910,6 +15713,8 @@
       "site/lib/catalog/site/traits.ts",
       "site/lib/catalog/sources.ts",
       "site/lib/catalog/types.ts",
+      "site/lib/clients/clientRegistry.ts",
+      "site/lib/clients/clientTypes.ts",
       "site/lib/consent.ts",
       "site/lib/displayText.ts",
       "site/lib/email/sendStaffQueryNotification.ts",
@@ -14964,6 +15769,7 @@
       "site/features/site/data/contact.ts",
       "site/features/site/data/fallbacks.ts",
       "site/features/site/data/localCatalogIndex.json",
+      "site/features/site/data/proof.ts",
       "site/features/site/data/routeCopy.ts",
       "site/features/site/data/seo.ts",
       "site/features/site/planSvg/resolvePdpPlanSvgThumb.server.ts",
@@ -14998,6 +15804,8 @@
       "site/lib/catalog/site/marketingImages.ts",
       "site/lib/catalog/sources.ts",
       "site/lib/catalog/types.ts",
+      "site/lib/clients/clientRegistry.ts",
+      "site/lib/clients/clientTypes.ts",
       "site/lib/consent.ts",
       "site/lib/displayText.ts",
       "site/lib/email/sendStaffQueryNotification.ts",
@@ -15060,6 +15868,7 @@
       "site/features/site/data/careerJobs.ts",
       "site/features/site/data/clientLogos.ts",
       "site/features/site/data/contact.ts",
+      "site/features/site/data/proof.ts",
       "site/features/site/data/routeCopy.ts",
       "site/lib/analytics/conversionContract.ts",
       "site/lib/analytics/emitSiteEvent.ts",
@@ -15070,6 +15879,8 @@
       "site/lib/analytics/siteEvents.ts",
       "site/lib/assetPaths.ts",
       "site/lib/catalog/site/catalogProductFilters.ts",
+      "site/lib/clients/clientRegistry.ts",
+      "site/lib/clients/clientTypes.ts",
       "site/lib/consent.ts",
       "site/lib/email/sendStaffQueryNotification.ts",
       "site/lib/helpers/gsapMotion.ts",
@@ -15113,6 +15924,7 @@
       "site/features/site/data/homepage.ts",
       "site/features/site/data/legalPage.ts",
       "site/features/site/data/productsPage.ts",
+      "site/features/site/data/proof.ts",
       "site/features/site/data/routeCopy.ts",
       "site/features/site/data/routeMetadata.ts",
       "site/features/site/data/seo.ts",
@@ -15129,6 +15941,8 @@
       "site/lib/catalog/site/catalogProductFilters.ts",
       "site/lib/catalog/site/categories.ts",
       "site/lib/catalog/types.ts",
+      "site/lib/clients/clientRegistry.ts",
+      "site/lib/clients/clientTypes.ts",
       "site/lib/consent.ts",
       "site/lib/email/sendStaffQueryNotification.ts",
       "site/lib/helpers/gsapMotion.ts",
@@ -15170,6 +15984,7 @@
       "site/features/site/data/contact.ts",
       "site/features/site/data/homepage.ts",
       "site/features/site/data/productsPage.ts",
+      "site/features/site/data/proof.ts",
       "site/features/site/data/routeCopy.ts",
       "site/features/site/data/routeMetadata.ts",
       "site/features/site/data/seo.ts",
@@ -15188,6 +16003,8 @@
       "site/lib/catalog/site/catalogProductFilters.ts",
       "site/lib/catalog/site/categories.ts",
       "site/lib/catalog/types.ts",
+      "site/lib/clients/clientRegistry.ts",
+      "site/lib/clients/clientTypes.ts",
       "site/lib/consent.ts",
       "site/lib/email/sendStaffQueryNotification.ts",
       "site/lib/helpers/gsapMotion.ts",
@@ -15232,8 +16049,8 @@
       "site/features/site/data/contact.ts",
       "site/features/site/data/homepage.ts",
       "site/features/site/data/productsPage.ts",
+      "site/features/site/data/proof.ts",
       "site/features/site/data/routeCopy.ts",
-      "site/features/site/data/routeMetadata.ts",
       "site/features/site/data/seo.ts",
       "site/features/site/data/showroomsPage.ts",
       "site/i18n/config.ts",
@@ -15250,6 +16067,8 @@
       "site/lib/catalog/site/catalogProductFilters.ts",
       "site/lib/catalog/site/categories.ts",
       "site/lib/catalog/types.ts",
+      "site/lib/clients/clientRegistry.ts",
+      "site/lib/clients/clientTypes.ts",
       "site/lib/consent.ts",
       "site/lib/email/sendStaffQueryNotification.ts",
       "site/lib/helpers/gsapMotion.ts",
@@ -15340,6 +16159,7 @@
       "site/features/site/data/contact.ts",
       "site/features/site/data/homepage.ts",
       "site/features/site/data/productsPage.ts",
+      "site/features/site/data/proof.ts",
       "site/features/site/data/routeClassification.ts",
       "site/features/site/data/routeCopy.ts",
       "site/features/site/data/routeMetadata.ts",
@@ -15358,6 +16178,8 @@
       "site/lib/catalog/site/catalogProductFilters.ts",
       "site/lib/catalog/site/categories.ts",
       "site/lib/catalog/types.ts",
+      "site/lib/clients/clientRegistry.ts",
+      "site/lib/clients/clientTypes.ts",
       "site/lib/consent.ts",
       "site/lib/email/sendStaffQueryNotification.ts",
       "site/lib/helpers/gsapMotion.ts",
@@ -15446,6 +16268,7 @@
       "site/features/site/data/contact.ts",
       "site/features/site/data/homepage.ts",
       "site/features/site/data/productsPage.ts",
+      "site/features/site/data/proof.ts",
       "site/features/site/data/routeCopy.ts",
       "site/features/site/data/routeMetadata.ts",
       "site/features/site/data/seo.ts",
@@ -15464,6 +16287,8 @@
       "site/lib/catalog/site/catalogProductFilters.ts",
       "site/lib/catalog/site/categories.ts",
       "site/lib/catalog/types.ts",
+      "site/lib/clients/clientRegistry.ts",
+      "site/lib/clients/clientTypes.ts",
       "site/lib/consent.ts",
       "site/lib/email/sendStaffQueryNotification.ts",
       "site/lib/helpers/gsapMotion.ts",
@@ -15510,6 +16335,7 @@
       "site/features/site/data/homepage.ts",
       "site/features/site/data/legalPage.ts",
       "site/features/site/data/productsPage.ts",
+      "site/features/site/data/proof.ts",
       "site/features/site/data/routeCopy.ts",
       "site/features/site/data/routeMetadata.ts",
       "site/features/site/data/seo.ts",
@@ -15526,6 +16352,8 @@
       "site/lib/catalog/site/catalogProductFilters.ts",
       "site/lib/catalog/site/categories.ts",
       "site/lib/catalog/types.ts",
+      "site/lib/clients/clientRegistry.ts",
+      "site/lib/clients/clientTypes.ts",
       "site/lib/consent.ts",
       "site/lib/email/sendStaffQueryNotification.ts",
       "site/lib/helpers/gsapMotion.ts",
@@ -15651,7 +16479,6 @@
       "site/features/site/data/productsPage.ts",
       "site/features/site/data/proof.ts",
       "site/features/site/data/routeCopy.ts",
-      "site/features/site/data/routeMetadata.ts",
       "site/features/site/data/seo.ts",
       "site/features/site/data/trustedByPage.ts",
       "site/i18n/config.ts",
@@ -15668,6 +16495,8 @@
       "site/lib/catalog/site/catalogProductFilters.ts",
       "site/lib/catalog/site/categories.ts",
       "site/lib/catalog/types.ts",
+      "site/lib/clients/clientRegistry.ts",
+      "site/lib/clients/clientTypes.ts",
       "site/lib/consent.ts",
       "site/lib/email/sendStaffQueryNotification.ts",
       "site/lib/helpers/gsapMotion.ts",

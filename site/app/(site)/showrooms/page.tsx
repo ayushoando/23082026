@@ -7,7 +7,12 @@ import {
   SHOWROOMS_HIGHLIGHTS,
   SHOWROOMS_PAGE_COPY,
 } from "@/features/site/data/routeCopy";
-import { buildBreadcrumbJsonLd, buildPageJsonLd, buildPageMetadata } from "@/features/site/data/seo";
+import {
+  buildBreadcrumbJsonLd,
+  buildPageJsonLd,
+  buildPageMetadata,
+  buildShowroomsLocalBusinessJsonLd,
+} from "@/features/site/data/seo";
 import { withLocaleCopy } from "@/lib/i18n/withLocaleCopy";
 import { SITE_URL } from "@/lib/siteUrl";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
@@ -44,6 +49,7 @@ export default async function ShowroomsPage() {
     { name: "Home", path: "/" },
     { name: copy.heroTitle, path: "/showrooms" },
   ]);
+  const localBusinessJsonLd = buildShowroomsLocalBusinessJsonLd(SITE_URL);
 
   return (
     <HomeMarketingLayout>
@@ -54,6 +60,10 @@ export default async function ShowroomsPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(localBusinessJsonLd) }}
       />
       <ShowroomsPageView
         heroKicker={copy.heroKicker}

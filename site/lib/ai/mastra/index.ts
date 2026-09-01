@@ -30,12 +30,3 @@ export {
 export { getAdvisorMemory } from "./advisorMemory";
 export { getAdvisorAgent, type AdvisorRole } from "./advisorAgent";
 export { resolveEmbedderModel, resolveMastraEmbeddingModel, isVectorRecallEnabled } from "./embedder";
-export {
-  getBedrockMantleBaseUrl,
-  requestProviderText,
-  resolveProviderChain,
-  type ProviderId,
-  type ResolvedProvider,
-  type ServerChatMessage,
-  type ServerChatMessageContentPart,
-} from "./providerFetch";

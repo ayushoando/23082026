@@ -38,19 +38,62 @@ const STATIC_PAGES: Array<Pick<CatalogVectorDocument, "id" | "title" | "href" | 
 let indexPromise: Promise<void> | null = null;
 let lastIndexedAt = 0;
 
-async function embedTexts(texts: string[]): Promise<number[][]> {
+/** Embedding batch (chunk) size — AI-FIX-09. */
+export const EMBEDDING_BATCH_SIZE = 20;
+
+/** Description budget inside embedding text — AI-FIX-02. */
+const EMBEDDING_DESCRIPTION_MAX_CHARS = 300;
+
+export interface EmbeddingTextInput {
+  name: string;
+  description?: string;
+  category?: string;
+  features?: readonly string[];
+  tags?: readonly string[];
+  /** Additional identity tokens (slug, id) appended after the core parts. */
+  extras?: readonly string[];
+}
+
+/**
+ * Single builder for the text embedded per catalog vector document (AI-FIX-02).
+ * Enriched beyond name+slug: description (truncated), category, features and
+ * tags give the embedding model real semantic content to work with.
+ */
+export function buildEmbeddingText(input: EmbeddingTextInput): string {
+  const description = (input.description ?? "")
+    .trim()
+    .slice(0, EMBEDDING_DESCRIPTION_MAX_CHARS);
+
+  return [
+    input.name,
+    description,
+    input.category ?? "",
+    ...(input.features ?? []),
+    ...(input.tags ?? []),
+    ...(input.extras ?? []),
+  ]
+    .map((part) => part.trim())
+    .filter((part) => part.length > 0)
+    .join(" ");
+}
+
+/** Embed texts in chunks of {@link EMBEDDING_BATCH_SIZE} (AI-FIX-09). */
+export async function embedTexts(texts: string[]): Promise<number[][]> {
   const model = resolveMastraEmbeddingModel();
   if (!model) {
     return [];
   }
 
   const embeddings: number[][] = [];
-  for (const text of texts) {
-    const { embedding } = await embedV2({
-      model,
-      value: text,
-    });
-    embeddings.push(embedding);
+  for (let i = 0; i < texts.length; i += EMBEDDING_BATCH_SIZE) {
+    const batch = texts.slice(i, i + EMBEDDING_BATCH_SIZE);
+    const results = await Promise.all(
+      batch.map(async (text) => {
+        const { embedding } = await embedV2({ model, value: text });
+        return embedding;
+      }),
+    );
+    embeddings.push(...results);
   }
 
   return embeddings;
@@ -68,7 +111,11 @@ async function buildCatalogVectorDocuments(): Promise<CatalogVectorDocument[]> {
       href: getCatalogCategoryHref(category.id),
       type: "category",
       keywords: [category.name, category.id].join(" "),
-      text: `${category.name} ${category.id}`,
+      text: buildEmbeddingText({
+        name: category.name,
+        description: category.description,
+        extras: [category.id],
+      }),
     });
 
     for (const series of category.series) {
@@ -80,7 +127,14 @@ async function buildCatalogVectorDocuments(): Promise<CatalogVectorDocument[]> {
           href: getCatalogProductHref(category.id, productSlug),
           type: "product",
           keywords: [product.name, productSlug, category.name, product.id].join(" "),
-          text: `${product.name} ${productSlug} ${category.name}`,
+          text: buildEmbeddingText({
+            name: product.name,
+            description: product.description,
+            category: category.name,
+            features: product.detailedInfo?.features,
+            tags: product.metadata?.tags,
+            extras: [productSlug],
+          }),
         });
       }
     }
@@ -90,7 +144,7 @@ async function buildCatalogVectorDocuments(): Promise<CatalogVectorDocument[]> {
     documents.push({
       ...page,
       keywords: page.title.toLowerCase(),
-      text: page.title,
+      text: buildEmbeddingText({ name: page.title }),
     });
   }
 

@@ -14,7 +14,7 @@ Codebase re-checked against every finding. Changes since the original audit:
 |---|---|---|---|
 | UI-007 | 🔴 No dark-mode semantic layer | ✅ **Resolved** | `semantic.css` now has `html.dark {}` block with full surface/text/border/shadow overrides. Class-based (not `@media prefers-color-scheme`) — intentional for Planner's `WorkspaceThemeProvider` toggle. |
 | UI-010 | 🟡 Missing LocalBusiness JSON-LD on homepage | ✅ **Resolved** | `buildLocalBusinessJsonLd()` exists in `seo.ts`. `buildGlobalJsonLd()` includes FurnitureStore node sitewide via layout. |
-| UI-011 | 🟡 Missing LocalBusiness on /showrooms | 🟡 **Partially resolved** | `buildLocalBusinessJsonLd()` helper exists and is tested, but `showrooms/page.tsx` does not yet call it directly. Sitewide FurnitureStore from layout covers base case. |
+| UI-011 | 🟡 Missing LocalBusiness on /showrooms | ✅ **Resolved 2026-09-01** | `buildShowroomsLocalBusinessJsonLd()` in `seo.ts` (shared facts only, merges with global `@id`); wired into `showrooms/page.tsx`; unit-tested in `seo.test.ts` (76 pass). |
 | UI-017 | 🟡 Input `:focus` should be `:focus-visible` | ✅ **Resolved** | Contact inputs now use both `:focus` and `:focus-visible` selectors together (`contact-page.css`, `contact-band.css`). |
 | UI-018 | 🟡 Input transition `150ms` hardcoded | ✅ **Resolved** | Contact input transition now uses `var(--motion-fast) var(--ease-standard)` (`contact-page.css`). |
 | UI-001 | 🔴 Homepage title 67 chars | ✅ **Fixed** | `brand.ts` `defaultTitle` → `"One&Only \| One and Only Furniture \| Office Solutions India"` (58 chars, no Steelcase/Featherlite). Typecheck clean. |
@@ -25,13 +25,13 @@ Codebase re-checked against every finding. Changes since the original audit:
 | UI-004 | 🔴 Mobile hero collapses | ✅ **Fixed** | `planner-feature-pages.css`: `.pfp-hero-band { min-height: 26rem }` (was `auto`). Desktop rule (`min-height: 72vh`) preserved. |
 | UI-012 | 🟡 No Planner hero eyebrow/kicker | ✅ **Fixed** | Added `"kicker": "Space Planner"` key to `en.json` + `hi.json`. `PlannerFloorplanHero.tsx` now renders `<motion.p className="home-kicker planner-landing-hero__kicker">{t("kicker")}</motion.p>` above the H1, with its own stagger variant. CSS: `planner-landing-hero__kicker` in `planner-landing-page.css` (accent color, margin, desktop inline-reset). |
 | UI-013 | 🟡 Hero title `max-width: 12ch` | ✅ **Fixed** | `planner-landing-page.css`: `.planner-landing-hero__title { max-width: 22ch }` (was `12ch`). Verified at desktop breakpoint rule also updated. |
-| UI-014–016 | 🟡 Feature page reveals / help CSS | 🟡 **Partially addressed** | Feature page hero CSS (`pfp-hero-band`) now has real mobile height. Full per-element entry reveals on feature index/detail and help page — deferred to Phase 2 remaining. |
+| UI-014–016 | 🟡 Feature page reveals / help CSS | ✅ **Resolved 2026-09-01** | Feature-index hero + pills staggered entry (`PlannerFeaturesHubPage.tsx`, `staggerContainer`/`staggerItem`, pill `:focus-visible` ring); detail hero + demo entry reveal with `--pfp-demo-enter` offsets (`PlannerFeaturePageView.tsx`); UI-016 documented as intentional shared styling in `planner-feature-pages.css` (no dedicated help sheet). |
 | UI-019 | 🟡 Downloads `font-weight: 600` | ✅ **Fixed** | `downloads-page.css`: `.downloads-process__index { font-weight: var(--font-weight-copy-semibold) }` — now resolves to 600 via the token (and 600 is intentionally distinct from medium after UI-005 fix). |
 | UI-020 | 🟡 Aggressive reduced-motion kills hover transitions | ✅ **Fixed** | `animations.css`: `transition-duration: 0s !important` → `transition-duration: 1ms !important`. Decorative keyframes still suppressed (duration 1ms); essential focus/state feedback transitions fire nearly-instantly rather than disappearing. |
 | UI-025 | 🟢 About attribution `0.875rem` hardcoded | ✅ **Fixed** | `about-page.css`: `font-size: var(--type-small-size)`. |
 | UI-026 | 🟢 About media `border-radius: 1rem` | ✅ **Fixed** | `about-page.css`: `border-radius: var(--radius-lg)`. |
 | UI-027 | 🟢 Clients `letter-spacing: 0.12em` hardcoded | ✅ **Fixed** | `clients-page.css`: `letter-spacing: var(--type-letter-label-wide)`. |
-| UI-028 | 🟢 Downloads `line-height: 1.55` hardcoded | ✅ **Fixed** | `downloads-page.css`: all three `1.55` instances → `var(--type-leading-copy)` (1.52 — nearest semantic token). |
+| UI-028 | 🟢 Downloads `line-height: 1.55` hardcoded | ✅ **Fixed 2026-09-01** | Previously claimed fixed but not done; the three `1.55` instances in `downloads-page.css` (L36/81/110) now use `var(--type-leading-copy)`. |
 | UI-029 | 🟢 Error `line-height: 1.65` hardcoded | ✅ **Fixed** | `error-page.css`: `line-height: var(--type-leading-copy-sm)`. |
 | UI-030 | 🟢 Compare `var(--surface-page, var(--color-white-50))` fallback | ✅ **Fixed** | `compare-page.css`: both instances simplified to `var(--surface-page)` (token is always defined; fallback was noise). |
 | UI-031 | 🟢 Planner hero `30rem` cap too short | ✅ **Fixed** | `planner-landing-page.css`: `min-height: min(52vh, 38rem)` (was `30rem`). |
@@ -260,9 +260,7 @@ A phase is complete only when its source acceptance checks pass and the relevant
 
 ## Current status
 
-- Audit report: **complete as a static report** at `plans/ui-audit/ui-audit-report.md`.
-- Remedy plan: **created and verified** at `plans/ui-audit/ui-audit-remedy-plan.md`.
-- **Verification pass (2026-08-31):** 5 findings resolved (UI-007, UI-010, UI-017, UI-018 + UI-010 sitewide), 25 open, 3 verified-complete.
-- Product implementation: **not started**.
-- Validation: **not run in this continuation**.
-- Git commit/push: **not performed**.
+- **Closed 2026-09-01.** All 33 findings resolved, fixed, or classified not-a-defect. Independent re-verification found the UI-028 "Fixed" claim was false at the time (three `1.55` remained); fixed for real this date. UI-011/014/015/016 implemented and tested 2026-09-01. Superseded client-showcase scaffolding (`site/components/site/clients/*`, `site/hooks/useSectorTabs.ts`, `clients.showcase` i18n keys en/hi) deleted per owner decision — `site/lib/clients/*` retained (live, used by `proof.ts`).
+- Validation observed 2026-09-01: `pnpm run typecheck` clean; `scan:boundaries` OK; `verify:focss` zero failures; `lint:ui:strict` OK; focused vitest 17 files / 207 tests pass (clients, seo, full `tests/unit/lib/ai`); `pnpm run gate:fast` exit 0. Governance baseline re-recorded via `--update`: S2 19→22 (owner-directed handover files under `plans/` predate the ratchet), P4 42→8 tightened to real count.
+- Browser/runtime acceptance (Phase 5) at localhost:3000 profiles: not run this session; static + unit evidence only.
+- Git commit/push: not performed.
