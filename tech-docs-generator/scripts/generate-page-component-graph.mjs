@@ -5,11 +5,11 @@ import path from "node:path";
 import { extractRouteRecords } from "./extract-routes.mjs";
 
 const ROOT = process.cwd();
-const AGENTS_WORK_ROOT = path.resolve(ROOT, "agents-work");
-const requestedOut = path.resolve(ROOT, readArg("--out", "agents-work/repository-graph/page-components"));
-const relativeOut = path.relative(AGENTS_WORK_ROOT, requestedOut);
+const GENERATED_ROOT = path.resolve(ROOT, "generated-documents");
+const requestedOut = path.resolve(ROOT, readArg("--out", "generated-documents/repository-graph/page-components"));
+const relativeOut = path.relative(GENERATED_ROOT, requestedOut);
 if (relativeOut.startsWith(`..${path.sep}`) || relativeOut === ".." || path.isAbsolute(relativeOut)) {
-  throw new Error("Page/component graph output must remain under agents-work/");
+  throw new Error("Page/component graph output must remain under generated-documents/");
 }
 const OUT = requestedOut;
 const SKIP_DIRS = new Set(["node_modules", ".next", ".git", "results", "dist", "coverage"]);

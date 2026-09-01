@@ -5,8 +5,8 @@ import path from "node:path";
 import { Project } from "ts-morph";
 
 const ROOT = path.resolve(process.cwd());
-const AGENTS_WORK_ROOT = path.resolve(ROOT, "agents-work");
-const DEFAULT_REPORT_ROOT = path.resolve(AGENTS_WORK_ROOT, "repository-graph");
+const GENERATED_ROOT = path.resolve(ROOT, "generated-documents");
+const DEFAULT_REPORT_ROOT = path.resolve(GENERATED_ROOT, "repository-graph");
 const GRAPH_ROOTS = [
   "site",
   "tests",
@@ -57,8 +57,8 @@ function isWithinDirectory(parentDirectory, candidateDirectory) {
 function reportRoot() {
   const requested = readArgument("--out");
   const candidate = path.resolve(ROOT, requested ?? path.relative(ROOT, DEFAULT_REPORT_ROOT));
-  if (!isWithinDirectory(AGENTS_WORK_ROOT, candidate)) {
-    fail(`Report output must remain under ${normalizeRelative(path.relative(ROOT, AGENTS_WORK_ROOT))}/`);
+  if (!isWithinDirectory(GENERATED_ROOT, candidate)) {
+    fail(`Report output must remain under ${normalizeRelative(path.relative(ROOT, GENERATED_ROOT))}/`);
   }
   return candidate;
 }
@@ -69,13 +69,13 @@ function safeReportSegment(value) {
 
 function writeReport(payload, folder, filename) {
   const directory = path.resolve(reportRoot(), folder);
-  if (!isWithinDirectory(AGENTS_WORK_ROOT, directory)) {
-    fail("Report output directory escaped agents-work/");
+  if (!isWithinDirectory(GENERATED_ROOT, directory)) {
+    fail("Report output directory escaped generated-documents/");
   }
   fs.mkdirSync(directory, { recursive: true });
   const reportPath = path.resolve(directory, filename);
-  if (!isWithinDirectory(AGENTS_WORK_ROOT, reportPath)) {
-    fail("Report output path escaped agents-work/");
+  if (!isWithinDirectory(GENERATED_ROOT, reportPath)) {
+    fail("Report output path escaped generated-documents/");
   }
   fs.writeFileSync(reportPath, `${JSON.stringify(payload, null, 2)}\n`, "utf8");
   return normalizeRelative(path.relative(ROOT, reportPath));
@@ -531,19 +531,19 @@ function runCycles({ graph }) {
 function printHelp() {
   print({
     usage: [
-      "node tech-docs-generator/scripts/graph-impact.mjs --stats [--out=agents-work/repository-graph]",
-      "node tech-docs-generator/scripts/graph-impact.mjs --circles [--out=agents-work/repository-graph]",
-      "node tech-docs-generator/scripts/graph-impact.mjs --file=<repository-relative-path> [--depth=N] [--out=agents-work/repository-graph]",
+      "node tech-docs-generator/scripts/graph-impact.mjs --stats [--out=generated-documents/repository-graph]",
+      "node tech-docs-generator/scripts/graph-impact.mjs --circles [--out=generated-documents/repository-graph]",
+      "node tech-docs-generator/scripts/graph-impact.mjs --file=<repository-relative-path> [--depth=N] [--out=generated-documents/repository-graph]",
     ],
     roots: GRAPH_ROOTS,
     behavior: "Read-only local import graph; results are printed to stdout and saved as JSON reports.",
     depth: "The seed is distance 0; --depth=2 includes direct dependents and one additional hop.",
     reportLayout: {
-      stats: "agents-work/repository-graph/stats/latest.json",
-      cycles: "agents-work/repository-graph/cycles/latest.json",
-      impact: "agents-work/repository-graph/impact/<domain>/<file>.json",
+      stats: "generated-documents/repository-graph/stats/latest.json",
+      cycles: "generated-documents/repository-graph/cycles/latest.json",
+      impact: "generated-documents/repository-graph/impact/<domain>/<file>.json",
     },
-    outputBoundary: "Report output must remain under agents-work/; this tool never writes to site/.",
+    outputBoundary: "Report output must remain under generated-documents/; this tool never writes to site/.",
   });
 }
 
