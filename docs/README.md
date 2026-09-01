@@ -17,6 +17,7 @@ Use this index to find architecture, database, and governance references that sh
 | Where code goes / source pointers / tech-docs | [`architecture/product-map.md`](./architecture/product-map.md) |
 | Stack (Node, Next, FOCSS, packages) | [`architecture/stack.md`](./architecture/stack.md) |
 | Pages + API | [`architecture/routes.md`](./architecture/routes.md) |
+| Site map (all surfaces, redirects, boundaries) | [`architecture/sitemap.md`](./architecture/sitemap.md) |
 | CSS | [`architecture/css.md`](./architecture/css.md) · [`governance/focss-stop-drift.md`](./governance/focss-stop-drift.md) |
 | Scripts and command authorities | [`architecture/scripts.md`](./architecture/scripts.md) · [catalog CSV](./architecture/scripts.csv) · [staleness CSV](./architecture/scripts-stale-review.csv) |
 | Schema | [`database/schema.md`](./database/schema.md) |
@@ -26,7 +27,6 @@ Use this index to find architecture, database, and governance references that sh
 | Charter / benchmarks | [`governance/charter.md`](./governance/charter.md) · [`governance/benchmarks.md`](./governance/benchmarks.md) |
 | Deploy | [`../OPERATIONS_RUNBOOK.md`](../OPERATIONS_RUNBOOK.md) |
 | Security (CSP, mutators) | [`governance/rules.md`](./governance/rules.md) |
-| Agent reports pointer | [`../agent-reports/`](../agent-reports/README.md) |
 | Tech-docs package | [`../tech-docs-generator/README.md`](../tech-docs-generator/README.md) |
 | Blockers | [`../Failures.md`](../Failures.md) |
 
@@ -39,6 +39,7 @@ Use this index to find architecture, database, and governance references that sh
 | `architecture/product-map.md` | Placement, Studio→Planner, source pointers, tech-docs |
 | `architecture/stack.md` | Toolchain, workspace, FOCSS-on-Tailwind, package truth |
 | `architecture/routes.md` | Page + API inventories |
+| `architecture/sitemap.md` | Whole-site surface map, redirect register, system boundaries |
 | `architecture/css.md` | FOCSS zones |
 | `database/schema.md` | Tables, RLS, archive |
 | `database/drizzle.md` | Two DBs, Drizzle vs Supabase JS, mermaid |

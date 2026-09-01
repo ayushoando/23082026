@@ -83,7 +83,6 @@ raw disk helper. Selectors: `site/lib/Planner/plannerPersistenceMode.ts`,
 | Product | [`../README.md`](../README.md) |
 | Security / i18n | [`../docs/architecture/stack.md`](../docs/architecture/stack.md) §7–8 · [`../docs/governance/rules.md`](../docs/governance/rules.md) |
 | Tests / coverage | [`../Testing-handbook.md`](../Testing-handbook.md) |
-| Agent reports pointer | [`../agent-reports/README.md`](../agent-reports/README.md) |
 
 ## VS Code Customizations
 

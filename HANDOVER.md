@@ -12,6 +12,12 @@ This file preserves prior handoff context; it is not a source of current reposit
 
 Store credentials only in `.env.local` or `site/.env.local`. Server credentials, including service-role and AI-provider credentials, are server-only and must not appear in client code, browser output, client-visible configuration, documentation output, or Git.
 
+## Session notes — 2026-09-01
+
+- `.kiro\agents\*.md` (5 files) and several `.kiro\specs` subfolders vanished mid-session while `.kiro` was being modified by another process; not restored, not assumed. Rule for next sessions: **ask the user whenever an expected file is missing.**
+- Moved on user instruction: `agents-work\client-hub` → `plans\client-hub`; all `.kiro\specs\*` subfolders → `plans\` (`planner-comprehensive-audit` merged with its existing plan folder). `.kiro\specs` is now empty. Moves are unstaged in git.
+- Root docs, `docs/`, `plans/` (md), `.kiro\skills`, and `Agents/` handbooks were read in full this session.
+
 ## Current-owner checklist
 
 1. Read the [process floor](./AGENTS.md) and [active planning index](./plans/README.md).

@@ -54,7 +54,7 @@ See [`docs/README.md`](./docs/README.md) for the full 14-file table. Highlights:
 
 | Topic | Home |
 |-------|------|
-| Repo layout / stack / routes / css | `docs/architecture/{layout,stack,routes,css}.md` |
+| Repo layout / stack / routes / css / sitemap | `docs/architecture/{layout,stack,routes,css,sitemap}.md` |
 | Scripts catalog, commands, and documentation sources | `docs/architecture/scripts.md` |
 | Product placement + tech-docs | `docs/architecture/product-map.md` |
 | Database (schema, drizzle, ops) | `docs/database/*` |
