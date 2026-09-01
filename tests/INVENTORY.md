@@ -2,19 +2,19 @@
 
 Generated executable-test and support-file inventory. Layout rules: `tests/CONTENTS.md`.
 
-*Updated: 2026-08-30 — regenerate through the repository docs workflow.*
+*Updated: 2026-09-01 — regenerate through the repository docs workflow.*
 
 ## Counts
 
 | Kind | Count |
 |---|---:|
-| Vitest executable files | 724 |
-| Playwright executable specs | 82 |
+| Vitest executable files | 754 |
+| Playwright executable specs | 83 |
 | Helpers | 38 |
 | Fixtures | 15 |
 | Snapshots | 12 |
 | Other assets | 10 |
-| **Total files** | **881** |
+| **Total files** | **912** |
 
 ## vitest
 
@@ -48,6 +48,29 @@ Generated executable-test and support-file inventory. Layout rules: `tests/CONTE
 - `tests/integration/lib/catalog/site/specSchema.test.ts`
 - `tests/integration/lib/catalog/sources.test.ts`
 - `tests/integration/planner/plannerWorkstream5Regression.test.ts`
+- `tests/operations-review/alignmentSourceLinked.property.test.ts`
+- `tests/operations-review/attributableMissingBackupCoverageGaps.property.test.ts`
+- `tests/operations-review/attributableMonitoringGaps.property.test.ts`
+- `tests/operations-review/evidenceRecordPartitions.property.test.ts`
+- `tests/operations-review/extractors.fixture.test.ts`
+- `tests/operations-review/incidentUncertaintyPreservation.property.test.ts`
+- `tests/operations-review/monitoringGapsAttributable.property.test.ts`
+- `tests/operations-review/persistedDataReleaseCompleteness.property.test.ts`
+- `tests/operations-review/protectedOperationCompleteness.property.test.ts`
+- `tests/operations-review/repositoryEvidenceAdmission.property.test.ts`
+- `tests/operations-review/restoreDrillCompleteness.property.test.ts`
+- `tests/operations-review/restoreDrillEvidenceFields.property.test.ts`
+- `tests/operations-review/scheduledWorkflowCredentialRedaction.property.test.ts`
+- `tests/operations-review/sourceLinkedAlignmentDifferences.property.test.ts`
+- `tests/operations-review/unsupportedExternalClaim.property.test.ts`
+- `tests/operations-review/workerReleaseDecision.property.test.ts`
+- `tests/site-ui-content-links-audit/canonicalInventoryClosure.property.test.ts`
+- `tests/site-ui-content-links-audit/dynamicInstanceDeduplication.property.test.ts`
+- `tests/site-ui-content-links-audit/property-03-occurrence-bijection.test.ts`
+- `tests/site-ui-content-links-audit/property-04-auth-non-escalation.test.ts`
+- `tests/site-ui-content-links-audit/property-05-zero-product-mutation.test.ts`
+- `tests/site-ui-content-links-audit/property-3-occurrence-expansion-finding-bijection.test.ts`
+- `tests/site-ui-content-links-audit/property-5-zero-product-code-mutation.test.ts`
 - `tests/tech-docs-generator/app-overlay.test.tsx`
 - `tests/tech-docs-generator/auth-gate.test.tsx`
 - `tests/tech-docs-generator/auth-provider.test.tsx`
@@ -195,30 +218,7 @@ Generated executable-test and support-file inventory. Layout rules: `tests/CONTE
 - `tests/unit/app/layout.test.tsx`
 - `tests/unit/app/not-found.test.tsx`
 - `tests/unit/app/offline/layout.test.tsx`
-- `tests/unit/app/offline/page.test.tsx`
-- `tests/unit/app/offline/ReloadButton.test.tsx`
-- `tests/unit/app/plannerRootViewportLock.test.ts`
-- `tests/unit/app/robots.test.ts`
-- `tests/unit/app/sitemap.test.ts`
-- `tests/unit/components/analytics/KpiIntegrityMonitor.test.tsx`
-- `tests/unit/components/career/CareerPageView.test.tsx`
-- `tests/unit/components/career/JobCard.test.tsx`
-- `tests/unit/components/ClientBadge.test.tsx`
-- `tests/unit/components/contact/ContactPageView.test.tsx`
-- `tests/unit/components/contact/CustomerQueryForm.test.tsx`
-- `tests/unit/components/home/CategoryGrid.test.tsx`
-- `tests/unit/components/home/CollectionsSectionHeading.test.tsx`
-- `tests/unit/components/home/Hero.test.tsx`
-- `tests/unit/components/home/HomepageHero.test.tsx`
-- `tests/unit/components/home/InteractiveTools.test.tsx`
-- `tests/unit/components/home/KpiCounter.test.tsx`
-- `tests/unit/components/home/layout/HomeCatalogLayout.test.tsx`
-- `tests/unit/components/home/layout/HomeMarketingLayout.test.tsx`
-- `tests/unit/components/home/layout/HomeSection.test.tsx`
-- `tests/unit/components/home/layout/HomeSectionInner.test.tsx`
-- `tests/unit/components/home/layout/index.test.ts`
-- `tests/unit/components/home/layout/SiteWorkspaceShell.test.tsx`
-- … +524 more
+- … +554 more
 
 ## playwright
 
@@ -270,6 +270,7 @@ Generated executable-test and support-file inventory. Layout rules: `tests/CONTE
 - `tests/e2e/planner-canvas-trust.spec.ts`
 - `tests/e2e/planner-catalog.spec.ts`
 - `tests/e2e/planner-chrome.spec.ts`
+- `tests/e2e/planner-comprehensive-audit-browser.spec.ts`
 - `tests/e2e/planner-comprehensive-audit-regression.spec.ts`
 - `tests/e2e/planner-custom-tools.spec.ts`
 - `tests/e2e/planner-entry-states.spec.ts`
