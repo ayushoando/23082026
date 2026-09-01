@@ -1,14 +1,6 @@
-# Updated findings — Dependencies & build/config
-
+# Remaining — Dependencies & build/config
 **Date:** 2026-09-01
 
-## Resolved
-- None yet. No remediation performed for this area as of 2026-09-01.
-
-## Fixed along the way (discovered during remediation)
-- None.
-
-## Remaining (failures / open items)
 - 19.1 (Med): duplicated search stacks (fuse.js + @orama/orama) still ship simultaneously — open, not started.
 - 19.2 (Med): framer-motion major split (root ^13.1.1 vs tech-docs ^12.43.0) — open, not started.
 - 19.3 (Med): TypeScript 7 frontier pins requiring `experimental.useTypeScriptCli: true` + `oxlint-tsgolint` — guarded, reassessment open.

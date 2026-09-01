@@ -1,14 +1,5 @@
-# Updated findings — 29-tests-css-content
-
+# Remaining — 29-tests-css-content
 **Date:** 2026-09-01
-
-## Resolved
-- none yet — No remediation performed for this area as of 2026-09-01.
-
-## Fixed along the way (discovered during remediation)
-- none
-
-## Remaining (failures / open items)
 - Visual baselines (High): open — still 0 of 216 on disk (re-verified unchanged by report 35 on 2026-09-01); strategy decision (generate + review vs flip manifest/policy) pending.
 - 29.1: open — 110 `waitForTimeout` across 24 files unchanged (worst: audit-3a-planner-journey-2 ×29, planner-comprehensive-audit-browser ×13, audit-4a-marketing-pages ×10).
 - 29.2: open — 4 specs still hardcode `http://localhost:3000` (+1 self-constructed baseURL).

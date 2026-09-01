@@ -1,0 +1,5 @@
+# Resolved — 33-canvas-algorithms
+**Date:** 2026-09-01
+- Evidence collected 2026-09-01 (static audit of fabric serialize, geometry bridge, snap, DXF export, room-area math): verdict — snap math clean (zoom/grid/rotation sound; only cosmetic rotated-anchor nit); the only genuinely invalid output is the DXF R12 entity-set violation (`LWPOLYLINE`/`ELLIPSE` emitted under an R12 header — strict R12 importers reject/drop every wall/polygon/furniture outline); the highest-fidelity bug is stale Fabric `Line.x1..y2` shared by the Gate-B geometry snapshot and the DXF line export (moved walls persist/export at their original position); the requested signed-area/non-convex-room check resolves to "the math doesn't exist" (rooms are `width×height` rectangles everywhere; `usedArea` ignores overlaps); remaining items are valid-but-imprecise fidelity gaps (lock-prop asymmetry, save path `["data"]`-only, silent class drop + z-order split, catalog-vs-scaled dimensions, DXF rotation/groups/scale, scale-param trap).
+
+(Fixed along the way: none — read-only static audit; no code changes.)

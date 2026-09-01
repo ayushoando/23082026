@@ -1,14 +1,6 @@
-# Updated findings — Accessibility
-
+# Remaining — Accessibility
 **Date:** 2026-09-01
 
-## Resolved
-- None yet. No remediation performed for this area as of 2026-09-01.
-
-## Fixed along the way (discovered during remediation)
-- None.
-
-## Remaining (failures / open items)
 - 16.1: axe scan coverage still limited to home + guest planner + export menu (4 targets); PDP/catalog/contact form unscanned — open, not started.
 - 16.2: manual focus trap in `MobileNavDrawer.tsx:141-159` coexists with the react-aria `Modal` it imports — open, not started.
 - 16.3: tap-target 44px floor still an explicit allowlist — open, not started.

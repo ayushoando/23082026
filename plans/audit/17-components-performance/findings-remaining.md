@@ -1,14 +1,6 @@
-# Updated findings — Component quality & performance
-
+# Remaining — Component quality & performance
 **Date:** 2026-09-01
 
-## Resolved
-- None yet. No remediation performed for this area as of 2026-09-01.
-
-## Fixed along the way (discovered during remediation)
-- None.
-
-## Remaining (failures / open items)
 - 17.1 (High): `Planner.tsx` still 3,387 lines with no local error boundary — open, not started.
 - 17.2 (High): ~24-file Planner/Studio parallel fork with no shared core — open, not started.
 - 17.3 (Med): no remediation performed under this report; cross-ref — 02-architecture-routes records 2.3 resolved (route-level `error.tsx` added at `app/admin/`, `app/ooplanner/`, `app/oostudio/`), which covers this item's substance.

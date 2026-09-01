@@ -1,14 +1,5 @@
-# Updated findings — 28-canvas-features-logic
-
+# Remaining — 28-canvas-features-logic
 **Date:** 2026-09-01
-
-## Resolved
-- none yet — all findings 28.1–28.18 are open (not started).
-
-## Fixed along the way (discovered during remediation)
-- none
-
-## Remaining (failures / open items)
 - 28.1: open (High) — history `suppress` deadlock: corrupt snapshot permanently stops undo/redo recording.
 - 28.2: open (High) — `useKeyboardShortcuts` with no deps at `Planner.tsx:2390` → Ctrl+S duplicate project.
 - 28.3: open — Studio `useHistory` regression (per-render `propsToInclude`, no `onRestore`).
