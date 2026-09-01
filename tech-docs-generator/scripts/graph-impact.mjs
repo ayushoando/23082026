@@ -9,8 +9,11 @@ const AGENTS_WORK_ROOT = path.resolve(ROOT, "agents-work");
 const DEFAULT_REPORT_ROOT = path.resolve(AGENTS_WORK_ROOT, "repository-graph");
 const GRAPH_ROOTS = [
   "site",
+  "tests",
   "scripts",
   "workers",
+  "config",
+  "i18n",
   "tech-docs-generator/src",
   "tech-docs-generator/scripts",
 ];
@@ -153,6 +156,7 @@ function loadAliases() {
   const configPaths = [
     "tsconfig.json",
     "site/tsconfig.json",
+    "tests/tsconfig.json",
     "workers/oando-worker-proxy/tsconfig.json",
     "tech-docs-generator/tsconfig.json",
   ];
@@ -327,6 +331,9 @@ function classifyDomain(relativePath) {
   }
   if (relativePath.startsWith("workers/")) return "worker";
   if (relativePath.startsWith("tech-docs-generator/")) return "tech-docs";
+  if (relativePath.startsWith("tests/")) return "tests";
+  if (relativePath.startsWith("config/")) return "config";
+  if (relativePath.startsWith("i18n/")) return "i18n";
   return "other";
 }
 
@@ -524,9 +531,9 @@ function runCycles({ graph }) {
 function printHelp() {
   print({
     usage: [
-      "node scripts/graph-impact.mjs --stats [--out=agents-work/repository-graph]",
-      "node scripts/graph-impact.mjs --circles [--out=agents-work/repository-graph]",
-      "node scripts/graph-impact.mjs --file=<repository-relative-path> [--depth=N] [--out=agents-work/repository-graph]",
+      "node tech-docs-generator/scripts/graph-impact.mjs --stats [--out=agents-work/repository-graph]",
+      "node tech-docs-generator/scripts/graph-impact.mjs --circles [--out=agents-work/repository-graph]",
+      "node tech-docs-generator/scripts/graph-impact.mjs --file=<repository-relative-path> [--depth=N] [--out=agents-work/repository-graph]",
     ],
     roots: GRAPH_ROOTS,
     behavior: "Read-only local import graph; results are printed to stdout and saved as JSON reports.",

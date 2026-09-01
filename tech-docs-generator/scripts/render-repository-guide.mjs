@@ -142,7 +142,7 @@ function markdownToHtml(markdown, ctx) {
     while (
       i < lines.length &&
       lines[i].trim() &&
-      !/^```/.test(lines[i]) &&
+      !lines[i].startsWith('```') &&
       !/^#{1,6}\s/.test(lines[i]) &&
       !/^>\s?/.test(lines[i]) &&
       !/^(\s*)([-*]|\d+\.)\s+/.test(lines[i]) &&
@@ -270,7 +270,6 @@ export function renderGuidePages({ repoRoot = defaultRepoRoot } = {}) {
   const sources = collectGuideSources({ repoRoot })
   const entries = []
   const readmeSource = 'README.md'
-  const readmeRaw = readFileSync(sources.readme, 'utf8')
   entries.push({ file: sources.readme, name: readmeSource })
   for (const chapter of sources.chapters) entries.push({ file: chapter, name: path.basename(chapter) })
   const navEntries = entries.map((entry) => ({

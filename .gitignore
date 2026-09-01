@@ -58,28 +58,17 @@ site/public/assets/others/misc/from-recovery/
 # Template is safe to commit; required by tech-docs generate on Vercel.
 !.env.example
 
-# Qwen IDE session artifacts
-.qwen/
+
 
 # IDE / agent session tooling (not product)
 .commandcode/
-.kiro/
 
-.qoder/
 
 # Wrangler / Miniflare local dev state (transient SQLite cache, R2 blobs)
 workers/**/.wrangler/
-
-# --- ltm-power ---
-ltm/store/*.jsonl
-ltm/runtime/*
-ltm/reports/*
-ltm/snapshots/*
-# --- /ltm-power ---
+-
 
 # Python cache (never commit compiled bytecode)
 __pycache__/
 *.pyc
 
-# MCP local data caches (repo-local Datadog index; regenerated, not source)
-mcp/Datadog/

@@ -10,6 +10,7 @@ import { buildGeneratorModel } from './model.mjs'
 import { validateGeneratedSurface } from './publish-generated-tree.mjs'
 import { PARITY_DATA_FILES } from './renderer-data.mjs'
 import { writeGuidePages } from './render-repository-guide.mjs'
+import { writeRepositoryMap } from './render-repository-map.mjs'
 import {
   getDocumentsRoot,
   getGeneratedRoot,
@@ -42,7 +43,8 @@ let generateAllQueue = Promise.resolve()
  * 3. validate parity + manifests
  * 4. regenerate repository-graph stats/cycles + page-component graph,
  *    then render the agents-work guide Markdown to its html/ projection
- *    (deterministic outputs under agents-work/; the wipe never touches them)
+ *    and the repository-map page (deterministic outputs under agents-work/;
+ *    the wipe never touches them)
  * (site is rebuilt afterward by `vite build`)
  */
 const execFileAsync = promisify(execFile)
@@ -68,11 +70,13 @@ export async function generateAll({ repoRoot = defaultRepoRoot } = {}) {
     await validateGeneratedSurface({ root: getDocumentsRoot(repoRoot), surface: 'docs' })
     await validateGeneratedSurface({ root: getRendererDataRoot(repoRoot), surface: 'data' })
     console.log('generate: repository graph + guide projection')
-    await runRepositoryScript(repoRoot, 'scripts/graph-impact.mjs', ['--stats'])
-    await runRepositoryScript(repoRoot, 'scripts/graph-impact.mjs', ['--circles'])
-    await runRepositoryScript(repoRoot, 'scripts/generate-page-component-graph.mjs', [])
+    await runRepositoryScript(repoRoot, 'tech-docs-generator/scripts/graph-impact.mjs', ['--stats'])
+    await runRepositoryScript(repoRoot, 'tech-docs-generator/scripts/graph-impact.mjs', ['--circles'])
+    await runRepositoryScript(repoRoot, 'tech-docs-generator/scripts/generate-page-component-graph.mjs', [])
     const guide = writeGuidePages({ repoRoot })
     console.log(`generate: guide projection wrote ${guide.written} files`)
+    const map = writeRepositoryMap({ repoRoot })
+    console.log(`generate: repository-map projection wrote ${map.written} files`)
     return { model, docs, data, publication: { published: ['docs', 'data'], preserved: [] } }
   }
 

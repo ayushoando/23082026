@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from 'vitest'
 import { defaultRepoRoot } from '../helpers/shared-repo-model.mjs'
 import { renderGuidePages } from '../../../tech-docs-generator/scripts/render-repository-guide.mjs'
@@ -13,8 +14,9 @@ describe('render-repository-guide', () => {
     expect(pages.has('index.html')).toBe(true)
     expect(pages.has('guide.css')).toBe(true)
     expect(pages.has('repository-map.html')).toBe(true)
-    expect(pages.has('agent-workflows.html')).toBe(true)
-    expect(result.pages.length).toBeGreaterThanOrEqual(13)
+    expect(pages.has('product-domains.html')).toBe(true)
+    expect(pages.has('agent-workspace.html')).toBe(true)
+    expect(result.pages.length).toBe(5)
   })
 
   it('is deterministic across renders', () => {

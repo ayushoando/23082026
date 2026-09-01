@@ -77,7 +77,7 @@
     "audit:visual": "cross-env DEV_AUTH_BYPASS=1 pnpm exec playwright test -c config/build/playwright.config.ts tests/e2e/visual-audit-full-site.spec.ts && node scripts/generate-visual-audit-report.mjs",
     "audit:visual:report": "node scripts/generate-visual-audit-report.mjs",
     "audit:site-pages": "node scripts/site-page-audit.mjs --out=results/site/page-audit-latest",
-    "graph:page-components": "node scripts/generate-page-component-graph.mjs",
+    "graph:page-components": "node tech-docs-generator/scripts/generate-page-component-graph.mjs",
     "tech-docs:dev": "pnpm --filter oando-tech-docs dev",
     "tech-docs:test": "pnpm --filter oando-tech-docs test",
     "tech-docs:gate": "pnpm --filter oando-tech-docs gate",

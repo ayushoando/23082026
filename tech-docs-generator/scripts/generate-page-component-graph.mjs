@@ -2,7 +2,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { existsSync, readdirSync, statSync } from "node:fs";
 import { createHash } from "node:crypto";
 import path from "node:path";
-import { extractRouteRecords } from "../tech-docs-generator/scripts/extract-routes.mjs";
+import { extractRouteRecords } from "./extract-routes.mjs";
 
 const ROOT = process.cwd();
 const AGENTS_WORK_ROOT = path.resolve(ROOT, "agents-work");

@@ -2,8 +2,11 @@
   "mode": "stats",
   "roots": [
     "site",
+    "tests",
     "scripts",
     "workers",
+    "config",
+    "i18n",
     "tech-docs-generator/src",
     "tech-docs-generator/scripts"
   ],
@@ -13,12 +16,36 @@
       "target": "site/components/Planner"
     },
     {
+      "prefix": "@planner/components/",
+      "target": "site/components/Planner"
+    },
+    {
+      "prefix": "@studio/components/",
+      "target": "site/components/Studio"
+    },
+    {
       "prefix": "@studio/components/",
       "target": "site/components/Studio"
     },
     {
       "prefix": "@planner/server/",
       "target": "site/server/Planner"
+    },
+    {
+      "prefix": "@planner/server/",
+      "target": "site/server/Planner"
+    },
+    {
+      "prefix": "@planner/hooks/",
+      "target": "site/hooks/Planner"
+    },
+    {
+      "prefix": "@planner/store/",
+      "target": "site/store/Planner"
+    },
+    {
+      "prefix": "@studio/server/",
+      "target": "site/server/Studio"
     },
     {
       "prefix": "@planner/hooks/",
@@ -41,6 +68,22 @@
       "target": "site/store/Studio"
     },
     {
+      "prefix": "@studio/hooks/",
+      "target": "site/hooks/Studio"
+    },
+    {
+      "prefix": "@studio/store/",
+      "target": "site/store/Studio"
+    },
+    {
+      "prefix": "@planner/lib/",
+      "target": "site/lib/Planner"
+    },
+    {
+      "prefix": "@/components/",
+      "target": "site/components"
+    },
+    {
       "prefix": "@planner/lib/",
       "target": "site/lib/Planner"
     },
@@ -49,17 +92,57 @@
       "target": "site/lib/Studio"
     },
     {
+      "prefix": "@studio/lib/",
+      "target": "site/lib/Studio"
+    },
+    {
+      "prefix": "@/features/",
+      "target": "site/features"
+    },
+    {
+      "prefix": "@/scripts/",
+      "target": "scripts"
+    },
+    {
+      "prefix": "@/types/",
+      "target": "site/platform/types"
+    },
+    {
+      "prefix": "@/tests/",
+      "target": "tests"
+    },
+    {
       "prefix": "@focss/",
       "target": "site/focss"
+    },
+    {
+      "prefix": "@/data/",
+      "target": "site/data"
+    },
+    {
+      "prefix": "@focss/",
+      "target": "site/focss"
+    },
+    {
+      "prefix": "@/app/",
+      "target": "site/app"
+    },
+    {
+      "prefix": "@/lib/",
+      "target": "site/lib"
+    },
+    {
+      "prefix": "@/",
+      "target": "site"
     },
     {
       "prefix": "@/",
       "target": "site"
     }
   ],
-  "files": 1356,
-  "edges": 2644,
-  "unresolvedLocalSpecifiers": 34,
+  "files": 2245,
+  "edges": 4152,
+  "unresolvedLocalSpecifiers": 140,
   "unresolvedExamples": [
     {
       "file": "site/app/not-found.tsx",
@@ -102,18 +185,6 @@
       "file": "site/lib/i18n/withLocaleCopy.ts",
       "specifiers": [
         "@/i18n/messages/hi.json"
-      ]
-    },
-    {
-      "file": "site/next.config.js",
-      "specifiers": [
-        "../config/build/next.config.js"
-      ]
-    },
-    {
-      "file": "site/postcss.config.mjs",
-      "specifiers": [
-        "../config/build/postcss.config.mjs"
       ]
     },
     {
@@ -218,6 +289,20 @@
       "specifiers": [
         "../../../generated-documents/data/search-items.json"
       ]
+    },
+    {
+      "file": "tech-docs-generator/src/pages/Database.tsx",
+      "specifiers": [
+        "./schema"
+      ]
+    },
+    {
+      "file": "tests/e2e/helpers/isolatedAdminSvgPublishWorker.ts",
+      "specifiers": [
+        "@/features/planner/asset-engine/svg/compileSvgForPublish",
+        "@/features/admin/product-studio/storage/persistBlockDescriptor",
+        "@/features/admin/product-studio/storage/catalogWriteIsolation"
+      ]
     }
   ],
   "domains": {
@@ -226,8 +311,12 @@
       "edges": 275
     },
     "ai-retrieval": {
-      "files": 17,
-      "edges": 33
+      "files": 26,
+      "edges": 44
+    },
+    "config": {
+      "files": 5,
+      "edges": 3
     },
     "database-platform": {
       "files": 16,
@@ -237,13 +326,17 @@
       "files": 146,
       "edges": 151
     },
+    "i18n": {
+      "files": 1,
+      "edges": 1
+    },
     "marketing": {
       "files": 130,
       "edges": 448
     },
     "planner": {
-      "files": 153,
-      "edges": 352
+      "files": 211,
+      "edges": 465
     },
     "scripts/AsNeeded": {
       "files": 7,
@@ -270,8 +363,8 @@
       "edges": 43
     },
     "scripts/root": {
-      "files": 101,
-      "edges": 91
+      "files": 99,
+      "edges": 90
     },
     "scripts/site-ui-content-links-audit": {
       "files": 20,
@@ -303,19 +396,23 @@
     },
     "site/root": {
       "files": 4,
-      "edges": 6
+      "edges": 8
     },
     "site/types": {
       "files": 2,
       "edges": 2
     },
     "studio": {
-      "files": 78,
-      "edges": 166
+      "files": 86,
+      "edges": 188
     },
     "tech-docs": {
-      "files": 110,
-      "edges": 211
+      "files": 113,
+      "edges": 213
+    },
+    "tests": {
+      "files": 807,
+      "edges": 1355
     },
     "worker": {
       "files": 2,
@@ -324,34 +421,79 @@
   },
   "highestFanIn": [
     {
+      "file": "tests/e2e/guestProjectSetup.ts",
+      "count": 52,
+      "domain": "tests"
+    },
+    {
       "file": "site/components/home/layout/index.ts",
-      "count": 45,
+      "count": 48,
       "domain": "site/components"
     },
     {
       "file": "site/lib/siteUrl.ts",
-      "count": 44,
+      "count": 48,
       "domain": "site/lib"
     },
     {
-      "file": "site/features/shared/api/withAuth.ts",
-      "count": 33,
-      "domain": "site/features"
+      "file": "tests/e2e/plannerCanvasHelpers.ts",
+      "count": 45,
+      "domain": "tests"
     },
     {
-      "file": "site/lib/utils.ts",
-      "count": 32,
+      "file": "site/lib/rateLimit.ts",
+      "count": 41,
       "domain": "site/lib"
     },
     {
       "file": "site/features/site/data/seo.ts",
-      "count": 31,
+      "count": 40,
       "domain": "marketing"
     },
     {
-      "file": "site/lib/helpers/gsapMotion.ts",
-      "count": 30,
+      "file": "site/features/shared/api/withAuth.ts",
+      "count": 39,
+      "domain": "site/features"
+    },
+    {
+      "file": "site/lib/catalog/site/getProducts.ts",
+      "count": 36,
       "domain": "site/lib"
+    },
+    {
+      "file": "site/features/site/data/routeCopy.ts",
+      "count": 34,
+      "domain": "marketing"
+    },
+    {
+      "file": "site/lib/utils.ts",
+      "count": 33,
+      "domain": "site/lib"
+    },
+    {
+      "file": "site/features/shared/api/ApiError.ts",
+      "count": 32,
+      "domain": "site/features"
+    },
+    {
+      "file": "site/lib/catalog/site/categories.ts",
+      "count": 32,
+      "domain": "site/lib"
+    },
+    {
+      "file": "site/lib/helpers/gsapMotion.ts",
+      "count": 31,
+      "domain": "site/lib"
+    },
+    {
+      "file": "site/features/site/data/routeMetadata.ts",
+      "count": 30,
+      "domain": "marketing"
+    },
+    {
+      "file": "tech-docs-generator/scripts/output-contract.mjs",
+      "count": 28,
+      "domain": "tech-docs"
     },
     {
       "file": "site/components/ui/MarketingCtaLink.tsx",
@@ -359,68 +501,23 @@
       "domain": "site/components"
     },
     {
-      "file": "site/components/ui/Button.tsx",
-      "count": 25,
-      "domain": "site/components"
-    },
-    {
-      "file": "scripts/general/loadEnvLocal.cjs",
-      "count": 23,
-      "domain": "scripts/general"
-    },
-    {
       "file": "site/lib/Planner/plannerTypes.ts",
-      "count": 23,
+      "count": 27,
       "domain": "planner"
     },
     {
-      "file": "site/lib/security/sanitize.ts",
-      "count": 23,
+      "file": "site/lib/security/csrf.ts",
+      "count": 27,
       "domain": "site/lib"
     },
     {
-      "file": "site/lib/catalog/site/categories.ts",
-      "count": 22,
-      "domain": "site/lib"
+      "file": "site/platform/supabase/server.ts",
+      "count": 27,
+      "domain": "database-platform"
     },
     {
-      "file": "tech-docs-generator/scripts/output-contract.mjs",
-      "count": 22,
-      "domain": "tech-docs"
-    },
-    {
-      "file": "site/components/Planner/ui/PlannerPhIcon.tsx",
-      "count": 21,
-      "domain": "planner"
-    },
-    {
-      "file": "site/features/shared/api/ApiError.ts",
-      "count": 21,
-      "domain": "site/features"
-    },
-    {
-      "file": "site/features/site/data/routeCopy.ts",
-      "count": 21,
-      "domain": "marketing"
-    },
-    {
-      "file": "site/lib/catalog/site/getProducts.ts",
-      "count": 20,
-      "domain": "site/lib"
-    },
-    {
-      "file": "site/components/shared/RouteCtaBand.tsx",
-      "count": 19,
-      "domain": "site/components"
-    },
-    {
-      "file": "site/features/shared/api/apiResponse.ts",
-      "count": 19,
-      "domain": "site/features"
-    },
-    {
-      "file": "site/components/shared/ContactTeaser.tsx",
-      "count": 18,
+      "file": "site/components/ui/Button.tsx",
+      "count": 26,
       "domain": "site/components"
     }
   ],
@@ -439,6 +536,11 @@
       "file": "site/focss/site/components/index.css",
       "count": 24,
       "domain": "focss"
+    },
+    {
+      "file": "tests/unit/features/site/data/navigation-coverage.test.ts",
+      "count": 22,
+      "domain": "tests"
     },
     {
       "file": "site/focss/site/components/shared/index.css",
@@ -519,11 +621,6 @@
       "file": "site/focss/site/components/products/index.css",
       "count": 13,
       "domain": "focss"
-    },
-    {
-      "file": "scripts/site-ui-content-links-audit/index.ts",
-      "count": 12,
-      "domain": "scripts/site-ui-content-links-audit"
     }
   ]
 }
