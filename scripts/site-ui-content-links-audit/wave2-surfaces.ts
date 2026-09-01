@@ -1622,7 +1622,7 @@ function inventoryRecordsForOccurrence(
     records.filter((record) => {
       if (record.inventoryKind !== kind) return false;
       if (record.productSurface !== occurrence.productSurface) return false;
-      const subjectIds = record.applicableOccurrenceSelector.subjectIds;
+      const subjectIds = record.applicableOccurrenceSelector.subjectIds ?? [];
       return (
         subjectIds.length === 0 || subjectIds.includes(occurrence.subjectId)
       );
@@ -1636,7 +1636,7 @@ function subjectRouteId(
 ): string | undefined {
   const record = records.find(
     (candidate) =>
-      candidate.applicableOccurrenceSelector.subjectIds.includes(
+      (candidate.applicableOccurrenceSelector.subjectIds ?? []).includes(
         occurrence.subjectId,
       ) && typeof candidate.payload.routeId === "string",
   );
@@ -1649,7 +1649,7 @@ function journeyRecordsForOccurrence(
   occurrence: OccurrenceRecord,
 ): readonly SpecializedInventoryRecord[] {
   const routePattern = records.find((record) =>
-    record.applicableOccurrenceSelector.subjectIds.includes(
+    (record.applicableOccurrenceSelector.subjectIds ?? []).includes(
       occurrence.subjectId,
     ),
   )?.payload.routePattern;
@@ -1657,7 +1657,7 @@ function journeyRecordsForOccurrence(
     typeof routePattern === "string" ? routePattern : occurrence.concreteUrl;
   return Object.freeze(
     journeys.filter((journey) => {
-      const subjectIds = journey.applicableOccurrenceSelector.subjectIds;
+      const subjectIds = journey.applicableOccurrenceSelector.subjectIds ?? [];
       if (subjectIds.includes(occurrence.subjectId)) return true;
       if (subjectIds.length > 0) return false;
       const nodes = Array.isArray(journey.payload.nodes)

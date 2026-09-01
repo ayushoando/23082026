@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from "vitest";
 
 import { WORKFLOW_STAGE_ORDER } from "../../../plans/planner-comprehensive-audit/auditModel";

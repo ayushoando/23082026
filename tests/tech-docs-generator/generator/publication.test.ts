@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { mkdirSync, readFileSync, readdirSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { rename } from 'node:fs/promises'
 import os from 'node:os'

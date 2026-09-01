@@ -1,7 +1,7 @@
 # Planner Surface Audit
 
 **Created:** 2026-08-31
-**Status:** Audit complete
+**Status:** ✅ Closed — all 4 fixes applied (PLN-FIX-01..04, Phase 10 of [`../execution-checklist.md`](../execution-checklist.md): IndexedDB offline backup, advisor rate scope, 60s auto-save, guest AI limits).
 **Owner:** Repository owner
 
 ## Documents

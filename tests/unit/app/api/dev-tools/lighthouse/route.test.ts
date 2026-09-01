@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import fs from "fs/promises";
 import { GET } from "@/app/api/dev-tools/lighthouse/route";

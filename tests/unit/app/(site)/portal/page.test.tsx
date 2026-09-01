@@ -12,14 +12,16 @@ vi.mock('@/lib/auth/session', () => ({
   requireAuthUser: vi.fn(),
 }));
 
-vi.mock('@planner/lib/projectsStore', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@planner/lib/projectsStore')>();
-  return {
-    ...actual,
-    isPlannerDatabaseConfigured: vi.fn(),
-    listPlannerDocumentsFromStore: vi.fn(),
-  };
-});
+vi.mock('@planner/lib/projectsStore', () => ({
+  // Faithful inline copy of the real predicate (projectsStore.ts) — the test
+  // exercises genuine classification without loading the fs-touching barrel.
+  isMissingOandoPlansTableError: (error: unknown): boolean => {
+    const msg = error instanceof Error ? error.message : String(error);
+    return /oando_plans|relation .* does not exist|42P01/i.test(msg);
+  },
+  isPlannerDatabaseConfigured: vi.fn(),
+  listPlannerDocumentsFromStore: vi.fn(),
+}));
 
 vi.mock('@/features/site/portal/PortalPageView', () => ({
   default: ({

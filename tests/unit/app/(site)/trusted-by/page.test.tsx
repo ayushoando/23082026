@@ -1,22 +1,18 @@
 import "@/tests/helpers/nextIntlServerEnMock";
-import { readFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import { TRUSTED_BY_PAGE_COPY } from "@/features/site/data/routeCopy";
 import { TRUSTED_BY_PAGE_METADATA } from "@/features/site/data/routeMetadata";
 import { TRUSTED_BY_CLIENTS } from "@/features/site/data/proof";
 
-const trustedByPagePath = resolve(
-  dirname(fileURLToPath(import.meta.url)),
-  "../../../../..",
-  "site/app/(site)/trusted-by/page.tsx",
-);
-const trustedByPageViewInvocation = readFileSync(
-  trustedByPagePath,
-  "utf8",
-).match(/<TrustedByPageView\b[\s\S]*?\/>/)?.[0];
+// happy-dom externalizes ESM node builtins — read the page source lazily via require.
+function getTrustedByPageViewInvocation(): string | undefined {
+  const source = require("node:fs").readFileSync(
+    require("node:path").join(process.cwd(), "app/(site)/trusted-by/page.tsx"),
+    "utf8",
+  );
+  return source.match(/<TrustedByPageView\b[\s\S]*?\/>/)?.[0];
+}
 
 vi.mock("@/lib/helpers/gsapMotion", () => ({
   registerGsapPlugins: () => {},
@@ -122,12 +118,12 @@ import TrustedByPage from "@/app/(site)/trusted-by/page";
 describe("app/(site)/trusted-by/page.tsx", () => {
   it("explores the duplicate rosterKicker bug condition at the route call site", () => {
     // **Validates: Requirements 1.1, 1.2**
-    expect(trustedByPageViewInvocation).toBeDefined();
+    expect(getTrustedByPageViewInvocation()).toBeDefined();
 
     const rosterKickerAttributes =
-      trustedByPageViewInvocation?.match(/\brosterKicker\s*=/g) ?? [];
+      getTrustedByPageViewInvocation()?.match(/\brosterKicker\s*=/g) ?? [];
     const authoritativeRosterKickerAttributes =
-      trustedByPageViewInvocation?.match(
+      getTrustedByPageViewInvocation()?.match(
         /rosterKicker=\{copy\.rosterKicker\}/g,
       ) ?? [];
 
@@ -137,10 +133,10 @@ describe("app/(site)/trusted-by/page.tsx", () => {
 
   it("preserves every non-roster TrustedByPageView prop mapping", () => {
     // **Validates: Requirements 3.1, 3.2, 3.3**
-    expect(trustedByPageViewInvocation).toBeDefined();
+    expect(getTrustedByPageViewInvocation()).toBeDefined();
 
     const propMappings =
-      trustedByPageViewInvocation
+      getTrustedByPageViewInvocation()
         ?.match(/^\s+\w+=\{[^}\r\n]+\}$/gm)
         ?.map((mapping) => mapping.trim()) ?? [];
     const rosterMappings = propMappings.filter((mapping) =>

@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from 'vitest'
 import { buildRendererDataPayloads } from '../../../tech-docs-generator/scripts/renderer-data.mjs'
 import { extractDeploymentRecords } from '../../../tech-docs-generator/scripts/extract-deployment.mjs'

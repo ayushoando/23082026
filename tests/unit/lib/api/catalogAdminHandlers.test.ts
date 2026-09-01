@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { resolveCatalogType, listStandardCatalog } from "@/features/admin/api/catalogAdminHandlers";
 import { NextRequest } from "next/server";

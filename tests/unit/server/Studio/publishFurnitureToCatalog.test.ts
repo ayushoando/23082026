@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import path from "node:path";
 import { mkdtempSync, rmSync, existsSync, readFileSync } from "node:fs";

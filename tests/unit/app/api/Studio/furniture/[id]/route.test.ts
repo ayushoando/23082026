@@ -1,3 +1,4 @@
+// @vitest-environment node
 /**
  * Contract tests for Studio furniture item API — catalog PNG authority on PATCH.
  * PATCH /api/Studio/furniture/[id] must server-render top_png from top_svg,

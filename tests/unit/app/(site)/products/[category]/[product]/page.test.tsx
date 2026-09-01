@@ -72,6 +72,10 @@ vi.mock('@/features/site/catalog/ProductViewer', () => ({
   ),
 }));
 
+vi.mock('@/features/site/planSvg/resolvePdpPlanSvgThumb.server', () => ({
+  resolvePdpPlanSvgThumbFromDisk: vi.fn(),
+}));
+
 vi.mock('@/platform/drizzle/productsDb', () => ({
   supabase: {
     from: () => ({

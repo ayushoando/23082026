@@ -1,3 +1,4 @@
+// @vitest-environment node
 /**
  * Contract tests for POST /api/Studio/furniture/[id]/publish.
  */

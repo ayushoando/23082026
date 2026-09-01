@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect, vi } from 'vitest';
 import OpengraphImage, { alt, size, contentType } from '@/app/(site)/opengraph-image';
 import { SITE_BRAND } from '@/features/site/data/brand';

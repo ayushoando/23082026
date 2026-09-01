@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from 'vitest'
 import { evaluateCoverage } from '../../../tech-docs-generator/scripts/check-coverage.mjs'
 

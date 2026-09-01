@@ -149,57 +149,9 @@ describe("planner: usePlannerFocusManager hook", () => {
 });
 
 // ---------------------------------------------------------------------------
-// Touch-action scope — CSS architecture test (Req 7.4)
+// Touch-action CSS architecture tests moved to plannerTouchActionCss.test.ts
+// (they read site CSS from disk and require the node environment).
 // ---------------------------------------------------------------------------
-describe("planner: touch-action CSS architecture", () => {
-  it("canvas-specific touch-action rule exists in workspace-shell CSS", async () => {
-    // Read the CSS file and verify the touch-action: none rule is scoped
-    // to the canvas element only, not the page or workspace.
-    const fs = await import("node:fs");
-    const path = await import("node:path");
-    const cssPath = path.resolve(
-      import.meta.dirname,
-      "../../../site/focss/planner/workspace-shell.css",
-    );
-    const css = fs.readFileSync(cssPath, "utf-8");
-
-    // The canvas inner canvas element should have touch-action: none.
-    expect(css).toContain(".canvas-stage__inner canvas { touch-action: none; }");
-
-    // The workspace or page-level elements should NOT have touch-action: none.
-    // Split into lines and check no line applies touch-action: none to .workspace or body.
-    const lines = css.split("\n");
-    const problematicLines = lines.filter((line) => {
-      const trimmed = line.trim();
-      if (!trimmed.includes("touch-action: none")) return false;
-      // Allow only the canvas-scoped rule and the resize handles.
-      if (trimmed.includes("canvas")) return false;
-      if (trimmed.includes("grip")) return false;
-      if (trimmed.includes("resize")) return false;
-      return true;
-    });
-
-    expect(
-      problematicLines,
-      "No page-level touch-action: none should exist in workspace-shell.css (only canvas-scoped)",
-    ).toHaveLength(0);
-  });
-
-  it("phone panels use touch-action: pan-y for vertical scrolling", async () => {
-    const fs = await import("node:fs");
-    const path = await import("node:path");
-    const cssPath = path.resolve(
-      import.meta.dirname,
-      "../../../site/focss/planner/workspace-shell.css",
-    );
-    const css = fs.readFileSync(cssPath, "utf-8");
-
-    // Verify pan-y exists for panels on narrow viewports.
-    expect(css).toContain("touch-action: pan-y");
-    // Verify pan-x exists for toolbars on narrow viewports.
-    expect(css).toContain("touch-action: pan-x");
-  });
-});
 
 // ---------------------------------------------------------------------------
 // Roving tabindex — toolbar keyboard navigation (Req 7.5)

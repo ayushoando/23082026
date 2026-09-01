@@ -1,3 +1,4 @@
+// @vitest-environment node
 /**
  * Ownership enforcement for member-scoped store helpers (IDOR guard).
  * Disk I/O mocked; pure filter/ownership logic is the contract under test.

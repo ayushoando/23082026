@@ -1,3 +1,4 @@
+// @vitest-environment node
 /**
  * Contract tests for Studio furniture collection API — catalog PNG authority.
  * POST /api/Studio/furniture must server-render top_png from top_svg, quality-gate,

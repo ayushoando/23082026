@@ -1,7 +1,7 @@
 # UI Audit Plan
 
-**Created:** 2025-07-31 (audit) · 2026-08-31 (verified against current codebase)
-**Status:** 5 findings resolved, 25 open, 3 verified-complete — remedy plan updated
+**Created:** 2025-07-31 (audit) · 2026-08-31 (verified against current codebase) · **Remediated:** 2026-08-31
+**Status:** ✅ Closed — all 33 findings resolved (Phases 1–4 of [`../execution-checklist.md`](../execution-checklist.md) executed; token, Planner visual, focus/a11y, and SEO fixes applied). Sections below are the audit-time snapshots retained for traceability.
 **Owner:** Product / UI engineering
 
 ## Documents

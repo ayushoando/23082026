@@ -1,3 +1,4 @@
+// @vitest-environment node
 /**
  * Name-mirror coverage for lib/catalog/site/specSchema.
  */

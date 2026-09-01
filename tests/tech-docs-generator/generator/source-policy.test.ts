@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from 'vitest'
 import { getPolicy, selectPreferredSource, sourceKinds, sourcePolicy } from '../../../tech-docs-generator/scripts/source-policy.mjs'
 import * as outputContract from '../../../tech-docs-generator/scripts/output-contract.mjs'

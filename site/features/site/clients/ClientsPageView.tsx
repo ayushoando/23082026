@@ -23,7 +23,6 @@ import {
 import { formatKpiValuePlus } from "@/lib/kpiFormat";
 import { SITE_URL } from "@/lib/siteUrl";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
-import { ClientShowcaseSection } from "@/components/site/clients/ClientShowcaseSection";
 
 async function loadClientsCopy() {
   return withLocaleCopy(
@@ -111,12 +110,6 @@ export async function ClientsPageView() {
           ) : (
             <ClientsCaseStudies clients={clientWork} />
           )}
-        </HomeSectionInner>
-      </HomeSection>
-
-      <HomeSection variant="white" spacing="sm">
-        <HomeSectionInner>
-          <ClientShowcaseSection />
         </HomeSectionInner>
       </HomeSection>
 

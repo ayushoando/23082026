@@ -1,3 +1,4 @@
+// @vitest-environment node
 import fc from "fast-check";
 import { describe, expect, it } from "vitest";
 import { applyPlannerProjectMutation, type PlannerProjectAtomicStateV1 } from "@planner/lib/plannerProjectOperations";

@@ -1,3 +1,4 @@
+// @vitest-environment node
 /**
  * Name-mirror coverage for lib/fonts.
  * next/font/local is globally mocked in tests/setup.ts.

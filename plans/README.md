@@ -15,8 +15,6 @@ This directory holds active planning coordination. Durable architecture facts be
 | [`db-audit/`](./db-audit/) | Database & migrations audit — 64 migrations, 2 DBs, RLS verified. Clean. |
 | [`testing-audit/`](./testing-audit/) | Testing audit — Vitest + Playwright, gate system, audit scripts. Solid infrastructure. |
 | [`worker-audit/`](./worker-audit/) | Cloudflare Worker audit — R2, caching, robots, HSTS. Needs Vectorize binding for AI fix. |
-| [`focss-static-defects/`](./focss-static-defects/) | Reconciled static-defects plan and its colocated audit/decision records. |
-| [`plans-reports-references.csv`](./plans-reports-references.csv) | Root registry of known plans, reports, and durable references. |
 | [`CONTEXT.md`](./CONTEXT.md) | Optional lazy domain glossary; create only when domain modeling requires it. |
 | [`adr/`](./adr/) | Optional architecture decision records. |
 

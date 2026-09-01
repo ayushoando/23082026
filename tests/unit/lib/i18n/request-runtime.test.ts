@@ -1,3 +1,4 @@
+// @vitest-environment node
 /**
  * Locale is prefixless (`localePrefix: never`). HTML language comes from the
  * NEXT_LOCALE cookie via `site/i18n/request.ts`.

@@ -1,3 +1,4 @@
+// @vitest-environment node
 import path from 'node:path'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { createRegenerationCoordinator } from '../../../tech-docs-generator/scripts/live-regeneration'

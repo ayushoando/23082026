@@ -1,5 +1,3 @@
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import type { ReactNode } from "react";
@@ -52,10 +50,15 @@ vi.mock("@/components/shared/RouteCtaBand", () => ({
 
 const products = enMessages.products;
 
-const catalogMobileCss = readFileSync(
-  resolve(__dirname, "../../../../site/focss/site/components/products/catalog-mobile.css"),
-  "utf8",
-);
+// happy-dom externalizes ESM node builtins — read the CSS lazily via require.
+const readCatalogMobileCss = (): string =>
+  require("node:fs").readFileSync(
+    require("node:path").resolve(
+      __dirname,
+      "../../../../site/focss/site/components/products/catalog-mobile.css",
+    ),
+    "utf8",
+  );
 
 const baseProps = {
   heroKicker: products.heroKicker,
@@ -105,6 +108,7 @@ const baseProps = {
 
 describe("CatalogMobile MOB-04", () => {
   it("MOB-04: products fold heading region clears --site-fab-side-* via catalog-mobile inset", () => {
+    const catalogMobileCss = readCatalogMobileCss();
     expect(catalogMobileCss).toMatch(/MOB-04/);
     expect(catalogMobileCss).toMatch(
       /\.products-strategy\s*\{[^}]*padding-inline:\s*max\(\s*var\(--space-4\)\s*,\s*var\(--site-fab-side-left\)\s*\)/s,

@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from 'vitest'
 
 import { navItems } from '../../tech-docs-generator/src/data/navigation'

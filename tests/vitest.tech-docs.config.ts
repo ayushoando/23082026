@@ -52,13 +52,23 @@ export default defineConfig({
       // package.json (not hoisted to the workspace root). This lane's tests live
       // under tests/tech-docs-generator/, so bare-specifier mocks must resolve to
       // the same module id as the component imports under tech-docs-generator/src/.
+      // react-router-dom MUST resolve to the tech-docs package instance too —
+      // the root copy is a different version, and Router context does not cross
+      // module instances (useLocation/useNavigate invariant failures).
       mermaid: path.resolve(techDocsPackageRoot, "node_modules/mermaid"),
       "highlight.js": path.resolve(techDocsPackageRoot, "node_modules/highlight.js"),
+      "react-router-dom": path.resolve(techDocsPackageRoot, "node_modules/react-router-dom"),
+      // Setup must configure THIS package's framer-motion instance
+      // (MotionGlobalConfig.skipAnimations), not the root's v13 copy.
+      "framer-motion": path.resolve(techDocsPackageRoot, "node_modules/framer-motion"),
     },
   },
   test: {
     env: {
       ...loadEnv("test", VITEST_WORKSPACE_ROOT, ""),
+      // Match the main lane: never let .env NODE_ENV=production select the
+      // production React build (React.act is absent there, breaking RTL).
+      NODE_ENV: "test",
       DEV_AUTH_BYPASS: "true",
     },
     // Serial forks + isolate so per-file mocks stay correct. Generator model

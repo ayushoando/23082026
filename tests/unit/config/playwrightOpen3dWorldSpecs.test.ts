@@ -1,3 +1,4 @@
+// @vitest-environment node
 /**
  * Contract: the Open3D world E2E pack is declared and every file exists.
  */

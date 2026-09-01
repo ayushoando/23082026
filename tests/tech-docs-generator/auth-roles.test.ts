@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from "vitest";
 import { isAppAdmin, readAppRole } from "../../tech-docs-generator/src/lib/authRoles";
 
