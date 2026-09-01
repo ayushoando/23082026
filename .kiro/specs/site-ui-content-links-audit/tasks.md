@@ -88,7 +88,7 @@ Completion state is preserved from the prior plan: the consolidated Wave 0 items
   - **Property 10: Metadata route consistency** — verify deterministic canonical/sitemap comparison, per-instance conclusions, and indexing rationale for protected, transactional, offline, error-only, Planner, and Studio policies. **Validates:** Requirements 14.2–14.8.
   - **Prerequisites:** 3.1. Generate at least 100 cases per property and use the exact targeted Vitest `--run` command only with separate authorization under the legend.
 
-- [x] 3.3 Execute and checkpoint the Wave 2 static batch
+- [-] 3.3 Execute and checkpoint the Wave 2 static batch
   - Generate Wave 2 inventories, evidence, findings, initial copy/Hindi proposals, and exact pending runtime operations without remediating product code.
   - **Consolidates former task:** 3.6. **Prerequisites:** 3.1; optional 3.2 only if separately authorized.
   - **Validation:** All scoped journeys and occurrences are terminal or explicitly gapped; metadata conclusions cover all applicable route instances; generated manifests reconcile. Ensure all authorized tests pass; ask the user if questions arise.
