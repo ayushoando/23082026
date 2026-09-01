@@ -11,7 +11,16 @@ const MAX_STACK = 60;
 export const useHistory = (
   fabricRef: MutableRefObject<Canvas | null>,
   ready: boolean,
-  propsToInclude: string[] = [...STUDIO_FABRIC_OBJECT_PROPS],
+  // Default to the module-level constant directly (not `[...STUDIO_FABRIC_OBJECT_PROPS]`,
+  // which allocated a brand-new array — and therefore a new `commit` identity —
+  // on every render). An unstable `commit` re-ran the listener-registration
+  // effect below on every React render, calling `commit()` each time (28.3;
+  // the Planner hook fixed exactly this — see usePlannerHistory.ts).
+  propsToInclude: readonly string[] = STUDIO_FABRIC_OBJECT_PROPS,
+  // Called after a successful loadFromJSON so the caller can re-draw
+  // canvas-managed decorations (grid lines) that are deliberately excluded
+  // from the serialized snapshot and would otherwise be dropped on undo/redo.
+  onRestore?: () => void,
 ) => {
   const past = useRef<string[]>([]);
   const future = useRef<string[]>([]);
@@ -42,13 +51,34 @@ export const useHistory = (
     (json: string) => {
       const c = fabricRef.current;
       if (!c) return;
+      // Guard JSON.parse: a corrupt snapshot must not throw out of
+      // undo()/redo() and must not leave `suppress` set (which would
+      // permanently stop history recording).
+      let parsed: object;
+      try {
+        parsed = JSON.parse(json) as object;
+      } catch {
+        return;
+      }
       suppress.current = true;
-      void c.loadFromJSON(JSON.parse(json) as object).then(() => {
-        c.requestRenderAll();
-        suppress.current = false;
-      });
+      void c
+        .loadFromJSON(parsed)
+        .then(() => {
+          c.requestRenderAll();
+          // loadFromJSON replaces the entire object list, which discards
+          // canvas-managed decorations (grid lines) that are deliberately
+          // excluded from the serialized snapshot. Let the caller re-draw
+          // them so undo/redo doesn't visually corrupt the canvas.
+          onRestore?.();
+        })
+        .catch(() => {
+          c.requestRenderAll();
+        })
+        .finally(() => {
+          suppress.current = false;
+        });
     },
-    [fabricRef],
+    [fabricRef, onRestore],
   );
 
   const undo = useCallback(() => {

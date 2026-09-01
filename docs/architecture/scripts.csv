@@ -1,6 +1,6 @@
 artifact_path,family,artifact_type,purpose,known_route,working_tree_state
 scripts/.gitkeep,root,support,Directory retention placeholder,,present
-scripts/apply-db-image-path-rewrite.mjs,root,entrypoint,Apply database image path rewrite,,present
+scripts/apply-db-image-path-rewrite.mjs,root,entrypoint,Apply database image path rewrite,ops db:images:rewrite:apply,present
 scripts/arrange_supabase_catalog_assets.ts,root,entrypoint,Arrange Supabase catalog assets,ops supabase:assets:arrange,present
 scripts/asset-path-map.mjs,root,entrypoint,Build or inspect asset path mappings,,present
 scripts/audit-broken-db-image-paths.mjs,root,entrypoint,Audit broken database image paths,,present
@@ -26,8 +26,8 @@ scripts/check-supabase-missing-images.mjs,root,check,Check Supabase missing imag
 scripts/checkAuthEnv.ts,root,check,Check authentication environment,ops test:auth:env,present
 scripts/check_all_env_full.ts,root,check,Run full environment check,check:env:full,present
 scripts/clean-test-artifacts.mjs,root,maintenance,Clean generated test artifacts,test:clean,present
-scripts/configure-cf-security-txt.ps1,root,entrypoint,Configure Cloudflare security.txt,,present
-scripts/contact-sheet.mjs,root,generator,Generate image contact sheet,,present
+scripts/configure-cf-security-txt.ps1,root,entrypoint,Configure Cloudflare security.txt,ops cloudflare:security-txt,present
+scripts/contact-sheet.mjs,root,generator,Generate image contact sheet,ops assets:contact-sheet,present
 scripts/count-r2-objects.mjs,root,entrypoint,Count R2 objects,ops assets:r2:count,present
 scripts/coverage-metrics.mjs,root,helper,Calculate coverage metrics,,present
 scripts/coverage-policy.mjs,root,helper,Apply or report coverage policy,,present
@@ -46,14 +46,14 @@ scripts/db_sync_drizzle_schema.ts,root,entrypoint,Synchronize Drizzle schema,ops
 scripts/db_test_connection.ts,root,entrypoint,Test database connection,db:test,present
 scripts/delete-twin-images.mjs,root,entrypoint,Delete duplicate image files,,present
 scripts/deleteR2Bucket.ts,root,entrypoint,Delete R2 bucket,ops assets:r2:delete-bucket,present
-scripts/detect-corrupt-images.mjs,root,entrypoint,Detect corrupt image files,,present
+scripts/detect-corrupt-images.mjs,root,entrypoint,Detect corrupt image files,ops audit:images:corrupt,present
 scripts/downloadCdnAssets.ts,root,entrypoint,Download CDN assets,ops assets:cdn:catalog,present
 scripts/ensure-retire-restore-precondition.mjs,root,check,Verify retire and restore prerequisites,,present
 scripts/ensureAuthTestUsers.ts,root,entrypoint,Ensure authentication test users,ops test:auth:seed-users,present
 scripts/export-pending-failures.mjs,root,entrypoint,Export pending failures,failures:sync,present
 scripts/export-pending-translations.mjs,root,entrypoint,Export pending translations,,present
 scripts/finish-all.ps1,root,entrypoint,Finish all automation helper,,missing
-scripts/five-majors-hash-dedup.mjs,root,entrypoint,Hash and deduplicate five major assets,,present
+scripts/five-majors-hash-dedup.mjs,root,entrypoint,Hash and deduplicate five major assets,ops assets:dedup:majors,present
 scripts/fix-asset-paths.mjs,root,entrypoint,Repair asset paths,,present
 scripts/fix-commit-author.ps1,root,entrypoint,Correct Git commit author metadata,,missing
 scripts/gate-site-ui.mjs,root,gate,Run site UI gate,gate:site-ui,present
@@ -68,11 +68,11 @@ scripts/generate-vitest-report.mjs,root,generator,Generate Vitest report,test li
 scripts/generate_blocks.ts,root,generator,Generate catalog blocks,ops catalog:blocks:qa,present
 scripts/graph-impact.mjs,root,analysis,Analyze import graph impact and cycles,,present
 scripts/launch-smoke.mjs,root,entrypoint,Run launch smoke verification,ops launch:smoke,present
-scripts/marketing-ui-audit.mjs,root,audit,Audit marketing UI,,present
+scripts/marketing-ui-audit.mjs,root,audit,Audit marketing UI,ops audit:marketing-ui,present
 scripts/merge-recovery-into-majors.mjs,root,entrypoint,Merge recovery data into major records,,present
 scripts/migrate-svg-catalog-to-png.mjs,root,entrypoint,Migrate SVG catalog assets to PNG,,present
-scripts/mirror-assets-to-r2.mjs,root,entrypoint,Mirror assets to R2,,present
-scripts/mobile-canvas-share.mjs,root,helper,Mobile canvas sharing helper,,present
+scripts/mirror-assets-to-r2.mjs,root,entrypoint,Mirror assets to R2,ops assets:r2:mirror,present
+scripts/mobile-canvas-share.mjs,root,helper,Mobile canvas sharing helper,ops audit:mobile-canvas-share,present
 scripts/ops-command-registry.mjs,root,helper,Derive Ops commands from run-ops,derived registry,present
 scripts/organize-catalog-images.ts,root,entrypoint,Organize catalog images,ops catalog:organize routes,present
 scripts/planner-lift-project-trees.mjs,root,entrypoint,Lift or verify Planner project trees,ops planner:lift routes,present
@@ -81,7 +81,7 @@ scripts/pushSvgCatalogToDb.ts,root,entrypoint,Push SVG catalog to database,,pres
 scripts/render-catalog-qa-sheet.ts,root,generator,Render catalog QA sheet,ops catalog:qa:sheet,present
 scripts/repo_backup_upload_r2.ts,root,entrypoint,Back up repository to R2,ops repo:backup:r2,present
 scripts/responsive-audit.mjs,root,audit,Audit responsive UI,,present
-scripts/reverse-asset-paths.mjs,root,entrypoint,Reverse asset path changes,,present
+scripts/reverse-asset-paths.mjs,root,entrypoint,Reverse asset path changes,ops db:images:rewrite:reverse,present
 scripts/run-admin-production-auth-smoke.ps1,root,entrypoint,Run Admin production auth smoke check,,present
 scripts/run-admin-retire-restore-canvas.mjs,root,entrypoint,Run Admin retire and restore canvas flow,,present
 scripts/run-full-vitest.mjs,root,entrypoint,Run two lane Vitest suite,test,present
@@ -108,11 +108,11 @@ scripts/sync-token-pairs.mjs,root,entrypoint,Synchronize token pairs,Ops scan:to
 scripts/syncClientLogosFromR2.ts,root,entrypoint,Synchronize client logos from R2,,present
 scripts/syncVendorCdnAssets.mjs,root,entrypoint,Synchronize vendor CDN assets,Ops assets:cdn:sync,present
 scripts/translate-deferred-marketing-flat.mjs,root,entrypoint,Translate deferred marketing locales,,present
-scripts/trim-catalog.mjs,root,entrypoint,Trim catalog data,,present
+scripts/trim-catalog.mjs,root,entrypoint,Trim catalog data,ops catalog:trim,present
 scripts/tsconfig.tsbuildinfo,root,support,TypeScript build metadata,,untracked
-scripts/ui-polish-pass1-audit.mjs,root,audit,Audit first pass UI polish,,present
+scripts/ui-polish-pass1-audit.mjs,root,audit,Audit first pass UI polish,ops audit:ui-polish-pass1,present
 scripts/uploadCdnAssets.ts,root,entrypoint,Upload CDN assets,Ops assets:cdn upload routes,present
-scripts/verify-asset-decode.mjs,root,check,Verify asset decoding,,present
+scripts/verify-asset-decode.mjs,root,check,Verify asset decoding,ops verify:asset-decode,present
 scripts/verify-png-release.mjs,root,check,Verify PNG release assets,,present
 scripts/verify-remote.ps1,root,check,Verify remote configuration,,missing
 scripts/general/.gitkeep,general,support,Directory retention placeholder,,present

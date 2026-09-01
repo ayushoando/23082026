@@ -175,6 +175,21 @@ export async function writeProjectToSupabase(
   await ensurePlannerProfile(userId, opts?.email);
   const row = projectToUpsert(project, userId);
   const c = createSupabaseAuthAdminClient();
+  // Defense-in-depth ownership check (28.12): the admin client bypasses RLS,
+  // so upserting on a client-supplied `project.id` could otherwise overwrite
+  // another user's plan (last-write-wins on a foreign id). Verify that the
+  // existing row — when one exists — belongs to the caller before writing.
+  // Route-layer auth (withAuth + owner checks in projectsStore.ts) remains
+  // the primary enforcement; this only narrows the blast radius if a caller
+  // forgets to check.
+  const { data: existing, error: existingError } = await plansTable(c)
+    .select("id,user_id")
+    .eq("id", row.id)
+    .maybeSingle();
+  if (existingError) throw new Error(existingError.message);
+  if (existing && existing.user_id !== userId) {
+    throw new Error("FORBIDDEN: plan ownership mismatch");
+  }
   const { data, error } = await plansTable(c)
     .upsert(row, { onConflict: "id" })
     .select("*")
@@ -183,9 +198,20 @@ export async function writeProjectToSupabase(
   return rowToProject(data as OandoPlanRow);
 }
 
-export async function deleteProjectFromSupabase(id: string): Promise<boolean> {
+export async function deleteProjectFromSupabase(
+  id: string,
+  opts?: { userId?: string | null },
+): Promise<boolean> {
   const c = createSupabaseAuthAdminClient();
-  const { data, error } = await plansTable(c).delete().eq("id", id).select("id");
+  // Defense-in-depth ownership filter (28.12): scope the delete to the
+  // caller's rows so a guessed/foreign id can never delete another user's
+  // plan even if route-layer auth were bypassed. Omitted userId (admin
+  // sweeps) keeps the previous unrestricted behavior.
+  let query = plansTable(c).delete().eq("id", id);
+  if (opts?.userId) {
+    query = query.eq("user_id", opts.userId);
+  }
+  const { data, error } = await query.select("id");
   if (error) throw new Error(error.message);
   return Array.isArray(data) && data.length > 0;
 }

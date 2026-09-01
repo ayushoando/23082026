@@ -202,7 +202,13 @@ const Studio = () => {
     }
   }, []);
 
-  const history = useHistory(fabricRef, ready);
+  // Undo/redo restore from snapshots that deliberately exclude canvas-managed
+  // decorations (grid lines), so route the restore hook through a ref to the
+  // `drawGrid` callback defined below (28.3 — mirrors Planner.tsx).
+  const onHistoryRestoreRef = useRef<() => void>(() => {});
+  const history = useHistory(fabricRef, ready, undefined, useCallback(() => {
+    onHistoryRestoreRef.current();
+  }, []));
   const core = useCanvasCore({ fabricRef, ready, scale: SCALE_PX_PER_MM, snapEnabled, gridSize, tool, wrapperRef, onCursorMm: setCursorMm });
 
   const focusDockPanel = useCallback((side: "left" | "right", panelId: string) => {
@@ -308,6 +314,14 @@ const Studio = () => {
 
   useEffect(() => { if (ready) drawGrid(); }, [ready, drawGrid]);
   useEffect(() => { if (ready) drawGrid(); }, [core.zoom, ready, drawGrid]);
+
+  // After an undo/redo jump the serialized snapshot has no grid lines (they
+  // are excluded from history); re-draw them (28.3).
+  useEffect(() => {
+    onHistoryRestoreRef.current = () => {
+      drawGrid();
+    };
+  }, [drawGrid]);
 
   const refreshLayers = useCallback(() => {
     const c = fabricRef.current;

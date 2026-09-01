@@ -13,7 +13,12 @@
  * when the count rises, not on the existing debt.
  *
  *   node scripts/general/check-governance.mjs
- *   node scripts/general/check-governance.mjs --update
+ *   node scripts/general/check-governance.mjs --update --confirm
+ *
+ * `--update` refuses to RAISE any rule's count (a rise is new debt — fix it
+ * instead of re-recording) and requires `--confirm` (or
+ * `GOVERNANCE_BASELINE_CONFIRM=1` in non-interactive CI) so a baseline
+ * rewrite can never happen silently.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -135,6 +140,36 @@ checks.S2_stray_report = plansDirExists
 const counts = Object.fromEntries(Object.entries(checks).map(([k, v]) => [k, v.length]));
 
 if (process.argv.includes("--update")) {
+  const previous = fs.existsSync(BASELINE_FILE)
+    ? JSON.parse(fs.readFileSync(BASELINE_FILE, "utf8"))
+    : {};
+  const raises = Object.entries(counts).filter(([rule, n]) => n > (previous[rule] ?? 0));
+
+  if (raises.length) {
+    console.error(
+      "check:governance --update REFUSED — this would RAISE the ratchet:\n" +
+        raises.map(([r, n]) => `  ${r}: ${previous[r] ?? 0} -> ${n}`).join("\n") +
+        "\nA rise is new debt — fix the violations instead of re-recording the baseline" +
+        " (governance §7). If a rule's definition changed, edit the baseline by hand.",
+    );
+    process.exit(1);
+  }
+
+  const confirmed =
+    process.argv.includes("--confirm") || process.env.GOVERNANCE_BASELINE_CONFIRM === "1";
+  if (!confirmed) {
+    const diffs = Object.entries(counts)
+      .filter(([r, n]) => n !== (previous[r] ?? n))
+      .map(([r, n]) => `  ${r}: ${previous[r] ?? "(unset)"} -> ${n}`);
+    console.error(
+      "check:governance --update refused: rewriting the baseline needs an explicit\n" +
+        "confirmation so a count change can never be laundered in silently.\n" +
+        (diffs.length ? "Pending change:\n" + diffs.join("\n") + "\n" : "Counts unchanged.\n") +
+        `Re-run with --confirm (or GOVERNANCE_BASELINE_CONFIRM=1) to write ${path.relative(ROOT, BASELINE_FILE)}.`,
+    );
+    process.exit(1);
+  }
+
   fs.mkdirSync(path.dirname(BASELINE_FILE), { recursive: true });
   fs.writeFileSync(BASELINE_FILE, JSON.stringify(counts, null, 1) + "\n");
   console.log("check:governance baseline recorded —", JSON.stringify(counts));

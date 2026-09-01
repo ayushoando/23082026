@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, type DependencyList } from "react";
+import { useEffect, useRef, type DependencyList } from "react";
 
 type ShortcutHandlers = {
   undo?: () => void;
@@ -16,101 +16,117 @@ type ShortcutHandlers = {
 };
 
 export const useKeyboardShortcuts = (handlers: ShortcutHandlers, deps: DependencyList = []) => {
+  // Latest-handler ref: the keydown listener reads the newest handlers object
+  // on every dispatch, so handlers passed here may be plain per-render
+  // closures without stale-capture (28.4 — the previous deps array only
+  // included undo/redo, leaving save/delete/copy/paste bound to their
+  // first-render closures). `deps` is kept for API compatibility.
+  const handlersRef = useRef(handlers);
+  handlersRef.current = handlers;
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      const h = handlersRef.current;
       const target = e.target as HTMLElement | null;
       const inField =
         target &&
         (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable);
       const ctrl = e.ctrlKey || e.metaKey;
       const key = e.key.toLowerCase();
+
+      // Editing text must never trigger canvas mutations — this check has to
+      // run BEFORE the Ctrl+* blocks, or Ctrl+A/Z/S/D/C/V inside an input or
+      // textarea are hijacked to canvas actions (28.4; mirrors the Planner
+      // hook). Escape is intentionally allowed so an open modal/menu can
+      // still close.
+      if (inField && key !== "escape") return;
+
       if (ctrl && key === "z" && !e.shiftKey) {
         e.preventDefault();
-        handlers.undo?.();
+        h.undo?.();
         return;
       }
       if ((ctrl && key === "y") || (ctrl && e.shiftKey && key === "z")) {
         e.preventDefault();
-        handlers.redo?.();
+        h.redo?.();
         return;
       }
       if (ctrl && key === "d") {
         e.preventDefault();
-        handlers.duplicate?.();
+        h.duplicate?.();
         return;
       }
       if (ctrl && key === "g") {
         e.preventDefault();
-        handlers.group?.();
+        h.group?.();
         return;
       }
       if (ctrl && key === "s") {
         e.preventDefault();
-        handlers.save?.();
+        h.save?.();
         return;
       }
       if (ctrl && key === "a") {
         e.preventDefault();
-        handlers.selectAll?.();
+        h.selectAll?.();
         return;
       }
       if (ctrl && key === "c") {
-        handlers.copy?.();
+        h.copy?.();
         return;
       }
       if (ctrl && key === "v") {
-        handlers.paste?.();
+        h.paste?.();
         return;
       }
 
-      if (inField) return;
       if (key === "delete" || key === "backspace") {
         e.preventDefault();
-        handlers.delete?.();
+        h.delete?.();
         return;
       }
       if (key === "escape") {
-        handlers.escape?.();
+        h.escape?.();
         return;
       }
       if (key === "v") {
-        handlers.tool?.("select");
+        h.tool?.("select");
         return;
       }
       if (key === "r") {
-        handlers.tool?.("rect");
+        h.tool?.("rect");
         return;
       }
       if (key === "c") {
-        handlers.tool?.("circle");
+        h.tool?.("circle");
         return;
       }
       if (key === "l") {
-        handlers.tool?.("line");
+        h.tool?.("line");
         return;
       }
       if (key === "p") {
-        handlers.tool?.("polygon");
+        h.tool?.("polygon");
         return;
       }
       if (key === "t") {
-        handlers.tool?.("text");
+        h.tool?.("text");
         return;
       }
       if (key === "w") {
-        handlers.tool?.("wall");
+        h.tool?.("wall");
         return;
       }
       if (key === "h") {
-        handlers.tool?.("pan");
+        h.tool?.("pan");
         return;
       }
       if (key === "d") {
-        handlers.tool?.("dimension");
+        h.tool?.("dimension");
         return;
       }
       if (key === "m") {
-        handlers.tool?.("freehand");
+        h.tool?.("freehand");
         return;
       }
     };

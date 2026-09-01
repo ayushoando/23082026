@@ -137,26 +137,12 @@ export function MobileNavDrawer({ open, onClose }: MobileNavDrawerProps) {
   useEffect(() => {
     if (!open) {return;}
 
+    // Escape-to-close only. Focus containment (Tab cycling) is owned by the
+    // react-aria-components Modal that already wraps this drawer — exactly one
+    // trap mechanism per component, so the two cannot drift apart.
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         onClose();
-        return;
-      }
-      if (e.key !== "Tab" || !drawerRef.current) {return;}
-
-      const focusable = drawerRef.current.querySelectorAll<HTMLElement>(
-        "a[href], button:not([disabled]), input, [tabindex]:not([tabindex='-1'])",
-      );
-      if (focusable.length === 0) {return;}
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
       }
     };
 

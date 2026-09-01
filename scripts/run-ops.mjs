@@ -192,6 +192,10 @@ const COMMANDS = {
   "db:backup:pgdump": () => runTsx("db_backup_pg_dump.ts"),
   "db:ensure-plans": () => runTsx("db_ensure_plans_table.ts"),
   "db:sync-drizzle": () => runTsx("db_sync_drizzle_schema.ts"),
+  // Asset-cutover path rewrites (registered 2026-09-01 from the orphan triage in
+  // plans/audit/20-scripts-governance). Mutating tools — read the header before running.
+  "db:images:rewrite:apply": () => runNode("apply-db-image-path-rewrite.mjs"),
+  "db:images:rewrite:reverse": () => runNode("reverse-asset-paths.mjs"),
 
   "backup:supabase:r2": () => runTsx("db_backup_upload_r2.ts"),
   "backup:github-secrets:sync": () =>
@@ -201,6 +205,15 @@ const COMMANDS = {
       "Bypass",
       "-File",
       path.join(ROOT, "scripts/sync-github-backup-secrets.ps1"),
+    ]),
+  // Cloudflare managed security.txt (needs CLOUDFLARE_API_TOKEN; see script header).
+  "cloudflare:security-txt": () =>
+    run("pwsh", [
+      "-NoProfile",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      path.join(ROOT, "scripts/configure-cf-security-txt.ps1"),
     ]),
   "catalog:snapshot:r2": () => runTsx("catalog_snapshot_upload_r2.ts"),
   "repo:backup:r2": () => runTsx("repo_backup_upload_r2.ts"),
@@ -225,6 +238,8 @@ const COMMANDS = {
     runTsx("organize-catalog-images.ts", ["--apply"]),
   "catalog:organize:sync": () =>
     runTsx("organize-catalog-images.ts", ["--sync-db"]),
+  // DESTRUCTIVE: keeps the best ≤MAX images per product folder (phash dedupe).
+  "catalog:trim": () => runNode("trim-catalog.mjs"),
 
   "supabase:assets:arrange": () => runTsx("arrange_supabase_catalog_assets.ts"),
   "supabase:backup": () => runTsx("backup_supabase.ts"),
@@ -256,8 +271,21 @@ const COMMANDS = {
       "--fail-on-hit",
     ]),
   "assets:r2:count": () => runNode("count-r2-objects.mjs"),
+  // Asset QA one-offs (registered 2026-09-01 from the orphan triage in
+  // plans/audit/20-scripts-governance).
+  "assets:contact-sheet": () => runNode("contact-sheet.mjs"),
+  "audit:images:corrupt": () => runNode("detect-corrupt-images.mjs"),
+  "verify:asset-decode": () => runNode("verify-asset-decode.mjs"),
+  // Mutating: merges + hash-dedupes the five major asset trees.
+  "assets:dedup:majors": () => runNode("five-majors-hash-dedup.mjs"),
+  // Dry-run default; --apply uploads site/public/assets to R2.
+  "assets:r2:mirror": () => runNode("mirror-assets-to-r2.mjs"),
 
   "launch:smoke": () => runNode("launch-smoke.mjs"),
+  // Browser audits against a local dev server (need http://localhost:3000).
+  "audit:marketing-ui": () => runNode("marketing-ui-audit.mjs"),
+  "audit:ui-polish-pass1": () => runNode("ui-polish-pass1-audit.mjs"),
+  "audit:mobile-canvas-share": () => runNode("mobile-canvas-share.mjs"),
   "launch:env": () => runGeneral("validate-launch-env.mjs"),
   "env:sync": () => runGeneral("sync-env-local-files.mjs"),
 

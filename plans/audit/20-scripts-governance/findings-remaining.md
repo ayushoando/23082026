@@ -1,6 +1,9 @@
 # Remaining — 20-scripts-governance
-**Date:** 2026-09-01
-- 20.1: open — both nonzero ratchets remain live debt (P4_migration_no_rollback: 8; S2_stray_report: 22). Note: report 24 observed all supabase migrations already carry `-- rollback` (stale baseline), but the baseline has not been re-recorded.
-- 20.2: open — `check-governance.mjs --update` can still silently launder a count increase into the baseline (no confirm guard added).
-- Orphan one-offs: open — ~18 zero-reference scripts confirmed by report 26's triage (corroborated by report 30's single-touch git history); deletion awaits user confirmation; unregistered one-offs still not registered in `run-ops.mjs`/`ops-command-registry.mjs`.
-- Prioritized recommendations 1–14: open — none actioned (wave3/wave5 commit, sanitizeSvg wiring, scan:secrets in gate:fast, site/data/storage retirement, Planner.tsx split, migration/stray-report cleanup, etc.).
+**Date:** 2026-09-01 (post-remediation)
+
+- **S2 final stray:** `plans/audit/comprehensive-code-review-report.md` (now the only in-scope hit; baseline locked at 1). Deletion is user-confirmation-gated — not done here.
+- **`site/data/storage` retirement (plan #5 core):** dir still exists (zero code refs verified via `git grep "data/storage"` — only docs/audit notes reference it). Physical deletion awaits user confirmation. The `check-repo-layout.mjs` FORBIDDEN_DIRS entry must be added **at deletion time** — adding it now would fail every gate run while the dir exists. (Overview.tsx "is retired" wording stays physically premature until then.)
+- **Rec #2 sanitizeSvg wiring (Studio furniture upload):** not actioned — target files are `site/components|lib/Studio*` (agent B's area, hands-off per session rules).
+- **Zero-wired one-off scripts (12, re-triaged):** now registered as ops commands instead of deleted; physical deletion of any of them still awaits user confirmation.
+- **Recs #5–#9, #11–#14** (worker VERCEL_ORIGIN/slug tables, Planner.tsx split, route error.tsx, redirect overrides/images, bundle diet, i18n workspace strings, dead code removal, env contract, routes doc): out of this remediation's file scope — they belong to audit areas 02/03/05/08/12/15/17/19, owned by other agents/central. Not touched.
+- **Note (no action):** S2 scans one level deep only; 20 report-like `.md` files physically exist deeper under `plans/audit/**` (13 sanctioned handovers + 6 folder reports + the orphan above). Not counted by the rule; listed for triage awareness.

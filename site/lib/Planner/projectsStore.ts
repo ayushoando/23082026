@@ -270,14 +270,17 @@ export async function writeProjectRecord(
   });
 }
 
-export async function deleteProjectRecord(id: string): Promise<boolean> {
+export async function deleteProjectRecord(
+  id: string,
+  opts?: { userId?: string | null },
+): Promise<boolean> {
   return runPlannerPersistenceOperation({
     disk: () => deleteProjectFiles(id),
     supabase: async () => {
       const { deleteProjectFromSupabase } = await import(
         "@planner/lib/projectsStore.supabase"
       );
-      return deleteProjectFromSupabase(id);
+      return deleteProjectFromSupabase(id, { userId: opts?.userId });
     },
   });
 }
@@ -345,7 +348,10 @@ export async function deletePlannerDocumentFromStore(
     const project = await loadProjectRecord(id);
     if (!ownsProject(project, userId)) return false;
   }
-  return deleteProjectRecord(id);
+  // Thread the owner filter into the store adapters (28.12 defense-in-depth):
+  // the Supabase delete is scoped to `user_id` so a foreign id can never be
+  // removed even if the pre-check above were bypassed.
+  return deleteProjectRecord(id, { userId });
 }
 
 export async function deletePlannerDocument(id: string): Promise<{ success: boolean }> {

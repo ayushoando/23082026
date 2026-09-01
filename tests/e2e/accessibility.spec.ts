@@ -21,6 +21,22 @@ test.describe("Accessibility baseline", () => {
     expect(results.violations).toEqual([]);
   });
 
+  // 16.1 — the enforced zero-violation bar now covers the largest public
+  // interactive surfaces: catalog category, PDP, and the contact form.
+  // Stable slugs shared with marketing-desktop-layout.spec / touch-targets.spec.
+  for (const route of ["/products/workstations/", "/products/seating/rider/", "/contact/"]) {
+    test(`${route} has no WCAG AA violations`, async ({ page }) => {
+      await page.goto(route, { waitUntil: "load" });
+      await page.evaluate(() => document.fonts.ready);
+      await page.waitForTimeout(500);
+
+      const results = await new AxeBuilder({ page })
+        .withTags(["wcag2aa"])
+        .analyze();
+      expect(results.violations).toEqual([]);
+    });
+  }
+
   test("should not have any automatically detectable accessibility issues in guest planner", async ({ page }) => {
     await enterGuestPlannerWorkspace(page, { projectName: "A11y Test" });
     await dismissOnboardingIfVisible(page);

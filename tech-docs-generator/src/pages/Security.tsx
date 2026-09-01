@@ -202,7 +202,8 @@ export const PUT = withAuth(
             code={`// Anon / cookie server client + separate admin (service role) client
 // Service role must never ship to the browser bundle.
 // Residual tables use RLS policies in site/platform/supabase/migrations/*.sql
-// Fork Studio/Planner product data is largely disk under site/data/storage/`}
+// Fork Studio/Planner product data: disk under site/platform/*/data/ (dev, DEV_AUTH_BYPASS=1)
+// or Supabase (prod) — legacy site/data/storage/ is retired; do not write there.`}
           />
         </CollapsibleSection>
       </section>

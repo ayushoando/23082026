@@ -166,4 +166,30 @@
   :where([data-testid="contact-form-submit"]) {
     min-height: var(--control-height-sm);
   }
+
+  /* MOB-TAP: structural floors — new controls inherit the 44px target without
+     needing an allowlist entry. Buttons and form controls need no display
+     change, so they are floored structurally. Anchors are floored only inside
+     container scopes whose links are standalone controls (footer, consent bar,
+     breadcrumb, catalog header, contact intro, access back); inline text links
+     outside these scopes are deliberately untouched — promoting a text link to
+     an inline-flex box is a per-case layout decision. The class rules above
+     stay: they carry per-class paddings and the deliberate carousel/hero
+     pagination exclusions. */
+  :where(form button, form [role="button"]) {
+    min-height: var(--control-height-sm);
+  }
+
+  :where(
+    .site-footer a,
+    [data-cookie-consent-bar] a,
+    nav[aria-label="Breadcrumb"] a,
+    .catalog-page-header a,
+    .contact-form-intro a,
+    .shell-access-back a
+  ) {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--control-height-sm);
+  }
 }

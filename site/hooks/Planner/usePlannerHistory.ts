@@ -54,18 +54,34 @@ export const useHistory = (
     (json: string) => {
       const c = fabricRef.current;
       if (!c) return;
+      // Guard JSON.parse: a corrupt snapshot must not throw out of
+      // undo()/redo() and must not leave `suppress` set (which would
+      // permanently stop history recording).
+      let parsed: object;
+      try {
+        parsed = JSON.parse(json) as object;
+      } catch {
+        return;
+      }
       suppress.current = true;
-      void c.loadFromJSON(JSON.parse(json) as object).then(() => {
-        c.requestRenderAll();
-        suppress.current = false;
-        // loadFromJSON replaces the entire object list, which discards
-        // canvas-managed decorations (grid lines, sheet outline) that are
-        // deliberately excluded from the serialized snapshot. Let the
-        // caller re-draw those and refresh any derived UI state (layers
-        // list, scene version) so undo/redo doesn't visually corrupt the
-        // canvas even though the underlying restore was correct.
-        onRestore?.();
-      });
+      void c
+        .loadFromJSON(parsed)
+        .then(() => {
+          c.requestRenderAll();
+          // loadFromJSON replaces the entire object list, which discards
+          // canvas-managed decorations (grid lines, sheet outline) that are
+          // deliberately excluded from the serialized snapshot. Let the
+          // caller re-draw those and refresh any derived UI state (layers
+          // list, scene version) so undo/redo doesn't visually corrupt the
+          // canvas even though the underlying restore was correct.
+          onRestore?.();
+        })
+        .catch(() => {
+          c.requestRenderAll();
+        })
+        .finally(() => {
+          suppress.current = false;
+        });
     },
     [fabricRef, onRestore],
   );

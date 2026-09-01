@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, type DependencyList } from "react";
+import { useEffect, useRef, type DependencyList } from "react";
 
 type ShortcutHandlers = {
   undo?: () => void;
@@ -31,8 +31,19 @@ type ShortcutHandlers = {
 };
 
 export const useKeyboardShortcuts = (handlers: ShortcutHandlers, deps: DependencyList = []) => {
+  // Latest-handler ref (28.2): the keydown listener is registered once, but
+  // every dispatch reads the newest handlers object. This kills the
+  // stale-capture class of bugs where a first-render closure kept invoking
+  // e.g. `save` with a stale `projectId` — after the first save changed the
+  // project id, Ctrl+S still took the create-branch and produced a duplicate
+  // project. `deps` is kept for call-site/API compatibility; with the ref in
+  // place the handlers are always current even when callers pass no deps.
+  const handlersRef = useRef(handlers);
+  handlersRef.current = handlers;
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      const h = handlersRef.current;
       const target = e.target as HTMLElement | null;
       const inField =
         target &&
@@ -50,50 +61,50 @@ export const useKeyboardShortcuts = (handlers: ShortcutHandlers, deps: Dependenc
 
       if (ctrl && key === "z" && !e.shiftKey) {
         e.preventDefault();
-        handlers.undo?.();
+        h.undo?.();
         return;
       }
       if ((ctrl && key === "y") || (ctrl && e.shiftKey && key === "z")) {
         e.preventDefault();
-        handlers.redo?.();
+        h.redo?.();
         return;
       }
       if (ctrl && key === "d") {
         e.preventDefault();
-        handlers.duplicate?.();
+        h.duplicate?.();
         return;
       }
       if (ctrl && key === "g") {
         e.preventDefault();
-        handlers.group?.();
+        h.group?.();
         return;
       }
       if (ctrl && key === "s") {
         e.preventDefault();
-        handlers.save?.();
+        h.save?.();
         return;
       }
       if (ctrl && key === "a") {
         e.preventDefault();
-        handlers.selectAll?.();
+        h.selectAll?.();
         return;
       }
       if (ctrl && key === "c") {
-        handlers.copy?.();
+        h.copy?.();
         return;
       }
       if (ctrl && key === "v") {
-        handlers.paste?.();
+        h.paste?.();
         return;
       }
 
       if (key === "delete" || key === "backspace") {
         e.preventDefault();
-        handlers.delete?.();
+        h.delete?.();
         return;
       }
       if (key === "escape") {
-        handlers.escape?.();
+        h.escape?.();
         return;
       }
 
@@ -102,26 +113,26 @@ export const useKeyboardShortcuts = (handlers: ShortcutHandlers, deps: Dependenc
       // and accessible controls all invoke the same logic (Req 7.1–7.3).
       if (key === "arrowleft") {
         e.preventDefault();
-        if (e.shiftKey) handlers.resizeWidthShrink?.();
-        else handlers.moveLeft?.();
+        if (e.shiftKey) h.resizeWidthShrink?.();
+        else h.moveLeft?.();
         return;
       }
       if (key === "arrowright") {
         e.preventDefault();
-        if (e.shiftKey) handlers.resizeWidthGrow?.();
-        else handlers.moveRight?.();
+        if (e.shiftKey) h.resizeWidthGrow?.();
+        else h.moveRight?.();
         return;
       }
       if (key === "arrowup") {
         e.preventDefault();
-        if (e.shiftKey) handlers.resizeHeightShrink?.();
-        else handlers.moveUp?.();
+        if (e.shiftKey) h.resizeHeightShrink?.();
+        else h.moveUp?.();
         return;
       }
       if (key === "arrowdown") {
         e.preventDefault();
-        if (e.shiftKey) handlers.resizeHeightGrow?.();
-        else handlers.moveDown?.();
+        if (e.shiftKey) h.resizeHeightGrow?.();
+        else h.moveDown?.();
         return;
       }
 
@@ -129,59 +140,59 @@ export const useKeyboardShortcuts = (handlers: ShortcutHandlers, deps: Dependenc
       // alternatives for multi-pointer gestures).
       if (key === "+" || key === "=") {
         e.preventDefault();
-        handlers.zoomIn?.();
+        h.zoomIn?.();
         return;
       }
       if (key === "-" || key === "_") {
         e.preventDefault();
-        handlers.zoomOut?.();
+        h.zoomOut?.();
         return;
       }
 
       if (key === "v") {
-        handlers.tool?.("select");
+        h.tool?.("select");
         return;
       }
       if (key === "r") {
         // R with selection rotates; without selection switches to rect tool.
         // The rotate handler returns early when nothing is selected.
-        if (handlers.rotate) {
-          handlers.rotate();
+        if (h.rotate) {
+          h.rotate();
         } else {
-          handlers.tool?.("rect");
+          h.tool?.("rect");
         }
         return;
       }
       if (key === "c") {
-        handlers.tool?.("circle");
+        h.tool?.("circle");
         return;
       }
       if (key === "l") {
-        handlers.tool?.("line");
+        h.tool?.("line");
         return;
       }
       if (key === "p") {
-        handlers.tool?.("polygon");
+        h.tool?.("polygon");
         return;
       }
       if (key === "t") {
-        handlers.tool?.("text");
+        h.tool?.("text");
         return;
       }
       if (key === "w") {
-        handlers.tool?.("wall");
+        h.tool?.("wall");
         return;
       }
       if (key === "h") {
-        handlers.tool?.("pan");
+        h.tool?.("pan");
         return;
       }
       if (key === "d") {
-        handlers.tool?.("dimension");
+        h.tool?.("dimension");
         return;
       }
       if (key === "m") {
-        handlers.tool?.("freehand");
+        h.tool?.("freehand");
         return;
       }
     };
