@@ -7,7 +7,7 @@
 import fc from "fast-check";
 import { describe, expect, it } from "vitest";
 
-import type { EvidenceRecord, HookPermissionState, UserAuthorizationState } from "../../../plans/planner-comprehensive-audit/auditModel";
+import type { EvidenceRecord, HookPermissionState, UserAuthorizationState } from "../../../plans/audit/28-canvas-features-logic/auditModel";
 import {
   derivePlannerValidationManifest,
   evidenceClassForOrigin,
@@ -18,7 +18,7 @@ import {
   type EvidenceOrigin,
   type PlannerValidationCategory,
   type PlannerValidationFindingInput,
-} from "../../../plans/planner-comprehensive-audit/validationEvidence";
+} from "../../../plans/audit/28-canvas-features-logic/validationEvidence";
 
 const PROPERTY_RUNS = 200;
 const userAuthorizationArbitrary = fc.constantFrom<UserAuthorizationState>("not-requested", "not-authorized", "authorized");

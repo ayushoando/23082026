@@ -1,6 +1,6 @@
 // @vitest-environment node
 // Feature: planner-comprehensive-audit, Task 5.9 targeted regression evidence
-// Finding links and sources: plans/planner-comprehensive-audit/workstream5Evidence.ts
+// Finding links and sources: plans/audit/28-canvas-features-logic/workstream5Evidence.ts
 // Validates: Requirements 2.6, 18.1, 18.5, 19.1-19.4
 
 import { describe, expect, it, vi } from "vitest";
@@ -9,7 +9,7 @@ import { derivePlannerOwnerScope, findPlannerOwnedRecord, listPlannerOwnedRecord
 import { runContextualPlannerPersistenceOperation } from "@planner/lib/plannerPersistenceMode";
 import { clearObsoleteErrorOnRetry, getPlannerRequiredState } from "@planner/lib/plannerWorkflowState";
 import { fromMm, mmToPx, pxToMm, toMm } from "@planner/lib/plannerUnits";
-import { TASK_5_9_REGRESSION_LINKS } from "../../../plans/planner-comprehensive-audit/workstream5Evidence";
+import { TASK_5_9_REGRESSION_LINKS } from "../../../plans/audit/28-canvas-features-logic/workstream5Evidence";
 
 describe("Task 5.9 finding-linked Planner regressions", () => {
   it("keeps canonical millimetres and Planner scale round trips stable", () => {

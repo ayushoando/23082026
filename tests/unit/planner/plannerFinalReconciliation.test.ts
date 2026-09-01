@@ -18,7 +18,7 @@ import {
   FINAL_RECONCILIATION_VALIDATION,
   IS_COMPREHENSIVE_REMEDIATION_COMPLETE,
   IS_FULL_VALIDATION_COMPLETE,
-} from "../../../plans/planner-comprehensive-audit/finalReconciliation";
+} from "../../../plans/audit/28-canvas-features-logic/finalReconciliation";
 
 const REPO_ROOT = path.resolve(__dirname, "../../..");
 

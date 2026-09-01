@@ -262,14 +262,14 @@ export const TASK_5_7_REPOSITORY_EVIDENCE: EvidenceRecord = {
   summary:
     "Task 5.7 defines and property-tests the mandatory evidence contract for every measured performance-budget miss.",
   sourceRefs: [
-    "plans/planner-comprehensive-audit/performanceEvidence.ts",
+    "plans/audit/28-canvas-features-logic/performanceEvidence.ts",
     "tests/unit/planner/plannerPerformanceFindingCompleteness.property.test.ts",
   ],
   limitation:
     "Authored repository evidence does not supply browser measurements, integration latency, cleanup results, bottleneck diagnosis, remediation success, or budget compliance.",
   artifact: {
     authorship: "authored",
-    path: "plans/planner-comprehensive-audit/performanceEvidence.ts",
+    path: "plans/audit/28-canvas-features-logic/performanceEvidence.ts",
   },
 };
 

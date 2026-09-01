@@ -12,7 +12,7 @@ import {
   TASK_4_10_BRANCH,
   TASK_4_9_PENDING_ACTIONS,
   TASK_4_9_SCHEMA_GAP_DECISION,
-} from "../../../../plans/planner-comprehensive-audit/schemaGapDecision";
+} from "../../../../plans/audit/28-canvas-features-logic/schemaGapDecision";
 
 const ADMIN_MIGRATIONS_PATH = path.join(
   process.cwd(),

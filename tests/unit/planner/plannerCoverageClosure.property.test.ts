@@ -17,12 +17,12 @@ import {
   type CoverageItem,
   type PlannerAuditDataset,
   type RequirementRef,
-} from "../../../plans/planner-comprehensive-audit/auditModel";
-import { validateAuditDataset } from "../../../plans/planner-comprehensive-audit/auditValidators";
+} from "../../../plans/audit/28-canvas-features-logic/auditModel";
+import { validateAuditDataset } from "../../../plans/audit/28-canvas-features-logic/auditValidators";
 import {
   collectPlannerCoverage,
   type PlannerCoverageInventory,
-} from "../../../plans/planner-comprehensive-audit/coverageCollector";
+} from "../../../plans/audit/28-canvas-features-logic/coverageCollector";
 
 const PROPERTY_REQUIREMENTS = [
   "1.1",

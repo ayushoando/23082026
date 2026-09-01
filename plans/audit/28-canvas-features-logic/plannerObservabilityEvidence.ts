@@ -55,7 +55,7 @@ export const TASK_5_1_5_4_REPOSITORY_EVIDENCE: EvidenceRecord = {
     "tests/unit/planner/plannerObservability.property.test.ts",
   ],
   limitation: "Static source establishes both serial call-site integrations and the response/result-preservation contract; runtime event emission, metric scraping across deployment instances, hosted telemetry, and a test result remain unverified.",
-  artifact: { authorship: "authored", path: "plans/planner-comprehensive-audit/plannerObservabilityEvidence.ts" },
+  artifact: { authorship: "authored", path: "plans/audit/28-canvas-features-logic/plannerObservabilityEvidence.ts" },
 };
 
 export const TASK_5_3_5_4_PENDING_VALIDATION: ValidationRecord = {

@@ -8,7 +8,7 @@
 | # | Report | Area |
 |---|--------|------|
 | 01 | [Executive summary](01-executive-summary/findings.md) | Overall verdict + severity rollup |
-| 02 | [Architecture & routes](02-architecture-routes/findings.md) | Route inventory, layout consistency |
+| 02 | [Architecture & routes](../.archive/02-architecture-routes/findings.md) | Route inventory, layout consistency |
 | 03 | [Module boundaries / fork](03-module-boundaries-fork/findings.md) | Studio↔Planner fork discipline |
 | 04 | [Repo layout & git hygiene](04-repo-layout-git-hygiene/findings.md) | check:layout conformance, untracked load-bearing files, TODOs |
 | 05 | [Dead code](05-dead-code/findings.md) | Orphaned modules |
@@ -46,5 +46,17 @@
 | Low | ~40 | Dev-bypass on non-prod hosts, env contract gaps, fail-open rate limits, focss near-cap files, axe coverage gaps, dead code items, orphan scripts, DXF fidelity gaps, Deno dep drift, etc. |
 
 **Second pass (reports 21–24) corrections to first-pass findings:** `P4_migration_no_rollback: 8` is a stale baseline (0/64 migrations lack `-- rollback` today); the `pending-translations/` dir is empty; `scan-boundaries` finds no violations (unchanged); new High-adjacent item: `db:types` depends on an undeclared global `supabase` CLI; new Medium items: dead `turbo.json`, `admin/themes` reads an archived table, stale hand-written `platform/supabase/types.ts`, `routes.md` false "no redirect table" claim.
+
+## Legacy program reconciliation (read in full 2026-09-01)
+
+The 5 original folders here (planner-audit, studio-audit, testing-audit, ui-audit, worker-audit) are **closed prior audit+remedy programs**:
+
+| Folder | Status | Reconciliation |
+|---|---|---|
+| planner-audit | Closed — PLN-FIX-01–04 applied; 634/634 planner tests | Confirms report 28's autosave/rate-limit items already fixed; open debt matches our findings |
+| studio-audit | Closed — STU-FIX-01–03 applied (was CRITICAL: no auth on /oostudio; axios removed) | Why no live Studio auth/CSRF issue appears in reports 07/08 |
+| testing-audit | Closed — Vitest 4 breakage repaired; lanes green (4,088 + 214 tests) | Supersedes "suite state unverified" caveat in reports 18/29 |
+| ui-audit | Closed — 33 findings resolved; false-fix UI-028 caught on re-verification | Explains report 20's S2 19→22 / P4 42→8 baselines as owner-directed, not drift |
+| worker-audit | Closed with CF-TOKEN-01 deploy pending; Vectorize binding added | Matches report 12 and remaining-areas #6 |
 
 **Backlog:** [remaining-areas/README.md](../remaining-areas/README.md) — audit areas not yet covered (list only, none started).

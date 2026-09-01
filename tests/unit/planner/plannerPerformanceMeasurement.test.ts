@@ -23,12 +23,12 @@ import {
   type DirectFeedbackSample,
   type NonCanvasInpSample,
   type RouteEntrySample,
-} from "../../../plans/planner-comprehensive-audit/performanceMeasurement";
+} from "../../../plans/audit/28-canvas-features-logic/performanceMeasurement";
 import {
   createRepresentativeProjectFixture,
   REPRESENTATIVE_FIXTURE_ID,
   validateRepresentativeProjectFixture,
-} from "../../../plans/planner-comprehensive-audit/representativeProjectFixture";
+} from "../../../plans/audit/28-canvas-features-logic/representativeProjectFixture";
 
 function repeatTimestamps(intervalMs: number): number[] {
   return [0, intervalMs, intervalMs * 2, intervalMs * 3, intervalMs * 4];

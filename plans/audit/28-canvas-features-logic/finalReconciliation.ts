@@ -42,21 +42,21 @@ export const FINAL_RECONCILIATION_EVIDENCE_ID =
   "evidence:final-planner-reconciliation" as const;
 
 const FINAL_RECONCILIATION_PATH =
-  "plans/planner-comprehensive-audit/finalReconciliation.ts" as const;
+  "plans/audit/28-canvas-features-logic/finalReconciliation.ts" as const;
 
 const WORKSTREAM_1_PATHS = [
-  "plans/planner-comprehensive-audit/auditModel.ts",
-  "plans/planner-comprehensive-audit/auditValidators.ts",
-  "plans/planner-comprehensive-audit/coverageCollector.ts",
-  "plans/planner-comprehensive-audit/initialInventory.ts",
-  "plans/planner-comprehensive-audit/firstEvidenceMatrix.ts",
-  "plans/planner-comprehensive-audit/findingRegistry.ts",
-  "plans/planner-comprehensive-audit/workflowTraceBuilder.ts",
+  "plans/audit/28-canvas-features-logic/auditModel.ts",
+  "plans/audit/28-canvas-features-logic/auditValidators.ts",
+  "plans/audit/28-canvas-features-logic/coverageCollector.ts",
+  "plans/audit/28-canvas-features-logic/initialInventory.ts",
+  "plans/audit/28-canvas-features-logic/firstEvidenceMatrix.ts",
+  "plans/audit/28-canvas-features-logic/findingRegistry.ts",
+  "plans/audit/28-canvas-features-logic/workflowTraceBuilder.ts",
   FINAL_RECONCILIATION_PATH,
   // Corrected 2026-09-01: the plan artifacts moved from the removed
-  // external spec tree to `plans/planner-comprehensive-audit/`.
-  "plans/planner-comprehensive-audit/tasks.md",
-  "plans/planner-comprehensive-audit/handover.md",
+  // external spec tree to `plans/audit/28-canvas-features-logic/`.
+  "plans/audit/28-canvas-features-logic/tasks.md",
+  "plans/audit/28-canvas-features-logic/handover.md",
 ] as const;
 
 const WORKSTREAM_2_PATHS = [
@@ -91,12 +91,12 @@ const WORKSTREAM_5_PATHS = [
   "site/lib/observability/planner/plannerObservabilityAdapters.ts",
   "site/lib/observability/planner/plannerObservabilityExporter.server.ts",
   "site/lib/observability/planner/plannerObservability.server.ts",
-  "plans/planner-comprehensive-audit/plannerObservabilityEvidence.ts",
-  "plans/planner-comprehensive-audit/performanceMeasurement.ts",
-  "plans/planner-comprehensive-audit/performanceEvidence.ts",
-  "plans/planner-comprehensive-audit/validationEvidence.ts",
-  "plans/planner-comprehensive-audit/workstream5Evidence.ts",
-  "plans/planner-comprehensive-audit/workstream5ValidationManifest.ts",
+  "plans/audit/28-canvas-features-logic/plannerObservabilityEvidence.ts",
+  "plans/audit/28-canvas-features-logic/performanceMeasurement.ts",
+  "plans/audit/28-canvas-features-logic/performanceEvidence.ts",
+  "plans/audit/28-canvas-features-logic/validationEvidence.ts",
+  "plans/audit/28-canvas-features-logic/workstream5Evidence.ts",
+  "plans/audit/28-canvas-features-logic/workstream5ValidationManifest.ts",
   "tests/unit/planner/plannerObservability.property.test.ts",
   "tests/unit/planner/plannerValidationEvidence.property.test.ts",
   "tests/unit/planner/plannerPerformanceMeasurement.test.ts",
@@ -155,9 +155,9 @@ const FINAL_RECONCILIATION_EVIDENCE: EvidenceRecord = {
     "The final Planner reconciliation freezes audited paths, assigns exclusive owners, acknowledges geometry/persistence/API/migration contracts, resolves authored integration conflicts, and separates remediation completion from validation completion.",
   sourceRefs: uniqueSorted([
     FINAL_RECONCILIATION_PATH,
-    "plans/planner-comprehensive-audit/firstEvidenceMatrix.ts",
-    "plans/planner-comprehensive-audit/findingRegistry.ts",
-    "plans/planner-comprehensive-audit/validationEvidence.ts",
+    "plans/audit/28-canvas-features-logic/firstEvidenceMatrix.ts",
+    "plans/audit/28-canvas-features-logic/findingRegistry.ts",
+    "plans/audit/28-canvas-features-logic/validationEvidence.ts",
     ...WORKSTREAM_1_PATHS,
     ...WORKSTREAM_2_PATHS,
     ...WORKSTREAM_3_PATHS,
@@ -566,16 +566,17 @@ export const FINAL_PENDING_VALIDATION_COMMANDS = uniqueSorted(
 
 export const FINAL_PRESERVED_UNRELATED_PATHS = [
   // Corrected 2026-09-01: the ai-package-remediation spec folder
-  // (the removed external spec tree) lives on as `plans/packages/`.
-  "plans/packages/package-audit-report.md",
-  "plans/packages/remedy-plan.md",
+  // (the removed external spec tree) lives on as `plans/audit/22-packages-workspace/packages/`.
+  // package-audit-report.md was not present on disk at the 2026-09-01 reconciliation;
+  // only the remedy plan survives.
+  "plans/audit/22-packages-workspace/packages/remedy-plan.md",
   "tests/unit/lib/ai/mastra/catalogRetrieval.test.ts",
 ] as const;
 
 export const FINAL_PRESERVED_OUT_OF_SCOPE_PATHS = [
   // Corrected 2026-09-01: the ai-implementation-audit spec folder
   // (the removed external spec tree) lives on as `plans/ai-audit/`.
-  "plans/ai-audit/remedy-plan.md",
+  "plans/audit/27-lib-ai-svg-observability/remedy-plan.md",
   "scripts/AsNeeded/verify-focss.mjs",
   "site/components/Planner/PlannerAlignBar.tsx",
   "site/components/Planner/PlannerAutoArrangeDialog.tsx",

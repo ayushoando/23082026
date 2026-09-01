@@ -1,6 +1,6 @@
 # Plan — Architecture & Routes
 
-**Status:** not started (awaiting owner go-ahead). **Source:** [findings.md](./findings.md)
+**Status:** ✅ done 2026-09-01 — routes.md updated (2 tool pages added), `error.tsx` added to admin/ooplanner/oostudio; route-contract 9/9 + typecheck green. Source: [findings.md](./findings.md)
 
 ## Objective
 Eliminate docs drift and give non-marketing route groups local error/loading recovery, keeping the already-consistent route structure intact.

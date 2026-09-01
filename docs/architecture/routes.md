@@ -54,6 +54,8 @@ This reference maps known `site/app/**/page.tsx` and `site/app/api/**/route.ts` 
 - `/solutions` → `app/(site)/solutions/page.tsx`
 - `/sustainability` → `app/(site)/sustainability/page.tsx`
 - `/terms` → `app/(site)/terms/page.tsx`
+- `/tools/meeting-room-capacity-calculator` → `app/(site)/tools/meeting-room-capacity-calculator/page.tsx`
+- `/tools/office-space-calculator` → `app/(site)/tools/office-space-calculator/page.tsx`
 - `/trusted-by` → `app/(site)/trusted-by/page.tsx`
 - `/login` → `app/(site)/login/page.tsx`
 

@@ -20,14 +20,14 @@ import type {
   RequirementRef,
   ValidationRecord,
   WorkflowTrace,
-} from "../../../plans/planner-comprehensive-audit/auditModel";
-import { WORKFLOW_STAGE_ORDER } from "../../../plans/planner-comprehensive-audit/auditModel";
+} from "../../../plans/audit/28-canvas-features-logic/auditModel";
+import { WORKFLOW_STAGE_ORDER } from "../../../plans/audit/28-canvas-features-logic/auditModel";
 import {
   createFindingRegistry,
   TASK_1_4_REQUIREMENTS,
   validateFindingRegistry,
   type FindingRegistration,
-} from "../../../plans/planner-comprehensive-audit/findingRegistry";
+} from "../../../plans/audit/28-canvas-features-logic/findingRegistry";
 
 const SOURCE_EVIDENCE_ID = "evidence:traceability-source";
 const TRACEABILITY_SEED = 20260823;

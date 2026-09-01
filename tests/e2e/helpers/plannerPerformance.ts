@@ -23,7 +23,7 @@ import {
   type SupportedRoutePath,
   type SupportedTestProfile,
   type WarmColdStatus,
-} from "../../../plans/planner-comprehensive-audit/performanceMeasurement";
+} from "../../../plans/audit/28-canvas-features-logic/performanceMeasurement";
 import type { RepresentativeProjectFixture } from "../../fixtures/planner/representativeProject";
 
 interface PlannerPerformanceWindow {

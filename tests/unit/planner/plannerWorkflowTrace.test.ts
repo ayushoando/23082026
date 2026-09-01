@@ -1,20 +1,20 @@
 // @vitest-environment node
 import { describe, expect, it } from "vitest";
 
-import { WORKFLOW_STAGE_ORDER } from "../../../plans/planner-comprehensive-audit/auditModel";
-import { validateAuditDataset } from "../../../plans/planner-comprehensive-audit/auditValidators";
+import { WORKFLOW_STAGE_ORDER } from "../../../plans/audit/28-canvas-features-logic/auditModel";
+import { validateAuditDataset } from "../../../plans/audit/28-canvas-features-logic/auditValidators";
 import {
   assertFirstPlannerEvidenceMatrix,
   createFirstPlannerEvidenceMatrix,
   FIRST_PLANNER_EVIDENCE_MATRIX_REQUIREMENTS,
   firstPlannerEvidenceMatrix,
-} from "../../../plans/planner-comprehensive-audit/firstEvidenceMatrix";
+} from "../../../plans/audit/28-canvas-features-logic/firstEvidenceMatrix";
 import {
   PLANNER_WORKFLOW_BLUEPRINTS,
   TASK_1_3_VALIDATION_ID,
   workflowFindingId,
   workflowId,
-} from "../../../plans/planner-comprehensive-audit/workflowTraceBuilder";
+} from "../../../plans/audit/28-canvas-features-logic/workflowTraceBuilder";
 
 describe("Planner Task 1.3 workflow evidence matrix", () => {
   it("builds deterministic complete traces for every required workflow", () => {

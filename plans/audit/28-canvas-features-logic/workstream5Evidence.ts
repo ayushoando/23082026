@@ -74,8 +74,8 @@ export const TASK_5_6_REPOSITORY_EVIDENCE: EvidenceRecord = {
   summary:
     "The required performance runner and comparison definition use fixed supported profiles and budget assertions. An authorized run was attempted but exited before measurement because PLANNER_PERFORMANCE_PROJECT_ID was unavailable, so no measured miss exists to dispatch to a product-file owner.",
   sourceRefs: [
-    "plans/planner-comprehensive-audit/performanceMeasurement.ts",
-    "plans/planner-comprehensive-audit/performanceEvidence.ts",
+    "plans/audit/28-canvas-features-logic/performanceMeasurement.ts",
+    "plans/audit/28-canvas-features-logic/performanceEvidence.ts",
     "tests/e2e/planner-performance-required.spec.ts",
     "tests/e2e/helpers/plannerPerformance.ts",
   ],
@@ -83,7 +83,7 @@ export const TASK_5_6_REPOSITORY_EVIDENCE: EvidenceRecord = {
     "The attempted command produced no measurement. Static inspection and a prerequisite failure cannot establish a measured value, bottleneck, cleanup defect, remediation need, or budget compliance. Product-owner handoffs remain empty until a complete authorized measurement records a miss.",
   artifact: {
     authorship: "authored",
-    path: "plans/planner-comprehensive-audit/workstream5Evidence.ts",
+    path: "plans/audit/28-canvas-features-logic/workstream5Evidence.ts",
   },
 };
 
@@ -123,7 +123,7 @@ export const TASK_5_8_EXTENDED_PROFILE_EVIDENCE: EvidenceRecord = {
   ],
   limitation:
     "These extra profiles are authored optional browser coverage only. The authorized optional command exited before browser launch because the Firefox and WebKit executables were missing; the optional profiles remain validation-pending and do not block closure of required-profile findings.",
-  artifact: { authorship: "authored", path: "plans/planner-comprehensive-audit/workstream5Evidence.ts" },
+  artifact: { authorship: "authored", path: "plans/audit/28-canvas-features-logic/workstream5Evidence.ts" },
 };
 
 export const TASK_5_8_PENDING_VALIDATION: ValidationRecord = {
@@ -188,10 +188,10 @@ export const WORKSTREAM_5_VALIDATION_INPUT: PlannerValidationFindingInput = {
     "site/lib/observability/planner/plannerObservabilityAdapters.ts",
     "site/lib/observability/planner/plannerObservabilityExporter.server.ts",
     "site/lib/observability/planner/plannerObservability.server.ts",
-    "plans/planner-comprehensive-audit/plannerObservabilityEvidence.ts",
-    "plans/planner-comprehensive-audit/validationEvidence.ts",
-    "plans/planner-comprehensive-audit/workstream5Evidence.ts",
-    "plans/planner-comprehensive-audit/workstream5ValidationManifest.ts",
+    "plans/audit/28-canvas-features-logic/plannerObservabilityEvidence.ts",
+    "plans/audit/28-canvas-features-logic/validationEvidence.ts",
+    "plans/audit/28-canvas-features-logic/workstream5Evidence.ts",
+    "plans/audit/28-canvas-features-logic/workstream5ValidationManifest.ts",
     "tests/fixtures/planner/browserAuditMatrix.ts",
     "tests/unit/planner/plannerBrowserAuditMatrix.test.ts",
     "tests/unit/planner/plannerObservability.property.test.ts",
@@ -220,7 +220,7 @@ export const TASK_5_9_5_10_REPOSITORY_EVIDENCE: EvidenceRecord = {
   // duplicate sourceRefs, so the reference list is deduplicated.
   sourceRefs: [...new Set(TASK_5_9_REGRESSION_LINKS.map((link) => link.testPath))],
   limitation: "Authored tests are static repository evidence only; no regression, rendered, accessibility, performance, integration, hosted, or deployment result is claimed.",
-  artifact: { authorship: "authored", path: "plans/planner-comprehensive-audit/workstream5Evidence.ts" },
+  artifact: { authorship: "authored", path: "plans/audit/28-canvas-features-logic/workstream5Evidence.ts" },
 };
 
 export const TASK_5_11_REPOSITORY_EVIDENCE: EvidenceRecord = {
@@ -229,14 +229,14 @@ export const TASK_5_11_REPOSITORY_EVIDENCE: EvidenceRecord = {
   summary:
     "The Workstream 5 manifest derives narrow exact commands from finding categories and changed paths, records authorization and hook state, and leaves every unexecuted action pending without an outcome.",
   sourceRefs: [
-    "plans/planner-comprehensive-audit/validationEvidence.ts",
-    "plans/planner-comprehensive-audit/workstream5ValidationManifest.ts",
+    "plans/audit/28-canvas-features-logic/validationEvidence.ts",
+    "plans/audit/28-canvas-features-logic/workstream5ValidationManifest.ts",
   ],
   limitation:
     "The manifest is authored static evidence and contains no observed validation result; the Task 5.6 prerequisite failure is recorded separately in this workstream's evidence without being promoted to a performance result. It proves no runtime behavior.",
   artifact: {
     authorship: "authored",
-    path: "plans/planner-comprehensive-audit/workstream5ValidationManifest.ts",
+    path: "plans/audit/28-canvas-features-logic/workstream5ValidationManifest.ts",
   },
 };
 
@@ -246,7 +246,7 @@ export const TASKS_5_12_TO_5_14_REPOSITORY_EVIDENCE: EvidenceRecord = {
   summary:
     "Properties 27-29 are authored with deterministic 200-case generators for authorization gating, change-derived command selection, and evidence-class separation.",
   sourceRefs: [
-    "plans/planner-comprehensive-audit/validationEvidence.ts",
+    "plans/audit/28-canvas-features-logic/validationEvidence.ts",
     "tests/unit/planner/plannerValidationEvidence.property.test.ts",
   ],
   limitation:

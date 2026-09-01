@@ -5,8 +5,8 @@ import type {
   PlannerAuditDataset,
   ValidationRecord,
   WorkflowTrace,
-} from "../../../plans/planner-comprehensive-audit/auditModel";
-import { WORKFLOW_STAGE_ORDER } from "../../../plans/planner-comprehensive-audit/auditModel";
+} from "../../../plans/audit/28-canvas-features-logic/auditModel";
+import { WORKFLOW_STAGE_ORDER } from "../../../plans/audit/28-canvas-features-logic/auditModel";
 import {
   createFindingRegistry,
   createOwnershipLedger,
@@ -15,7 +15,7 @@ import {
   transitionFindingLifecycle,
   validateFindingRegistry,
   type FindingRegistration,
-} from "../../../plans/planner-comprehensive-audit/findingRegistry";
+} from "../../../plans/audit/28-canvas-features-logic/findingRegistry";
 
 const SOURCE_EVIDENCE_ID = "evidence:source";
 const VALIDATION_EVIDENCE_ID = "evidence:validation";

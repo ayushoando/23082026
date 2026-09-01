@@ -13,12 +13,12 @@ import { afterEach, describe, expect, it } from "vitest";
 import type {
   ApiCoverageItem,
   RouteCoverageItem,
-} from "../../../plans/planner-comprehensive-audit/auditModel";
+} from "../../../plans/audit/28-canvas-features-logic/auditModel";
 import {
   collectPlannerCoverage,
   type PlannerCoverageInventory,
-} from "../../../plans/planner-comprehensive-audit/coverageCollector";
-import { initialPlannerInventory } from "../../../plans/planner-comprehensive-audit/initialInventory";
+} from "../../../plans/audit/28-canvas-features-logic/coverageCollector";
+import { initialPlannerInventory } from "../../../plans/audit/28-canvas-features-logic/initialInventory";
 
 const temporaryRoots: string[] = [];
 

@@ -7,15 +7,15 @@ import type {
   PlannerAuditDataset,
   RequirementRef,
   ValidationRecord,
-} from "../../../plans/planner-comprehensive-audit/auditModel";
+} from "../../../plans/audit/28-canvas-features-logic/auditModel";
 import {
   WORKFLOW_STAGE_ORDER,
-} from "../../../plans/planner-comprehensive-audit/auditModel";
+} from "../../../plans/audit/28-canvas-features-logic/auditModel";
 import {
   isFindingTransitionAllowed,
   isRequirementRef,
   validateAuditDataset,
-} from "../../../plans/planner-comprehensive-audit/auditValidators";
+} from "../../../plans/audit/28-canvas-features-logic/auditValidators";
 
 const TASK_REQUIREMENTS: RequirementRef[] = [
   "1.1",
@@ -141,7 +141,7 @@ function makeDataset(): PlannerAuditDataset {
         limitation: "Static source does not prove rendered behavior.",
         artifact: {
           authorship: "authored",
-          path: "plans/planner-comprehensive-audit/records/coverage.json",
+          path: "plans/audit/28-canvas-features-logic/records/coverage.json",
         },
       },
       {
@@ -186,8 +186,8 @@ function makeDataset(): PlannerAuditDataset {
         workflowIds: ["workflow-open-project"],
         adjacentWorkflowIds: [],
         sourcePaths: [
-          "plans/planner-comprehensive-audit/auditModel.ts",
-          "plans/planner-comprehensive-audit/auditValidators.ts",
+          "plans/audit/28-canvas-features-logic/auditModel.ts",
+          "plans/audit/28-canvas-features-logic/auditValidators.ts",
         ],
         requirementRefs: [...TASK_REQUIREMENTS],
         reproductionEvidenceRefs: ["evidence-source"],
