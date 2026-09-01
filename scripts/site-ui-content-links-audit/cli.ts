@@ -14,6 +14,14 @@
  *                      terminal matrix rows, and occurrence findings.
  *   wave:static       — execute and checkpoint the complete Wave 1 static batch.
  *   wave:surfaces     — build Wave 2 surface-specific static evidence.
+ *   wave:partitions   — build Wave 3 protected/admin, Planner, Studio, and
+ *                       specialized-state static partitions (Task 4.1).
+ *   wave:reconcile    — reconcile final occurrence findings, severity, and
+ *                       duplicate groups from run artifacts (Task 6.1).
+ *   wave:handoffs     — finalize remediation handoffs, copy/Hindi proposals,
+ *                       exclusions, gaps, and pending operations (Task 6.2).
+ *   wave:proof        — generate final manifests and the machine-checkable
+ *                       completion proof (Task 6.3).
  *
  * Protected commands (test, build, gate, browser, hosted, performance) are
  * NOT wired here. They require separate explicit current-session authorization
@@ -31,6 +39,10 @@ import { loadAuditConfiguration } from "./config";
 import { runWave1Foundations } from "./wave1-foundations";
 import { runWave1StaticBatch } from "./wave1-static-batch";
 import { runWave2Surfaces } from "./wave2-surfaces";
+import { runWave3Partitions } from "./wave3-partitions";
+import { runWave5CompletionProof } from "./wave5-completion-proof";
+import { runWave5Handoffs } from "./wave5-handoffs";
+import { runWave5Reconciliation } from "./wave5-reconcile";
 import {
   discoverCanonicalInventory,
   discoveryToAuditRecords,
@@ -226,6 +238,34 @@ export async function runAuditCommand(
   }
 
   // -------------------------------------------------------------------------
+  // wave:partitions — build Wave 3 static partitions (Task 4.1)
+  // -------------------------------------------------------------------------
+  if (command === "wave:partitions") {
+    return runWave3Partitions(repositoryRoot, readOption(argv, "config"));
+  }
+
+  // -------------------------------------------------------------------------
+  // wave:reconcile — Wave 5 final reconciliation (Task 6.1)
+  // -------------------------------------------------------------------------
+  if (command === "wave:reconcile") {
+    return runWave5Reconciliation(repositoryRoot, readOption(argv, "config"));
+  }
+
+  // -------------------------------------------------------------------------
+  // wave:handoffs — Wave 5 handoffs and closure finalization (Task 6.2)
+  // -------------------------------------------------------------------------
+  if (command === "wave:handoffs") {
+    return runWave5Handoffs(repositoryRoot, readOption(argv, "config"));
+  }
+
+  // -------------------------------------------------------------------------
+  // wave:proof — Wave 5 completion proof (Task 6.3)
+  // -------------------------------------------------------------------------
+  if (command === "wave:proof") {
+    return runWave5CompletionProof(repositoryRoot, readOption(argv, "config"));
+  }
+
+  // -------------------------------------------------------------------------
   // wave:run — open ManifestStore and start a wave
   // -------------------------------------------------------------------------
   if (command === "wave:run") {
@@ -316,7 +356,8 @@ export async function runAuditCommand(
 
   throw new Error(
     `Unknown audit command: ${command}. Valid commands: config:dry, discover, ` +
-    `wave:plan, wave:foundations, wave:static, wave:surfaces, wave:run, wave:checkpoint, wave:complete, wave:invalidate, manifest:open`,
+    `wave:plan, wave:foundations, wave:static, wave:surfaces, wave:partitions, ` +
+    `wave:reconcile, wave:handoffs, wave:proof, wave:run, wave:checkpoint, wave:complete, wave:invalidate, manifest:open`,
   );
 }
 

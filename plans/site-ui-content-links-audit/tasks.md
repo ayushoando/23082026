@@ -96,7 +96,7 @@ Completion state is preserved from the prior plan: the consolidated Wave 0 items
 
 ### Wave 3 — Audit administration, Planner, Studio, protected contexts, and specialized states
 
-- [ ] 4.1 Build the protected/admin, Planner-only, Studio-only, and specialized-state static partitions
+- [x] 4.1 Build the protected/admin, Planner-only, Studio-only, and specialized-state static partitions
   - Inventory administration, portal/dashboard protection, auth redirects, role/session contracts, development-bypass behavior, specialized states, forms, messages, journeys, and unavailable fixtures/credentials without accessing protected routes. Keep guest, customer, staff, administrator, expired-session, insufficient-role, and development-bypass occurrences separate; public/guest/bypass evidence cannot close authenticated or role-specific rows.
   - Build a Planner-only partition for `/ooplanner`, every discoverable project instance, Planner shells, canvas/editor actions, states, persistence expectations, links, forms, assets, copy, metadata/indexing, accessibility-equivalent outcomes, and likely Planner-owned source areas. Build a separate Studio-only partition for `/oostudio` and its equivalent surfaces. Never import, compare as shared implementation, or recommend ownership from the other fork.
   - Reconcile per-occurrence static findings for admin, Planner, Studio, protected access, offline/recovery, error, empty, stale, conflict, rate-limit, and other specialized states. Record exact protected-route/browser operations and fixture/credential needs for unresolved runtime claims without executing them.
@@ -136,14 +136,14 @@ Completion state is preserved from the prior plan: the consolidated Wave 0 items
 
 ### Wave 5 — Reconcile findings, proposals, handoffs, manifests, completion proof, and review
 
-- [ ] 6.1 Reconcile final occurrence findings, severity, and duplicate groups
+- [x] 6.1 Reconcile final occurrence findings, severity, and duplicate groups
   - Merge static and authorized runtime evidence by authority without losing conflicts; retain one terminal finding per matrix row, including conforming rows, with complete mandatory fields. Assign severity from all documented dimensions using the highest-supported deciding factor, rationale, and deterministic order.
   - Group supported root causes while retaining every per-occurrence evidence/finding record, occurrence selector/count, and separate Planner/Studio group. Preserve `requires-owner-decision` where severity or ownership is not evidenced.
   - **Consolidates former task:** 6.1. **Prerequisites:** Waves 0–4 closed (1.3, 2.4, 3.3, 4.2, 5.3) and the latest inventory generation propagated.
   - **Validation:** Matrix/finding bijection holds; every defect has severity/rationale or an explicit owner decision; duplicate groups preserve every member and fork owner.
   - _Requirements: 20.1–20.8, 21.1–21.7, 26.3–26.5, 26.7_
 
-- [ ] 6.2 Finalize copy/Hindi proposals, remediation handoffs, exclusions, gaps, conflicts, and pending operations
+- [x] 6.2 Finalize copy/Hindi proposals, remediation handoffs, exclusions, gaps, conflicts, and pending operations
   - Produce complete English wording/structure, placement, intent, state, preserved facts, and a Hindi Note for every copy-related defect; include only evidenced approved Hindi or named translation ownership and mandatory human review. Keep proposals in authored audit work products linked to generated indices; do not edit product content.
   - Create one authored handoff per independent defect or supported duplicate group with IDs, occurrence selectors/counts, root-cause hypothesis, expected/proposed outcome, copy/Hindi content, ownership, likely source areas, dependencies, review/authorization/migration/asset needs, all acceptance contexts, risk, rollout/rollback, and verification method. State that product-code changes are separate implementation work requiring new approval; never prescribe Planner/Studio cross-imports or database mutation.
   - Complete every Exclusion Record and Coverage Gap, retain absent/legacy/local-only/unreachable items, require owner decisions for visible-scope exclusions, and list every pending protected operation with affected occurrences and exact authorization need. Resolve authority conflicts explicitly; no silent exclusion or unclassified item may disappear from totals.
@@ -151,7 +151,7 @@ Completion state is preserved from the prior plan: the consolidated Wave 0 items
   - **Validation:** Proposal count equals copy-related defect count and cites/preserves INR, product facts, legal meaning, and business intent; every defect/group links to exactly one complete handoff; pending-operation totals equal canonical records; zero silent exclusions and zero unclassified gaps remain.
   - _Requirements: 1.6–1.8, 2.4, 8.3–8.8, 11.6–11.7, 13.7, 14.6, 18.6–18.7, 23.1–23.8, 24.1–24.8, 25.5–25.7, 26.6, 26.8–26.10_
 
-- [ ] 6.3 Generate final artifact manifests and machine-checkable completion proof
+- [x] 6.3 Generate final artifact manifests and machine-checkable completion proof
   - Compute canonical inventory, dynamic-source, matrix, finding, evidence, copy, severity, handoff, exclusion, gap, pending, result, and wave totals; verify one-to-one/set-equality invariants, schema closure, authorization coverage, generation/invalidation state, and content-signed manifests.
   - Emit a changed-path manifest proving zero `site/**` or product-code mutation and distinguish authored handoffs from generated evidence. Completion prominently reports blocked, not-run, owner-decision, and gap totals rather than treating them as passes.
   - **Consolidates former task:** 6.5. **Prerequisites:** 6.1–6.2.

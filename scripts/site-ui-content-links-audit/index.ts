@@ -10,3 +10,7 @@ export * from "./wave";
 export * from "./wave1-foundations";
 export * from "./wave1-static-batch";
 export * from "./wave2-surfaces";
+export * from "./wave3-partitions";
+export * from "./wave5-completion-proof";
+export * from "./wave5-handoffs";
+export * from "./wave5-reconcile";
