@@ -110,4 +110,4 @@ Run only an exact command authorized by the current user and permitted by the en
 | CSS | `Agents/07-css.md`, `docs/architecture/css.md` |
 | Tech-docs SPA | `tech-docs-generator/README.md` (detail also in product-map § Tech-docs) |
 | Onboarding / ops | `START.md`, `OPERATIONS_RUNBOOK.md`, `README.md`, `Testing-handbook.md` |
-| Plans | [`plans/PLAN.md`](plans/PLAN.md) and phase folders under `plans/` |
+| Plans | [`plans/PLAN.md`](plans/PLAN.md); route map [`plans/client-hub/flowcharts/clients-hub-flow.md`](plans/client-hub/flowcharts/clients-hub-flow.md) |

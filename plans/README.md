@@ -6,6 +6,7 @@ Active sequence: [`PLAN.md`](./PLAN.md).
 
 | Folder | Phase |
 |---|---|
+| [`client-hub/`](./client-hub/) | Spine — public/client route map |
 | [`chrome/`](./chrome/) | 1 — public chrome |
 | [`homepage/`](./homepage/) | 2 — homepage + CSS |
 | [`map-equals-code/`](./map-equals-code/) | 3 — redirects and indexability |
@@ -17,4 +18,4 @@ Active sequence: [`PLAN.md`](./PLAN.md).
 
 `planner-comprehensive-audit/` is dated. Tests still import its `.ts` files. Do not treat it as the live plan.
 
-Route map: `agents-work/client-hub/flowcharts/clients-hub-flow.md`. Architecture: `docs/`. Blockers: [`Failures.md`](../Failures.md).
+Route map: [`client-hub/flowcharts/clients-hub-flow.md`](./client-hub/flowcharts/clients-hub-flow.md). Architecture: `docs/`. Blockers: [`Failures.md`](../Failures.md).

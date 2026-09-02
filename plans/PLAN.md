@@ -1,6 +1,6 @@
 # Client-hub plan
 
-Spine: `agents-work/client-hub/flowcharts/clients-hub-flow.md`.
+Spine: [`client-hub/flowcharts/clients-hub-flow.md`](./client-hub/flowcharts/clients-hub-flow.md).
 
 This file is the sequence. Phase notes live in subfolders under `plans/`. Named packets (`ui-audit`, `seosec`, …) stay here as history and input — they are not a second spine. `planner-comprehensive-audit/` is **dated**; tests still import its TypeScript.
 

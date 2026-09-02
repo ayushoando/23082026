@@ -17,7 +17,7 @@ Moved 2026-09-02 from `agents-work/agents-work/`. Do not treat as a plan.
 
 | From | To |
 |------|----|
-| `agents-work/client-hub/` | `agents-work/client-hub/` (never archived) |
+| `agents-work/client-hub/` | `plans/client-hub/` |
 | `agents-work/planner-comprehensive-audit/decisions/task-4-9-schema-gap-decision.md` | `plans/planner-comprehensive-audit/decisions/` |
 
 Removed (not archived): `oando-repository-guide/` (duplicate of root/`docs/`/`Agents/`).
