@@ -4,7 +4,7 @@ import {
   derivePlannerValidationManifest,
   recordValidationEvidence,
   type PlannerValidationFindingInput,
-} from "../../../plans/audit/28-canvas-features-logic/validationEvidence";
+} from "../../../plans/planner-comprehensive-audit/validationEvidence";
 
 function finding(
   id: string,
@@ -21,7 +21,7 @@ describe("Planner task 5.11 validation manifest", () => {
       finding(
         "finding:unit-only",
         ["unit"],
-        ["plans/audit/28-canvas-features-logic/validationEvidence.ts"],
+        ["plans/planner-comprehensive-audit/validationEvidence.ts"],
         ["tests/unit/planner/plannerValidationManifest.test.ts"],
       ),
       finding(

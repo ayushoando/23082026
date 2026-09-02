@@ -313,15 +313,15 @@ export const TASK_5_5_REPOSITORY_EVIDENCE: EvidenceRecord = {
   summary:
     "Task 5.5 defines a deterministic representative project, complete supported profiles, and pure reducers for every required performance and cleanup metric.",
   sourceRefs: [
-    "plans/audit/28-canvas-features-logic/representativeProjectFixture.ts",
-    "plans/audit/28-canvas-features-logic/performanceMeasurement.ts",
+    "plans/planner-comprehensive-audit/representativeProjectFixture.ts",
+    "plans/planner-comprehensive-audit/performanceMeasurement.ts",
     "tests/unit/planner/plannerPerformanceMeasurement.test.ts",
   ],
   limitation:
     "Static repository evidence proves only that fixtures, profiles, and measurement reducers are authored. Browser values, API integration latency, cleanup behavior, and budget compliance remain unverified until separately authorized execution.",
   artifact: {
     authorship: "authored",
-    path: "plans/audit/28-canvas-features-logic/performanceMeasurement.ts",
+    path: "plans/planner-comprehensive-audit/performanceMeasurement.ts",
   },
 };
 

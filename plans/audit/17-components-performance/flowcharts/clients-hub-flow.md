@@ -107,8 +107,8 @@ These source-defined public utilities and transactional shells are deliberately 
 | `/compare` | public utility | Side-by-side comparison surface; not part of the public content branch |
 | `/quote-cart` | public utility/noindex intent | Quote-list builder; no static inbound link was found in the focused audit, which is not proof that no runtime link exists |
 | `/choose-product` | public utility/noindex intent | Guided product choice with auth or guest handoff |
-| `/tools/meeting-room-capacity-calculator` | utility/noindex placeholder shell | Source page shell contains a `tools-engine-placeholder` area; no completed calculator behavior is claimed |
-| `/tools/office-space-calculator` | utility/noindex placeholder shell | Source page shell contains a `tools-engine-placeholder` area; no completed calculator behavior is claimed |
+| `/tools/meeting-room-capacity-calculator` | public utility page — launched 2026-09-01 | Launched with unique NBC-based calculator content; `indexable: true` (sitemap-listed). Supersedes the earlier "placeholder shell" classification. |
+| `/tools/office-space-calculator` | public utility page — launched 2026-09-01 | Launched with unique NBC-based calculator content; `indexable: true` (sitemap-listed). `spaceCalculator.ts` is its engine. Supersedes the earlier "placeholder shell" classification. |
 
 ## 4. Redirect register — not pages
 

@@ -1,0 +1,22 @@
+{
+  // Root scripts/ was never covered by any tsconfig: `tsc -p site/tsconfig.json`
+  // only checks site/, so editors fell back to an inferred project without
+  // @types/node and flagged every `node:*` import. This file gives the IDE
+  // (and any future script-lane typecheck) the Node type context. Gate-level
+  // script typechecking remains a separate decision — do not wire this into
+  // the release gate without owner review.
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": ["node"],
+    "strict": false,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules"]
+}

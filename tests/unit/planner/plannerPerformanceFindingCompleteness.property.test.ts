@@ -9,7 +9,7 @@
 import fc from "fast-check";
 import { describe, expect, it } from "vitest";
 
-import type { AuditFinding } from "../../../plans/audit/28-canvas-features-logic/auditModel";
+import type { AuditFinding } from "../../../plans/planner-comprehensive-audit/auditModel";
 import {
   PERFORMANCE_METRICS,
   PERFORMANCE_REMEDIATION_STATUSES,
@@ -19,12 +19,12 @@ import {
   type PerformanceMeasuredValue,
   type PerformanceMetric,
   type PerformanceRemediationStatus,
-} from "../../../plans/audit/28-canvas-features-logic/performanceEvidence";
+} from "../../../plans/planner-comprehensive-audit/performanceEvidence";
 import {
   getSupportedTestProfile,
   PLANNER_PERFORMANCE_BUDGETS,
   type SupportedTestProfile,
-} from "../../../plans/audit/28-canvas-features-logic/performanceMeasurement";
+} from "../../../plans/planner-comprehensive-audit/performanceMeasurement";
 
 const PROPERTY_SEED = 26_202_608;
 const PROPERTY_RUNS = 200;

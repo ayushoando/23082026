@@ -13,13 +13,13 @@ export {
   type RepresentativeProjectFixture,
   type RepresentativeProjectMetadata,
   type RepresentativeRoomBoundary,
-} from "../../../plans/audit/28-canvas-features-logic/representativeProjectFixture";
+} from "../../../plans/planner-comprehensive-audit/representativeProjectFixture";
 
 import {
   createRepresentativeProjectFixture,
   representativeProjectFixture,
   validateRepresentativeProjectFixture,
-} from "../../../plans/audit/28-canvas-features-logic/representativeProjectFixture";
+} from "../../../plans/planner-comprehensive-audit/representativeProjectFixture";
 
 const fixtureIssues = validateRepresentativeProjectFixture(
   representativeProjectFixture,

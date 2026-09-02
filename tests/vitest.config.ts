@@ -21,6 +21,8 @@ import {
 /**
  * Vitest lives under monorepo `tests/`.
  * `root` stays the product app (`site/`) so aliases and coverage globs match source.
+ * The @planner/* and @studio/* alias maps below MUST stay in sync with
+ * site/tsconfig.json paths — two places total; update both on any path change.
  */
 export default defineConfig({
   root: VITEST_REPO_ROOT,

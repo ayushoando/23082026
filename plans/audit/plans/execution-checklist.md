@@ -33,8 +33,8 @@ Living checklist. Updated as tasks complete.
 - [x] **Full typecheck** — `pnpm run typecheck` passes
 - [x] **Boundary scan** — `pnpm run scan:boundaries` — clean (1007 files, 762 edges, zero violations)
 - [x] **pnpm audit** — 1 LOW remaining (Mastra upstream). HIGH and MODERATE CVEs eliminated.
-- [ ] **scan:secrets** — Not run; scheduled in final verification sweep (do not treat as done until it runs)
-- [ ] **gate:fast** — Not run; scheduled in final verification sweep (requires full test run)
+- [ ] **scan:secrets** — Not run (optional)
+- [ ] **gate:fast** — Not run (requires full test run)
 
 ## Phase 5: Cross-Plan Updates ✅
 
@@ -124,13 +124,12 @@ Add to `.env.local` and `.env.example`:
 | `plans/seosec/remedy-plan.md` | Corrected Wave 1/2, marked fixes done |
 | `plans/seosec/security-audit-report.md` | Corrected SEC-C01/C02, updated SEC-H01-H04 |
 
-### Remaining in plans/seosec/ (updated 2026-09-02 — verification-sweep round fixed R07/R08/R09 + sitemap script)
-- [x] **SEC-R07** — Fixed in code 2026-09-01: fingerprinted once-per-token deprecation warning + `CUSTOMER_QUERIES_ADMIN_TOKENS` rotation + 2026-12-01 sunset shipped (`site/lib/security/staticAdminToken.ts`, wired into `customer-queries/manage/route.ts`, `.env.example`, `tests/unit/lib/security/staticAdminToken.test.ts`). Consumer migration remains an external-coordination item — fallback removal pending sunsetting consumers.
-- [x] **SEC-R08** — Fixed in code 2026-09-01: bearer-token verification + authenticated writes via `createSupabaseAuthAnonClient(token)` (`site/app/api/tracking/route.ts`, `site/platform/supabase/auth-admin.ts`) under new owner-scoped RLS migration `20260901120000_user_history_owner_rls.sql` (authored + governance-compliant; application to Admin DB in deploy-prep via authorized `db:apply:admin`, dry first). Cookie-only anon writes intentionally remain server-mediated. Tests: `tests/unit/app/api/tracking/route.test.ts` (10 pass).
-- [x] **SEC-R09** — Fixed 2026-09-01: `isOversizedRequestBody()` pre-check (10 MiB + 64 KiB margin; falls through to post-parse backstop if header absent/unparsable) in `site/lib/security/uploadLimits.ts`, wired into `site/app/api/Studio/furniture/upload/route.ts` (413 before `formData()`) and `site/lib/Planner/plannerRequestPipeline.ts` multipart branch. Tests: `tests/unit/lib/security/uploadLimits.test.ts`.
-- [x] **SEO monitoring half** — `scripts/general/audit-sitemap-health.mjs` + `pnpm run audit:sitemap-health` (package.json) + `tests/unit/scripts/audit-sitemap-health.test.ts` shipped 2026-09-01.
-- SEO-R01 through SEO-R06 (core GSC analysis) — remain open awaiting live Google Search Console data.
-- SEC-R06 (CORS policy) — remains OPEN pending product decision on whether cross-origin consumers are planned.
+### Remaining in plans/seosec/ (not executed — needs live data or is content/ops work)
+- SEO-R01 through SEO-R09 — require live Google Search Console export access
+- SEC-R06 (CORS policy) — needs product decision on whether cross-origin consumers are planned
+- SEC-R07 (deprecate static admin token) — needs external consumer migration coordination
+- SEC-R08 (tracking route anon key + RLS) — needs a new migration + RLS policy design
+- SEC-R09 (upload content-length pre-check) — small, still pending
 
 
 ---
@@ -233,7 +232,7 @@ All plans executed and closed:
 - ✅ packages — all dead deps removed, CVEs patched
 - ✅ ai-audit — Vectorize migration, agent merge, provider failover
 - ✅ studio-audit — auth gate, axios removal, exportPDF guard
-- ✅ seosec — middleware false positive corrected, 3 real fixes applied (SEC-R07/R08/R09 + sitemap script followed 2026-09-01/02; see Phase 11)
+- ✅ seosec — middleware false positive corrected, 3 real fixes applied
 - ✅ ui-audit — all 33 findings resolved
 - ✅ admin-audit — all 5 fixes applied
 - ✅ planner-audit — all 4 fixes applied
@@ -242,25 +241,3 @@ All plans executed and closed:
 - ✅ worker-audit — Vectorize binding added (covered in ai-audit)
 
 Typecheck: clean. Boundary scan: clean.
-
----
-
-## Phase 11: 2026-09-01/02 verification sweep corrections ✅
-
-Corrections from the full-repo verification sweep against live code (detail log: `plans/FIX-LOG-20260901.md`).
-
-- **SEC-R07 static admin token** — `site/lib/security/staticAdminToken.ts` + `customer-queries/manage/route.ts` + `.env.example`: once-per-token fingerprinted deprecation warning, `CUSTOMER_QUERIES_ADMIN_TOKENS` rotation, 2026-12-01 sunset shipped; consumer removal still pending sunset coordination (9 tests).
-- **SEC-R08 tracking service-role** — `site/app/api/tracking/route.ts` + `site/platform/supabase/auth-admin.ts` + `migrations.admin/20260901120000_user_history_owner_rls.sql`: bearer verification + authenticated writes via anon-key session client under owner-scoped RLS; migration authored only, apply at deploy-prep (`db:apply:admin`, dry first); cookie-only anon writes stay server-mediated (10 tests).
-- **SEC-R09 upload pre-check** — `site/lib/security/uploadLimits.ts` + `Studio/furniture/upload/route.ts` + `plannerRequestPipeline.ts`: `isOversizedRequestBody()` rejects declared-oversize bodies before `formData()`; post-parse check stays as backstop.
-- **Advisor guest limiter restored (P1 regression)** — `site/app/api/Planner/ai-advisor/route.ts`: 2/min inner guest check lost in the endpoint rebuild, now re-landed on top of the outer 5/min.
-- **`loadLocalBackup` restore-on-load wired** — `site/components/Planner/Planner.tsx`: PLN-FIX-01 restore offer had zero call sites; backup payload now strips grid/sheet decorations and a new plan clears the draft backup.
-- **Worker HSTS closed** — `workers/oando-worker-proxy/src/index.js`: `Strict-Transport-Security` added on security.txt, R2-hit, fallback, and 404 paths to match the audit README claim.
-- **Migration rollbacks added** — 8 files in `site/platform/supabase/migrations.admin/`: `-- rollback` sections where missing; live debt 8→0 (zero migrations lack rollback today; baseline file ratchets next run).
-- **client-showcase-tabs fully implemented** — `site/hooks/useSectorTabs.ts`, `site/components/site/clients/*`, `ClientsPageView.tsx`, en/hi i18n, unit + e2e specs: registry was already live; 2026-09-01 owner decision to delete the scaffolding is reversed by current owner instruction.
-- **Sitemap-health audit script** — `scripts/general/audit-sitemap-health.mjs` + `package.json` (`audit:sitemap-health`) + test: seosec code-actionable monitoring half shipped; GSC-dependent SEO-R01..R06 remain open.
-- **planner-comprehensive reconciliation closed** — `tests/unit/planner/plannerFinalReconciliation.test.ts`: `finalReconciliation.ts` now executed by an existence test; stale checkboxes and handover counts corrected.
-- **site-ui-content-links-audit Wave 3 + final generators** — completion-proof + handoff generators exist; authorized audit lane: 11 files / 36/36 pass (handover evidence 2026-09-01).
-- **Stale-path fixes** — `plans/planner-comprehensive-audit/**` + touched docs: references to nonexistent removed-tooling paths rewritten to in-repo `plans/` locations.
-- **kiro-name scrub** — repo-wide: stray vendor-template name references removed (live grep: zero hits).
-- **documentation-global-standards optional tasks 8.1-8.4** — executed in the final sweep (scripts `check:docs-all`, `docs:check:root-links`, `check:layout`, broader gate).
-- **scan:secrets / gate:fast** — still NOT run as of 2026-09-02; scheduled in the final verification sweep (see Phase 4).

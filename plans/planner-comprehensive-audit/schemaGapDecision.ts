@@ -70,7 +70,7 @@ export interface PendingTask4_9Action {
 }
 
 const ARTIFACT_PATH =
-  "plans/audit/28-canvas-features-logic/schemaGapDecision.ts" as const;
+  "plans/planner-comprehensive-audit/schemaGapDecision.ts" as const;
 
 export const TASK_4_9_EVIDENCE = [
   {

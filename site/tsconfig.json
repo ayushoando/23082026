@@ -22,7 +22,6 @@
         "name": "next"
       }
     ],
-    "// sync": "The @planner/* and @studio/* alias maps below MUST stay in sync with tests/vitest.config.ts resolve.alias (root tests/ read from site/ root) — two places total; update both on any path change.",
     "paths": {
       "@/*": [
         "./*"

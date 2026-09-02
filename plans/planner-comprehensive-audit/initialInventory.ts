@@ -5,7 +5,7 @@ import {
   type PlannerCoverageInventory,
 } from "./coverageCollector";
 
-const REPOSITORY_ROOT = path.resolve(import.meta.dirname, "../../..");
+const REPOSITORY_ROOT = path.resolve(import.meta.dirname, "../..");
 
 /**
  * Rebuilds the authored initial inventory from the current repository tree.

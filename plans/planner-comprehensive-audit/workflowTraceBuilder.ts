@@ -573,7 +573,7 @@ export function buildPlannerWorkflowEvidence(): EvidenceRecord[] {
         : "Static repository tracing identifies a missing or incomplete behavior path; runtime proof and remediation belong to later authorized tasks.",
     artifact: {
       authorship: "authored" as const,
-      path: "plans/audit/28-canvas-features-logic/firstEvidenceMatrix.ts" as const,
+      path: "plans/planner-comprehensive-audit/firstEvidenceMatrix.ts" as const,
     },
   })).sort((left, right) => compareText(left.id, right.id));
 }

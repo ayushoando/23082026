@@ -1,5 +1,5 @@
 export const PLANNER_AUDIT_AUTHORED_ROOT =
-  "plans/audit/28-canvas-features-logic/" as const;
+  "plans/planner-comprehensive-audit/" as const;
 // Corrected 2026-09-01: property/example tests authored for this plan live
 // under tests/unit/planner/; modelling them as an authored artifact used to
 // require an `as unknown as` cast. The union now types them honestly.

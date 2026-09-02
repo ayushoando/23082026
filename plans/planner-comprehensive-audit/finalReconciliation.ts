@@ -42,21 +42,21 @@ export const FINAL_RECONCILIATION_EVIDENCE_ID =
   "evidence:final-planner-reconciliation" as const;
 
 const FINAL_RECONCILIATION_PATH =
-  "plans/audit/28-canvas-features-logic/finalReconciliation.ts" as const;
+  "plans/planner-comprehensive-audit/finalReconciliation.ts" as const;
 
 const WORKSTREAM_1_PATHS = [
-  "plans/audit/28-canvas-features-logic/auditModel.ts",
-  "plans/audit/28-canvas-features-logic/auditValidators.ts",
-  "plans/audit/28-canvas-features-logic/coverageCollector.ts",
-  "plans/audit/28-canvas-features-logic/initialInventory.ts",
-  "plans/audit/28-canvas-features-logic/firstEvidenceMatrix.ts",
-  "plans/audit/28-canvas-features-logic/findingRegistry.ts",
-  "plans/audit/28-canvas-features-logic/workflowTraceBuilder.ts",
+  "plans/planner-comprehensive-audit/auditModel.ts",
+  "plans/planner-comprehensive-audit/auditValidators.ts",
+  "plans/planner-comprehensive-audit/coverageCollector.ts",
+  "plans/planner-comprehensive-audit/initialInventory.ts",
+  "plans/planner-comprehensive-audit/firstEvidenceMatrix.ts",
+  "plans/planner-comprehensive-audit/findingRegistry.ts",
+  "plans/planner-comprehensive-audit/workflowTraceBuilder.ts",
   FINAL_RECONCILIATION_PATH,
   // Corrected 2026-09-01: the plan artifacts moved from the removed
-  // external spec tree to `plans/audit/28-canvas-features-logic/`.
-  "plans/audit/28-canvas-features-logic/tasks.md",
-  "plans/audit/28-canvas-features-logic/handover.md",
+  // external spec tree to `plans/planner-comprehensive-audit/`.
+  "plans/planner-comprehensive-audit/tasks.md",
+  "plans/planner-comprehensive-audit/handover.md",
 ] as const;
 
 const WORKSTREAM_2_PATHS = [
@@ -87,16 +87,16 @@ const WORKSTREAM_4_PATHS = [
 ] as const;
 
 const WORKSTREAM_5_PATHS = [
-  "site/lib/observability/planner/plannerObservability.ts",
-  "site/lib/observability/planner/plannerObservabilityAdapters.ts",
-  "site/lib/observability/planner/plannerObservabilityExporter.server.ts",
-  "site/lib/observability/planner/plannerObservability.server.ts",
-  "plans/audit/28-canvas-features-logic/plannerObservabilityEvidence.ts",
-  "plans/audit/28-canvas-features-logic/performanceMeasurement.ts",
-  "plans/audit/28-canvas-features-logic/performanceEvidence.ts",
-  "plans/audit/28-canvas-features-logic/validationEvidence.ts",
-  "plans/audit/28-canvas-features-logic/workstream5Evidence.ts",
-  "plans/audit/28-canvas-features-logic/workstream5ValidationManifest.ts",
+  "site/lib/Planner/observability/plannerObservability.ts",
+  "site/lib/Planner/observability/plannerObservabilityAdapters.ts",
+  "site/lib/Planner/observability/plannerObservabilityExporter.server.ts",
+  "site/lib/Planner/observability/plannerObservability.server.ts",
+  "plans/planner-comprehensive-audit/plannerObservabilityEvidence.ts",
+  "plans/planner-comprehensive-audit/performanceMeasurement.ts",
+  "plans/planner-comprehensive-audit/performanceEvidence.ts",
+  "plans/planner-comprehensive-audit/validationEvidence.ts",
+  "plans/planner-comprehensive-audit/workstream5Evidence.ts",
+  "plans/planner-comprehensive-audit/workstream5ValidationManifest.ts",
   "tests/unit/planner/plannerObservability.property.test.ts",
   "tests/unit/planner/plannerValidationEvidence.property.test.ts",
   "tests/unit/planner/plannerPerformanceMeasurement.test.ts",
@@ -155,9 +155,9 @@ const FINAL_RECONCILIATION_EVIDENCE: EvidenceRecord = {
     "The final Planner reconciliation freezes audited paths, assigns exclusive owners, acknowledges geometry/persistence/API/migration contracts, resolves authored integration conflicts, and separates remediation completion from validation completion.",
   sourceRefs: uniqueSorted([
     FINAL_RECONCILIATION_PATH,
-    "plans/audit/28-canvas-features-logic/firstEvidenceMatrix.ts",
-    "plans/audit/28-canvas-features-logic/findingRegistry.ts",
-    "plans/audit/28-canvas-features-logic/validationEvidence.ts",
+    "plans/planner-comprehensive-audit/firstEvidenceMatrix.ts",
+    "plans/planner-comprehensive-audit/findingRegistry.ts",
+    "plans/planner-comprehensive-audit/validationEvidence.ts",
     ...WORKSTREAM_1_PATHS,
     ...WORKSTREAM_2_PATHS,
     ...WORKSTREAM_3_PATHS,
@@ -439,7 +439,7 @@ const FINAL_OWNERSHIP_LEDGER_INPUT: OwnershipLedger = {
     ),
     handoff(
       "handoff:w5-observability-call-site-v1",
-      "site/lib/observability/planner/plannerObservability.server.ts",
+      "site/lib/Planner/observability/plannerObservability.server.ts",
       "planner-observability-v1",
       "workstream-5",
       ["workstream-2", "workstream-4"],
@@ -475,7 +475,7 @@ const FINAL_OWNERSHIP_LEDGER_INPUT: OwnershipLedger = {
       [
         "site/lib/Planner/plannerProjectOperations.ts",
         "site/server/Planner/plannerRouteAdapter.ts",
-        "site/lib/observability/planner/plannerObservability.server.ts",
+        "site/lib/Planner/observability/plannerObservability.server.ts",
       ],
       "Route and selected-adapter observability integrations preserve the original response/result, correlation id, and single-adapter behavior without retry or fallback calls.",
       firstPlannerEvidenceMatrix.coverageItems,

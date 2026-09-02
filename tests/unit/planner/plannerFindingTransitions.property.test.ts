@@ -21,7 +21,7 @@ import {
   type PlannerAuditDataset,
   type ValidationRecord,
   type WorkflowTrace,
-} from "../../../plans/audit/28-canvas-features-logic/auditModel";
+} from "../../../plans/planner-comprehensive-audit/auditModel";
 import {
   createFindingRegistry,
   isComprehensiveRemediationComplete,
@@ -31,7 +31,7 @@ import {
   type FindingLifecyclePatch,
   type FindingRegistration,
   type FindingRegistryDataset,
-} from "../../../plans/audit/28-canvas-features-logic/findingRegistry";
+} from "../../../plans/planner-comprehensive-audit/findingRegistry";
 
 const SOURCE_EVIDENCE_ID = "evidence:source";
 const VALIDATION_EVIDENCE_ID = "evidence:validation";

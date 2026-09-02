@@ -539,11 +539,11 @@ export const TASK_5_11_REPOSITORY_EVIDENCE: EvidenceRecord = {
   class: "repository",
   summary: "Pure authored code derives narrow checks from changed paths and records only permission-backed observed outcomes.",
   sourceRefs: [
-    "plans/audit/28-canvas-features-logic/validationEvidence.ts",
+    "plans/planner-comprehensive-audit/validationEvidence.ts",
     "tests/unit/planner/plannerValidationEvidence.property.test.ts",
   ],
   limitation: "Static inspection does not execute or establish any validation, browser, hosted, or deployment outcome.",
-  artifact: { authorship: "authored", path: "plans/audit/28-canvas-features-logic/validationEvidence.ts" },
+  artifact: { authorship: "authored", path: "plans/planner-comprehensive-audit/validationEvidence.ts" },
 };
 
 export const TASK_5_12_5_14_PENDING_VALIDATION: ValidationRecord = {
