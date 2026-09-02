@@ -21,6 +21,8 @@ Footer, mobile Planner tab, header labels. Client-hub flattened. Do not redo.
 
 Order: 1 → 2 → 3 → 4. Commit when a phase is actually done.
 
+Work systematically. Read the packet and the live files before changing them. Do not cut a surface unread.
+
 ## Packets (read when the phase needs them)
 
 | Packet | Use in this sequence |

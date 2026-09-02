@@ -19,3 +19,12 @@ Read [`../ui-audit/`](../ui-audit/) before changing homepage look.
 - `pnpm run verify:focss` and `pnpm run lint:ui:strict` only with current-session authorization.
 
 Verify `http://localhost:3000` desktop and phone before calling this phase done.
+
+## Verified in source (2026-09-02) — do not re-guess
+
+- **UI-005 is already fixed.** `typography.css`: `--font-weight-medium: 500`, `--font-weight-semibold: 600`. The ui-audit line that both are 500 is stale.
+- **Hero CTAs are data-only.** `HOMEPAGE_HERO_CONTENT` and `en.json` still have primary `/planner` and secondary `/products`. `HomepageHero` does not render them. `HomepageHero.test.tsx` asserts those links are absent. The visible hero action is glass proof → `/trusted-by/`. Products sit in Collections; planner launch sits in InteractiveTools (`/planner`). Do not put the two buttons back without a design pass and a test change.
+- **Hero images are R2 path + `unoptimized`.** Poster and slides under `/assets/marketing/hero/`.
+- **`Hero.tsx` is unused by pages.** Only `tests/unit/components/home/Hero.test.tsx` imports it. Leave it until we delete test + component together.
+- **`demoHref="/ooplanner"`** on InteractiveTools is the floorplan demo, not the primary CTA (`launchHref` is `/planner`). Leave until we see it in the browser.
+- **`loginHref: /login/?next=/planner/canvas/`** lives in `homepage.ts` but is used by `PlannerSuite` on the **planner landing**, not `/`. `/login` 308s to `/access`; `/planner/canvas` 308s to `/ooplanner`. Sloppy, not a homepage bug. Touch in Phase 3 or planner marketing, not here.
