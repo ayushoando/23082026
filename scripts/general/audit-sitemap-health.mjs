@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * audit-sitemap-health.mjs — SEO-R01/R02 code-side remedy (plans/seosec/).
+ * audit-sitemap-health.mjs — sitemap/robots health check.
  *
  * Fetches the public sitemap of a deployment, walks every <loc>, and checks
  * each URL for: HTTP status, X-Robots-Tag directives, redirects, and an

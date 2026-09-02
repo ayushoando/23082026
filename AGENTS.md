@@ -110,4 +110,4 @@ Run only an exact command authorized by the current user and permitted by the en
 | CSS | `Agents/07-css.md`, `docs/architecture/css.md` |
 | Tech-docs SPA | `tech-docs-generator/README.md` (detail also in product-map § Tech-docs) |
 | Onboarding / ops | `START.md`, `OPERATIONS_RUNBOOK.md`, `README.md`, `Testing-handbook.md` |
-| Plans | [`plans/README.md`](plans/README.md) and its indexed `plans/<name>/` folders |
+| Plans | [`plans/PLAN.md`](plans/PLAN.md) (active sequence); closed packets in `.archive/plans/` |

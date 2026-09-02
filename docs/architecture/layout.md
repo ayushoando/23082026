@@ -12,7 +12,7 @@ This reference maps top-level repository paths and their roles. Verify a path ag
 | `tech-docs-generator/` | Source-driven docs generator + Vite inventory SPA (second vitest lane; `ops tech-docs:generate` → `generated-documents/`) |
 | `docs/` | Canonical docs — this tree (`architecture/`, `database/`, `governance/`). See [`docs/README.md`](../README.md) |
 | `Agents/` | Agent handbooks (`01-standard` … `07-css`, `INDEX.md`) |
-| `plans/` | Active planning coordination; [`README.md`](../../plans/README.md) indexes canonical `plans/<name>/` folders and optional shared context |
+| `plans/` | One active sequence: [`PLAN.md`](../../plans/PLAN.md). Test modules in `planner-comprehensive-audit/`. Closed packets in `.archive/plans/` |
 | `config/` | Cross-task config: `config/build/` (next/playwright), `config/quality/` (baselines) |
 | `workers/` | Cloudflare Workers (e.g. `oando-worker-proxy/` — apex asset edge) |
 | `supabase/` | Supabase CLI / project config |
