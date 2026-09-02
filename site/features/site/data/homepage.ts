@@ -111,7 +111,7 @@ export const HOMEPAGE_PLANNER_SUITE_CONTENT = {
   titleLead: "Oando",
   titleAccent: "Planner",
   description: "Sketch floors, place catalog items, export.",
-  loginHref: "/login/?next=%2Fplanner%2Fcanvas%2F",
+  loginHref: "/access/?next=%2Fooplanner%2F",
   loginLabel: "Member login",
   /** Marketing overview (features / learn more). */
   overviewHref: "/planner",

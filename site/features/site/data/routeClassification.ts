@@ -56,8 +56,8 @@ export const SITE_ROUTE_CLASSIFICATION: SiteRouteMeta[] = [
     owner: "Marketing",
     canonicalUrl: canonicalFor("/tools/meeting-room-capacity-calculator"),
     primaryAction: "Use calculator",
-    indexable: true,
-    notes: "Launched calculator with unique NBC-based content (Plan 02a condition met 2026-09-01); indexed + sitemap-listed.",
+    indexable: false,
+    notes: "Page metadata is noindex. Engine is still a tools-engine-placeholder; keep off sitemap until the calculator is wired.",
   },
   {
     route: "/tools/office-space-calculator",
@@ -67,8 +67,8 @@ export const SITE_ROUTE_CLASSIFICATION: SiteRouteMeta[] = [
     owner: "Marketing",
     canonicalUrl: canonicalFor("/tools/office-space-calculator"),
     primaryAction: "Use calculator",
-    indexable: true,
-    notes: "Launched calculator with unique NBC-based content (Plan 02a condition met 2026-09-01); indexed + sitemap-listed.",
+    indexable: false,
+    notes: "Page metadata is noindex. Engine is still a tools-engine-placeholder; keep off sitemap until the calculator is wired.",
   },
   {
     route: "/products/[category]",

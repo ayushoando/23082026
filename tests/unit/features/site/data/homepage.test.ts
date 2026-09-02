@@ -22,6 +22,7 @@ describe("homepage data", () => {
   it("planner suite launch CTA is planner marketing landing", () => {
     expect(HOMEPAGE_PLANNER_SUITE_CONTENT.launchHref).toBe("/planner");
     expect(HOMEPAGE_PLANNER_SUITE_CONTENT.overviewHref).toBe("/planner");
+    expect(HOMEPAGE_PLANNER_SUITE_CONTENT.loginHref).toBe("/access/?next=%2Fooplanner%2F");
     expect(HOMEPAGE_PLANNER_SUITE_CONTENT.launchLabel).toMatch(/launch planner/i);
   });
 

@@ -36,7 +36,7 @@
       "titleLead": "Oando",
       "titleAccent": "Planner",
       "description": "Sketch floors, place catalog items, export.",
-      "loginHref": "/login/?next=%2Fplanner%2Fcanvas%2F",
+      "loginHref": "/access/?next=%2Fooplanner%2F",
       "loginLabel": "Member login",
       "overviewHref": "/planner",
       "overviewLabel": "Learn more"

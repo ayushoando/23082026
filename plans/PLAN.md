@@ -8,7 +8,7 @@ R2 is the image optimizer. `D:\23082026 - Copy` is reference only. Studio, Admin
 
 ## Already done
 
-Footer, mobile Planner tab, header labels. Client-hub flattened. Do not redo.
+Footer, mobile Planner tab, header labels. Client-hub flattened. Map §4 matches next.config. Calculator classification is noindex. Unused `Hero.tsx` removed. Do not redo.
 
 ## Sequence
 

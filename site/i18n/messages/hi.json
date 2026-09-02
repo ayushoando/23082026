@@ -36,7 +36,7 @@
       "titleLead": "ओएंडओ",
       "titleAccent": "प्लानर",
       "description": "फ़्लोर स्केच करें, कैटलॉग उत्पाद रखें और निर्यात करें।",
-      "loginHref": "/login/?next=%2Fplanner%2Fcanvas%2F",
+      "loginHref": "/access/?next=%2Fooplanner%2F",
       "loginLabel": "सदस्य लॉगिन",
       "overviewHref": "/planner",
       "overviewLabel": "अधिक जानें"

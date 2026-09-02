@@ -2,6 +2,8 @@
 
 Browser at `http://localhost:3000`. Not Markdown. Desktop and phone.
 
+**2026-09-02:** `localhost:3000` timed out. This phase is blocked until the app is running. Do not fake a walk.
+
 1. `/` → products → category → product → contact
 2. `/trusted-by` and `/clients` as siblings
 3. `/planning` and `/planner` → `/ooplanner` only when launching the app
