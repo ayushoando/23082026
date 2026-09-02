@@ -1,0 +1,13 @@
+__vite_ssr_exportName__("locales", () => { try { return locales } catch {} });
+__vite_ssr_exportName__("defaultLocale", () => { try { return defaultLocale } catch {} });
+__vite_ssr_exportName__("isLocale", () => { try { return isLocale } catch {} });
+/** English is source. Hindi is machine-generated. No fr/de/es. */
+const locales = ["en", "hi"];
+const defaultLocale = "en";
+function isLocale(value) {
+	return typeof value === "string" && locales.includes(value);
+}
+//# sourceMappingSource=vite-generated
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJtYXBwaW5ncyI6IkFBQUEsQ0FBQTs7OztBQUNPLE1BQU0sVUFBVSxDQUFDLE1BQU0sSUFBSTtBQUUzQixNQUFNLGdCQUF3QjtBQUU5QixTQUFTLFNBQVMsT0FBaUM7Q0FDeEQsT0FDRSxPQUFPLFVBQVUsWUFDaEIsUUFBOEIsU0FBUyxLQUFLO0FBRWpEIiwibmFtZXMiOltdLCJpZ25vcmVMaXN0IjpbXSwic291cmNlcyI6WyJjb25maWcudHMiXSwic291cmNlc0NvbnRlbnQiOlsiLyoqIEVuZ2xpc2ggaXMgc291cmNlLiBIaW5kaSBpcyBtYWNoaW5lLWdlbmVyYXRlZC4gTm8gZnIvZGUvZXMuICovXHJcbmV4cG9ydCBjb25zdCBsb2NhbGVzID0gWydlbicsICdoaSddIGFzIGNvbnN0O1xyXG5leHBvcnQgdHlwZSBMb2NhbGUgPSAodHlwZW9mIGxvY2FsZXMpW251bWJlcl07XHJcbmV4cG9ydCBjb25zdCBkZWZhdWx0TG9jYWxlOiBMb2NhbGUgPSAnZW4nO1xyXG5cclxuZXhwb3J0IGZ1bmN0aW9uIGlzTG9jYWxlKHZhbHVlOiB1bmtub3duKTogdmFsdWUgaXMgTG9jYWxlIHtcclxuICByZXR1cm4gKFxyXG4gICAgdHlwZW9mIHZhbHVlID09PSAnc3RyaW5nJyAmJlxyXG4gICAgKGxvY2FsZXMgYXMgcmVhZG9ubHkgc3RyaW5nW10pLmluY2x1ZGVzKHZhbHVlKVxyXG4gICk7XHJcbn1cclxuIl0sImZpbGUiOiIvaTE4bi9jb25maWcudHMifQ==
+
+//# vitestCache=W3siZmlsZSI6IjEiLCJpZCI6IjEiLCJ1cmwiOiIyIiwiaW1wb3J0ZWRVcmxzIjoiMyIsIm1hcHBpbmdzIjpmYWxzZX0sIkQ6LzIzMDgyMDI2L3NpdGUvaTE4bi9jb25maWcudHMiLCIvaTE4bi9jb25maWcudHMiLFtdXQ==

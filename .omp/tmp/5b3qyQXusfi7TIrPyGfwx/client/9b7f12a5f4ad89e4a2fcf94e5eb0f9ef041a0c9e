@@ -1,0 +1,30 @@
+__vite_ssr_exportName__("MockNextLink", () => { try { return MockNextLink } catch {} });
+__vite_ssr_exportName__("installNextLinkMock", () => { try { return installNextLinkMock } catch {} });
+const __vite_ssr_import_0__ = await __vite_ssr_import__("/@fs/D:/23082026/node_modules/.pnpm/react@19.2.8/node_modules/react/index.js", {"importedNames":["default"]});
+const __vite_ssr_import_1__ = await __vite_ssr_import__("/@fs/D:/23082026/node_modules/.pnpm/react@19.2.8/node_modules/react/jsx-dev-runtime.js", {"importedNames":["jsxDEV"]});
+
+var _jsxFileName = "D:/23082026/tests/helpers/mockNextLink.tsx";
+
+function MockNextLink({ children, href, prefetch: _prefetch, ...rest }) {
+	// Prefer an explicit data-testid; ignore undefined so callers that pass
+	// data-testid={optional} do not wipe the default mock attribute.
+	const explicitTestId = rest["data-testid"];
+	const testId = typeof explicitTestId === "string" && explicitTestId.length > 0 ? explicitTestId : "next-link";
+	return /* @__PURE__ */ (0,__vite_ssr_import_1__.jsxDEV)("a", {
+		href,
+		...rest,
+		"data-testid": testId,
+		children
+	}, void 0, false, {
+		fileName: _jsxFileName,
+		lineNumber: 18,
+		columnNumber: 5
+	}, this);
+};
+function installNextLinkMock() {
+	// Registered globally from tests/setup.ts via vi.mock.
+}
+//# sourceMappingSource=vite-generated
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJtYXBwaW5ncyI6IkFBQUEsQ0FBQTs7QUFBQTs7Ozs7QUFRTyxTQUFTLGFBQWEsRUFBRSxVQUFVLE1BQU0sVUFBVSxXQUFXLEdBQUcsUUFBbUI7OztDQUd4RixNQUFNLGlCQUFpQixLQUFLO0NBQzVCLE1BQU0sU0FDSixPQUFPLG1CQUFtQixZQUFZLGVBQWUsU0FBUyxJQUMxRCxpQkFDQTtDQUNOLE9BQ0UsaURBQUMsS0FBRDtFQUFTO0VBQU0sR0FBSTtFQUFNLGVBQWE7RUFDbkM7Q0FDQTs7Ozs7QUFFUDtBQUVPLFNBQVMsc0JBQXNCOztBQUV0QyIsIm5hbWVzIjpbXSwiaWdub3JlTGlzdCI6W10sInNvdXJjZXMiOlsibW9ja05leHRMaW5rLnRzeCJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgUmVhY3QgZnJvbSBcInJlYWN0XCI7XHJcblxyXG50eXBlIExpbmtQcm9wcyA9IFJlYWN0LkFuY2hvckhUTUxBdHRyaWJ1dGVzPEhUTUxBbmNob3JFbGVtZW50PiAmIHtcclxuICBocmVmOiBzdHJpbmc7XHJcbiAgcHJlZmV0Y2g/OiBib29sZWFuIHwgbnVsbDtcclxuICBcImRhdGEtdGVzdGlkXCI/OiBzdHJpbmc7XHJcbn07XHJcblxyXG5leHBvcnQgZnVuY3Rpb24gTW9ja05leHRMaW5rKHsgY2hpbGRyZW4sIGhyZWYsIHByZWZldGNoOiBfcHJlZmV0Y2gsIC4uLnJlc3QgfTogTGlua1Byb3BzKSB7XHJcbiAgLy8gUHJlZmVyIGFuIGV4cGxpY2l0IGRhdGEtdGVzdGlkOyBpZ25vcmUgdW5kZWZpbmVkIHNvIGNhbGxlcnMgdGhhdCBwYXNzXHJcbiAgLy8gZGF0YS10ZXN0aWQ9e29wdGlvbmFsfSBkbyBub3Qgd2lwZSB0aGUgZGVmYXVsdCBtb2NrIGF0dHJpYnV0ZS5cclxuICBjb25zdCBleHBsaWNpdFRlc3RJZCA9IHJlc3RbXCJkYXRhLXRlc3RpZFwiXTtcclxuICBjb25zdCB0ZXN0SWQgPVxyXG4gICAgdHlwZW9mIGV4cGxpY2l0VGVzdElkID09PSBcInN0cmluZ1wiICYmIGV4cGxpY2l0VGVzdElkLmxlbmd0aCA+IDBcclxuICAgICAgPyBleHBsaWNpdFRlc3RJZFxyXG4gICAgICA6IFwibmV4dC1saW5rXCI7XHJcbiAgcmV0dXJuIChcclxuICAgIDxhIGhyZWY9e2hyZWZ9IHsuLi5yZXN0fSBkYXRhLXRlc3RpZD17dGVzdElkfT5cclxuICAgICAge2NoaWxkcmVufVxyXG4gICAgPC9hPlxyXG4gICk7XHJcbn1cclxuXHJcbmV4cG9ydCBmdW5jdGlvbiBpbnN0YWxsTmV4dExpbmtNb2NrKCkge1xyXG4gIC8vIFJlZ2lzdGVyZWQgZ2xvYmFsbHkgZnJvbSB0ZXN0cy9zZXR1cC50cyB2aWEgdmkubW9jay5cclxufVxyXG4iXSwiZmlsZSI6Ii9AZnMvRDovMjMwODIwMjYvdGVzdHMvaGVscGVycy9tb2NrTmV4dExpbmsudHN4In0=
+
+//# vitestCache=W3siZmlsZSI6IjEiLCJpZCI6IjEiLCJ1cmwiOiIyIiwiaW1wb3J0ZWRVcmxzIjoiMyIsIm1hcHBpbmdzIjpmYWxzZX0sIkQ6LzIzMDgyMDI2L3Rlc3RzL2hlbHBlcnMvbW9ja05leHRMaW5rLnRzeCIsIi9AZnMvRDovMjMwODIwMjYvdGVzdHMvaGVscGVycy9tb2NrTmV4dExpbmsudHN4IixbXV0=

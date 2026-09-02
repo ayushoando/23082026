@@ -1,0 +1,14 @@
+__vite_ssr_exportName__("routing", () => { try { return routing } catch {} });
+const __vite_ssr_import_0__ = await __vite_ssr_import__("/@fs/D:/23082026/node_modules/.pnpm/next-intl@4.14.1_@swc+helpe_e4e9335d3b0043b83f09b1be81245fd5/node_modules/next-intl/dist/esm/development/routing.js", {"importedNames":["defineRouting"]});
+const __vite_ssr_import_1__ = await __vite_ssr_import__("/i18n/config.ts", {"importedNames":["locales","defaultLocale"]});
+
+
+const routing = (0,__vite_ssr_import_0__.defineRouting)({
+	locales: __vite_ssr_import_1__.locales,
+	defaultLocale: __vite_ssr_import_1__.defaultLocale,
+	localePrefix: "never"
+});
+//# sourceMappingSource=vite-generated
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJtYXBwaW5ncyI6IkFBQUEsQ0FBQTtBQUFBO0FBQ0E7OztBQUVPLE1BQU0sVUFBVSx3Q0FBYztDQUNuQztDQUNBO0NBQ0EsY0FBYztBQUNoQixDQUFDIiwibmFtZXMiOltdLCJpZ25vcmVMaXN0IjpbXSwic291cmNlcyI6WyJyb3V0aW5nLnRzIl0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7ZGVmaW5lUm91dGluZ30gZnJvbSAnbmV4dC1pbnRsL3JvdXRpbmcnO1xyXG5pbXBvcnQge2xvY2FsZXMsIGRlZmF1bHRMb2NhbGV9IGZyb20gJy4vY29uZmlnJztcclxuXHJcbmV4cG9ydCBjb25zdCByb3V0aW5nID0gZGVmaW5lUm91dGluZyh7XHJcbiAgbG9jYWxlcyxcclxuICBkZWZhdWx0TG9jYWxlLFxyXG4gIGxvY2FsZVByZWZpeDogJ25ldmVyJ1xyXG59KTtcclxuIl0sImZpbGUiOiIvaTE4bi9yb3V0aW5nLnRzIn0=
+
+//# vitestCache=W3siZmlsZSI6IjEiLCJpZCI6IjEiLCJ1cmwiOiIyIiwiaW1wb3J0ZWRVcmxzIjoiMyIsIm1hcHBpbmdzIjpmYWxzZX0sIkQ6LzIzMDgyMDI2L3NpdGUvaTE4bi9yb3V0aW5nLnRzIiwiL2kxOG4vcm91dGluZy50cyIsW11d

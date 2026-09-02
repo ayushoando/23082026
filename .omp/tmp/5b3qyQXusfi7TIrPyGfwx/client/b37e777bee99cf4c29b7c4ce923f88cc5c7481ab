@@ -1,0 +1,27 @@
+__vite_ssr_exportName__("MockNextImage", () => { try { return MockNextImage } catch {} });
+__vite_ssr_exportName__("installNextImageMock", () => { try { return installNextImageMock } catch {} });
+const __vite_ssr_import_0__ = await __vite_ssr_import__("/@fs/D:/23082026/node_modules/.pnpm/react@19.2.8/node_modules/react/index.js", {"importedNames":["default"]});
+const __vite_ssr_import_1__ = await __vite_ssr_import__("/@fs/D:/23082026/node_modules/.pnpm/react@19.2.8/node_modules/react/jsx-dev-runtime.js", {"importedNames":["jsxDEV"]});
+
+var _jsxFileName = "D:/23082026/tests/helpers/mockNextImage.tsx";
+
+function MockNextImage({ alt = "", src, priority, unoptimized, fill: _fill, ...rest }) {
+	return /* @__PURE__ */ (0,__vite_ssr_import_1__.jsxDEV)("img", {
+		alt,
+		src: typeof src === "string" ? src : undefined,
+		...rest,
+		"data-priority": priority ? "true" : undefined,
+		"data-unoptimized": unoptimized ? "true" : undefined
+	}, void 0, false, {
+		fileName: _jsxFileName,
+		lineNumber: 18,
+		columnNumber: 5
+	}, this);
+};
+function installNextImageMock() {
+	// Registered globally from tests/setup.ts via vi.mock.
+}
+//# sourceMappingSource=vite-generated
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJtYXBwaW5ncyI6IkFBQUEsQ0FBQTs7QUFBQTs7Ozs7QUFRTyxTQUFTLGNBQWMsRUFDNUIsTUFBTSxJQUNOLEtBQ0EsVUFDQSxhQUNBLE1BQU0sT0FDTixHQUFHLFFBQ1U7Q0FDYixPQUNFLGlEQUFDLE9BQUQ7RUFDTztFQUNMLEtBQUssT0FBTyxRQUFRLFdBQVcsTUFBTTtFQUNyQyxHQUFJO0VBQ0osaUJBQWUsV0FBVyxTQUFTO0VBQ25DLG9CQUFrQixjQUFjLFNBQVM7Q0FDMUM7Ozs7O0FBRUw7QUFFTyxTQUFTLHVCQUF1Qjs7QUFFdkMiLCJuYW1lcyI6W10sImlnbm9yZUxpc3QiOltdLCJzb3VyY2VzIjpbIm1vY2tOZXh0SW1hZ2UudHN4Il0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBSZWFjdCBmcm9tIFwicmVhY3RcIjtcclxuXHJcbnR5cGUgSW1hZ2VQcm9wcyA9IFJlYWN0LkltZ0hUTUxBdHRyaWJ1dGVzPEhUTUxJbWFnZUVsZW1lbnQ+ICYge1xyXG4gIGZpbGw/OiBib29sZWFuO1xyXG4gIHByaW9yaXR5PzogYm9vbGVhbjtcclxuICB1bm9wdGltaXplZD86IGJvb2xlYW47XHJcbn07XHJcblxyXG5leHBvcnQgZnVuY3Rpb24gTW9ja05leHRJbWFnZSh7XHJcbiAgYWx0ID0gXCJcIixcclxuICBzcmMsXHJcbiAgcHJpb3JpdHksXHJcbiAgdW5vcHRpbWl6ZWQsXHJcbiAgZmlsbDogX2ZpbGwsXHJcbiAgLi4ucmVzdFxyXG59OiBJbWFnZVByb3BzKSB7XHJcbiAgcmV0dXJuIChcclxuICAgIDxpbWdcclxuICAgICAgYWx0PXthbHR9XHJcbiAgICAgIHNyYz17dHlwZW9mIHNyYyA9PT0gXCJzdHJpbmdcIiA/IHNyYyA6IHVuZGVmaW5lZH1cclxuICAgICAgey4uLnJlc3R9XHJcbiAgICAgIGRhdGEtcHJpb3JpdHk9e3ByaW9yaXR5ID8gXCJ0cnVlXCIgOiB1bmRlZmluZWR9XHJcbiAgICAgIGRhdGEtdW5vcHRpbWl6ZWQ9e3Vub3B0aW1pemVkID8gXCJ0cnVlXCIgOiB1bmRlZmluZWR9XHJcbiAgICAvPlxyXG4gICk7XHJcbn1cclxuXHJcbmV4cG9ydCBmdW5jdGlvbiBpbnN0YWxsTmV4dEltYWdlTW9jaygpIHtcclxuICAvLyBSZWdpc3RlcmVkIGdsb2JhbGx5IGZyb20gdGVzdHMvc2V0dXAudHMgdmlhIHZpLm1vY2suXHJcbn1cclxuIl0sImZpbGUiOiIvQGZzL0Q6LzIzMDgyMDI2L3Rlc3RzL2hlbHBlcnMvbW9ja05leHRJbWFnZS50c3gifQ==
+
+//# vitestCache=W3siZmlsZSI6IjEiLCJpZCI6IjEiLCJ1cmwiOiIyIiwiaW1wb3J0ZWRVcmxzIjoiMyIsIm1hcHBpbmdzIjpmYWxzZX0sIkQ6LzIzMDgyMDI2L3Rlc3RzL2hlbHBlcnMvbW9ja05leHRJbWFnZS50c3giLCIvQGZzL0Q6LzIzMDgyMDI2L3Rlc3RzL2hlbHBlcnMvbW9ja05leHRJbWFnZS50c3giLFtdXQ==

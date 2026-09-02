@@ -1,0 +1,123 @@
+__vite_ssr_exportName__("SITE_CONTACT", () => { try { return SITE_CONTACT } catch {} });
+__vite_ssr_exportName__("FOOTER_CONVERSION_PANEL", () => { try { return FOOTER_CONVERSION_PANEL } catch {} });
+__vite_ssr_exportName__("SUPPORT_PHONE_DIGITS", () => { try { return SUPPORT_PHONE_DIGITS } catch {} });
+__vite_ssr_exportName__("SALES_PHONE_DIGITS", () => { try { return SALES_PHONE_DIGITS } catch {} });
+__vite_ssr_exportName__("toTelHref", () => { try { return toTelHref } catch {} });
+__vite_ssr_exportName__("officeMapsQuery", () => { try { return officeMapsQuery } catch {} });
+__vite_ssr_exportName__("googleMapsEmbedSrc", () => { try { return googleMapsEmbedSrc } catch {} });
+__vite_ssr_exportName__("googleMapsOpenHref", () => { try { return googleMapsOpenHref } catch {} });
+__vite_ssr_exportName__("formatSitePostalAddress", () => { try { return formatSitePostalAddress } catch {} });
+__vite_ssr_exportName__("buildMailtoHref", () => { try { return buildMailtoHref } catch {} });
+__vite_ssr_exportName__("buildWhatsAppHref", () => { try { return buildWhatsAppHref } catch {} });
+const SITE_CONTACT = {
+	brandName: "One&Only",
+	/** Spoken / search form used in address blocks and local SEO copy. */
+	brandNameSpoken: "One and Only Furniture",
+	salesPhone: "+91 98356 30940",
+	supportPhone: "+91 90310 22875",
+	salesEmail: "sales@oando.co.in",
+	/** Public security disclosure inbox (RFC 9116 security.txt Contact). */
+	securityEmail: "sales@oando.co.in",
+	regionLine: "India — multi-city commercial delivery · HQ Patna",
+	openingHours: "Mo-Sa 09:00-18:00",
+	priceRange: "INR",
+	// Schema areaServed: national reach (physical HQ address stays accurate below).
+	areaServed: ["India"],
+	address: {
+		streetAddress: "401, Jagat Trade Centre, Frazer Road",
+		addressLocality: "Patna",
+		postalCode: "800001",
+		addressRegion: "Bihar",
+		addressCountry: "IN"
+	},
+	geo: {
+		latitude: 25.6127,
+		longitude: 85.1376
+	},
+	socialLinks: [{
+		label: "YouTube",
+		href: "https://www.youtube.com/channel/UCehXuPNAXkyfODPCwyAU1gQ",
+		id: "youtube"
+	}, {
+		label: "Facebook",
+		href: "https://www.facebook.com/oandofurniture",
+		id: "facebook"
+	}]
+};
+const FOOTER_CONVERSION_PANEL = {
+	eyebrow: "Start in the right lane",
+	title: "Need planning, documents, or a commercial next step?",
+	description: "Use the planning route for layout guidance, the Resource Desk for packs and technical sheets, or contact sales when your team is ready to discuss scope and commercials.",
+	actions: [
+		{
+			label: "Guided Planner",
+			href: "/planning",
+			variant: "primary"
+		},
+		{
+			label: "Open Resource Desk",
+			href: "/downloads",
+			variant: "secondary"
+		},
+		{
+			label: "Contact sales",
+			href: "/contact",
+			variant: "secondary"
+		}
+	],
+	highlights: [
+		"Planning-led guidance",
+		"Resource Desk routing",
+		"Sales and support continuity"
+	],
+	responseLine: "India-wide team supporting multi-city office furniture rollouts, planning, and commercial delivery.",
+	whatsappPrompt: "Need help choosing the right planning, documentation, or sales lane?"
+};
+const SUPPORT_PHONE_DIGITS = "919031022875";
+const SALES_PHONE_DIGITS = "919835630940";
+/** `tel:` href with digits and optional leading `+` only (spaces/dashes stripped). */
+function toTelHref(phone) {
+	const cleaned = phone.trim().replace(/[^\d+]/g, "");
+	return `tel:${cleaned}`;
+};
+function officeMapsQuery() {
+	const { streetAddress, addressLocality, postalCode, addressRegion } = SITE_CONTACT.address;
+	return `${streetAddress}, ${addressLocality}, ${addressRegion} ${postalCode}`;
+};
+function googleMapsEmbedSrc() {
+	const q = encodeURIComponent(officeMapsQuery());
+	return `https://www.google.com/maps?q=${q}&z=16&output=embed`;
+};
+function googleMapsOpenHref() {
+	const q = encodeURIComponent(officeMapsQuery());
+	return `https://www.google.com/maps/search/?api=1&query=${q}`;
+};
+function formatSitePostalAddress() {
+	const { streetAddress, addressLocality, postalCode, addressRegion, addressCountry } = SITE_CONTACT.address;
+	const country = addressCountry === "IN" ? "India" : addressCountry;
+	return [
+		streetAddress,
+		`${addressLocality}, ${addressRegion} ${postalCode}`,
+		country
+	].join("\n");
+};
+function buildMailtoHref(subject, body) {
+	const params = new URLSearchParams();
+	if (subject) {
+		params.set("subject", subject);
+	};
+	if (body) {
+		params.set("body", body);
+	};
+	const query = params.toString();
+	const mailtoBase = `mailto:${SITE_CONTACT.salesEmail}`;
+	return query ? `${mailtoBase}?${query}` : mailtoBase;
+};
+function buildWhatsAppHref(message, phoneDigits = SUPPORT_PHONE_DIGITS) {
+	const encodedMessage = encodeURIComponent(message);
+	return `https://wa.me/${phoneDigits}?text=${encodedMessage}`;
+}
+//# sourceMappingSource=vite-generated
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJtYXBwaW5ncyI6IkFBQUEsQ0FBQTs7Ozs7Ozs7Ozs7QUFNTyxNQUFNLGVBQWU7Q0FDMUIsV0FBVzs7Q0FFWCxpQkFBaUI7Q0FDakIsWUFBWTtDQUNaLGNBQWM7Q0FDZCxZQUFZOztDQUVaLGVBQWU7Q0FDZixZQUFZO0NBQ1osY0FBYztDQUNkLFlBQVk7O0NBRVosWUFBWSxDQUFDLE9BQU87Q0FDcEIsU0FBUztFQUNQLGVBQWU7RUFDZixpQkFBaUI7RUFDakIsWUFBWTtFQUNaLGVBQWU7RUFDZixnQkFBZ0I7Q0FDbEI7Q0FDQSxLQUFLO0VBQ0gsVUFBVTtFQUNWLFdBQVc7Q0FDYjtDQUNBLGFBQWEsQ0FDWDtFQUNFLE9BQU87RUFDUCxNQUFNO0VBQ04sSUFBSTtDQUNOLEdBQ0E7RUFDRSxPQUFPO0VBQ1AsTUFBTTtFQUNOLElBQUk7Q0FDTixDQUNGO0FBQ0Y7QUFFTyxNQUFNLDBCQUEwQjtDQUNyQyxTQUFTO0NBQ1QsT0FBTztDQUNQLGFBQ0U7Q0FDRixTQUFTO0VBQ1A7R0FDRSxPQUFPO0dBQ1AsTUFBTTtHQUNOLFNBQVM7RUFDWDtFQUNBO0dBQ0UsT0FBTztHQUNQLE1BQU07R0FDTixTQUFTO0VBQ1g7RUFDQTtHQUNFLE9BQU87R0FDUCxNQUFNO0dBQ04sU0FBUztFQUNYO0NBQ0Y7Q0FDQSxZQUFZO0VBQ1Y7RUFDQTtFQUNBO0NBQ0Y7Q0FDQSxjQUNFO0NBQ0YsZ0JBQWdCO0FBQ2xCO0FBRU8sTUFBTSx1QkFBdUI7QUFDN0IsTUFBTSxxQkFBcUI7O0FBRzNCLFNBQVMsVUFBVSxPQUFlO0NBQ3ZDLE1BQU0sVUFBVSxNQUFNLEtBQUssQ0FBQyxDQUFDLFFBQVEsV0FBVyxFQUFFO0NBQ2xELE9BQU8sT0FBTztBQUNoQjtBQUVPLFNBQVMsa0JBQTBCO0NBQ3hDLE1BQU0sRUFBRSxlQUFlLGlCQUFpQixZQUFZLGtCQUFrQixhQUFhO0NBQ25GLE9BQU8sR0FBRyxjQUFjLElBQUksZ0JBQWdCLElBQUksY0FBYyxHQUFHO0FBQ25FO0FBRU8sU0FBUyxxQkFBNkI7Q0FDM0MsTUFBTSxJQUFJLG1CQUFtQixnQkFBZ0IsQ0FBQztDQUM5QyxPQUFPLGlDQUFpQyxFQUFFO0FBQzVDO0FBRU8sU0FBUyxxQkFBNkI7Q0FDM0MsTUFBTSxJQUFJLG1CQUFtQixnQkFBZ0IsQ0FBQztDQUM5QyxPQUFPLG1EQUFtRDtBQUM1RDtBQUVPLFNBQVMsMEJBQTBCO0NBQ3hDLE1BQU0sRUFBRSxlQUFlLGlCQUFpQixZQUFZLGVBQWUsbUJBQ2pFLGFBQWE7Q0FDZixNQUFNLFVBQVUsbUJBQW1CLE9BQU8sVUFBVTtDQUNwRCxPQUFPO0VBQ0w7RUFDQSxHQUFHLGdCQUFnQixJQUFJLGNBQWMsR0FBRztFQUN4QztDQUNGLENBQUMsQ0FBQyxLQUFLLElBQUk7QUFDYjtBQUVPLFNBQVMsZ0JBQWdCLFNBQWtCLE1BQWU7Q0FDL0QsTUFBTSxTQUFTLElBQUksZ0JBQWdCO0NBQ25DLElBQUksU0FBUztFQUFDLE9BQU8sSUFBSSxXQUFXLE9BQU87Q0FBRTtDQUM3QyxJQUFJLE1BQU07RUFBQyxPQUFPLElBQUksUUFBUSxJQUFJO0NBQUU7Q0FFcEMsTUFBTSxRQUFRLE9BQU8sU0FBUztDQUM5QixNQUFNLGFBQWEsVUFBVSxhQUFhO0NBQzFDLE9BQU8sUUFBUSxHQUFHLFdBQVcsR0FBRyxVQUFVO0FBQzVDO0FBRU8sU0FBUyxrQkFBa0IsU0FBaUIsY0FBYyxzQkFBc0I7Q0FDckYsTUFBTSxpQkFBaUIsbUJBQW1CLE9BQU87Q0FDakQsT0FBTyxpQkFBaUIsWUFBWSxRQUFRO0FBQzlDIiwibmFtZXMiOltdLCJpZ25vcmVMaXN0IjpbXSwic291cmNlcyI6WyJjb250YWN0LnRzIl0sInNvdXJjZXNDb250ZW50IjpbImV4cG9ydCB0eXBlIFNpdGVTb2NpYWxMaW5rID0ge1xyXG4gIGxhYmVsOiBzdHJpbmc7XHJcbiAgaHJlZjogc3RyaW5nO1xyXG4gIGlkOiBcInlvdXR1YmVcIiB8IFwiZmFjZWJvb2tcIjtcclxufTtcclxuXHJcbmV4cG9ydCBjb25zdCBTSVRFX0NPTlRBQ1QgPSB7XHJcbiAgYnJhbmROYW1lOiBcIk9uZSZPbmx5XCIsXHJcbiAgLyoqIFNwb2tlbiAvIHNlYXJjaCBmb3JtIHVzZWQgaW4gYWRkcmVzcyBibG9ja3MgYW5kIGxvY2FsIFNFTyBjb3B5LiAqL1xyXG4gIGJyYW5kTmFtZVNwb2tlbjogXCJPbmUgYW5kIE9ubHkgRnVybml0dXJlXCIsXHJcbiAgc2FsZXNQaG9uZTogXCIrOTEgOTgzNTYgMzA5NDBcIixcclxuICBzdXBwb3J0UGhvbmU6IFwiKzkxIDkwMzEwIDIyODc1XCIsXHJcbiAgc2FsZXNFbWFpbDogXCJzYWxlc0BvYW5kby5jby5pblwiLFxyXG4gIC8qKiBQdWJsaWMgc2VjdXJpdHkgZGlzY2xvc3VyZSBpbmJveCAoUkZDIDkxMTYgc2VjdXJpdHkudHh0IENvbnRhY3QpLiAqL1xyXG4gIHNlY3VyaXR5RW1haWw6IFwic2FsZXNAb2FuZG8uY28uaW5cIixcclxuICByZWdpb25MaW5lOiBcIkluZGlhIOKAlCBtdWx0aS1jaXR5IGNvbW1lcmNpYWwgZGVsaXZlcnkgwrcgSFEgUGF0bmFcIixcclxuICBvcGVuaW5nSG91cnM6IFwiTW8tU2EgMDk6MDAtMTg6MDBcIixcclxuICBwcmljZVJhbmdlOiBcIklOUlwiLFxyXG4gIC8vIFNjaGVtYSBhcmVhU2VydmVkOiBuYXRpb25hbCByZWFjaCAocGh5c2ljYWwgSFEgYWRkcmVzcyBzdGF5cyBhY2N1cmF0ZSBiZWxvdykuXHJcbiAgYXJlYVNlcnZlZDogW1wiSW5kaWFcIl0sXHJcbiAgYWRkcmVzczoge1xyXG4gICAgc3RyZWV0QWRkcmVzczogXCI0MDEsIEphZ2F0IFRyYWRlIENlbnRyZSwgRnJhemVyIFJvYWRcIixcclxuICAgIGFkZHJlc3NMb2NhbGl0eTogXCJQYXRuYVwiLFxyXG4gICAgcG9zdGFsQ29kZTogXCI4MDAwMDFcIixcclxuICAgIGFkZHJlc3NSZWdpb246IFwiQmloYXJcIixcclxuICAgIGFkZHJlc3NDb3VudHJ5OiBcIklOXCIsXHJcbiAgfSxcclxuICBnZW86IHtcclxuICAgIGxhdGl0dWRlOiAyNS42MTI3LFxyXG4gICAgbG9uZ2l0dWRlOiA4NS4xMzc2LFxyXG4gIH0sXHJcbiAgc29jaWFsTGlua3M6IFtcclxuICAgIHtcclxuICAgICAgbGFiZWw6IFwiWW91VHViZVwiLFxyXG4gICAgICBocmVmOiBcImh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL2NoYW5uZWwvVUNlaFh1UE5BWGt5Zk9EUEN3eUFVMWdRXCIsXHJcbiAgICAgIGlkOiBcInlvdXR1YmVcIixcclxuICAgIH0sXHJcbiAgICB7XHJcbiAgICAgIGxhYmVsOiBcIkZhY2Vib29rXCIsXHJcbiAgICAgIGhyZWY6IFwiaHR0cHM6Ly93d3cuZmFjZWJvb2suY29tL29hbmRvZnVybml0dXJlXCIsXHJcbiAgICAgIGlkOiBcImZhY2Vib29rXCIsXHJcbiAgICB9LFxyXG4gIF0gc2F0aXNmaWVzIFNpdGVTb2NpYWxMaW5rW10sXHJcbn0gYXMgY29uc3Q7XHJcblxyXG5leHBvcnQgY29uc3QgRk9PVEVSX0NPTlZFUlNJT05fUEFORUwgPSB7XHJcbiAgZXllYnJvdzogXCJTdGFydCBpbiB0aGUgcmlnaHQgbGFuZVwiLFxyXG4gIHRpdGxlOiBcIk5lZWQgcGxhbm5pbmcsIGRvY3VtZW50cywgb3IgYSBjb21tZXJjaWFsIG5leHQgc3RlcD9cIixcclxuICBkZXNjcmlwdGlvbjpcclxuICAgIFwiVXNlIHRoZSBwbGFubmluZyByb3V0ZSBmb3IgbGF5b3V0IGd1aWRhbmNlLCB0aGUgUmVzb3VyY2UgRGVzayBmb3IgcGFja3MgYW5kIHRlY2huaWNhbCBzaGVldHMsIG9yIGNvbnRhY3Qgc2FsZXMgd2hlbiB5b3VyIHRlYW0gaXMgcmVhZHkgdG8gZGlzY3VzcyBzY29wZSBhbmQgY29tbWVyY2lhbHMuXCIsXHJcbiAgYWN0aW9uczogW1xyXG4gICAge1xyXG4gICAgICBsYWJlbDogXCJHdWlkZWQgUGxhbm5lclwiLFxyXG4gICAgICBocmVmOiBcIi9wbGFubmluZ1wiLFxyXG4gICAgICB2YXJpYW50OiBcInByaW1hcnlcIiBhcyBjb25zdCxcclxuICAgIH0sXHJcbiAgICB7XHJcbiAgICAgIGxhYmVsOiBcIk9wZW4gUmVzb3VyY2UgRGVza1wiLFxyXG4gICAgICBocmVmOiBcIi9kb3dubG9hZHNcIixcclxuICAgICAgdmFyaWFudDogXCJzZWNvbmRhcnlcIiBhcyBjb25zdCxcclxuICAgIH0sXHJcbiAgICB7XHJcbiAgICAgIGxhYmVsOiBcIkNvbnRhY3Qgc2FsZXNcIixcclxuICAgICAgaHJlZjogXCIvY29udGFjdFwiLFxyXG4gICAgICB2YXJpYW50OiBcInNlY29uZGFyeVwiIGFzIGNvbnN0LFxyXG4gICAgfSxcclxuICBdLFxyXG4gIGhpZ2hsaWdodHM6IFtcclxuICAgIFwiUGxhbm5pbmctbGVkIGd1aWRhbmNlXCIsXHJcbiAgICBcIlJlc291cmNlIERlc2sgcm91dGluZ1wiLFxyXG4gICAgXCJTYWxlcyBhbmQgc3VwcG9ydCBjb250aW51aXR5XCIsXHJcbiAgXSxcclxuICByZXNwb25zZUxpbmU6XHJcbiAgICBcIkluZGlhLXdpZGUgdGVhbSBzdXBwb3J0aW5nIG11bHRpLWNpdHkgb2ZmaWNlIGZ1cm5pdHVyZSByb2xsb3V0cywgcGxhbm5pbmcsIGFuZCBjb21tZXJjaWFsIGRlbGl2ZXJ5LlwiLFxyXG4gIHdoYXRzYXBwUHJvbXB0OiBcIk5lZWQgaGVscCBjaG9vc2luZyB0aGUgcmlnaHQgcGxhbm5pbmcsIGRvY3VtZW50YXRpb24sIG9yIHNhbGVzIGxhbmU/XCIsXHJcbn0gYXMgY29uc3Q7XHJcblxyXG5leHBvcnQgY29uc3QgU1VQUE9SVF9QSE9ORV9ESUdJVFMgPSBcIjkxOTAzMTAyMjg3NVwiO1xyXG5leHBvcnQgY29uc3QgU0FMRVNfUEhPTkVfRElHSVRTID0gXCI5MTk4MzU2MzA5NDBcIjtcclxuXHJcbi8qKiBgdGVsOmAgaHJlZiB3aXRoIGRpZ2l0cyBhbmQgb3B0aW9uYWwgbGVhZGluZyBgK2Agb25seSAoc3BhY2VzL2Rhc2hlcyBzdHJpcHBlZCkuICovXHJcbmV4cG9ydCBmdW5jdGlvbiB0b1RlbEhyZWYocGhvbmU6IHN0cmluZykge1xyXG4gIGNvbnN0IGNsZWFuZWQgPSBwaG9uZS50cmltKCkucmVwbGFjZSgvW15cXGQrXS9nLCBcIlwiKTtcclxuICByZXR1cm4gYHRlbDoke2NsZWFuZWR9YDtcclxufVxyXG5cclxuZXhwb3J0IGZ1bmN0aW9uIG9mZmljZU1hcHNRdWVyeSgpOiBzdHJpbmcge1xyXG4gIGNvbnN0IHsgc3RyZWV0QWRkcmVzcywgYWRkcmVzc0xvY2FsaXR5LCBwb3N0YWxDb2RlLCBhZGRyZXNzUmVnaW9uIH0gPSBTSVRFX0NPTlRBQ1QuYWRkcmVzcztcclxuICByZXR1cm4gYCR7c3RyZWV0QWRkcmVzc30sICR7YWRkcmVzc0xvY2FsaXR5fSwgJHthZGRyZXNzUmVnaW9ufSAke3Bvc3RhbENvZGV9YDtcclxufVxyXG5cclxuZXhwb3J0IGZ1bmN0aW9uIGdvb2dsZU1hcHNFbWJlZFNyYygpOiBzdHJpbmcge1xyXG4gIGNvbnN0IHEgPSBlbmNvZGVVUklDb21wb25lbnQob2ZmaWNlTWFwc1F1ZXJ5KCkpO1xyXG4gIHJldHVybiBgaHR0cHM6Ly93d3cuZ29vZ2xlLmNvbS9tYXBzP3E9JHtxfSZ6PTE2Jm91dHB1dD1lbWJlZGA7XHJcbn1cclxuXHJcbmV4cG9ydCBmdW5jdGlvbiBnb29nbGVNYXBzT3BlbkhyZWYoKTogc3RyaW5nIHtcclxuICBjb25zdCBxID0gZW5jb2RlVVJJQ29tcG9uZW50KG9mZmljZU1hcHNRdWVyeSgpKTtcclxuICByZXR1cm4gYGh0dHBzOi8vd3d3Lmdvb2dsZS5jb20vbWFwcy9zZWFyY2gvP2FwaT0xJnF1ZXJ5PSR7cX1gO1xyXG59XHJcblxyXG5leHBvcnQgZnVuY3Rpb24gZm9ybWF0U2l0ZVBvc3RhbEFkZHJlc3MoKSB7XHJcbiAgY29uc3QgeyBzdHJlZXRBZGRyZXNzLCBhZGRyZXNzTG9jYWxpdHksIHBvc3RhbENvZGUsIGFkZHJlc3NSZWdpb24sIGFkZHJlc3NDb3VudHJ5IH0gPVxyXG4gICAgU0lURV9DT05UQUNULmFkZHJlc3M7XHJcbiAgY29uc3QgY291bnRyeSA9IGFkZHJlc3NDb3VudHJ5ID09PSBcIklOXCIgPyBcIkluZGlhXCIgOiBhZGRyZXNzQ291bnRyeTtcclxuICByZXR1cm4gW1xyXG4gICAgc3RyZWV0QWRkcmVzcyxcclxuICAgIGAke2FkZHJlc3NMb2NhbGl0eX0sICR7YWRkcmVzc1JlZ2lvbn0gJHtwb3N0YWxDb2RlfWAsXHJcbiAgICBjb3VudHJ5LFxyXG4gIF0uam9pbihcIlxcblwiKTtcclxufVxyXG5cclxuZXhwb3J0IGZ1bmN0aW9uIGJ1aWxkTWFpbHRvSHJlZihzdWJqZWN0Pzogc3RyaW5nLCBib2R5Pzogc3RyaW5nKSB7XHJcbiAgY29uc3QgcGFyYW1zID0gbmV3IFVSTFNlYXJjaFBhcmFtcygpO1xyXG4gIGlmIChzdWJqZWN0KSB7cGFyYW1zLnNldChcInN1YmplY3RcIiwgc3ViamVjdCk7fVxyXG4gIGlmIChib2R5KSB7cGFyYW1zLnNldChcImJvZHlcIiwgYm9keSk7fVxyXG5cclxuICBjb25zdCBxdWVyeSA9IHBhcmFtcy50b1N0cmluZygpO1xyXG4gIGNvbnN0IG1haWx0b0Jhc2UgPSBgbWFpbHRvOiR7U0lURV9DT05UQUNULnNhbGVzRW1haWx9YDtcclxuICByZXR1cm4gcXVlcnkgPyBgJHttYWlsdG9CYXNlfT8ke3F1ZXJ5fWAgOiBtYWlsdG9CYXNlO1xyXG59XHJcblxyXG5leHBvcnQgZnVuY3Rpb24gYnVpbGRXaGF0c0FwcEhyZWYobWVzc2FnZTogc3RyaW5nLCBwaG9uZURpZ2l0cyA9IFNVUFBPUlRfUEhPTkVfRElHSVRTKSB7XHJcbiAgY29uc3QgZW5jb2RlZE1lc3NhZ2UgPSBlbmNvZGVVUklDb21wb25lbnQobWVzc2FnZSk7XHJcbiAgcmV0dXJuIGBodHRwczovL3dhLm1lLyR7cGhvbmVEaWdpdHN9P3RleHQ9JHtlbmNvZGVkTWVzc2FnZX1gO1xyXG59XHJcbiJdLCJmaWxlIjoiL2ZlYXR1cmVzL3NpdGUvZGF0YS9jb250YWN0LnRzIn0=
+
+//# vitestCache=W3siZmlsZSI6IjEiLCJpZCI6IjEiLCJ1cmwiOiIyIiwiaW1wb3J0ZWRVcmxzIjoiMyIsIm1hcHBpbmdzIjpmYWxzZX0sIkQ6LzIzMDgyMDI2L3NpdGUvZmVhdHVyZXMvc2l0ZS9kYXRhL2NvbnRhY3QudHMiLCIvZmVhdHVyZXMvc2l0ZS9kYXRhL2NvbnRhY3QudHMiLFtdXQ==

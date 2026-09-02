@@ -1,0 +1,12 @@
+
+ RUN  v4.1.11 D:/23082026/site
+
+ ✓ ../tests/unit/lib/assetPaths.test.ts (23 tests) 62ms
+ ✓ ../tests/unit/features/site/data/seo.test.ts (76 tests) 20ms
+
+ Test Files  2 passed (2)
+      Tests  99 passed (99)
+   Start at  21:11:13
+   Duration  941ms (transform 225ms, setup 524ms, import 121ms, tests 83ms, environment 731ms)
+
+JSON report written to D:/23082026/results/tests/vitest-results.json
