@@ -2,7 +2,17 @@
 
 Browser at `http://localhost:3000`. Not Markdown. Desktop and phone.
 
-**2026-09-02:** `localhost:3000` timed out. This phase is blocked until the app is running. Do not fake a walk.
+**2026-09-02 walk (Chrome, localhost:3000):**
+
+Desktop 1440: header Products / Solutions / Clients / Planner `/planner` / About / Contact / Sign in `/access`. Footer has no dashboard/portal/ooplanner.
+
+Phone 390: Get Quote + hamburger; tabs Home, All Products, Planner `/planner`, About, Sign in.
+
+Home: proof → `/trusted-by/`; categories → six product pages; Launch planner → `/planner/`; floorplan demo still → `/ooplanner/?siteSource=/`.
+
+Fixed this walk: trust logos now use kebab-case files from `clientLogos.ts` (old `Titan.png` etc. 404ed). Showcase slides now `/clients` not `/portfolio`.
+
+Still open: contact-band image goes through `/_next/image/` in dev; client-logo PNGs also via `/_next/image/` (R2 is the production optimizer). `/planner` “Start free” → `/choose-product/?mode=guest` (utility, journey 7). Catalog product images load from `https://oando.co.in/assets/catalog/...`.
 
 1. `/` → products → category → product → contact
 2. `/trusted-by` and `/clients` as siblings

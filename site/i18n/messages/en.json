@@ -46,75 +46,75 @@
       "logos": [
         {
           "name": "Titan",
-          "src": "/assets/marketing/client-logos/Titan.png"
+          "src": "/assets/marketing/client-logos/titan-limited.png"
         },
         {
           "name": "L&T",
-          "src": "/assets/marketing/client-logos/LandT.png"
+          "src": "/assets/marketing/client-logos/l-and-t-finance-limited.png"
         },
         {
           "name": "JSW",
-          "src": "/assets/marketing/client-logos/JSW.png"
+          "src": "/assets/marketing/client-logos/jsw.png"
         },
         {
           "name": "Tata Motors",
-          "src": "/assets/marketing/client-logos/TataMotors.jpg"
+          "src": "/assets/marketing/client-logos/tata-motors.svg"
         },
         {
           "name": "Maruti Suzuki",
-          "src": "/assets/marketing/client-logos/MarutiSuzuki.png"
+          "src": "/assets/marketing/client-logos/maruti-suzuki-limited.png"
         },
         {
           "name": "HDFC",
-          "src": "/assets/marketing/client-logos/HDFCLogo.jpg"
+          "src": "/assets/marketing/client-logos/hdfc-limited.jpg"
         },
         {
           "name": "Canara Bank",
-          "src": "/assets/marketing/client-logos/CanaraBank.jpg"
+          "src": "/assets/marketing/client-logos/canara-bank.jpg"
         },
         {
           "name": "Franklin Templeton",
-          "src": "/assets/marketing/client-logos/FranklinTempleton.jpg"
+          "src": "/assets/marketing/client-logos/franklin-templeton.jpg"
         },
         {
           "name": "Hyundai",
-          "src": "/assets/marketing/client-logos/HyundaiLogo.jpg"
+          "src": "/assets/marketing/client-logos/hyundai-limited.jpg"
         },
         {
           "name": "IDBI Bank",
-          "src": "/assets/marketing/client-logos/IDBIBankLogo.png"
+          "src": "/assets/marketing/client-logos/idbi-bank.png"
         },
         {
           "name": "Usha",
-          "src": "/assets/marketing/client-logos/USHA.png"
+          "src": "/assets/marketing/client-logos/usha-international-ltd.png"
         },
         {
           "name": "Bihar Government",
-          "src": "/assets/marketing/client-logos/BiharGovernment.jpg"
+          "src": "/assets/marketing/client-logos/government-of-bihar.jpg"
         },
         {
           "name": "SAIL",
-          "src": "/assets/marketing/client-logos/SAIL.png"
+          "src": "/assets/marketing/client-logos/steel-authority-of-india-limited.png"
         },
         {
           "name": "BIS",
-          "src": "/assets/marketing/client-logos/BIS.jpg"
+          "src": "/assets/marketing/client-logos/bureau-of-indian-standards.jpg"
         },
         {
           "name": "Sonalika",
-          "src": "/assets/marketing/client-logos/Sonalika.jpg"
+          "src": "/assets/marketing/client-logos/sonalika.jpg"
         },
         {
           "name": "Survey of India",
-          "src": "/assets/marketing/client-logos/SurveyofIndia.jpg"
+          "src": "/assets/marketing/client-logos/survey-of-india.jpg"
         },
         {
           "name": "CRI Pumps",
-          "src": "/assets/marketing/client-logos/CRIPumps.jpg"
+          "src": "/assets/marketing/client-logos/cri-pumps.jpg"
         },
         {
           "name": "MECON",
-          "src": "/assets/marketing/client-logos/MECON.jpg"
+          "src": "/assets/marketing/client-logos/mecon-limited.jpg"
         }
       ],
       "projectsCta": "View projects",
@@ -201,21 +201,21 @@
           "name": "DMRC",
           "label": "",
           "image": "/assets/marketing/clients/DMRC/dmrc.webp",
-          "link": "/portfolio"
+          "link": "/clients"
         },
         {
           "id": "titan",
           "name": "Titan",
           "label": "",
           "image": "/assets/marketing/clients/Titan/hero.webp",
-          "link": "/portfolio"
+          "link": "/clients"
         },
         {
           "id": "tvs",
           "name": "TVS",
           "label": "",
           "image": "/assets/marketing/clients/TVS/hero.webp",
-          "link": "/portfolio"
+          "link": "/clients"
         }
       ]
     },

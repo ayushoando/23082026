@@ -1,3 +1,4 @@
+import { CLIENT_LOGO_SRC_BY_NAME } from "@/features/site/data/clientLogos";
 import { HOMEPAGE_COLLECTION_IMAGES } from "@/features/site/data/productsPage";
 
 /** Shared fallback when a category or page has no flagship image. */
@@ -133,33 +134,38 @@ export interface HomepageTrustContent {
   reviewDate: string;
 }
 
+const HOMEPAGE_TRUST_LOGO_NAMES = [
+  "Titan",
+  "L&T",
+  "JSW",
+  "Tata Motors",
+  "Maruti Suzuki",
+  "HDFC",
+  "Canara Bank",
+  "Franklin Templeton",
+  "Hyundai",
+  "IDBI Bank",
+  "Usha",
+  "Bihar Government",
+  "SAIL",
+  "BIS",
+  "Sonalika",
+  "Survey of India",
+  "CRI Pumps",
+  "MECON",
+] as const;
+
 export const HOMEPAGE_TRUST_CONTENT = {
   logoLabel: "Selected organisations",
-  logos: [
-    { name: "Titan", src: "/assets/marketing/client-logos/Titan.png" },
-    { name: "L&T", src: "/assets/marketing/client-logos/LandT.png" },
-    { name: "JSW", src: "/assets/marketing/client-logos/JSW.png" },
-    { name: "Tata Motors", src: "/assets/marketing/client-logos/TataMotors.jpg" },
-    { name: "Maruti Suzuki", src: "/assets/marketing/client-logos/MarutiSuzuki.png" },
-    { name: "HDFC", src: "/assets/marketing/client-logos/HDFCLogo.jpg" },
-    { name: "Canara Bank", src: "/assets/marketing/client-logos/CanaraBank.jpg" },
-    { name: "Franklin Templeton", src: "/assets/marketing/client-logos/FranklinTempleton.jpg" },
-    { name: "Hyundai", src: "/assets/marketing/client-logos/HyundaiLogo.jpg" },
-    { name: "IDBI Bank", src: "/assets/marketing/client-logos/IDBIBankLogo.png" },
-    { name: "Usha", src: "/assets/marketing/client-logos/USHA.png" },
-    { name: "Bihar Government", src: "/assets/marketing/client-logos/BiharGovernment.jpg" },
-    { name: "SAIL", src: "/assets/marketing/client-logos/SAIL.png" },
-    { name: "BIS", src: "/assets/marketing/client-logos/BIS.jpg" },
-    { name: "Sonalika", src: "/assets/marketing/client-logos/Sonalika.jpg" },
-    { name: "Survey of India", src: "/assets/marketing/client-logos/SurveyofIndia.jpg" },
-    { name: "CRI Pumps", src: "/assets/marketing/client-logos/CRIPumps.jpg" },
-    { name: "MECON", src: "/assets/marketing/client-logos/MECON.jpg" },
-  ],
+  logos: HOMEPAGE_TRUST_LOGO_NAMES.map((name) => ({
+    name,
+    src: CLIENT_LOGO_SRC_BY_NAME[name],
+  })),
   projectsCta: "View projects",
   source: "Internal client records",
   owner: "Marketing",
   reviewDate: "2026-07-14",
-} as const satisfies HomepageTrustContent;
+} satisfies HomepageTrustContent;
 
 export const HOMEPAGE_BRAND_STATEMENT_CONTENT = {
   lead: "Workplaces planned and installed across India since 2011.",

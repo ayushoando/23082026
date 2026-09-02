@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { CLIENT_LOGO_SRC_BY_NAME } from "@/features/site/data/clientLogos";
 import {
   HOMEPAGE_HERO_CONTENT,
   HOMEPAGE_HERO_IMAGES,
@@ -8,6 +9,7 @@ import {
   HOMEPAGE_PARTNERSHIP_CONTENT,
   HOMEPAGE_CONTACT_CONTENT,
   HOMEPAGE_WHY_CHOOSE_US_CONTENT,
+  HOMEPAGE_TRUST_CONTENT,
   joinAccessibleTitleLines,
   resolveHeroTitleLines,
 } from "@/features/site/data/homepage";
@@ -73,6 +75,14 @@ describe("homepage data", () => {
     expect(HOMEPAGE_WHY_CHOOSE_US_CONTENT.titleAccent).toBe("workspaces");
   });
 
+  it("trust logos use the renamed client-logos files", () => {
+    expect(HOMEPAGE_TRUST_CONTENT.logos.length).toBeGreaterThan(0);
+    for (const logo of HOMEPAGE_TRUST_CONTENT.logos) {
+      expect(logo.src).toBe(CLIENT_LOGO_SRC_BY_NAME[logo.name]);
+      expect(logo.src).toMatch(/^\/assets\/marketing\/client-logos\/[a-z0-9].+/);
+    }
+  });
+
   it("collections shows six featured categories", () => {
     expect(HOMEPAGE_COLLECTIONS_CONTENT.items).toHaveLength(6);
     expect(HOMEPAGE_COLLECTIONS_CONTENT.catalogCta.href).toBe("/products");
@@ -86,6 +96,9 @@ describe("homepage data", () => {
       "titan",
       "tvs",
     ]);
+    expect(HOMEPAGE_SHOWCASE_CONTENT.items.every((item) => item.link === "/clients")).toBe(
+      true,
+    );
     expect(HOMEPAGE_SHOWCASE_CONTENT.sectionTitleLead).toBe("Recent");
     expect(HOMEPAGE_SHOWCASE_CONTENT.sectionTitleAccent).toBe("installs");
     expect(HOMEPAGE_SHOWCASE_CONTENT.browseCta).toEqual({

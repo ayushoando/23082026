@@ -25,6 +25,7 @@ Verify `http://localhost:3000` desktop and phone before calling this phase done.
 - **UI-005 is already fixed.** `typography.css`: `--font-weight-medium: 500`, `--font-weight-semibold: 600`. The ui-audit line that both are 500 is stale.
 - **Hero CTAs are data-only.** `HOMEPAGE_HERO_CONTENT` and `en.json` still have primary `/planner` and secondary `/products`. `HomepageHero` does not render them. `HomepageHero.test.tsx` asserts those links are absent. The visible hero action is glass proof → `/trusted-by/`. Products sit in Collections; planner launch sits in InteractiveTools (`/planner`). Do not put the two buttons back without a design pass and a test change.
 - **Hero images are R2 path + `unoptimized`.** Poster and slides under `/assets/marketing/hero/`.
+- **Trust logos** use `CLIENT_LOGO_SRC_BY_NAME` (kebab-case files). Old PascalCase names 404ed.
 - **`Hero.tsx` removed 2026-09-02** with `tests/unit/components/home/Hero.test.tsx`. Live hero is `HomepageHero`.
 - **`demoHref="/ooplanner"`** on InteractiveTools is the floorplan demo, not the primary CTA (`launchHref` is `/planner`). Leave until we see it in the browser.
 - **`loginHref`** on `HOMEPAGE_PLANNER_SUITE_CONTENT` (planner landing, not `/`) is now `/access/?next=/ooplanner/` — no `/login` + `/planner/canvas` hop.
