@@ -16,7 +16,7 @@ Use this index to find the canonical document for a task. Start with [onboarding
 | 08 | [`Failures.md`](./Failures.md) | Open blockers only |
 | 09 | [`owners.md`](./owners.md) | Code and document ownership map · playbook |
 | 10 | [`HANDOVER.md`](./HANDOVER.md) | Historical handoff context; verify against live state |
-| 11 | [`plans/PLAN.md`](./plans/PLAN.md) | Active client-hub sequence |
+| 11 | [`plans/PLAN.md`](./plans/PLAN.md) | Active client-hub sequence; phase folders under `plans/` |
 
 ## Agents / docs / tooling
 

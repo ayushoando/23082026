@@ -16,22 +16,4 @@ Removed (not archived): `oando-repository-guide/` (duplicate of root/`docs/`/`Ag
 
 Kept live: `agents-work/client-hub/` (`clients-hub-flow.md`).
 
-Moved 2026-09-02 from `plans/`:
-
-| Path | Why retired |
-|------|-------------|
-| `plans/seosec/` | Closed SEO/security packet |
-| `plans/ui-audit/` | Closed marketing UI packet |
-| `plans/packages/` | Closed dependency packet |
-| `plans/ai-audit/` | Closed AI packet |
-| `plans/admin-audit/` | Closed Admin packet |
-| `plans/studio-audit/` | Closed Studio packet |
-| `plans/planner-audit/` | Closed Planner packet |
-| `plans/db-audit/` | Closed DB packet |
-| `plans/testing-audit/` | Closed testing packet |
-| `plans/worker-audit/` | Closed worker packet |
-| `plans/execution-checklist.md` | 2026-08-31 session log |
-
-Live plan: `plans/PLAN.md`. Live test modules: `plans/planner-comprehensive-audit/`.
-
-Do not recreate Phase A dumps under `.archive/audit/`.
+Do not recreate Phase A dumps under `.archive/audit/`. Plan packets live under `plans/`.

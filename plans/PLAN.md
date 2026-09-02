@@ -1,58 +1,36 @@
-# Client-hub plan (one sequence)
+# Client-hub plan
 
-Spine: `agents-work/client-hub/flowcharts/clients-hub-flow.md`.  
-This is the only active plan.
+Spine: `agents-work/client-hub/flowcharts/clients-hub-flow.md`.
 
-R2 is the image optimizer. `D:\23082026 - Copy` is reference only. Studio, Admin, APIs, worker deploy, and `CF-TOKEN-01` are out.
+This file is the sequence. Phase notes live in subfolders under `plans/`. Named packets (`ui-audit`, `seosec`, …) stay here as history and input — they are not a second spine. `planner-comprehensive-audit/` is **dated**; tests still import its TypeScript.
+
+R2 is the image optimizer. `D:\23082026 - Copy` is reference only. Studio, Admin, APIs, worker deploy, and `CF-TOKEN-01` are out of this sequence unless a walk finds a public leak.
 
 ## Already done
 
-Footer, mobile Planner tab, and header labels match the map. Client-hub flattened. Do not redo.
+Footer, mobile Planner tab, header labels. Client-hub flattened. Do not redo.
 
-## Keep here
+## Sequence
 
-- This file
-- `README.md`
-- `planner-comprehensive-audit/*.ts` (tests import these)
+| Phase | Folder | What |
+|---|---|---|
+| 1 | [`chrome/`](./chrome/) | Public header, footer, tabs |
+| 2 | [`homepage/`](./homepage/) | `/` as journey start, FOCSS, leftover hero |
+| 3 | [`map-equals-code/`](./map-equals-code/) | Redirects, calculator indexability |
+| 4 | [`walk/`](./walk/) | Browser, desktop + phone |
 
-Closed audit packets live under `.archive/plans/`. Do not resurrect `plans/audit/01–37`.
+Order: 1 → 2 → 3 → 4. Commit when a phase is actually done.
 
----
+## Packets (read when the phase needs them)
 
-## Phase 0 — Slim `plans/`
-
-Archive leftover packets. Index this file only.
-
-## Phase 1 — Chrome
-
-`site/features/site/data/navigation.ts` is the public chrome contract.
-
-- Header: Products, Solutions, Clients, Planner `/planner`, About, Contact. Sign in stays a utility.
-- Footer: no `/dashboard`, `/portal`, `/ooplanner`, `/admin`.
-- Mobile Planner tab stays `/planner`.
-- Check ≥1280 nav and `<768` Get Quote + tabs.
-
-## Phase 2 — Homepage
-
-`/` starts journeys 1–2. CTAs: `/products`, proof, `/planner`, `/contact` or `/planning`. No hero deep-link to `/ooplanner`. Marketing images stay `unoptimized` (R2). Delete leftover `Hero.tsx` only with its test. Do not paste Copy CSS over live. Verify `http://localhost:3000` desktop + phone.
-
-## Phase 3 — Map equals code
-
-- Redirects: map §4 must match `config/build/next.config.js` (live wins).
-- Calculators: one indexability story in map, `routeClassification.ts`, and sitemap.
-- `/compare`, `/quote-cart`, `/choose-product`, `/tools/*` stay out of chrome.
-
-## Phase 4 — Walk
-
-Browser, not Markdown. Hunt leaks into `/ooplanner`, `/portal`, `/dashboard`, `/admin`.
-
-1. `/` → products → category → product → contact
-2. `/trusted-by` and `/clients` as siblings
-3. `/planning` and `/planner` → app only when launching
-4. `/access` from Sign in / Account only
+| Packet | Use in this sequence |
+|---|---|
+| [`ui-audit/`](./ui-audit/) | CSS, tokens, marketing layout, a11y — **Phase 2 and 4** |
+| [`seosec/`](./seosec/) | Redirects, sitemap, robots — **Phase 3** |
+| [`planner-audit/`](./planner-audit/) | Only `/planner` marketing pages, not the canvas |
+| [`worker-audit/`](./worker-audit/) | R2 delivery only |
+| others | Open when a walk hits that surface |
 
 ## Done when
 
-A stranger can follow the map using header, footer, and tabs. Public chrome has no client-access or admin URLs. Redirects and calculator indexability match the map. Homepage does not skip to the app. Images come from R2. Home, products, clients, `/planner`, `/access` checked on localhost, desktop and phone.
-
-Order: 0 → 1 → 2 → 3 → 4. Commit when a phase is actually done.
+A stranger can follow the map from header, footer, and tabs. No public chrome to `/dashboard`, `/portal`, `/ooplanner`, `/admin`. Redirects and calculator indexability match the map. Homepage does not skip to the app. Marketing images are R2 / `unoptimized`. Home, products, clients, `/planner`, `/access` checked on `http://localhost:3000`, desktop and phone.

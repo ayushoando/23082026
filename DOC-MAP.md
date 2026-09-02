@@ -18,7 +18,7 @@ user  >  live code + fresh commands  >  AGENTS.md  >  Agents/  >  docs/**
 |------|--------|
 | Durable facts (stack, routes, schema, rules, benchmarks) | `docs/**` — see tree below |
 | Execution/how-to procedures | root docs (`OPERATIONS_RUNBOOK.md`, `Testing-handbook.md`) |
-| Coordination and active plans | [`plans/PLAN.md`](./plans/PLAN.md); index [`plans/README.md`](./plans/README.md) |
+| Coordination and active plans | [`plans/PLAN.md`](./plans/PLAN.md); phase folders and packets under [`plans/`](./plans/) |
 | Generated evidence | `results/**` (machine-generated output; not authority) |
 | Blockers | `Failures.md` |
 | Session agent rules | `Agents/**` |
