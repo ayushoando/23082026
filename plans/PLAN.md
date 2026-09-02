@@ -2,8 +2,6 @@
 
 No active cross-cutting plan is currently in flight.
 
-Per-feature plans live under `plans/<name>/` with their own `requirements.md`,
-`design.md`, and `tasks.md` (see `plans/README.md`). Kiro spec work is tracked
-separately under `.kiro/specs/<name>/`.
+Per-feature history lives under `plans/<name>/`. Current public/client routes are mapped in `agents-work/client-hub/flowcharts/clients-hub-flow.md`.
 
 Record hard blockers in root `Failures.md`, not here.

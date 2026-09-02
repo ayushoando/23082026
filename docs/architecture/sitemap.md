@@ -2,7 +2,7 @@
 
 Source-oriented map of every site surface: public content, Planner marketing, the product catalog, proof pages, client workspaces, the admin suite, the API surface, and system territory. Route shapes are classified from live source files; they are **not** browser or hosted results — a listed route is source-defined intent, not proof of render state.
 
-Owning detail lives one level down: page + API inventory in [`routes.md`](./routes.md), the client-hub journey analysis in `agents-work/client-hub/flowcharts/clients-hub-flow.md`, redirect sources in `config/build/next.config.js`.
+Owning detail lives one level down: page + API inventory in [`routes.md`](./routes.md), the client-hub journey analysis in [`agents-work/client-hub/flowcharts/clients-hub-flow.md`](../../agents-work/client-hub/flowcharts/clients-hub-flow.md), redirect sources in `config/build/next.config.js`.
 
 ## 1. Public content
 
