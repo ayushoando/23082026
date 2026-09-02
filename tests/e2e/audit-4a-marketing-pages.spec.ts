@@ -434,7 +434,7 @@ test("11. secondary pages spot-check — status, h1, images, chrome consistency"
     rows.push(
       `${route}: status=${res?.status()} h1="${h1}" imgs=${state.imgs} broken=${state.broken} headerLinks=${state.headerLinks} footerLinks=${state.footerLinks}`,
     );
-    if (["/compare", "/choose-product", "/clients"].includes(route)) {
+    if (["/compare", "/choose-product", "/portfolio"].includes(route)) {
       await shot(page, `11-${route.replace(/\//g, "")}.png`);
     }
   }

@@ -96,14 +96,14 @@ describe("homepage data", () => {
       "titan",
       "tvs",
     ]);
-    expect(HOMEPAGE_SHOWCASE_CONTENT.items.every((item) => item.link === "/clients")).toBe(
+    expect(HOMEPAGE_SHOWCASE_CONTENT.items.every((item) => item.link === "/portfolio")).toBe(
       true,
     );
     expect(HOMEPAGE_SHOWCASE_CONTENT.sectionTitleLead).toBe("Recent");
     expect(HOMEPAGE_SHOWCASE_CONTENT.sectionTitleAccent).toBe("installs");
     expect(HOMEPAGE_SHOWCASE_CONTENT.browseCta).toEqual({
-      label: "View clients",
-      href: "/clients",
+      label: "View portfolio",
+      href: "/portfolio",
     });
   });
 

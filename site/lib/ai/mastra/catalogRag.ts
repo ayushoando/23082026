@@ -31,7 +31,7 @@ export type CatalogVectorDocument = {
 const STATIC_PAGES: Array<Pick<CatalogVectorDocument, "id" | "title" | "href" | "type">> = [
   { id: "page:products", title: "All Products", href: "/products", type: "page" },
   { id: "page:solutions", title: "Solutions", href: "/solutions", type: "page" },
-  { id: "page:clients", title: "Clients", href: "/clients", type: "page" },
+  { id: "page:portfolio", title: "Portfolio", href: "/portfolio", type: "page" },
   { id: "page:contact", title: "Contact", href: "/contact", type: "page" },
 ];
 

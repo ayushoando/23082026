@@ -29,7 +29,7 @@
         "lead": "120+ workplaces delivered.",
         "support": "Catalog in planner · drafts · branded BOQ.",
         "href": "/trusted-by/",
-        "cta": "View clients"
+        "cta": "View portfolio"
       }
     },
     "plannerSuite": {
@@ -192,8 +192,8 @@
       "sectionTitleLead": "Recent",
       "sectionTitleAccent": "installs",
       "browseCta": {
-        "label": "View all clients",
-        "href": "/clients"
+        "label": "View portfolio",
+        "href": "/portfolio"
       },
       "items": [
         {
@@ -201,21 +201,21 @@
           "name": "DMRC",
           "label": "",
           "image": "/assets/marketing/clients/DMRC/dmrc.webp",
-          "link": "/clients"
+          "link": "/portfolio"
         },
         {
           "id": "titan",
           "name": "Titan",
           "label": "",
           "image": "/assets/marketing/clients/Titan/hero.webp",
-          "link": "/clients"
+          "link": "/portfolio"
         },
         {
           "id": "tvs",
           "name": "TVS",
           "label": "",
           "image": "/assets/marketing/clients/TVS/hero.webp",
-          "link": "/clients"
+          "link": "/portfolio"
         }
       ]
     },
@@ -365,7 +365,7 @@
     "ctaTitleAccent": "your space.",
     "ctaDescription": "Book a planning call or open Resource Desk for packs and technical sheets.",
     "ctaPrimary": "Request planning call",
-    "ctaSecondary": "View clients",
+    "ctaSecondary": "View portfolio",
     "sectionKicker": "Who we are",
     "sectionTitle": "Planning-first partner",
     "sectionTitleLead": "Planning-first",
@@ -927,9 +927,9 @@
     "totalTemplate": "{clients} clients - {photos} photos"
   },
   "clients": {
-    "heroTitle": "Clients",
-    "heroTitleLead": "Our",
-    "heroTitleAccent": "clients",
+    "heroTitle": "Portfolio",
+    "heroTitleLead": "Workplace",
+    "heroTitleAccent": "projects.",
     "eyebrow": "Delivery",
     "heroSubtitleTemplate": "{clients} organisations across government, finance, energy, manufacturing, and more.",
     "featuredLabel": "Selected organisations",
@@ -1159,7 +1159,8 @@
       "navigation": {
         "products": "Products",
         "solutions": "Solutions",
-        "clients": "Clients",
+        "clients": "Portfolio",
+        "portfolio": "Portfolio",
         "planner": "Planner",
         "about": "About",
         "contact": "Contact",

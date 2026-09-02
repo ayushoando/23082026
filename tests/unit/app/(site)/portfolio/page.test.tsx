@@ -1,7 +1,7 @@
 import "../../../../helpers/nextIntlServerEnMock";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, within } from "@testing-library/react";
-import ClientsPage, { generateMetadata } from "@/app/(site)/clients/page";
+import PortfolioPage, { generateMetadata } from "@/app/(site)/portfolio/page";
 import { CLIENTS_PAGE_METADATA } from "@/features/site/data/routeMetadata";
 import { CLIENTS_PAGE_COPY, CLIENTS_WORK } from "@/features/site/data/routeCopy";
 import { expectHomeMarketingShell } from "@/tests/unit/app/(site)/_template.homepage.test";
@@ -36,7 +36,7 @@ vi.mock("@/lib/helpers/gsapMotion", () => ({
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: vi.fn(), replace: vi.fn(), prefetch: vi.fn() }),
-  usePathname: () => "/clients",
+  usePathname: () => "/portfolio",
   useSearchParams: () => new URLSearchParams(),
 }));
 
@@ -125,7 +125,7 @@ describe("app/(site)/clients/page.tsx — behavior", () => {
   });
 
   it("renders marketing shell, hero with computed labellings, and JSON-LD scripts", async () => {
-    const pageElement = await ClientsPage();
+    const pageElement = await PortfolioPage();
     const { container } = render(pageElement);
 
     expectHomeMarketingShell(container);
@@ -159,7 +159,7 @@ describe("app/(site)/clients/page.tsx — behavior", () => {
   });
 
   it("renders proof strip via source-of-truth with computed kpi ids and asOf formatting", async () => {
-    const pageElement = await ClientsPage();
+    const pageElement = await PortfolioPage();
     const { container } = render(pageElement);
 
     expect(container.querySelector(".clients-proof-strip")).toBeNull();
@@ -167,7 +167,7 @@ describe("app/(site)/clients/page.tsx — behavior", () => {
   });
 
   it("iterates CLIENTS_WORK source-of-truth into case studies with computed ids, mosaics, and alt", async () => {
-    const pageElement = await ClientsPage();
+    const pageElement = await PortfolioPage();
     const { container } = render(pageElement);
 
     // all CLIENTS_WORK entries should render (buildClientWorkWithPhotos is mocked to return all)
@@ -208,7 +208,7 @@ describe("app/(site)/clients/page.tsx — behavior", () => {
   });
 
   it("renders pull quotes, CTA band with computed hrefs, and contact teaser", async () => {
-    const pageElement = await ClientsPage();
+    const pageElement = await PortfolioPage();
     const { container } = render(pageElement);
 
     const quoteSection = container.querySelector(".clients-trust-strip");
@@ -252,7 +252,7 @@ describe("app/(site)/clients/page.tsx — behavior", () => {
     const { buildClientWorkWithPhotos } = await import("@/features/site/data/clientWorkPhotos");
     vi.mocked(buildClientWorkWithPhotos).mockResolvedValueOnce([]);
 
-    const pageElement = await ClientsPage();
+    const pageElement = await PortfolioPage();
     const { container } = render(pageElement);
 
     expect(screen.getByRole("heading", { level: 2, name: CLIENTS_PAGE_COPY.emptyTitle })).toBeInTheDocument();

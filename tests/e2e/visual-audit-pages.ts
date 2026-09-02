@@ -42,7 +42,7 @@ export const PAGE_MANIFEST: AuditPage[] = [
   { path: "/access", label: "access", group: "site" },
   { path: "/career", label: "career", group: "site" },
   { path: "/choose-product", label: "choose-product", group: "site" },
-  { path: "/clients", label: "clients", group: "site" },
+  { path: "/portfolio", label: "portfolio", group: "site" },
   { path: "/compare", label: "compare", group: "site" },
   { path: "/contact", label: "contact", group: "site" },
   { path: "/dashboard", label: "dashboard", group: "site" },

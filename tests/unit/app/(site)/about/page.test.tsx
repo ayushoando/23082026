@@ -91,7 +91,7 @@ describe("app/(site)/about/page.tsx", () => {
     expect(screen.getByText(aboutMessages.heroKicker)).toBeInTheDocument();
     expect(screen.queryByText(aboutMessages.heroSubtitle)).not.toBeInTheDocument();
 
-    expect(screen.getByRole("link", { name: aboutMessages.heroCta })).toHaveAttribute("href", "/clients");
+    expect(screen.getByRole("link", { name: aboutMessages.heroCta })).toHaveAttribute("href", "/portfolio");
     expect(screen.getByTestId("mock-about-hero-media")).toBeInTheDocument();
 
     expect(screen.getByTestId("about-story")).toBeInTheDocument();
@@ -144,7 +144,7 @@ describe("app/(site)/about/page.tsx", () => {
 
     expect(screen.getByRole("heading", { name: new RegExp(aboutMessages.ctaTitleLead) })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: aboutMessages.ctaPrimary })).toHaveAttribute("href", "/contact");
-    expect(screen.getByRole("link", { name: aboutMessages.ctaSecondary })).toHaveAttribute("href", "/clients");
+    expect(screen.getByRole("link", { name: aboutMessages.ctaSecondary })).toHaveAttribute("href", "/portfolio");
 
     expect(screen.getByTestId("home-contact-teaser")).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /nonexistent-cta/i })).not.toBeInTheDocument();

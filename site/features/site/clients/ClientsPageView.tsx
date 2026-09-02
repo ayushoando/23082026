@@ -46,14 +46,14 @@ export async function ClientsPageView() {
   ]);
   const clientsValue = formatKpiValuePlus(stats.clientOrganisations);
   const clientsJsonLd = buildPageJsonLd(SITE_URL, {
-    path: "/clients",
+    path: "/portfolio",
     title: `${copy.heroTitle} | One&Only`,
     description: copy.heroSubtitle,
     pageType: "CollectionPage",
   });
   const clientsBreadcrumbJsonLd = buildBreadcrumbJsonLd(SITE_URL, [
     { name: "Home", path: "/" },
-    { name: copy.heroTitle, path: "/clients" },
+    { name: copy.heroTitle, path: "/portfolio" },
   ]);
 
   return (

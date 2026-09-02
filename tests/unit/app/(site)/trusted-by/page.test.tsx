@@ -228,7 +228,7 @@ describe("app/(site)/trusted-by/page.tsx", () => {
       within(heroEl).getByRole("link", {
         name: TRUSTED_BY_PAGE_COPY.ctaSecondary,
       }),
-    ).toHaveAttribute("href", "/clients");
+    ).toHaveAttribute("href", "/portfolio");
 
     // Story section
     expect(screen.getByTestId("trusted-by-story")).toBeInTheDocument();
@@ -354,7 +354,7 @@ describe("app/(site)/trusted-by/page.tsx", () => {
       within(ctaBand).getByRole("link", {
         name: TRUSTED_BY_PAGE_COPY.ctaSecondary,
       }),
-    ).toHaveAttribute("href", "/clients");
+    ).toHaveAttribute("href", "/portfolio");
 
     expect(screen.getByTestId("mock-contact-teaser")).toBeInTheDocument();
     expect(

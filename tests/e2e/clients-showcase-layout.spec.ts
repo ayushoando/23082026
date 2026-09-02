@@ -10,7 +10,7 @@ const SHOWCASE = 'section[aria-labelledby="clients-showcase-heading"]';
 const WIDTHS = [320, 768, 1280, 1440, 1920] as const;
 
 async function gotoClients(page: Page) {
-  await page.goto("/clients", { waitUntil: "load" });
+  await page.goto("/portfolio", { waitUntil: "load" });
   await page.evaluate(() => document.fonts.ready);
   await expect(page.locator(`${SHOWCASE} [role="tablist"]`)).toBeVisible();
 }

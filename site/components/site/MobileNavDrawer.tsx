@@ -68,7 +68,7 @@ const DRAWER_SHORTCUTS = [
 const NAVIGATION_LABEL_KEYS: Record<string, string> = {
   Products: "products",
   Solutions: "solutions",
-  Clients: "clients",
+  Portfolio: "portfolio",
   Planner: "planner",
   About: "about",
   Contact: "contact",

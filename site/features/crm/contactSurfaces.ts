@@ -6,7 +6,7 @@ const ROUTES_WITH_CONTACT_TEASER = new Set([
   "/planning",
   "/privacy",
   "/products",
-  "/clients",
+  "/portfolio",
   "/refund-and-return-policy",
   "/service",
   "/showrooms",

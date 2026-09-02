@@ -100,7 +100,7 @@ export const NAV_PRIMARY_LINKS = [
   { label: "Home", href: "/" },
   { label: "Products", href: "/products", hasMega: true },
   { label: "Solutions", href: "/solutions" },
-  { label: "Clients", href: "/clients" },
+  { label: "Portfolio", href: "/portfolio" },
   { label: "Trusted by", href: "/trusted-by/" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },

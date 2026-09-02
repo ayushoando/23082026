@@ -1,46 +1,45 @@
 import type { Metadata } from "next";
 
-import { HomeMarketingLayout, HomeSection, HomeSectionInner } from "@/components/home/layout";
+import { HomeMarketingLayout } from "@/components/home/layout";
 import { ContactTeaser } from "@/components/shared/ContactTeaser";
-import { HOMEPAGE_FAQ_CONTENT } from "@/features/site/data/homepage";
+import { FaqPageView } from "@/components/faq/FaqPageView";
+import { FAQ_PAGE_COPY } from "@/features/site/data/routeCopy";
+import { FAQ_PAGE_METADATA } from "@/features/site/data/routeMetadata";
 import {
   buildBreadcrumbJsonLd,
   buildFaqJsonLd,
   buildPageJsonLd,
-  buildPageMetadata,
 } from "@/features/site/data/seo";
+import { withLocaleCopy } from "@/lib/i18n/withLocaleCopy";
 import { SITE_URL } from "@/lib/siteUrl";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
 const FAQ_PATH = "/faq";
-const FAQ_TITLE = "FAQ — Delivery, installation, and warranty";
-const FAQ_DESCRIPTION =
-  "Answers on where we deliver, installation, warranty, and multi-site office rollouts. Contact us if your question is not listed.";
 
-export const metadata: Metadata = buildPageMetadata(SITE_URL, {
-  title: FAQ_TITLE,
-  description: FAQ_DESCRIPTION,
-  path: FAQ_PATH,
-});
+async function loadFaqCopy() {
+  return withLocaleCopy({ ...FAQ_PAGE_COPY }, "faq");
+}
 
-export default function FaqPage() {
+export async function generateMetadata(): Promise<Metadata> {
+  return FAQ_PAGE_METADATA;
+}
+
+export default async function FaqPage() {
+  const copy = await loadFaqCopy();
   const faqJsonLd = buildFaqJsonLd(
     SITE_URL,
     FAQ_PATH,
-    HOMEPAGE_FAQ_CONTENT.items.map((item) => ({
-      question: item.q,
-      answer: item.a,
-    })),
+    copy.items.map((item) => ({ question: item.q, answer: item.a })),
   );
   const pageJsonLd = buildPageJsonLd(SITE_URL, {
     path: FAQ_PATH,
-    title: FAQ_TITLE,
-    description: FAQ_DESCRIPTION,
+    title: copy.metadataTitle,
+    description: copy.metadataDescription,
     pageType: "WebPage",
   });
   const breadcrumbJsonLd = buildBreadcrumbJsonLd(SITE_URL, [
     { name: "Home", path: "/" },
-    { name: "FAQ", path: FAQ_PATH },
+    { name: copy.heroTitle, path: FAQ_PATH },
   ]);
 
   return (
@@ -52,23 +51,19 @@ export default function FaqPage() {
           dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(jsonLd) }}
         />
       ))}
-      <HomeSection variant="white" spacing="md">
-        <HomeSectionInner>
-          <p className="home-kicker">Help</p>
-          <h1 className="home-heading">{HOMEPAGE_FAQ_CONTENT.titleLead}</h1>
-          <p className="home-lead">{FAQ_DESCRIPTION}</p>
-          <div className="tools-faq">
-            <dl>
-              {HOMEPAGE_FAQ_CONTENT.items.map((item) => (
-                <div key={item.q}>
-                  <dt className="home-faq-question">{item.q}</dt>
-                  <dd className="home-copy">{item.a}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-        </HomeSectionInner>
-      </HomeSection>
+      <FaqPageView
+        heroKicker={copy.heroKicker}
+        heroTitleLead={copy.heroTitleLead}
+        heroTitleAccent={copy.heroTitleAccent}
+        heroSubtitle={copy.heroSubtitle}
+        items={copy.items}
+        ctaKicker={copy.ctaKicker}
+        ctaTitleLead={copy.ctaTitleLead}
+        ctaTitleAccent={copy.ctaTitleAccent}
+        ctaDescription={copy.ctaDescription}
+        ctaPrimary={copy.ctaPrimary}
+        ctaSecondary={copy.ctaSecondary}
+      />
       <ContactTeaser />
     </HomeMarketingLayout>
   );

@@ -64,10 +64,10 @@ describe("SITE_NAV_LINKS", () => {
     expect(match?.href).toBe("/about");
   });
 
-  it("contains Clients page", () => {
-    const match = SITE_NAV_LINKS.find((l) => l.label === "Clients");
+  it("contains Portfolio page", () => {
+    const match = SITE_NAV_LINKS.find((l) => l.label === "Portfolio");
     expect(match).toBeDefined();
-    expect(match?.href).toBe("/clients");
+    expect(match?.href).toBe("/portfolio");
   });
 
   it("contains Planner page as marketing landing", () => {
@@ -99,7 +99,7 @@ describe("SITE_NAV_LINKS", () => {
     expect(SITE_HEADER_PRIMARY_LINKS.map((l) => l.label)).toEqual([
       "Products",
       "Solutions",
-      "Clients",
+      "Portfolio",
       "Planner",
       "About",
       "Contact",
@@ -237,7 +237,7 @@ describe("SITE_FOOTER_NAV", () => {
     const company = SITE_FOOTER_NAV.find((section) => section.heading === "Company");
     expect(company?.links.map((link) => link.label)).toEqual([
       "About Us",
-      "Clients",
+      "Portfolio",
       "Trusted By",
       "Sustainability",
       "Showrooms",

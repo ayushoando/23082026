@@ -220,7 +220,7 @@ export function AboutPageView({
             </h1>
             <div data-about-hero-reveal className="about-hero__actions">
               <MarketingCtaLink
-                href="/clients"
+                href="/portfolio"
                 label={heroCta}
                 surface="about-hero"
                 variant="primary"
@@ -364,7 +364,7 @@ export function AboutPageView({
                 {ctaPrimary}
               </MarketingCtaLink>
               <MarketingCtaLink
-                href="/clients"
+                href="/portfolio"
                 label={ctaSecondary}
                 surface="about-cta"
                 variant="outline-light"

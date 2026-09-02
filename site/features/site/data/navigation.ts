@@ -9,7 +9,7 @@ import { PRODUCT_SUITE } from "@/features/site/data/productSuite";
 export const SITE_NAV_LINKS = [
   { label: "Products", href: "/products", hasMega: true },
   { label: "Solutions", href: "/solutions" },
-  { label: "Clients", href: "/clients" },
+  { label: "Portfolio", href: "/portfolio" },
   /** Marketing planner landing (/planner). */
   { label: "Planner", href: PRODUCT_SUITE.planner.routes.landing },
   { label: "About", href: "/about" },
@@ -45,7 +45,7 @@ export const SITE_AUTH_LINK = { label: "Sign in", href: "/access" } as const;
 export const MOBILE_TABS = [
   { id: "catalog", label: "Catalog", href: "/products", icon: "SquaresFour" },
   { id: "planner", label: "Planner", href: PRODUCT_SUITE.planner.routes.landing, icon: "PencilSimple" },
-  { id: "clients", label: "Clients", href: "/clients", icon: "UsersThree" },
+  { id: "clients", label: "Portfolio", href: "/portfolio", icon: "UsersThree" },
   { id: "about", label: "About Us", href: "/about", icon: "Buildings" },
   { id: "account", label: "Account", href: SITE_AUTH_LINK.href, icon: "UserCircle" },
 ] as const;
@@ -57,7 +57,7 @@ export function activeTabFor(pathname: string): MobileTabId | null {
   const p = (pathname || "/").replace(/\/+$/, "") || "/";
   if (p.startsWith("/products")) {return "catalog";}
   if (p.startsWith("/ooplanner") || p.startsWith("/planner")) {return "planner";}
-  if (p.startsWith("/clients") || p.startsWith("/trusted-by")) {return "clients";}
+  if (p.startsWith("/portfolio") || p.startsWith("/clients") || p.startsWith("/trusted-by")) {return "clients";}
   if (p.startsWith("/about")) {return "about";}
   if (["/access", "/dashboard", "/portal", "/login"].some((s) => p.startsWith(s))) {
     return "account";
@@ -90,7 +90,7 @@ export const SITE_NAV_FEATURED_CARDS = [
 export const SITE_NAV_SEARCH_FALLBACK_LINKS = [
   { href: "/products", label: "All Products" },
   { href: "/solutions", label: "Solutions" },
-  { href: "/clients", label: "Clients" },
+  { href: "/portfolio", label: "Portfolio" },
   { href: PRODUCT_SUITE.planner.routes.landing, label: "Planner" },
   { href: PRODUCT_SUITE.planner.routes.help, label: "Planner help" },
   { href: "/trusted-by", label: "Trusted By" },
@@ -143,7 +143,7 @@ export const SITE_FOOTER_NAV = buildFooterNav([
     heading: "Company",
     links: [
       { href: "/about", label: "About Us" },
-      { href: "/clients", label: "Clients" },
+      { href: "/portfolio", label: "Portfolio" },
       { href: "/trusted-by", label: "Trusted By" },
       { href: "/sustainability", label: "Sustainability" },
       { href: "/showrooms", label: "Showrooms" },

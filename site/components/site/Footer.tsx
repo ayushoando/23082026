@@ -49,7 +49,7 @@ const footerSocialClass = `site-footer__social ${footerInteractiveClass} inline-
 const FOOTER_LABEL_KEYS: Record<string, string> = {
   "All Products": "navigation.allProducts",
   Solutions: "navigation.solutions",
-  Clients: "navigation.clients",
+  Portfolio: "navigation.portfolio",
   Planner: "navigation.planner",
   "Planner help": "navigation.plannerHelp",
   "About Us": "navigation.about",

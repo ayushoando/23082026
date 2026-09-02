@@ -62,7 +62,7 @@ const STATIC_PATH_LABELS: Record<string, string> = {
   "/products": "All products",
   "/solutions": "Solutions overview",
   "/about": "About",
-  "/clients": "Clients",
+  "/portfolio": "Portfolio",
   "/contact": "Contact",
   "/service": "Service & after-sales",
   "/showrooms": "Showrooms",
@@ -113,7 +113,7 @@ const ADMIN_PATH_LABELS: Record<string, string> = {
 
 const COMPANY_SERVICE_PATHS = [
   "/about",
-  "/clients",
+  "/portfolio",
   "/contact",
   "/service",
   "/showrooms",

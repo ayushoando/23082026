@@ -148,7 +148,7 @@ export function HeaderSearchPanel({
                 {t("solutions")}
               </Link>
               <Link
-                href="/clients"
+                href="/portfolio"
                 onClick={onSearchResultClick}
                 className="shell-list-link flex items-center justify-between rounded-xl px-3 py-2 typ-body"
               >

@@ -73,8 +73,8 @@ describe("MobileAppShell", () => {
       within(tabBar).getByRole("link", { name: "Planner" }),
     ).toHaveAttribute("href", "/planner");
     expect(
-      within(tabBar).getByRole("link", { name: "Clients" }),
-    ).toHaveAttribute("href", "/clients");
+      within(tabBar).getByRole("link", { name: "Portfolio" }),
+    ).toHaveAttribute("href", "/portfolio");
     expect(within(tabBar).getByRole("link", { name: "About" })).toHaveAttribute(
       "href",
       "/about",
@@ -142,11 +142,11 @@ describe("MobileAppShell", () => {
     );
 
     const tabBar = screen.getByRole("navigation", { name: /Mobile primary/i });
-    fireEvent.click(within(tabBar).getByRole("link", { name: "Clients" }));
+    fireEvent.click(within(tabBar).getByRole("link", { name: "Portfolio" }));
     expect(trackSiteTabSelected).toHaveBeenCalledWith({
       pathname: "/products",
       tab: "clients",
-      destination: "/clients",
+      destination: "/portfolio",
     });
   });
 });

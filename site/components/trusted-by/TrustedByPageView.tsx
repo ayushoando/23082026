@@ -279,7 +279,7 @@ export function TrustedByPageView({
 
             <div data-trusted-hero-reveal className="trusted-by-hero__actions">
               <MarketingCtaLink
-                href="/clients"
+                href="/portfolio"
                 label={ctaSecondary}
                 surface="trusted-by-hero"
                 variant="primary"
@@ -398,7 +398,7 @@ export function TrustedByPageView({
             description={ctaDescription}
             actions={[
               { href: "/contact", label: ctaPrimary, variant: "primary" },
-              { href: "/clients", label: ctaSecondary, variant: "outline-light" },
+              { href: "/portfolio", label: ctaSecondary, variant: "outline-light" },
             ]}
           />
         </HomeSectionInner>

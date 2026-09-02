@@ -68,7 +68,7 @@ export const SEO01_STATIC_METADATA: ReadonlyArray<{
   { path: "/terms", metadata: TERMS_PAGE_METADATA },
   { path: "/refund-and-return-policy", metadata: REFUND_POLICY_PAGE_METADATA },
   { path: "/sustainability", metadata: SUSTAINABILITY_PAGE_METADATA },
-  { path: "/clients", metadata: CLIENTS_PAGE_METADATA },
+  { path: "/portfolio", metadata: CLIENTS_PAGE_METADATA },
   { path: "/service", metadata: SERVICE_PAGE_METADATA },
   {
     path: "/sitemap",

@@ -166,12 +166,52 @@ export const TRUSTED_BY_PAGE_COPY = {
   ctaSecondary: "See installs",
 } as const;
 
-export const CLIENTS_PAGE_COPY = {
-  heroTitle: "Clients",
-  heroTitleLead: "Trusted",
-  heroTitleAccent: "clients.",
+export const FAQ_PAGE_COPY = {
+  heroKicker: "Help",
+  heroTitle: "FAQ",
+  heroTitleLead: "Frequently asked",
+  heroTitleAccent: "questions",
   heroSubtitle:
-    "Executed workplace deliveries and selected client proof across government, finance, education, energy, and manufacturing.",
+    "Delivery, installation, warranty, and how we work across India. If your question is not listed, contact the team.",
+  metadataTitle: "FAQ | Office furniture delivery and installation",
+  metadataDescription:
+    "Answers on where One&Only delivers, installation, warranty, and multi-site office rollouts across India.",
+  ctaKicker: "Still need a person",
+  ctaTitleLead: "Ask the",
+  ctaTitleAccent: "team.",
+  ctaDescription: "City, scope, and timing. We reply by phone or email.",
+  ctaPrimary: "Contact us",
+  ctaSecondary: "Planning service",
+  items: [
+    {
+      q: "Which cities do you serve?",
+      a: "We deliver commercial office furniture across India, including multi-city and multi-floor rollouts. Logistics are coordinated by our team — no third-party intermediaries.",
+    },
+    {
+      q: "How long does delivery and installation take?",
+      a: "Scope and design is completed within 7 working days of brief sign-off. Delivery and installation timelines depend on order volume and are agreed in writing before production begins.",
+    },
+    {
+      q: "Is installation included in the price?",
+      a: "Yes. All orders include delivery to site and supervised installation by our team. Post-installation snag support is also covered.",
+    },
+    {
+      q: "What warranty do you offer?",
+      a: "Products carry manufacturer warranty (typically 2–5 years depending on the range). After-sales support is managed by our team directly.",
+    },
+    {
+      q: "Can you handle large or phased office rollouts?",
+      a: "Yes. We have executed government and corporate rollouts across multiple floors and sites. Share a brief through planning or contact and we will route the right next step.",
+    },
+  ],
+} as const;
+
+export const CLIENTS_PAGE_COPY = {
+  heroTitle: "Portfolio",
+  heroTitleLead: "Workplace",
+  heroTitleAccent: "projects.",
+  heroSubtitle:
+    "Office furniture projects and workplace fit-outs across government, finance, education, energy, and manufacturing.",
   heroSubtitleTemplate:
     "{clients} organisations represented across government, finance, education, energy, and manufacturing.",
   heroBackgroundImage: "/assets/marketing/clients/DMRC/dmrc-1.webp",

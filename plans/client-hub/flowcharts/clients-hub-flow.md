@@ -58,7 +58,8 @@ The hierarchy below maps public/client page routes only. Root-level routes are s
 │
 ├── Proof
 │   ├── /trusted-by                                 public proof page
-│   └── /clients                                    public proof/portfolio page
+│   └── /portfolio                                  public proof page
+│       /clients                                    redirect alias → /portfolio
 │
 └── Client access and workspaces (not public navigation)
     ├── /access                                    auth entry; public utility/noindex intent
@@ -79,7 +80,7 @@ The hierarchy below maps public/client page routes only. Root-level routes are s
 | Public content | `/`, `/about`, `/career`, `/contact`, `/planning`, `/solutions`, `/solutions/[category]`, `/showrooms`, `/service`, `/downloads`, `/sustainability`, `/privacy`, `/terms`, `/refund-and-return-policy`, `/sitemap` | Public page or dynamic public page pattern | Public/indexable intent is source classification only |
 | Planner marketing | `/planner`, `/planner/help`, `/planner/features`, `/planner/features/[slug]` | Public marketing/help and dynamic feature page pattern | Separate from the interactive `/ooplanner` app |
 | Products | `/products`, six concrete category pages, and six category-specific `[product]` patterns | Public catalog page and data-driven detail patterns | Concrete product records are not fabricated or enumerated here |
-| Proof | `/trusted-by`, `/clients` | Flat public proof pages | No `/clients/work` child route is modeled |
+| Proof | `/trusted-by`, `/portfolio` | Flat public proof pages | `/clients` redirects to `/portfolio`. No `/clients/work` child |
 | Client access | `/access`, `/portal`, `/portal/[id]`, `/portal/guest`, `/portal/guest/view/[id]`, `/dashboard` | Auth/protected client pages with noindex intent | Not public navigation; session and authorization are unverified |
 | Planner app | `/ooplanner`, `/ooplanner/projects`, `/ooplanner/projects/[id]` | Interactive app pages with noindex/authenticated intent | Guest/member behavior and saved records are unverified |
 
@@ -92,7 +93,7 @@ The six category pages use the canonical live source vocabulary: `seating`, `wor
 These are static, intended journey relationships used to explain how page families relate. They are not observed browser transitions or proof of a static inbound link.
 
 1. **Discover → specify → enquire:** `/` → `/products` → one of the six category pages → that category's `[product]` detail pattern; a visitor may continue to `/compare`, `/quote-cart`, or `/contact`.
-2. **Proof → conversation:** `/` or `/trusted-by` may lead to `/clients`; either proof sibling may continue to `/contact` or `/planning`. The public proof surface is curated, not an exhaustive client database.
+2. **Proof → conversation:** `/` or `/trusted-by` may lead to `/portfolio`; either proof sibling may continue to `/contact` or `/planning`. The public proof surface is curated, not an exhaustive client database.
 3. **Planning-led entry:** `/planning` may lead to `/contact`; `/planner` may lead to `/planner/features` or `/planner/help`, then to `/ooplanner` when a visitor is ready to use the workspace.
 4. **Support and resources:** `/service` and `/downloads` may lead to `/contact` or `/planning` for a human-supported next step.
 5. **Authenticated customer:** `/access` is the canonical auth entry; the source map groups `/dashboard`, `/portal`, and `/portal/[id]` as client workspace destinations. Session transitions and authorization are not proven here.
@@ -119,7 +120,7 @@ These are approved redirect-only groupings. An alias is not a page node in the p
 |---|---|---|
 | `/downloads` | `/catalog`, `/brochure`, `/download-brochure`, `/workstations/configurator` | Retired catalog/brochure aliases |
 | `/about` | `/news` | Retired newsroom |
-| `/clients` | `/gallery`, `/portfolio`, `/projects`, `/social` | Consolidated client proof |
+| `/portfolio` | `/clients`, `/gallery`, `/projects`, `/social` | Consolidated workplace proof |
 | `/service` | `/support-ivr`, `/tracking` | After-sales |
 | `/products` | `/templates`, `/portal/svg-catalog`, `/portal/svg-catalog/[slug]` | Canonical catalog |
 | `/terms` | `/imprint` | Legal (`?section=imprint`) |

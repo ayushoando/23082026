@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { SITE_BRAND } from "@/features/site/data/brand";
 import {
+  FAQ_PAGE_COPY,
   LEGAL_PAGE_COPY,
   PRODUCTS_PAGE_COPY,
   SOLUTIONS_PAGE_COPY,
@@ -117,6 +118,18 @@ export const PLANNING_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
   ],
 });
 
+export const FAQ_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
+  title: `${FAQ_PAGE_COPY.metadataTitle} | One&Only`,
+  description: FAQ_PAGE_COPY.metadataDescription,
+  path: "/faq",
+  keywords: [
+    "office furniture FAQ India",
+    "office furniture delivery India",
+    "office furniture installation warranty",
+    "workplace furniture rollout",
+  ],
+});
+
 export const DOWNLOADS_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
   title: `${DOWNLOADS_PAGE_COPY.metadataTitle} | One&Only`,
   description: DOWNLOADS_PAGE_COPY.metadataDescription,
@@ -186,17 +199,17 @@ export const SHOWROOMS_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
 });
 
 export const CLIENTS_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
-  title: "Trusted clients | Office furniture delivery | One&Only",
+  title: "Office furniture portfolio | Workplace projects | One&Only",
   description:
-    "Workplace installations for government, finance, manufacturing, and institutions across India.",
-  path: "/clients",
+    "Office furniture projects and workplace fit-outs for government, finance, manufacturing, and institutions across India.",
+  path: "/portfolio",
   image: "/assets/marketing/hero/pages/Planner-oneandonly-bright.webp",
   keywords: [
-    "office furniture clients India",
-    "workspace delivery clients India",
+    "office furniture portfolio India",
+    "office furniture projects India",
+    "workplace fit-out photos",
     "enterprise office furniture India",
     "DMRC Titan TVS office furniture",
-    "completed office fit-out photos",
   ],
 });
 

@@ -8,7 +8,7 @@ import { test, expect, type Page } from "@playwright/test";
 const SHOWCASE = 'section[aria-labelledby="clients-showcase-heading"]';
 
 async function gotoClients(page: Page) {
-  await page.goto("/clients", { waitUntil: "load" });
+  await page.goto("/portfolio", { waitUntil: "load" });
   await page.evaluate(() => document.fonts.ready);
   await expect(page.locator(`${SHOWCASE} [role="tablist"]`)).toBeVisible();
 }

@@ -84,7 +84,7 @@ describe("navigation site-data helper", () => {
       expect(MOBILE_TABS.map((tab) => tab.label)).toEqual([
         "Catalog",
         "Planner",
-        "Clients",
+        "Portfolio",
         "About Us",
         "Account",
       ]);
@@ -94,7 +94,7 @@ describe("navigation site-data helper", () => {
       const byId = Object.fromEntries(MOBILE_TABS.map((tab) => [tab.id, tab]));
       expect(byId.catalog.href).toBe("/products");
       expect(byId.planner.href).toBe(PRODUCT_SUITE.planner.routes.landing);
-      expect(byId.clients.href).toBe("/clients");
+      expect(byId.clients.href).toBe("/portfolio");
       expect(byId.about.href).toBe("/about");
       expect(byId.account.href).toBe(SITE_AUTH_LINK.href);
     });
@@ -104,6 +104,7 @@ describe("navigation site-data helper", () => {
     it("resolves primary destinations and trailing slashes", () => {
       expect(activeTabFor("/")).toBeNull();
       expect(activeTabFor("")).toBeNull();
+      expect(activeTabFor("/portfolio")).toBe("clients");
       expect(activeTabFor("/clients")).toBe("clients");
       expect(activeTabFor("/products")).toBe("catalog");
       expect(activeTabFor("/products/seating/")).toBe("catalog");

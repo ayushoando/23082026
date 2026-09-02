@@ -39,7 +39,7 @@ const HEADER_MORE_LINKS = [...SITE_HEADER_MORE_LINKS];
 const NAVIGATION_LABEL_KEYS: Record<string, string> = {
   Products: "products",
   Solutions: "solutions",
-  Clients: "clients",
+  Portfolio: "portfolio",
   Planner: "planner",
   About: "about",
   Contact: "contact",

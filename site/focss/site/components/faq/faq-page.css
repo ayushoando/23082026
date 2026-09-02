@@ -1,0 +1,52 @@
+/* FAQ route — accordion on marketing paper */
+
+.faq-list {
+  margin-top: var(--space-10);
+  border-top: 1px solid var(--border-soft);
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.faq-item summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  min-height: 2.75rem;
+  padding-block: var(--space-4);
+  font-family: var(--font-display);
+  font-size: var(--type-title-sm-size);
+  font-weight: var(--font-weight-display-regular);
+  letter-spacing: var(--type-letter-title);
+  line-height: var(--type-leading-h3);
+  color: var(--text-heading);
+  cursor: pointer;
+  list-style: none;
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-item summary::after {
+  content: "";
+  flex: none;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-inline-end: 1.5px solid var(--text-heading);
+  border-bottom: 1.5px solid var(--text-heading);
+  transform: rotate(45deg);
+  transition: transform var(--motion-fast) var(--ease-standard);
+}
+
+.faq-item[open] summary::after {
+  transform: rotate(-135deg);
+}
+
+.faq-item p {
+  margin: 0;
+  max-width: 40rem;
+  padding-bottom: var(--space-6);
+}

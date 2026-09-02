@@ -120,7 +120,7 @@ export function MobileAppShell({
               : tab.id === "planner"
                 ? "navigation.planner"
                 : tab.id === "clients"
-                  ? "navigation.clients"
+                  ? "navigation.portfolio"
                   : tab.id === "about"
                     ? "navigation.about"
                     : "navigation.signIn",
