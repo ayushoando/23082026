@@ -432,7 +432,7 @@ export function SiteHeader() {
                       onMouseEnter={closeMegaMenu}
                       className={navClassName}
                     >
-                      {link.label}
+                      {label}
                     </PlannerLaunchLink>
                   );
                 }
@@ -444,7 +444,7 @@ export function SiteHeader() {
                     onMouseEnter={closeMegaMenu}
                     className={navClassName}
                   >
-                    {link.label}
+                    {label}
                   </Link>
                 );
               })}

@@ -222,14 +222,13 @@ describe("SITE_FOOTER_NAV", () => {
     expect(products?.links.map((link) => link.label)).toEqual([
       "All Products",
       "Solutions",
-      "Clients",
       "Planner",
       "Planner help",
-      "Member dashboard",
     ]);
     const company = SITE_FOOTER_NAV.find((section) => section.heading === "Company");
     expect(company?.links.map((link) => link.label)).toEqual([
       "About Us",
+      "Clients",
       "Trusted By",
       "Sustainability",
       "Showrooms",
@@ -238,6 +237,7 @@ describe("SITE_FOOTER_NAV", () => {
     const services = SITE_FOOTER_NAV.find((section) => section.heading === "Services");
     expect(services?.links.map((link) => link.label)).toEqual([
       "Contact",
+      "Planning",
       "After Sales",
       "Downloads",
     ]);
@@ -254,7 +254,7 @@ describe("SITE_FOOTER_NAV", () => {
     expect(labels.some((label) => label.trim().toLowerCase() === "admin")).toBe(false);
   });
 
-  it("never links public nav or footer to Portal or bare Sign in", () => {
+  it("never links public nav or footer to Portal, dashboard, or bare Sign in", () => {
     const hrefs = [
       ...SITE_NAV_LINKS.map((l) => l.href),
       ...SITE_FOOTER_NAV.flatMap((s) => s.links.map((l) => l.href)),
@@ -266,8 +266,11 @@ describe("SITE_FOOTER_NAV", () => {
       ...SITE_NAV_SEARCH_FALLBACK_LINKS.map((l) => l.label),
     ];
     expect(hrefs.some((h) => /^\/portal(\/|$|\?)/i.test(h))).toBe(false);
+    expect(hrefs.some((h) => /^\/dashboard(\/|$|\?)/i.test(h))).toBe(false);
+    expect(hrefs.some((h) => /^\/ooplanner(\/|$|\?)/i.test(h))).toBe(false);
     expect(labels.some((l) => /^portal$/i.test(l.trim()))).toBe(false);
     expect(labels.some((l) => /^sign in$/i.test(l.trim()))).toBe(false);
+    expect(labels.some((l) => /^member dashboard$/i.test(l.trim()))).toBe(false);
   });
 });
 

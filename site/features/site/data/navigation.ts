@@ -36,7 +36,7 @@ export const SITE_AUTH_LINK = { label: "Sign in", href: "/access" } as const;
 export const MOBILE_TABS = [
   { id: "home", label: "Home", href: "/", icon: "House" },
   { id: "catalog", label: "Catalog", href: "/products", icon: "SquaresFour" },
-  { id: "planner", label: "Planner", href: PRODUCT_SUITE.planner.routes.guest, icon: "PencilSimple" },
+  { id: "planner", label: "Planner", href: PRODUCT_SUITE.planner.routes.landing, icon: "PencilSimple" },
   { id: "about", label: "About Us", href: "/about", icon: "Buildings" },
   { id: "account", label: "Account", href: SITE_AUTH_LINK.href, icon: "UserCircle" },
 ] as const;
@@ -84,7 +84,7 @@ export const SITE_NAV_SEARCH_FALLBACK_LINKS = [
   { href: "/clients", label: "Clients" },
   { href: PRODUCT_SUITE.planner.routes.landing, label: "Planner" },
   { href: PRODUCT_SUITE.planner.routes.help, label: "Planner help" },
-  { href: "/trusted-by/", label: "Trusted By" },
+  { href: "/trusted-by", label: "Trusted By" },
   { href: "/sustainability", label: "Sustainability" },
   { href: "/contact", label: "Contact" },
 ] as const;
@@ -116,8 +116,8 @@ export function buildFooterNav(
 }
 
 /**
- * Public footer — all secondary destinations as direct links.
- * No Admin, Portal, or Sign in.
+ * Public footer — secondary destinations as direct links.
+ * Client access (/access, /portal, /dashboard, /ooplanner) stays off this list.
  */
 export const SITE_FOOTER_NAV = buildFooterNav([
   {
@@ -125,17 +125,16 @@ export const SITE_FOOTER_NAV = buildFooterNav([
     links: [
       { href: "/products", label: "All Products" },
       { href: "/solutions", label: "Solutions" },
-      { href: "/clients", label: "Clients" },
       { href: PRODUCT_SUITE.planner.routes.landing, label: "Planner" },
       { href: PRODUCT_SUITE.planner.routes.help, label: "Planner help" },
-      { href: PRODUCT_SUITE.shared.routes.dashboard, label: "Member dashboard" },
     ],
   },
   {
     heading: "Company",
     links: [
       { href: "/about", label: "About Us" },
-      { href: "/trusted-by/", label: "Trusted By" },
+      { href: "/clients", label: "Clients" },
+      { href: "/trusted-by", label: "Trusted By" },
       { href: "/sustainability", label: "Sustainability" },
       { href: "/showrooms", label: "Showrooms" },
       { href: "/career", label: "Careers" },
@@ -145,6 +144,7 @@ export const SITE_FOOTER_NAV = buildFooterNav([
     heading: "Services",
     links: [
       { href: "/contact", label: "Contact" },
+      { href: "/planning", label: "Planning" },
       { href: "/service", label: "After Sales" },
       { href: "/downloads", label: "Downloads" },
     ],

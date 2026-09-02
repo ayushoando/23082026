@@ -90,11 +90,11 @@ describe("navigation site-data helper", () => {
       ]);
     });
 
-    it("points Planner at the guest workspace and Account at sign-in", () => {
+    it("points Planner at the marketing landing and Account at sign-in", () => {
       const byId = Object.fromEntries(MOBILE_TABS.map((tab) => [tab.id, tab]));
       expect(byId.home.href).toBe("/");
       expect(byId.catalog.href).toBe("/products");
-      expect(byId.planner.href).toBe(PRODUCT_SUITE.planner.routes.guest);
+      expect(byId.planner.href).toBe(PRODUCT_SUITE.planner.routes.landing);
       expect(byId.about.href).toBe("/about");
       expect(byId.account.href).toBe(SITE_AUTH_LINK.href);
     });
