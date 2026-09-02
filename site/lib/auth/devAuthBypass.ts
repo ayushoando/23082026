@@ -62,7 +62,24 @@ export function isLoopbackHost(host: string | null | undefined): boolean {
   if (!host) {
     return false;
   }
-  const bare = host.trim().toLowerCase().replace(/:\d+$/, "").replace(/^\[|\]$/g, "");
+  const trimmed = host.trim().toLowerCase();
+  if (!trimmed) {
+    return false;
+  }
+  // Bracketed IPv6 (`[::1]` or `[::1]:3000`): extract the literal first so the
+  // port-strip below cannot mangle it.
+  const bracketed = trimmed.match(/^\[(.+)\](?::\d+)?$/);
+  let bare: string;
+  if (bracketed) {
+    bare = bracketed[1];
+  } else if ((trimmed.match(/:/g) ?? []).length === 1) {
+    // Exactly one colon → `host:port`; strip the port.
+    bare = trimmed.replace(/:\d+$/, "");
+  } else {
+    // Unbracketed multi-colon → bare IPv6 literal (e.g. `::1`); keep as-is.
+    bare = trimmed;
+  }
+  bare = bare.replace(/^\[|\]$/g, "");
   if (!bare) {
     return false;
   }

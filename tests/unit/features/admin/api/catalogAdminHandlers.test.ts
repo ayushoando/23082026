@@ -216,4 +216,40 @@ describe("catalogAdminHandlers", () => {
     );
     expect(responseBody(unavailable)).toBeDefined();
   });
+
+  // 28.14 — PG unique violation on the standard-catalog create path must
+  // surface as 409 RESOURCE_EXISTS (configurator path behavior), not 500.
+  it("maps 23505 duplicate on standard create to 409", async () => {
+    const validBody = {
+      name: "Dup Desk",
+      category: "desks",
+      width_mm: 1200,
+      depth_mm: 600,
+      height_mm: 750,
+      price: 1000,
+      mesh_type: "box",
+      image_url: "/desk.png",
+      visible: true,
+    };
+    createAdminServiceClient.mockReturnValue(
+      makeSupabase({
+        insert: {
+          data: null,
+          error: {
+            message: 'duplicate key value violates unique constraint "planner_managed_products_slug_key"',
+            code: "23505",
+          },
+        },
+      }),
+    );
+    const res = await createStandardCatalog(
+      new NextRequest("http://localhost/api/catalogs/standard", {
+        method: "POST",
+        body: JSON.stringify(validBody),
+      }),
+    );
+    expect(responseStatus(res)).toBe(409);
+    expect(JSON.stringify(responseBody(res))).toContain("RESOURCE_EXISTS");
+    expect(JSON.stringify(responseBody(res))).toContain("already exists");
+  });
 });

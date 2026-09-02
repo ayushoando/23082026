@@ -1,8 +1,7 @@
 # Remaining — Workers & edge (`workers/oando-worker-proxy`)
-**Date:** 2026-09-01
+**Date:** 2026-09-02
 
-- 12.1 (Medium): hardcoded origin in `wrangler.toml:12` + fallback in `src/index.js:188` — open, not started.
-- 12.2 (Medium): seating SKU→material slug sets and `/images/` remap still embedded in worker code (`src/index.js:76-95,127-137`) — open, not started.
-- 12.3: stale `compatibility_date = "2024-01-01"`, no `[env.production]`/routes config — open, not started.
-- 12.6: npm `package-lock.json` in pnpm repo + wrangler version skew — open, not started.
+- **12.2 (Medium):** seating SKU→material slug sets (`seatingLeather/Cafe/Fabric`, `src/index.js:76-95`) and the `/images/` remap (`src/index.js:127-137`) are still embedded in worker code — re-verified on disk 2026-09-02 (line ranges unchanged; the 12.1 edit only touched the origin branch below them). Real fix needs a shared data source (generated manifest JSON shipped with the worker package, or an R2/KV-hosted map) so catalog knowledge stops duplicating into the edge — a product/tooling decision, not a code-only refactor; intra-worker extraction alone would not remove the drift.
+- **12.3 (Med-low):** `compatibility_date = "2024-01-01"` (wrangler.toml:3) and no `[env.production]`/routes config — open. Bumping the compatibility date changes runtime behavior and can only be validated by a deploy (NO deploys this session; CF-TOKEN-01 still stands). Needs an authorized deploy window; routes config needs the owner's dashboard/zone facts.
+- **12.6 residual (Low):** wrangler pin skew — worker `package-lock.json` resolves 4.123.0 vs root pnpm `wrangler@4.127.1` (same major; worker range `^4.123.0` already admits 4.127.1). Realignment = bump the worker devDependency and regenerate its npm lockfile (`npm install` in `workers/oando-worker-proxy/`) — dependency installs are outside this session's allowed command set, and editing the range without regenerating the lock would break the documented `npm ci` flow.
 - 12.4 / 12.5: info-positive/informational (R2-first caching, HSTS, security.txt contact disclosure) — no action required.

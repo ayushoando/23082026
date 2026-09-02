@@ -833,23 +833,38 @@ const Studio = () => {
     }
   }, [fabricRef]);
 
+  // Raster/SVG exports are wrapped in try/catch (28.8): a tainted-canvas
+  // SecurityError from a cross-origin underlay otherwise escapes as an
+  // uncaught throw; `withGridHidden` still restores grid visibility.
   const doExportPNG = useCallback(() => {
-    const url = withGridHidden((c) => exportTightPNG(c, 3) || exportPNG(c));
-    if (!url) return;
-    downloadDataUrl(url, "furniture.png");
-    showToast("Exported PNG");
+    try {
+      const url = withGridHidden((c) => exportTightPNG(c, 3) || exportPNG(c));
+      if (!url) return;
+      downloadDataUrl(url, "furniture.png");
+      showToast("Exported PNG");
+    } catch (e) {
+      showToast(`PNG export failed: ${getErrorMessage(e)}`, "error");
+    }
   }, [showToast, withGridHidden]);
   const doExportJPG = useCallback(() => {
-    const url = withGridHidden((c) => exportTightJPEG(c, 3) || exportJPEG(c));
-    if (!url) return;
-    downloadDataUrl(url, "furniture.jpg");
-    showToast("Exported JPG");
+    try {
+      const url = withGridHidden((c) => exportTightJPEG(c, 3) || exportJPEG(c));
+      if (!url) return;
+      downloadDataUrl(url, "furniture.jpg");
+      showToast("Exported JPG");
+    } catch (e) {
+      showToast(`JPG export failed: ${getErrorMessage(e)}`, "error");
+    }
   }, [showToast, withGridHidden]);
   const doExportSVG = useCallback(() => {
-    const result = withGridHidden((c) => exportSVG(c));
-    if (!result) return;
-    downloadDataUrl(result.dataUrl, "furniture.svg");
-    showToast("Exported SVG");
+    try {
+      const result = withGridHidden((c) => exportSVG(c));
+      if (!result) return;
+      downloadDataUrl(result.dataUrl, "furniture.svg");
+      showToast("Exported SVG");
+    } catch (e) {
+      showToast(`SVG export failed: ${getErrorMessage(e)}`, "error");
+    }
   }, [showToast, withGridHidden]);
   const doExportJSON = useCallback(() => {
     const c = fabricRef.current;

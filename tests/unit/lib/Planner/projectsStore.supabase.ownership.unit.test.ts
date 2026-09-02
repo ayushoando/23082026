@@ -9,10 +9,21 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("server-only", () => ({}));
 
-type Builder = Record<string, ReturnType<typeof vi.fn>>;
+type Builder = {
+  select: ReturnType<typeof vi.fn>;
+  eq: ReturnType<typeof vi.fn>;
+  upsert: ReturnType<typeof vi.fn>;
+  delete: ReturnType<typeof vi.fn>;
+  order: ReturnType<typeof vi.fn>;
+  limit: ReturnType<typeof vi.fn>;
+  single: ReturnType<typeof vi.fn>;
+  maybeSingle: ReturnType<typeof vi.fn>;
+  then: Promise<unknown>["then"];
+};
 
 function makeBuilder(terminal: { data: unknown; error: unknown }): Builder {
-  // Every method chains and the awaited result is `terminal`.
+  // Every method chains; awaiting the builder resolves `terminal` (the real
+  // PostgREST builder is thenable).
   const b: Builder = {
     select: vi.fn(() => b),
     eq: vi.fn(() => b),
@@ -20,8 +31,10 @@ function makeBuilder(terminal: { data: unknown; error: unknown }): Builder {
     delete: vi.fn(() => b),
     order: vi.fn(() => b),
     limit: vi.fn(() => b),
-    single: vi.fn(async () => terminal),
-    maybeSingle: vi.fn(async () => terminal),
+    single: vi.fn(() => b),
+    maybeSingle: vi.fn(() => b),
+    then: (onFulfilled, onRejected) =>
+      Promise.resolve(terminal).then(onFulfilled, onRejected),
   };
   return b;
 }
@@ -65,10 +78,7 @@ beforeEach(() => {
 
 describe("writeProjectToSupabase ownership (28.12)", () => {
   it("writes when the existing row belongs to the caller", async () => {
-    plansBuilder.maybeSingle.mockResolvedValue({
-      data: { id: projectId, user_id: alice },
-      error: null,
-    });
+    plansBuilder = makeBuilder({ data: planRow(alice), error: null });
     const saved = await writeProjectToSupabase(
       { id: projectId, name: "Mine", canvas_json: { objects: [] } },
       { userId: alice },
@@ -78,10 +88,7 @@ describe("writeProjectToSupabase ownership (28.12)", () => {
   });
 
   it("refuses to overwrite another user's plan (client-supplied foreign id)", async () => {
-    plansBuilder.maybeSingle.mockResolvedValue({
-      data: { id: projectId, user_id: bob },
-      error: null,
-    });
+    plansBuilder = makeBuilder({ data: planRow(bob), error: null });
     await expect(
       writeProjectToSupabase(
         { id: projectId, name: "Hijack", canvas_json: { objects: [] } },
@@ -92,7 +99,8 @@ describe("writeProjectToSupabase ownership (28.12)", () => {
   });
 
   it("allows creating a brand-new plan (no existing row)", async () => {
-    plansBuilder.maybeSingle.mockResolvedValue({ data: null, error: null });
+    plansBuilder = makeBuilder({ data: planRow(alice), error: null });
+    // Pre-check sees no row; the write path then returns the upserted row.
     await writeProjectToSupabase(
       { id: projectId, name: "New", canvas_json: { objects: [] } },
       { userId: alice },
@@ -100,11 +108,8 @@ describe("writeProjectToSupabase ownership (28.12)", () => {
     expect(plansBuilder.upsert).toHaveBeenCalled();
   });
 
-  it("propagates the ownership pre-check error", async () => {
-    plansBuilder.maybeSingle.mockResolvedValue({
-      data: null,
-      error: { message: "select failed" },
-    });
+  it("propagates the ownership pre-check error without writing", async () => {
+    plansBuilder = makeBuilder({ data: null, error: { message: "select failed" } });
     await expect(
       writeProjectToSupabase({ id: projectId, name: "X" }, { userId: alice }),
     ).rejects.toThrow(/select failed/);
@@ -114,7 +119,7 @@ describe("writeProjectToSupabase ownership (28.12)", () => {
 
 describe("deleteProjectFromSupabase ownership (28.12)", () => {
   it("scopes the delete to the caller's user_id", async () => {
-    plansBuilder.single.mockResolvedValue({ data: [{ id: projectId }], error: null });
+    plansBuilder = makeBuilder({ data: [{ id: projectId }], error: null });
     const ok = await deleteProjectFromSupabase(projectId, { userId: alice });
     expect(ok).toBe(true);
     const eqCalls = plansBuilder.eq.mock.calls.map((c) => [c[0], c[1]]);
@@ -123,7 +128,7 @@ describe("deleteProjectFromSupabase ownership (28.12)", () => {
   });
 
   it("stays unrestricted when no userId is supplied (admin sweep)", async () => {
-    plansBuilder.single.mockResolvedValue({ data: [{ id: projectId }], error: null });
+    plansBuilder = makeBuilder({ data: [{ id: projectId }], error: null });
     await expect(deleteProjectFromSupabase(projectId)).resolves.toBe(true);
     const eqCalls = plansBuilder.eq.mock.calls.map((c) => [c[0], c[1]]);
     expect(eqCalls).toContainEqual(["id", projectId]);
@@ -131,7 +136,7 @@ describe("deleteProjectFromSupabase ownership (28.12)", () => {
   });
 
   it("returns false when the scoped delete matched no rows", async () => {
-    plansBuilder.single.mockResolvedValue({ data: [], error: null });
+    plansBuilder = makeBuilder({ data: [], error: null });
     await expect(
       deleteProjectFromSupabase(projectId, { userId: bob }),
     ).resolves.toBe(false);

@@ -18,6 +18,7 @@ Client → Cloudflare DNS → oando-worker-proxy → Vercel (Next.js)
 ## Bindings (wrangler.toml)
 - **R2:** `ASSET_BUCKET` → `oando-asset-cdn`
 - **Env:** `VERCEL_ORIGIN`, `PUBLIC_INDEXABLE_HOSTS`
+- **Vectorize:** `CATALOG_VECTORS` → index `catalog-nav` (AI-FIX-05)
 
 ## Cache Policy (cachePolicy.js)
 
@@ -41,7 +42,7 @@ Client → Cloudflare DNS → oando-worker-proxy → Vercel (Next.js)
 ### Issues
 - **security.txt contact is sales email** — not a dedicated security contact (also noted in SEC-L01)
 - **Seating routing logic is complex** — hardcoded product sets for leather/cafe/fabric classification. Should this be data-driven?
-- **No Vectorize binding** — needed for AI-FIX-05 (Cloudflare Vectorize migration). Will require adding `[[vectorize]]` binding to wrangler.toml.
+- **Vectorize binding present (2026-09-01):** `[[vectorize]] binding = "CATALOG_VECTORS"` → index `catalog-nav` is in `workers/oando-worker-proxy/wrangler.toml` (AI-FIX-05). Remaining: create the index (`npx wrangler vectorize create catalog-nav --dimensions 768 --metric cosine`) and deploy — blocked by CF-TOKEN-01.
 
 ### Remedy
-Only change needed: add Vectorize binding when executing the AI remedy plan. Otherwise the Worker is well-built.
+Vectorize binding is in place; execute the index-create + deploy steps of the AI remedy plan when CF-TOKEN-01 is resolved. Otherwise the Worker is well-built.

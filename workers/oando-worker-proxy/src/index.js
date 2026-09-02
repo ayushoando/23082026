@@ -184,8 +184,20 @@ export default {
       });
     }
 
-    // Fall back to Vercel
-    const origin = env.VERCEL_ORIGIN || 'https://oando1408.vercel.app';
+    // Fall back to Vercel. VERCEL_ORIGIN has a single source of truth:
+    // wrangler.toml [vars] (12.1). No code fallback — a missing var fails fast
+    // with a clear 500 instead of silently proxying to a stale hardcoded host.
+    const origin = env.VERCEL_ORIGIN;
+    if (!origin) {
+      return new Response('VERCEL_ORIGIN is not configured (set [vars] in wrangler.toml)', {
+        status: 500,
+        headers: {
+          'content-type': 'text/plain; charset=utf-8',
+          'strict-transport-security': HSTS_HEADER,
+          'x-oando-proxy': 'config-error',
+        },
+      });
+    }
     const targetUrl = new URL(pathname + url.search, origin);
     
     const upstreamRequest = new Request(targetUrl.toString(), request);

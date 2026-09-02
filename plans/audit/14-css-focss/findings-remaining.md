@@ -1,5 +1,5 @@
 # Remaining — CSS system (FOCSS)
-**Date:** 2026-09-01
+**Date:** 2026-09-02
 
-- 14.4 (partial): `site/focss/site/components/shared/missing-components.css` (233 lines, debt-marker name) remains a resident of the shared barrel. Header comment now describes its actual content, but the plan's rename/split-out needs a file rename or deletion — **file deletions/moves require user confirmation** (hard rule). Removing it from the barrel without relocating its consumers (`.product-gallery` etc. are used outside route bundles) risks style regressions that cannot be verified here because visual baselines must not be regenerated (policy requires review).
+- None open. 14.4's rename completed 2026-09-02 (see findings-resolved.md) — the only remaining 14.4 facet is the plan's optional "split" alternative, which is moot now that the file carries an accurate name and its actual content (product-gallery / contact-teaser / shell-card shared classes). A future content split into per-feature sheets remains possible but is not required by any finding.
 - 14.1 (future work, not required): per-route marketing CSS entry chains — formally declined for now; documented in `site/focss/site/components/index.css` header. Revisit only if a bundle budget flags marketing CSS weight.

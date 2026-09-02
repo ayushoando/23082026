@@ -463,7 +463,7 @@ site/lib/Planner/plannerPersistenceMode.ts
 site/platform/Planner/data/projects/
 site/platform/supabase/migrations.admin/
 tests/unit/planner/</pre>
-        <p class="small">For a lower-risk UI-first path, study <code>site/app/(site)/page.tsx</code>, <code>site/components/home/</code>, <code>site/features/site/</code>, <code>site/lib/analytics/seo.ts</code>, and <code>site/focss/site/</code>.</p>
+        <p class="small">For a lower-risk UI-first path, study <code>site/app/(site)/page.tsx</code>, <code>site/components/home/</code>, <code>site/features/site/</code>, <code>site/features/site/data/seo.ts</code>, and <code>site/focss/site/</code>.</p>
       </section>
     </main>
   </div>

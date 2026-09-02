@@ -1,8 +1,7 @@
 
 /* ==========================================================================
-   Shared component layer — content split from the retired
-   "missing-components.css" temporary dump; the historical filename remains
-   until its delete-and-rename is approved (deletions need owner sign-off).
+   Shared component layer — the former "missing-components.css" temporary
+   dump, renamed to its real role (plan item 14.4, 2026-09-02).
    Global component layer for shared classes used outside route-only bundles.
    ========================================================================== */
 

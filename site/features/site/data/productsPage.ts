@@ -1,8 +1,8 @@
 ﻿import type { RequestedCategoryId } from "@/lib/catalog/site/categories";
 
 /**
- * Products hub media â€” executed install photography (marketing surface).
- * PDP product truth stays photography + published SVG elsewhere â€” no AI video on PDP.
+ * Products hub media — executed install photography (marketing surface).
+ * PDP product truth stays photography + published SVG elsewhere — no AI video on PDP.
  */
 export const PRODUCTS_HERO_IMAGE = {
   src: "/assets/marketing/hero/slides/Titan-Oneandonly-bright.webp",
@@ -37,7 +37,7 @@ export const PRODUCTS_CATEGORY_TILE_FALLBACKS: Record<RequestedCategoryId, strin
   education: "/assets/marketing/ui/categories/education-clean.webp",
 };
 
-/** Homepage collection band â€” same 6 flagship stills as category tiles. */
+/** Homepage collection band — same 6 flagship stills as category tiles. */
 export const HOMEPAGE_COLLECTION_IMAGES = {
   seating: PRODUCTS_CATEGORY_TILE_FALLBACKS.seating,
   workstations: PRODUCTS_CATEGORY_TILE_FALLBACKS.workstations,
@@ -47,7 +47,7 @@ export const HOMEPAGE_COLLECTION_IMAGES = {
   education: PRODUCTS_CATEGORY_TILE_FALLBACKS.education,
 } as const;
 
-/** Category listing hero stills â€” `/products/[category]` band above the filter grid. */
+/** Category listing hero stills — `/products/[category]` band above the filter grid. */
 export const CATEGORY_LISTING_HERO: Record<
   RequestedCategoryId,
   { src: string; alt: string }

@@ -43,15 +43,10 @@ export default defineConfig({
     globals: true,
     environment: "happy-dom",
     // catalogAdminHandlers + priceBookGovernance + workspaceConfigurationRepository
-    // touch node:* (crypto/fs/os) — must run in node, not happy-dom (which
-    // externalizes node:* as browser and throws ERR_UNKNOWN_BUILTIN_MODULE).
-    // Root is site/ — globs are matched relative to root, tests live at ../tests/.
-    // @ts-expect-error -- vitest 4.x public types omit environmentMatchGlobs
-    environmentMatchGlobs: [
-      ["../tests/unit/features/admin/api/catalogAdminHandlers.test.ts", "node"],
-      ["../tests/unit/features/admin/pricing/priceBookGovernance.test.ts", "node"],
-      ["../tests/unit/features/admin/workspace-config/workspaceConfigurationRepository.server.test.ts", "node"],
-    ],
+    // touch node:* (crypto/fs/os) — they carry per-file `@vitest-environment
+    // node` pragmas. `environmentMatchGlobs` is gone in Vitest 4 (absent from
+    // the runtime, not just the types) — the dead glob table was removed
+    // (finding 18.2).
     setupFiles: [VITEST_SETUP_FILE],
     reporters: ["default", "json"],
     include: [

@@ -2,8 +2,6 @@ import type { PlannerUnit } from "@planner/store/plannerUiStore";
 import {
   PLANNER_SCALE_PX_PER_MM,
   assertPlannerScale,
-  plannerMmToPx,
-  plannerPxToMm,
 } from "@planner/lib/plannerGeometryContract";
 
 /** Unit conversion and canvas scaling helpers. Canonical world unit: mm. */
@@ -36,7 +34,12 @@ export const pxToMm = (
   scale: number = PLANNER_SCALE_PX_PER_MM,
 ): number => {
   assertPlannerScale(scale);
-  return plannerPxToMm(px);
+  // Convert with the (asserted) scale parameter, not the fixed global
+  // constant — 28.9. Today `assertPlannerScale` pins scale to
+  // PLANNER_SCALE_PX_PER_MM, so this is numerically identical to
+  // `plannerPxToMm(px)`, but the helper now honors its signature instead of
+  // silently ignoring a caller-supplied scale if the contract ever widens.
+  return px / scale;
 };
 
 export const mmToPx = (
@@ -44,5 +47,5 @@ export const mmToPx = (
   scale: number = PLANNER_SCALE_PX_PER_MM,
 ): number => {
   assertPlannerScale(scale);
-  return plannerMmToPx(mm);
+  return mm * scale;
 };

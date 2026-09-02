@@ -11,8 +11,9 @@ Deploy and edge ops: [`OPERATIONS_RUNBOOK.md`](../../OPERATIONS_RUNBOOK.md). Pro
 ## Setup
 
 ```bash
-# Install dependencies
-pnpm install
+# Install worker dependencies (from this directory — the worker is NOT a pnpm
+# workspace member and keeps its own npm package-lock.json)
+npm ci
 
 # Deploy to Cloudflare
 pnpm deploy
@@ -20,6 +21,11 @@ pnpm deploy
 # Local development
 pnpm dev
 ```
+
+Root `worker:*` scripts (`worker:dev` / `worker:deploy` / `worker:tail`) call
+`pnpm --dir workers/oando-worker-proxy <script>` — they run this package's
+scripts but do **not** install its dependencies, so the `npm ci` above is a
+prerequisite (also required by CI/deploy runbooks).
 
 ## Configuration
 
@@ -29,7 +35,7 @@ pnpm dev
 ## Environment Variables
 
 Set in Cloudflare Dashboard or wrangler.toml:
-- `VERCEL_ORIGIN`: Vercel deployment URL (default: `https://oando1408.vercel.app`)
+- `VERCEL_ORIGIN`: Vercel deployment URL — **single source of truth is `wrangler.toml [vars]`**; there is no code fallback (the worker returns a clear 500 if unset)
 - `PUBLIC_INDEXABLE_HOSTS`: custom domains that must be indexable (default via wrangler: `oando.co.in,www.oando.co.in`)
 
 ## SEO / indexing

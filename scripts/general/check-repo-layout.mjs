@@ -32,6 +32,9 @@ const FORBIDDEN_DIRS = [
   "site/.cursor",
   "site/.firecrawl",
   "site/node_modules",
+  // Legacy disk store + legacy seed — live store/seed live under site/platform/
+  // (finding 4.2/11.3; dir deleted 2026-09-02, forbid rule flipped in same change)
+  "site/data",
   // Claude Code local config — not part of this repo
   ".claude",
   "site/.claude",

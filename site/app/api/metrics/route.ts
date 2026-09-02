@@ -4,11 +4,22 @@ import { getMetricsRegistry } from "@/lib/observability/metrics";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+/** 8.3: warn once per server instance when metrics are served without a token. */
+let warnedOpenMetrics = false;
+
 function isAuthorizedMetricsRequest(request: Request): boolean {
   const expectedToken = process.env.METRICS_AUTH_TOKEN?.trim();
   // No token configured: metrics stay open (dev/local default). Once a token
   // is set, every request must present it — closes SEC-H02.
-  if (!expectedToken) {return true;}
+  if (!expectedToken) {
+    if (!warnedOpenMetrics && process.env.NODE_ENV !== "test") {
+      warnedOpenMetrics = true;
+      console.warn(
+        "[metrics] METRICS_AUTH_TOKEN is not configured — /api/metrics is unauthenticated (dev/local default; production 404s unless OBSERVABILITY_METRICS_ENABLED=1).",
+      );
+    }
+    return true;
+  }
 
   const authHeader = request.headers.get("authorization") ?? "";
   const provided = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";

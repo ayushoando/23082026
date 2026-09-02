@@ -147,4 +147,39 @@ describe('rateLimit', () => {
       expect(res.success).toBe(false);
     });
   });
+
+  describe('10.1 degradation warning', () => {
+    it('warns (throttled) when the configured distributed backend setup fails, then serves memory results', async () => {
+      setNodeEnv('production');
+      process.env.SUPABASE_URL = 'https://supabase.co';
+      process.env.SUPABASE_SERVICE_ROLE_KEY = 'srv-key';
+
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const adminError = new Error('admin client unavailable');
+      vi.doMock('@/platform/supabase/adminServer', () => ({
+        createAdminServiceClient: vi.fn(() => {
+          throw adminError;
+        }),
+      }));
+      try {
+        // Re-import with the broken admin client; defaultBackendPromise resets via resetModules.
+        vi.resetModules();
+        rateLimitModule = await import('../../../site/lib/rateLimit');
+
+        const res1 = await rateLimitModule.rateLimit('tracking:1.2.3.4', 5, 60_000);
+        expect(res1.success).toBe(true); // non-AI route: degrades to memory, does not 500
+        expect(warnSpy).toHaveBeenCalledTimes(1);
+        expect(warnSpy.mock.calls[0]?.[0]).toContain('distributed backend unavailable');
+
+        const res2 = await rateLimitModule.rateLimit('tracking:1.2.3.4', 5, 60_000);
+        expect(res2.success).toBe(true);
+        expect(warnSpy).toHaveBeenCalledTimes(1); // throttled within 60s
+      } finally {
+        warnSpy.mockRestore();
+        vi.doUnmock('@/platform/supabase/adminServer');
+        vi.resetModules();
+        rateLimitModule = await import('../../../site/lib/rateLimit');
+      }
+    });
+  });
 });

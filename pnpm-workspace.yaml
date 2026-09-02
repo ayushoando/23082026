@@ -1,5 +1,10 @@
 # Workspace: root product + tech-docs. One install from repo root only.
 # (`pnpm install` — never inside site/ or tech-docs-generator/)
+# workers/oando-worker-proxy is deliberately NOT a member: it installs with its
+# own npm lockfile (workers/oando-worker-proxy/package-lock.json). Its `worker:*`
+# scripts (`pnpm --dir workers/oando-worker-proxy <script>`) run the worker's own
+# package scripts but do NOT install — run `npm ci` inside that dir first
+# (spared from cleanup by scripts/general/cleanup-nested-installs.mjs).
 # Note: pnpm rewrites allowBuilds alphabetically; keep each comment on the line
 # directly above the key it describes.
 packages:

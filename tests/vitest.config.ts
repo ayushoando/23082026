@@ -33,6 +33,8 @@ export default defineConfig({
     alias: {
       // Planner / Studio category aliases. These must precede the bare "@"
       // entry below, which would otherwise swallow "@planner/*" and "@studio/*".
+      // SYNC: keep in lockstep with site/tsconfig.json "paths" (@planner/*,
+      // @studio/*) — the two maps are the only alias sources; next.config has none.
       "@planner/components": path.resolve(VITEST_REPO_ROOT, "components/Planner"),
       "@planner/lib": path.resolve(VITEST_REPO_ROOT, "lib/Planner"),
       "@planner/hooks": path.resolve(VITEST_REPO_ROOT, "hooks/Planner"),
@@ -69,21 +71,11 @@ export default defineConfig({
     maxWorkers: 4,
     globals: true,
     environment: "happy-dom",
-    // Root is site/ — globs are matched relative to root. Tests live at ../tests/.
-    // @ts-expect-error -- vitest 4.x public types omit environmentMatchGlobs
-    environmentMatchGlobs: [
-      ["../tests/unit/lib/auth/**/*.test.ts", "node"],
-      ["../tests/unit/features/admin/api/catalogAdminHandlers.test.ts", "node"],
-      ["../tests/unit/features/admin/pricing/priceBookGovernance.test.ts", "node"],
-      ["../tests/unit/features/admin/workspace-config/workspaceConfigurationRepository.server.test.ts", "node"],
-      ["../tests/unit/lib/catalog/publish/svgArtifactStatus.server.test.ts", "node"],
-      ["../tests/unit/lib/catalog/**/*.server.test.ts", "node"],
-      ["../tests/unit/lib/env.server.test.ts", "node"],
-      ["../tests/unit/lib/paths/**/*.server.test.ts", "node"],
-      ["../tests/unit/features/**/catalogAssetStorage.server.test.ts", "node"],
-      ["../tests/unit/features/site/planSvg/**/*.server.test.ts", "node"],
-      ["../tests/unit/server/**/*.server.test.ts", "node"],
-    ],
+    // Node-environment tests are selected with per-file `@vitest-environment
+    // node` pragmas (50+ suites). `environmentMatchGlobs` is gone in Vitest 4
+    // (absent from the runtime, not just the types) — the old glob table was
+    // dead config and was removed (finding 18.2). Files that genuinely need
+    // node carry the pragma; auth/* suites verifiably pass under happy-dom.
     setupFiles: [VITEST_SETUP_FILE],
     reporters: [
       "default",

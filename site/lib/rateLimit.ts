@@ -20,6 +20,29 @@ const MEMORY_MAP_MAX_KEYS = 10_000;
 const AI_RATE_LIMIT_KEY_PATTERN =
   /^(ai-advisor|planner-ai-advisor|planner-sketch-to-plan|filter|generate-alt|configurator-smart-wizard|nav-search|studio-ai-generate|studio-ai-suggest|studio-ai-restyle):/i;
 
+/**
+ * 10.1: when the distributed backend is configured but unavailable, non-AI
+ * routes degrade to per-instance in-memory limiting (best effort). That is a
+ * deliberate fail-open trade-off for availability — but it must be observable,
+ * so emit a throttled warning (once per minute) in production.
+ */
+const DEGRADED_WARN_INTERVAL_MS = 60_000;
+let lastDegradedWarnMs = 0;
+
+function warnDistributedBackendDegraded(reason: string): void {
+  if (process.env.NODE_ENV !== "production") {
+    return;
+  }
+  const now = Date.now();
+  if (now - lastDegradedWarnMs < DEGRADED_WARN_INTERVAL_MS) {
+    return;
+  }
+  lastDegradedWarnMs = now;
+  console.warn(
+    `[rateLimit] distributed backend unavailable (${reason}) — degrading to per-instance in-memory limiting; on multi-instance deployments limits are per-instance until the backend recovers. AI-scoped keys still fail closed.`,
+  );
+}
+
 const rateLimitMap = new Map<string, RateLimitInfo>();
 let defaultBackendPromise: Promise<RateLimitBackend> | null = null;
 
@@ -117,13 +140,16 @@ export async function rateLimit(
     try {
       const distributedBackend = await defaultBackendPromise;
       return await distributedBackend.check(key, limit, windowMs);
-    } catch {
+    } catch (error) {
       // Setting up (or querying) the distributed backend failed — never let a
       // rate-limiter infra hiccup 500 the calling API route. Reset the cached
       // promise so a transient failure (e.g. a cold-start dynamic-import glitch)
       // doesn't permanently poison every future request, then fail open to the
-      // in-memory limiter for this call.
+      // in-memory limiter for this call (10.1: warn, throttled).
       defaultBackendPromise = null;
+      warnDistributedBackendDegraded(
+        error instanceof Error ? error.message : "setup/query failure",
+      );
       return memoryRateLimitOrFailClosed(key, limit, windowMs);
     }
   }
@@ -159,6 +185,7 @@ export async function createSupabaseRateLimitBackend(): Promise<RateLimitBackend
         const data = rawData as { count?: number | null; window_start?: number | null } | null;
 
         if (error) {
+          warnDistributedBackendDegraded("query error");
           return memoryRateLimitOrFailClosed(key, limit, windowMs);
         }
 
@@ -201,6 +228,7 @@ export async function createSupabaseRateLimitBackend(): Promise<RateLimitBackend
         const { error: upsertError } = await rateLimitsTable.upsert(upsertPayload);
 
         if (upsertError) {
+          warnDistributedBackendDegraded("upsert error");
           return memoryRateLimitOrFailClosed(key, limit, windowMs);
         }
 
@@ -211,6 +239,7 @@ export async function createSupabaseRateLimitBackend(): Promise<RateLimitBackend
           reset: currentWindow + windowMs,
         };
       } catch {
+        warnDistributedBackendDegraded("unexpected check failure");
         return memoryRateLimitOrFailClosed(key, limit, windowMs);
       }
     },

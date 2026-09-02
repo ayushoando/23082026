@@ -149,4 +149,40 @@ describe("supabase env utilities", () => {
       });
     });
   });
+
+  // 9.3 misuse guard: service-role JWTs are rejected in publishable/anon slots.
+  const b64url = (obj: object) =>
+    Buffer.from(JSON.stringify(obj), "utf8").toString("base64url");
+  const serviceRoleJwt = `header.${b64url({ role: "service_role" })}.sig`;
+  const anonRoleJwt = `header.${b64url({ role: "anon" })}.sig`;
+
+  describe("9.3 service-role misuse guard", () => {
+    it("rejects a service-role JWT in NEXT_ADMIN_SUPABASE_ANON_KEY", () => {
+      process.env.NEXT_ADMIN_SUPABASE_URL = "https://auth.supabase.co";
+      process.env.NEXT_ADMIN_SUPABASE_ANON_KEY = serviceRoleJwt;
+
+      expect(() => getOptionalAuthSupabaseEnv()).toThrow(
+        /service-role key/,
+      );
+      expect(() => getAuthSupabaseEnv()).toThrow(/service-role key/);
+      expect(hasAuthSupabaseEnv()).toBe(false);
+    });
+
+    it("rejects a service-role JWT in NEXT_PUBLIC_SUPABASE_ANON_KEY", () => {
+      process.env.NEXT_PUBLIC_SUPABASE_URL = "https://test.supabase.co";
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = serviceRoleJwt;
+
+      expect(() => getOptionalPublicSupabaseEnv()).toThrow(/service-role key/);
+    });
+
+    it("accepts anon-role JWTs and non-JWT keys", () => {
+      process.env.NEXT_ADMIN_SUPABASE_URL = "https://auth.supabase.co";
+      process.env.NEXT_ADMIN_SUPABASE_ANON_KEY = anonRoleJwt;
+      process.env.NEXT_PUBLIC_SUPABASE_URL = "https://test.supabase.co";
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = "sb_publishable_plain_token";
+
+      expect(getOptionalAuthSupabaseEnv()?.anonKey).toBe(anonRoleJwt);
+      expect(getOptionalPublicSupabaseEnv()?.anonKey).toBe("sb_publishable_plain_token");
+    });
+  });
 });

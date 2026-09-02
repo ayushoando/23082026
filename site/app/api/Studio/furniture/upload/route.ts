@@ -13,6 +13,7 @@ import {
   isOversizedRequestBody,
   isOversizedUpload,
 } from "@/lib/security/uploadLimits";
+import { sanitizeSvg } from "@/lib/security/svgSanitizer";
 
 export const POST = withAuth(
   async (request) => {
@@ -48,6 +49,21 @@ export const POST = withAuth(
     const raw = Buffer.from(await file.arrayBuffer());
     const isSvg =
       (file.type || "").includes("svg") || file.name.toLowerCase().endsWith(".svg");
+    if (isSvg) {
+      // 8.1: user-supplied SVG is stored verbatim and later served back as
+      // `image/svg+xml` (site/app/api/files/furniture/[filename]) — it must
+      // pass the sanitizer before it is ever written to disk.
+      const svgResult = sanitizeSvg(raw.toString("utf8"));
+      if (!svgResult.safe) {
+        return NextResponse.json(
+          {
+            detail: "Unsafe SVG rejected",
+            issues: svgResult.issues,
+          },
+          { status: 422 },
+        );
+      }
+    }
     const urls = await persistFurnitureUpload({ itemId, bytes: raw, isSvg });
     const item = {
       id: itemId,

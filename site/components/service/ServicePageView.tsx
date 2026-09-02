@@ -51,7 +51,7 @@ export interface ServicePageViewProps {
   ctaDescription: string;
 }
 
-/** Signature beat â€” bronze rule draw, then craft pull-quote scroll reveal. */
+/** Signature beat — bronze rule draw, then craft pull-quote scroll reveal. */
 function useCraftReveal(sectionRef: RefObject<HTMLElement | null>) {
   useGSAP(
     () => {

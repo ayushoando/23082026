@@ -22,6 +22,7 @@ import React, {
   useSyncExternalStore,
 } from "react";
 import { createPortal } from "react-dom";
+import { PlannerErrorBoundary } from "./PlannerErrorBoundary";
 import * as fabric from "fabric";
 import type { ModifiedEvent, TPointerEvent, TPointerEventInfo } from "fabric";
 import { useRouter, useParams } from "next/navigation";
@@ -110,7 +111,7 @@ import {
   buildSnapStatusLabel,
   isSnapStatusActive,
 } from "@planner/lib/plannerSnapStatusLabel";
-import { exportPNG, exportPDF, downloadDataUrl, exportSVG } from "@planner/lib/plannerExporters";
+import { exportPNG, exportPDF, downloadDataUrl, exportSVG, hasExportableContent } from "@planner/lib/plannerExporters";
 import { downloadDxf } from "@planner/lib/plannerDxfExport";
 import {
   createProject,
@@ -1412,32 +1413,54 @@ const Planner = ({
     }
   };
 
+  // Export handlers wrap every export/download path in try/catch so raw
+  // throws (tainted-canvas SecurityError from cross-origin underlays, jsPDF
+  // failures, …) surface as a user-visible toast instead of an uncaught
+  // rejection (28.8). Grid/sheet hiding is always restored in `finally`.
   const doExportPNG = useCallback(() => {
     const c = fabricRef.current;
-    if (!c) return;
+    if (!c) { showToast("Canvas not ready", "error"); return; }
     const hidden = c.getObjects().filter((o) => asOo(o).data?.isGridLine);
-    hidden.forEach((g) => (g.visible = false)); c.requestRenderAll();
-    const url = exportPNG(c, { dpiMultiplier: 2 });
-    hidden.forEach((g) => (g.visible = true)); c.requestRenderAll();
-    downloadDataUrl(url, `${projectName || "floor-plan"}.png`); showToast("Exported PNG");
+    try {
+      hidden.forEach((g) => (g.visible = false)); c.requestRenderAll();
+      const url = exportPNG(c, { dpiMultiplier: 2 });
+      downloadDataUrl(url, `${projectName || "floor-plan"}.png`); showToast("Exported PNG");
+    } catch (e) {
+      showToast(`PNG export failed: ${errMessage(e)}`, "error");
+    } finally {
+      hidden.forEach((g) => (g.visible = true)); c.requestRenderAll();
+    }
   }, [fabricRef, projectName, showToast]);
   const doExportPDF = () => {
     const c = fabricRef.current;
-    if (!c) return;
+    if (!c) { showToast("Canvas not ready", "error"); return; }
+    // Empty-canvas guard (28.11, parity with Studio STU-FIX-03).
+    if (!hasExportableContent(c)) { showToast("Plan is empty — nothing to export", "error"); return; }
     const hidden = c.getObjects().filter((o) => asOo(o).data?.isGridLine);
-    hidden.forEach((g) => (g.visible = false)); c.requestRenderAll();
-    exportPDF(c, `${projectName || "floor-plan"}.pdf`);
-    hidden.forEach((g) => (g.visible = true)); c.requestRenderAll();
-    showToast("Exported PDF");
+    try {
+      hidden.forEach((g) => (g.visible = false)); c.requestRenderAll();
+      const ok = exportPDF(c, `${projectName || "floor-plan"}.pdf`);
+      if (ok) showToast("Exported PDF");
+      else showToast("Plan is empty — nothing to export", "error");
+    } catch (e) {
+      showToast(`PDF export failed: ${errMessage(e)}`, "error");
+    } finally {
+      hidden.forEach((g) => (g.visible = true)); c.requestRenderAll();
+    }
   };
   const doExportSVG = () => {
     const c = fabricRef.current;
-    if (!c) return;
+    if (!c) { showToast("Canvas not ready", "error"); return; }
     const hidden = c.getObjects().filter((o) => asOo(o).data?.isGridLine);
-    hidden.forEach((g) => (g.visible = false)); c.requestRenderAll();
-    const { dataUrl } = exportSVG(c);
-    hidden.forEach((g) => (g.visible = true)); c.requestRenderAll();
-    downloadDataUrl(dataUrl, `${projectName || "floor-plan"}.svg`); showToast("Exported SVG");
+    try {
+      hidden.forEach((g) => (g.visible = false)); c.requestRenderAll();
+      const { dataUrl } = exportSVG(c);
+      downloadDataUrl(dataUrl, `${projectName || "floor-plan"}.svg`); showToast("Exported SVG");
+    } catch (e) {
+      showToast(`SVG export failed: ${errMessage(e)}`, "error");
+    } finally {
+      hidden.forEach((g) => (g.visible = true)); c.requestRenderAll();
+    }
   };
   const doExportDXF = () => {
     try {
@@ -2758,6 +2781,7 @@ const Planner = ({
 
   return (
     <PlannerContext.Provider value={plannerCtx}>
+    <PlannerErrorBoundary>
     <div className="planner-stack" data-planner-step={plannerStep} data-viewport-class={viewport.viewportClass}>
       <PlannerTopToolbar handlers={toolbarHandlers} />
       <PlannerWorkflowBar
@@ -3380,6 +3404,7 @@ const Planner = ({
       <AutoArrangeDialog open={autoOpen} onClose={() => setAutoOpen(false)} sheet={sheet} onArrange={doAutoArrange} />
     </div>
     </div>
+    </PlannerErrorBoundary>
     </PlannerContext.Provider>
   );
 };

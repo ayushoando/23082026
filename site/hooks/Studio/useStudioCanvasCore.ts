@@ -282,11 +282,31 @@ export const useCanvasCore = ({
     let maxX = -Infinity;
     let maxY = -Infinity;
     objs.forEach((o) => {
-      const b = o.getBoundingRect();
-      minX = Math.min(minX, b.left);
-      minY = Math.min(minY, b.top);
-      maxX = Math.max(maxX, b.left + b.width);
-      maxY = Math.max(maxY, b.top + b.height);
+      // Use scene-space object bounds (not getBoundingRect which returns
+      // viewport-space and changes with the current transform — fit drifted
+      // whenever zoom != 1, 28.6; ported from usePlannerCanvasCore.ts).
+      // aCoords gives the four corners in scene space after applying the
+      // object's own transform (scale/rotation/skew) but before the canvas
+      // viewport transform — exactly what we need for a stable fit.
+      const coords = o.aCoords;
+      if (coords) {
+        const xs = [coords.tl.x, coords.tr.x, coords.br.x, coords.bl.x];
+        const ys = [coords.tl.y, coords.tr.y, coords.br.y, coords.bl.y];
+        minX = Math.min(minX, ...xs);
+        minY = Math.min(minY, ...ys);
+        maxX = Math.max(maxX, ...xs);
+        maxY = Math.max(maxY, ...ys);
+      } else {
+        // Fallback for objects that have not yet calculated aCoords.
+        const l = o.left ?? 0;
+        const t = o.top ?? 0;
+        const w = o.getScaledWidth?.() ?? (o.width ?? 0);
+        const h = o.getScaledHeight?.() ?? (o.height ?? 0);
+        minX = Math.min(minX, l);
+        minY = Math.min(minY, t);
+        maxX = Math.max(maxX, l + w);
+        maxY = Math.max(maxY, t + h);
+      }
     });
     const cw = c.getWidth();
     const ch = c.getHeight();

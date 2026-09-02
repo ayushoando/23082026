@@ -3,13 +3,13 @@
 - **Date:** 2026-09-01
 - **Scope:** full repository, read-only (no code modified)
 - **Method:** 4 parallel explore agents (architecture/structure, security/API, frontend quality, code quality/ops), all findings verified against disk. No gates/tests/browser runs (owner-gated per repo rules).
-- **Location:** `plans/audit/` — one subfolder per report: `NN-slug/findings.md` (the report) + `NN-slug/plan.md` (the matching remediation plan). Existing plans/ folders moved here intact (ai-audit, seosec, db-audit, …). Related: [../FIX-LOG-20260901.md](../FIX-LOG-20260901.md)
+- **Location:** `plans/audit/` — one subfolder per report: `NN-slug/findings.md` (the report) + `NN-slug/plan.md` (the matching remediation plan). Existing plans/ folders moved here intact (ai-audit, seosec, db-audit, …). Related: [FIX-LOG-20260901.md](FIX-LOG-20260901.md)
 
 | # | Report | Area |
 |---|--------|------|
 | 01 | [Executive summary](01-executive-summary/findings.md) | Overall verdict + severity rollup |
-| 02 | [Architecture & routes](../.archive/02-architecture-routes/findings.md) | Route inventory, layout consistency |
-| 03 | [Module boundaries / fork](03-module-boundaries-fork/findings.md) | Studio↔Planner fork discipline |
+| 02 | [Architecture & routes](02-architecture-routes/findings.md) | Route inventory, layout consistency |
+| 03 | [Module boundaries / fork](../.archive/03-module-boundaries-fork/findings.md) | Studio↔Planner fork discipline (folder archived) |
 | 04 | [Repo layout & git hygiene](04-repo-layout-git-hygiene/findings.md) | check:layout conformance, untracked load-bearing files, TODOs |
 | 05 | [Dead code](05-dead-code/findings.md) | Orphaned modules |
 | 06 | [State & dataflow](06-state-dataflow/findings.md) | zustand/react-query/server actions |
@@ -36,6 +36,13 @@
 | 27 | [lib deep: AI/Mastra, SVG pipeline, observability](27-lib-ai-svg-observability/findings.md) | Advisor agents/RAG, descriptor persist/load contract, metrics endpoint |
 | 28 | [Canvas hooks & features logic](28-canvas-features-logic/findings.md) | Undo/redo deadlock, Ctrl+S duplicate, service-role project writes, DXF exports |
 | 29 | [Tests, CSS usage & content](29-tests-css-content/findings.md) | Test quality, visual baselines (0/216), e2e hygiene, marketing content |
+| 30 | [Git history orphans](30-git-history-orphans/findings.md) | Orphan dating from git history (single-touch files) |
+| 31 | [Dependency CVE & currency](31-deps-cve-currency/findings.md) | pnpm audit, dep currency |
+| 32 | [i18n Hindi quality](32-i18n-hi-quality/findings.md) | hi.json translation quality |
+| 33 | [Canvas algorithms](33-canvas-algorithms/findings.md) | Canvas algorithm static audit (fast) |
+| 34 | [Runtime verification pass](34-runtime-verification/findings.md) | Backlog area 1: gates, two-lane tests, scan:secrets |
+| 35 | [Bundle size, SEO rendered-HTML & visual baselines](35-bundle-seo-visual/findings.md) | Real build-output measurement |
+| 36 | [DB, worker token & CI gate — observed run](36-db-worker-ci/findings.md) | Observed-run evidence for DB/worker/CI |
 
 ## Severity rollup
 
@@ -46,6 +53,8 @@
 | Low | ~40 | Dev-bypass on non-prod hosts, env contract gaps, fail-open rate limits, focss near-cap files, axe coverage gaps, dead code items, orphan scripts, DXF fidelity gaps, Deno dep drift, etc. |
 
 **Second pass (reports 21–24) corrections to first-pass findings:** `P4_migration_no_rollback: 8` is a stale baseline (0/64 migrations lack `-- rollback` today); the `pending-translations/` dir is empty; `scan-boundaries` finds no violations (unchanged); new High-adjacent item: `db:types` depends on an undeclared global `supabase` CLI; new Medium items: dead `turbo.json`, `admin/themes` reads an archived table, stale hand-written `platform/supabase/types.ts`, `routes.md` false "no redirect table" claim.
+
+**Remediation corrections (2026-09-01):** governance baseline re-recorded `P4 8→0, S2 22→1` (`S2` sole remainder: `plans/audit/comprehensive-code-review-report.md`, owner-gated); `check-governance --update` now confirm-guarded and refuses count raises; report 26's "~18 orphan scripts" re-triaged to 12 zero-wiring scripts and all 12 registered as ops commands (`pnpm run ops list` = 149); `plans/README.md` rewritten for the reorganized layout.
 
 ## Legacy program reconciliation (read in full 2026-09-01)
 

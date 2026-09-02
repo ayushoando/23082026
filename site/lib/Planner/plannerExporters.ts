@@ -32,7 +32,23 @@ export const exportSVG = (canvas: Canvas): { svg: string; dataUrl: string } => {
   return { svg, dataUrl };
 };
 
-export const exportPDF = (canvas: Canvas, filename = "floor-plan.pdf"): void => {
+/**
+ * True when the canvas holds at least one exportable (non-decoration) object.
+ * Mirrors Studio's contentBounds guard (STU-FIX-03) so callers can refuse a
+ * blank export instead of saving an empty PNG/PDF (28.11).
+ */
+export const hasExportableContent = (canvas: Canvas): boolean =>
+  canvas
+    .getObjects()
+    .some((raw) => {
+      const o = raw as OoFabricObject;
+      return !o.data?.isGridLine && !o.data?.isSheet && !o.excludeFromExport;
+    });
+
+export const exportPDF = (canvas: Canvas, filename = "floor-plan.pdf"): boolean => {
+  // Empty-canvas guard (28.11): exporting an empty plan produced a blank
+  // PDF. Callers show a "Nothing to export" toast when this returns false.
+  if (!hasExportableContent(canvas)) return false;
   const dataUrl = exportPNG(canvas, { dpiMultiplier: 3 });
   const width = canvas.getWidth();
   const height = canvas.getHeight();
@@ -40,6 +56,7 @@ export const exportPDF = (canvas: Canvas, filename = "floor-plan.pdf"): void => 
   const pdf = new jsPDF({ orientation, unit: "px", format: [width, height] });
   pdf.addImage(dataUrl, "PNG", 0, 0, width, height);
   pdf.save(filename);
+  return true;
 };
 
 export const downloadDataUrl = (dataUrl: string, filename: string): void => {

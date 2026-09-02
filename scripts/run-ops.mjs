@@ -171,6 +171,23 @@ const COMMANDS = {
     );
     if (result.status !== 0) {
       if (result.stderr) process.stderr.write(result.stderr);
+      // The supabase CLI is intentionally not a devDependency (large install);
+      // it is expected on PATH via the developer's own global install. Say so
+      // instead of leaving a bare `command not found` (report 22.1).
+      const missing =
+        result.error ||
+        /command not found|is not recognized|not found: supabase|ENOENT/i.test(
+          `${result.stderr || ""}${result.stdout || ""}`,
+        );
+      if (missing) {
+        process.stderr.write(
+          "\ndb:types: the Supabase CLI was not found. It is not part of the\n" +
+            "lockfile — install it once, e.g. `npm i -g supabase` (or\n" +
+            "`pnpm add -D supabase` to pin it for this repo), then re-run\n" +
+            "`pnpm run ops db:types`.\n",
+        );
+        process.exit(1);
+      }
       process.exit(result.status ?? 1);
     }
     fs.writeFileSync(

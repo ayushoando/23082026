@@ -206,7 +206,6 @@ export const WAVE2_SOURCE_ROOTS = [
   "site/lib/analytics",
   "site/lib/consent.ts",
   "site/lib/seo",
-  "site/lib/helpers/seo",
   "site/lib/catalog",
   "site/lib/auth",
 ] as const;
@@ -638,8 +637,7 @@ function isSharedSource(relativePath: string): boolean {
     value.includes("/features/site/data/seo") ||
     value.includes("/lib/analytics/") ||
     value.endsWith("/lib/consent.ts") ||
-    value.includes("/lib/seo/") ||
-    value.includes("/lib/helpers/seo/")
+    value.includes("/lib/seo/")
   );
 }
 

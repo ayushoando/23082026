@@ -3,15 +3,12 @@
 import { headers } from "next/headers";
 import { returnServerError } from "next-safe-action";
 import { actionClient } from "@/lib/safe-action";
+import { resolveClientIpFromHeaders } from "@/lib/clientIp";
 import { submitContactActionSchema } from "@/features/site/contact/customerQuerySchema";
 import { createCustomerQuery } from "@/features/site/contact/createCustomerQuery";
 
 function resolveClientIp(headerStore: Headers): string {
-  return (
-    headerStore.get("cf-connecting-ip") ||
-    headerStore.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    "127.0.0.1"
-  );
+  return resolveClientIpFromHeaders(headerStore);
 }
 
 /**

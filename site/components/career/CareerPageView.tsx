@@ -53,7 +53,7 @@ export interface CareerPageViewProps {
   ctaSecondary: string;
 }
 
-/** Quiet hero entrance + still parallax â€” signature beat is the openings cascade below. */
+/** Quiet hero entrance + still parallax — signature beat is the openings cascade below. */
 function useHeroEntrance(heroRef: RefObject<HTMLElement | null>, motionReady: boolean) {
   useGSAP(
     () => {
@@ -96,7 +96,7 @@ function useHeroEntrance(heroRef: RefObject<HTMLElement | null>, motionReady: bo
   );
 }
 
-/** Quiet craft strip settle â€” openings cascade stays the signature beat. */
+/** Quiet craft strip settle — openings cascade stays the signature beat. */
 function useCraftReveal(sectionRef: RefObject<HTMLElement | null>) {
   useGSAP(
     () => {
@@ -173,7 +173,7 @@ export function CareerPageView({
   useHeroEntrance(heroRef, motionReady);
   useCraftReveal(craftRef);
 
-  /* Signature beat â€” openings list cascade */
+  /* Signature beat — openings list cascade */
   useGSAP(
     () => {
       if (gsapReducedMotion() || !jobsRef.current) {

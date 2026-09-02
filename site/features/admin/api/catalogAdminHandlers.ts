@@ -263,6 +263,28 @@ export async function listStandardCatalog(req: NextRequest): Promise<NextRespons
 }
 
 /**
+ * Error mapping shared by standard-catalog create/patch (28.14): PG unique
+ * violation `23505` (duplicate name/slug) must surface as 409 like the
+ * configurator path (`mapConfiguratorWriteError`) instead of a generic 500.
+ */
+function mapStandardWriteError(
+  dbError: { message: string; code?: string },
+  conflictMessage: string,
+  failureMessage: string,
+): ApiError {
+  const conflict = dbError.code === "23505";
+  return new ApiError(
+    conflict ? 409 : isMissingTableError(dbError.message) ? 503 : 500,
+    conflict
+      ? API_ERROR_CODES.RESOURCE_EXISTS
+      : isMissingTableError(dbError.message)
+        ? API_ERROR_CODES.SERVICE_UNAVAILABLE
+        : API_ERROR_CODES.DATABASE_ERROR,
+    conflict ? conflictMessage : failureMessage,
+  );
+}
+
+/**
  * Pure create for the standard catalog (planner_managed_products) — no
  * NextRequest/NextResponse. Caller must pass schema-validated input.
  * Throws `ApiError` on storage/DB failure. Shared by REST + safe-action.
@@ -283,11 +305,9 @@ export async function createStandardCatalogItem(
     .single();
 
   if (dbError) {
-    throw new ApiError(
-      isMissingTableError(dbError.message) ? 503 : 500,
-      isMissingTableError(dbError.message)
-        ? API_ERROR_CODES.SERVICE_UNAVAILABLE
-        : API_ERROR_CODES.DATABASE_ERROR,
+    throw mapStandardWriteError(
+      dbError,
+      "A catalog item with this name or slug already exists",
       "Failed to create catalog item",
     );
   }
@@ -406,11 +426,9 @@ export async function patchStandardCatalogItem(
     .single();
 
   if (dbError) {
-    throw new ApiError(
-      isMissingTableError(dbError.message) ? 503 : 500,
-      isMissingTableError(dbError.message)
-        ? API_ERROR_CODES.SERVICE_UNAVAILABLE
-        : API_ERROR_CODES.DATABASE_ERROR,
+    throw mapStandardWriteError(
+      dbError,
+      "A catalog item with this name or slug already exists",
       "Failed to update catalog item",
     );
   }

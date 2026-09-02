@@ -35,6 +35,26 @@ const serverSchema = {
   CLOUDFLARE_S3_URL: optionalEnvUrl,
   CLOUDFLARE_ACCESS_KEY_ID: optionalEnvString,
   CLOUDFLARE_SECRET_ACCESS_KEY: optionalEnvString,
+  // 9.2: ad-hoc `process.env` reads elsewhere in the codebase, now declared so
+  // the server env surface is validated (and documented) in one place.
+  RESEND_API_KEY: optionalEnvString,
+  METRICS_AUTH_TOKEN: optionalEnvString,
+  SITE_MAINTENANCE_MODE: optionalEnvString,
+  CUSTOMER_QUERIES_ADMIN_TOKEN: optionalEnvString,
+  CUSTOMER_QUERIES_ADMIN_TOKENS: optionalEnvString,
+  VERCEL_TOKEN: optionalEnvString,
+  E2E_SUPABASE_ADMIN_EMAIL: optionalEnvString,
+  E2E_SUPABASE_ADMIN_PASSWORD: optionalEnvString,
+  E2E_SUPABASE_USER_EMAIL: optionalEnvString,
+  E2E_SUPABASE_USER_PASSWORD: optionalEnvString,
+  // 9.2: alias chain consumed by resolveCloudflarePair — real R2 aliases plus
+  // the historical typo aliases, all optional strings.
+  CLOUDFLARE_R2_ACCESS_KEY_ID: optionalEnvString,
+  CLOUDFLARE_R2_SECRET_ACCESS_KEY: optionalEnvString,
+  CLOULD_ACCESS_KEY_ID: optionalEnvString,
+  CLOULDFLARE_S3_SECRET_ACCESS_KEY: optionalEnvString,
+  CLOOUDFLARE_SECRET_API_TOKEN: optionalEnvString,
+  CLOULDFLARE_S3_API_TOKEN: optionalEnvString,
 };
 
 type ServerEnv = {
@@ -59,6 +79,22 @@ type ServerEnv = {
   CLOUDFLARE_S3_URL?: string;
   CLOUDFLARE_ACCESS_KEY_ID?: string;
   CLOUDFLARE_SECRET_ACCESS_KEY?: string;
+  RESEND_API_KEY?: string;
+  METRICS_AUTH_TOKEN?: string;
+  SITE_MAINTENANCE_MODE?: string;
+  CUSTOMER_QUERIES_ADMIN_TOKEN?: string;
+  CUSTOMER_QUERIES_ADMIN_TOKENS?: string;
+  VERCEL_TOKEN?: string;
+  E2E_SUPABASE_ADMIN_EMAIL?: string;
+  E2E_SUPABASE_ADMIN_PASSWORD?: string;
+  E2E_SUPABASE_USER_EMAIL?: string;
+  E2E_SUPABASE_USER_PASSWORD?: string;
+  CLOUDFLARE_R2_ACCESS_KEY_ID?: string;
+  CLOUDFLARE_R2_SECRET_ACCESS_KEY?: string;
+  CLOULD_ACCESS_KEY_ID?: string;
+  CLOULDFLARE_S3_SECRET_ACCESS_KEY?: string;
+  CLOOUDFLARE_SECRET_API_TOKEN?: string;
+  CLOULDFLARE_S3_API_TOKEN?: string;
 };
 
 /**
@@ -133,6 +169,22 @@ function buildRuntimeEnv(source: NodeJS.ProcessEnv) {
     CLOUDFLARE_S3_URL: cf.s3Url,
     CLOUDFLARE_ACCESS_KEY_ID: cf.access,
     CLOUDFLARE_SECRET_ACCESS_KEY: cf.secret,
+    RESEND_API_KEY: source.RESEND_API_KEY,
+    METRICS_AUTH_TOKEN: source.METRICS_AUTH_TOKEN,
+    SITE_MAINTENANCE_MODE: source.SITE_MAINTENANCE_MODE,
+    CUSTOMER_QUERIES_ADMIN_TOKEN: source.CUSTOMER_QUERIES_ADMIN_TOKEN,
+    CUSTOMER_QUERIES_ADMIN_TOKENS: source.CUSTOMER_QUERIES_ADMIN_TOKENS,
+    VERCEL_TOKEN: source.VERCEL_TOKEN,
+    E2E_SUPABASE_ADMIN_EMAIL: source.E2E_SUPABASE_ADMIN_EMAIL,
+    E2E_SUPABASE_ADMIN_PASSWORD: source.E2E_SUPABASE_ADMIN_PASSWORD,
+    E2E_SUPABASE_USER_EMAIL: source.E2E_SUPABASE_USER_EMAIL,
+    E2E_SUPABASE_USER_PASSWORD: source.E2E_SUPABASE_USER_PASSWORD,
+    CLOUDFLARE_R2_ACCESS_KEY_ID: source.CLOUDFLARE_R2_ACCESS_KEY_ID,
+    CLOUDFLARE_R2_SECRET_ACCESS_KEY: source.CLOUDFLARE_R2_SECRET_ACCESS_KEY,
+    CLOULD_ACCESS_KEY_ID: source.CLOULD_ACCESS_KEY_ID,
+    CLOULDFLARE_S3_SECRET_ACCESS_KEY: source.CLOULDFLARE_S3_SECRET_ACCESS_KEY,
+    CLOOUDFLARE_SECRET_API_TOKEN: source.CLOOUDFLARE_SECRET_API_TOKEN,
+    CLOULDFLARE_S3_API_TOKEN: source.CLOULDFLARE_S3_API_TOKEN,
   };
 }
 

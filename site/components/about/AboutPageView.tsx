@@ -51,7 +51,7 @@ export interface AboutPageViewProps {
   ctaSecondary: string;
 }
 
-/** Signature beat only â€” craft pull-quote reveal (hero has its own entrance). */
+/** Signature beat only — craft pull-quote reveal (hero has its own entrance). */
 function useCraftReveal(sectionRef: RefObject<HTMLElement | null>) {
   useGSAP(
     () => {

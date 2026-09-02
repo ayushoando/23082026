@@ -6,6 +6,18 @@ import { redirect } from "next/navigation";
 import { buildAccessRedirect } from "@/lib/auth/plannerRedirect";
 import { DEV_BYPASS_USER } from "@/lib/auth/devAuthBypass";
 
+const { headersMock } = vi.hoisted(() => ({
+  headersMock: vi.fn(async () => ({
+    get: (key: string) => (key === "host" ? "localhost:3000" : null),
+  })),
+}));
+
+// The 7.1 allowed-host guard reads the request host via next/headers; default
+// the mock to a loopback host so bypass-on tests exercise the allowed path.
+vi.mock("next/headers", () => ({
+  headers: () => headersMock(),
+}));
+
 vi.mock("next/navigation", () => ({
   redirect: vi.fn(),
 }));
@@ -197,12 +209,32 @@ describe("session auth helpers", () => {
   });
 
   describe("admin gate (DEV_AUTH_BYPASS on, non-prod only)", () => {
-    it("returns synthetic admin without session", async () => {
+    beforeEach(() => {
+      // 7.1 guard reads the request host; loopback is always allowed.
+      headersMock.mockImplementation(async () => ({
+        get: (key: string) => (key === "host" ? "localhost:3000" : null),
+      }));
+    });
+
+    it("returns synthetic admin without session on a loopback host", async () => {
       forceBypassOn();
       const user = await requireAuthUser("/admin", "admin");
       expect(user.id).toBe(DEV_BYPASS_USER.id);
       expect(user.email).toBe(DEV_BYPASS_USER.email);
       expect(redirect).not.toHaveBeenCalled();
+    });
+
+    it("falls back to real auth (redirect) for non-loopback hosts (7.1 fail-closed)", async () => {
+      forceBypassOn();
+      headersMock.mockImplementation(async () => ({
+        get: (key: string) => (key === "host" ? "staging.internal:3000" : null),
+      }));
+      await expect(requireAuthUser("/admin", "admin")).rejects.toThrow(
+        "Authentication required",
+      );
+      expect(redirect).toHaveBeenCalledWith(
+        expect.stringContaining("/access?next="),
+      );
     });
   });
 
