@@ -6,11 +6,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Buildings,
-  House,
   MagnifyingGlass,
   PencilSimple,
   SquaresFour,
   UserCircle,
+  UsersThree,
 } from "@phosphor-icons/react";
 import { OneAndOnlyLogo } from "@/components/ui/Logo";
 import { TrackedLink } from "@/components/ui/TrackedLink";
@@ -23,7 +23,7 @@ import { MOBILE_TABS, activeTabFor } from "@/features/site/data/navigation";
 import { resolveRouteChromeMode } from "@/features/site/data/routeChromeRules";
 import { trackSiteTabSelected } from "@/lib/analytics/siteEvents";
 
-const ICONS = { House, SquaresFour, PencilSimple, Buildings, UserCircle } as const;
+const ICONS = { SquaresFour, PencilSimple, UsersThree, Buildings, UserCircle } as const;
 
 /**
  * Marketing pages carry a single primary conversion — "Get Quote". On routes
@@ -115,12 +115,12 @@ export function MobileAppShell({
           const LinkCmp = isPlanner ? PlannerLaunchLink : TrackedLink;
           const isActive = active === tab.id;
           const tabLabel = t(
-            tab.id === "home"
-              ? "header.homeLabel"
-              : tab.id === "catalog"
-                ? "navigation.allProducts"
-                : tab.id === "planner"
-                  ? "navigation.planner"
+            tab.id === "catalog"
+              ? "navigation.allProducts"
+              : tab.id === "planner"
+                ? "navigation.planner"
+                : tab.id === "clients"
+                  ? "navigation.clients"
                   : tab.id === "about"
                     ? "navigation.about"
                     : "navigation.signIn",

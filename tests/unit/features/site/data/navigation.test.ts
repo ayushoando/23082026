@@ -73,18 +73,18 @@ describe("navigation site-data helper", () => {
   });
 
   describe("MOBILE_TABS", () => {
-    it("is Home, Catalog, Planner, About Us, Account in that order", () => {
+    it("is Catalog, Planner, Clients, About Us, Account — no Home tab", () => {
       expect(MOBILE_TABS.map((tab) => tab.id)).toEqual([
-        "home",
         "catalog",
         "planner",
+        "clients",
         "about",
         "account",
       ]);
       expect(MOBILE_TABS.map((tab) => tab.label)).toEqual([
-        "Home",
         "Catalog",
         "Planner",
+        "Clients",
         "About Us",
         "Account",
       ]);
@@ -92,9 +92,9 @@ describe("navigation site-data helper", () => {
 
     it("points Planner at the marketing landing and Account at sign-in", () => {
       const byId = Object.fromEntries(MOBILE_TABS.map((tab) => [tab.id, tab]));
-      expect(byId.home.href).toBe("/");
       expect(byId.catalog.href).toBe("/products");
       expect(byId.planner.href).toBe(PRODUCT_SUITE.planner.routes.landing);
+      expect(byId.clients.href).toBe("/clients");
       expect(byId.about.href).toBe("/about");
       expect(byId.account.href).toBe(SITE_AUTH_LINK.href);
     });
@@ -102,8 +102,9 @@ describe("navigation site-data helper", () => {
 
   describe("activeTabFor", () => {
     it("resolves primary destinations and trailing slashes", () => {
-      expect(activeTabFor("/")).toBe("home");
-      expect(activeTabFor("")).toBe("home");
+      expect(activeTabFor("/")).toBeNull();
+      expect(activeTabFor("")).toBeNull();
+      expect(activeTabFor("/clients")).toBe("clients");
       expect(activeTabFor("/products")).toBe("catalog");
       expect(activeTabFor("/products/seating/")).toBe("catalog");
       expect(activeTabFor("/ooplanner")).toBe("planner");

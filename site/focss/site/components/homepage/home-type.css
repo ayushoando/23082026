@@ -2,10 +2,10 @@
 
 .home-heading {
   font-family: var(--font-display);
-  font-size: clamp(2rem, 3.6vw, 2.9rem);
-  font-weight: var(--font-weight-display-light, 300);
-  letter-spacing: var(--type-letter-title, -0.04em);
-  line-height: 1.08;
+  font-size: var(--type-title-lg-size);
+  font-weight: var(--font-weight-display-light);
+  letter-spacing: var(--type-letter-title);
+  line-height: var(--type-leading-title);
   /* black-100 — never pure #000 / harsh ink-950 */
   color: var(--text-heading, var(--color-black-100));
   text-wrap: balance;
@@ -13,10 +13,10 @@
 
 .typ-section {
   font-family: var(--font-display);
-  font-size: clamp(2rem, 3.6vw, 2.9rem);
-  font-weight: var(--font-weight-display-light, 300);
-  letter-spacing: var(--type-letter-title, -0.04em);
-  line-height: var(--type-leading-title, 1.08);
+  font-size: var(--type-title-lg-size);
+  font-weight: var(--font-weight-display-light);
+  letter-spacing: var(--type-letter-title);
+  line-height: var(--type-leading-title);
   color: var(--text-heading, var(--color-black-100));
   text-wrap: balance;
 }
@@ -63,10 +63,10 @@
 
 .home-kicker {
   font-family: var(--font-sans);
-  font-size: var(--type-label-size, 0.75rem);
-  font-weight: var(--font-weight-copy-medium, 500);
-  letter-spacing: 0.11em;
-  line-height: 1.3;
+  font-size: var(--type-label-size);
+  font-weight: var(--font-weight-copy-medium);
+  letter-spacing: var(--type-letter-label-wide);
+  line-height: var(--type-leading-label);
   text-transform: uppercase;
 }
 
@@ -75,10 +75,10 @@
   margin-inline: auto;
   color: var(--text-inverse);
   font-family: var(--font-display);
-  font-size: clamp(2.35rem, 8vw, 2.85rem);
+  font-size: var(--type-display-size);
   font-weight: var(--font-weight-display-light);
-  line-height: var(--type-leading-title);
-  letter-spacing: var(--type-letter-title);
+  line-height: var(--type-leading-display);
+  letter-spacing: var(--type-letter-tight);
   text-shadow: 0 2px 28px var(--scrim-black-40);
   text-wrap: balance;
   font-synthesis: none;
@@ -87,7 +87,6 @@
 @media (width >= 40rem) and (width < theme(--breakpoint-lg)) {
   .home-hero-title-homepage {
     max-width: 14ch;
-    font-size: clamp(2.5rem, 5.4vw, 3.15rem);
   }
 }
 
@@ -95,7 +94,6 @@
   .home-hero-title-homepage {
     max-width: 11ch;
     margin-inline: 0;
-    font-size: clamp(3.15rem, 4.6vw, 4.5rem);
   }
 }
 
@@ -204,7 +202,7 @@
 
 .text-accent-italic {
   font-style: italic;
-  color: var(--color-contrast-accent, var(--color-bronze-500));
+  color: var(--color-contrast-accent);
 }
 
 .text-accent-italic-on-dark {

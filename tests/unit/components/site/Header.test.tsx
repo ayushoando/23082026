@@ -145,7 +145,7 @@ describe("SiteHeader Component", () => {
     await renderSettledHeader();
 
     expect(screen.getByTestId("header-logo")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Home" })).toHaveAttribute(
+    expect(screen.getByTestId("header-logo").closest("a")).toHaveAttribute(
       "href",
       "/",
     );

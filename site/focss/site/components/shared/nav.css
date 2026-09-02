@@ -5,8 +5,8 @@
 
 /*
  * Header breakpoint contract (unlayered — wins over @layer utilities):
- * - < xl: hamburger visible, primary nav hidden (mobile drawer)
- * - ≥ xl (1280px): desktop primary nav, hamburger hidden
+ * - < lg: hamburger visible, primary nav hidden (mobile drawer)
+ * - ≥ lg (1024px): desktop primary nav + More, hamburger hidden
  * Tailwind .inline-flex / .shell-icon-button used to override @utility media hide.
  */
 .site-header__desktop-nav {
@@ -19,7 +19,7 @@
   display: inline-flex;
 }
 
-@media (width >= 1280px) {
+@media (width >= theme(--breakpoint-lg)) {
   .site-header__desktop-nav {
     display: flex;
   }

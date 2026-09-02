@@ -10,7 +10,7 @@ import { OneAndOnlyLogo } from "@/components/ui/Logo";
 import { LanguageSwitcher } from "@/components/site/LanguageSwitcher";
 import { TrackedLink } from "@/components/ui/TrackedLink";
 import { PlannerLaunchLink } from "@/components/ui/PlannerLaunchLink";
-import { SITE_HEADER_PRIMARY_LINKS } from "@/features/site/data/navigation";
+import { SITE_HEADER_MORE_LINKS, SITE_HEADER_PRIMARY_LINKS } from "@/features/site/data/navigation";
 import { isPlannerEntryHref } from "@/lib/analytics/plannerEntry";
 import { trackSiteSearchSubmitted } from "@/lib/analytics/siteEvents";
 import {
@@ -61,7 +61,7 @@ interface MobileNavDrawerProps {
 const DRAWER_SHORTCUTS = [
   { href: "/products?sort=new-arrivals", translationKey: "mobile.newArrivals" },
   { href: "/products?filter=best-sellers", translationKey: "mobile.bestSellers" },
-  { href: "/portal", translationKey: "mobile.savedPlans" },
+  { href: "/faq", translationKey: "navigation.faq" },
   { href: "/contact", translationKey: "navigation.contact" },
 ] as const;
 
@@ -72,6 +72,14 @@ const NAVIGATION_LABEL_KEYS: Record<string, string> = {
   Planner: "planner",
   About: "about",
   Contact: "contact",
+  Planning: "planning",
+  Showrooms: "showrooms",
+  "Trusted By": "trustedBy",
+  Careers: "careers",
+  "After Sales": "afterSales",
+  Downloads: "downloads",
+  Sustainability: "sustainability",
+  FAQ: "faq",
 };
 
 const drawerSearchClass =
@@ -419,6 +427,25 @@ export function MobileNavDrawer({ open, onClose }: MobileNavDrawerProps) {
 
               return (
                 <li key={link.label}>
+                  <TrackedLink
+                    href={link.href}
+                    label={label}
+                    surface="mobile-nav"
+                    className={drawerLinkClass}
+                    onClick={handleClose}
+                  >
+                    {label}
+                  </TrackedLink>
+                </li>
+              );
+            })}
+          </ul>
+
+          <ul className="drawer-more mt-4 min-w-0 space-y-1">
+            {SITE_HEADER_MORE_LINKS.map((link) => {
+              const label = navigationLabel(link.label);
+              return (
+                <li key={link.href}>
                   <TrackedLink
                     href={link.href}
                     label={label}

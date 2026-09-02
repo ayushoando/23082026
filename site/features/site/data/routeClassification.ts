@@ -308,6 +308,16 @@ export const SITE_ROUTE_CLASSIFICATION: SiteRouteMeta[] = [
     indexable: true,
   },
   {
+    route: "/faq",
+    classification: "public",
+    audience: "Public visitor / buyer",
+    intent: "Company FAQ: delivery, installation, warranty, rollouts",
+    owner: "Marketing",
+    canonicalUrl: canonicalFor("/faq"),
+    primaryAction: "Read an answer or contact",
+    indexable: true,
+  },
+  {
     route: "/sitemap",
     classification: "public",
     audience: "Public visitor",

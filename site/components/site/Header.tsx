@@ -43,6 +43,14 @@ const NAVIGATION_LABEL_KEYS: Record<string, string> = {
   Planner: "planner",
   About: "about",
   Contact: "contact",
+  Planning: "planning",
+  Showrooms: "showrooms",
+  "Trusted By": "trustedBy",
+  Careers: "careers",
+  "After Sales": "afterSales",
+  Downloads: "downloads",
+  Sustainability: "sustainability",
+  FAQ: "faq",
 };
 
 interface NavCategoriesPayload {

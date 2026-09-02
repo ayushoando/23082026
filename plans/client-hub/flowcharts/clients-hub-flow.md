@@ -29,6 +29,7 @@ The hierarchy below maps public/client page routes only. Root-level routes are s
 │   ├── /service                                    public page
 │   ├── /downloads                                  public page
 │   ├── /sustainability                             public page
+│   ├── /faq                                        public page
 │   ├── /privacy                                    public legal page
 │   ├── /terms                                     public legal page
 │   ├── /refund-and-return-policy                   public policy page

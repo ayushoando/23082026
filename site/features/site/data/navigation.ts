@@ -21,8 +21,17 @@ export type SiteNavLink = (typeof SITE_NAV_LINKS)[number];
 /** Desktop + mobile center nav — same flat list. */
 export const SITE_HEADER_PRIMARY_LINKS = SITE_NAV_LINKS;
 
-/** @deprecated Empty — no header dropdown. Secondary routes are footer-only. */
-export const SITE_HEADER_MORE_LINKS: readonly SiteNavLink[] = [];
+/** Header "More" — rest of the public tree so chrome is not six links. */
+export const SITE_HEADER_MORE_LINKS = [
+  { label: "Planning", href: "/planning" },
+  { label: "Showrooms", href: "/showrooms" },
+  { label: "Trusted By", href: "/trusted-by" },
+  { label: "Careers", href: "/career" },
+  { label: "After Sales", href: "/service" },
+  { label: "Downloads", href: "/downloads" },
+  { label: "Sustainability", href: "/sustainability" },
+  { label: "FAQ", href: "/faq" },
+] as const;
 
 export const SITE_CTA_LINKS = [
   { label: "Get Quote", href: "/contact", variant: "primary" as const },
@@ -32,11 +41,11 @@ export const SITE_CTA_LINKS = [
 /** Canonical member sign-in (login route redirects here). */
 export const SITE_AUTH_LINK = { label: "Sign in", href: "/access" } as const;
 
-/** Bottom tab bar destinations for the marketing mobile app shell (<768). */
+/** Bottom tab bar (<768). Logo already goes home — no Home tab. */
 export const MOBILE_TABS = [
-  { id: "home", label: "Home", href: "/", icon: "House" },
   { id: "catalog", label: "Catalog", href: "/products", icon: "SquaresFour" },
   { id: "planner", label: "Planner", href: PRODUCT_SUITE.planner.routes.landing, icon: "PencilSimple" },
+  { id: "clients", label: "Clients", href: "/clients", icon: "UsersThree" },
   { id: "about", label: "About Us", href: "/about", icon: "Buildings" },
   { id: "account", label: "Account", href: SITE_AUTH_LINK.href, icon: "UserCircle" },
 ] as const;
@@ -46,9 +55,9 @@ export type MobileTabId = (typeof MOBILE_TABS)[number]["id"];
 /** Resolve the active tab id from a pathname (null = interior page, no active tab). */
 export function activeTabFor(pathname: string): MobileTabId | null {
   const p = (pathname || "/").replace(/\/+$/, "") || "/";
-  if (p === "/") {return "home";}
   if (p.startsWith("/products")) {return "catalog";}
   if (p.startsWith("/ooplanner") || p.startsWith("/planner")) {return "planner";}
+  if (p.startsWith("/clients") || p.startsWith("/trusted-by")) {return "clients";}
   if (p.startsWith("/about")) {return "about";}
   if (["/access", "/dashboard", "/portal", "/login"].some((s) => p.startsWith(s))) {
     return "account";
@@ -87,6 +96,7 @@ export const SITE_NAV_SEARCH_FALLBACK_LINKS = [
   { href: "/trusted-by", label: "Trusted By" },
   { href: "/sustainability", label: "Sustainability" },
   { href: "/contact", label: "Contact" },
+  { href: "/faq", label: "FAQ" },
 ] as const;
 
 type FooterLink = { href: string; label: string };
@@ -145,6 +155,7 @@ export const SITE_FOOTER_NAV = buildFooterNav([
     links: [
       { href: "/contact", label: "Contact" },
       { href: "/planning", label: "Planning" },
+      { href: "/faq", label: "FAQ" },
       { href: "/service", label: "After Sales" },
       { href: "/downloads", label: "Downloads" },
     ],

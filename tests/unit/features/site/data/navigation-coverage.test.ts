@@ -95,7 +95,7 @@ describe("SITE_NAV_LINKS", () => {
     expect(new Set(labels).size).toBe(labels.length);
   });
 
-  it("uses primary header list with Products mega and no More dropdown links", () => {
+  it("uses primary header list with Products mega and a More menu for the rest", () => {
     expect(SITE_HEADER_PRIMARY_LINKS.map((l) => l.label)).toEqual([
       "Products",
       "Solutions",
@@ -104,7 +104,16 @@ describe("SITE_NAV_LINKS", () => {
       "About",
       "Contact",
     ]);
-    expect(SITE_HEADER_MORE_LINKS).toEqual([]);
+    expect(SITE_HEADER_MORE_LINKS.map((l) => l.href)).toEqual([
+      "/planning",
+      "/showrooms",
+      "/trusted-by",
+      "/career",
+      "/service",
+      "/downloads",
+      "/sustainability",
+      "/faq",
+    ]);
     expect(SITE_HEADER_PRIMARY_LINKS).toEqual(SITE_NAV_LINKS);
     const products = SITE_NAV_LINKS.find((l) => l.label === "Products");
     expect(products && "hasMega" in products && products.hasMega).toBe(true);
@@ -238,6 +247,7 @@ describe("SITE_FOOTER_NAV", () => {
     expect(services?.links.map((link) => link.label)).toEqual([
       "Contact",
       "Planning",
+      "FAQ",
       "After Sales",
       "Downloads",
     ]);

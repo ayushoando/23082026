@@ -4,9 +4,9 @@ import { MobileAppShell } from "@/components/site/MobileAppShell";
 import { trackSiteTabSelected } from "@/lib/analytics/siteEvents";
 
 vi.mock("@phosphor-icons/react", () => ({
-  House: () => <span data-testid="icon-house" />,
   SquaresFour: () => <span data-testid="icon-squares" />,
   PencilSimple: () => <span data-testid="icon-pencil" />,
+  UsersThree: () => <span data-testid="icon-users" />,
   Buildings: () => <span data-testid="icon-buildings" />,
   UserCircle: () => <span data-testid="icon-user" />,
   MagnifyingGlass: () => <span data-testid="icon-search" />,
@@ -65,16 +65,16 @@ describe("MobileAppShell", () => {
     expect(screen.getByTestId("shell-child")).toBeInTheDocument();
     const tabBar = screen.getByRole("navigation", { name: /Mobile primary/i });
     expect(tabBar).toBeInTheDocument();
-    expect(within(tabBar).getByRole("link", { name: /home/i })).toHaveAttribute(
-      "href",
-      "/",
-    );
+    expect(within(tabBar).queryByRole("link", { name: /^home$/i })).toBeNull();
     expect(
       within(tabBar).getByRole("link", { name: /All Products|Catalog/i }),
     ).toHaveAttribute("aria-current", "page");
     expect(
       within(tabBar).getByRole("link", { name: "Planner" }),
-    ).toHaveAttribute("href", expect.stringMatching(/^\/ooplanner/));
+    ).toHaveAttribute("href", "/planner");
+    expect(
+      within(tabBar).getByRole("link", { name: "Clients" }),
+    ).toHaveAttribute("href", "/clients");
     expect(within(tabBar).getByRole("link", { name: "About" })).toHaveAttribute(
       "href",
       "/about",
@@ -142,11 +142,11 @@ describe("MobileAppShell", () => {
     );
 
     const tabBar = screen.getByRole("navigation", { name: /Mobile primary/i });
-    fireEvent.click(within(tabBar).getByRole("link", { name: /home/i }));
+    fireEvent.click(within(tabBar).getByRole("link", { name: "Clients" }));
     expect(trackSiteTabSelected).toHaveBeenCalledWith({
       pathname: "/products",
-      tab: "home",
-      destination: "/",
+      tab: "clients",
+      destination: "/clients",
     });
   });
 });

@@ -59,6 +59,7 @@ const FOOTER_LABEL_KEYS: Record<string, string> = {
   Careers: "navigation.careers",
   Contact: "navigation.contact",
   Planning: "navigation.planning",
+  FAQ: "navigation.faq",
   "After Sales": "navigation.afterSales",
   Downloads: "navigation.downloads",
 };
