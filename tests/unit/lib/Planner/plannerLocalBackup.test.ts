@@ -152,7 +152,7 @@ function installStubIndexedDB(options: InstallOptions = {}): StubHandle {
       storeMapFor(stores, name);
       return makeTransaction(stores).objectStore(name);
     },
-    transaction: (name) => makeTransaction(stores),
+    transaction: (_name) => makeTransaction(stores),
     close: () => {
       // Real close() invalidates the connection; the stub keeps data in the
       // registry so save/load roundtrips across opens behave like IDB.

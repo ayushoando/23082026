@@ -95,7 +95,7 @@ describe("Feature: ai-implementation-audit", () => {
     it("sequenceBySeverity does not mutate the original array", () => {
       fc.assert(
         fc.property(fc.array(findingArb, { minLength: 1 }), (findings) => {
-          const snapshot = [...findings.map((f) => f.severity)];
+          const snapshot = findings.map((f) => f.severity);
           sequenceBySeverity(findings);
           const afterIds = findings.map((f) => f.severity);
           expect(afterIds).toEqual(snapshot);

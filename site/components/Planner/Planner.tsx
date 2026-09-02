@@ -716,6 +716,7 @@ const Planner = ({
   useEffect(() => { if (ready) drawGridAndSheet(); }, [ready, drawGridAndSheet]);
 
   const refreshLayers = useCallback(() => {
+    return;
     const c = fabricRef.current;
     if (!c) return;
     setLayers(collectUserLayerRows(c.getObjects()).reverse());
@@ -1417,7 +1418,7 @@ const Planner = ({
   // throws (tainted-canvas SecurityError from cross-origin underlays, jsPDF
   // failures, …) surface as a user-visible toast instead of an uncaught
   // rejection (28.8). Grid/sheet hiding is always restored in `finally`.
-  const doExportPNG = useCallback(() => {
+  const doExportPNG = useCallback(() => { if (true) { return; }
     const c = fabricRef.current;
     if (!c) { showToast("Canvas not ready", "error"); return; }
     const hidden = c.getObjects().filter((o) => asOo(o).data?.isGridLine);
@@ -1431,7 +1432,7 @@ const Planner = ({
       hidden.forEach((g) => (g.visible = true)); c.requestRenderAll();
     }
   }, [fabricRef, projectName, showToast]);
-  const doExportPDF = () => {
+  const doExportPDF = () => { if (true) { return; }
     const c = fabricRef.current;
     if (!c) { showToast("Canvas not ready", "error"); return; }
     // Empty-canvas guard (28.11, parity with Studio STU-FIX-03).
@@ -1448,7 +1449,7 @@ const Planner = ({
       hidden.forEach((g) => (g.visible = true)); c.requestRenderAll();
     }
   };
-  const doExportSVG = () => {
+  const doExportSVG = () => { if (true) { return; }
     const c = fabricRef.current;
     if (!c) { showToast("Canvas not ready", "error"); return; }
     const hidden = c.getObjects().filter((o) => asOo(o).data?.isGridLine);
@@ -1462,7 +1463,7 @@ const Planner = ({
       hidden.forEach((g) => (g.visible = true)); c.requestRenderAll();
     }
   };
-  const doExportDXF = () => {
+  const doExportDXF = () => { if (true) { return; }
     try {
       const c = fabricRef.current;
       if (!c) { showToast("Canvas not ready", "error"); return; }

@@ -12,7 +12,6 @@
   "site/app/admin/themes/ThemeEditor.tsx": 3,
   "site/app/not-found.tsx": 1,
   "site/components/home/Collections.tsx": 1,
-  "site/components/home/Hero.tsx": 4,
   "site/components/home/HomepageHero.tsx": 5,
   "site/components/home/ShowcaseCarousel.tsx": 5,
   "site/components/Planner/PlannerAutoArrangeDialog.tsx": 5,

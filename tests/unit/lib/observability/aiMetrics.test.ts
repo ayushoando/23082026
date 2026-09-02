@@ -71,11 +71,11 @@ const PII_PATTERNS = [
   // raw session / user identifiers
   /sess[_-]?[0-9a-f]{8,}/i,
   // email addresses
-  /\b[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}\b/i,
+  /\b[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}\b/i,
   // AWS-style keys
   /AKIA[A-Z0-9]{16}/,
   // bearer / API tokens (long alphanumeric strings ≥ 32 chars that look like tokens)
-  /[a-zA-Z0-9_\-]{32,}/,
+  /[a-zA-Z0-9_-]{32,}/,
 ];
 
 function assertNoPii(calls: unknown[][]) {

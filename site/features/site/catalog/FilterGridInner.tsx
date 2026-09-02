@@ -165,7 +165,7 @@ export function AdvancedFilterGridInner({
       return clientFilteredFallback;
     }
     return fallbackProducts;
-  }, [clientFilteredFallback, data?.products, fallbackProducts, hasFilterQuery]);
+  }, [clientFilteredFallback, data, fallbackProducts, hasFilterQuery]);
 
   const navigableProducts = useMemo(
     () => filteredProducts.filter((product) => getProductRouteKey(product).length > 0),

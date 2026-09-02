@@ -1,5 +1,6 @@
 "use client";
 
+import { createElement } from "react";
 import type { IconProps } from "@phosphor-icons/react";
 import { resolvePhIcon, type PhIconName } from "@planner/components/ui/plannerPhIconMap";
 
@@ -14,8 +15,14 @@ type PhIconProps = {
 
 /** OO shell icon — maps stable keys to `@phosphor-icons/react`. */
 export function PhIcon({ name, size = 18, className, weight = "regular" }: PhIconProps) {
-  const Icon = resolvePhIcon(name);
-  return <Icon size={size} width={size} height={size} className={className} weight={weight} aria-hidden />;
+  return createElement(resolvePhIcon(name), {
+    size,
+    width: size,
+    height: size,
+    className,
+    weight,
+    "aria-hidden": true,
+  });
 }
 
 export default PhIcon;

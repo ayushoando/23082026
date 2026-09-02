@@ -258,12 +258,6 @@ describe(
 
             // Protected non-escalation: applicable protected-context rows are
             // never closed with a conforming or guest-derived result.
-            const protectedAccess = new Set([
-              "access.authenticated-admin",
-              "access.authenticated-customer",
-              "access.planner-member",
-              "access.studio-user",
-            ]);
             for (const name of ["protected-admin", "planner", "studio", "specialized-states"] as const) {
               for (const row of built.partitions[name].matrixRows) {
                 if (row.status === "not-applicable") {

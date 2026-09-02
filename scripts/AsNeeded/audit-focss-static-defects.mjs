@@ -427,7 +427,7 @@ function isReducedMotionMedia(block) {
 }
 
 function hasUniversalSelector(prelude) {
-  return splitSelectors(prelude).some((selector) => /(^|[\s>+~,(])\*(?=\s*(?:[.:#\[>+~]|$))/.test(selector));
+  return splitSelectors(prelude).some((selector) => /(^|[\s>+~,(])\*(?=\s*(?:[.:#>[>+~]|$))/.test(selector));
 }
 
 function hasResetProperty(body) {

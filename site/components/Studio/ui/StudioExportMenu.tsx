@@ -41,6 +41,15 @@ export function ExportMenu({
 }: ExportMenuProps) {
   const sections = useMemo(() => resolveSections({ items, sections: sectionsProp }), [items, sectionsProp]);
   const flatItems = useMemo(() => flattenExportSections(sections), [sections]);
+  /** Flat index at which each section's items start — keeps render free of mutation. */
+  const sectionStartIndexes = useMemo(
+    () =>
+      sections.reduce<number[]>((offsets, _section, sectionIndex) => {
+        const nextStart = sectionIndex === 0 ? 0 : offsets[sectionIndex - 1] + sections[sectionIndex - 1].items.length;
+        return [...offsets, nextStart];
+      }, []),
+    [sections],
+  );
 
   const [open, setOpen] = useState(false);
   const [focusIndex, setFocusIndex] = useState(-1);
@@ -153,8 +162,6 @@ export function ExportMenu({
     }
   };
 
-  let flatIndex = 0;
-
   return (
     <div className="export-menu" ref={rootRef} data-open={open ? "true" : "false"}>
       <button
@@ -180,37 +187,39 @@ export function ExportMenu({
         hidden={!open}
         aria-label={label}
       >
-        {sections.map((section, sectionIndex) => (
-          <div key={section.id} className="export-menu__section" role="none">
-            {section.heading ? (
-              <div className="export-menu__heading" role="presentation">
-                {section.heading}
-              </div>
-            ) : null}
-            {sectionIndex > 0 ? <div className="export-menu__sep" role="separator" aria-hidden="true" /> : null}
-            {section.items.map((item) => {
-              const index = flatIndex;
-              flatIndex += 1;
-              return (
-                <button
-                  key={item.id}
-                  ref={(el) => {
-                    itemRefs.current[index] = el;
-                  }}
-                  type="button"
-                  role="menuitem"
-                  tabIndex={open && focusIndex === index ? 0 : -1}
-                  className="export-menu__item"
-                  data-testid={item.testId ?? `btn-export-${item.id}`}
-                  onClick={() => selectItem(item)}
-                  onKeyDown={(event) => onItemKeyDown(event, index)}
-                >
-                  {item.label}
-                </button>
-              );
-            })}
-          </div>
-        ))}
+        {sections.map((section, sectionIndex) => {
+          const sectionStart = sectionStartIndexes[sectionIndex] ?? 0;
+          return (
+            <div key={section.id} className="export-menu__section" role="none">
+              {section.heading ? (
+                <div className="export-menu__heading" role="presentation">
+                  {section.heading}
+                </div>
+              ) : null}
+              {sectionIndex > 0 ? <div className="export-menu__sep" role="separator" aria-hidden="true" /> : null}
+              {section.items.map((item, itemIndex) => {
+                const index = sectionStart + itemIndex;
+                return (
+                  <button
+                    key={item.id}
+                    ref={(el) => {
+                      itemRefs.current[index] = el;
+                    }}
+                    type="button"
+                    role="menuitem"
+                    tabIndex={open && focusIndex === index ? 0 : -1}
+                    className="export-menu__item"
+                    data-testid={item.testId ?? `btn-export-${item.id}`}
+                    onClick={() => selectItem(item)}
+                    onKeyDown={(event) => onItemKeyDown(event, index)}
+                  >
+                    {item.label}
+                  </button>
+                );
+              })}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

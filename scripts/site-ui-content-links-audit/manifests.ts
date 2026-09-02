@@ -2061,7 +2061,7 @@ export async function runBounded<T>(
   if (!Number.isInteger(concurrency) || concurrency < 1) {
     throw new ManifestError("Concurrency must be an integer of at least 1.");
   }
-  const results: T[] = new Array(tasks.length);
+  const results: T[] = Array.from({ length: tasks.length }, () => undefined as T);
   let nextIndex = 0;
   async function worker(): Promise<void> {
     while (true) {

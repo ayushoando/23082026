@@ -540,7 +540,7 @@ describe(
       async () => {
         await fc.assert(
           fc.asyncProperty(
-            fc.constantFrom(...[...MULTI_POINTER_VIEWPORT_IDS]),
+            fc.constantFrom(...MULTI_POINTER_VIEWPORT_IDS),
             fc.boolean(),
             async (commandId, hasActiveObject) => {
               const canvas = createCanvas();

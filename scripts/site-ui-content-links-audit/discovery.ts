@@ -371,7 +371,9 @@ function fsPathToUrlPattern(relativePath: string): string {
     urlSegments.push(seg);
   }
 
-  return `/${urlSegments.join("/")}` || "/";
+  // An empty segment list joins to "" which still yields the site root "/",
+  // so no `|| "/"` fallback is needed here.
+  return `/${urlSegments.join("/")}`;
 }
 
 function extractDynamicSegments(urlPattern: string): string[] {

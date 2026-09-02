@@ -43,7 +43,7 @@ function workerReviewSources(context: ReleaseChangeContext): WorkerReviewSources
   const vercelRoute =
     context.vercelDeploymentCommand === null
       ? ""
-      : `, \"vercel:prod\": \"${context.vercelDeploymentCommand}\"`;
+      : `, "vercel:prod": "${context.vercelDeploymentCommand}"`;
 
   return {
     wrangler: repositorySource(
@@ -68,7 +68,7 @@ function workerReviewSources(context: ReleaseChangeContext): WorkerReviewSources
     ),
     rootPackage: repositorySource(
       "package.json",
-      `{\"scripts\": {\"worker:deploy\": \"pnpm --dir workers/oando-worker-proxy deploy\"${vercelRoute}}}`,
+      `{"scripts": {"worker:deploy": "pnpm --dir workers/oando-worker-proxy deploy"${vercelRoute}}}`,
     ),
     workerPackage: repositorySource(
       "workers/oando-worker-proxy/package.json",

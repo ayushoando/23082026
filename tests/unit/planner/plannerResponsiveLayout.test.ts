@@ -212,7 +212,10 @@ describe("tablet panel scrim", () => {
 
   it("scrim is hidden when all panels are collapsed on tablet", () => {
     const viewportIsTablet = true;
-    const tabletPanelOpen = viewportIsTablet && (false || false || false);
+    const leftCollapsed = true;
+    const rightCollapsed = true;
+    const toolsCollapsed = true;
+    const tabletPanelOpen = viewportIsTablet && (!leftCollapsed || !rightCollapsed || !toolsCollapsed);
     expect(tabletPanelOpen).toBe(false);
   });
 

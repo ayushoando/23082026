@@ -27,7 +27,8 @@ const parsedAssetBaseUrl = (() => {
   }
 })();
 
-// Keep in sync with site/lib/images/optimizerMode.ts (COST-S01).
+// Image optimization flag — single source (the deleted COST-S01 module's logic
+// was inlined here; the TS module was unwired dead code and removed 2026-09-02).
 const imageOptFlag = process.env.NEXT_IMAGE_UNOPTIMIZED?.trim().toLowerCase();
 const useUnoptimizedImages =
   imageOptFlag === "0" || imageOptFlag === "false"

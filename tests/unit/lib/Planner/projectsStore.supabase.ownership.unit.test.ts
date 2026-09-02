@@ -18,25 +18,30 @@ type Builder = {
   limit: ReturnType<typeof vi.fn>;
   single: ReturnType<typeof vi.fn>;
   maybeSingle: ReturnType<typeof vi.fn>;
-  then: Promise<unknown>["then"];
 };
 
 function makeBuilder(terminal: { data: unknown; error: unknown }): Builder {
-  // Every method chains; awaiting the builder resolves `terminal` (the real
-  // PostgREST builder is thenable).
-  const b: Builder = {
-    select: vi.fn(() => b),
-    eq: vi.fn(() => b),
-    upsert: vi.fn(() => b),
-    delete: vi.fn(() => b),
-    order: vi.fn(() => b),
-    limit: vi.fn(() => b),
-    single: vi.fn(() => b),
-    maybeSingle: vi.fn(() => b),
-    then: (onFulfilled, onRejected) =>
-      Promise.resolve(terminal).then(onFulfilled, onRejected),
+  // Every method chains; awaiting any link in the chain resolves `terminal`
+  // (the real PostgREST builder is thenable). Instead of hanging a `then`
+  // property off the mock (unicorn/no-thenable), each chain method returns a
+  // real Promise resolved with the terminal sentinel that carries the same
+  // chain methods — so awaiting any link behaves like awaiting the builder.
+  const links: Builder = {
+    select: vi.fn(),
+    eq: vi.fn(),
+    upsert: vi.fn(),
+    delete: vi.fn(),
+    order: vi.fn(),
+    limit: vi.fn(),
+    single: vi.fn(),
+    maybeSingle: vi.fn(),
   };
-  return b;
+  for (const link of Object.values(links)) {
+    link.mockImplementation(() =>
+      Object.assign(Promise.resolve(terminal), links),
+    );
+  }
+  return links;
 }
 
 const profilesBuilder = makeBuilder({ data: null, error: null });

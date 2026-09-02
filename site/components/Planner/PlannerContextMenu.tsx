@@ -83,7 +83,7 @@ export const ContextMenu = ({ x, y, items, onClose }: ContextMenuProps) => {
     >
       {items.map((item, index) => {
         if (item.separator) {
-          return <div key={`separator-${index}`} className="context-menu__sep" role="separator" />;
+          return <div key={`separator-${index}`} className="context-menu__sep" role="presentation" />;
         }
         return (
           <button
