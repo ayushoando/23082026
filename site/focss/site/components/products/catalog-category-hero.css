@@ -117,7 +117,7 @@
   margin: clamp(0.65rem, 1.4vw, 0.9rem) 0 0;
   max-width: 36rem;
   font-family: var(--font-sans);
-  font-size: clamp(0.9375rem, 1.5vw, 1.0625rem);
+  font-size: var(--type-body-lg-size) /* TODO token: closest var(--type-body-lg-size) — no exact match */;
   line-height: 1.5;
   color: var(--text-body);
 }
@@ -182,7 +182,7 @@
 
 @media (width < theme(--breakpoint-md)) {
   .catalog-category-hero__title.home-heading {
-    font-size: clamp(1.75rem, 6.8vw, 2.25rem);
+    font-size: var(--type-title-lg-size) /* TODO token: closest var(--type-title-lg-size) — no exact match */;
     line-height: 1.1;
     max-width: none;
   }

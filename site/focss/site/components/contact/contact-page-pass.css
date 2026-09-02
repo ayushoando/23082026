@@ -20,7 +20,7 @@
 }
 
 .contact-hero__subtitle {
-  font-size: clamp(1.05rem, 2.4vw, 1.2rem);
+  font-size: var(--type-body-lg-size) /* TODO token: closest var(--type-body-lg-size) — no exact match */;
   line-height: 1.6;
 }
 
@@ -34,12 +34,12 @@
 
 .contact-summary__intro .page-copy-sm,
 .contact-quick-desk .page-copy-sm {
-  font-size: clamp(1.05rem, 2.4vw, 1.125rem);
+  font-size: var(--type-body-lg-size) /* TODO token: closest var(--type-body-lg-size) — no exact match */;
   line-height: 1.6;
 }
 
 .contact-office-card address.page-copy-sm {
-  font-size: clamp(1rem, 2vw, 1.0625rem);
+  font-size: var(--type-body-size) /* TODO token: closest var(--type-body-size) — no exact match */;
   line-height: 1.55;
 }
 
@@ -154,7 +154,7 @@
   }
 
   .contact-hero__title {
-    font-size: clamp(1.85rem, 9vw, 2.35rem);
+    font-size: var(--type-title-lg-size) /* TODO token: closest var(--type-title-lg-size) — no exact match */;
     line-height: 1.1;
   }
 
@@ -209,7 +209,7 @@
 .contact-form-band__title {
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(1.5rem, 2.8vw, 2rem);
+  font-size: var(--type-title-sm-size) /* TODO token: closest var(--type-title-sm-size) — no exact match */;
   font-weight: var(--font-weight-display-light);
   letter-spacing: var(--type-letter-title);
   line-height: 1.12;

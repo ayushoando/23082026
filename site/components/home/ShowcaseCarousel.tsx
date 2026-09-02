@@ -226,6 +226,7 @@ export function ShowcaseCarousel({
                       alt={item.name}
                       aria-hidden="true"
                       fill
+                      unoptimized
                       quality={85}
                       sizes="(max-width: 768px) 88vw, (max-width: 1280px) 42vw, 28rem"
                       className="home-showcase-card__media object-cover transition-transform duration-1000 ease-out group-hover:scale-105"

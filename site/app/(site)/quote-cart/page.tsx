@@ -184,6 +184,7 @@ export default function QuoteCartPage() {
                           src={normalizeAssetPath(item.image) || PRODUCT_IMAGE_FALLBACK}
                           alt={item.name}
                           fill
+                          unoptimized
                           className="object-contain p-2"
                         />
                       </div>

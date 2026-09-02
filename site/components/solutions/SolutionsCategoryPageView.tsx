@@ -172,6 +172,7 @@ export function SolutionsCategoryPageView({
             alt={heroImageAlt}
             fill
             priority
+            unoptimized
             sizes="100vw"
             className="solutions-hero__img solutions-category-hero__img"
           />
@@ -249,6 +250,7 @@ export function SolutionsCategoryPageView({
                 alt={heroImageAlt}
                 fill
                 sizes="(min-width: 56rem) 52vw, 100vw"
+                unoptimized
                 className="solutions-category-overview__img"
               />
             </div>

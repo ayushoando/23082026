@@ -8,13 +8,13 @@ R2 is the image optimizer. `D:\23082026 - Copy` is reference only. Studio, Admin
 
 ## Already done
 
-Footer, mobile Planner tab, header labels. Client-hub flattened. Map §4 matches next.config. Calculator classification is noindex. Unused `Hero.tsx` removed. Do not redo.
+Footer, mobile Planner tab, header labels. Client-hub flattened. Redirect register §4 matches the live `config/build/next.config.js` redirects as of 2026-09-02. Calculator classification is noindex. Unused `Hero.tsx` removed. Do not redo.
 
 ## Sequence
 
 | Phase | Folder | What |
 |---|---|---|
-| — | [`client-hub/`](./client-hub/) | Spine (map). §4 aligned to next.config 2026-09-02 |
+| — | [`client-hub/`](./client-hub/) | Spine (map). §4 aligned to live next.config redirects 2026-09-02 |
 | 1 | [`chrome/`](./chrome/) | Public header, footer, tabs — handover [`chrome/handover.md`](./chrome/handover.md) |
 | 2 | [`homepage/`](./homepage/) | `/` as journey start, FOCSS, leftover hero |
 | 3 | [`map-equals-code/`](./map-equals-code/) | Redirects, calculator indexability |
@@ -36,4 +36,4 @@ Work systematically. Read the packet and the live files before changing them. Do
 
 ## Done when
 
-A stranger can follow the map from header, footer, and tabs. No public chrome to `/dashboard`, `/portal`, `/ooplanner`, `/admin`. Redirects and calculator indexability match the map. Homepage does not skip to the app. Marketing images are R2 / `unoptimized`. Home, products, clients, `/planner`, `/access` checked on `http://localhost:3000`, desktop and phone.
+A stranger can follow the map from header, footer, and tabs. No public chrome to `/dashboard`, `/portal`, `/ooplanner`, `/admin`. Redirects and calculator indexability match the live config and map. Homepage does not skip to the app. Marketing images are R2 / `unoptimized`. Home, products, clients, `/planner`, `/access` checked on `http://localhost:3000`, desktop and phone.

@@ -315,6 +315,7 @@ export function SustainabilityPageView({
                 alt={SUSTAINABILITY_STORY_IMAGE.alt}
                 fill
                 sizes="(min-width: 56rem) 52vw, 100vw"
+                unoptimized
                 className="sustainability-story__img"
               />
             </div>

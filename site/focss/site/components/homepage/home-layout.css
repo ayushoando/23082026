@@ -248,7 +248,7 @@
 }
 .home-tool-title--dark {
   font-family: var(--font-display);
-  font-size: var(--type-title-sm-size, clamp(18px, 1.04rem + 0.24vw, 1.25rem));
+  font-size: var(--type-title-sm-size);
   font-weight: var(--font-weight-display-regular, 400);
   letter-spacing: -0.038em;
   line-height: var(--type-leading-h3, 1.12);
@@ -294,7 +294,7 @@
 .home-partnership-ribbon__copy {
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(1.5rem, 2.85vw, 2.125rem);
+  font-size: var(--type-title-sm-size) /* TODO token: closest var(--type-title-sm-size) — no exact match */;
   font-weight: var(--font-weight-display-light, 300);
   letter-spacing: -0.025em;
   line-height: 1.2;

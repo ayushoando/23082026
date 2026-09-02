@@ -50,7 +50,7 @@
   margin: 0 auto;
   color: var(--text-inverse);
   font-family: var(--font-display);
-  font-size: clamp(2.35rem, 8vw, 2.85rem);
+  font-size: var(--type-title-lg-size) /* TODO token: closest var(--type-title-lg-size) — no exact match */;
   font-weight: var(--font-weight-display-light);
   line-height: var(--type-leading-title);
   letter-spacing: var(--type-letter-title);
@@ -76,7 +76,7 @@
 
   .planner-landing-hero__title {
     margin-inline: 0;
-    font-size: clamp(2.75rem, 2.8vw, 3.75rem);
+    font-size: var(--type-title-lg-size) /* TODO token: closest var(--type-title-lg-size) — no exact match */;
   }
 
   .planner-landing-hero__lede {

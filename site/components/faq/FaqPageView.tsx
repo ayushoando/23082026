@@ -36,8 +36,7 @@ export function FaqPageView({
         <HomeSectionInner>
           <p className="home-kicker">{heroKicker}</p>
           <h1 className="home-heading mt-3">
-            {heroTitleLead}{" "}
-            <span className="text-accent-italic">{heroTitleAccent}</span>
+            {`${heroTitleLead} ${heroTitleAccent}`}
           </h1>
           <p className="page-copy-sm text-muted mt-4 max-w-2xl">{heroSubtitle}</p>
 

@@ -219,7 +219,7 @@
 
 .pdp-title {
   font-family: var(--font-display);
-  font-size: clamp(2rem, 3.6vw, 2.9rem);
+  font-size: var(--type-title-lg-size) /* TODO token: closest var(--type-title-lg-size) — no exact match */;
   font-weight: var(--font-weight-display-light);
   letter-spacing: var(--type-letter-title);
   line-height: 1.08;

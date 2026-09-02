@@ -312,6 +312,7 @@ export async function ComparePageView({
                                   src={image}
                                   alt={item.product.name}
                                   fill
+                                  unoptimized
                                   sizes="(max-width: 1024px) 100vw, 33vw"
                                   className="object-cover"
                                 />

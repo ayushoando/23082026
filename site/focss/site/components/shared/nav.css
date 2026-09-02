@@ -29,6 +29,34 @@
   }
 }
 
+/*
+ * ≤1100px (68.75rem): nine links + width-locked search + compact EN|HI
+ * crowd the fixed header. Free space without touching the type floor:
+ * hide the 9th link (FAQ — the last primary; drawer keeps the full list at
+ * MobileNavDrawer) and tighten nav-link padding. Font-size is left at the
+ * --type-small floor (0.86rem); readability first, per handover Option 1.
+ */
+@media (width < 68.75rem) {
+  /* Tighten header bar + nav-link spacing without touching the type floor. */
+  .site-header__bar {
+    gap: 0.5rem;
+  }
+
+  .site-header__desktop-nav .shell-nav-link--desktop {
+    padding-inline: 0.5rem;
+  }
+
+  .site-header__desktop-nav > :nth-child(9) {
+    display: none;
+  }
+
+  /* Keep FAQ reachable: re-show the drawer trigger in the 1024–1099 band
+     where the desktop nav is also visible. Below lg it is already shown. */
+  .site-header__hamburger {
+    display: inline-flex;
+  }
+}
+
 .site-header {
   position: fixed;
   top: 0;

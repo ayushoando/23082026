@@ -19,6 +19,7 @@ export function PartnershipPanel() {
       <Image
         src={image.src}
         alt=""
+        unoptimized
         width={224}
         height={153}
         sizes="(max-width: 768px) 9.5rem, 11.75rem"

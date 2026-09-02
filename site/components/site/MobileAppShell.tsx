@@ -66,6 +66,7 @@ export function MobileAppShell({
               href={primaryAction.href}
               label={primaryAction.label}
               surface="mobile-app-bar"
+              aria-label="Get quote — contact sales"
               className="btn-primary mobile-app-bar__cta"
             >
               {primaryAction.label}

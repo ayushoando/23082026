@@ -72,7 +72,7 @@
   }
 
   .catalog-card--compact .catalog-card__body .typ-h3 {
-    font-size: clamp(1.05rem, 0.5vw + 0.95rem, 1.2rem);
+    font-size: var(--type-body-lg-size) /* TODO token: closest var(--type-body-lg-size) — no exact match */;
   }
 }
 

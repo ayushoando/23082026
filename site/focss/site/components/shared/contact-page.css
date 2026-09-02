@@ -53,7 +53,7 @@
 }
 
 .contact-summary__intro .home-heading {
-  font-size: clamp(1.65rem, 2.8vw, 2.15rem);
+  font-size: var(--type-title-sm-size) /* TODO token: closest var(--type-title-sm-size) — no exact match */;
   line-height: 1.12;
 }
 
@@ -72,7 +72,7 @@
 
 .contact-quick-desk__title {
   font-family: var(--font-display);
-  font-size: clamp(1.35rem, 2.2vw, 1.65rem);
+  font-size: var(--type-title-sm-size) /* TODO token: closest var(--type-title-sm-size) — no exact match */;
   font-weight: var(--font-weight-display-light);
   letter-spacing: var(--type-letter-title);
   line-height: 1.15;

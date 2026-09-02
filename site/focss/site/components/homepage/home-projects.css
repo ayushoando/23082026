@@ -167,14 +167,14 @@
 
 @utility projects-card__title {
   color: var(--text-strong);
-  font-size: clamp(1.3rem, 1.08rem + 0.6vw, 1.9rem);
+  font-size: var(--type-title-sm-size) /* TODO token: closest var(--type-title-sm-size) — no exact match */;
   font-weight: 300;
   letter-spacing: -0.028em;
   line-height: 1.12;
 }
 
 .projects-card--primary .projects-card__title {
-  font-size: clamp(1.7rem, 1.4rem + 0.9vw, 2.45rem);
+  font-size: var(--type-title-lg-size) /* TODO token: closest var(--type-title-lg-size) — no exact match */;
 }
 
 @utility projects-card__outcome {

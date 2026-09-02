@@ -234,6 +234,7 @@ export function SolutionsPageView({
                 alt={deliveryMedia.alt}
                 fill
                 sizes="(min-width: 56rem) 52vw, 100vw"
+                unoptimized
                 className="solutions-delivery__img"
               />
             </div>
@@ -275,6 +276,7 @@ export function SolutionsPageView({
                     alt=""
                     aria-hidden="true"
                     fill
+                    unoptimized
                     sizes={
                       index === 0
                         ? "(max-width: 767px) 100vw, 60vw"

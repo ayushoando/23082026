@@ -269,6 +269,7 @@ export function ContactTeaser() {
                 <Image
                   src={t("contact.image.src")}
                   alt={t("contact.image.alt")}
+                  unoptimized
                   width={960}
                   height={720}
                   className="contact-teaser__img"

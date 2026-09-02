@@ -337,7 +337,7 @@ export function SiteHeader() {
       <header className={cn(siteHeaderBaseClass, scrolled ? siteHeaderScrolledClass : "shadow-none")} suppressHydrationWarning>
         {/* home-shell-xl: same max + gutters as marketing body/footer (not shell-container-wide). */}
         <div className="home-shell-xl min-w-0" suppressHydrationWarning>
-          <div className="flex h-16 min-w-0 items-center justify-between gap-2 sm:gap-3">
+          <div className="site-header__bar flex h-16 min-w-0 items-center justify-between gap-2 sm:gap-3">
 
             {/* Logo */}
             <Link

@@ -168,7 +168,7 @@
 .home-step-card__title {
   color: var(--text-strong);
   font-family: var(--font-display);
-  font-size: clamp(1.6rem, 1.35rem + 0.6vw, 2rem);
+  font-size: var(--type-title-sm-size) /* TODO token: closest var(--type-title-sm-size) — no exact match */;
   font-weight: 400;
   letter-spacing: -0.035em;
   line-height: 1;
@@ -238,7 +238,7 @@
   max-width: 22rem;
   color: color-mix(in srgb, white 82%, transparent);
   font-family: var(--font-sans);
-  font-size: clamp(0.8125rem, 0.78rem + 0.12vw, 0.9375rem);
+  font-size: var(--type-small-size) /* TODO token: closest var(--type-small-size) — no exact match */;
   font-weight: 400;
   line-height: 1.45;
   letter-spacing: -0.008em;

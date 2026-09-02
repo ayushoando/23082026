@@ -14,7 +14,7 @@
 
 @media (width >= 64rem) {
   .products-hero__title {
-    font-size: clamp(2.75rem, 2.8vw, 3.75rem);
+    font-size: var(--type-title-lg-size) /* TODO token: closest var(--type-title-lg-size) — no exact match */;
     line-height: 1.08;
   }
 }

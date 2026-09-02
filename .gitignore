@@ -3,6 +3,7 @@ node_modules/
 
 # next.js
 .next/
+.omp/
 out/
 .tmp/
 site/AGENTS.md

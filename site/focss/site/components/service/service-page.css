@@ -96,7 +96,7 @@
 
 .service-channel-row__value {
   margin: 0;
-  font-size: clamp(1.05rem, 2vw, 1.25rem);
+  font-size: var(--type-body-lg-size) /* TODO token: closest var(--type-body-lg-size) — no exact match */;
   font-weight: 600;
   color: var(--text-strong);
 }
@@ -105,7 +105,7 @@
   margin: 0;
   padding-block-start: clamp(0.5rem, 1.5vw, 1rem);
   max-width: 34rem;
-  font-size: clamp(1rem, 2vw, 1.1rem);
+  font-size: var(--type-body-size) /* TODO token: closest var(--type-body-size) — no exact match */;
   line-height: 1.55;
   color: var(--text-body);
 }

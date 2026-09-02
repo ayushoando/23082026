@@ -28,13 +28,14 @@ Living checklist. Updated as tasks complete.
 - [x] **Typecheck** — Clean
 - [x] **Boundary scan** — `pnpm run scan:boundaries` — zero cross-product edges
 
-## Phase 4: Validation ✅
+## Phase 4: Validation (pending ship-bar re-observation)
 
 - [x] **Full typecheck** — `pnpm run typecheck` passes
 - [x] **Boundary scan** — `pnpm run scan:boundaries` — clean (1007 files, 762 edges, zero violations)
 - [x] **pnpm audit** — 1 LOW remaining (Mastra upstream). HIGH and MODERATE CVEs eliminated.
 - [ ] **scan:secrets** — Not run (optional)
-- [ ] **gate:fast** — Not run (requires full test run)
+- [ ] **gate:fast** — Pending Step 7 authorized re-observation; not run in this session
+- Ambient boundary: `M .gitignore` (`+.omp/`) is pre-existing and not produced by this plan; report explicitly.
 
 ## Phase 5: Cross-Plan Updates ✅
 

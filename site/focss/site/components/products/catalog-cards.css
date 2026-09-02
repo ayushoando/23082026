@@ -283,7 +283,7 @@
 }
 
 .home-collection-card--compact .typ-overlay-title {
-  font-size: clamp(0.875rem, 0.84rem + 0.18vw, 1rem);
+  font-size: var(--type-small-size) /* TODO token: closest var(--type-small-size) — no exact match */;
   line-height: 1.15;
 }
 

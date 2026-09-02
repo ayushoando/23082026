@@ -173,7 +173,7 @@
 }
 
 .shell-portal-page-title {
-  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-size: var(--type-title-lg-size) /* TODO token: closest var(--type-title-lg-size) — no exact match */;
   font-weight: var(--font-weight-copy-semibold, 600);
   line-height: 1.2;
   letter-spacing: -0.02em;

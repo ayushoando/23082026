@@ -314,7 +314,7 @@
   margin: 0;
   color: var(--text-inverse);
   font-family: var(--font-display);
-  font-size: clamp(2.35rem, 7.5vw, 3.65rem);
+  font-size: var(--type-title-lg-size) /* TODO token: closest var(--type-title-lg-size) — no exact match */;
   font-weight: var(--font-weight-display-light);
   line-height: 1.08;
   letter-spacing: var(--type-letter-title, -0.02em);
@@ -353,7 +353,7 @@
   margin: 1rem 0 0;
   max-width: 32rem;
   color: var(--text-inverse-body);
-  font-size: clamp(1rem, 2.2vw, 1.125rem);
+  font-size: var(--type-body-lg-size) /* TODO token: closest var(--type-body-lg-size) — no exact match */;
   line-height: 1.55;
   text-shadow: 0 1px 10px var(--overlay-inverse-55);
 }
@@ -375,12 +375,12 @@
 
 /* Compact legal heroes — keep inverse type, tighter title scale */
 .legal-hero.legal-hero--compact .legal-hero__title {
-  font-size: clamp(1.85rem, 4.5vw, 2.75rem);
+  font-size: var(--type-title-lg-size) /* TODO token: closest var(--type-title-lg-size) — no exact match */;
 }
 
 .legal-hero.legal-hero--compact .legal-hero__subtitle {
   max-width: 36rem;
-  font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+  font-size: var(--type-body-size) /* TODO token: closest var(--type-body-size) — no exact match */;
 }
 
 .contact-hero {

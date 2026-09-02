@@ -22,7 +22,7 @@
   overflow-wrap: anywhere;
   word-break: break-word;
   hyphens: auto;
-  font-size: clamp(1.35rem, 4.2vw, 2rem);
+  font-size: var(--type-title-sm-size) /* TODO token: closest var(--type-title-sm-size) — no exact match */;
   line-height: 1.2;
 }
 
@@ -150,7 +150,7 @@
 }
 
 .projects-kpi__value {
-  font-size: clamp(1.25rem, 5.5vw, 2.5rem);
+  font-size: var(--type-title-lg-size) /* TODO token: closest var(--type-title-lg-size) — no exact match */;
   line-height: 1;
 }
 

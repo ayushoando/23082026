@@ -29,6 +29,7 @@ export function FooterLogoMarquee() {
                 src={logo.src}
                 alt=""
                 fill
+                unoptimized
                 sizes="(max-width: 640px) 112px, (max-width: 768px) 128px, 176px"
                 // Marquee uses transform translate — layout boxes stay off-viewport, so
                 // native loading="lazy" (Next default) never intersects and logos stay blank.

@@ -40,6 +40,7 @@ export function ClientBadge({
           <Image
             src={logoSrc}
             alt={`${name} logo`}
+            unoptimized
             width={160}
             height={48}
             sizes="(max-width: 640px) 40vw, 160px"

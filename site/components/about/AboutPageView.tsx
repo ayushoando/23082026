@@ -247,6 +247,7 @@ export function AboutPageView({
                   alt={ABOUT_STORY_IMAGE.alt}
                   fill
                   priority
+                  unoptimized
                   sizes="(min-width: 56rem) 52vw, 100vw"
                   className="about-story__img"
                 />

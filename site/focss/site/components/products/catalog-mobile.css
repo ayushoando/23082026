@@ -42,7 +42,7 @@
   }
 
   .catalog-lane .home-heading {
-    font-size: clamp(1.65rem, 7.4vw, 2.15rem);
+    font-size: var(--type-title-sm-size) /* TODO token: closest var(--type-title-sm-size) — no exact match */;
     line-height: 1.12;
   }
 
@@ -104,7 +104,7 @@
 
   .catalog-lane .home-heading,
   .pdp-page .home-heading {
-    font-size: clamp(1.65rem, 7.4vw, 2.15rem);
+    font-size: var(--type-title-sm-size) /* TODO token: closest var(--type-title-sm-size) — no exact match */;
     line-height: 1.12;
   }
 
@@ -120,7 +120,7 @@
   }
 
   .catalog-card--compact .catalog-card__body .typ-h3 {
-    font-size: clamp(1.05rem, 4.8vw, 1.2rem);
+    font-size: var(--type-body-lg-size) /* TODO token: closest var(--type-body-lg-size) — no exact match */;
     line-height: 1.2;
   }
 

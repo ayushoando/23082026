@@ -70,7 +70,7 @@
 
 .planner-landing-proof__value {
   font-family: var(--font-display);
-  font-size: clamp(1.05rem, 0.9rem + 0.45vw, 1.45rem);
+  font-size: var(--type-body-lg-size) /* TODO token: closest var(--type-body-lg-size) — no exact match */;
   font-weight: 400;
   line-height: 1;
   letter-spacing: -0.03em;

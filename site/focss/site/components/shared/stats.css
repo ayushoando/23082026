@@ -13,7 +13,7 @@
 }
 
 .stats-block__value {
-  font-size: clamp(2.5rem, 5vw, 4.2rem);
+  font-size: var(--type-title-lg-size) /* TODO token: closest var(--type-title-lg-size) — no exact match */;
   font-weight: 275;
   letter-spacing: -0.035em;
   line-height: 1;
