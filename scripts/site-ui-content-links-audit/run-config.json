@@ -6,7 +6,7 @@
   "artifactPaths": {
     "toolingRoot": "scripts/site-ui-content-links-audit",
     "generatedRoot": "results/site-ui-content-links-audit",
-    "authoredRoot": "agents-work/site-ui-content-links-audit",
+    "authoredRoot": ".archive/agents-work/site-ui-content-links-audit",
     "generatedPurposes": [
       "manifests",
       "registries",
