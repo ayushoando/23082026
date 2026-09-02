@@ -1,10 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { GET } from "@/app/api/dev/auth-bypass-status/route";
-import { isDevAuthBypassEnabled } from "@/lib/auth/devAuthBypass";
+import { isDevAuthBypassEnabled, isDevAuthBypassRequestAllowed } from "@/lib/auth/devAuthBypass";
 import { setNodeEnv } from "@/tests/helpers/setNodeEnv";
 
 vi.mock("@/lib/auth/devAuthBypass", () => ({
   isDevAuthBypassEnabled: vi.fn(),
+  isDevAuthBypassRequestAllowed: vi.fn(),
 }));
 
 describe("app/api/dev/auth-bypass-status/route.ts", () => {
@@ -26,10 +27,11 @@ describe("app/api/dev/auth-bypass-status/route.ts", () => {
 
   it("GET reports bypass disabled without secrets", async () => {
     vi.mocked(isDevAuthBypassEnabled).mockReturnValue(false);
+    vi.mocked(isDevAuthBypassRequestAllowed).mockReturnValue(false);
     process.env.DEV_AUTH_BYPASS = "0";
     setNodeEnv("test");
 
-    const res = await GET();
+    const res = await GET(new Request("http://localhost/api/dev/auth-bypass-status"));
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.bypassEnabled).toBe(false);
@@ -41,10 +43,11 @@ describe("app/api/dev/auth-bypass-status/route.ts", () => {
 
   it("GET reports bypass enabled when helper says so", async () => {
     vi.mocked(isDevAuthBypassEnabled).mockReturnValue(true);
+    vi.mocked(isDevAuthBypassRequestAllowed).mockReturnValue(true);
     process.env.DEV_AUTH_BYPASS = "1";
     setNodeEnv("development");
 
-    const res = await GET();
+    const res = await GET(new Request("http://localhost/api/dev/auth-bypass-status"));
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.bypassEnabled).toBe(true);
@@ -55,7 +58,7 @@ describe("app/api/dev/auth-bypass-status/route.ts", () => {
   it("GET returns 404 in production (PX-S08 — no exposure of bypass state)", async () => {
     setNodeEnv("production");
 
-    const res = await GET();
+    const res = await GET(new Request("http://localhost/api/dev/auth-bypass-status"));
     expect(res.status).toBe(404);
   });
 });

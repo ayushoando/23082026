@@ -77,7 +77,7 @@
     "components/site/MobileNavDrawer.tsx",
     "components/site/CookieConsentBar.tsx",
     "components/ui/WhatsAppCTA.tsx",
-    "app/(site)/clients/page.tsx",
+    "app/(site)/portfolio/page.tsx",
     "app/(site)/sitemap/page.tsx"
   ]
 }

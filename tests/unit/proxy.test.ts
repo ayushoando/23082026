@@ -21,7 +21,7 @@ vi.mock('next/server', () => {
 
   return {
     NextRequest: class NextRequest {
-      nextUrl: { pathname: string; search: string; clone: () => URL };
+      nextUrl: { pathname: string; search: string; host: string; hostname: string; clone: () => URL };
       method: string;
       headers: StubHeaders;
       cookies: { has: (n: string) => boolean; getAll: () => { name: string; value: string }[]; set: (n: string, v: string) => void };
@@ -31,10 +31,13 @@ vi.mock('next/server', () => {
         this.nextUrl = {
           pathname: parsed.pathname,
           search: parsed.search,
+          host: parsed.host,
+          hostname: parsed.hostname,
           clone: () => new URL(url)
         };
         this.method = init?.method || 'GET';
         this.headers = new StubHeaders();
+        this.headers.set("host", parsed.host);
         if (init?.headers) {
           if (init.headers instanceof Map) {
             init.headers.forEach((v: string, k: string) => this.headers.set(k, v));

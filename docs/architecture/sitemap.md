@@ -39,7 +39,7 @@ Concrete product records are data-driven (Products DB, 143 `catalog_products` at
 | Route | Classification |
 |---|---|
 | `/trusted-by` | Public proof page |
-| `/clients` | Public proof/portfolio page — **curated** (photography-forward case studies; flat sibling, no child routes) |
+| `/portfolio` | Public proof page — curated case studies. `/clients` is a 308 alias. |
 
 ## 5. Client access and the Planner app (noindex/protected intent)
 
@@ -76,7 +76,7 @@ Verified against `config/build/next.config.js`:
 | Destination | Aliases |
 |---|---|
 | `/` | `/news`, `/brochure`, `/download-brochure`, `/catalog` |
-| `/clients` | `/gallery`, `/portfolio`, `/projects`, `/social` |
+| `/portfolio` | `/clients`, `/gallery`, `/projects`, `/social` |
 | `/service` | `/support-ivr`, `/tracking` |
 | `/products` | `/templates`, retired `/portal/svg-catalog[/[slug]]` |
 | `/terms` | `/imprint` |

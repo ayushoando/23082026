@@ -216,7 +216,7 @@ export const TASK_5_9_5_10_REPOSITORY_EVIDENCE: EvidenceRecord = {
   id: "evidence:tasks-5.9-5.10-targeted-regression-specifications",
   class: "repository",
   summary: "Finding-linked regression metadata and distinct Workstream 5 unit, integration, and browser specifications are authored.",
-  sourceRefs: TASK_5_9_REGRESSION_LINKS.map((link) => link.testPath),
+  sourceRefs: [...new Set(TASK_5_9_REGRESSION_LINKS.map((link) => link.testPath))],
   limitation: "Authored tests are static repository evidence only; no regression, rendered, accessibility, performance, integration, hosted, or deployment result is claimed.",
   artifact: { authorship: "authored", path: "plans/planner-comprehensive-audit/workstream5Evidence.ts" },
 };

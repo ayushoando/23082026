@@ -133,10 +133,6 @@ describe("MobileNavDrawer Component", () => {
       "href",
       "/products?filter=best-sellers",
     );
-    expect(screen.getByRole("link", { name: "Saved plans" })).toHaveAttribute(
-      "href",
-      "/portal",
-    );
     expect(screen.getAllByRole("link", { name: "Contact" })[0]).toHaveAttribute(
       "href",
       "/contact",

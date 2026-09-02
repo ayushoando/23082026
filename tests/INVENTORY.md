@@ -117,7 +117,7 @@ Generated executable-test and support-file inventory. Layout rules: `tests/CONTE
 - `tests/unit/app/(site)/access/page.test.tsx`
 - `tests/unit/app/(site)/career/page.test.tsx`
 - `tests/unit/app/(site)/choose-product/page.test.tsx`
-- `tests/unit/app/(site)/clients/page.test.tsx`
+- `tests/unit/app/(site)/portfolio/page.test.tsx`
 - `tests/unit/app/(site)/compare/page.test.tsx`
 - `tests/unit/app/(site)/contact/page.test.tsx`
 - `tests/unit/app/(site)/dashboard/layout.test.tsx`

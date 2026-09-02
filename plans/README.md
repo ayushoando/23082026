@@ -7,7 +7,7 @@ Active sequence: [`PLAN.md`](./PLAN.md).
 | Folder | Phase |
 |---|---|
 | [`client-hub/`](./client-hub/) | Spine — public/client route map |
-| [`chrome/`](./chrome/) | 1 — public chrome |
+| [`chrome/`](./chrome/) | 1 — public chrome ([handover](./chrome/handover.md)) |
 | [`homepage/`](./homepage/) | 2 — homepage + CSS |
 | [`map-equals-code/`](./map-equals-code/) | 3 — redirects and indexability |
 | [`walk/`](./walk/) | 4 — browser |

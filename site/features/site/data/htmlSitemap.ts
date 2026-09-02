@@ -121,6 +121,7 @@ const COMPANY_SERVICE_PATHS = [
   "/trusted-by",
   "/career",
   "/planning",
+  "/faq",
   "/compare",
   "/downloads",
 ] as const;

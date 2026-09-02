@@ -215,7 +215,7 @@ describe("resolveAuthContext", () => {
   it("uses dev bypass user when enabled", async () => {
     setNodeEnv("development");
     process.env.DEV_AUTH_BYPASS = "1";
-    const auth = await resolveAuthContext("admin");
+    const auth = await resolveAuthContext("admin", { requestHost: "localhost" });
     expect(auth.user?.id).toBe(DEV_BYPASS_USER.id);
     expect(auth.isAdmin).toBe(true);
   });

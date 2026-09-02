@@ -716,10 +716,9 @@ const Planner = ({
   useEffect(() => { if (ready) drawGridAndSheet(); }, [ready, drawGridAndSheet]);
 
   const refreshLayers = useCallback(() => {
-    return;
-    const c = fabricRef.current;
-    if (!c) return;
-    setLayers(collectUserLayerRows(c.getObjects()).reverse());
+    const canvas = fabricRef.current;
+    if (!canvas) return;
+    setLayers(collectUserLayerRows(canvas.getObjects()).reverse());
   }, [fabricRef]);
 
   // Undo/redo replace the entire Fabric object list from a serialized
@@ -1418,58 +1417,57 @@ const Planner = ({
   // throws (tainted-canvas SecurityError from cross-origin underlays, jsPDF
   // failures, …) surface as a user-visible toast instead of an uncaught
   // rejection (28.8). Grid/sheet hiding is always restored in `finally`.
-  const doExportPNG = useCallback(() => { if (true) { return; }
-    const c = fabricRef.current;
-    if (!c) { showToast("Canvas not ready", "error"); return; }
-    const hidden = c.getObjects().filter((o) => asOo(o).data?.isGridLine);
+  const doExportPNG = useCallback(() => {
+    const canvas = fabricRef.current;
+    if (!canvas) { showToast("Canvas not ready", "error"); return; }
+    const hidden = canvas.getObjects().filter((o) => asOo(o).data?.isGridLine);
     try {
-      hidden.forEach((g) => (g.visible = false)); c.requestRenderAll();
-      const url = exportPNG(c, { dpiMultiplier: 2 });
+      hidden.forEach((g) => { g.visible = false; }); canvas.requestRenderAll();
+      const url = exportPNG(canvas, { dpiMultiplier: 2 });
       downloadDataUrl(url, `${projectName || "floor-plan"}.png`); showToast("Exported PNG");
     } catch (e) {
       showToast(`PNG export failed: ${errMessage(e)}`, "error");
     } finally {
-      hidden.forEach((g) => (g.visible = true)); c.requestRenderAll();
+      hidden.forEach((g) => { g.visible = true; }); canvas.requestRenderAll();
     }
   }, [fabricRef, projectName, showToast]);
-  const doExportPDF = () => { if (true) { return; }
-    const c = fabricRef.current;
-    if (!c) { showToast("Canvas not ready", "error"); return; }
-    // Empty-canvas guard (28.11, parity with Studio STU-FIX-03).
-    if (!hasExportableContent(c)) { showToast("Plan is empty — nothing to export", "error"); return; }
-    const hidden = c.getObjects().filter((o) => asOo(o).data?.isGridLine);
+  const doExportPDF = () => {
+    const canvas = fabricRef.current;
+    if (!canvas) { showToast("Canvas not ready", "error"); return; }
+    if (!hasExportableContent(canvas)) { showToast("Plan is empty — nothing to export", "error"); return; }
+    const hidden = canvas.getObjects().filter((o) => asOo(o).data?.isGridLine);
     try {
-      hidden.forEach((g) => (g.visible = false)); c.requestRenderAll();
-      const ok = exportPDF(c, `${projectName || "floor-plan"}.pdf`);
+      hidden.forEach((g) => { g.visible = false; }); canvas.requestRenderAll();
+      const ok = exportPDF(canvas, `${projectName || "floor-plan"}.pdf`);
       if (ok) showToast("Exported PDF");
       else showToast("Plan is empty — nothing to export", "error");
     } catch (e) {
       showToast(`PDF export failed: ${errMessage(e)}`, "error");
     } finally {
-      hidden.forEach((g) => (g.visible = true)); c.requestRenderAll();
+      hidden.forEach((g) => { g.visible = true; }); canvas.requestRenderAll();
     }
   };
-  const doExportSVG = () => { if (true) { return; }
-    const c = fabricRef.current;
-    if (!c) { showToast("Canvas not ready", "error"); return; }
-    const hidden = c.getObjects().filter((o) => asOo(o).data?.isGridLine);
+  const doExportSVG = () => {
+    const canvas = fabricRef.current;
+    if (!canvas) { showToast("Canvas not ready", "error"); return; }
+    const hidden = canvas.getObjects().filter((o) => asOo(o).data?.isGridLine);
     try {
-      hidden.forEach((g) => (g.visible = false)); c.requestRenderAll();
-      const { dataUrl } = exportSVG(c);
+      hidden.forEach((g) => { g.visible = false; }); canvas.requestRenderAll();
+      const { dataUrl } = exportSVG(canvas);
       downloadDataUrl(dataUrl, `${projectName || "floor-plan"}.svg`); showToast("Exported SVG");
     } catch (e) {
       showToast(`SVG export failed: ${errMessage(e)}`, "error");
     } finally {
-      hidden.forEach((g) => (g.visible = true)); c.requestRenderAll();
+      hidden.forEach((g) => { g.visible = true; }); canvas.requestRenderAll();
     }
   };
-  const doExportDXF = () => { if (true) { return; }
+  const doExportDXF = () => {
     try {
-      const c = fabricRef.current;
-      if (!c) { showToast("Canvas not ready", "error"); return; }
-      const drawn = c.getObjects().filter((o) => !asOo(o).data?.isGridLine && !asOo(o).data?.isSheet);
+      const canvas = fabricRef.current;
+      if (!canvas) { showToast("Canvas not ready", "error"); return; }
+      const drawn = canvas.getObjects().filter((o) => !asOo(o).data?.isGridLine && !asOo(o).data?.isSheet);
       if (drawn.length === 0) { showToast("Plan is empty", "error"); return; }
-      downloadDxf(c, projectName || "floor-plan", { pxPerMm: SCALE_PX_PER_MM });
+      downloadDxf(canvas, projectName || "floor-plan", { pxPerMm: SCALE_PX_PER_MM });
       showToast("Exported DXF (mm, layered)");
     } catch (e) {
       showToast(`DXF failed: ${errMessage(e)}`, "error");

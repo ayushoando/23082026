@@ -61,7 +61,6 @@ interface MobileNavDrawerProps {
 const DRAWER_SHORTCUTS = [
   { href: "/products?sort=new-arrivals", translationKey: "mobile.newArrivals" },
   { href: "/products?filter=best-sellers", translationKey: "mobile.bestSellers" },
-  { href: "/faq", translationKey: "navigation.faq" },
   { href: "/contact", translationKey: "navigation.contact" },
 ] as const;
 

@@ -33,6 +33,8 @@ vi.mock("@/platform/supabase/server", () => ({
 
 vi.mock("@/lib/auth/devAuthBypass", () => ({
   isDevAuthBypassEnabled: vi.fn().mockReturnValue(false),
+  isDevAuthBypassActiveForRequest: vi.fn().mockReturnValue(false),
+  isDevAuthBypassRequestAllowed: vi.fn().mockReturnValue(false),
   DEV_BYPASS_USER: { id: "dev-user", email: "dev@localhost", role: "admin" },
   DEV_AUTH_BYPASS_ENV: "DEV_AUTH_BYPASS",
 }));

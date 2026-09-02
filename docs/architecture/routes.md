@@ -26,11 +26,12 @@ This reference maps known `site/app/**/page.tsx` and `site/app/api/**/route.ts` 
 - `/access` → `app/(site)/access/page.tsx`
 - `/career` → `app/(site)/career/page.tsx`
 - `/choose-product` → `app/(site)/choose-product/page.tsx`
-- `/clients` → `app/(site)/clients/page.tsx`
+- `/portfolio` → `app/(site)/portfolio/page.tsx` (`/clients` 308s here)
 - `/compare` → `app/(site)/compare/page.tsx`
 - `/contact` → `app/(site)/contact/page.tsx`
 - `/dashboard` → `app/(site)/dashboard/page.tsx`
 - `/downloads` → `app/(site)/downloads/page.tsx`
+- `/faq` → `app/(site)/faq/page.tsx`
 - `/planning` → `app/(site)/planning/page.tsx`
 - `/planner` → `app/(site)/planner/page.tsx` (marketing)
 - `/planner/features` → `app/(site)/planner/features/page.tsx` (marketing)

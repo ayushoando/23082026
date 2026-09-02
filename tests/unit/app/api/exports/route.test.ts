@@ -131,6 +131,7 @@ describe("POST /api/exports (TST-S22)", () => {
     const res = await POST(
       new NextRequest("http://localhost/api/exports", {
         method: "POST",
+        headers: { host: "localhost" },
         body: JSON.stringify({ name: "x" }),
       }),
     );

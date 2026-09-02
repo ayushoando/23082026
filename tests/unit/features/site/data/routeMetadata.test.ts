@@ -71,7 +71,7 @@ describe("routeMetadata site-data", () => {
       "https://mock-site-url.com/showrooms",
     );
     expect(CLIENTS_PAGE_METADATA.alternates?.canonical).toBe(
-      "https://mock-site-url.com/clients",
+      "https://mock-site-url.com/portfolio",
     );
     expect(TRUSTED_BY_PAGE_METADATA.alternates?.canonical).toBe(
       "https://mock-site-url.com/trusted-by",

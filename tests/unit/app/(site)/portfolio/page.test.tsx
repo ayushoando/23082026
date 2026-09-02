@@ -40,6 +40,10 @@ vi.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams(),
 }));
 
+vi.mock("@/components/site/clients/ClientShowcaseSection", () => ({
+  ClientShowcaseSection: () => <div data-testid="client-showcase" />,
+}));
+
 vi.mock("@/components/shared/ContactTeaser", () => ({
   ContactTeaser: () => <div data-testid="home-contact-teaser" />,
 }));
