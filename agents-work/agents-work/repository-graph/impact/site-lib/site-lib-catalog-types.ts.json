@@ -1,0 +1,116 @@
+{
+  "mode": "file",
+  "file": "site/lib/catalog/types.ts",
+  "domain": "site/lib",
+  "depth": 1,
+  "depthMeaning": "The seed is distance 0; --depth=N includes dependents up to N import hops.",
+  "directDependencies": [],
+  "directDependents": [
+    "scripts/catalog_snapshot_upload_r2.ts",
+    "site/lib/catalog/adapters.ts",
+    "site/lib/catalog/blocks2d.ts",
+    "site/lib/catalog/catalogDrizzle.ts",
+    "site/lib/catalog/catalogFallbackResolver.ts",
+    "site/lib/catalog/catalogSnapshotR2.ts",
+    "site/lib/catalog/catalogTree.ts",
+    "site/lib/catalog/configuratorCatalog.ts",
+    "site/lib/catalog/configuratorCatalogPayload.ts",
+    "site/lib/catalog/fallback.ts",
+    "site/lib/catalog/geometry.ts",
+    "site/lib/catalog/seed/oandoCatalog.ts",
+    "site/lib/catalog/sources.ts"
+  ],
+  "dependents": [
+    {
+      "file": "scripts/catalog_snapshot_upload_r2.ts",
+      "distance": 1,
+      "domain": "scripts/root",
+      "fanIn": 0,
+      "fanOut": 9
+    },
+    {
+      "file": "site/lib/catalog/adapters.ts",
+      "distance": 1,
+      "domain": "site/lib",
+      "fanIn": 5,
+      "fanOut": 1
+    },
+    {
+      "file": "site/lib/catalog/blocks2d.ts",
+      "distance": 1,
+      "domain": "site/lib",
+      "fanIn": 2,
+      "fanOut": 5
+    },
+    {
+      "file": "site/lib/catalog/catalogDrizzle.ts",
+      "distance": 1,
+      "domain": "site/lib",
+      "fanIn": 3,
+      "fanOut": 1
+    },
+    {
+      "file": "site/lib/catalog/catalogFallbackResolver.ts",
+      "distance": 1,
+      "domain": "site/lib",
+      "fanIn": 2,
+      "fanOut": 4
+    },
+    {
+      "file": "site/lib/catalog/catalogSnapshotR2.ts",
+      "distance": 1,
+      "domain": "site/lib",
+      "fanIn": 1,
+      "fanOut": 2
+    },
+    {
+      "file": "site/lib/catalog/catalogTree.ts",
+      "distance": 1,
+      "domain": "site/lib",
+      "fanIn": 0,
+      "fanOut": 4
+    },
+    {
+      "file": "site/lib/catalog/configuratorCatalog.ts",
+      "distance": 1,
+      "domain": "site/lib",
+      "fanIn": 2,
+      "fanOut": 1
+    },
+    {
+      "file": "site/lib/catalog/configuratorCatalogPayload.ts",
+      "distance": 1,
+      "domain": "site/lib",
+      "fanIn": 0,
+      "fanOut": 2
+    },
+    {
+      "file": "site/lib/catalog/fallback.ts",
+      "distance": 1,
+      "domain": "site/lib",
+      "fanIn": 2,
+      "fanOut": 2
+    },
+    {
+      "file": "site/lib/catalog/geometry.ts",
+      "distance": 1,
+      "domain": "site/lib",
+      "fanIn": 1,
+      "fanOut": 1
+    },
+    {
+      "file": "site/lib/catalog/seed/oandoCatalog.ts",
+      "distance": 1,
+      "domain": "site/lib",
+      "fanIn": 0,
+      "fanOut": 1
+    },
+    {
+      "file": "site/lib/catalog/sources.ts",
+      "distance": 1,
+      "domain": "site/lib",
+      "fanIn": 0,
+      "fanOut": 4
+    }
+  ]
+}

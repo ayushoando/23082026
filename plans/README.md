@@ -1,22 +1,24 @@
 # Plans
 
-Planning and audit records. Durable architecture facts belong in `docs/`; current behavior belongs in live code.
-
-## Layout (reorganized 2026-09-01 — former `plans/<name>/` folders now live under [`audit/`](./audit/))
+This directory holds active planning coordination. Durable architecture facts belong in `docs/`; current behavior belongs in live code.
 
 | Location | Role |
 |---|---|
-| [`audit/`](./audit/) | Repository audit program. One folder per report (`NN-slug/` with `findings.md` + `plan.md`, plus `findings-resolved.md` / `findings-remaining.md` as remediation lands). Index: [`audit/INDEX.md`](./audit/INDEX.md). |
-| `audit/01–29/` | Full-repo static audit: findings + remediation plans (remediation tracked per folder). |
-| `audit/30–36/` | Post-audit verification findings (git-history orphans, CVE/currency, i18n hi quality, canvas algorithms, runtime verification, bundle/SEO/visual, DB-worker-CI observed run) — findings only, no plans. |
-| [`audit/planner-audit/`](./audit/planner-audit/) · [`audit/studio-audit/`](./audit/studio-audit/) · [`audit/testing-audit/`](./audit/testing-audit/) · [`audit/ui-audit/`](./audit/ui-audit/) · [`audit/worker-audit/`](./audit/worker-audit/) | The 5 closed pre-audit audit+remedy programs, moved intact under `audit/` (see `audit/INDEX.md` §Legacy program reconciliation). |
-| [`audit/FIX-LOG-20260901.md`](./audit/FIX-LOG-20260901.md) | Verification-sweep fix log — one entry per corrected file, with evidence. |
-| [`audit/PLAN.md`](./audit/PLAN.md) | Active-plan placeholder (none in flight). |
-| [`audit/execution-checklist.md`](./audit/execution-checklist.md) | Remediation execution checklist (superseded in large part by the per-folder `findings-resolved.md`/`findings-remaining.md`; removal awaits owner confirmation). |
-| [`remaining-areas/`](./remaining-areas/) | Backlog of audit areas not yet covered (list only, prerequisites stated). |
-| [`.archive/`](./.archive/) | Retired plan folders kept for the record (currently `03-module-boundaries-fork/`). |
-
-There is no `plans/CONTEXT.md` or `plans/adr/`; create them only if/when domain modeling or ADRs are actually needed.
+| Plan folders (`plans/<name>/`) | Canonical requirements, design, tasks, and plan-owned evidence for active work. |
+| [`seosec/`](./seosec/) | SEO & security audit — 15 security findings, indexing crisis analysis, 4-wave remedy plan. |
+| [`ui-audit/`](./ui-audit/) | UI audit — 33 findings across 34 routes (5 resolved), phased remedy plan (Phases 0–5). |
+| [`packages/`](./packages/) | Package & dependency audit — dead packages removed, CVE overrides, replacement analysis. |
+| [`ai-audit/`](./ai-audit/) | AI implementation audit — Mastra agents, RAG pipeline, vector store, 3-wave remedy plan. |
+| [`admin-audit/`](./admin-audit/) | Admin surface audit — 17 pages, 16 API endpoints, auth, data flow. Studio auth gap found. |
+| [`studio-audit/`](./studio-audit/) | Studio audit — canvas, furniture CRUD, publishing, exports. **No auth** (fixed). |
+| [`planner-audit/`](./planner-audit/) | Planner audit — 4 routes, 10 API endpoints, canvas, projects, offline, AI. Best-architected surface. |
+| [`db-audit/`](./db-audit/) | Database & migrations audit — 64 migrations, 2 DBs, RLS verified. Clean. |
+| [`testing-audit/`](./testing-audit/) | Testing audit — Vitest + Playwright, gate system, audit scripts. Solid infrastructure. |
+| [`worker-audit/`](./worker-audit/) | Cloudflare Worker audit — R2, caching, robots, HSTS. Needs Vectorize binding for AI fix. |
+| [`focss-static-defects/`](./focss-static-defects/) | Reconciled static-defects plan and its colocated audit/decision records. |
+| [`plans-reports-references.csv`](./plans-reports-references.csv) | Root registry of known plans, reports, and durable references. |
+| [`CONTEXT.md`](./CONTEXT.md) | Optional lazy domain glossary; create only when domain modeling requires it. |
+| [`adr/`](./adr/) | Optional architecture decision records. |
 
 **Truth order:** user → live code + fresh commands → `AGENTS.md` → `Agents/` → `docs/` → `plans/`.
 

@@ -1,0 +1,129 @@
+{
+  "mode": "file",
+  "file": "site/features/site/data/routeMetadata.ts",
+  "domain": "marketing",
+  "depth": 2,
+  "depthMeaning": "The seed is distance 0; --depth=N includes dependents up to N import hops.",
+  "directDependencies": [
+    "site/features/site/data/brand.ts",
+    "site/features/site/data/routeCopy.ts",
+    "site/features/site/data/seo.ts",
+    "site/lib/siteUrl.ts"
+  ],
+  "directDependents": [
+    "site/app/(site)/about/page.tsx",
+    "site/app/(site)/access/page.tsx",
+    "site/app/(site)/career/page.tsx",
+    "site/app/(site)/choose-product/page.tsx",
+    "site/app/(site)/compare/page.tsx",
+    "site/app/(site)/contact/page.tsx",
+    "site/app/(site)/planner/features/page.tsx",
+    "site/app/(site)/planner/help/page.tsx",
+    "site/app/(site)/planner/page.tsx",
+    "site/app/(site)/quote-cart/layout.tsx",
+    "site/app/(site)/refund-and-return-policy/page.tsx",
+    "site/app/(site)/solutions/page.tsx",
+    "site/app/(site)/terms/page.tsx",
+    "site/features/site/data/siteSeoContract.ts"
+  ],
+  "dependents": [
+    {
+      "file": "site/app/(site)/about/page.tsx",
+      "distance": 1,
+      "domain": "marketing",
+      "fanIn": 0,
+      "fanOut": 7
+    },
+    {
+      "file": "site/app/(site)/access/page.tsx",
+      "distance": 1,
+      "domain": "marketing",
+      "fanIn": 0,
+      "fanOut": 5
+    },
+    {
+      "file": "site/app/(site)/career/page.tsx",
+      "distance": 1,
+      "domain": "marketing",
+      "fanIn": 0,
+      "fanOut": 8
+    },
+    {
+      "file": "site/app/(site)/choose-product/page.tsx",
+      "distance": 1,
+      "domain": "marketing",
+      "fanIn": 0,
+      "fanOut": 5
+    },
+    {
+      "file": "site/app/(site)/compare/page.tsx",
+      "distance": 1,
+      "domain": "marketing",
+      "fanIn": 0,
+      "fanOut": 2
+    },
+    {
+      "file": "site/app/(site)/contact/page.tsx",
+      "distance": 1,
+      "domain": "marketing",
+      "fanIn": 0,
+      "fanOut": 6
+    },
+    {
+      "file": "site/app/(site)/planner/features/page.tsx",
+      "distance": 1,
+      "domain": "marketing",
+      "fanIn": 0,
+      "fanOut": 5
+    },
+    {
+      "file": "site/app/(site)/planner/help/page.tsx",
+      "distance": 1,
+      "domain": "marketing",
+      "fanIn": 0,
+      "fanOut": 6
+    },
+    {
+      "file": "site/app/(site)/planner/page.tsx",
+      "distance": 1,
+      "domain": "marketing",
+      "fanIn": 0,
+      "fanOut": 5
+    },
+    {
+      "file": "site/app/(site)/quote-cart/layout.tsx",
+      "distance": 1,
+      "domain": "marketing",
+      "fanIn": 0,
+      "fanOut": 1
+    },
+    {
+      "file": "site/app/(site)/refund-and-return-policy/page.tsx",
+      "distance": 1,
+      "domain": "marketing",
+      "fanIn": 0,
+      "fanOut": 7
+    },
+    {
+      "file": "site/app/(site)/solutions/page.tsx",
+      "distance": 1,
+      "domain": "marketing",
+      "fanIn": 0,
+      "fanOut": 8
+    },
+    {
+      "file": "site/app/(site)/terms/page.tsx",
+      "distance": 1,
+      "domain": "marketing",
+      "fanIn": 0,
+      "fanOut": 8
+    },
+    {
+      "file": "site/features/site/data/siteSeoContract.ts",
+      "distance": 1,
+      "domain": "marketing",
+      "fanIn": 0,
+      "fanOut": 5
+    }
+  ]
+}

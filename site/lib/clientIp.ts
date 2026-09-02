@@ -23,8 +23,7 @@ export function normalizeClientIp(ip: string): string {
  *
  * NOTE: on a self-hosted reverse proxy that *appends* to client-supplied
  * XFF, the first hop remains client-chosen — fully spoof-proof resolution
- * needs a trusted-proxy allowlist decision at the platform level (recorded
- * in plans/audit/28 findings-remaining, 28.17).
+ * needs a trusted-proxy allowlist decision at the platform level.
  */
 export function resolveClientIpFromHeaders(headerStore: Headers): string {
   const raw =

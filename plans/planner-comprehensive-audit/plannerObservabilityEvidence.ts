@@ -19,7 +19,7 @@ export const PLANNER_OBSERVABILITY_SERIAL_HANDOFFS: readonly PlannerObservabilit
     id: "handoff:w4:planner-route-observability",
     owner: "workstream-4",
     path: "site/server/Planner/plannerRouteAdapter.ts",
-    adapterImport: "import { observePlannerApiResponseAtCallSite } from '@/lib/Planner/observability/plannerObservability.server';",
+    adapterImport: "import { observePlannerApiResponseAtCallSite } from '@/lib/observability/planner/plannerObservability.server';",
     integration: "createPlannerHandler observes the single processPlannerRequest response with descriptor-derived method/authorization labels and preserves the exact Response; unsupported-method helper coverage remains source-defined and runtime-unverified.",
     requiredAssertions: [
       "The exact Response object and body are preserved.",
@@ -32,7 +32,7 @@ export const PLANNER_OBSERVABILITY_SERIAL_HANDOFFS: readonly PlannerObservabilit
     id: "handoff:w2:planner-persistence-observability",
     owner: "workstream-2",
     path: "site/lib/Planner/plannerProjectOperations.ts",
-    adapterImport: "import { runObservedPlannerPersistenceAtCallSite } from '@/lib/Planner/observability/plannerObservability.server';",
+    adapterImport: "import { runObservedPlannerPersistenceAtCallSite } from '@/lib/observability/planner/plannerObservability.server';",
     integration: "createPlannerProjectRepository wraps each list/load/create/save/delete operation at the selected adapter boundary with its bounded operation, adapter mode, and unchanged context correlation id; no retry or fallback adapter call is added.",
     requiredAssertions: [
       "Exactly one selected disk or Supabase adapter executes.",
@@ -48,10 +48,10 @@ export const TASK_5_1_5_4_REPOSITORY_EVIDENCE: EvidenceRecord = {
   class: "repository",
   summary: "Planner-only allowlisted operation events, bounded Prometheus labels, response/persistence adapters, exporter isolation, fallback behavior, and Properties 24-25 are authored.",
   sourceRefs: [
-    "site/lib/Planner/observability/plannerObservability.ts",
-    "site/lib/Planner/observability/plannerObservabilityAdapters.ts",
-    "site/lib/Planner/observability/plannerObservabilityExporter.server.ts",
-    "site/lib/Planner/observability/plannerObservability.server.ts",
+    "site/lib/observability/planner/plannerObservability.ts",
+    "site/lib/observability/planner/plannerObservabilityAdapters.ts",
+    "site/lib/observability/planner/plannerObservabilityExporter.server.ts",
+    "site/lib/observability/planner/plannerObservability.server.ts",
     "tests/unit/planner/plannerObservability.property.test.ts",
   ],
   limitation: "Static source establishes both serial call-site integrations and the response/result-preservation contract; runtime event emission, metric scraping across deployment instances, hosted telemetry, and a test result remain unverified.",

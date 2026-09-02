@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-// Finding 8.1 (plans/audit/08): user-uploaded SVG is stored verbatim and later
-// served back as `image/svg+xml` from /api/files/furniture/[filename] — the
-// route must reject SVG payloads that fail the shared sanitizer.
+// User-uploaded SVG is stored verbatim and later served back as
+// `image/svg+xml` from /api/files/furniture/[filename] — the route must
+// reject SVG payloads that fail the shared sanitizer.
 
 vi.mock("@studio/server/studioStore", () => ({
   ensureStorageDirs: vi.fn(async () => undefined),

@@ -1,13 +1,5 @@
 export const PLANNER_AUDIT_AUTHORED_ROOT =
   "plans/planner-comprehensive-audit/" as const;
-// Corrected 2026-09-01: property/example tests authored for this plan live
-// under tests/unit/planner/; modelling them as an authored artifact used to
-// require an `as unknown as` cast. The union now types them honestly.
-export const PLANNER_AUDIT_AUTHORED_TEST_ROOT =
-  "tests/unit/planner/" as const;
-export type PlannerAuditAuthoredPath =
-  | `${typeof PLANNER_AUDIT_AUTHORED_ROOT}${string}`
-  | `${typeof PLANNER_AUDIT_AUTHORED_TEST_ROOT}${string}`;
 export const PLANNER_AUDIT_MACHINE_EVIDENCE_ROOT =
   "results/planner-comprehensive-audit/" as const;
 
@@ -188,7 +180,7 @@ export type EvidenceClass =
 export type EvidenceArtifact =
   | {
       authorship: "authored";
-      path: PlannerAuditAuthoredPath;
+      path: `${typeof PLANNER_AUDIT_AUTHORED_ROOT}${string}`;
     }
   | {
       authorship: "generated";

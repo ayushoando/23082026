@@ -209,8 +209,7 @@ const COMMANDS = {
   "db:backup:pgdump": () => runTsx("db_backup_pg_dump.ts"),
   "db:ensure-plans": () => runTsx("db_ensure_plans_table.ts"),
   "db:sync-drizzle": () => runTsx("db_sync_drizzle_schema.ts"),
-  // Asset-cutover path rewrites (registered 2026-09-01 from the orphan triage in
-  // plans/audit/20-scripts-governance). Mutating tools — read the header before running.
+  // Asset-cutover path rewrites. Mutating tools — read the header before running.
   "db:images:rewrite:apply": () => runNode("apply-db-image-path-rewrite.mjs"),
   "db:images:rewrite:reverse": () => runNode("reverse-asset-paths.mjs"),
 
@@ -288,8 +287,7 @@ const COMMANDS = {
       "--fail-on-hit",
     ]),
   "assets:r2:count": () => runNode("count-r2-objects.mjs"),
-  // Asset QA one-offs (registered 2026-09-01 from the orphan triage in
-  // plans/audit/20-scripts-governance).
+  // Asset QA one-offs.
   "assets:contact-sheet": () => runNode("contact-sheet.mjs"),
   "audit:images:corrupt": () => runNode("detect-corrupt-images.mjs"),
   "verify:asset-decode": () => runNode("verify-asset-decode.mjs"),

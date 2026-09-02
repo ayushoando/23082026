@@ -184,10 +184,10 @@ export const TASK_5_9_REGRESSION_LINKS: readonly RegressionEvidenceLink[] = [
 export const WORKSTREAM_5_VALIDATION_INPUT: PlannerValidationFindingInput = {
   id: "finding:workstream-5-authored-deliverables",
   changedPaths: [
-    "site/lib/Planner/observability/plannerObservability.ts",
-    "site/lib/Planner/observability/plannerObservabilityAdapters.ts",
-    "site/lib/Planner/observability/plannerObservabilityExporter.server.ts",
-    "site/lib/Planner/observability/plannerObservability.server.ts",
+    "site/lib/observability/planner/plannerObservability.ts",
+    "site/lib/observability/planner/plannerObservabilityAdapters.ts",
+    "site/lib/observability/planner/plannerObservabilityExporter.server.ts",
+    "site/lib/observability/planner/plannerObservability.server.ts",
     "plans/planner-comprehensive-audit/plannerObservabilityEvidence.ts",
     "plans/planner-comprehensive-audit/validationEvidence.ts",
     "plans/planner-comprehensive-audit/workstream5Evidence.ts",
@@ -216,9 +216,7 @@ export const TASK_5_9_5_10_REPOSITORY_EVIDENCE: EvidenceRecord = {
   id: "evidence:tasks-5.9-5.10-targeted-regression-specifications",
   class: "repository",
   summary: "Finding-linked regression metadata and distinct Workstream 5 unit, integration, and browser specifications are authored.",
-  // Regression links share spec files across concerns; the registry rejects
-  // duplicate sourceRefs, so the reference list is deduplicated.
-  sourceRefs: [...new Set(TASK_5_9_REGRESSION_LINKS.map((link) => link.testPath))],
+  sourceRefs: TASK_5_9_REGRESSION_LINKS.map((link) => link.testPath),
   limitation: "Authored tests are static repository evidence only; no regression, rendered, accessibility, performance, integration, hosted, or deployment result is claimed.",
   artifact: { authorship: "authored", path: "plans/planner-comprehensive-audit/workstream5Evidence.ts" },
 };
@@ -253,7 +251,7 @@ export const TASKS_5_12_TO_5_14_REPOSITORY_EVIDENCE: EvidenceRecord = {
     "The property tests are authored but unexecuted. Their presence is repository evidence only and is not a passing test result.",
   artifact: {
     authorship: "authored",
-    path: "tests/unit/planner/plannerValidationEvidence.property.test.ts",
+    path: "tests/unit/planner/plannerValidationEvidence.property.test.ts" as unknown as `plans/planner-comprehensive-audit/${string}`,
   },
 };
 
