@@ -3,7 +3,7 @@
  * Poster-first LCP; reduced-motion stays on the still.
  */
 export const PLANNING_HERO_IMAGE = {
-  src: "/assets/marketing/hero/pages/Planner-oneandonly-bright.webp",
+  src: "/assets/marketing/hero/pages/Other3-oneandonly-bright.webp",
   alt: "Workspace planning session with floor layout and furniture specification",
 } as const;
 

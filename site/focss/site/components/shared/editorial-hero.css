@@ -193,6 +193,8 @@
 .trusted-by-hero__img,
 .sustainability-hero__img {
   object-fit: cover;
+  transform: scale(1.03);
+  filter: saturate(0.86) contrast(1.14) brightness(0.78);
 }
 
 .about-hero__grade,
@@ -212,7 +214,18 @@
   inset: 0;
   z-index: 2;
   pointer-events: none;
-  background: color-mix(in srgb, var(--surface-inverse) 5%, transparent);
+  background:
+    linear-gradient(
+      180deg,
+      var(--overlay-inverse-24) 0%,
+      transparent 38%,
+      var(--overlay-inverse-52) 100%
+    ),
+    radial-gradient(
+      ellipse 80% 55% at 50% 100%,
+      var(--overlay-inverse-35),
+      transparent 70%
+    );
 }
 
 .about-hero__img { object-position: 58% 38%; }
@@ -244,8 +257,8 @@
   inset: 0;
   z-index: 1;
   background:
-    linear-gradient(180deg, var(--overlay-inverse-12) 0%, var(--overlay-inverse-52) 100%),
-    linear-gradient(90deg, var(--overlay-inverse-64) 0%, var(--overlay-inverse-30) 48%, var(--overlay-inverse-08) 100%);
+    linear-gradient(180deg, var(--overlay-inverse-24) 0%, var(--overlay-inverse-64) 100%),
+    linear-gradient(90deg, var(--overlay-inverse-64) 0%, var(--overlay-inverse-35) 46%, var(--overlay-inverse-12) 100%);
 }
 
 .about-hero__layout,

@@ -441,6 +441,7 @@ export function MobileNavDrawer({ open, onClose }: MobileNavDrawerProps) {
             })}
           </ul>
 
+          {SITE_HEADER_MORE_LINKS.length > 0 ? (
           <ul className="drawer-more mt-4 min-w-0 space-y-1">
             {SITE_HEADER_MORE_LINKS.map((link) => {
               const label = navigationLabel(link.label);
@@ -459,6 +460,7 @@ export function MobileNavDrawer({ open, onClose }: MobileNavDrawerProps) {
               );
             })}
           </ul>
+          ) : null}
 
           <ul className="drawer-shortcuts mt-4 min-w-0 space-y-1">
             {DRAWER_SHORTCUTS.map((link) => (

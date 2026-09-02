@@ -117,6 +117,7 @@ export function ChooseProductPage({
             alt="Office furniture workspace layout preview in planning view"
             fill
             priority
+            unoptimized
             sizes="(max-width: 1024px) 100vw, 48vw"
             className="choose-product-hero__media"
           />

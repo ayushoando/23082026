@@ -3,10 +3,10 @@
 /* --- Display / H1 --- */
 @utility typ-h1 {
   font-family: var(--font-display);
-  font-size: var(--type-display-size);
+  font-size: var(--type-title-lg-size);
   font-weight: var(--font-weight-display-light);
-  letter-spacing: var(--type-letter-tight);
-  line-height: var(--type-leading-display);
+  letter-spacing: var(--type-letter-title);
+  line-height: var(--type-leading-title);
   font-kerning: normal;
   overflow-wrap: break-word;
   text-wrap: balance;
@@ -38,10 +38,10 @@
 
 @utility typ-section {
   font-family: var(--font-display);
-  font-size: clamp(2rem, 3.6vw, 2.9rem);
+  font-size: var(--type-title-lg-size);
   font-weight: var(--font-weight-display-light);
   letter-spacing: var(--type-letter-title);
-  line-height: 1.08;
+  line-height: var(--type-leading-title);
   font-kerning: normal;
   overflow-wrap: break-word;
   text-wrap: balance;
@@ -50,10 +50,10 @@
 
 @utility typ-section-title {
   font-family: var(--font-display);
-  font-size: clamp(1.75rem, 4vw, 2.75rem);
-  font-weight: 300;
-  letter-spacing: -0.04em;
-  line-height: 1.08;
+  font-size: var(--type-title-lg-size);
+  font-weight: var(--font-weight-display-light);
+  letter-spacing: var(--type-letter-title);
+  line-height: var(--type-leading-title);
   font-kerning: normal;
   overflow-wrap: break-word;
   text-wrap: balance;
@@ -96,7 +96,7 @@
 
 @utility typ-subsection-title {
   font-family: var(--font-display);
-  font-size: clamp(1.75rem, 2.4vw, 2.25rem);
+  font-size: var(--type-project-display-size);
   font-weight: var(--font-weight-display-light);
   letter-spacing: var(--type-letter-title);
   line-height: var(--type-leading-title);
@@ -108,10 +108,10 @@
 
 @utility typ-proof-value {
   font-family: var(--font-display);
-  font-size: clamp(1.5rem, 2vw, 1.75rem);
+  font-size: var(--type-partner-title-size);
   font-weight: var(--font-weight-display-light);
   letter-spacing: var(--type-letter-card);
-  line-height: 1.08;
+  line-height: var(--type-leading-title);
   font-kerning: normal;
 }
 
@@ -120,7 +120,7 @@
   font-family: var(--font-display);
   font-size: var(--type-title-sm-size);
   font-weight: var(--font-weight-display-regular);
-  letter-spacing: -0.038em;
+  letter-spacing: var(--type-letter-h3);
   line-height: var(--type-leading-h3);
   font-kerning: normal;
   overflow-wrap: break-word;
@@ -238,10 +238,10 @@
 /* --- Stat --- */
 @utility typ-stat {
   font-family: var(--font-display);
-  font-size: clamp(2.5rem, 5vw, 4.1875rem);
+  font-size: var(--type-stat-size);
   font-weight: var(--font-weight-display-light);
-  letter-spacing: -0.06em;
-  line-height: 1;
+  letter-spacing: var(--type-letter-stat);
+  line-height: var(--type-leading-stat);
   font-variant-numeric: tabular-nums;
 }
 
@@ -275,10 +275,10 @@
 /* --- Image-overlay title --- */
 @utility typ-overlay-title {
   font-family: var(--font-display);
-  font-size: clamp(1.25rem, 1.1rem + 0.7vw, 1.75rem);
+  font-size: var(--type-project-title-size);
   font-weight: var(--font-weight-display-light);
   letter-spacing: var(--type-letter-card);
-  line-height: 1.02;
+  line-height: var(--type-leading-title);
   font-kerning: normal;
   text-wrap: balance;
 }

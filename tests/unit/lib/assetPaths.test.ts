@@ -103,11 +103,11 @@ describe('assetPaths', () => {
 
   it('rewrites legacy /media/hero paths to /assets/marketing/hero/pages', () => {
     mockFs.existsSync.mockImplementation((p: string) => {
-      if (String(p).includes('/assets/marketing/hero/pages/Planner-oneandonly-bright.webp')) return true;
+      if (String(p).includes('/assets/marketing/hero/pages/Other3-oneandonly-bright.webp')) return true;
       return false;
     });
     expect(assetPaths.normalizeAssetPath('/media/hero/hero-1.webp', DISK_PROBE)).toBe(
-      '/assets/marketing/hero/pages/Planner-oneandonly-bright.webp',
+      '/assets/marketing/hero/pages/Other3-oneandonly-bright.webp',
     );
   });
 

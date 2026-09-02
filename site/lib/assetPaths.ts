@@ -430,21 +430,21 @@ const MARKETING_PATH_ALIASES: Readonly<Record<string, string>> = {
   "/assets/marketing/hero/slides/hero-5.webp":
     "/assets/marketing/hero/pages/Spare/hero-5.webp",
   "/assets/marketing/hero/hero-1.webp":
-    "/assets/marketing/hero/pages/Planner-oneandonly-bright.webp",
+    "/assets/marketing/hero/pages/Other3-oneandonly-bright.webp",
   "/assets/marketing/hero/hero-2.webp":
     "/assets/marketing/hero/pages/about-oneandonly-bright.webp",
   "/assets/marketing/hero/slides/home-poster.webp":
-    "/assets/marketing/hero/pages/Planner-oneandonly-bright.webp",
+    "/assets/marketing/hero/pages/Other3-oneandonly-bright.webp",
   "/assets/marketing/hero/admin-entry-poster.webp":
-    "/assets/marketing/hero/pages/Planner-oneandonly-bright.webp",
+    "/assets/marketing/hero/pages/Other3-oneandonly-bright.webp",
   "/assets/marketing/hero/pages/career-poster.webp":
-    "/assets/marketing/hero/pages/Planner-oneandonly-bright.webp",
+    "/assets/marketing/hero/pages/Other3-oneandonly-bright.webp",
   "/assets/marketing/hero/pages/service-poster.webp":
     "/assets/marketing/hero/pages/solutions-oneandonly-bright.webp",
   "/assets/marketing/hero/pages/showrooms-poster.webp":
     "/assets/marketing/hero/pages/Other3-oneandonly-bright.webp",
   "/assets/marketing/hero/pages/hero-1.webp":
-    "/assets/marketing/hero/pages/Planner-oneandonly-bright.webp",
+    "/assets/marketing/hero/pages/Other3-oneandonly-bright.webp",
   "/assets/marketing/hero/pages/hero-2.webp":
     "/assets/marketing/hero/pages/about-oneandonly-bright.webp",
   "/assets/marketing/hero/pages/hero-5.webp":
@@ -458,11 +458,11 @@ const MARKETING_PATH_ALIASES: Readonly<Record<string, string>> = {
   "/assets/marketing/hero/pages/trusted-by-poster.webp":
     "/assets/marketing/hero/pages/Other3-oneandonly-bright.webp",
   "/assets/marketing/hero/pages/planning-poster.webp":
-    "/assets/marketing/hero/pages/Planner-oneandonly-bright.webp",
+    "/assets/marketing/hero/pages/Other3-oneandonly-bright.webp",
   "/assets/marketing/hero/pages/downloads-poster.webp":
-    "/assets/marketing/hero/pages/Planner-oneandonly-bright.webp",
+    "/assets/marketing/hero/pages/Other3-oneandonly-bright.webp",
   "/assets/marketing/hero/slides/downloads-poster.webp":
-    "/assets/marketing/hero/pages/Planner-oneandonly-bright.webp",
+    "/assets/marketing/hero/pages/Other3-oneandonly-bright.webp",
   // Non-bright page files → bright (slight lift)
   "/assets/marketing/hero/pages/about-oneandonly.webp":
     "/assets/marketing/hero/pages/about-oneandonly-bright.webp",
@@ -479,7 +479,7 @@ const MARKETING_PATH_ALIASES: Readonly<Record<string, string>> = {
   "/assets/marketing/hero/pages/Other3-oneandonly.webp":
     "/assets/marketing/hero/pages/Other3-oneandonly-bright.webp",
   "/assets/marketing/hero/pages/Planner-oneandonly.webp":
-    "/assets/marketing/hero/pages/Planner-oneandonly-bright.webp",
+    "/assets/marketing/hero/pages/Other3-oneandonly-bright.webp",
   "/assets/marketing/hero/pages/solutions-oneandonly.webp":
     "/assets/marketing/hero/pages/solutions-oneandonly-bright.webp",
   "/assets/marketing/hero/27-06-2025 Image 03.webp":

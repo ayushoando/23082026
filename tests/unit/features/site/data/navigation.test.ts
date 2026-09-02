@@ -73,29 +73,29 @@ describe("navigation site-data helper", () => {
   });
 
   describe("MOBILE_TABS", () => {
-    it("is Catalog, Planner, Clients, About Us, Account — no Home tab", () => {
+    it("is Products, Planner, Quote, Portfolio, Account — no Home or About tab", () => {
       expect(MOBILE_TABS.map((tab) => tab.id)).toEqual([
-        "catalog",
+        "products",
         "planner",
-        "clients",
-        "about",
+        "quote",
+        "portfolio",
         "account",
       ]);
       expect(MOBILE_TABS.map((tab) => tab.label)).toEqual([
-        "Catalog",
+        "Products",
         "Planner",
+        "Quote",
         "Portfolio",
-        "About Us",
         "Account",
       ]);
     });
 
     it("points Planner at the marketing landing and Account at sign-in", () => {
       const byId = Object.fromEntries(MOBILE_TABS.map((tab) => [tab.id, tab]));
-      expect(byId.catalog.href).toBe("/products");
+      expect(byId.products.href).toBe("/products");
       expect(byId.planner.href).toBe(PRODUCT_SUITE.planner.routes.landing);
-      expect(byId.clients.href).toBe("/portfolio");
-      expect(byId.about.href).toBe("/about");
+      expect(byId.quote.href).toBe("/contact");
+      expect(byId.portfolio.href).toBe("/portfolio");
       expect(byId.account.href).toBe(SITE_AUTH_LINK.href);
     });
   });
@@ -104,13 +104,14 @@ describe("navigation site-data helper", () => {
     it("resolves primary destinations and trailing slashes", () => {
       expect(activeTabFor("/")).toBeNull();
       expect(activeTabFor("")).toBeNull();
-      expect(activeTabFor("/portfolio")).toBe("clients");
-      expect(activeTabFor("/clients")).toBe("clients");
-      expect(activeTabFor("/products")).toBe("catalog");
-      expect(activeTabFor("/products/seating/")).toBe("catalog");
+      expect(activeTabFor("/portfolio")).toBe("portfolio");
+      expect(activeTabFor("/clients")).toBe("portfolio");
+      expect(activeTabFor("/products")).toBe("products");
+      expect(activeTabFor("/products/seating/")).toBe("products");
       expect(activeTabFor("/ooplanner")).toBe("planner");
       expect(activeTabFor("/planner/help")).toBe("planner");
-      expect(activeTabFor("/about")).toBe("about");
+      expect(activeTabFor("/contact")).toBe("quote");
+      expect(activeTabFor("/about")).toBeNull();
       expect(activeTabFor("/access")).toBe("account");
       expect(activeTabFor("/dashboard")).toBe("account");
       expect(activeTabFor("/portal/guest")).toBe("account");
@@ -119,8 +120,8 @@ describe("navigation site-data helper", () => {
 
     it("returns null for interior marketing pages", () => {
       expect(activeTabFor("/oostudio")).toBeNull();
-      expect(activeTabFor("/contact")).toBeNull();
       expect(activeTabFor("/solutions")).toBeNull();
+      expect(activeTabFor("/about")).toBeNull();
     });
   });
 

@@ -1263,7 +1263,8 @@
         "bestSellers": "लोकप्रिय उत्पाद",
         "submitSearch": "मोबाइल खोज सबमिट करें",
         "searchProducts": "उत्पाद खोजें",
-        "getQuote": "कोटेशन लें"
+        "getQuote": "कोटेशन लें",
+        "quote": "Quote"
       },
       "footer": {
         "products": "उत्पाद",

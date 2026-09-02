@@ -34,6 +34,7 @@ export function PlannerFeaturesHubPage() {
             alt={PLANNER_HERO_IMAGES[0].alt}
             fill
             priority
+            unoptimized
             sizes="100vw"
             className="object-cover object-center"
           />

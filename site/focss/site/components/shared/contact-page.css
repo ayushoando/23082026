@@ -10,25 +10,18 @@
  */
 .page-hero--compact .page-hero-title,
 .page-hero--compact .home-hero-title-route {
-  font-size: clamp(1.65rem, 3.6vw, 2.35rem);
-  line-height: 1.12;
+  font-size: var(--type-title-lg-size);
+  line-height: var(--type-leading-title);
   max-width: min(100%, 28rem);
   letter-spacing: var(--type-letter-title);
   white-space: normal;
   text-wrap: pretty;
 }
 
-@media (width >= theme(--breakpoint-md)) {
-  .page-hero--compact .page-hero-title,
-  .page-hero--compact .home-hero-title-route {
-    font-size: clamp(1.9rem, 2.8vw, 2.55rem);
-  }
-}
-
 .page-hero--compact .hero-subtitle {
-  font-size: clamp(0.95rem, 1.4vw, 1.05rem);
+  font-size: var(--type-body-lg-size);
   max-width: 36rem;
-  line-height: 1.45;
+  line-height: var(--type-leading-copy);
 }
 
 /* ── Two-column shell (desktop) ── */

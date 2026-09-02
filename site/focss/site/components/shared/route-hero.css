@@ -17,17 +17,12 @@
   overflow-wrap: normal;
   word-break: normal;
   hyphens: none;
-  /* Match locked route clamps (home-type-fallback / home-base) */
-  font-size: clamp(2.5rem, 8.5vw, 3.75rem);
-  line-height: 1.1;
-  letter-spacing: var(--type-letter-title);
   max-width: min(100%, 40rem);
 }
 
 @media (width >= theme(--breakpoint-md)) {
   .page-hero:not(.page-hero--compact) .home-hero-title-route,
   .page-hero:not(.page-hero--compact) .page-hero-title {
-    font-size: clamp(3rem, 5vw, 4.25rem);
     max-width: min(100%, 44rem);
   }
 }

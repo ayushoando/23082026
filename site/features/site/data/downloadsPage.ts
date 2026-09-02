@@ -3,7 +3,7 @@
  * (not shared dmrc stock; not catalog PDP truth). No hero video.
  */
 export const DOWNLOADS_HERO_IMAGE = {
-  src: "/assets/marketing/hero/pages/Planner-oneandonly-bright.webp",
+  src: "/assets/marketing/hero/pages/Other3-oneandonly-bright.webp",
   alt: "One and Only workspace documentation and specification review in Patna",
 } as const;
 

@@ -107,7 +107,7 @@ vi.mock("@/components/analytics/KpiIntegrityMonitor", () => ({
   ),
 }));
 
-describe("app/(site)/clients/page.tsx — behavior", () => {
+describe("app/(site)/portfolio/page.tsx — behavior", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -119,9 +119,9 @@ describe("app/(site)/clients/page.tsx — behavior", () => {
         ? CLIENTS_PAGE_METADATA.title
         : ((CLIENTS_PAGE_METADATA.title as { absolute?: string })?.absolute ?? String(CLIENTS_PAGE_METADATA.title));
     expect(titleValue).toMatch(/One&Only/);
-    expect(CLIENTS_PAGE_METADATA.openGraph?.url).toMatch(/\/clients\/?$/);
+    expect(CLIENTS_PAGE_METADATA.openGraph?.url).toMatch(/\/portfolio\/?$/);
     expect(CLIENTS_PAGE_METADATA.description).toBeDefined();
-    expect((CLIENTS_PAGE_METADATA.alternates as { canonical?: string })?.canonical).toMatch(/\/clients\/?$/);
+    expect((CLIENTS_PAGE_METADATA.alternates as { canonical?: string })?.canonical).toMatch(/\/portfolio\/?$/);
   });
 
   it("renders marketing shell, hero with computed labellings, and JSON-LD scripts", async () => {

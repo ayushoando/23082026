@@ -70,7 +70,7 @@ export function HeaderSearchPanel({
         <label htmlFor="site-header-search" className="sr-only">
           {t("inputLabel")}
         </label>
-        <MagnifyingGlass size={16} weight="bold" className="text-muted" aria-hidden="true" />
+        <MagnifyingGlass size={12} weight="bold" className="text-muted" aria-hidden="true" />
         <input
           id="site-header-search"
           name="search"
@@ -80,7 +80,7 @@ export function HeaderSearchPanel({
           onFocus={() => onShowSearchPanel(true)}
           placeholder={t("placeholder")}
           data-caret={showSearchPanel ? "visible" : "hidden"}
-          className={`site-header-search-input min-w-0 flex-1 w-40 bg-transparent typ-body outline-none placeholder:text-subtle sm:w-48 lg:w-56 xl:w-64 ${showSearchPanel ? "caret-visible" : "caret-transparent"}`}
+          className={`site-header-search-input min-w-0 bg-transparent typ-body outline-none placeholder:text-subtle ${showSearchPanel ? "caret-visible" : "caret-transparent"}`}
           autoComplete="off"
           aria-label={t("inputLabel")}
           aria-describedby="site-header-search-status"
@@ -88,7 +88,7 @@ export function HeaderSearchPanel({
           suppressHydrationWarning
           toolparamdescription="Product search keywords, for example ergonomic chair or modular workstation."
         />
-        <Sparkle size={16} weight="duotone" className="text-contrast-accent" aria-hidden="true" />
+        <Sparkle size={12} weight="duotone" className="text-contrast-accent" aria-hidden="true" />
         <button type="submit" className="sr-only">
           {t("submit")}
         </button>

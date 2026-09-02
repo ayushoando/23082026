@@ -60,6 +60,12 @@
   inset: 0;
 }
 
+.pfp-hero-media img {
+  object-fit: cover;
+  transform: scale(1.03);
+  filter: saturate(0.86) contrast(1.14) brightness(0.78);
+}
+
 .pfp-hero-overlay {
   position: absolute;
   inset: 0;

@@ -313,7 +313,7 @@ describe("SiteHeader Component", () => {
     expect(shell?.className).toMatch(/min-w-0/);
 
     expect(screen.getByRole("group", { name: /Select Language/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /English/i }).className).toMatch(/min-h-11/);
+    expect(screen.getByRole("button", { name: /English/i }).className).toMatch(/site-header__locale-btn/);
   });
 
   it("adds shadow style class on page scroll", async () => {

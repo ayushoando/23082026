@@ -155,26 +155,23 @@
 }
 @utility home-hero-title-small {
   max-width: 12ch;
-  font-size: clamp(2.6rem, 5vw, 4.7rem);
+  font-size: var(--type-display-size);
 }
-/* Route landings — same scale as homepage hero, wider measure for long titles */
+/* Route landings — display scale, wider measure for long titles */
 @utility home-hero-title-route {
   max-width: min(100%, 36rem);
   font-family: var(--font-display);
   color: var(--text-inverse);
-  font-size: clamp(2.5rem, 8.5vw, 3.75rem);
+  font-size: var(--type-display-size);
   font-weight: var(--font-weight-display-light);
-  line-height: var(--type-leading-title);
-  letter-spacing: var(--type-letter-title);
+  line-height: var(--type-leading-display);
+  letter-spacing: var(--type-letter-tight);
   text-shadow: 0 2px 28px var(--scrim-black-40);
   text-wrap: balance;
-  @media (width >= theme(--breakpoint-md)) {
-    font-size: clamp(3.5rem, 5.8vw, 4.75rem);
-  }
 }
 @utility home-hero-title-default {
   max-width: 13ch;
-  font-size: clamp(3.25rem, 6vw, 5.8rem);
+  font-size: var(--type-display-size);
 }
 @utility home-hero__layout {
   display: grid;

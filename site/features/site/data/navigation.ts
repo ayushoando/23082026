@@ -6,6 +6,7 @@ import { PRODUCT_SUITE } from "@/features/site/data/productSuite";
  * Products opens the category mega menu (desktop) / accordion (mobile).
  * Secondary destinations live as direct footer links (no "More" dropdown).
  */
+/** Header destinations: 9 max. More is unused while the primary list is at that cap. */
 export const SITE_NAV_LINKS = [
   { label: "Products", href: "/products", hasMega: true },
   { label: "Solutions", href: "/solutions" },
@@ -14,6 +15,9 @@ export const SITE_NAV_LINKS = [
   { label: "Planner", href: PRODUCT_SUITE.planner.routes.landing },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
+  { label: "Trusted By", href: "/trusted-by" },
+  { label: "Sustainability", href: "/sustainability" },
+  { label: "FAQ", href: "/faq" },
 ] as const;
 
 export type SiteNavLink = (typeof SITE_NAV_LINKS)[number];
@@ -21,14 +25,8 @@ export type SiteNavLink = (typeof SITE_NAV_LINKS)[number];
 /** Desktop + mobile center nav — same flat list. */
 export const SITE_HEADER_PRIMARY_LINKS = SITE_NAV_LINKS;
 
-/** Header "More" — rest of the public tree so chrome is not six links. */
-export const SITE_HEADER_MORE_LINKS = [
-  { label: "Planning", href: "/planning" },
-  { label: "Showrooms", href: "/showrooms" },
-  { label: "Trusted By", href: "/trusted-by" },
-  { label: "Sustainability", href: "/sustainability" },
-  { label: "FAQ", href: "/faq" },
-] as const;
+/** Overflow only — keep empty while `SITE_NAV_LINKS` is already at the 9-link cap. */
+export const SITE_HEADER_MORE_LINKS: readonly { label: string; href: string }[] = [];
 
 export const SITE_CTA_LINKS = [
   { label: "Get Quote", href: "/contact", variant: "primary" as const },
@@ -38,13 +36,13 @@ export const SITE_CTA_LINKS = [
 /** Canonical member sign-in (login route redirects here). */
 export const SITE_AUTH_LINK = { label: "Sign in", href: "/access" } as const;
 
-/** Bottom tab bar (<768). Logo already goes home — no Home tab. */
+/** Bottom tab bar (<768). High-value only — logo already goes home; About lives in the drawer. */
 export const MOBILE_TABS = [
-  { id: "catalog", label: "Catalog", href: "/products", icon: "SquaresFour" },
-  { id: "planner", label: "Planner", href: PRODUCT_SUITE.planner.routes.landing, icon: "PencilSimple" },
-  { id: "clients", label: "Portfolio", href: "/portfolio", icon: "UsersThree" },
-  { id: "about", label: "About Us", href: "/about", icon: "Buildings" },
-  { id: "account", label: "Account", href: SITE_AUTH_LINK.href, icon: "UserCircle" },
+  { id: "products", label: "Products", href: "/products", icon: "SquaresFour", chromeKey: "navigation.products" },
+  { id: "planner", label: "Planner", href: PRODUCT_SUITE.planner.routes.landing, icon: "PencilSimple", chromeKey: "navigation.planner" },
+  { id: "quote", label: "Quote", href: "/contact", icon: "ChatCircle", chromeKey: "mobile.quote" },
+  { id: "portfolio", label: "Portfolio", href: "/portfolio", icon: "UsersThree", chromeKey: "navigation.portfolio" },
+  { id: "account", label: "Account", href: SITE_AUTH_LINK.href, icon: "UserCircle", chromeKey: "navigation.signIn" },
 ] as const;
 
 export type MobileTabId = (typeof MOBILE_TABS)[number]["id"];
@@ -52,10 +50,10 @@ export type MobileTabId = (typeof MOBILE_TABS)[number]["id"];
 /** Resolve the active tab id from a pathname (null = interior page, no active tab). */
 export function activeTabFor(pathname: string): MobileTabId | null {
   const p = (pathname || "/").replace(/\/+$/, "") || "/";
-  if (p.startsWith("/products")) {return "catalog";}
+  if (p.startsWith("/products")) {return "products";}
   if (p.startsWith("/ooplanner") || p.startsWith("/planner")) {return "planner";}
-  if (p.startsWith("/portfolio") || p.startsWith("/clients") || p.startsWith("/trusted-by")) {return "clients";}
-  if (p.startsWith("/about")) {return "about";}
+  if (p.startsWith("/contact") || p.startsWith("/quote-cart")) {return "quote";}
+  if (p.startsWith("/portfolio") || p.startsWith("/clients") || p.startsWith("/trusted-by")) {return "portfolio";}
   if (["/access", "/dashboard", "/portal", "/login"].some((s) => p.startsWith(s))) {
     return "account";
   }

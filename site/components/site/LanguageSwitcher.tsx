@@ -71,7 +71,7 @@ export function LanguageSwitcher({
           aria-label={t("english")}
           onClick={() => applyLocale("en")}
           className={cn(
-            "typ-micro min-h-11 min-w-11 touch-manipulation rounded-l-full border border-soft px-2 font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+            "site-header__locale-btn site-header__locale-btn--en touch-manipulation rounded-l-full border border-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
             currentLocale === "en"
               ? "border-primary bg-panel text-strong"
               : "bg-transparent text-muted hover:text-strong",
@@ -85,7 +85,7 @@ export function LanguageSwitcher({
           aria-label={t("hindi")}
           onClick={() => applyLocale("hi")}
           className={cn(
-            "typ-micro -ms-px min-h-11 min-w-11 touch-manipulation rounded-r-full border border-soft px-2 font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+            "site-header__locale-btn site-header__locale-btn--hi -ms-px touch-manipulation rounded-r-full border border-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
             currentLocale === "hi"
               ? "border-primary bg-panel text-strong"
               : "bg-transparent text-muted hover:text-strong",

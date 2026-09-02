@@ -36,8 +36,9 @@ import * as catalogSlugResolver from "@/lib/catalog/site/slugResolver";
 import { getCatalog, getCategoryIds, getProducts } from "@/lib/catalog/site/getProducts";
 
 describe("SITE_NAV_LINKS", () => {
-  it("has at least 5 items", () => {
+  it("has at least 5 items and at most 9 header destinations", () => {
     expect(SITE_NAV_LINKS.length).toBeGreaterThanOrEqual(5);
+    expect(SITE_NAV_LINKS.length).toBeLessThanOrEqual(9);
   });
 
   it("every link has a non-empty label", () => {
@@ -95,7 +96,7 @@ describe("SITE_NAV_LINKS", () => {
     expect(new Set(labels).size).toBe(labels.length);
   });
 
-  it("uses primary header list with Products mega and a More menu for the rest", () => {
+  it("uses a 9-link primary header (no More overflow)", () => {
     expect(SITE_HEADER_PRIMARY_LINKS.map((l) => l.label)).toEqual([
       "Products",
       "Solutions",
@@ -103,14 +104,12 @@ describe("SITE_NAV_LINKS", () => {
       "Planner",
       "About",
       "Contact",
+      "Trusted By",
+      "Sustainability",
+      "FAQ",
     ]);
-    expect(SITE_HEADER_MORE_LINKS.map((l) => l.href)).toEqual([
-      "/planning",
-      "/showrooms",
-      "/trusted-by",
-      "/sustainability",
-      "/faq",
-    ]);
+    expect(SITE_HEADER_MORE_LINKS).toEqual([]);
+    expect(SITE_HEADER_PRIMARY_LINKS.length + SITE_HEADER_MORE_LINKS.length).toBeLessThanOrEqual(9);
     expect(SITE_HEADER_PRIMARY_LINKS).toEqual(SITE_NAV_LINKS);
     const products = SITE_NAV_LINKS.find((l) => l.label === "Products");
     expect(products && "hasMega" in products && products.hasMega).toBe(true);

@@ -93,10 +93,11 @@ describe('LanguageSwitcher Component', () => {
     expect(screen.getByRole("button", { name: "हिन्दी" })).toHaveAttribute("aria-pressed", "false");
   });
 
-  it('keeps header language control at 44px touch height', () => {
+  it('keeps header language control compact, not a 44px pair', () => {
     render(<LanguageSwitcher variant="header" />);
 
-    expect(screen.getByRole("button", { name: "English" }).className).toMatch(/min-h-11/);
+    expect(screen.getByRole("button", { name: "English" }).className).toMatch(/site-header__locale-btn/);
+    expect(screen.getByRole("button", { name: "English" }).className).not.toMatch(/min-h-11/);
     expect(screen.getByRole("button", { name: "English" }).className).toMatch(/touch-manipulation/);
   });
 

@@ -83,7 +83,7 @@ export const SUSTAINABILITY_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL
   title: "Sustainable office furniture | One&Only",
   description: SUSTAINABILITY_PAGE_COPY.heroSubtitle,
   path: "/sustainability",
-  image: "/assets/marketing/hero/pages/Planner-oneandonly-bright.webp",
+  image: "/assets/marketing/hero/pages/Other3-oneandonly-bright.webp",
   keywords: [
     "sustainable office furniture",
     "long-life workspace systems",
@@ -97,7 +97,7 @@ export const SERVICE_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
   description: SERVICE_PAGE_COPY.heroSubtitle,
   path: "/service",
   /** Same family hero as planning / privacy / downloads for visual parity. */
-  image: "/assets/marketing/hero/pages/Planner-oneandonly-bright.webp",
+  image: "/assets/marketing/hero/pages/Other3-oneandonly-bright.webp",
   keywords: [
     "office furniture service support",
     "after-sales support furniture",
@@ -148,7 +148,7 @@ export const TERMS_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
     "Website, quotation, delivery, warranty, and support terms for One&Only office furniture across India.",
   path: "/terms",
   alternates: false,
-  image: "/assets/marketing/hero/pages/Planner-oneandonly-bright.webp",
+  image: "/assets/marketing/hero/pages/Other3-oneandonly-bright.webp",
 });
 
 export const REFUND_POLICY_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
@@ -184,7 +184,7 @@ export const SHOWROOMS_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
   description:
     "Visit One&Only (One and Only Furniture) showroom in Patna — Jagat Trade Centre, Frazer Road. See seating, workstations, and finishes before you brief the planning team.",
   path: "/showrooms",
-  image: "/assets/marketing/hero/pages/Planner-oneandonly-bright.webp",
+  image: "/assets/marketing/hero/pages/Other3-oneandonly-bright.webp",
   keywords: [
     "One and Only Furniture Patna",
     "One and Only Patna",
@@ -203,7 +203,7 @@ export const CLIENTS_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
   description:
     "Office furniture projects and workplace fit-outs for government, finance, manufacturing, and institutions across India.",
   path: "/portfolio",
-  image: "/assets/marketing/hero/pages/Planner-oneandonly-bright.webp",
+  image: "/assets/marketing/hero/pages/Other3-oneandonly-bright.webp",
   keywords: [
     "office furniture portfolio India",
     "office furniture projects India",
@@ -217,7 +217,7 @@ export const TRUSTED_BY_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
   title: `${TRUSTED_BY_PAGE_COPY.heroTitle} | One&Only`,
   description: TRUSTED_BY_PAGE_COPY.heroSubtitle,
   path: "/trusted-by",
-  image: "/assets/marketing/hero/pages/Planner-oneandonly-bright.webp",
+  image: "/assets/marketing/hero/pages/Other3-oneandonly-bright.webp",
   keywords: [
     "trusted office furniture clients",
     "enterprise furniture clients India",

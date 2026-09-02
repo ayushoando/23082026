@@ -33,6 +33,7 @@ export function CategoryTileImage({ src, alt }: CategoryTileImageProps) {
       loading="lazy"
       fetchPriority="low"
       className="products-category-tile__img"
+      unoptimized
       onError={() => {
         setCandidateIndex((current) => Math.min(current + 1, candidates.length - 1));
       }}

@@ -1221,7 +1221,8 @@
         "bestSellers": "Best sellers",
         "submitSearch": "Submit mobile search",
         "searchProducts": "Search products",
-        "getQuote": "Get Quote"
+        "getQuote": "Get Quote",
+        "quote": "Quote"
       },
       "footer": {
         "products": "Products",

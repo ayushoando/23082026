@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  Buildings,
+  ChatCircle,
   MagnifyingGlass,
   PencilSimple,
   SquaresFour,
@@ -23,7 +23,7 @@ import { MOBILE_TABS, activeTabFor } from "@/features/site/data/navigation";
 import { resolveRouteChromeMode } from "@/features/site/data/routeChromeRules";
 import { trackSiteTabSelected } from "@/lib/analytics/siteEvents";
 
-const ICONS = { SquaresFour, PencilSimple, UsersThree, Buildings, UserCircle } as const;
+const ICONS = { SquaresFour, PencilSimple, UsersThree, ChatCircle, UserCircle } as const;
 
 /**
  * Marketing pages carry a single primary conversion — "Get Quote". On routes
@@ -114,17 +114,7 @@ export function MobileAppShell({
           const isPlanner = isPlannerEntryHref(tab.href);
           const LinkCmp = isPlanner ? PlannerLaunchLink : TrackedLink;
           const isActive = active === tab.id;
-          const tabLabel = t(
-            tab.id === "catalog"
-              ? "navigation.allProducts"
-              : tab.id === "planner"
-                ? "navigation.planner"
-                : tab.id === "clients"
-                  ? "navigation.portfolio"
-                  : tab.id === "about"
-                    ? "navigation.about"
-                    : "navigation.signIn",
-          );
+          const tabLabel = t(tab.chromeKey);
           return (
             <LinkCmp
               key={tab.id}

@@ -9,6 +9,7 @@ vi.mock("@phosphor-icons/react", () => ({
   UsersThree: () => <span data-testid="icon-users" />,
   Buildings: () => <span data-testid="icon-buildings" />,
   UserCircle: () => <span data-testid="icon-user" />,
+  ChatCircle: () => <span data-testid="icon-chat" />,
   MagnifyingGlass: () => <span data-testid="icon-search" />,
 }));
 
@@ -67,18 +68,18 @@ describe("MobileAppShell", () => {
     expect(tabBar).toBeInTheDocument();
     expect(within(tabBar).queryByRole("link", { name: /^home$/i })).toBeNull();
     expect(
-      within(tabBar).getByRole("link", { name: /All Products|Catalog/i }),
+      within(tabBar).getByRole("link", { name: /Products/i }),
     ).toHaveAttribute("aria-current", "page");
     expect(
       within(tabBar).getByRole("link", { name: "Planner" }),
     ).toHaveAttribute("href", "/planner");
     expect(
+      within(tabBar).getByRole("link", { name: "Quote" }),
+    ).toHaveAttribute("href", "/contact");
+    expect(
       within(tabBar).getByRole("link", { name: "Portfolio" }),
     ).toHaveAttribute("href", "/portfolio");
-    expect(within(tabBar).getByRole("link", { name: "About" })).toHaveAttribute(
-      "href",
-      "/about",
-    );
+    expect(within(tabBar).queryByRole("link", { name: /^About/i })).toBeNull();
     expect(
       within(tabBar).getByRole("link", { name: /Sign in|Account/i }),
     ).toHaveAttribute("href", "/access");
@@ -145,7 +146,7 @@ describe("MobileAppShell", () => {
     fireEvent.click(within(tabBar).getByRole("link", { name: "Portfolio" }));
     expect(trackSiteTabSelected).toHaveBeenCalledWith({
       pathname: "/products",
-      tab: "clients",
+      tab: "portfolio",
       destination: "/portfolio",
     });
   });

@@ -17,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: t("privacy.metadataTitle"),
     description: t("privacy.metadataDescription"),
     path: "/privacy",
-    image: "/assets/marketing/hero/pages/Planner-oneandonly-bright.webp",
+    image: "/assets/marketing/hero/pages/Other3-oneandonly-bright.webp",
   });
 }
 

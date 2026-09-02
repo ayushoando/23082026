@@ -2,7 +2,7 @@ import { CLIENT_LOGO_SRC_BY_NAME } from "@/features/site/data/clientLogos";
 import { HOMEPAGE_COLLECTION_IMAGES } from "@/features/site/data/productsPage";
 
 /** Shared fallback when a category or page has no flagship image. */
-export const DEFAULT_HERO_FALLBACK = "/assets/marketing/hero/pages/Planner-oneandonly-bright.webp";
+export const DEFAULT_HERO_FALLBACK = "/assets/marketing/hero/pages/Other3-oneandonly-bright.webp";
 
 /**
  * Homepage UI strings are mirrored in `i18n/messages/en.json` under the `home` namespace (Phase 4a).
