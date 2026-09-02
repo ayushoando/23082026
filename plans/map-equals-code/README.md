@@ -2,7 +2,7 @@
 
 HTTP redirects: `config/build/next.config.js`. Map §4 must list the same destinations. Live wins; then update the map.
 
-Known mismatch: map sends `/news`, `/brochure`, `/catalog` to `/`. Live sends news → `/about`, catalog/brochure → `/downloads`.
+§4 of the map was updated 2026-09-02 to match next.config (news → `/about`, catalog/brochure → `/downloads`). Remaining: calculator indexability.
 
 Calculators `/tools/*`: one story in the map, `routeClassification.ts`, robots, and sitemap. Either real NBC content and indexable, or shells and noindex. Not both.
 

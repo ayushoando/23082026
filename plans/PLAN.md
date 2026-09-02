@@ -14,6 +14,7 @@ Footer, mobile Planner tab, header labels. Client-hub flattened. Do not redo.
 
 | Phase | Folder | What |
 |---|---|---|
+| — | [`client-hub/`](./client-hub/) | Spine (map). §4 aligned to next.config 2026-09-02 |
 | 1 | [`chrome/`](./chrome/) | Public header, footer, tabs |
 | 2 | [`homepage/`](./homepage/) | `/` as journey start, FOCSS, leftover hero |
 | 3 | [`map-equals-code/`](./map-equals-code/) | Redirects, calculator indexability |

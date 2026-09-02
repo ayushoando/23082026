@@ -6,6 +6,6 @@ Public chrome contract: `site/features/site/data/navigation.ts`.
 - Footer: no `/dashboard`, `/portal`, `/ooplanner`, `/admin`. Clients under Company. Planning in Services.
 - Mobile: Planner tab → `/planner`. Account → `/access`. Phone bar is Get Quote + hamburger by design (`<768`). Desktop primary nav from `1280px`.
 
-Source for this phase is already landed. Browser proof is Phase 4.
+Source for this phase is already landed (`navigation.ts` re-read 2026-09-02: header, footer, mobile Planner tab still match). Browser proof is Phase 4.
 
 Do not put calculators, compare, quote-cart, or choose-product in chrome.

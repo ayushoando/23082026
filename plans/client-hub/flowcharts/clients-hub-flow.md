@@ -112,17 +112,24 @@ These source-defined public utilities and transactional shells are deliberately 
 
 ## 4. Redirect register — not pages
 
-These are approved redirect-only groupings. An alias is not a page node in the primary hierarchy, and the table records destination intent rather than an observed HTTP status, response body, or hosted redirect.
+These are approved redirect-only groupings. An alias is not a page node in the primary hierarchy. Destinations below match `config/build/next.config.js` `redirects()` (permanent). Trailing-slash twins exist for most sources. This table is source intent plus that file, not a live HTTP capture.
 
 | Destination | Redirect alias group | Static intent |
 |---|---|---|
-| `/` | `/news`, `/brochure`, `/download-brochure`, `/catalog` | Retired newsroom, brochure, and catalog aliases grouped at home |
-| `/clients` | `/gallery`, `/portfolio`, `/projects`, `/social` | Consolidated client proof destination |
-| `/service` | `/support-ivr`, `/tracking` | After-sales/support destination |
-| `/products` | `/templates`, `/portal/svg-catalog`, `/portal/svg-catalog/[slug]` | Canonical catalog destination |
-| `/terms` | `/imprint` | Company identity/legal destination |
-| `/access` | `/login` | Canonical sign-in destination |
-| `/products/[category]` | `/products/category/[slug]` | Canonical category destination after slug resolution |
+| `/downloads` | `/catalog`, `/brochure`, `/download-brochure`, `/workstations/configurator` | Retired catalog/brochure aliases |
+| `/about` | `/news` | Retired newsroom |
+| `/clients` | `/gallery`, `/portfolio`, `/projects`, `/social` | Consolidated client proof |
+| `/service` | `/support-ivr`, `/tracking` | After-sales |
+| `/products` | `/templates`, `/portal/svg-catalog`, `/portal/svg-catalog/[slug]` | Canonical catalog |
+| `/terms` | `/imprint` | Legal (`?section=imprint`) |
+| `/access` | `/login` | Canonical sign-in (`site/app/(site)/login/page.tsx` also `redirect()`s) |
+| `/products/[category]` | `/products/category/[slug]`; legacy `oando-*` and old product slugs in next.config | Canonical category |
+| `/planner/features/export` | `/planner/features/3d-view` | Feature alias |
+| `/ooplanner` | `/planner/canvas`, `/planner/guest`, `/planner/fabric`, `/planner/open3d`, `/oando-planner` (and most `/:path*`) | App aliases. Marketing `/planner`, `/planner/help`, `/planner/features` stay pages |
+| `/ooplanner/projects` | `/planner/projects` | Saved-project alias |
+| `/dashboard` | `/results`, `/oando-planner/dashboard` | Client dashboard alias |
+
+Staff Studio aliases (`/admin/svg-editor`, `/admin/product-studio` → `/oostudio`) are outside this client tree. They live in next.config so they are not mistaken for public pages.
 
 ## 5. Mapped / not mapped
 
