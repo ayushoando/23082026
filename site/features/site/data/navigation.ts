@@ -26,9 +26,6 @@ export const SITE_HEADER_MORE_LINKS = [
   { label: "Planning", href: "/planning" },
   { label: "Showrooms", href: "/showrooms" },
   { label: "Trusted By", href: "/trusted-by" },
-  { label: "Careers", href: "/career" },
-  { label: "After Sales", href: "/service" },
-  { label: "Downloads", href: "/downloads" },
   { label: "Sustainability", href: "/sustainability" },
   { label: "FAQ", href: "/faq" },
 ] as const;

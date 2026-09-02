@@ -88,18 +88,23 @@ describe('LanguageSwitcher Component', () => {
   it('renders compact header variant with English and Hindi only', () => {
     render(<LanguageSwitcher variant="header" />);
 
-    const select = screen.getByLabelText('Select Language') as HTMLSelectElement;
-    expect(select).toBeInTheDocument();
-    const values = Array.from(select.options).map((o) => o.value);
-    expect(values).toEqual(['en', 'hi']);
+    expect(screen.getByRole("group", { name: "Select Language" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "English" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "हिन्दी" })).toHaveAttribute("aria-pressed", "false");
   });
 
   it('keeps header language control at 44px touch height', () => {
     render(<LanguageSwitcher variant="header" />);
 
-    const select = screen.getByLabelText('Select Language') as HTMLSelectElement;
-    expect(select.className).toMatch(/min-h-11/);
-    expect(select.className).toMatch(/touch-manipulation/);
+    expect(screen.getByRole("button", { name: "English" }).className).toMatch(/min-h-11/);
+    expect(screen.getByRole("button", { name: "English" }).className).toMatch(/touch-manipulation/);
+  });
+
+  it('sets NEXT_LOCALE cookie and reloads from the header toggle', () => {
+    render(<LanguageSwitcher variant="header" />);
+    fireEvent.click(screen.getByRole("button", { name: "हिन्दी" }));
+    expect(mockCookieStore['NEXT_LOCALE']).toBe('hi');
+    expect(mockReload).toHaveBeenCalled();
   });
 
   it('keeps footer language control at 44px touch height', () => {

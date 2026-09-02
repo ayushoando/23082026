@@ -42,9 +42,8 @@ export function LanguageSwitcher({
     syncFromCookie();
   }, []);
 
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const nextLocale = event.target.value;
-    if (!isLocale(nextLocale)) {
+  const applyLocale = (nextLocale: string) => {
+    if (!isLocale(nextLocale) || nextLocale === currentLocale) {
       return;
     }
     const secure = window.location.protocol === "https:" ? "; Secure" : "";
@@ -53,27 +52,47 @@ export function LanguageSwitcher({
     window.location.reload();
   };
 
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    applyLocale(event.target.value);
+  };
+
   const names = variant === "header" ? languageNames : languageNamesFull;
 
   if (variant === "header") {
     return (
-      <div className={cn("site-header__locale min-w-0 shrink", className)}>
-        <label htmlFor={selectId} className="sr-only">
-          {t("label")}
-        </label>
-        <select
-          id={selectId}
-          value={currentLocale}
-          onChange={handleChange}
-          aria-label={t("label")}
-          className="site-header__locale-select typ-nav min-h-11 max-w-[6.75rem] cursor-pointer touch-manipulation rounded-full border border-soft bg-panel px-2.5 py-2 font-semibold text-strong shadow-none transition-colors hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:max-w-[8.5rem] sm:px-3"
+      <div
+        className={cn("site-header__locale inline-flex min-w-0 shrink", className)}
+        role="group"
+        aria-label={t("label")}
+      >
+        <button
+          type="button"
+          aria-pressed={currentLocale === "en"}
+          aria-label={t("english")}
+          onClick={() => applyLocale("en")}
+          className={cn(
+            "typ-micro min-h-11 min-w-11 touch-manipulation rounded-l-full border border-soft px-2 font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+            currentLocale === "en"
+              ? "border-primary bg-panel text-strong"
+              : "bg-transparent text-muted hover:text-strong",
+          )}
         >
-          {Object.entries(names).map(([code, name]) => (
-            <option key={code} value={code}>
-              {name}
-            </option>
-          ))}
-        </select>
+          EN
+        </button>
+        <button
+          type="button"
+          aria-pressed={currentLocale === "hi"}
+          aria-label={t("hindi")}
+          onClick={() => applyLocale("hi")}
+          className={cn(
+            "typ-micro -ms-px min-h-11 min-w-11 touch-manipulation rounded-r-full border border-soft px-2 font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+            currentLocale === "hi"
+              ? "border-primary bg-panel text-strong"
+              : "bg-transparent text-muted hover:text-strong",
+          )}
+        >
+          HI
+        </button>
       </div>
     );
   }

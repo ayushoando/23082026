@@ -312,8 +312,8 @@ describe("SiteHeader Component", () => {
     const shell = banner.querySelector(".home-shell-xl");
     expect(shell?.className).toMatch(/min-w-0/);
 
-    const locale = screen.getByLabelText(/Select Language/i);
-    expect(locale.className).toMatch(/min-h-11/);
+    expect(screen.getByRole("group", { name: /Select Language/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /English/i }).className).toMatch(/min-h-11/);
   });
 
   it("adds shadow style class on page scroll", async () => {

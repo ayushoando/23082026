@@ -565,7 +565,7 @@ export function SiteHeader() {
                   {t("navigation.signIn")}
                 </TrackedLink>
               </div>
-              <LanguageSwitcher variant="header" className="hidden min-w-0 lg:block" />
+              <LanguageSwitcher variant="header" className="hidden min-w-0 lg:inline-flex" />
             </div>
           </div>
         </div>

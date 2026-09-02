@@ -108,9 +108,6 @@ describe("SITE_NAV_LINKS", () => {
       "/planning",
       "/showrooms",
       "/trusted-by",
-      "/career",
-      "/service",
-      "/downloads",
       "/sustainability",
       "/faq",
     ]);
