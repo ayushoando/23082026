@@ -103,9 +103,9 @@ No hosted state, migration result, or regenerated artifact result is claimed her
 
 ## Artifact and ownership record
 
-- **Decision artifact:** `agents-work/planner-comprehensive-audit/decisions/task-4-9-schema-gap-decision.md`.
+- **Decision artifact:** `plans/planner-comprehensive-audit/decisions/task-4-9-schema-gap-decision.md`.
 - **Typed decision artifact:** `plans/planner-comprehensive-audit/schemaGapDecision.ts`.
-- **Approved artifact placement:** `agents-work/planner-comprehensive-audit/decisions/` for the authored evidence record and `plans/planner-comprehensive-audit/schemaGapDecision.ts` for the typed decision/evidence binding.
-- **Changed paths for Task 4.9:** `agents-work/planner-comprehensive-audit/decisions/task-4-9-schema-gap-decision.md` and `plans/planner-comprehensive-audit/schemaGapDecision.ts`.
+- **Approved artifact placement:** `plans/planner-comprehensive-audit/decisions/` for the authored evidence record and `plans/planner-comprehensive-audit/schemaGapDecision.ts` for the typed decision/evidence binding.
+- **Changed paths for Task 4.9:** `plans/planner-comprehensive-audit/decisions/task-4-9-schema-gap-decision.md` and `plans/planner-comprehensive-audit/schemaGapDecision.ts`.
 - **Protected/unowned paths not changed:** UI, geometry internals, Planner persistence adapter implementation, shared observability, Products migrations, and new corrective Admin migration SQL.
 - **Rejected placements:** `results/` for authored reports, root authority Markdown, Products migrations, and a duplicate corrective Admin migration.
