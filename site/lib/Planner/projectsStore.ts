@@ -213,7 +213,15 @@ function ownsProject(
   return typeof owner === "string" && owner.length > 0 && owner === userId;
 }
 
-/** Raw project records (disk shape) for both modes. */
+/**
+ * Legacy portal/Admin compatibility records for both persistence modes.
+ *
+ * The interactive Planner workspace uses the versioned atomic repository via
+ * `/api/Planner/projects`. These helpers remain for the older `/api/plans`
+ * and Admin contracts, whose document shape has no revision or idempotency
+ * inputs. They retain ownership checks but must not be used by new workspace
+ * mutations until that public contract is versioned and migrated.
+ */
 export async function listProjectRecords(opts?: {
   userId?: string | null;
 }): Promise<Record<string, unknown>[]> {

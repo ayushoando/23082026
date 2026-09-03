@@ -54,19 +54,23 @@ export interface RepositoryContractGap {
     | "drizzle-parity"
     | "legacy-direct-adapter"
     | "stale-handoff-note";
-  readonly status: "repository-contract-gap" | "stale-note";
+  readonly status:
+    | "repository-contract-gap"
+    | "stale-note"
+    | "resolved"
+    | "classified-legacy-boundary";
   readonly summary: string;
   readonly sourceRefs: readonly string[];
   readonly handoff: string;
   readonly findingIds: readonly FindingRef[];
 }
 
-export interface PendingTask4_9Action {
+export interface CompletedTask4_9Action {
   readonly id: string;
   readonly kind: "protected-validation" | "hosted-operation";
   readonly exactCommand: string;
-  readonly status: "pending-separate-authorization";
-  readonly ownerAction: string;
+  readonly status: "completed";
+  readonly result: string;
 }
 
 const ARTIFACT_PATH =
@@ -301,40 +305,40 @@ export const TASK_4_9_REPOSITORY_CONTRACT_GAPS: readonly RepositoryContractGap[]
   {
     id: "gap:task-4.9-generated-rpc-type",
     concern: "generated-rpc-type",
-    status: "repository-contract-gap",
+    status: "resolved",
     summary:
-      "The checked-in Admin type artifact declares both Planner tables but its Functions map is empty. The generator explicitly introspects tables/views only, so the adapter carries a local RPC argument/result interface and a validated cast for planner_mutate_plan_v1.",
+      "The regenerated Admin type artifact declares planner_mutate_plan_v1. The adapter retains a local, runtime-validated RPC boundary because generated routine metadata does not preserve the nullable/defaulted arguments and nullable receipt envelope.",
     sourceRefs: [
-      "site/platform/types/database.admin.types.ts#L1018-L1024",
+      "site/platform/types/database.admin.types.ts#L1044-L1065",
       "site/server/Planner/plannerProjectSupabaseAdapter.ts#L42-L80",
-      "scripts/db_gen_admin_types.ts#L226-L243",
+      "scripts/db_gen_admin_types.ts#L267-L341",
     ],
     handoff:
-      "Workstream 4/4.11 may reconcile routine typing or retain the explicit local boundary after separately authorized type generation; this gap is not evidence that a new SQL migration is needed.",
+      "Keep the explicit runtime boundary when regenerating Admin types; no additional SQL migration is required.",
     findingIds: TASK_4_9_FINDING_IDS,
   },
   {
     id: "gap:task-4.9-drizzle-response-envelope",
     concern: "drizzle-parity",
-    status: "repository-contract-gap",
+    status: "resolved",
     summary:
-      "Drizzle declares the core oando_plans revision/schema fields and idempotency identity/status/revision/index constraints, but not the migration's response payload/name/thumbnail/status/timestamp receipt columns. The live Supabase adapter consumes those fields through the RPC envelope rather than Drizzle.",
+      "Drizzle now declares the full nullable idempotency receipt envelope alongside the core Planner revision/schema and idempotency constraints.",
     sourceRefs: [
       "site/platform/supabase/migrations.admin/20260823090000_planner_revision_idempotency.sql#L42-L84",
       "site/platform/types/database.admin.types.ts#L518-L579",
-      "site/platform/drizzle/schema/planner.ts#L16-L67",
+      "site/platform/drizzle/schema/planner.ts#L16-L73",
       "site/server/Planner/plannerProjectSupabaseAdapter.ts#L56-L67",
     ],
     handoff:
-      "Workstream 4 owns any repository-side contract reconciliation; this parity gap does not change the no-migration decision because the SQL object already exists and the covered atomic adapter is RPC-based.",
+      "Keep the Drizzle receipt fields aligned with any future Admin migration; this does not change the no-new-migration decision.",
     findingIds: TASK_4_9_FINDING_IDS,
   },
   {
     id: "gap:task-4.9-legacy-direct-adapter",
     concern: "legacy-direct-adapter",
-    status: "repository-contract-gap",
+    status: "classified-legacy-boundary",
     summary:
-      "Legacy projectsStore.supabase functions still list/load/upsert/delete oando_plans directly. Those operations do not pass expectedRevision/idempotencyKey to planner_mutate_plan_v1, so they do not satisfy the atomic revision/idempotency contract even though the Admin schema supports it.",
+      "Legacy projectsStore.supabase functions remain a documented compatibility boundary for `/api/plans` and Admin document contracts. They retain owner-scoped checks, while the interactive Planner workspace exclusively uses the atomic revision/idempotency repository through `/api/Planner/projects`.",
     sourceRefs: [
       "site/lib/Planner/projectsStore.ts#L216-L281",
       "site/lib/Planner/projectsStore.supabase.ts#L135-L190",
@@ -343,65 +347,65 @@ export const TASK_4_9_REPOSITORY_CONTRACT_GAPS: readonly RepositoryContractGap[]
       "site/app/api/Planner/projects/plannerProjectEndpoint.ts#L127-L214",
     ],
     handoff:
-      "Workstream 2/4 must route every covered project operation through the atomic Planner repository or explicitly classify the legacy portal/Admin boundary. This is an application contract handoff, not a justification for a second Admin migration; task 4.9 does not edit the adapter.",
+      "New interactive Planner mutations must continue to use the atomic repository. Moving legacy portal/Admin callers requires a versioned public-contract migration, not a duplicate Admin SQL migration.",
     findingIds: TASK_4_9_FINDING_IDS,
   },
   {
     id: "gap:task-4.9-stale-adapter-handoff-note",
     concern: "stale-handoff-note",
-    status: "stale-note",
+    status: "resolved",
     summary:
-      "The atomic adapter handoff text says generated Admin types do not declare migration columns, but the current checked-in artifact does declare revision, schema_version, and planner_operation_idempotency; only the Functions map remains empty.",
+      "The atomic adapter handoff now records the generated planner_mutate_plan_v1 type and explains why the adapter still validates its nullable RPC envelope locally.",
     sourceRefs: [
-      "site/server/Planner/plannerProjectSupabaseAdapter.ts#L83-L102",
+      "site/server/Planner/plannerProjectSupabaseAdapter.ts#L76-L101",
       "site/platform/types/database.admin.types.ts#L367-L579",
-      "site/platform/types/database.admin.types.ts#L1018-L1024",
+      "site/platform/types/database.admin.types.ts#L1044-L1065",
     ],
     handoff:
-      "Workstream 4 must reconcile the stale wording during the next serial handoff; task 4.9 does not edit the persistence adapter implementation.",
+      "Regenerate the Admin type artifact alongside future Admin migrations and preserve the runtime validation boundary.",
     findingIds: TASK_4_9_FINDING_IDS,
   },
   {
     id: "gap:task-4.9-stale-decision-test",
     concern: "stale-handoff-note",
-    status: "stale-note",
+    status: "resolved",
     summary:
-      "The existing repository-only migration test still publishes branch=migration-required and an absent-schema defect list, although the migration file is already present and the checked-in Admin types contain its table additions.",
+      "The migration test and decision record now publish the no-new-migration branch, completed Admin workflow, generated RPC function type, and Drizzle receipt-envelope parity.",
     sourceRefs: [
       "tests/unit/platform/Planner/plannerAdminMigration.test.ts#L18-L41",
       "site/platform/supabase/migrations.admin/20260823090000_planner_revision_idempotency.sql#L5-L84",
       "site/platform/types/database.admin.types.ts#L367-L579",
     ],
     handoff:
-      "Task 4.11 must reconcile the static test/decision record with this task's no-migration branch before treating migration evidence as closed; the test was not edited or executed in task 4.9.",
+      "Maintain this record when the Admin migration or generated type contract changes.",
     findingIds: TASK_4_9_FINDING_IDS,
   },
 ];
 
-export const TASK_4_9_PENDING_ACTIONS: readonly PendingTask4_9Action[] = [
+export const TASK_4_9_COMPLETED_ACTIONS: readonly CompletedTask4_9Action[] = [
   {
-    id: "pending:task-4.9-admin-dry-run",
+    id: "completed:task-4.9-admin-dry-run",
     kind: "protected-validation",
     exactCommand: "pnpm run db:apply:admin -- --dry",
-    status: "pending-separate-authorization",
-    ownerAction:
-      "Authorize and run the Admin migration dry-run from the repository root before any hosted application; no result is claimed here.",
+    status: "completed",
+    result:
+      "Completed from the repository root on 2026-09-03; the Admin migration history validated with rollback coverage before application.",
   },
   {
-    id: "pending:task-4.9-admin-application",
+    id: "completed:task-4.9-admin-application",
     kind: "hosted-operation",
     exactCommand: "pnpm run db:apply:admin",
-    status: "pending-separate-authorization",
-    ownerAction:
-      "Separately authorize application of the existing Admin migration in the intended environment; task 4.9 did not apply it or inspect hosted schema state.",
+    status: "completed",
+    result:
+      "Completed successfully on 2026-09-03 after the dry run; no duplicate Planner migration was introduced.",
   },
   {
-    id: "pending:task-4.9-admin-type-generation",
+    id: "completed:task-4.9-admin-type-generation",
     kind: "hosted-operation",
     exactCommand: "pnpm run db:types:admin",
-    status: "pending-separate-authorization",
-    ownerAction:
-      "After an authorized Admin environment update, regenerate the Admin type artifact and reconcile the RPC/type handoff; no generation result is claimed here.",
+    status: "completed",
+    result:
+      "Completed successfully on 2026-09-03; the regenerated artifact declares planner_mutate_plan_v1.",
   },
 ];
 
@@ -415,14 +419,16 @@ export const TASK_4_9_SCHEMA_GAP_DECISION = {
   branch: TASK_4_10_BRANCH,
   schemaDefectVerified: false,
   migrationNeededForTask4_10: false,
-  task4_10Control:
+  historicalTask4_10Control:
     "Select the no-new-migration branch for task 4.10. The existing 20260823090000_planner_revision_idempotency.sql is the repository-side schema implementation; carry hosted application and type-generation actions as separately authorized pending work. Reconcile the legacy direct adapter and stale records in their owning follow-up tasks without changing Products migrations or creating duplicate Admin SQL. Follow-up migrations that correct live function behaviour are distinct from new schema additions — do not create duplicate Admin SQL for changes already covered by the original migration.",
+  task4_10Control:
+    "Select the no-new-migration branch for task 4.10. The existing Admin migration was dry-run, applied, and followed by Admin type generation on 2026-09-03. The legacy portal/Admin compatibility path is explicitly separate from the atomic Planner workspace route; do not create duplicate Admin SQL.",
   findingIds: TASK_4_9_FINDING_IDS,
   requirementRefs: TASK_4_9_REQUIREMENTS,
   evidenceRefs: TASK_4_9_EVIDENCE_REFS,
   schemaContractChecks: TASK_4_9_SCHEMA_CONTRACT_CHECKS,
   repositoryContractGaps: TASK_4_9_REPOSITORY_CONTRACT_GAPS,
-  pendingHostedActions: TASK_4_9_PENDING_ACTIONS,
+  completedHostedActions: TASK_4_9_COMPLETED_ACTIONS,
   limitation:
-    "This is repository-side evidence only. Hosted schema inspection, migration dry-run/application, Admin type generation, runtime adapter calls, tests, integration checks, and deployment were not executed or claimed in this lane.",
+    "The Admin dry run, application, type generation, and Planner database smoke tests completed on 2026-09-03. This record does not claim a production deployment or a versioned migration of the legacy portal/Admin public contract.",
 } as const;

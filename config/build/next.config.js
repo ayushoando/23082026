@@ -79,6 +79,7 @@ const nextConfig = {
   output: "standalone",
   poweredByHeader: false,
   devIndicators: false,
+  agentRules: false,
   env: {
     NEXT_PUBLIC_SITE_URL: resolvedSiteUrl,
     NEXT_PUBLIC_ASSET_BASE_URL: configuredAssetBaseUrl,

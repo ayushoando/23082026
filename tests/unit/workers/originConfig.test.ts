@@ -60,7 +60,10 @@ describe("12.1 worker origin single source of truth", () => {
   });
 
   it("builds the upstream URL from env.VERCEL_ORIGIN when configured", async () => {
-    const fetchMock = vi.fn(async () => new Response("ok", { status: 200 }));
+    const fetchMock = vi.fn(
+      async (_input: RequestInfo | URL, _init?: RequestInit) =>
+        new Response("ok", { status: 200 }),
+    );
     vi.stubGlobal("fetch", fetchMock);
 
     const response = await worker.fetch(makeRequest("/about"), {
@@ -70,9 +73,12 @@ describe("12.1 worker origin single source of truth", () => {
     expect(response.status).toBe(200);
     expect(response.headers.get("x-oando-proxy")).toBe("cloudflare-worker");
     expect(fetchMock).toHaveBeenCalledTimes(1);
-    const upstream = fetchMock.mock.calls[0][0] as Request;
+    const [upstream, options] = fetchMock.mock.calls[0] ?? [];
+    if (!(upstream instanceof Request)) {
+      throw new Error("Expected the worker to send a Request upstream");
+    }
     expect(upstream.url).toBe("https://origin.example/about");
-    expect(fetchMock.mock.calls[0][1]).toMatchObject({
+    expect(options).toMatchObject({
       redirect: "manual",
       cf: { cacheEverything: false },
     });

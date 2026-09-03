@@ -42,6 +42,12 @@ export const plannerOperationIdempotency = pgTable("planner_operation_idempotenc
   requestFingerprint: text("request_fingerprint").notNull(),
   responseStatus: text("response_status").$type<"processing" | "success" | "not_found" | "conflict">().notNull(),
   responseRevision: bigint("response_revision", { mode: "number" }),
+  responsePayload: jsonb("response_payload"),
+  responseName: text("response_name"),
+  responseThumbnailUrl: text("response_thumbnail_url"),
+  responsePlanStatus: text("response_plan_status"),
+  responseCreatedAt: timestamp("response_created_at", { withTimezone: true }),
+  responseUpdatedAt: timestamp("response_updated_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 }, (table) => [
   uniqueIndex("planner_operation_idempotency_identity_key").on(

@@ -4,6 +4,12 @@ import { resolveCatalogType, listStandardCatalog } from "@/features/admin/api/ca
 import { NextRequest } from "next/server";
 
 vi.mock("@/platform/supabase/adminServer", () => {
+  return {
+    isMissingTableError: vi.fn(() => false),
+  };
+});
+
+vi.mock("@/platform/supabase/supabaseAdmin", () => {
   const mockSupabase = {
     from: vi.fn(() => ({
       select: vi.fn(() => ({
@@ -28,8 +34,7 @@ vi.mock("@/platform/supabase/adminServer", () => {
     })),
   };
   return {
-    createAdminServiceClient: vi.fn(() => mockSupabase),
-    isMissingTableError: vi.fn(() => false),
+    createOptionalSupabaseAdminClient: vi.fn(() => mockSupabase),
   };
 });
 

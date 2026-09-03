@@ -25,15 +25,19 @@ const sampleManagedRow: MockRow = {
   metadata: { source: "admin-catalog" },
 };
 
-const createAdminServiceClient = vi.fn();
+const createOptionalSupabaseAdminClient = vi.fn();
 const isMissingTableError = vi.fn((msg?: string) =>
   typeof msg === "string" && msg.includes("does not exist"),
 );
 const fetchAdminConfiguratorCatalog = vi.fn();
 
 vi.mock("@/platform/supabase/adminServer", () => ({
-  createAdminServiceClient: (...args: unknown[]) => createAdminServiceClient(...args),
   isMissingTableError: (msg?: string) => isMissingTableError(msg),
+}));
+
+vi.mock("@/platform/supabase/supabaseAdmin", () => ({
+  createOptionalSupabaseAdminClient: (...args: unknown[]) =>
+    createOptionalSupabaseAdminClient(...args),
 }));
 
 vi.mock("@/lib/catalog/configuratorCatalog.server", () => ({
@@ -120,7 +124,7 @@ function makeSupabase(options?: {
 describe("catalogAdminHandlers", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    createAdminServiceClient.mockReturnValue(makeSupabase());
+    createOptionalSupabaseAdminClient.mockReturnValue(makeSupabase());
     isMissingTableError.mockImplementation(
       (msg?: string) => typeof msg === "string" && msg.includes("does not exist"),
     );
@@ -149,7 +153,7 @@ describe("catalogAdminHandlers", () => {
         description: "secret",
       },
     ];
-    createAdminServiceClient.mockReturnValue(
+    createOptionalSupabaseAdminClient.mockReturnValue(
       makeSupabase({ list: { data: rows, error: null } }),
     );
 
@@ -163,7 +167,7 @@ describe("catalogAdminHandlers", () => {
     expect((body.items as unknown[]).length).toBe(1);
     expect((body.items as { name: string }[])[0]?.name).toBe("Hidden Chair");
 
-    createAdminServiceClient.mockReturnValue(null);
+    createOptionalSupabaseAdminClient.mockReturnValue(null);
     const local = await listStandardCatalog(
       new NextRequest("http://localhost/api/catalogs/standard?page=1&limit=5"),
     );
@@ -185,7 +189,7 @@ describe("catalogAdminHandlers", () => {
       description: "A desk",
     };
 
-    createAdminServiceClient.mockReturnValue(
+    createOptionalSupabaseAdminClient.mockReturnValue(
       makeSupabase({
         insert: {
           data: {
@@ -207,7 +211,7 @@ describe("catalogAdminHandlers", () => {
     expect(responseStatus(created)).toBe(201);
     expect(responseBody(created).source).toBe("planner_managed_products");
 
-    createAdminServiceClient.mockReturnValue(null);
+    createOptionalSupabaseAdminClient.mockReturnValue(null);
     const unavailable = await createStandardCatalog(
       new NextRequest("http://localhost/api/catalogs/standard", {
         method: "POST",
@@ -231,7 +235,7 @@ describe("catalogAdminHandlers", () => {
       image_url: "/desk.png",
       visible: true,
     };
-    createAdminServiceClient.mockReturnValue(
+    createOptionalSupabaseAdminClient.mockReturnValue(
       makeSupabase({
         insert: {
           data: null,

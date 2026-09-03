@@ -30,8 +30,10 @@ import { SITE_URL } from "@/lib/siteUrl";
  * are not listed here.
  */
 
+export const ABOUT_PAGE_TITLE = "About One&Only | One and Only Furniture India";
+
 export const ABOUT_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
-  title: "About One&Only | One and Only Furniture India",
+  title: ABOUT_PAGE_TITLE,
   description: ABOUT_PAGE_COPY.heroSubtitle,
   path: "/about",
   keywords: [

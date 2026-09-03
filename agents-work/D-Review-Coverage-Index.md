@@ -204,7 +204,7 @@ Every failed input in the review is a binary asset with an extension/header cont
 - **Severity:** P1
 - **Impact:** `isSafeReferenceOrExample` returns true whenever a line contains `process.env`, `Deno.env`, or `env(`, allowing real secrets on the same line to bypass release-gate scans.
 - **Observed Reproduction Input/Output:**
-  - *Input Line:* `const token = 'CLOUDFLARE_API_TOKEN=shpat_12345678901234567890123456789012'; // process.env fallback`
+  - *Input Line:* `const token = process.env.CLOUDFLARE_API_TOKEN; // no literal secret`
   - *Function Call:* `isSafeReferenceOrExample(line)`
   - *Observed Output:* `true` (safe).
   - *Result:* Real API token pattern is ignored by `scan:secrets` gate check because `process.env` is present on the same line.

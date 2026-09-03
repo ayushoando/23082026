@@ -29,6 +29,15 @@ export type FK = {
   foreign_column: string;
 };
 
+export type DbFunction = {
+  routine_name: string;
+  result_type: string;
+  is_set: boolean;
+  argument_names: (string | null)[] | null;
+  argument_modes: string[] | null;
+  argument_types: string[] | null;
+};
+
 export function tsTypeFor(col: Col): string {
   const dt = col.data_type;
   const udt = col.udt_name;
@@ -66,6 +75,51 @@ export function colToRowField(c: Col): string {
   const t = tsTypeFor(c);
   const nullable = c.is_nullable === "YES" ? " | null" : "";
   return `          ${c.column_name}: ${t}${nullable}`;
+}
+
+function tsTypeForPgType(type: string): string {
+  const normalized = type.trim().toLowerCase();
+  if (normalized.endsWith("[]")) {
+    return `${tsTypeForPgType(normalized.slice(0, -2))}[]`;
+  }
+  if (normalized === "json" || normalized === "jsonb") return "Json";
+  if (
+    ["integer", "bigint", "smallint", "numeric", "real", "double precision", "int4", "int8", "int2", "float8", "float4"].includes(normalized)
+  ) {
+    return "number";
+  }
+  if (normalized === "boolean" || normalized === "bool") return "boolean";
+  if (normalized === "void") return "null";
+  return "string";
+}
+
+function typeKey(name: string): string {
+  return /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(name) ? name : JSON.stringify(name);
+}
+
+function functionTypeBlock(fn: DbFunction): string {
+  const argumentTypes = fn.argument_types ?? [];
+  const argumentNames = fn.argument_names ?? [];
+  const argumentModes = fn.argument_modes?.length
+    ? fn.argument_modes
+    : argumentTypes.map(() => "i");
+  const inputs: string[] = [];
+  const outputs: string[] = [];
+
+  for (const [index, argumentType] of argumentTypes.entries()) {
+    const mode = argumentModes[index] ?? "i";
+    const argumentName = argumentNames[index] || `arg${index + 1}`;
+    const field = `${typeKey(argumentName)}: ${tsTypeForPgType(argumentType)}`;
+    if (mode === "i" || mode === "b" || mode === "v") inputs.push(field);
+    if (mode === "o" || mode === "b" || mode === "t") outputs.push(field);
+  }
+
+  const args = inputs.length > 0 ? `{ ${inputs.join("; ")} }` : "Record<PropertyKey, never>";
+  const returns = outputs.length > 0
+    ? `{ ${outputs.join("; ")} }${fn.is_set ? "[]" : ""}`
+    : `${tsTypeForPgType(fn.result_type)}${fn.is_set ? "[]" : ""}`;
+
+  return `{ Args: ${args}; Returns: ${returns} }`;
 }
 
 export async function main(): Promise<void> {
@@ -106,6 +160,23 @@ export async function main(): Promise<void> {
       on tc.constraint_name = ccu.constraint_name
     where tc.table_schema = 'public' and tc.constraint_type = 'FOREIGN KEY';
   `);
+
+  const functions = await sql<DbFunction[]>`
+    select
+      p.proname as routine_name,
+      p.proretset as is_set,
+      pg_catalog.format_type(p.prorettype, null) as result_type,
+      p.proargnames as argument_names,
+      p.proargmodes as argument_modes,
+      array(
+        select pg_catalog.format_type(argument_type, null)
+        from unnest(coalesce(p.proallargtypes, p.proargtypes::oid[])) as argument_type
+      ) as argument_types
+    from pg_proc p
+    join pg_namespace n on n.oid = p.pronamespace
+    where n.nspname = 'public' and p.prokind = 'f'
+    order by p.proname, p.oid;
+  `;
 
   const tableBlocks: string[] = [];
   for (const { table_name } of tables) {
@@ -203,6 +274,16 @@ ${rowFields}
     );
   }
 
+  const functionBlocks = new Map<string, string[]>();
+  for (const fn of functions) {
+    const existing = functionBlocks.get(fn.routine_name) ?? [];
+    existing.push(functionTypeBlock(fn));
+    functionBlocks.set(fn.routine_name, existing);
+  }
+  const renderedFunctions = [...functionBlocks.entries()]
+    .map(([name, overloads]) => `      ${typeKey(name)}: ${overloads.join(" | ")}`)
+    .join("\n");
+
   const out =
 `export type Json =
   | string
@@ -221,7 +302,7 @@ ${tableBlocks.join("\n")}
 ${viewBlocks.length ? viewBlocks.join("\n") : "      [_ in never]: never"}
     }
     Functions: {
-      [_ in never]: never
+${renderedFunctions || "      [_ in never]: never"}
     }
     Enums: {
       [_ in never]: never

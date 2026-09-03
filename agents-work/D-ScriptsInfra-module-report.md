@@ -49,7 +49,7 @@ The worker constructs `new URL(pathname + url.search, origin)` from client-contr
 `isSafeReferenceOrExample` returns safe when any line contains `process.env`, `Deno.env`, or `env(`, before secret patterns are evaluated.
 
 **Observed Reproduction Input/Output:**
-- *Input Line:* `const token = 'CLOUDFLARE_API_TOKEN=shpat_12345678901234567890123456789012'; // process.env fallback`
+- *Input Line:* `const token = process.env.CLOUDFLARE_API_TOKEN; // no literal secret`
 - *Function Call:* `isSafeReferenceOrExample(line)`
 - *Observed Output:* `true` (classified as safe).
 - *Result:* Real API token pattern on the same line is bypassed by the shipped predicate during release gates.

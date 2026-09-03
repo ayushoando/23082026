@@ -4,7 +4,10 @@ import { getTranslations } from "next-intl/server";
 import { AboutPageView } from "@/components/about/AboutPageView";
 import { HomeMarketingLayout } from "@/components/home/layout";
 import { ContactTeaser } from "@/components/shared/ContactTeaser";
-import { ABOUT_PAGE_METADATA } from "@/features/site/data/routeMetadata";
+import {
+  ABOUT_PAGE_METADATA,
+  ABOUT_PAGE_TITLE,
+} from "@/features/site/data/routeMetadata";
 import { buildBreadcrumbJsonLd, buildPageJsonLd } from "@/features/site/data/seo";
 import { SITE_URL } from "@/lib/siteUrl";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
@@ -26,7 +29,7 @@ export default async function AboutPage() {
 
   const aboutJsonLd = buildPageJsonLd(SITE_URL, {
     path: "/about",
-    title: "About One&Only | One and Only Furniture India — Steelcase & Featherlite",
+    title: ABOUT_PAGE_TITLE,
     description: t("heroSubtitle"),
     pageType: "WebPage",
   });

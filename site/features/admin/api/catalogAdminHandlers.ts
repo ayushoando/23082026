@@ -15,10 +15,8 @@
 import { randomUUID } from "node:crypto";
 import type { NextRequest, NextResponse } from "next/server";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import {
-  createAdminServiceClient,
-  isMissingTableError,
-} from "@/platform/supabase/adminServer";
+import { isMissingTableError } from "@/platform/supabase/adminServer";
+import { createOptionalSupabaseAdminClient } from "@/platform/supabase/supabaseAdmin";
 import { furnitureCatalog, categoryLabels } from "@/lib/catalog/catalogData";
 import { normalizePlannerManagedProductRow } from "@/lib/catalog/plannerManagedProductsShared";
 import { buildConfiguratorRow } from "@/lib/catalog/configuratorCatalogPayload";
@@ -199,7 +197,7 @@ export async function listStandardCatalog(req: NextRequest): Promise<NextRespons
   if (!parsed.success) {return validationError(parsed.error.issues);}
   const { page, limit, category, search, visible } = parsed.data;
 
-  const supabase = createAdminServiceClient();
+  const supabase = createOptionalSupabaseAdminClient();
   let items: CatalogResponseRow[] = [];
   let source = "local-catalog";
 
@@ -292,7 +290,7 @@ function mapStandardWriteError(
 export async function createStandardCatalogItem(
   validated: CreateStandardCatalogItemInput,
 ): Promise<{ item: CatalogResponseRow; source: string }> {
-  const supabase = createAdminServiceClient();
+  const supabase = createOptionalSupabaseAdminClient();
   if (!supabase) {
     throw new ApiError(503, API_ERROR_CODES.SERVICE_UNAVAILABLE, "Catalog storage is not configured");
   }
@@ -340,7 +338,7 @@ export async function patchStandardCatalogItem(
     throw new ApiError(400, API_ERROR_CODES.MISSING_REQUIRED_FIELD, "Item ID is required");
   }
 
-  const supabase = createAdminServiceClient();
+  const supabase = createOptionalSupabaseAdminClient();
   if (!supabase) {
     throw new ApiError(503, API_ERROR_CODES.SERVICE_UNAVAILABLE, "Catalog storage is not configured");
   }
@@ -467,7 +465,7 @@ export async function deleteStandardCatalogItem(
   if (!id?.trim()) {
     throw new ApiError(400, API_ERROR_CODES.MISSING_REQUIRED_FIELD, "Item ID is required");
   }
-  const supabase = createAdminServiceClient();
+  const supabase = createOptionalSupabaseAdminClient();
   if (!supabase) {
     throw new ApiError(503, API_ERROR_CODES.SERVICE_UNAVAILABLE, "Catalog storage is not configured");
   }
@@ -548,7 +546,7 @@ function configuratorBodyAsRecord(
 }
 
 function requireConfiguratorClient(): SupabaseClient {
-  const supabase = createAdminServiceClient();
+  const supabase = createOptionalSupabaseAdminClient();
   if (!supabase) {
     throw new ApiError(
       503,

@@ -3,7 +3,10 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import Page from "@/app/(site)/about/page";
 import enMessages from "@/i18n/messages/en.json";
-import { ABOUT_PAGE_METADATA } from "@/features/site/data/routeMetadata";
+import {
+  ABOUT_PAGE_METADATA,
+  ABOUT_PAGE_TITLE,
+} from "@/features/site/data/routeMetadata";
 
 vi.mock("next/image", () => ({
   default: ({ alt, src }: { alt: string; src: string }) => <img alt={alt} src={src} />,
@@ -107,6 +110,13 @@ describe("app/(site)/about/page.tsx", () => {
 
     const ldScripts = container.querySelectorAll('script[type="application/ld+json"]');
     expect(ldScripts.length).toBeGreaterThanOrEqual(2);
+
+    type PageJsonLd = { "@type"?: string; name?: string };
+    const pageJsonLd = [...ldScripts]
+      .map((script) => JSON.parse(script.textContent ?? "{}") as PageJsonLd)
+      .find((entry) => entry["@type"] === "WebPage");
+
+    expect(pageJsonLd?.name).toBe(ABOUT_PAGE_TITLE);
   });
 
   it("iterates modelPillars and processSteps source-of-truth with correct headings", async () => {

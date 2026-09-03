@@ -117,4 +117,25 @@ describe("scan_secrets (name-mirror)", () => {
       fs.rmSync(tmp, { recursive: true, force: true });
     }
   });
+
+  it("allows isolated runtime and Supabase configuration references", () => {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "scan-secrets-runtime-reference-"));
+    fs.writeFileSync(
+      path.join(tmp, "references.txt"),
+      [
+        "const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY')",
+        'openai_api_key = "env(OPENAI_API_KEY)"',
+      ].join("\n"),
+      "utf8",
+    );
+    try {
+      const out = execFileSync(process.execPath, [scriptPath], {
+        cwd: tmp,
+        encoding: "utf8",
+      });
+      expect(out).toContain("No likely secrets found.");
+    } finally {
+      fs.rmSync(tmp, { recursive: true, force: true });
+    }
+  });
 });

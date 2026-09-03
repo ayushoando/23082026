@@ -5,6 +5,8 @@
 **Scope:** Repository-local Admin migration history, checked-in generated Admin types, Planner persistence adapters, and related repository/API contracts.
 **Database boundary:** Admin (`rxzpznmxbaoxpikowmfc`) / `public.oando_plans`; Products was not inspected or changed.
 
+**Completion update (2026-09-03):** The authorized Admin dry run, application, and type generation completed successfully. The regenerated Admin type artifact declares `planner_mutate_plan_v1`, Drizzle now includes the complete nullable idempotency receipt envelope, and the Planner database smoke tests passed. The interactive workspace remains on the atomic `/api/Planner/projects` contract; legacy `/api/plans` and Admin document calls are explicitly retained as a separately versioned compatibility boundary rather than silently presented as atomic workspace mutations.
+
 ## Outcome
 
 **Decision: preserve the existing Admin migration; no corrective migration is required for Task 4.10.** Repository evidence shows that `20260823090000_planner_revision_idempotency.sql` already expresses the required revision, schema-version, idempotency, constraints, RLS, grants, indexes, guarded RPC, and rollback contract. The checked-in Admin table artifact contains the corresponding version columns and idempotency table. The atomic Supabase Planner adapter and repository contract consume that contract, while the disk adapter preserves the same mutation and receipt semantics for non-production mode.

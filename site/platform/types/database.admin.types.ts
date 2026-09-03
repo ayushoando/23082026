@@ -1037,7 +1037,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      consume_rate_limit: { Args: { p_key: string; p_limit: number; p_window_ms: number }; Returns: { allowed: boolean; count: number; window_start: number }[] }
+      create_product_studio_template: { Args: { p_name: string; p_normalized_name: string; p_tags: string[]; p_fragment: Json; p_schema_version: number; p_expected_revision: number; p_actor_id: string }; Returns: { ok: boolean; remote_revision: number; template: Json }[] }
+      mutate_product_studio_template: { Args: { p_id: string; p_action: string; p_expected_revision: number; p_actor_id: string; p_name: string; p_normalized_name: string; p_tags: string[] }; Returns: { ok: boolean; remote_revision: number; template: Json }[] }
+      mutate_workspace_editor_configuration: { Args: { p_action: string; p_workspace: string; p_profile_key: string; p_expected_revision: number; p_actor_id: string; p_schema_version: number; p_payload: Json; p_active: boolean }; Returns: { ok: boolean; remote_revision: number; configuration: Json }[] }
+      planner_mutate_plan_v1: { Args: { p_owner_id: string; p_operation: string; p_project_id: string; p_expected_revision: number; p_idempotency_key: string; p_request_fingerprint: string; p_name: string; p_payload: Json; p_thumbnail_url: string; p_status: string; p_schema_version: number }; Returns: { response_status: string; response_revision: number; response_payload: Json; response_name: string; response_thumbnail_url: string; response_plan_status: string; response_created_at: string; response_updated_at: string; replayed: boolean }[] }
+      reject_product_studio_template_audit_mutation: { Args: Record<PropertyKey, never>; Returns: string }
+      reject_workspace_editor_config_audit_mutation: { Args: Record<PropertyKey, never>; Returns: string }
+      rls_auto_enable: { Args: Record<PropertyKey, never>; Returns: string }
+      save_product_studio_draft: { Args: { p_slug: string; p_schema_version: number; p_draft: Json; p_expected_revision: number; p_updated_by: string }; Returns: { ok: boolean; revision: number; saved_at: string; remote_revision: number }[] }
+      touch_feature_flags_updated_at: { Args: Record<PropertyKey, never>; Returns: string }
     }
     Enums: {
       [_ in never]: never

@@ -1,7 +1,10 @@
 // @vitest-environment node
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { createClient } from "@supabase/supabase-js";
-import { createSupabaseAdminClient } from "@/platform/supabase/supabaseAdmin";
+import {
+  createOptionalSupabaseAdminClient,
+  createSupabaseAdminClient,
+} from "@/platform/supabase/supabaseAdmin";
 
 vi.mock("@supabase/supabase-js", () => ({
   createClient: vi.fn(() => ({
@@ -81,5 +84,9 @@ describe("platform/supabase/supabaseAdmin", () => {
       },
     );
     expect(client).toBeDefined();
+  });
+
+  it("returns null from the optional client when credentials are absent", () => {
+    expect(createOptionalSupabaseAdminClient()).toBeNull();
   });
 });

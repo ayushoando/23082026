@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { NextRequest } from "next/server";
 
 // User-uploaded SVG is stored verbatim and later served back as
 // `image/svg+xml` from /api/files/furniture/[filename] — the route must
@@ -33,7 +34,7 @@ const SAFE_SVG =
 const UNSAFE_SVG =
   '<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>';
 
-function svgRequest(content: string, name = "furniture.svg"): Request {
+function svgRequest(content: string, name = "furniture.svg"): NextRequest {
   const form = new FormData();
   form.append(
     "file",
@@ -41,7 +42,7 @@ function svgRequest(content: string, name = "furniture.svg"): Request {
   );
   form.append("name", "Test Chair");
   form.append("category", "seating");
-  return new Request("http://localhost/api/Studio/furniture/upload", {
+  return new NextRequest("http://localhost/api/Studio/furniture/upload", {
     method: "POST",
     body: form,
   });
@@ -84,7 +85,7 @@ describe("Studio furniture upload route (8.1 SVG sanitizer wiring)", () => {
     form.append("file", new File([new Uint8Array([137, 80, 78, 71])], "f.png", { type: "image/png" }));
     form.append("name", "Test PNG");
     const res = await POST(
-      new Request("http://localhost/api/Studio/furniture/upload", {
+      new NextRequest("http://localhost/api/Studio/furniture/upload", {
         method: "POST",
         body: form,
       }),

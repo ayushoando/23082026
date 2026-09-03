@@ -16,24 +16,6 @@ export interface RateLimitBackend {
   check(key: string, limit: number, windowMs: number): Promise<RateLimitResult>;
 }
 
-type RateLimitRpcRow = {
-  allowed: boolean;
-  count: number;
-  window_start: number;
-};
-
-type RateLimitRpcResponse = {
-  data: unknown;
-  error: { message?: string } | null;
-};
-
-type RateLimitRpcClient = {
-  rpc: (
-    functionName: "consume_rate_limit",
-    args: { p_key: string; p_limit: number; p_window_ms: number },
-  ) => Promise<RateLimitRpcResponse>;
-};
-
 const MEMORY_MAP_MAX_KEYS = 10_000;
 const AI_RATE_LIMIT_KEY_PATTERN =
   /^(ai-advisor|planner-ai-advisor|planner-sketch-to-plan|filter|generate-alt|configurator-smart-wizard|nav-search|studio-ai-generate|studio-ai-suggest|studio-ai-restyle):/i;
@@ -191,8 +173,7 @@ export async function createSupabaseRateLimitBackend(): Promise<RateLimitBackend
         // `consume_rate_limit` owns the whole reset/increment decision in one
         // database statement, so concurrent server instances cannot overwrite
         // one another's increments with a read-then-upsert race.
-        const rateLimitClient = supabase as unknown as RateLimitRpcClient;
-        const { data, error } = await rateLimitClient.rpc("consume_rate_limit", {
+        const { data, error } = await supabase.rpc("consume_rate_limit", {
           p_key: key,
           p_limit: limit,
           p_window_ms: windowMs,
@@ -202,25 +183,22 @@ export async function createSupabaseRateLimitBackend(): Promise<RateLimitBackend
           return memoryRateLimitOrFailClosed(key, limit, windowMs);
         }
 
-        const row = Array.isArray(data) ? data[0] : null;
+        const row = data?.[0];
         if (
           !row ||
-          typeof row !== "object" ||
-          typeof (row as Partial<RateLimitRpcRow>).allowed !== "boolean" ||
-          typeof (row as Partial<RateLimitRpcRow>).count !== "number" ||
-          typeof (row as Partial<RateLimitRpcRow>).window_start !== "number"
+          typeof row.allowed !== "boolean" ||
+          typeof row.count !== "number" ||
+          typeof row.window_start !== "number"
         ) {
           warnDistributedBackendDegraded("invalid RPC response");
           return memoryRateLimitOrFailClosed(key, limit, windowMs);
         }
 
-        const result = row as RateLimitRpcRow;
-
         return {
-          success: result.allowed,
+          success: row.allowed,
           limit,
-          remaining: Math.max(0, limit - result.count),
-          reset: result.window_start + windowMs,
+          remaining: Math.max(0, limit - row.count),
+          reset: row.window_start + windowMs,
         };
       } catch {
         warnDistributedBackendDegraded("unexpected check failure");

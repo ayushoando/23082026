@@ -7,7 +7,7 @@ import { buildAccessRedirect } from "@/lib/auth/plannerRedirect";
 import { DEV_BYPASS_USER } from "@/lib/auth/devAuthBypass";
 
 const { headersMock } = vi.hoisted(() => ({
-  headersMock: vi.fn(async () => ({
+  headersMock: vi.fn<() => Promise<{ get: (key: string) => string | null }>>(async () => ({
     get: (key: string) => (key === "host" ? "localhost:3000" : null),
   })),
 }));

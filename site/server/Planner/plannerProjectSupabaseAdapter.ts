@@ -74,16 +74,17 @@ interface PlannerMutationRpcClientV1 {
 }
 
 /**
- * The repository mutation contract is now represented by the Admin migration
- * response envelope. Hosted application and generated Admin types remain
- * separately pending; this record does not claim either operation ran.
+ * The generated Admin Database type now declares the Planner mutation RPC.
+ * The routine metadata does not preserve the nullable/defaulted argument and
+ * receipt-envelope contract, so this adapter retains a narrow, runtime-
+ * validated boundary instead of trusting a lossy generated signature.
  */
 export interface PlannerSupabaseMutationContractHandoffV1 {
   readonly source: "site/platform/supabase/migrations.admin/20260823090000_planner_revision_idempotency.sql";
   readonly rpc: "planner_mutate_plan_v1";
   readonly missing: readonly [];
-  readonly generatedTypeGap: "Admin generated Database types do not declare the migration columns or RPC";
-  readonly requiredFollowUp: "Run the separately authorized Admin migration workflow and regenerate Admin types";
+  readonly generatedTypeBoundary: "Admin generated Database types declare planner_mutate_plan_v1; this adapter validates the nullable RPC envelope at its boundary";
+  readonly requiredFollowUp: "Regenerate Admin types with future Admin migrations and retain runtime validation for the RPC envelope";
   readonly owner: "Workstream 4";
 }
 
@@ -92,9 +93,10 @@ export const PLANNER_SUPABASE_MUTATION_CONTRACT_HANDOFF_V1 = {
     "site/platform/supabase/migrations.admin/20260823090000_planner_revision_idempotency.sql",
   rpc: "planner_mutate_plan_v1",
   missing: [],
-  generatedTypeGap:
-    "Admin generated Database types do not declare the migration columns or RPC",
-  requiredFollowUp: "Run the separately authorized Admin migration workflow and regenerate Admin types",
+  generatedTypeBoundary:
+    "Admin generated Database types declare planner_mutate_plan_v1; this adapter validates the nullable RPC envelope at its boundary",
+  requiredFollowUp:
+    "Regenerate Admin types with future Admin migrations and retain runtime validation for the RPC envelope",
   owner: "Workstream 4",
 } as const satisfies PlannerSupabaseMutationContractHandoffV1;
 

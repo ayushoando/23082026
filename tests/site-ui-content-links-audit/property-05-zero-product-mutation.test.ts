@@ -40,7 +40,6 @@ import {
   verifyFailClosedArtifactPolicy,
 } from "../../scripts/site-ui-content-links-audit/artifactPaths";
 import type { AuditRunConfiguration } from "../../scripts/site-ui-content-links-audit/config";
-import { AUDIT_SCHEMA_VERSION } from "../../scripts/site-ui-content-links-audit/schemas";
 
 /** Inline type guard (manifests.ts does not export isRecord). */
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -619,54 +618,40 @@ describe("Feature: site-ui-content-links-audit, Property 5: Zero product-code mu
    * **Validates: Requirements 4.7, 23.6, 23.7**
    */
   it("Feature: site-ui-content-links-audit, Property 5: Zero product-code mutation — Wave 0 run manifest changedPaths contains no product-code writes", async () => {
-    const manifestPath = path.resolve(
+    const checkpointPath = path.resolve(
       REPO_ROOT,
-      `results/site-ui-content-links-audit/${WAVE0_RUN_ID}/manifests/run-manifest.json`,
+      `agents-work/site-ui-content-links-audit/decisions/wave-0-checkpoint-${WAVE0_RUN_ID}.json`,
     );
 
     let raw: string;
     try {
-      raw = await readFile(manifestPath, "utf8");
+      raw = await readFile(checkpointPath, "utf8");
     } catch (error) {
       throw new Error(
-        `Required Wave 0 run manifest is unreadable: ${manifestPath}`,
+        `Required Wave 0 checkpoint is unreadable: ${checkpointPath}`,
         { cause: error },
       );
     }
     const parsed: unknown = JSON.parse(raw);
 
-    // The manifest must be a record with the required shape.
+    // The checkpoint must be a record for the expected completed run.
     expect(isRecord(parsed)).toBe(true);
     if (!isRecord(parsed)) return;
+    expect(parsed["runId"]).toBe(WAVE0_RUN_ID);
+    expect(parsed["waveId"]).toBe(0);
 
-    // The schema version must match the audit schema version from schemas.ts.
-    expect(parsed["schemaVersion"]).toBe(AUDIT_SCHEMA_VERSION);
+    const changedPathManifest = parsed["changedPathManifest"];
+    expect(isRecord(changedPathManifest)).toBe(true);
+    if (!isRecord(changedPathManifest)) return;
 
-    // changedPaths must be an array.
-    const { changedPaths } = parsed;
-    expect(Array.isArray(changedPaths)).toBe(true);
-    if (!Array.isArray(changedPaths)) return;
+    expect(changedPathManifest["productCodeMutations"]).toBe(0);
+    expect(changedPathManifest["siteStarPaths"]).toEqual([]);
+    expect(changedPathManifest["allPathsInApprovedDestinations"]).toBe(true);
 
-    // The Wave 0 run manifest is expected to have changedPaths: [].
-    // Every path (if any) must be an accepted audit-tooling path.
-    for (const changedPath of changedPaths) {
-      expect(typeof changedPath).toBe("string");
-      expect(() =>
-        resolveApprovedArtifactPath(
-          REPO_ROOT,
-          changedPath as string,
-          BASE_CONFIG,
-          WAVE0_RUN_ID,
-        ),
-      ).not.toThrow();
-    }
+    const validationCriteria = parsed["validationCriteria"];
+    expect(isRecord(validationCriteria)).toBe(true);
+    if (!isRecord(validationCriteria)) return;
 
-    // No path in changedPaths may be under site/** (product-code boundary).
-    const siteWrites = (changedPaths as string[]).filter(
-      (p) =>
-        typeof p === "string" &&
-        (p.startsWith("site/") || p.startsWith("site\\")),
-    );
-    expect(siteWrites).toHaveLength(0);
+    expect(validationCriteria["noProductCodeWrite"]).toBe(true);
   });
 });

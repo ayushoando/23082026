@@ -2,11 +2,12 @@
 import { describe, expect, it, vi, afterEach } from "vitest";
 import { render, screen, cleanup } from "@testing-library/react";
 import { ReactNode } from "react";
+import type { LogErrorParams } from "@/lib/errorLogger";
 
-const logClientError = vi.fn(async () => true);
+const logClientError = vi.fn(async (_params: LogErrorParams) => true);
 
 vi.mock("@/lib/errorLogger", () => ({
-  logClientError: (...args: unknown[]) => logClientError(...(args as [])),
+  logClientError: (params: LogErrorParams) => logClientError(params),
 }));
 
 import { PlannerErrorBoundary } from "@/components/Planner/PlannerErrorBoundary";

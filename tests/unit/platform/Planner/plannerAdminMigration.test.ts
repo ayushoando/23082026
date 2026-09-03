@@ -10,7 +10,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   TASK_4_10_BRANCH,
-  TASK_4_9_PENDING_ACTIONS,
+  TASK_4_9_COMPLETED_ACTIONS,
   TASK_4_9_SCHEMA_GAP_DECISION,
 } from "../../../../plans/planner-comprehensive-audit/schemaGapDecision";
 
@@ -28,7 +28,7 @@ const DRIZZLE_PATH = path.join(
 
 export const PLANNER_SCHEMA_GAP_DECISION = TASK_4_9_SCHEMA_GAP_DECISION;
 
-export const PENDING_PLANNER_ADMIN_COMMANDS = TASK_4_9_PENDING_ACTIONS.map(
+export const COMPLETED_PLANNER_ADMIN_COMMANDS = TASK_4_9_COMPLETED_ACTIONS.map(
   (action) => action.exactCommand,
 );
 
@@ -44,7 +44,7 @@ async function migrationParts(): Promise<{ forward: string; rollback: string }> 
 }
 
 describe("Planner Admin schema-gap decision", () => {
-  it("binds the no-migration branch to repository evidence and pending workflow", () => {
+  it("binds the no-migration branch to the completed Admin workflow", () => {
     expect(PLANNER_SCHEMA_GAP_DECISION.branch).toBe(TASK_4_10_BRANCH);
     expect(PLANNER_SCHEMA_GAP_DECISION.branch).toBe("no-migration");
     expect(PLANNER_SCHEMA_GAP_DECISION.schemaDefectVerified).toBe(false);
@@ -56,20 +56,20 @@ describe("Planner Admin schema-gap decision", () => {
     expect(PLANNER_SCHEMA_GAP_DECISION.task4_10Control).toContain(
       "do not create duplicate Admin SQL",
     );
-    expect(PENDING_PLANNER_ADMIN_COMMANDS).toEqual([
+    expect(COMPLETED_PLANNER_ADMIN_COMMANDS).toEqual([
       "pnpm run db:apply:admin -- --dry",
       "pnpm run db:apply:admin",
       "pnpm run db:types:admin",
     ]);
-    expect(TASK_4_9_PENDING_ACTIONS).toEqual(
+    expect(TASK_4_9_COMPLETED_ACTIONS).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           exactCommand: "pnpm run db:apply:admin -- --dry",
-          status: "pending-separate-authorization",
+          status: "completed",
         }),
         expect.objectContaining({
           exactCommand: "pnpm run db:types:admin",
-          status: "pending-separate-authorization",
+          status: "completed",
         }),
       ]),
     );
@@ -162,12 +162,18 @@ describe("Existing Planner revision/idempotency Admin migration evidence", () =>
     expect(forward).not.toContain("grant all on table");
   });
 
-  it("keeps repository-side Drizzle support aligned pending generated Admin types", async () => {
+  it("keeps the full idempotency receipt envelope aligned in Drizzle", async () => {
     const schema = await readFile(DRIZZLE_PATH, "utf8");
     expect(schema).toContain('bigint("revision", { mode: "number" })');
     expect(schema).toContain('integer("schema_version")');
     expect(schema).toContain('pgTable("planner_operation_idempotency"');
     expect(schema).toContain('uniqueIndex("planner_operation_idempotency_identity_key")');
+    expect(schema).toContain('jsonb("response_payload")');
+    expect(schema).toContain('text("response_name")');
+    expect(schema).toContain('text("response_thumbnail_url")');
+    expect(schema).toContain('text("response_plan_status")');
+    expect(schema).toContain('timestamp("response_created_at", { withTimezone: true })');
+    expect(schema).toContain('timestamp("response_updated_at", { withTimezone: true })');
   });
 
   it("contains dependency-safe rollback for every introduced object", async () => {

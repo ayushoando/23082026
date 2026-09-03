@@ -33,3 +33,16 @@ export function createSupabaseAdminClient() {
     },
   });
 }
+
+/**
+ * Returns a Products-database service client when its server credentials are
+ * configured. Callers with a documented local fallback can use this without
+ * treating missing configuration as a runtime failure.
+ */
+export function createOptionalSupabaseAdminClient() {
+  try {
+    return createSupabaseAdminClient();
+  } catch {
+    return null;
+  }
+}

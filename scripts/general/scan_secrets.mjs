@@ -66,7 +66,16 @@ function isSafeReferenceOrExample(line) {
     /postgresql:\/\/\.\.\./i.test(line) ||
     /=\s*<[^>]+>\s*$/.test(line) ||
     /=\s*your[_-]/i.test(line) ||
-    /=\s*changeme/i.test(line)
+    /=\s*changeme/i.test(line) ||
+    // Isolated runtime lookups and Supabase TOML references name a secret but
+    // do not contain one. These are anchored so a real assignment elsewhere
+    // on the same line cannot be hidden by an env-reference comment.
+    /^\s*(?:const|let|var)\s+[A-Za-z_$][\w$]*\s*=\s*(?:process|Deno)\.env(?:\.[A-Za-z_$][\w$]*|\.get\(\s*["'][A-Za-z_][A-Za-z0-9_]*["']\s*\))\s*;?\s*(?:(?:\/\/).*|#.*)?$/.test(
+      line,
+    ) ||
+    /^\s*[A-Za-z_][A-Za-z0-9_]*\s*=\s*["']env\([A-Za-z_][A-Za-z0-9_]*\)["']\s*(?:#.*)?$/.test(
+      line,
+    )
   );
 }
 
