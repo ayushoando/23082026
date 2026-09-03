@@ -1,5 +1,5 @@
 {
- "total": 207,
+ "total": 201,
  "perFile": {
   "site/app/(site)/choose-product/page.tsx": 1,
   "site/app/(site)/loading.tsx": 1,
@@ -21,7 +21,6 @@
   "site/components/site/EditorialRoute.tsx": 3,
   "site/components/site/FooterLogoMarquee.tsx": 1,
   "site/components/site/Header.tsx": 2,
-  "site/components/site/LanguageSwitcher.tsx": 2,
   "site/components/site/MobileNavDrawer.tsx": 9,
   "site/components/site/SiteErrorBoundary.tsx": 8,
   "site/components/ui/ViewportControls.tsx": 10,

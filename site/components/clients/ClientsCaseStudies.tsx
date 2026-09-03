@@ -56,7 +56,7 @@ export function ClientsCaseStudies({ clients }: ClientsCaseStudiesProps) {
                   alt={`${client.name} installed workplace — primary view`}
                   sizes={secondaryPhotos.length > 0 ? "(max-width: 768px) 100vw, 58vw" : "100vw"}
                   className="portfolio-case__img object-cover"
-                  priority={index === 0}
+                  priority={index < 2}
                 />
               </div>
               {secondaryPhotos.map((photo, photoIndex) => (
@@ -73,6 +73,7 @@ export function ClientsCaseStudies({ clients }: ClientsCaseStudiesProps) {
                     alt={`${client.name} installed workplace — detail ${photoIndex + 2}`}
                     sizes="(max-width: 768px) 50vw, 42vw"
                     className="portfolio-case__img object-cover"
+                    loading="eager"
                   />
                 </div>
               ))}

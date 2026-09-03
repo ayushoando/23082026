@@ -9,6 +9,34 @@ import { ClientBadge, type ClientBadgeData } from "@/components/ClientBadge";
 import { RouteCtaBand } from "@/components/shared/RouteCtaBand";
 import { EditorialHeroMedia } from "@/components/site/EditorialHeroMedia";
 import { MarketingCtaLink } from "@/components/ui/MarketingCtaLink";
+import { MarketingImage } from "@/components/site/MarketingImage";
+
+const FEATURED_CLIENT_PHOTOS = [
+  {
+    name: "Titan",
+    location: "Patna, Bihar",
+    summary: "Collaborative office zones with modular seating and meeting layouts.",
+    image: "/assets/marketing/clients/Titan/titan-hero.webp",
+  },
+  {
+    name: "TVS Group",
+    location: "Patna, Bihar",
+    summary: "Workspace planning across leadership cabins, desking, and collaboration bays.",
+    image: "/assets/marketing/clients/TVS/hero.webp",
+  },
+  {
+    name: "Franklin Templeton",
+    location: "India",
+    summary: "Formal workspace setups with consistent finishes and executive-ready detailing.",
+    image: "/assets/marketing/clients/FranklinTempleton/franklin-templeton-office.webp",
+  },
+  {
+    name: "DMRC",
+    location: "New Delhi",
+    summary: "Operational office furniture delivery built for high-use enterprise teams.",
+    image: "/assets/marketing/clients/DMRC/dmrc.webp",
+  },
+] as const;
 
 import {
   TRUSTED_BY_HERO_IMAGE,
@@ -90,6 +118,7 @@ export function TrustedByPageView({
   const rosterRef = useRef<HTMLElement>(null);
   const quotesRef = useRef<HTMLElement>(null);
   const sectorsRef = useRef<HTMLElement>(null);
+  const photosRef = useRef<HTMLElement>(null);
   const [motionReady, setMotionReady] = useState(false);
 
   useEffect(() => {
@@ -233,6 +262,37 @@ export function TrustedByPageView({
 
   useGSAP(
     () => {
+      if (gsapReducedMotion() || !photosRef.current) {
+        return;
+      }
+
+      const ctx = gsap.context(() => {
+        const targets = photosRef.current?.querySelectorAll("[data-trusted-reveal]");
+        if (!targets?.length) {
+          return;
+        }
+
+        gsap.from(targets, {
+          y: GSAP_SCROLL_REVEAL.y,
+          opacity: GSAP_SCROLL_REVEAL.opacity,
+          duration: GSAP_SCROLL_REVEAL.duration,
+          stagger: GSAP_SCROLL_REVEAL.stagger,
+          ease: GSAP_EASE_OUT,
+          scrollTrigger: {
+            trigger: photosRef.current,
+            start: "top 85%",
+            once: true,
+          },
+        });
+      }, photosRef);
+
+      return () => ctx.revert();
+    },
+    { scope: photosRef, dependencies: [motionReady] },
+  );
+
+  useGSAP(
+    () => {
       if (gsapReducedMotion() || !sectorsRef.current) {
         return;
       }
@@ -306,7 +366,7 @@ export function TrustedByPageView({
                 href="/portfolio"
                 label={ctaSecondary}
                 surface="trusted-by-hero"
-                variant="outline"
+                variant="outline-light"
                 context="hero"
               >
                 {ctaSecondary}
@@ -392,6 +452,68 @@ export function TrustedByPageView({
                     location={client.location}
                     logoSrc={client.logoSrc}
                   />
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-8 text-center" data-trusted-reveal>
+              <MarketingCtaLink
+                href="/clients"
+                variant="outline"
+                surface="trusted-by-roster"
+                label="View all 118 clients across 4 sectors"
+              >
+                View all 118 clients across 4 sectors →
+              </MarketingCtaLink>
+            </div>
+          </section>
+        </HomeSectionInner>
+      </HomeSection>
+
+      <HomeSection variant="soft" spacing="md" borderY>
+        <HomeSectionInner>
+          <section ref={photosRef} className="trusted-by-photos" data-testid="trusted-by-photos">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+              <div>
+                <p data-trusted-reveal className="home-kicker">
+                  Workplace Photography
+                </p>
+                <h2 data-trusted-reveal className="home-heading mt-2">
+                  Featured installations
+                </h2>
+                <p data-trusted-reveal className="page-copy text-body mt-2 max-w-xl">
+                  Real furniture systems deployed across regional headquarters, corporate offices, and operations centres.
+                </p>
+              </div>
+              <div data-trusted-reveal className="shrink-0">
+                <MarketingCtaLink
+                  href="/portfolio"
+                  label="View full portfolio"
+                  surface="trusted-by-photos"
+                  variant="outline"
+                >
+                  View full portfolio →
+                </MarketingCtaLink>
+              </div>
+            </div>
+
+            <div className="trusted-by-photos-grid">
+              {FEATURED_CLIENT_PHOTOS.map((item) => (
+                <div key={item.name} data-trusted-reveal className="trusted-by-photo-card">
+                  <div className="trusted-by-photo-card__media">
+                    <MarketingImage
+                      src={item.image}
+                      alt={`${item.name} workspace installation`}
+                      sizes="(max-width: 768px) 100vw, 25vw"
+                      loading="eager"
+                      className="trusted-by-photo-card__img object-cover"
+                    />
+                    <span className="trusted-by-photo-card__badge">{item.name}</span>
+                  </div>
+                  <div className="trusted-by-photo-card__body">
+                    <span className="trusted-by-photo-card__location">{item.location}</span>
+                    <p className="trusted-by-photo-card__summary">{item.summary}</p>
+                  </div>
                 </div>
               ))}
             </div>

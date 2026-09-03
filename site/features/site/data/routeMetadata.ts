@@ -215,6 +215,20 @@ export const CLIENTS_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
   ],
 });
 
+export const CLIENT_DIRECTORY_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
+  title: "Client Directory & Sector Showcase | One&Only",
+  description:
+    "A curated, sector-wise directory of verified client organisations furnished across India since 2011.",
+  path: "/clients",
+  keywords: [
+    "client directory",
+    "verified clients",
+    "workplace clients India",
+    "institutional furniture clients",
+    "enterprise office clients",
+  ],
+});
+
 export const TRUSTED_BY_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
   title: `${TRUSTED_BY_PAGE_COPY.heroTitle} | One&Only`,
   description: TRUSTED_BY_PAGE_COPY.heroSubtitle,

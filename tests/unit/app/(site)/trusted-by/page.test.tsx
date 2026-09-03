@@ -277,10 +277,11 @@ describe("app/(site)/trusted-by/page.tsx", () => {
     expect(
       screen.getByText(TRUSTED_BY_PAGE_COPY.rosterDescription),
     ).toBeInTheDocument();
+    const roster = screen.getByTestId("trusted-by-roster");
     const badges = container.querySelectorAll(".client-badge");
     expect(badges).toHaveLength(TRUSTED_BY_CLIENTS.length);
-    expect(screen.getByText("Titan")).toBeInTheDocument();
-    expect(screen.getByText("HDFC Bank")).toBeInTheDocument();
+    expect(within(roster).getByText("Titan")).toBeInTheDocument();
+    expect(within(roster).getByText("HDFC Bank")).toBeInTheDocument();
 
     // Quotes section
     expect(screen.getByTestId("trusted-by-quotes")).toBeInTheDocument();

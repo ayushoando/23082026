@@ -274,7 +274,8 @@ export function ContactTeaser() {
                   height={720}
                   className="contact-teaser__img"
                   sizes="(max-width: 768px) 100vw, 40vw"
-                  loading="lazy"
+                  loading="eager"
+                  priority
                 />
               </div>
             </div>

@@ -144,15 +144,15 @@ describe("app/(site)/portfolio/page.tsx — behavior", () => {
     expect(h1).toHaveAttribute("id", "clients-hero-heading");
     expect(h1).toHaveTextContent(CLIENTS_PAGE_COPY.heroTitleLead);
     expect(h1).toHaveTextContent(CLIENTS_PAGE_COPY.heroTitleAccent);
-    expect(screen.getByText(CLIENTS_PAGE_COPY.eyebrow)).toBeInTheDocument();
-    expect(screen.getByText(CLIENTS_PAGE_COPY.eyebrow)).toHaveClass("home-kicker");
+    expect(screen.getByText("Workplace Photography")).toBeInTheDocument();
+    expect(screen.getByText("Workplace Photography")).toHaveClass("home-kicker");
 
     // hero subtitle is template-filled with clients value
     const heroSubtitle = CLIENTS_PAGE_COPY.heroSubtitleTemplate.replace("{clients}", "120+");
     expect(screen.queryByText(heroSubtitle)).not.toBeInTheDocument();
 
     expect(screen.getByTestId("kpi-monitor")).toBeInTheDocument();
-    expect(screen.getByTestId("kpi-monitor")).toHaveAttribute("data-page", "clients");
+    expect(screen.getByTestId("kpi-monitor")).toHaveAttribute("data-page", "portfolio");
     expect(screen.getByTestId("kpi-monitor")).toHaveAttribute("data-source", "supabase");
 
     const ldScripts = container.querySelectorAll('script[type="application/ld+json"]');
@@ -217,7 +217,7 @@ describe("app/(site)/portfolio/page.tsx — behavior", () => {
 
     const quoteSection = container.querySelector(".clients-trust-strip");
     expect(quoteSection).not.toBeNull();
-    expect(quoteSection).toHaveAttribute("aria-label", "Client delivery quotes");
+    expect(quoteSection).toHaveAttribute("aria-label", "Portfolio installation quotes");
     expect(quoteSection).toHaveClass("scheme-accent-wash");
 
     const pullQuotes = CLIENTS_PAGE_COPY.pullQuotes;
@@ -235,14 +235,17 @@ describe("app/(site)/portfolio/page.tsx — behavior", () => {
     }
 
     // RouteCta band
-    expect(screen.getByText(CLIENTS_PAGE_COPY.ctaKicker)).toBeInTheDocument();
-    expect(screen.getByText(CLIENTS_PAGE_COPY.ctaDescription)).toBeInTheDocument();
-    const ctaHeading = screen.getByRole("heading", { level: 2, name: new RegExp(CLIENTS_PAGE_COPY.ctaTitleLead) });
+    expect(screen.getByText("Next step")).toBeInTheDocument();
+    expect(
+      screen.getByText("Explore our sector-wise client directory or brief our workplace planning team."),
+    ).toBeInTheDocument();
+    const ctaHeading = screen.getByRole("heading", { level: 2, name: /See organisations or/i });
     expect(ctaHeading).toBeInTheDocument();
-    expect(ctaHeading).toHaveTextContent(CLIENTS_PAGE_COPY.ctaTitleAccent);
+    expect(ctaHeading).toHaveTextContent("plan your space.");
 
-    expect(screen.getByRole("link", { name: CLIENTS_PAGE_COPY.planningCta })).toHaveAttribute("href", "/planning");
-    expect(screen.getByRole("link", { name: CLIENTS_PAGE_COPY.contactCta })).toHaveAttribute("href", "/contact");
+    expect(screen.getByRole("link", { name: "Workplace planning" })).toHaveAttribute("href", "/planning");
+    expect(screen.getByRole("link", { name: "Contact sales" })).toHaveAttribute("href", "/contact");
+    expect(screen.getByRole("link", { name: "Client directory" })).toHaveAttribute("href", "/clients");
 
     const ctaBand = container.querySelector('[data-section="route-cta"]');
     expect(ctaBand).not.toBeNull();
@@ -265,8 +268,8 @@ describe("app/(site)/portfolio/page.tsx — behavior", () => {
 
     // empty-state links (unique hrefs) — also appears in bottom CTA band
     const emptySection = screen.getByRole("heading", { level: 2, name: CLIENTS_PAGE_COPY.emptyTitle }).closest("div") as HTMLElement;
-    expect(within(emptySection.closest("section") as HTMLElement).getByRole("link", { name: CLIENTS_PAGE_COPY.trustedCta })).toHaveAttribute("href", "/trusted-by/");
-    expect(container.querySelectorAll(`a[href="/trusted-by/"]`).length).toBeGreaterThanOrEqual(1);
+    expect(within(emptySection.closest("section") as HTMLElement).getByRole("link", { name: "View client directory" })).toHaveAttribute("href", "/clients");
+    expect(container.querySelectorAll(`a[href="/clients"]`).length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByRole("link", { name: CLIENTS_PAGE_COPY.contactCta }).length).toBeGreaterThanOrEqual(1);
 
     // no case mosaics in empty mode

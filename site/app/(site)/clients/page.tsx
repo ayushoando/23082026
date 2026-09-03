@@ -2,17 +2,11 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
 import { ClientsPageView } from "@/features/site/clients/ClientsPageView";
-import { buildPageMetadata } from "@/features/site/data/seo";
-import { SITE_URL } from "@/lib/siteUrl";
+import { CLIENT_DIRECTORY_PAGE_METADATA } from "@/features/site/data/routeMetadata";
 
 export async function generateMetadata(): Promise<Metadata> {
   void getTranslations("clients");
-  return buildPageMetadata(SITE_URL, {
-    title: "Client Directory & Sector Showcase | One&Only",
-    description:
-      "A curated, sector-wise directory of verified client organisations furnished across India since 2011.",
-    path: "/clients",
-  });
+  return CLIENT_DIRECTORY_PAGE_METADATA;
 }
 
 export default async function ClientsPage() {

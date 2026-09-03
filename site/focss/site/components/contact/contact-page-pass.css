@@ -431,3 +431,7 @@
   text-transform: uppercase;
   color: var(--color-bronze-200);
 }
+
+.contact-hero__whatsapp-icon {
+  color: var(--color-whatsapp);
+}

@@ -22,6 +22,12 @@ This document defines the repository-wide execution and safety floor. Current us
 - Tests, gates, builds, browser checks, coverage, and test-like commands require exact current-session user authorization and enabled-hook permission.
 - **Blockers:** record hard blockers only in [`Failures.md`](./Failures.md).
 
+### User control state
+
+- `wait`, `pause`, `read-only`, `do not write`, and equivalent instructions immediately prohibit edits, generated assets, external mutations, and commands that may write caches, build output, coverage, or test artifacts. This state persists until the user explicitly lifts it.
+- “Finish”, “complete”, or similar terminal language applies only to the current, directly stated task. It never authorizes work across unrelated plans, reports, audits, recovered files, or prior agent output.
+- Before a multi-file change, state the exact intended files. Preserve all unrelated work and never clean, reset, restore, delete, or apply report recommendations unless the user specifically names the targets.
+
 ## 2. Work
 
 - Repository root only. **Never create worktrees.** Use **`pnpm`** only.

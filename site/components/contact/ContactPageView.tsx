@@ -223,9 +223,9 @@ export function ContactPageView({
                 href="https://wa.me/919031022875?text=Hi%2C%20I%20would%20like%20to%20consult%20on%20an%20office%20furniture%20project."
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-outline-light inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors min-h-11 text-inverse border border-white/20 hover:bg-white/10"
+                className="btn-outline-light inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors min-h-11 text-inverse"
               >
-                <WhatsappLogo size={18} weight="fill" className="text-emerald-400" />
+                <WhatsappLogo size={18} weight="fill" className="contact-hero__whatsapp-icon" />
                 WhatsApp Consultation
               </a>
             </div>
