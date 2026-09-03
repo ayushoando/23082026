@@ -36,6 +36,22 @@ The Studio writes the furniture library; the Planner rail reads it. There is no
 shared module — each fork declares its own store and they meet at the same
 backing location. Keep it that way (`pnpm run scan:boundaries`).
 
+## Client registry & logo assets
+- **Canonical registry**: `site/lib/clients/clientRegistry.ts` (116 canonical clients across Financial Services, Government & Public Sector, Education & Social Impact, and Corporates & Multinationals).
+- **Zero-fallback logo library**: `site/public/assets/marketing/client-logos/` (verified vector SVGs and transparent PNGs; zero letter-initial fallback boxes).
+- **Name mapping**: `site/features/site/data/clientLogos.ts` (`CLIENT_LOGO_SRC_BY_NAME` dictionary with 163 mapped names and aliases).
+- **Proof surfaces**: `/trusted-by` (quiet luxury split-story showcase, metric counter strip, borderless logo roster) and `/clients` (sector showcase with Schema.org `ItemList` JSON-LD).
+
+## Security architecture
+- **Universal headers**: `site/next.config.js` and `site/next.config.mjs` enforce `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, and strict CSP (`frame-ancestors 'none'`, `form-action 'self'`).
+- **Edge proxy**: `site/proxy.ts` applies request nonces, CSP, cookie bounce, and sensitive API protections.
+- **Secure cookies**: `site/lib/security/cookies.ts` (`DEFAULT_SECURE_COOKIE_OPTIONS`, `STRICT_SECURE_COOKIE_OPTIONS`) and `site/platform/supabase/server.ts` enforce `httpOnly: true`, `secure: true` in production, `sameSite: "lax" | "strict"`.
+- **Input sanitization**: `site/lib/security/sanitize.ts` (`sanitizeInput`, `sanitizeJsonForScript`) sanitizes customer queries and SSR JSON-LD blocks.
+
+## i18n localization
+- **Message dictionaries**: `site/i18n/messages/{en,hi}.json` (861 keys across 26 namespaces, root `faq` added, 100% Hindi Devanagari parity, zero empty values).
+- **Runtime copy loader**: `site/lib/i18n/withLocaleCopy.ts` hydrates localized strings across all public marketing routes and feature views.
+
 ## VS Code Customization
 
 When editing forked code under `site/{components,lib,hooks,store,server}/{Studio,Planner}/`,

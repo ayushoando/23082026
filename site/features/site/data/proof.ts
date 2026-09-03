@@ -30,12 +30,13 @@ export const TRUSTED_BY_CLIENTS: ClientBadgeData[] =
  getCuratedLogoRecords().map((record) => ({
   name: record.displayName,
   sector: BADGE_SECTOR_BY_TAB[record.sectorTab],
+  logoSrc: record.logoPath,
   location: record.displayName === "Titan" ? "Patna, Bihar" : undefined,
  }));
 
 /** Static inspection helper for unresolved curated logo associations. */
 export function trustedByClientsMissingLogos(): string[] {
- return TRUSTED_BY_CLIENTS.filter(
-  (client) => !resolveClientLogoSrc(client.name, client.logoSrc),
- ).map((client) => client.name);
+  return TRUSTED_BY_CLIENTS.filter(
+    (client) => !resolveClientLogoSrc(client.name),
+  ).map((client) => client.name);
 }

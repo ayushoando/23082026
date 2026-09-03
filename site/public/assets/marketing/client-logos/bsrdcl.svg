@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" width="320" height="80">
+  <g transform="translate(12, 12)">
+    <rect width="56" height="56" rx="10" fill="#15803D"/>
+    <circle cx="28" cy="18" r="8" fill="#FACC15"/>
+    <polygon points="12,50 24,24 32,24 44,50" fill="#1F2937"/>
+    <line x1="28" y1="26" x2="28" y2="48" stroke="#FACC15" stroke-width="2" stroke-dasharray="3 2"/>
+  </g>
+  <text x="80" y="37" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="900" fill="#15803D" letter-spacing="1">BSRDCL</text>
+  <text x="81" y="54" font-family="system-ui, -apple-system, sans-serif" font-size="9.5" font-weight="600" fill="#374151" letter-spacing="0.2">Bihar State Road Dev. Corp. Ltd.</text>
+</svg>

@@ -30,14 +30,17 @@ Canvas fidelity, catalog honesty, and clear handoff matter equally.
 | `site/features/` | Product behavior (admin, site, crm, ops, forked Planner/Studio route entries) |
 | `site/components/` | Shared UI + forked `Planner/` + `Studio/` app UIs |
 | `site/lib/` | Shared utilities, catalog core, forked `Planner/` + `Studio/` libs |
+| `site/lib/clients/` | Canonical enterprise client registry (116 records), sector taxonomies, types |
+| `site/lib/security/` | Hardened security utilities: secure cookies, input sanitizers, CSRF, origin verification, headers |
 | `site/hooks`, `site/store`, `site/server` | Forked app hooks/stores/disk servers under `Planner/` / `Studio/` |
 | `site/platform/` | DB, Supabase, types, route contracts |
 | `site/focss/` | Shared CSS tree (`@focss/*`) — not a package |
-| `site/i18n/` | next-intl home; message files for `en` and `hi`; `request.ts` selects the validated `NEXT_LOCALE` cookie and defaults to English |
+| `site/i18n/` | next-intl home; message files for `en` and `hi` (861 keys across 26 namespaces); `request.ts` selects the validated `NEXT_LOCALE` cookie and defaults to English |
 | `site/platform/{shared,Studio,Planner}/data/` | Furniture library, uploads, projects, exports — **dev disk mode only** |
 | `tests/` | Unit (name-mirror), integration, browser |
 | `site/inventory/descriptors/` | Descriptor JSON / local release records — **dev disk mode only** |
 | `site/public/assets/` | Nested asset tree — `{catalog,marketing,others}` on disk (2026-08-06) |
+| `site/public/assets/marketing/client-logos/` | Verified vector SVG & transparent PNG logos for all 116 canonical enterprise clients |
 | `site/public/assets/others/legacy/png-catalog/` | Local PNG mirror (public URL `/png-catalog` via rewrite) |
 
 Decision tree / package map: this file.  
@@ -132,8 +135,10 @@ Shared rules: semantic tokens; distinct loading/empty/error states; no silent fa
 | Descriptors | `site/inventory/descriptors/*.json` present |
 | Legacy `/planner` app routes | **absent** — no longer tracked in `Failures.md`; re-verify residual `@/features/planner/*` imports if a build error appears |
 | Product Studio admin (`/admin/product-studio`) | **absent** |
-| Edge | **`site/proxy.ts` present** (Next 16); no `middleware.ts` |
-| i18n | **`site/i18n/` present** — `en`/`hi` messages; validated `NEXT_LOCALE` runtime with English fallback (see stack §7); plugin `./i18n/request.ts`; root shim for monorepo `process.cwd()` |
+| Edge & Security | **`site/proxy.ts` present** (Next 16); universal security headers in `site/next.config.js` and `site/next.config.mjs` (`X-Frame-Options: DENY`, nosniff, strict CSP with `frame-ancestors 'none'`, `form-action 'self'`); secure cookies in `site/lib/security/cookies.ts`; input sanitization in `site/lib/security/sanitize.ts` |
+| i18n | **`site/i18n/` present** — `en`/`hi` messages (861 keys across 26 namespaces with 100% Hindi Devanagari parity, root `faq` added); validated `NEXT_LOCALE` runtime with English fallback (see stack §7); plugin `./i18n/request.ts`; root shim for monorepo `process.cwd()`; runtime hydration via `withLocaleCopy` |
+| Client Registry & Logos | **116 canonical enterprise clients** across 4 sectors in `site/lib/clients/clientRegistry.ts`; verified vector SVG/PNG logos for all 116 clients in `site/public/assets/marketing/client-logos/`; zero letter monogram fallbacks; 163 mapped names in `site/features/site/data/clientLogos.ts` |
+| Proof Surfaces | **Quiet luxury `/trusted-by` & `/clients`** — Herman Miller / Vitra aesthetic; borderless brand marks; split-story installation highlights; clean metric counter strip; Schema.org `ItemList` with 116 organizations |
 
 Blockers: [`Failures.md`](../../Failures.md). Stack: [`stack.md`](./stack.md).
 
@@ -165,6 +170,11 @@ Where to start reading. Live code wins.
 | Tech-docs URL | `site/lib/admin/techDocsUrl.ts` |
 | Tech-docs package | `tech-docs-generator/` · `pnpm run tech-docs:dev` → **:3001** |
 | Proxy | `site/proxy.ts` |
+| Security helpers | `site/lib/security/` (`cookies.ts`, `sanitize.ts`, `headers.ts`, `csrf.ts`) |
+| Client registry | `site/lib/clients/clientRegistry.ts` (116 canonical enterprise clients) |
+| Client logos map | `site/features/site/data/clientLogos.ts` (163 mapped names & aliases) |
+| Client proof data | `site/features/site/data/proof.ts` |
+| Locale copy loader | `site/lib/i18n/withLocaleCopy.ts` |
 | Playwright harness | `config/build/playwright.config.ts` |
 
 **Absent:** `site/features/admin/product-studio/**`, legacy lowercase `features/planner/**` product cluster.

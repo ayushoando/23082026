@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" width="320" height="80">
+  <g transform="translate(12, 12)">
+    <rect width="56" height="56" rx="10" fill="#1D4ED8"/>
+    <circle cx="28" cy="28" r="18" fill="none" stroke="#FEF08A" stroke-width="3" stroke-dasharray="6 3"/>
+    <polygon points="20,40 20,24 28,30 28,20 36,26 36,40" fill="#FFFFFF"/>
+  </g>
+  <text x="80" y="37" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="900" fill="#1D4ED8" letter-spacing="1">BIADA</text>
+  <text x="81" y="54" font-family="system-ui, -apple-system, sans-serif" font-size="9" font-weight="700" fill="#EA580C" letter-spacing="0.2">BIHAR INDUSTRIAL AREA DEV. AUTHORITY</text>
+</svg>

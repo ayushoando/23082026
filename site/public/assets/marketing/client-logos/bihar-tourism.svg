@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" width="320" height="80">
+  <g transform="translate(12, 10)">
+    <path d="M30 6 C42 16 52 26 50 38 C48 50 36 56 30 56 C24 56 12 50 10 38 C8 26 18 16 30 6 Z" fill="#F97316"/>
+    <path d="M30 12 C38 20 44 28 42 38 C40 46 32 50 30 50 Z" fill="#06B6D4"/>
+    <path d="M30 12 C22 20 16 28 18 38 C20 46 28 50 30 50 Z" fill="#10B981"/>
+    <path d="M30 18 C34 24 38 30 36 38 C34 44 30 46 30 46 Z" fill="#EC4899"/>
+    <circle cx="30" cy="28" r="4" fill="#FBBF24"/>
+  </g>
+  <text x="75" y="37" font-family="system-ui, -apple-system, sans-serif" font-size="23" font-weight="800" fill="#1E293B" letter-spacing="-0.5">Bihar Tourism</text>
+  <text x="76" y="54" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="600" fill="#EA580C" font-style="italic" letter-spacing="0.5">blissful bihar</text>
+</svg>

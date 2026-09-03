@@ -15,10 +15,12 @@ Use this index to find architecture, database, and governance references that sh
 | Need | Open |
 |------|------|
 | Where code goes / source pointers / tech-docs | [`architecture/product-map.md`](./architecture/product-map.md) |
+| Client registry & verified logo library | [`architecture/product-map.md`](./architecture/product-map.md) · [`architecture/routes.md`](./architecture/routes.md) |
 | Stack (Node, Next, FOCSS, packages) | [`architecture/stack.md`](./architecture/stack.md) |
+| i18n localization (861 keys, Hindi parity) | [`architecture/stack.md`](./architecture/stack.md) §7 |
 | Pages + API | [`architecture/routes.md`](./architecture/routes.md) |
 | Site map (all surfaces, redirects, boundaries) | [`architecture/sitemap.md`](./architecture/sitemap.md) |
-| CSS | [`architecture/css.md`](./architecture/css.md) · [`governance/focss-stop-drift.md`](./governance/focss-stop-drift.md) |
+| CSS & quiet luxury redesign | [`architecture/css.md`](./architecture/css.md) · [`governance/focss-stop-drift.md`](./governance/focss-stop-drift.md) |
 | Scripts and command authorities | [`architecture/scripts.md`](./architecture/scripts.md) · [catalog CSV](./architecture/scripts.csv) · [staleness CSV](./architecture/scripts-stale-review.csv) |
 | Schema | [`database/schema.md`](./database/schema.md) |
 | Drizzle wiring | [`database/drizzle.md`](./database/drizzle.md) |
@@ -26,7 +28,7 @@ Use this index to find architecture, database, and governance references that sh
 | Programme rules | [`governance/rules.md`](./governance/rules.md) |
 | Charter / benchmarks | [`governance/charter.md`](./governance/charter.md) · [`governance/benchmarks.md`](./governance/benchmarks.md) |
 | Deploy | [`../OPERATIONS_RUNBOOK.md`](../OPERATIONS_RUNBOOK.md) |
-| Security (CSP, mutators) | [`governance/rules.md`](./governance/rules.md) |
+| Security (headers, CSP, cookies, sanitization) | [`architecture/stack.md`](./architecture/stack.md) §8 · [`governance/rules.md`](./governance/rules.md) |
 | Tech-docs package | [`../tech-docs-generator/README.md`](../tech-docs-generator/README.md) |
 | Blockers | [`../Failures.md`](../Failures.md) |
 

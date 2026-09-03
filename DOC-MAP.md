@@ -55,11 +55,14 @@ See [`docs/README.md`](./docs/README.md) for the full 14-file table. Highlights:
 | Topic | Home |
 |-------|------|
 | Repo layout / stack / routes / css / sitemap | `docs/architecture/{layout,stack,routes,css,sitemap}.md` |
+| Client registry (116 canonical clients) & verified vector logo library | `docs/architecture/product-map.md` · `docs/architecture/routes.md` |
+| Security architecture (CSP, headers, cookies, sanitization) | `docs/architecture/stack.md` §8 · `docs/governance/rules.md` |
+| i18n localization (861 keys, 26 namespaces, Hindi parity) | `docs/architecture/stack.md` §7 |
+| Quiet luxury redesign & FOCSS token alignment | `docs/architecture/css.md` · `docs/architecture/routes.md` |
 | Scripts catalog, commands, and documentation sources | `docs/architecture/scripts.md` |
 | Product placement + tech-docs | `docs/architecture/product-map.md` |
 | Database (schema, drizzle, ops) | `docs/database/*` |
 | Rules / benchmarks / charter / css-debt | `docs/governance/{rules,benchmarks,charter,focss-stop-drift}.md` |
-| Security facts (CSP, mutators) | `docs/governance/rules.md` |
 
 ## Don't mix
 

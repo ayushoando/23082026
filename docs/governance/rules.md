@@ -39,6 +39,8 @@ Use `observed`, `configured`, `present-but-unverified`, `planned`, `historical`,
 | P5 | Security capabilities unsupported by live configuration remain present-but-unverified or pending, never “enforced.” | Claim review |
 | P6 | A backup is proven only by a successful restore exercise. | Authorized restore evidence |
 | P7 | Risky procedures state prerequisites, target, impact, and recovery before executable steps. | Documentation review |
+| P8 | Universal security headers (`X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, strict CSP with `frame-ancestors 'none'` and `form-action 'self'`) and secure cookie options (`HttpOnly`, `Secure` in prod, `SameSite`) must be enforced across site entry points. | Config and proxy header inspection |
+| P9 | User-submitted inputs and serialized script payloads must be sanitized via mode-aware security helpers (`sanitizeInput`, `sanitizeJsonForScript`) before persistence or rendering. | Sanitizer and route inspection |
 
 ## Styling and dependencies
 
@@ -47,6 +49,7 @@ Use `observed`, `configured`, `present-but-unverified`, `planned`, `historical`,
 | C1 | `site/focss/` is the single product CSS home; preserve site, admin, Planner, and Studio zone boundaries. | Static import review |
 | C2 | Product presentation uses semantic tokens; do not add raw color or duplicate token systems. | Static review; configured token check |
 | C3 | Studio and Planner FOCSS never cross-import. | Static review; configured FOCSS check |
+| C4 | Public proof and directory surfaces (`/trusted-by`, `/clients`) follow quiet luxury standards (borderless marks, split-story installation cards, clean metric counters) using FOCSS semantic tokens without raw color classes. | Component and token inspection |
 | D1 | Use `pnpm exec`, never `npx`; product dependencies remain in root `package.json`. | Manifest and script review |
 | D2 | Add or upgrade dependencies only with explicit approval, a pinned version where required, and license/duplication review. | Plan and manifest review |
 | D3 | Never weaken a baseline or threshold to manufacture a green result. | Diff and evidence review |

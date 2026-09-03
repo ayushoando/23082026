@@ -510,6 +510,53 @@ export function buildPageJsonLd(siteUrl: string, input: PageJsonLdInput) {
   };
 }
 
+export interface ClientJsonLdItem {
+  canonicalId: string;
+  displayName: string;
+  logoPath?: string;
+}
+
+/**
+ * Schema.org ItemList with nested Organization entities for /clients directory.
+ * Indexes all canonical published client organisations with absolute logo/image URLs.
+ */
+export function buildClientsItemListJsonLd(
+  siteUrl: string,
+  clients: readonly ClientJsonLdItem[],
+) {
+  const origin = normalizeSiteOrigin(siteUrl);
+  const pageUrl = buildCanonicalUrl(origin, "/clients");
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "@id": `${pageUrl}#clients-directory`,
+    name: "One&Only Enterprise & Institutional Client Directory",
+    description:
+      "Verified workplace installations across financial institutions, public sector departments, education, and multinationals.",
+    numberOfItems: clients.length,
+    itemListElement: clients.map((client, index) => {
+      const clientAnchor = `${pageUrl}#${client.canonicalId}`;
+      const logoUrl = client.logoPath
+        ? toAbsoluteAssetUrl(origin, client.logoPath)
+        : undefined;
+
+      return {
+        "@type": "ListItem",
+        position: index + 1,
+        item: {
+          "@type": "Organization",
+          "@id": `${clientAnchor}-org`,
+          name: client.displayName,
+          url: clientAnchor,
+          ...(logoUrl ? { logo: logoUrl, image: logoUrl } : {}),
+        },
+      };
+    }),
+  };
+}
+
+
 export type CareerJobJsonLdInput = {
   title: string;
   department: string;

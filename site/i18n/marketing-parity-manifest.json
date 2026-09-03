@@ -20,10 +20,16 @@
     "tracking",
     "trustedBy",
     "supportIvr",
-    "home"
+    "home",
+    "faq"
   ],
-  "wave1Locales": ["en", "hi"],
-  "parityLocales": ["hi"],
+  "wave1Locales": [
+    "en",
+    "hi"
+  ],
+  "parityLocales": [
+    "hi"
+  ],
   "hiQuality": "machine-generated",
   "wave1Namespaces": [
     "about",
@@ -45,9 +51,14 @@
     "tracking",
     "trustedBy",
     "supportIvr",
-    "home"
+    "home",
+    "faq"
   ],
-  "batchAConsumerRoutes": ["about", "news", "legal"],
+  "batchAConsumerRoutes": [
+    "about",
+    "news",
+    "legal"
+  ],
   "deferredLocales": [],
   "i18nConsumerPaths": [
     "app/(site)/page.tsx",

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" width="320" height="80">
+  <g transform="translate(12, 12)">
+    <rect width="56" height="56" rx="10" fill="#0A3A60"/>
+    <polygon points="28,10 48,26 8,26" fill="#FF6600"/>
+    <rect x="16" y="26" width="24" height="22" fill="#FFFFFF"/>
+    <rect x="23" y="34" width="10" height="14" fill="#0A3A60"/>
+  </g>
+  <text x="80" y="36" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="800" fill="#0A3A60" letter-spacing="-0.3">Can Fin Homes Ltd</text>
+  <text x="81" y="53" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="600" fill="#FF6600" letter-spacing="0.2">A Canara Bank Subsidiary</text>
+</svg>

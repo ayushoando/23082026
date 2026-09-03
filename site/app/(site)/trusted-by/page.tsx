@@ -82,7 +82,9 @@ export default async function TrustedByPage() {
         ctaSecondary={copy.ctaSecondary}
         deliveryQuotesLabel={copy.deliveryQuotesLabel}
       />
-      <ContactTeaser />
+      <div className="hidden" aria-hidden="true">
+        <ContactTeaser />
+      </div>
     </HomeMarketingLayout>
   );
 }

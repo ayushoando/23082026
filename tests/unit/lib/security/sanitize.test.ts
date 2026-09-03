@@ -2,6 +2,11 @@ import { describe, it, expect } from "vitest";
 import {
   sanitizeJsonForScript,
   sanitizeInlineSvg,
+  sanitizeInput,
+  sanitizeQueryParam,
+  escapeHtml,
+  stripHtml,
+  sanitizeFormData,
 } from "@/lib/security/sanitize";
 
 describe("sanitize security utilities", () => {
@@ -103,4 +108,81 @@ describe("sanitize security utilities", () => {
       expect(clean).not.toContain("javascript:");
     });
   });
+
+  describe("sanitizeInput", () => {
+    it("strips script tags and executable contents", () => {
+      const dirty = "Hello <script>alert('xss')</script>World";
+      expect(sanitizeInput(dirty)).toBe("Hello World");
+    });
+
+    it("strips iframe and style tags", () => {
+      const dirty = 'Before <iframe src="evil.com"></iframe><style>body{color:red}</style>After';
+      expect(sanitizeInput(dirty)).toBe("Before After");
+    });
+
+    it("strips general HTML tags", () => {
+      const dirty = "<b>Bold</b> and <i>italic</i> <a href='link'>link</a>";
+      expect(sanitizeInput(dirty)).toBe("Bold and italic link");
+    });
+
+    it("strips null bytes and dangerous control characters", () => {
+      const dirty = "safe\0string\x08with\x1Fcontrol";
+      expect(sanitizeInput(dirty)).toBe("safestringwithcontrol");
+    });
+
+    it("enforces maximum length truncation", () => {
+      const longStr = "a".repeat(100);
+      expect(sanitizeInput(longStr, 20)).toBe("a".repeat(20));
+    });
+
+    it("handles non-string inputs gracefully", () => {
+      expect(sanitizeInput(null)).toBe("");
+      expect(sanitizeInput(undefined)).toBe("");
+      expect(sanitizeInput(123)).toBe("");
+    });
+  });
+
+  describe("sanitizeQueryParam", () => {
+    it("sanitizes query parameters with default limit", () => {
+      const dirty = "search <script>evil()</script> term";
+      expect(sanitizeQueryParam(dirty)).toBe("search term");
+    });
+  });
+
+  describe("escapeHtml", () => {
+    it("escapes all dangerous HTML characters", () => {
+      expect(escapeHtml('<script>alert("XSS") & \'foo\' /</script>')).toBe(
+        "&lt;script&gt;alert(&quot;XSS&quot;) &amp; &#x27;foo&#x27; &#x2F;&lt;&#x2F;script&gt;",
+      );
+    });
+  });
+
+  describe("stripHtml", () => {
+    it("removes all markup and collapses extra whitespace", () => {
+      expect(stripHtml("<h1> Title </h1> \n <p> Content here </p>")).toBe(
+        "Title Content here",
+      );
+    });
+  });
+
+  describe("sanitizeFormData", () => {
+    it("recursively sanitizes string fields in nested form data", () => {
+      const form = {
+        name: "Alice <script>xss</script>",
+        company: "Acme <b>Corp</b>",
+        count: 5,
+        details: {
+          note: "Important <iframe src='evil'></iframe> note",
+        },
+        tags: ["tag1 <script>", "tag2"],
+      };
+      const clean = sanitizeFormData(form);
+      expect(clean.name).toBe("Alice");
+      expect(clean.company).toBe("Acme Corp");
+      expect(clean.count).toBe(5);
+      expect(clean.details.note).toBe("Important note");
+      expect(clean.tags).toEqual(["tag1", "tag2"]);
+    });
+  });
 });
+

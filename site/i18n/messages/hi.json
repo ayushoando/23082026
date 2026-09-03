@@ -1,47 +1,489 @@
 {
+  "about": {
+    "confidenceCta": "सभी ग्राहक देखें",
+    "confidenceKicker": "ग्राहक विश्वास",
+    "confidenceTitle": "उद्यम टीमों द्वारा विश्वसनीय।",
+    "craftAttribution": "फ़ील्ड टीम · वन एंड ओनली",
+    "craftQuote": "फ़र्नीचर केवल आधा काम है। स्पेसिंग, स्थापना अनुशासन और हैंडओवर से विश्वास बनता है।",
+    "ctaDescription": "योजना कॉल बुक करें या दस्तावेज़ और तकनीकी शीट के लिए संसाधन डेस्क खोलें।",
+    "ctaKicker": "अगला कदम",
+    "ctaPrimary": "योजना कॉल का अनुरोध करें",
+    "ctaSecondary": "ग्राहक देखें",
+    "ctaTitleAccent": "बात करें।",
+    "ctaTitleLead": "अपने स्थान के बारे में",
+    "heroCta": "हमारा काम देखें",
+    "heroKicker": "भारत · राष्ट्रव्यापी",
+    "heroSubtitle": "हम व्यावहारिक, टिकाऊ और स्केलेबल वर्कस्पेस सिस्टम डिज़ाइन और डिलीवर करते हैं।",
+    "heroTitle": "वन एंड ओनली के बारे में",
+    "heroTitleAccent": "इंटीरियर।",
+    "heroTitleLead": "कुशलता से तैयार",
+    "modelDescription": "योजना, सोर्सिंग, निष्पादन और सहायता शुरुआत से हैंडओवर तक जुड़े रहते हैं।",
+    "modelKicker": "हम कैसे काम करते हैं",
+    "modelPillars": [
+      {
+        "detail": "श्रेणी, बजट और लेआउट को टीमों के वास्तविक काम करने के तरीके से मिलाएं।",
+        "title": "योजना-आधारित"
+      },
+      {
+        "detail": "पूरी प्रक्रिया में कार्यक्षेत्र, समयसीमा और स्थापना की तैयारी को स्पष्ट रखें।",
+        "title": "स्पष्ट निष्पादन"
+      },
+      {
+        "detail": "वारंटी और सहायता को एक ही जवाबदेह टीम के माध्यम से संभालें।",
+        "title": "हैंडओवर के बाद"
+      }
+    ],
+    "modelTitle": "एक एकीकृत टीम",
+    "paragraphs": [
+      "हम योजना, उत्पाद और वितरण को जोड़ते हैं ताकि टीमें बिना किसी देरी के योजना से हैंडओवर तक पहुंच सकें।",
+      "उद्यम और संस्थागत टीमों के लिए कुर्सियां, वर्कस्टेशन, मीटिंग रूम, स्टोरेज और सहायता।",
+      "स्पष्ट दायरा, व्यावहारिक समयसीमा और स्थापना के बाद जवाबदेह समर्थन।"
+    ],
+    "pillarsKicker": "हम कैसे काम करते हैं",
+    "processKicker": "प्रक्रिया",
+    "processSteps": [
+      {
+        "detail": "कर्मचारियों की संख्या, स्थान का प्रकार, बजट और समयसीमा दर्ज करें।",
+        "title": "विवरण"
+      },
+      {
+        "detail": "स्पष्ट अनुमोदन पथ पर उत्पादों और फ़िनिश को अंतिम रूप दें।",
+        "title": "विनिर्देश"
+      },
+      {
+        "detail": "हैंडओवर के बाद स्थापना, सेवा और सहायता सुनिश्चित करें।",
+        "title": "वितरण"
+      }
+    ],
+    "processTitle": "योजना से हैंडओवर तक",
+    "processTitleAccent": "हैंडओवर तक",
+    "processTitleLead": "योजना से",
+    "sectionKicker": "हम कौन हैं",
+    "sectionTitle": "योजना-प्रथम भागीदार",
+    "sectionTitleAccent": "भागीदार।",
+    "sectionTitleLead": "योजना-प्रथम",
+    "storyKicker": "हम कौन हैं",
+    "storyLead": "योजना, आपूर्ति और स्थापना की जिम्मेदारी एक ही टीम संभालती है — पूरे क्षेत्र में उद्यम टीमों के लिए कुर्सियां, वर्कस्टेशन, मीटिंग रूम और स्टोरेज।",
+    "storyTitleAccent": "विश्वास।",
+    "storyTitleLead": "डिलीवरी के माध्यम से",
+    "supportDescription": "दस्तावेज़ों और तकनीकी शीट के लिए योजना कॉल या संसाधन डेस्क।",
+    "supportPrimaryCta": "योजना कॉल का अनुरोध करें",
+    "supportSecondaryCta": "संसाधन डेस्क खोलें",
+    "supportTitle": "क्या आपको अगले कदम की आवश्यकता है?"
+  },
+  "career": {
+    "applyCta": "अपना बायोडाटा ईमेल करें",
+    "careersEmail": "careers@oando.co.in",
+    "craftAttribution": "लोग · वन एंड ओनली",
+    "craftQuote": "वास्तविक ग्राहक विवरण, मापी गई जिम्मेदारी, और टीमें जो डिलीवरी के करीब रहती हैं।",
+    "ctaDescription": "अपनी पृष्ठभूमि साझा करें — हम आपको सही योजना, बिक्री, संचालन या सहायता लेन की ओर निर्देशित करेंगे।",
+    "ctaKicker": "निश्चित नहीं कि आप कहाँ उपयुक्त हैं?",
+    "ctaPrimary": "टीम से संपर्क करें",
+    "ctaSecondary": "योजना पृष्ठ खोलें",
+    "ctaTitleAccent": "बात करें।",
+    "ctaTitleLead": "टीम से",
+    "fallbackDescription": "अपना प्रोफाइल भेजें और बताएं कि आप कहाँ योगदान दे सकते हैं। हम बिक्री, संचालन, योजना और सहायता कार्यों के लिए नियमित रूप से आवेदनों की समीक्षा करते हैं।",
+    "fallbackTitle": "अभी कोई उपयुक्त पद नहीं मिला?",
+    "heroKicker": "टीम से जुड़ें",
+    "heroSubtitle": "ऐसी टीम से जुड़ें जो पूरे भारत में संगठनों के लिए व्यावहारिक, उच्च प्रभाव वाले कार्यक्षेत्र बनाती है।",
+    "heroTitle": "करियर",
+    "heroTitleAccent": "करियर।",
+    "heroTitleLead": "हमारे साथ",
+    "introDescription": "हम योजना, उत्पाद परामर्श, परियोजना वितरण और सहायता में काम करते हैं। यदि आप विश्वसनीय निष्पादन और ग्राहक परिणामों की परवाह करते हैं, तो आप यहाँ पूरी तरह उपयुक्त होंगे।",
+    "introKicker": "हमसे क्यों जुड़ें",
+    "introTitle": "कार्यक्षेत्र वितरण में अपना करियर बनाएं।",
+    "openingsAvailableTemplate": "{count} पद उपलब्ध",
+    "openingsTitle": "वर्तमान रिक्तियां",
+    "pillars": [
+      {
+        "detail": "बिक्री, योजना और संचालन मिलकर काम करते हैं ताकि निर्णय स्पष्ट हों और निष्पादन तेज़ रहे।",
+        "icon": "users",
+        "title": "सहयोगात्मक टीमें"
+      },
+      {
+        "detail": "आप वास्तविक ग्राहक विवरण, खरीद चक्र और ऑन-ग्राउंड स्थापना का व्यावहारिक अनुभव प्राप्त करते हैं।",
+        "icon": "graduation-cap",
+        "title": "सीखने पर केंद्रित कार्य"
+      },
+      {
+        "detail": "हम मार्गदर्शन और स्पष्ट जवाबदेही मानकों के साथ शुरुआत में ही जिम्मेदारी सौंपते हैं।",
+        "icon": "briefcase",
+        "title": "सार्थक जिम्मेदारी"
+      }
+    ],
+    "processDescription": "टीम योजना, उत्पाद परामर्श, वाणिज्यिक समन्वय, साइट निष्पादन और बिक्री उपरांत सहायता में काम करती है। इसका अर्थ है कि भूमिकाएं वास्तविक ग्राहक परिणामों से जुड़ी रहती हैं।",
+    "processKicker": "यहाँ करियर कैसे बढ़ता है",
+    "processSteps": [
+      {
+        "detail": "आप केवल आंतरिक प्रशिक्षण सामग्री के बजाय सक्रिय कार्यक्षेत्र विवरणों, अनुमोदनों और जमीनी डिलीवरी वास्तविकताओं से सीखते हैं।",
+        "title": "ग्राहक-केंद्रित सीख"
+      },
+      {
+        "detail": "तेज़ निर्णयों और स्पष्ट जवाबदेही के लिए बिक्री, योजना, संचालन और सहायता एक साथ काम करते हैं।",
+        "title": "बहु-कार्यात्मक अनुभव"
+      },
+      {
+        "detail": "प्रदर्शन के साथ जिम्मेदारी बढ़ती है, और प्रतिक्रिया गुणवत्ता, निष्पादन व व्यावसायिकता पर अपेक्षाएं स्पष्ट रहती हैं।",
+        "title": "मापी गई जिम्मेदारी"
+      }
+    ],
+    "processTitle": "काम जो वास्तविक परियोजनाओं और वास्तविक जिम्मेदारी के करीब रहता है।",
+    "supportDescription": "अपने अनुभव क्षेत्र और पसंदीदा कार्य के साथ एक संक्षिप्त नोट भेजें। हम आपको सबसे उपयुक्त योजना, बिक्री, संचालन या सहायता लेन की ओर निर्देशित करेंगे।",
+    "supportPrimaryCta": "टीम से संपर्क करें",
+    "supportSecondaryCta": "योजना पृष्ठ खोलें",
+    "supportTitle": "निश्चित नहीं कि कौन सी भूमिका आपकी पृष्ठभूमि के लिए उपयुक्त है?"
+  },
+  "clients": {
+    "allLabel": "क्षेत्रवार विवरण",
+    "contactCta": "संपर्क करें",
+    "ctaDescription": "कर्मचारियों की संख्या, स्थान का प्रकार और समय-सीमा साझा करें — हम उपयुक्त श्रेणियां, फिनिश और एक व्यावहारिक वितरण मार्ग तय करेंगे।",
+    "ctaKicker": "अगला कदम",
+    "ctaTitleAccent": "योजना टीम को बताएं।",
+    "ctaTitleLead": "हमारी विशेषज्ञ",
+    "deliveryQuotesLabel": "ग्राहक परियोजना अनुभव",
+    "emptyDescription": "स्थापना के चित्र तैयार किए जा रहे हैं। चयनित ग्राहक प्रमाण देखें या टीम से संपर्क करें।",
+    "emptyTitle": "गैलरी अपडेट हो रही है",
+    "eyebrow": "डिलीवरी",
+    "featuredLabel": "चयनित संगठन",
+    "featuredTitle": "ग्राहक सूची",
+    "heroBackgroundImage": "/assets/marketing/clients/DMRC/dmrc-1.webp",
+    "heroSubtitle": "सरकार, वित्त, शिक्षा, ऊर्जा और विनिर्माण क्षेत्रों में कार्यालय फर्नीचर परियोजनाएं एवं कार्यस्थल समाधान।",
+    "heroSubtitleTemplate": "सरकार, वित्त, ऊर्जा, विनिर्माण आदि में {clients} संगठन।",
+    "heroTitle": "ग्राहक",
+    "heroTitleAccent": "ग्राहक",
+    "heroTitleLead": "हमारे",
+    "planningCta": "योजना परामर्श का अनुरोध करें",
+    "pullQuotes": [
+      {
+        "attribution": "सुविधा प्रमुख, कॉर्पोरेट फिट-आउट",
+        "quote": "टीम ने हमारे विवरण को एक व्यावहारिक लेआउट में परिवर्तित किया, जिसे हमने तुरंत स्वीकृति दी — और स्थापित परिणाम हमारे द्वारा अनुमोदित योजना के बिल्कुल अनुरूप था।"
+      },
+      {
+        "attribution": "परियोजना समन्वयक, संस्थागत कार्यक्षेत्र",
+        "quote": "डेस्किंग से लेकर मीटिंग रूम तक डिलीवरी पूरी तरह समन्वित रही। पूरे कार्यक्रम के दौरान दायरा, समय-सीमा और हैंडओवर बिल्कुल स्पष्ट थे।"
+      }
+    ],
+    "selectedClientsDescription": "सत्यापित संस्थानों का एक क्यूरेटेड समूह जो ऊपर प्रदर्शित स्थापना कार्य को दर्शाता है। यह कोई संपूर्ण सार्वजनिक सूची नहीं है।",
+    "selectedClientsKicker": "प्रमुख ग्राहक",
+    "selectedClientsTitle": "प्रमुख ग्राहक संगठनों का एक विशेष चयन।",
+    "showcase": {
+      "emptySector": "{sector} में अभी तक कोई प्रकाशित ग्राहक नहीं हैं।",
+      "sectionHeading": "हमारे ग्राहक"
+    },
+    "trustedCta": "चयनित ग्राहक देखें"
+  },
   "common": {
-    "signIn": "साइन इन करें",
-    "signOut": "साइन आउट",
+    "error": "एक त्रुटि हुई",
     "guest": "अतिथि के रूप में जारी रखें",
     "loading": "लोड हो रहा है...",
-    "error": "एक त्रुटि हुई"
+    "signIn": "साइन इन करें",
+    "signOut": "साइन आउट"
+  },
+  "contact": {
+    "channelEmailLabel": "ईमेल",
+    "channelQuotesLabel": "कोटेशन और योजना",
+    "channelRegionLabel": "सेवा क्षेत्र",
+    "channelSupportLabel": "सहायता और पूछताछ",
+    "channelsAriaLabel": "फोन, ईमेल और सेवा क्षेत्र",
+    "heroKicker": "भारत · राष्ट्रव्यापी",
+    "heroSubtitle": "अपनी वर्कस्पेस आवश्यकता साझा करें और हमारी टीम अगले कदम बताएगी।",
+    "heroTitle": "संपर्क करें",
+    "heroTitleAccent": "संपर्क करें।",
+    "heroTitleLead": "हमसे",
+    "introDescription": "भारत भर में प्रत्यक्ष संपर्क माध्यम, क्षेत्रीय कार्यालय और परामर्श डेस्क।",
+    "introTitle": "कार्यालय और चैनल",
+    "offices": [
+      {
+        "lines": [
+          "401, Jagat Trade Centre",
+          "Frazer Road",
+          "Patna - 800 001",
+          "India"
+        ],
+        "title": "कॉर्पोरेट कार्यालय"
+      },
+      {
+        "lines": [
+          "One and Only Furniture Pvt Ltd",
+          "Opp Patliputra Telephone Exchange",
+          "North Industrial Estate Road",
+          "Patna - 800 010",
+          "India"
+        ],
+        "title": "शोरूम"
+      }
+    ],
+    "quickDeskDescription": "योजना, दस्तावेज़ या कोटेशन — हम आपको सही टीम से जोड़ते हैं।",
+    "quickDeskKicker": "त्वरित मार्ग",
+    "quickDeskPrimaryCta": "संसाधन डेस्क",
+    "quickDeskSecondaryCta": "योजना कॉल",
+    "quickDeskTitle": "एक लेन चुनें",
+    "resourceDeskCta": "संसाधन डेस्क",
+    "resourceDeskLead": "पहले दस्तावेज़ चाहिए?",
+    "resourceDeskTail": "आपकी आवश्यकता के अनुसार दस्तावेज़ों के लिए।",
+    "sectionTitle": "कार्यालय"
+  },
+  "downloads": {
+    "craftAttribution": "दस्तावेज़ीकरण डेस्क, One and Only",
+    "craftQuote": "दस्तावेज़ीकरण सबसे उपयोगी तब होता है जब वह परियोजना चरण से मेल खाता है — डिज़ाइन के लिए संदर्भ, BOQ अनुमोदन के लिए तकनीकी पत्रक।",
+    "heroKicker": "रिसोर्स डेस्क",
+    "heroPrimaryCta": "दस्तावेज़ पैक का अनुरोध करें",
+    "heroSubtitle": "अपने कार्यक्षेत्र के लिए उपयुक्त उत्पाद पैक, तकनीकी शीट और योजना संदर्भ का अनुरोध करें।",
+    "heroTitle": "संसाधन डेस्क",
+    "heroTitleAccent": "दस्तावेज़",
+    "heroTitleLead": "आपकी आवश्यकताओं के अनुसार",
+    "metadataDescription": "अपने कार्यक्षेत्र की आवश्यकताओं के अनुसार उत्पाद कैटलॉग, तकनीकी शीट और योजना संदर्भ का अनुरोध करें।",
+    "metadataTitle": "संसाधन डेस्क",
+    "noteBody": "अनुरोध पैक में श्रेणी कैटलॉग, तकनीकी शीट, योजना संदर्भ, फ़िनिश विकल्प, वारंटी विवरण और मॉडल-विशिष्ट दस्तावेज़ शामिल हो सकते हैं।",
+    "notePoints": [
+      "श्रेणी और उपयोग के आधार पर समूहीकृत उत्पाद कैटलॉग",
+      "आयाम, सामग्री और वारंटी मार्गदर्शन वाली तकनीकी शीट",
+      "वर्कस्टेशन घनत्व, लेआउट और निष्पादन प्रवाह के लिए योजना संदर्भ"
+    ],
+    "noteTitle": "आप क्या अनुरोध कर सकते हैं",
+    "openPlanning": "योजना पृष्ठ खोलें",
+    "planningSupport": "योजना सहायता",
+    "primaryCta": "दस्तावेज़ पैक का अनुरोध करें",
+    "processKicker": "यह कैसे काम करता है",
+    "processSteps": [
+      {
+        "detail": "हमें श्रेणियां, सीट संख्या, शहर और समय सीमा बताएं ताकि हम सही उत्पाद सेट का मिलान कर सकें।",
+        "title": "अपना कार्यक्षेत्र विवरण साझा करें"
+      },
+      {
+        "detail": "हमारी टीम वर्तमान कैटलॉग, तकनीकी शीट और योजना संदर्भ भेजती है जो आपकी आवश्यकता के अनुरूप हों।",
+        "title": "हम नवीनतम पैक तैयार करते हैं"
+      },
+      {
+        "detail": "यदि आवश्यक हो, तो हम विकल्पों को सीमित करने, विनिर्देशों को स्पष्ट करने और फ़ाइलों को आपके लेआउट या BOQ चर्चा से जोड़ने में मदद करते हैं।",
+        "title": "योजना सहायता के साथ समीक्षा करें"
+      }
+    ],
+    "processTitle": "सक्रिय परियोजनाओं के लिए बनाया गया अनुरोध-आधारित डेस्क।",
+    "resourceDescription": "हमारा कैटलॉग विभिन्न श्रेणियों, फ़िनिश और योजना आवश्यकताओं में विकसित होता रहता है। पुराने सार्वजनिक डाउनलोड के बजाय, हम प्रत्येक अनुरोध को आपके प्रोजेक्ट के लिए नवीनतम पैक से जोड़ते हैं।",
+    "resourceKicker": "संसाधन रूटिंग",
+    "resourceTitle": "हमें बताएं कि आप क्या योजना बना रहे हैं और हम सही दस्तावेज़ पैक भेजेंगे।",
+    "secondaryCta": "बिक्री डेस्क को ईमेल करें",
+    "tertiaryCta": "व्हाट्सएप पर बात करें",
+    "urgentDescription": "अपनी आवश्यकता और आवश्यक श्रेणियां भेजें। हम नवीनतम उपलब्ध पैक और आपकी परियोजना के लिए सही संपर्क के साथ उत्तर देंगे।",
+    "urgentKicker": "त्वरित प्रतिक्रिया चाहिए?"
+  },
+  "faq": {
+    "ctaDescription": "शहर, परियोजना का दायरा और समय-सीमा बताएं। हम फोन या ईमेल द्वारा उत्तर देंगे।",
+    "ctaKicker": "विशेषज्ञ से बात करें",
+    "ctaPrimary": "संपर्क करें",
+    "ctaSecondary": "योजना सेवा",
+    "ctaTitleAccent": "टीम से पूछें।",
+    "ctaTitleLead": "हमारी विशेषज्ञ",
+    "heroKicker": "सहायता",
+    "heroSubtitle": "भारत भर में डिलीवरी, स्थापना, वारंटी और हमारी कार्यप्रणाली। यदि आपका प्रश्न यहाँ सूचीबद्ध नहीं है, तो टीम से संपर्क करें।",
+    "heroTitle": "सामान्य प्रश्न (FAQ)",
+    "heroTitleAccent": "प्रश्न",
+    "heroTitleLead": "अक्सर पूछे जाने वाले",
+    "items": [
+      {
+        "a": "हम पूरे भारत में वाणिज्यिक कार्यालय फर्नीचर वितरित करते हैं, जिसमें बहु-शहर और बहु-मंजिला परियोजनाएं शामिल हैं। लॉजिस्टिक्स का समन्वय सीधे हमारी टीम द्वारा किया जाता है — कोई तृतीय-पक्ष बिचौलिया नहीं।",
+        "q": "आप किन शहरों में सेवाएं प्रदान करते हैं?"
+      },
+      {
+        "a": "ब्रीफ की स्वीकृति के 7 कार्य दिवसों के भीतर दायरा और डिज़ाइन पूरा किया जाता है। डिलीवरी और स्थापना की समय-सीमा ऑर्डर की मात्रा पर निर्भर करती है और उत्पादन शुरू होने से पहले लिखित रूप में तय की जाती है।",
+        "q": "डिलीवरी और स्थापना में कितना समय लगता है?"
+      },
+      {
+        "a": "हाँ। सभी ऑर्डरों में साइट पर डिलीवरी और हमारी टीम द्वारा निर्देशित स्थापना शामिल है। स्थापना के बाद की आवश्यक सहायता भी प्रदान की जाती है।",
+        "q": "क्या कीमत में स्थापना शामिल है?"
+      },
+      {
+        "a": "उत्पादों पर निर्माता की वारंटी होती है (उत्पाद श्रेणी के आधार पर आमतौर पर 2 से 5 वर्ष)। बिक्री के बाद की सहायता का प्रबंधन सीधे हमारी टीम द्वारा किया जाता है।",
+        "q": "आप क्या वारंटी प्रदान करते हैं?"
+      },
+      {
+        "a": "हाँ। हमने कई मंजिलों और परिसरों में सरकारी और कॉर्पोरेट परियोजनाएं सफलतापूर्वक निष्पादित की हैं। योजना या संपर्क के माध्यम से अपना विवरण साझा करें और हम अगला कदम सुनिश्चित करेंगे।",
+        "q": "क्या आप बड़े या चरणबद्ध कार्यालय सेटअप का प्रबंधन कर सकते हैं?"
+      }
+    ],
+    "metadataDescription": "भारत भर में One&Only की डिलीवरी, स्थापना, वारंटी और बहु-स्थान कार्यालय परियोजनाओं से जुड़े प्रश्नों के उत्तर।",
+    "metadataTitle": "सामान्य प्रश्न | कार्यालय फर्नीचर डिलीवरी एवं स्थापना"
+  },
+  "gallery": {
+    "description": "विभिन्न परियोजना प्रकारों में फ़िनिश गुणवत्ता, लेआउट शैलियों और डिलीवरी पैमाने को समझने के लिए पूर्ण साइट फ़ोटो देखें।",
+    "heroSubtitle": "कॉर्पोरेट, सार्वजनिक और संस्थागत वातावरण में चयनित कार्यक्षेत्र वितरण।",
+    "heroTitle": "परियोजना गैलरी",
+    "kicker": "हाल की मुख्य झलकियां",
+    "title": "वास्तविक परियोजनाएं, वास्तविक स्थापना।"
   },
   "home": {
-    "title": "ओआंडो प्लेटफॉर्म",
-    "subtitle": "पेशेवर स्पेस प्लानिंग और डिज़ाइन टूल",
+    "brandStatement": {
+      "body": "एकाग्रता, सहयोग और विश्वसनीय डिलीवरी — दिखावे के लिए नहीं, वास्तविक काम के लिए।",
+      "lead": "2011 से पूरे भारत में कार्यक्षेत्रों की योजना और स्थापना।"
+    },
+    "collections": {
+      "catalogCta": {
+        "href": "/products",
+        "label": "पूरा कैटलॉग"
+      },
+      "items": [
+        {
+          "href": "/products/seating",
+          "image": "/assets/marketing/ui/categories/seating-clean.webp",
+          "name": "कुर्सियां"
+        },
+        {
+          "href": "/products/workstations",
+          "image": "/assets/marketing/ui/categories/workstations-clean.webp",
+          "name": "वर्कस्टेशन"
+        },
+        {
+          "href": "/products/tables",
+          "image": "/assets/marketing/ui/categories/tables-clean.webp",
+          "name": "मेज"
+        },
+        {
+          "href": "/products/storages",
+          "image": "/assets/marketing/ui/categories/storages-clean.webp",
+          "name": "स्टोरेज"
+        },
+        {
+          "href": "/products/soft-seating",
+          "image": "/assets/marketing/ui/categories/soft-seating-clean.webp",
+          "name": "सॉफ्ट सीटिंग"
+        },
+        {
+          "href": "/products/education",
+          "image": "/assets/marketing/ui/categories/education-clean.webp",
+          "name": "शिक्षा"
+        }
+      ],
+      "titleAccent": "ब्राउज़ करें",
+      "titleLead": "श्रेणियां"
+    },
+    "contact": {
+      "directActions": [
+        {
+          "label": "व्हाट्सएप करें",
+          "type": "whatsapp"
+        },
+        {
+          "label": "कॉल करें",
+          "type": "phone"
+        }
+      ],
+      "form": {
+        "briefLabel": "विवरण",
+        "briefPlaceholder": "टीम का आकार, दायरा, या समयसीमा — विवरण से सहायता मिलती है।",
+        "channelHint": "फोन या ईमेल — कम से कम एक आवश्यक है।",
+        "cityLabel": "शहर",
+        "cityPlaceholder": "परियोजना का शहर",
+        "consentHint": "भेजने के लिए आवश्यक। हम संपर्क विवरण नहीं बेचते हैं।",
+        "consentLink": "गोपनीयता नीति",
+        "consentText": "मैं सहमत हूं कि वन एंड ओनली मेरी पूछताछ का उत्तर देने के लिए इन विवरणों का उपयोग कर सकता है।",
+        "emailLabel": "ईमेल",
+        "emailPlaceholder": "you@company.com",
+        "nameLabel": "नाम",
+        "namePlaceholder": "आपका नाम",
+        "phoneLabel": "फोन",
+        "phonePlaceholder": "+91 …",
+        "submitLabel": "विवरण भेजें",
+        "submittingLabel": "भेजा जा रहा है..."
+      },
+      "image": {
+        "alt": "वन एंड ओनली द्वारा स्थापित कॉर्पोरेट कार्यक्षेत्र",
+        "src": "/assets/marketing/hero/pages/contact-oneandonly-bright.webp"
+      },
+      "status": {
+        "errorChannel": "कृपया फोन नंबर या ईमेल जोड़ें ताकि हम आपसे संपर्क कर सकें।",
+        "errorCity": "कृपया परियोजना का शहर जोड़ें।",
+        "errorConsent": "भेजने से पहले गोपनीयता सहमति की पुष्टि करें।",
+        "errorGeneric": "वर्तमान में सबमिट करने में असमर्थ।",
+        "success": "विवरण प्राप्त हुआ। हमारी टीम शीघ्र ही आपसे संपर्क करेगी।"
+      },
+      "subtitle": "शहर, दायरा, समयसीमा — हम फोन या ईमेल द्वारा संपर्क करेंगे।",
+      "titleAccent": "साझा करें",
+      "titleLead": "अपनी आवश्यकता"
+    },
     "getStarted": "शुरू करें",
     "hero": {
+      "glassProof": {
+        "badge": "भरोसेमंद भागीदार",
+        "cta": "ग्राहक देखें",
+        "href": "/trusted-by/",
+        "lead": "120+ कार्यक्षेत्र सफलतापूर्वक वितरित।",
+        "support": "प्लानर में कैटलॉग · ड्राफ्ट · ब्रांडेड BOQ।"
+      },
+      "kicker": "पैन-इंडिया · 2011 से",
+      "primaryCta": {
+        "href": "/products",
+        "label": "उत्पाद देखें"
+      },
+      "secondaryCta": {
+        "href": "/#contact",
+        "label": "कोटेशन अनुरोध"
+      },
       "title": [
         "कार्यक्षेत्र जो",
         "बेहतर काम करें"
-      ],
-      "kicker": "पैन-इंडिया · 2011 से",
-      "primaryCta": {
-        "label": "उत्पाद देखें",
-        "href": "/products"
-      },
-      "secondaryCta": {
-        "label": "कोटेशन अनुरोध",
-        "href": "/#contact"
-      },
-      "glassProof": {
-        "badge": "भरोसेमंद भागीदार",
-        "lead": "120+ कार्यक्षेत्र सफलतापूर्वक वितरित।",
-        "support": "प्लानर में कैटलॉग · ड्राफ्ट · ब्रांडेड BOQ।",
-        "href": "/trusted-by/",
-        "cta": "ग्राहक देखें"
-      }
+      ]
     },
     "plannerSuite": {
-      "titleLead": "ओएंडओ",
-      "titleAccent": "प्लानर",
       "description": "फ़्लोर स्केच करें, कैटलॉग उत्पाद रखें और निर्यात करें।",
+      "launchHref": "/planner",
+      "launchLabel": "प्लानर शुरू करें",
       "loginHref": "/access/?next=%2Fooplanner%2F",
       "loginLabel": "सदस्य लॉगिन",
       "overviewHref": "/planner",
-      "overviewLabel": "अधिक जानें"
+      "overviewLabel": "अधिक जानें",
+      "titleAccent": "प्लानर",
+      "titleLead": "ओएंडओ"
+    },
+    "showcase": {
+      "browseCta": {
+        "href": "/portfolio",
+        "label": "सभी ग्राहक देखें"
+      },
+      "items": [
+        {
+          "id": "dmrc",
+          "image": "/assets/marketing/clients/DMRC/dmrc.webp",
+          "label": "",
+          "link": "/portfolio",
+          "name": "DMRC"
+        },
+        {
+          "id": "titan",
+          "image": "/assets/marketing/clients/Titan/hero.webp",
+          "label": "",
+          "link": "/portfolio",
+          "name": "Titan"
+        },
+        {
+          "id": "tvs",
+          "image": "/assets/marketing/clients/TVS/hero.webp",
+          "label": "",
+          "link": "/portfolio",
+          "name": "TVS"
+        }
+      ],
+      "sectionLabel": "चयनित परियोजनाएं",
+      "sectionTitleAccent": "स्थापनाएं",
+      "sectionTitleLead": "हालिया"
+    },
+    "subtitle": "पेशेवर स्पेस प्लानिंग और डिज़ाइन टूल",
+    "title": "ओआंडो प्लेटफॉर्म",
+    "tools": {
+      "demoAriaLabel": "उदाहरण 10x8 मीटर कार्यालय फ़्लोर प्लान",
+      "demoCaption": "उदाहरण 10x8 मीटर कार्यालय फ़्लोर प्लान",
+      "description": "कैटलॉग फ़र्नीचर के साथ वास्तविक पैमाने की योजनाएं — कोटेशन से पहले निर्यात करें।",
+      "kicker": "कार्यक्षेत्र योजना",
+      "titleAccent": "डिज़ाइन करें",
+      "titleLead": "अपने कार्यक्षेत्र को"
     },
     "trust": {
+      "kpiLabels": [
+        "वर्षों का अनुभव",
+        "पूर्ण परियोजनाएं",
+        "प्रमुख संगठन",
+        "सेवा प्राप्त शहर"
+      ],
       "logoLabel": "प्रमुख संगठन",
       "logos": [
         {
@@ -117,651 +559,37 @@
           "src": "/assets/marketing/client-logos/mecon-limited.jpg"
         }
       ],
-      "projectsCta": "परियोजनाएं देखें",
-      "kpiLabels": [
-        "वर्षों का अनुभव",
-        "पूर्ण परियोजनाएं",
-        "प्रमुख संगठन",
-        "सेवा प्राप्त शहर"
-      ]
-    },
-    "brandStatement": {
-      "lead": "2011 से पूरे भारत में कार्यक्षेत्रों की योजना और स्थापना।",
-      "body": "एकाग्रता, सहयोग और विश्वसनीय डिलीवरी — दिखावे के लिए नहीं, वास्तविक काम के लिए।"
-    },
-    "collections": {
-      "titleLead": "श्रेणियां",
-      "titleAccent": "ब्राउज़ करें",
-      "catalogCta": {
-        "label": "पूरा कैटलॉग",
-        "href": "/products"
-      },
-      "items": [
-        {
-          "name": "कुर्सियां",
-          "image": "/assets/marketing/ui/categories/seating-clean.webp",
-          "href": "/products/seating"
-        },
-        {
-          "name": "वर्कस्टेशन",
-          "image": "/assets/marketing/ui/categories/workstations-clean.webp",
-          "href": "/products/workstations"
-        },
-        {
-          "name": "मेज",
-          "image": "/assets/marketing/ui/categories/tables-clean.webp",
-          "href": "/products/tables"
-        },
-        {
-          "name": "स्टोरेज",
-          "image": "/assets/marketing/ui/categories/storages-clean.webp",
-          "href": "/products/storages"
-        },
-        {
-          "name": "सॉफ्ट सीटिंग",
-          "image": "/assets/marketing/ui/categories/soft-seating-clean.webp",
-          "href": "/products/soft-seating"
-        },
-        {
-          "name": "शिक्षा",
-          "image": "/assets/marketing/ui/categories/education-clean.webp",
-          "href": "/products/education"
-        }
-      ]
+      "projectsCta": "परियोजनाएं देखें"
     },
     "whyChooseUs": {
-      "titleLead": "हम तैयार करते हैं",
-      "titleAccent": "कार्यक्षेत्र",
       "features": [
         {
-          "title": "प्रदर्शन-ग्रेड",
-          "tagline": "भार · चक्र · एर्गोनॉमिक्स"
+          "tagline": "भार · चक्र · एर्गोनॉमिक्स",
+          "title": "प्रदर्शन-ग्रेड"
         },
         {
-          "title": "टिकाऊ निर्माण",
-          "tagline": "मॉडल अनुसार वारंटी"
+          "tagline": "मॉडल अनुसार वारंटी",
+          "title": "टिकाऊ निर्माण"
         },
         {
-          "title": "कम पुनर्कार्य",
-          "tagline": "टिकाऊ सामग्री"
+          "tagline": "टिकाऊ सामग्री",
+          "title": "कम पुनर्कार्य"
         },
         {
-          "title": "आसान विस्तार",
-          "tagline": "पायलट से पूर्ण रोलआउट"
+          "tagline": "पायलट से पूर्ण रोलआउट",
+          "title": "आसान विस्तार"
         }
-      ]
-    },
-    "tools": {
-      "kicker": "कार्यक्षेत्र योजना",
-      "titleLead": "अपने कार्यक्षेत्र को",
-      "titleAccent": "डिज़ाइन करें",
-      "description": "कैटलॉग फ़र्नीचर के साथ वास्तविक पैमाने की योजनाएं — कोटेशन से पहले निर्यात करें।",
-      "demoAriaLabel": "उदाहरण 10x8 मीटर कार्यालय फ़्लोर प्लान",
-      "demoCaption": "उदाहरण 10x8 मीटर कार्यालय फ़्लोर प्लान"
-    },
-    "showcase": {
-      "sectionLabel": "चयनित परियोजनाएं",
-      "sectionTitleLead": "हालिया",
-      "sectionTitleAccent": "स्थापनाएं",
-      "browseCta": {
-        "label": "सभी ग्राहक देखें",
-        "href": "/portfolio"
-      },
-      "items": [
-        {
-          "id": "dmrc",
-          "name": "DMRC",
-          "label": "",
-          "image": "/assets/marketing/clients/DMRC/dmrc.webp",
-          "link": "/portfolio"
-        },
-        {
-          "id": "titan",
-          "name": "Titan",
-          "label": "",
-          "image": "/assets/marketing/clients/Titan/hero.webp",
-          "link": "/portfolio"
-        },
-        {
-          "id": "tvs",
-          "name": "TVS",
-          "label": "",
-          "image": "/assets/marketing/clients/TVS/hero.webp",
-          "link": "/portfolio"
-        }
-      ]
-    },
-    "contact": {
-      "titleLead": "अपनी आवश्यकता",
-      "titleAccent": "साझा करें",
-      "subtitle": "शहर, दायरा, समयसीमा — हम फोन या ईमेल द्वारा संपर्क करेंगे।",
-      "image": {
-        "src": "/assets/marketing/hero/pages/contact-oneandonly-bright.webp",
-        "alt": "वन एंड ओनली द्वारा स्थापित कॉर्पोरेट कार्यक्षेत्र"
-      },
-      "form": {
-        "nameLabel": "नाम",
-        "namePlaceholder": "आपका नाम",
-        "cityLabel": "शहर",
-        "cityPlaceholder": "परियोजना का शहर",
-        "phoneLabel": "फोन",
-        "phonePlaceholder": "+91 …",
-        "emailLabel": "ईमेल",
-        "emailPlaceholder": "you@company.com",
-        "briefLabel": "विवरण",
-        "briefPlaceholder": "टीम का आकार, दायरा, या समयसीमा — विवरण से सहायता मिलती है।",
-        "consentText": "मैं सहमत हूं कि वन एंड ओनली मेरी पूछताछ का उत्तर देने के लिए इन विवरणों का उपयोग कर सकता है।",
-        "consentLink": "गोपनीयता नीति",
-        "consentHint": "भेजने के लिए आवश्यक। हम संपर्क विवरण नहीं बेचते हैं।",
-        "channelHint": "फोन या ईमेल — कम से कम एक आवश्यक है।",
-        "submitLabel": "विवरण भेजें",
-        "submittingLabel": "भेजा जा रहा है..."
-      },
-      "status": {
-        "success": "विवरण प्राप्त हुआ। हमारी टीम शीघ्र ही आपसे संपर्क करेगी।",
-        "errorCity": "कृपया परियोजना का शहर जोड़ें।",
-        "errorConsent": "भेजने से पहले गोपनीयता सहमति की पुष्टि करें।",
-        "errorChannel": "कृपया फोन नंबर या ईमेल जोड़ें ताकि हम आपसे संपर्क कर सकें।",
-        "errorGeneric": "वर्तमान में सबमिट करने में असमर्थ।"
-      },
-      "directActions": [
-        {
-          "type": "whatsapp",
-          "label": "व्हाट्सएप करें"
-        },
-        {
-          "type": "phone",
-          "label": "कॉल करें"
-        }
-      ]
+      ],
+      "titleAccent": "कार्यक्षेत्र",
+      "titleLead": "हम तैयार करते हैं"
     }
-  },
-  "plannerLanding": {
-    "kicker": "स्पेस प्लानर",
-    "titleLead": "अपना",
-    "titleAccent": "ऑफिस",
-    "description": "सही पैमाने की फ्लोर प्लान, कैटलॉग फर्नीचर, PDF निर्यात।",
-    "primaryCta": "मुफ्त शुरू करें",
-    "secondaryCta": "साइन इन",
-    "featuresCta": "सभी सुविधाएँ",
-    "whatItDoesLead": "यह",
-    "whatItDoesAccent": "करता है",
-    "howItWorksLead": "कैसे",
-    "howItWorksAccent": "काम करता है",
-    "bottomCta": "मुफ्त शुरू करें — खाता नहीं चाहिए।",
-    "step1": "फ्लोर स्केच करें",
-    "step2": "कैटलॉग फर्नीचर लगाएँ",
-    "step3": "निर्यात और कोट",
-    "featureMeasure": "कमरे का नाप",
-    "featureMeasureTag": "दीवारें मिलीमीटर में बनाएँ।",
-    "featureCatalog": "कैटलॉग",
-    "featureCatalogTag": "असली फर्नीचर डालें।",
-    "featureAi": "AI सहायता",
-    "featureAiTag": "अटकने पर पहली लेआउट।",
-    "featurePdf": "PDF",
-    "featurePdfTag": "प्लान निर्यात करें।"
-  },
-  "planner": {
-    "title": "स्पेस प्लानर",
-    "newProject": "नया प्रोजेक्ट",
-    "roomPresets": "कमरे के प्रीसेट",
-    "session": {
-      "title": "योजना सत्र",
-      "description": "साझा प्लानर वर्कस्पेस में सहेजें, स्थानीय ड्राफ्ट पास रखें, प्रामाणिक प्लानर दस्तावेज़ आयात करें, या 3D में वही योजना पुनः खोलें।",
-      "saveCloud": "क्लाउड में सहेजें",
-      "saveDraft": "स्थानीय ड्राफ्ट सहेजें",
-      "saveAsNew": "नए सत्र के रूप में सहेजें",
-      "open3d": "3D व्यूअर में खोलें",
-      "importJson": "प्लान JSON आयात करें",
-      "exportJson": "प्लान JSON निर्यात करें",
-      "savedPlans": "सहेजी गई योजनाएं",
-      "noPlans": "अभी कोई स्थानीय ड्राफ्ट या क्लाउड योजना नहीं है।",
-      "delete": "हटाएं",
-      "rename": "नाम बदलें"
-    },
-    "export": {
-      "title": "अपनी योजना निर्यात करें",
-      "subtitle": "एक प्रारूप चुनें, फिर डाउनलोड करें या लिंक साझा करें।",
-      "formatLabel": "प्रारूप",
-      "pdfStyleLabel": "PDF शैली",
-      "downloadPrefix": "डाउनलोड",
-      "exporting": "निर्यात हो रहा है…",
-      "downloaded": "डाउनलोड हो गया!",
-      "copyLink": "लिंक कॉपी करें",
-      "linkCopied": "कॉपी हो गया!",
-      "ready": "आपकी {format} फ़ाइल तैयार है।",
-      "failed": "निर्यात विफल रहा। कृपया पुन: प्रयास करें।"
-    }
-  },
-  "about": {
-    "heroTitle": "वन एंड ओनली के बारे में",
-    "heroKicker": "भारत · राष्ट्रव्यापी",
-    "heroTitleLead": "कुशलता से तैयार",
-    "heroTitleAccent": "इंटीरियर।",
-    "heroSubtitle": "हम व्यावहारिक, टिकाऊ और स्केलेबल वर्कस्पेस सिस्टम डिज़ाइन और डिलीवर करते हैं।",
-    "heroCta": "हमारा काम देखें",
-    "storyKicker": "हम कौन हैं",
-    "storyTitleLead": "डिलीवरी के माध्यम से",
-    "storyTitleAccent": "विश्वास।",
-    "storyLead": "योजना, आपूर्ति और स्थापना की जिम्मेदारी एक ही टीम संभालती है — पूरे क्षेत्र में उद्यम टीमों के लिए कुर्सियां, वर्कस्टेशन, मीटिंग रूम और स्टोरेज।",
-    "craftQuote": "फ़र्नीचर केवल आधा काम है। स्पेसिंग, स्थापना अनुशासन और हैंडओवर से विश्वास बनता है।",
-    "craftAttribution": "फ़ील्ड टीम · वन एंड ओनली",
-    "pillarsKicker": "हम कैसे काम करते हैं",
-    "modelPillars": [
-      {
-        "title": "योजना-आधारित",
-        "detail": "श्रेणी, बजट और लेआउट को टीमों के वास्तविक काम करने के तरीके से मिलाएं।"
-      },
-      {
-        "title": "स्पष्ट निष्पादन",
-        "detail": "पूरी प्रक्रिया में कार्यक्षेत्र, समयसीमा और स्थापना की तैयारी को स्पष्ट रखें।"
-      },
-      {
-        "title": "हैंडओवर के बाद",
-        "detail": "वारंटी और सहायता को एक ही जवाबदेह टीम के माध्यम से संभालें।"
-      }
-    ],
-    "processKicker": "प्रक्रिया",
-    "processTitleLead": "योजना से",
-    "processTitleAccent": "हैंडओवर तक",
-    "processSteps": [
-      {
-        "title": "विवरण",
-        "detail": "कर्मचारियों की संख्या, स्थान का प्रकार, बजट और समयसीमा दर्ज करें।"
-      },
-      {
-        "title": "विनिर्देश",
-        "detail": "स्पष्ट अनुमोदन पथ पर उत्पादों और फ़िनिश को अंतिम रूप दें।"
-      },
-      {
-        "title": "वितरण",
-        "detail": "हैंडओवर के बाद स्थापना, सेवा और सहायता सुनिश्चित करें।"
-      }
-    ],
-    "ctaKicker": "अगला कदम",
-    "ctaTitleLead": "अपने स्थान के बारे में",
-    "ctaTitleAccent": "बात करें।",
-    "ctaDescription": "योजना कॉल बुक करें या दस्तावेज़ और तकनीकी शीट के लिए संसाधन डेस्क खोलें।",
-    "ctaPrimary": "योजना कॉल का अनुरोध करें",
-    "ctaSecondary": "ग्राहक देखें",
-    "sectionKicker": "हम कौन हैं",
-    "sectionTitle": "योजना-प्रथम भागीदार",
-    "sectionTitleLead": "योजना-प्रथम",
-    "sectionTitleAccent": "भागीदार।",
-    "paragraphs": [
-      "हम योजना, उत्पाद और वितरण को जोड़ते हैं ताकि टीमें बिना किसी देरी के योजना से हैंडओवर तक पहुंच सकें।",
-      "उद्यम और संस्थागत टीमों के लिए कुर्सियां, वर्कस्टेशन, मीटिंग रूम, स्टोरेज और सहायता।",
-      "स्पष्ट दायरा, व्यावहारिक समयसीमा और स्थापना के बाद जवाबदेह समर्थन।"
-    ],
-    "confidenceKicker": "ग्राहक विश्वास",
-    "confidenceTitle": "उद्यम टीमों द्वारा विश्वसनीय।",
-    "confidenceCta": "सभी ग्राहक देखें",
-    "modelKicker": "हम कैसे काम करते हैं",
-    "modelTitle": "एक एकीकृत टीम",
-    "modelDescription": "योजना, सोर्सिंग, निष्पादन और सहायता शुरुआत से हैंडओवर तक जुड़े रहते हैं।",
-    "processTitle": "योजना से हैंडओवर तक",
-    "supportTitle": "क्या आपको अगले कदम की आवश्यकता है?",
-    "supportDescription": "दस्तावेज़ों और तकनीकी शीट के लिए योजना कॉल या संसाधन डेस्क।",
-    "supportPrimaryCta": "योजना कॉल का अनुरोध करें",
-    "supportSecondaryCta": "संसाधन डेस्क खोलें"
-  },
-  "contact": {
-    "heroTitle": "संपर्क करें",
-    "heroKicker": "भारत · राष्ट्रव्यापी",
-    "heroTitleLead": "हमसे",
-    "heroTitleAccent": "संपर्क करें।",
-    "heroSubtitle": "अपनी वर्कस्पेस आवश्यकता साझा करें और हमारी टीम अगले कदम बताएगी।",
-    "sectionTitle": "कार्यालय",
-    "introTitle": "कार्यालय और चैनल",
-    "introDescription": "",
-    "resourceDeskLead": "पहले दस्तावेज़ चाहिए?",
-    "resourceDeskCta": "संसाधन डेस्क",
-    "resourceDeskTail": "आपकी आवश्यकता के अनुसार दस्तावेज़ों के लिए।",
-    "quickDeskKicker": "त्वरित मार्ग",
-    "quickDeskTitle": "एक लेन चुनें",
-    "quickDeskDescription": "योजना, दस्तावेज़ या कोटेशन — हम आपको सही टीम से जोड़ते हैं।",
-    "quickDeskPrimaryCta": "संसाधन डेस्क",
-    "quickDeskSecondaryCta": "योजना कॉल",
-    "channelRegionLabel": "सेवा क्षेत्र",
-    "channelQuotesLabel": "कोटेशन और योजना",
-    "channelSupportLabel": "सहायता और पूछताछ",
-    "channelEmailLabel": "ईमेल",
-    "channelsAriaLabel": "फोन, ईमेल और सेवा क्षेत्र",
-    "offices": [
-      {
-        "title": "कॉर्पोरेट कार्यालय",
-        "lines": [
-          "401, Jagat Trade Centre",
-          "Frazer Road",
-          "Patna - 800 001",
-          "India"
-        ]
-      },
-      {
-        "title": "शोरूम",
-        "lines": [
-          "One and Only Furniture Pvt Ltd",
-          "Opp Patliputra Telephone Exchange",
-          "North Industrial Estate Road",
-          "Patna - 800 010",
-          "India"
-        ]
-      }
-    ]
-  },
-  "products": {
-    "heroKicker": "उत्पाद कैटलॉग",
-    "heroSubtitle": "लाइव कैटलॉग से श्रेणियां ब्राउज़ करें और अपनी टीम के लिए सही मिक्स चुनें।",
-    "headlineLead": "वर्कस्पेस",
-    "headlineAccent": "उत्पाद",
-    "heroPrimaryCta": "श्रेणियां ब्राउज़ करें",
-    "heroSecondaryCta": "बिक्री टीम से बात करें",
-    "craftQuote": "हम इसी कैटलॉग से बेचते हैं और इंस्टॉल करते हैं।",
-    "craftAttribution": "वन एंड ओनली",
-    "introKicker": "श्रेणियां",
-    "introTitleLead": "एक श्रेणी",
-    "introTitleAccent": "खोलें",
-    "introDescription": "हर मॉडल की फोटो, नाप और फ़िनिश।",
-    "featureBullets": [
-      "टास्क, कार्यकारी और आगंतुक क्षेत्रों के लिए कुर्सियां।",
-      "विस्तार योग्य टीम लेआउट के लिए मॉड्यूलर वर्कस्टेशन।",
-      "साझा स्थानों के लिए टेबल और सहयोग फ़र्नीचर।",
-      "दैनिक संचालन के लिए स्टोरेज और सहायक उपकरण।",
-      "लाउंज, रिसेप्शन और अनौपचारिक बैठकों के लिए सॉफ्ट सीटिंग।",
-      "कक्षाओं, प्रशिक्षण और परिसरों के लिए शिक्षा फ़र्नीचर।"
-    ],
-    "categoryRoutesKicker": "त्वरित लिंक",
-    "categoryRoutesDescription": "एक श्रेणी पर जाएं, शॉर्टलिस्ट करें और पूछताछ करें।",
-    "categoryRoutesCta": "सभी श्रेणियां देखें",
-    "rangeKicker": "छह श्रेणियां",
-    "rangeTitleLead": "आवश्यकतानुसार",
-    "rangeTitleAccent": "ब्राउज़ करें।",
-    "categoriesTitleLead": "ब्राउज़ करें",
-    "categoriesTitleAccent": "उत्पाद श्रेणियां",
-    "pillarsKicker": "हम कैसे काम करते हैं",
-    "pillarsTitleLead": "हम कैसे",
-    "pillarsTitleAccent": "निर्दिष्ट करते हैं।",
-    "pillarsIntro": "हम फ़िनिश और समयसीमा से पहले टीम के आकार, उपयोग और बजट का मिलान करते हैं।",
-    "pillars": [
-      {
-        "title": "विनिर्देश-आधारित मार्गदर्शन",
-        "detail": "हम टीम के आकार, उपयोग पैटर्न और बजट का मिलान करते हैं ताकि उत्पाद विकल्प पहले दिन से व्यावहारिक हों।",
-        "icon": "check-circle"
-      },
-      {
-        "title": "विश्वसनीय समयसीमा",
-        "detail": "मॉड्यूलर श्रेणियां और संरचित योजना टीमों को अनुमोदन से स्थापना तक नियंत्रण के साथ आगे बढ़ने में मदद करती हैं।",
-        "icon": "clock"
-      },
-      {
-        "title": "बिक्री के बाद विश्वास",
-        "detail": "वारंटी कवरेज और सेवा सहायता प्रत्येक प्रस्ताव का हिस्सा हैं।",
-        "icon": "shield"
-      }
-    ],
-    "deskKicker": "क्या आपको शॉर्टलिस्ट चाहिए?",
-    "deskTitle": "एक विवरण भेजें।",
-    "deskDescription": "टीम का आकार, लेआउट और समयसीमा साझा करें। हम एक अनुशंसित संयोजन और स्पष्ट अगले कदमों के साथ उत्तर देंगे।",
-    "deskPrimaryCta": "कोटेशन का अनुरोध करें",
-    "deskSecondaryCta": "समाधान देखें",
-    "deskTertiaryCta": "दस्तावेज़ पैक डाउनलोड करें",
-    "categories": {
-      "seating": "कुर्सियां",
-      "workstations": "वर्कस्टेशन",
-      "tables": "मेज",
-      "storages": "स्टोरेज",
-      "soft-seating": "सॉफ्ट सीटिंग",
-      "education": "शिक्षा"
-    }
-  },
-  "solutions": {
-    "metadataTitle": "कार्यक्षेत्र समाधान",
-    "metadataDescription": "एकाग्रता, सहयोग, बैठकों, स्टोरेज और शिक्षा के लिए कार्यक्षेत्र फ़र्नीचर समाधान।",
-    "heroTitle": "समाधान",
-    "heroKicker": "संपूर्ण कार्यक्षेत्र",
-    "heroTitleLead": "वर्कस्पेस",
-    "heroTitleAccent": "समाधान",
-    "heroSubtitle": "योजना से डिलीवरी तक — एक टीम, स्पष्ट समयरेखा, मापनीय परिणाम।",
-    "heroPrimaryCta": "योजना कॉल",
-    "heroSecondaryCta": "उत्पाद ब्राउज़ करें",
-    "heroBackgroundImage": "/assets/marketing/hero/pages/about-oneandonly-bright.webp",
-    "categoriesTitleLead": "ब्राउज़ करें",
-    "categoriesTitleAccent": "समाधान",
-    "deliveryKicker": "वितरण",
-    "deliveryTitle": "विश्वसनीय वितरण",
-    "deliveryDescription": "स्पष्ट दायरा, व्यावहारिक योजना और जवाबदेह स्थापना।",
-    "deliveryMedia": {
-      "src": "/assets/marketing/hero/pages/about-oneandonly-bright.webp",
-      "alt": "कार्यक्षेत्र योजना और वितरण"
-    },
-    "stats": [
-      {
-        "value": "14+",
-        "label": "कार्यक्षेत्र परियोजनाओं में वर्ष"
-      },
-      {
-        "value": "120+",
-        "label": "वितरित परियोजनाएं"
-      },
-      {
-        "value": "120+",
-        "label": "सेवा प्राप्त ग्राहक संगठन"
-      },
-      {
-        "value": "20+",
-        "label": "सेवा प्राप्त शहर"
-      }
-    ],
-    "phaseLabelTemplate": "चरण {number}",
-    "planningKicker": "योजना शुरू करें",
-    "planningTitle": "अपनी आवश्यकता पर चर्चा करें",
-    "planningDescription": "साइट विवरण, समयसीमा और सीट संख्या — हम एक व्यावहारिक मार्ग का प्रस्ताव करते हैं।",
-    "planningPrimaryCta": "योजना कॉल",
-    "planningSecondaryCta": "उत्पाद ब्राउज़ करें",
-    "planningTertiaryCta": "संसाधन डेस्क",
-    "planningCtas": [
-      {
-        "label": "योजना कॉल",
-        "href": "/contact",
-        "variant": "primary"
-      },
-      {
-        "label": "उत्पाद ब्राउज़ करें",
-        "href": "/products",
-        "variant": "outline"
-      },
-      {
-        "label": "संसाधन डेस्क",
-        "href": "/downloads",
-        "variant": "outline"
-      }
-    ],
-    "categoryHeroKicker": "समाधान श्रेणी",
-    "categoryHeroPrimaryCta": "उत्पाद ब्राउज़ करें",
-    "categoryHeroSecondaryCta": "सभी समाधान",
-    "categoryCraftQuote": "इन्वेंट्री केवल शुरुआत है — लेआउट और आवागमन तय करते हैं कि श्रेणी साइट पर काम करती है या नहीं।",
-    "categoryCraftAttribution": "योजना डेस्क · वन एंड ओनली",
-    "categoryBodyKicker": "विनिर्देश",
-    "categoryBodyTitle": "कैटलॉग से लेआउट तक",
-    "categoryBodyDescription": "{description} लाइव उत्पाद कैटलॉग ब्राउज़ करें या इस श्रेणी के अनुरूप कार्यक्षेत्र लेआउट के लिए योजना डेस्क से बात करें।",
-    "categoryBrowseCta": "उत्पाद ब्राउज़ करें",
-    "categoryAllCta": "सभी समाधान",
-    "categoryContactCta": "योजना डेस्क से संपर्क करें",
-    "categoryDeskKicker": "अगला कदम",
-    "categoryDeskTitle": "इस श्रेणी की योजना बनाएं",
-    "categoryDeskDescription": "सीट संख्या, समयसीमा और साइट की बाधाएं साझा करें — हम उत्पादों और एक व्यावहारिक लेआउट पथ का सुझाव देंगे।",
-    "categoryDeskPrimaryCta": "योजना कॉल",
-    "categoryDeskSecondaryCta": "प्लानर खोलें",
-    "categoryDeskTertiaryCta": "सभी समाधान"
-  },
-  "workspace": {
-    "backToHome": "होम पर वापस जाएं",
-    "accessPanelTitle": "योजना में सटीकता",
-    "accessPanelDescription": "ओएंडओ सूट का अनुभव करें। हमारे उपकरण टीमों में सटीकता, प्रदर्शन और स्पष्ट सहयोग के लिए डिज़ाइन किए गए हैं।",
-    "plannerEntry": {
-      "accessStatusLabel": "प्लानर एक्सेस स्थिति",
-      "guestLabel": "अतिथि वर्कस्पेस",
-      "signedInLabel": "साइन-इन वर्कस्पेस",
-      "guestHint": "कैटलॉग देखें और लेआउट तैयार करें। प्लान सहेजने या खोलने के लिए साइन इन करें।",
-      "signedInHint": "आपके सहेजे गए प्लान प्रोजेक्ट सूची में उपलब्ध हैं।",
-      "signInToSave": "सहेजने के लिए साइन इन करें",
-      "viewSavedPlans": "सहेजे गए प्लान देखें"
-    }
-  },
-  "news": {
-    "heroTitle": "समाचार और अपडेट",
-    "heroSubtitle": "कार्यक्षेत्र मार्गदर्शन, परियोजना विषय और सेवा अपडेट।",
-    "introKicker": "हमारा फोकस",
-    "introTitle": "वर्तमान दिशा के लिए एक स्पष्ट मार्ग।",
-    "introDescription": "यह पृष्ठ आगंतुकों को यह समझने में मदद करता है कि टीम उत्पादों, योजना, सहायता और परियोजना वितरण में किस पर ध्यान केंद्रित कर रही है।",
-    "cards": [
-      {
-        "category": "योजना फोकस",
-        "title": "टीमें चरणबद्ध कार्यक्षेत्र उन्नयन की योजना कैसे बना रही हैं",
-        "summary": "अधिक परियोजनाएं चरणों में आगे बढ़ रही हैं, जहां योजना, अनुमोदन और श्रेणी निर्णय कई परिचालन मील के पत्थरों में विभाजित हैं।"
-      },
-      {
-        "category": "उत्पाद मार्गदर्शन",
-        "title": "लंबे समय तक उपयोगी रहने वाली श्रेणियों का चयन",
-        "summary": "टास्क सीटिंग, मॉड्यूलर वर्कस्टेशन, सहयोग फ़र्नीचर और स्टोरेज सिस्टम को लंबे प्रतिस्थापन चक्रों को ध्यान में रखकर चुना जा रहा है।"
-      },
-      {
-        "category": "सहायता कार्यप्रवाह",
-        "title": "दस्तावेज़, ट्रैकिंग और बिक्री उपरांत अनुरोधों के लिए स्पष्ट मार्ग",
-        "summary": "लाइव रूट सिस्टम अब आगंतुकों को सही संपर्क और संसाधन डेस्क लेन की ओर निर्देशित करता है।"
-      }
-    ],
-    "ctaTitle": "क्या आपको वर्तमान उत्पाद, योजना या सहायता अपडेट की आवश्यकता है?",
-    "ctaDescription": "जब आपको किसी लाइव प्रोजेक्ट के लिए नवीनतम श्रेणी पैक, सेवा रूटिंग या योजना संदर्भ की आवश्यकता हो, तो संपर्क और संसाधन डेस्क मार्गों का उपयोग करें।",
-    "primaryCta": "संसाधन डेस्क खोलें",
-    "secondaryCta": "टीम से संपर्क करें"
   },
   "legal": {
-    "privacy": {
-      "title": "गोपनीयता नीति",
-      "heroSubtitle": "हम योजना, बिक्री और सहायता प्रवाह में पूछताछ डेटा, कुकीज़ और संचार रिकॉर्ड कैसे संभालते हैं।",
-      "overviewKicker": "गोपनीयता और सहमति",
-      "overviewTitle": "सक्रिय कार्यक्षेत्र पूछताछ के लिए एक व्यावहारिक गोपनीयता नीति।",
-      "overviewDescription": "हम केवल वही जानकारी एकत्र करते हैं जो परियोजना अनुरोधों का उत्तर देने, सहायता वार्तालाप को रूट करने और सेवा रिकॉर्ड बनाए रखने के लिए आवश्यक है।",
-      "intro": [
-        "वन एंड ओनली का संचालन वन एंड ओनली फ़र्नीचर प्राइवेट लिमिटेड द्वारा किया जाता है। यह नीति बताती है कि जब आप हमारी वेबसाइट ब्राउज़ करते हैं या पूछताछ सबमिट करते हैं तो हम कौन सा व्यक्तिगत डेटा एकत्र करते हैं।",
-        "व्यक्तिगत जानकारी में वह डेटा शामिल है जो आपकी पहचान कर सकता है या आपसे संपर्क कर सकता है, जैसे आपका नाम, कंपनी, ईमेल पता, फोन नंबर और पूछताछ विवरण।"
-      ],
-      "commitmentsTitle": "यह नीति क्या कवर करती है",
-      "commitments": [
-        "जब आप ब्राउज़ करते हैं, पूछताछ करते हैं या सहायता का अनुरोध करते हैं तो हम क्या जानकारी एकत्र करते हैं।",
-        "हम रूटिंग, फॉलो-अप और सेवा गुणवत्ता के लिए सबमिट की गई जानकारी का उपयोग कैसे करते हैं।",
-        "सहमति और एट्रिब्यूशन रिपोर्टिंग के लिए कौन सी कुकीज़ उपयोग की जाती हैं।"
-      ],
-      "metadataTitle": "गोपनीयता नीति | वन एंड ओनली",
-      "metadataDescription": "वन एंड ओनली भारत भर में फ़र्नीचर योजना और व्यावसायिक सहायता के लिए पूछताछ डेटा, कुकीज़ और रिकॉर्ड कैसे संभालता है।",
-      "ctas": {
-        "contactTeam": "टीम से संपर्क करें",
-        "openResourceDesk": "संसाधन डेस्क खोलें",
-        "contactSupport": "सहायता से संपर्क करें",
-        "viewTerms": "नियम देखें"
-      },
-      "information": {
-        "title": "हम आपकी जानकारी का उपयोग कैसे करते हैं",
-        "firstParagraph": "हम सबमिट की गई जानकारी का उपयोग कोटेशन अनुरोधों का उत्तर देने, कार्यक्षेत्र पूछताछ पर फॉलो-अप करने, सेवा गुणवत्ता सुधारने और बिक्री व सहायता वार्तालापों के आंतरिक रिकॉर्ड रखने के लिए करते हैं।",
-        "secondParagraph": "हम आपकी व्यक्तिगत जानकारी नहीं बेचते हैं। कानून द्वारा आवश्यक होने, दुरुपयोग की जांच करने या हमारी सेवाओं को सुरक्षित रखने के लिए हम जानकारी प्रकट कर सकते हैं।"
-      },
-      "security": {
-        "title": "लिंक और सुरक्षा",
-        "firstParagraph": "हमारी वेबसाइट बाहरी वेबसाइटों से लिंक कर सकती है। उनकी गोपनीयता प्रथाएं हमारी प्रथाओं से अलग हैं, इसलिए जानकारी साझा करने से पहले उनकी नीतियां पढ़ें।",
-        "secondParagraph": "हम एकत्रित जानकारी की सुरक्षा के लिए उचित तकनीकी और संगठनात्मक उपाय अपनाते हैं। कोई भी प्रणाली पूर्ण सुरक्षा की गारंटी नहीं दे सकती, लेकिन हम जोखिम घटाने और अनावश्यक पहुंच सीमित करने के लिए कदम उठाते हैं।"
-      },
-      "cookies": {
-        "title": "कुकीज़, टैग और समान तकनीकें",
-        "description": "हम आपकी सहमति पसंद याद रखने के लिए एक आवश्यक कुकी का उपयोग करते हैं और कुकी बैनर में आपकी स्वीकृति पर लैंडिंग पेज, रेफरर और UTM पैरामीटर दर्ज करने के लिए वैकल्पिक विश्लेषण व एट्रिब्यूशन कुकीज़ का उपयोग करते हैं।",
-        "listAriaLabel": "इस साइट पर उपयोग की जाने वाली कुकीज़",
-        "duration": "180 दिन",
-        "categories": {
-          "essential": "आवश्यक",
-          "analytics": "विश्लेषण और एट्रिब्यूशन"
-        },
-        "headers": {
-          "cookie": "कुकी",
-          "category": "श्रेणी",
-          "purpose": "उद्देश्य",
-          "duration": "अवधि"
-        },
-        "rows": {
-          "consent": "आपकी कुकी पसंद संग्रहीत करता है ताकि हम हर विज़िट पर न पूछें।",
-          "landing": "एट्रिब्यूशन रिपोर्टिंग के लिए लैंडिंग पेज का पथ संग्रहीत करता है।",
-          "referrer": "रेफर करने वाला URL या स्रोत साइट संग्रहीत करता है।",
-          "source": "डायरेक्ट, Google या LinkedIn जैसे ट्रैफ़िक स्रोत को संग्रहीत करता है।",
-          "medium": "रेफरल, none या अभियान माध्यम जैसे ट्रैफ़िक माध्यम को संग्रहीत करता है।",
-          "campaign": "उपलब्ध होने पर UTM अभियान मान संग्रहीत करता है।",
-          "term": "उपलब्ध होने पर UTM term मान संग्रहीत करता है।",
-          "content": "उपलब्ध होने पर UTM content मान संग्रहीत करता है।",
-          "locale": "एट्रिब्यूशन संदर्भ के लिए वर्तमान साइट लोकेल संग्रहीत करता है।"
-        }
-      },
-      "questions": {
-        "title": "गोपनीयता के बारे में प्रश्न?",
-        "emailLead": "गोपनीयता संबंधी प्रश्नों या अनुरोधों के लिए ईमेल करें",
-        "emailTail": ". इस नीति का नवीनतम संस्करण हमेशा इसी पृष्ठ पर प्रकाशित रहेगा।"
-      },
-      "cta": {
-        "kicker": "गोपनीयता डेस्क",
-        "titleLead": "क्या आपकी कार्यक्षेत्र पूछताछ को संभालने की आवश्यकता है",
-        "titleAccent": "सावधानी से",
-        "description": "डेटा प्रबंधन, एट्रिब्यूशन कुकीज़ या परियोजना संचार के रिकॉर्ड के बारे में पूछें — हमारी टीम आधिकारिक चैनलों के माध्यम से उत्तर देगी।"
-      }
-    },
-    "shared": {
-      "serviceSupport": "सेवा और सहायता"
-    },
-    "terms": {
-      "title": "नियम और शर्तें",
-      "heroSubtitle": "वन एंड ओनली के लिए वेबसाइट, पूछताछ, कोटेशन, डिलीवरी, वारंटी और सहायता शर्तें।",
-      "overviewKicker": "व्यावसायिक शर्तें",
-      "overviewTitle": "कोटेशन, ऑर्डर, डिलीवरी और सहायता के परिचालन नियम।",
-      "overviewDescription": "ये शर्तें बताती हैं कि वेबसाइट जानकारी, व्यावसायिक कोटेशन, परियोजना निष्पादन और वारंटी सहायता को व्यवहार में कैसे संभाला जाता है।",
-      "sections": [
-        {
-          "heading": "सामान्य नियम और शर्तें",
-          "body": "ये नियम और शर्तें इस वेबसाइट के उपयोग और उत्पाद पूछताछ, कोटेशन, आपूर्ति और सहायता सेवाओं सहित सभी व्यावसायिक व्यवहारों को नियंत्रित करती हैं।"
-        },
-        {
-          "heading": "1. दायरा",
-          "body": "ये शर्तें ग्राहकों के साथ सभी व्यावसायिक संबंधों पर लागू होती हैं, जो दोनों पक्षों के बीच निष्पादित किसी भी परियोजना-विशिष्ट लिखित समझौते के अधीन हैं।"
-        },
-        {
-          "heading": "2. कोटेशन और स्वीकृति",
-          "body": "इस वेबसाइट पर उत्पाद और सेवा की जानकारी सूचनात्मक है। एक बाध्यकारी लेनदेन लिखित कोटेशन स्वीकृति और ऑर्डर पुष्टि के बाद ही होता है।"
-        },
-        {
-          "heading": "3. डिलीवरी और स्थापना",
-          "body": "ऑर्डर की पुष्टि के समय डिलीवरी शेड्यूल साझा किया जाता है और यह परियोजना के दायरे, साइट की तैयारी और सामग्री की उपलब्धता के आधार पर भिन्न हो सकता है।"
-        },
-        {
-          "heading": "4. वारंटी और सहायता",
-          "body": "वारंटी लागू होना विशिष्ट उत्पाद श्रृंखला और सहमत शर्तों के अनुसार होता है। सेवा और सहायता अनुरोध हमारे आधिकारिक चैनलों के माध्यम से नियंत्रित किए जाते हैं।"
-        },
-        {
-          "heading": "5. दायित्व",
-          "body": "दायित्व कानून द्वारा अनुमत सीमा और संबंधित वाणिज्यिक अनुबंध में सहमत मूल्य या शर्तों तक सीमित है।"
-        }
-      ],
-      "asideGuidance": "इस पृष्ठ का उपयोग रिफंड, गोपनीयता और सेवा मार्गों के साथ करें जब किसी ग्राहक को व्यावसायिक संचालन या वारंटी सहायता पर स्पष्ट मार्गदर्शन की आवश्यकता हो।",
-      "viewRefundPolicy": "रिफंड नीति देखें",
-      "privacyPolicy": "गोपनीयता नीति",
-      "askCommercialDesk": "वाणिज्यिक डेस्क से पूछें",
-      "ctaKicker": "वाणिज्यिक डेस्क",
-      "ctaTitleLead": "लिखित में दायरा तय करने के लिए",
-      "ctaTitleAccent": "तैयार हैं",
-      "ctaDescription": "कोटेशन, डिलीवरी और वारंटी सहायता इन शर्तों का पालन करते हैं — जब किसी परियोजना को स्पष्ट अगले कदम की आवश्यकता हो तो डेस्क से संपर्क करें।",
-      "ctaPrimary": "टीम से संपर्क करें",
-      "ctaSecondary": "गोपनीयता नीति"
-    },
     "imprint": {
-      "title": "कंपनी विवरण (इम्प्रिंट)",
       "heroSubtitle": "वन एंड ओनली के लिए व्यावसायिक पहचान, प्रतिनिधि विवरण और आधिकारिक संपर्क जानकारी।",
+      "overviewDescription": "जब आपको कानूनी व्यावसायिक पहचान, आधिकारिक कार्यालय का पता या प्रबंधन संपर्क लाइनों की आवश्यकता हो तो इस पृष्ठ का उपयोग करें।",
       "overviewKicker": "व्यावसायिक जानकारी",
       "overviewTitle": "आधिकारिक कंपनी और संपर्क विवरण।",
-      "overviewDescription": "जब आपको कानूनी व्यावसायिक पहचान, आधिकारिक कार्यालय का पता या प्रबंधन संपर्क लाइनों की आवश्यकता हो तो इस पृष्ठ का उपयोग करें।",
       "sections": [
         {
           "heading": "कानूनी जानकारी",
@@ -782,8 +610,8 @@
         {
           "heading": "संपर्क",
           "lines": [
-            "Phone: +91 90310 22875",
-            "Email: sales@oando.co.in"
+            "फ़ोन: +91 90310 22875",
+            "ईमेल: sales@oando.co.in"
           ]
         },
         {
@@ -793,647 +621,1184 @@
             "पटना, बिहार में पंजीकृत।"
           ]
         }
-      ]
+      ],
+      "title": "कंपनी विवरण (इम्प्रिंट)"
+    },
+    "privacy": {
+      "commitments": [
+        "जब आप ब्राउज़ करते हैं, पूछताछ करते हैं या सहायता का अनुरोध करते हैं तो हम क्या जानकारी एकत्र करते हैं।",
+        "हम रूटिंग, फॉलो-अप और सेवा गुणवत्ता के लिए सबमिट की गई जानकारी का उपयोग कैसे करते हैं।",
+        "सहमति और एट्रिब्यूशन रिपोर्टिंग के लिए कौन सी कुकीज़ उपयोग की जाती हैं।"
+      ],
+      "commitmentsTitle": "यह नीति क्या कवर करती है",
+      "cookies": {
+        "categories": {
+          "analytics": "विश्लेषण और एट्रिब्यूशन",
+          "essential": "आवश्यक"
+        },
+        "description": "हम आपकी सहमति पसंद याद रखने के लिए एक आवश्यक कुकी का उपयोग करते हैं और कुकी बैनर में आपकी स्वीकृति पर लैंडिंग पेज, रेफरर और UTM पैरामीटर दर्ज करने के लिए वैकल्पिक विश्लेषण व एट्रिब्यूशन कुकीज़ का उपयोग करते हैं।",
+        "duration": "180 दिन",
+        "headers": {
+          "category": "श्रेणी",
+          "cookie": "कुकी",
+          "duration": "अवधि",
+          "purpose": "उद्देश्य"
+        },
+        "listAriaLabel": "इस साइट पर उपयोग की जाने वाली कुकीज़",
+        "rows": {
+          "campaign": "उपलब्ध होने पर UTM अभियान मान संग्रहीत करता है।",
+          "consent": "आपकी कुकी पसंद संग्रहीत करता है ताकि हम हर विज़िट पर न पूछें।",
+          "content": "उपलब्ध होने पर UTM content मान संग्रहीत करता है।",
+          "landing": "एट्रिब्यूशन रिपोर्टिंग के लिए लैंडिंग पेज का पथ संग्रहीत करता है।",
+          "locale": "एट्रिब्यूशन संदर्भ के लिए वर्तमान साइट लोकेल संग्रहीत करता है।",
+          "medium": "रेफरल, none या अभियान माध्यम जैसे ट्रैफ़िक माध्यम को संग्रहीत करता है।",
+          "referrer": "रेफर करने वाला URL या स्रोत साइट संग्रहीत करता है।",
+          "source": "डायरेक्ट, Google या LinkedIn जैसे ट्रैफ़िक स्रोत को संग्रहीत करता है।",
+          "term": "उपलब्ध होने पर UTM term मान संग्रहीत करता है।"
+        },
+        "title": "कुकीज़, टैग और समान तकनीकें"
+      },
+      "cta": {
+        "description": "डेटा प्रबंधन, एट्रिब्यूशन कुकीज़ या परियोजना संचार के रिकॉर्ड के बारे में पूछें — हमारी टीम आधिकारिक चैनलों के माध्यम से उत्तर देगी।",
+        "kicker": "गोपनीयता डेस्क",
+        "titleAccent": "सावधानी से",
+        "titleLead": "क्या आपकी कार्यक्षेत्र पूछताछ को संभालने की आवश्यकता है"
+      },
+      "ctas": {
+        "contactSupport": "सहायता से संपर्क करें",
+        "contactTeam": "टीम से संपर्क करें",
+        "openResourceDesk": "संसाधन डेस्क खोलें",
+        "viewTerms": "नियम देखें"
+      },
+      "heroSubtitle": "हम योजना, बिक्री और सहायता प्रवाह में पूछताछ डेटा, कुकीज़ और संचार रिकॉर्ड कैसे संभालते हैं।",
+      "information": {
+        "firstParagraph": "हम सबमिट की गई जानकारी का उपयोग कोटेशन अनुरोधों का उत्तर देने, कार्यक्षेत्र पूछताछ पर फॉलो-अप करने, सेवा गुणवत्ता सुधारने और बिक्री व सहायता वार्तालापों के आंतरिक रिकॉर्ड रखने के लिए करते हैं।",
+        "secondParagraph": "हम आपकी व्यक्तिगत जानकारी नहीं बेचते हैं। कानून द्वारा आवश्यक होने, दुरुपयोग की जांच करने या हमारी सेवाओं को सुरक्षित रखने के लिए हम जानकारी प्रकट कर सकते हैं।",
+        "title": "हम आपकी जानकारी का उपयोग कैसे करते हैं"
+      },
+      "intro": [
+        "वन एंड ओनली का संचालन वन एंड ओनली फ़र्नीचर प्राइवेट लिमिटेड द्वारा किया जाता है। यह नीति बताती है कि जब आप हमारी वेबसाइट ब्राउज़ करते हैं या पूछताछ सबमिट करते हैं तो हम कौन सा व्यक्तिगत डेटा एकत्र करते हैं।",
+        "व्यक्तिगत जानकारी में वह डेटा शामिल है जो आपकी पहचान कर सकता है या आपसे संपर्क कर सकता है, जैसे आपका नाम, कंपनी, ईमेल पता, फोन नंबर और पूछताछ विवरण।"
+      ],
+      "metadataDescription": "वन एंड ओनली भारत भर में फ़र्नीचर योजना और व्यावसायिक सहायता के लिए पूछताछ डेटा, कुकीज़ और रिकॉर्ड कैसे संभालता है।",
+      "metadataTitle": "गोपनीयता नीति | वन एंड ओनली",
+      "overviewDescription": "हम केवल वही जानकारी एकत्र करते हैं जो परियोजना अनुरोधों का उत्तर देने, सहायता वार्तालाप को रूट करने और सेवा रिकॉर्ड बनाए रखने के लिए आवश्यक है।",
+      "overviewKicker": "गोपनीयता और सहमति",
+      "overviewTitle": "सक्रिय कार्यक्षेत्र पूछताछ के लिए एक व्यावहारिक गोपनीयता नीति।",
+      "questions": {
+        "emailLead": "गोपनीयता संबंधी प्रश्नों या अनुरोधों के लिए ईमेल करें",
+        "emailTail": ". इस नीति का नवीनतम संस्करण हमेशा इसी पृष्ठ पर प्रकाशित रहेगा।",
+        "title": "गोपनीयता के बारे में प्रश्न?"
+      },
+      "security": {
+        "firstParagraph": "हमारी वेबसाइट बाहरी वेबसाइटों से लिंक कर सकती है। उनकी गोपनीयता प्रथाएं हमारी प्रथाओं से अलग हैं, इसलिए जानकारी साझा करने से पहले उनकी नीतियां पढ़ें।",
+        "secondParagraph": "हम एकत्रित जानकारी की सुरक्षा के लिए उचित तकनीकी और संगठनात्मक उपाय अपनाते हैं। कोई भी प्रणाली पूर्ण सुरक्षा की गारंटी नहीं दे सकती, लेकिन हम जोखिम घटाने और अनावश्यक पहुंच सीमित करने के लिए कदम उठाते हैं।",
+        "title": "लिंक और सुरक्षा"
+      },
+      "title": "गोपनीयता नीति"
     },
     "refund": {
-      "metadataTitle": "रिफंड और वापसी नीति",
-      "metadataDescription": "वन एंड ओनली के लिए रिफंड, वापसी, प्रतिस्थापन और रद्दीकरण नीति।",
-      "heroTitle": "रिफंड और वापसी नीति",
+      "contactSalesDesk": "बिक्री डेस्क से संपर्क करें",
+      "ctaDescription": "क्षतिग्रस्त सामान, रद्दीकरण और रिफंड इस नीति का पालन करते हैं — जब किसी डिलीवरी को अगले कदम की आवश्यकता हो तो बिक्री टीम से संपर्क करें।",
+      "ctaKicker": "वापसी डेस्क",
+      "ctaPrimary": "बिक्री डेस्क से संपर्क करें",
+      "ctaSecondary": "शर्तें देखें",
+      "ctaTitleAccent": "चाहिए",
+      "ctaTitleLead": "प्रतिस्थापन या रिफंड स्पष्टीकरण",
       "heroSubtitle": "वापसी, प्रतिस्थापन, रद्दीकरण और रिफंड की शर्तें।",
+      "heroTitle": "रिफंड और वापसी नीति",
+      "metadataDescription": "वन एंड ओनली के लिए रिफंड, वापसी, प्रतिस्थापन और रद्दीकरण नीति।",
+      "metadataTitle": "रिफंड और वापसी नीति",
+      "overviewDescription": "यह नीति उत्पाद क्षति रिपोर्टिंग, प्रतिस्थापन प्रबंधन, रद्दीकरण समय और उन शर्तों को निर्धारित करती है जिनके तहत रिफंड संसाधित किए जाते हैं।",
       "overviewKicker": "वापसी और प्रतिस्थापन शर्तें",
       "overviewTitle": "क्षतिग्रस्त सामान, रद्दीकरण समयसीमा और रिफंड पात्रता के लिए स्पष्ट मार्गदर्शन।",
-      "overviewDescription": "यह नीति उत्पाद क्षति रिपोर्टिंग, प्रतिस्थापन प्रबंधन, रद्दीकरण समय और उन शर्तों को निर्धारित करती है जिनके तहत रिफंड संसाधित किए जाते हैं।",
       "sections": [
         {
-          "title": "सामान्य नीति",
-          "tone": "white",
           "items": [
             "क्षतिग्रस्त या दोषपूर्ण उत्पादों को छोड़कर, डिलीवरी पूरी होने के बाद परिवर्तन अनुरोध स्वीकार नहीं किए जाते हैं।",
             "एक्सचेंज केवल उन उत्पादों के लिए प्रदान किए जाते हैं जो क्षतिग्रस्त या दोषपूर्ण आते हैं।",
             "वेबसाइट पर उत्पाद छवियां प्रतीकात्मक हैं और अंतिम उत्पाद पर कुछ विशेषताएं भिन्न हो सकती हैं।",
             "शिपमेंट से पहले रद्दीकरण की अनुमति है। छूट वाली खरीदारी रद्दीकरण के लिए पात्र नहीं है।"
-          ]
+          ],
+          "title": "सामान्य नीति",
+          "tone": "white"
         },
         {
-          "title": "क्षतिग्रस्त या दोषपूर्ण उत्पाद",
-          "tone": "soft",
           "items": [
             "उत्पाद तस्वीरों के साथ ईमेल द्वारा डिलीवरी के 24 घंटों के भीतर क्षति की रिपोर्ट करें।",
             "संपर्क: sales@oando.co.in",
             "क्षतिग्रस्त उत्पाद मामलों के लिए रिवर्स पिकअप और प्रतिस्थापन की व्यवस्था हमारी टीम द्वारा की जाती है।",
             "बदलने योग्य दोषपूर्ण भागों की व्यवस्था आमतौर पर 7 दिनों के भीतर की जाती है; पूर्ण प्रतिस्थापन में उपलब्धता के आधार पर 15 दिन तक लग सकते हैं।"
-          ]
+          ],
+          "title": "क्षतिग्रस्त या दोषपूर्ण उत्पाद",
+          "tone": "soft"
         },
         {
-          "title": "वापसी और रिफंड",
-          "tone": "white",
           "items": [
             "वापसी केवल तभी स्वीकार की जाती है जब उत्पाद आगमन पर क्षतिग्रस्त हों।",
             "रिफंड केवल तभी जारी किया जाता है जब उसी उत्पाद के लिए प्रतिस्थापन या प्रतिस्थापन भाग उपलब्ध न हों।",
             "गैर-क्षति रिफंड अनुरोधों के लिए, पुनः पैकेजिंग और परिवहन शुल्क लागू हो सकते हैं।",
             "रिफंड एनईएफटी के माध्यम से या मूल भुगतान विधि में आमतौर पर 7 कार्य दिवसों के भीतर संसाधित किए जाते हैं।"
-          ]
+          ],
+          "title": "वापसी और रिफंड",
+          "tone": "white"
         },
         {
-          "title": "वापसी या रद्दीकरण कैसे शुरू करें",
-          "tone": "soft",
           "contactLines": [
-            "Email: sales@oando.co.in",
-            "Phone: +91 90310 22875",
-            "Corporate Office: 401, Jagat Trade Centre, Frazer Road, Patna - 800 001, Bihar, India"
+            "ईमेल: sales@oando.co.in",
+            "फ़ोन: +91 90310 22875",
+            "कॉर्पोरेट कार्यालय: 401, जगत ट्रेड सेंटर, फ्रेज़र रोड, पटना - 800 001, बिहार, भारत"
           ],
-          "items": []
+          "items": [],
+          "title": "वापसी या रद्दीकरण कैसे शुरू करें",
+          "tone": "soft"
+        }
+      ]
+    },
+    "shared": {
+      "serviceSupport": "सेवा और सहायता"
+    },
+    "terms": {
+      "asideGuidance": "इस पृष्ठ का उपयोग रिफंड, गोपनीयता और सेवा मार्गों के साथ करें जब किसी ग्राहक को व्यावसायिक संचालन या वारंटी सहायता पर स्पष्ट मार्गदर्शन की आवश्यकता हो।",
+      "askCommercialDesk": "वाणिज्यिक डेस्क से पूछें",
+      "ctaDescription": "कोटेशन, डिलीवरी और वारंटी सहायता इन शर्तों का पालन करते हैं — जब किसी परियोजना को स्पष्ट अगले कदम की आवश्यकता हो तो डेस्क से संपर्क करें।",
+      "ctaKicker": "वाणिज्यिक डेस्क",
+      "ctaPrimary": "टीम से संपर्क करें",
+      "ctaSecondary": "गोपनीयता नीति",
+      "ctaTitleAccent": "तैयार हैं",
+      "ctaTitleLead": "लिखित में दायरा तय करने के लिए",
+      "heroSubtitle": "वन एंड ओनली के लिए वेबसाइट, पूछताछ, कोटेशन, डिलीवरी, वारंटी और सहायता शर्तें।",
+      "overviewDescription": "ये शर्तें बताती हैं कि वेबसाइट जानकारी, व्यावसायिक कोटेशन, परियोजना निष्पादन और वारंटी सहायता को व्यवहार में कैसे संभाला जाता है।",
+      "overviewKicker": "व्यावसायिक शर्तें",
+      "overviewTitle": "कोटेशन, ऑर्डर, डिलीवरी और सहायता के परिचालन नियम।",
+      "privacyPolicy": "गोपनीयता नीति",
+      "sections": [
+        {
+          "body": "ये नियम और शर्तें इस वेबसाइट के उपयोग और उत्पाद पूछताछ, कोटेशन, आपूर्ति और सहायता सेवाओं सहित सभी व्यावसायिक व्यवहारों को नियंत्रित करती हैं।",
+          "heading": "सामान्य नियम और शर्तें"
+        },
+        {
+          "body": "ये शर्तें ग्राहकों के साथ सभी व्यावसायिक संबंधों पर लागू होती हैं, जो दोनों पक्षों के बीच निष्पादित किसी भी परियोजना-विशिष्ट लिखित समझौते के अधीन हैं।",
+          "heading": "1. दायरा"
+        },
+        {
+          "body": "इस वेबसाइट पर उत्पाद और सेवा की जानकारी सूचनात्मक है। एक बाध्यकारी लेनदेन लिखित कोटेशन स्वीकृति और ऑर्डर पुष्टि के बाद ही होता है।",
+          "heading": "2. कोटेशन और स्वीकृति"
+        },
+        {
+          "body": "ऑर्डर की पुष्टि के समय डिलीवरी शेड्यूल साझा किया जाता है और यह परियोजना के दायरे, साइट की तैयारी और सामग्री की उपलब्धता के आधार पर भिन्न हो सकता है।",
+          "heading": "3. डिलीवरी और स्थापना"
+        },
+        {
+          "body": "वारंटी लागू होना विशिष्ट उत्पाद श्रृंखला और सहमत शर्तों के अनुसार होता है। सेवा और सहायता अनुरोध हमारे आधिकारिक चैनलों के माध्यम से नियंत्रित किए जाते हैं।",
+          "heading": "4. वारंटी और सहायता"
+        },
+        {
+          "body": "दायित्व कानून द्वारा अनुमत सीमा और संबंधित वाणिज्यिक अनुबंध में सहमत मूल्य या शर्तों तक सीमित है।",
+          "heading": "5. दायित्व"
         }
       ],
-      "contactSalesDesk": "बिक्री डेस्क से संपर्क करें",
-      "ctaKicker": "वापसी डेस्क",
-      "ctaTitleLead": "प्रतिस्थापन या रिफंड स्पष्टीकरण",
-      "ctaTitleAccent": "चाहिए",
-      "ctaDescription": "क्षतिग्रस्त सामान, रद्दीकरण और रिफंड इस नीति का पालन करते हैं — जब किसी डिलीवरी को अगले कदम की आवश्यकता हो तो बिक्री टीम से संपर्क करें।",
-      "ctaPrimary": "बिक्री डेस्क से संपर्क करें",
-      "ctaSecondary": "शर्तें देखें"
+      "title": "नियम और शर्तें",
+      "viewRefundPolicy": "रिफंड नीति देखें"
     }
   },
-  "career": {
-    "heroKicker": "टीम से जुड़ें",
-    "heroTitleLead": "हमारे साथ",
-    "heroTitleAccent": "करियर।",
-    "heroTitle": "करियर",
-    "heroSubtitle": "ऐसी टीम से जुड़ें जो पूरे भारत में संगठनों के लिए व्यावहारिक, उच्च प्रभाव वाले कार्यक्षेत्र बनाती है।",
-    "craftQuote": "वास्तविक ग्राहक विवरण, मापी गई जिम्मेदारी, और टीमें जो डिलीवरी के करीब रहती हैं।",
-    "craftAttribution": "लोग · वन एंड ओनली",
-    "introKicker": "हमसे क्यों जुड़ें",
-    "introTitle": "कार्यक्षेत्र वितरण में अपना करियर बनाएं।",
-    "introDescription": "हम योजना, उत्पाद परामर्श, परियोजना वितरण और सहायता में काम करते हैं। यदि आप विश्वसनीय निष्पादन और ग्राहक परिणामों की परवाह करते हैं, तो आप यहाँ पूरी तरह उपयुक्त होंगे।",
-    "pillars": [
-      {
-        "title": "सहयोगात्मक टीमें",
-        "detail": "बिक्री, योजना और संचालन मिलकर काम करते हैं ताकि निर्णय स्पष्ट हों और निष्पादन तेज़ रहे।",
-        "icon": "users"
+  "marketing": {
+    "chrome": {
+      "cookie": {
+        "accept": "सभी स्वीकार करें",
+        "acceptAll": "सभी कुकीज़ स्वीकार करें",
+        "compact": "जब तक आप वैकल्पिक एनालिटिक्स स्वीकार नहीं करते, केवल आवश्यक कुकीज़ उपयोग होंगी।",
+        "description": "हम खोज और उपयोगकर्ता अनुभव बेहतर बनाने के लिए आवश्यक कुकीज़ और वैकल्पिक एनालिटिक्स एवं एट्रिब्यूशन कुकीज़ उपयोग करते हैं।",
+        "privacyNotice": "गोपनीयता सूचना",
+        "reject": "अस्वीकार करें",
+        "rejectNonEssential": "गैर-आवश्यक कुकीज़ अस्वीकार करें",
+        "title": "कुकी प्राथमिकताएं"
       },
-      {
-        "title": "सीखने पर केंद्रित कार्य",
-        "detail": "आप वास्तविक ग्राहक विवरण, खरीद चक्र और ऑन-ग्राउंड स्थापना का व्यावहारिक अनुभव प्राप्त करते हैं।",
-        "icon": "graduation-cap"
+      "footer": {
+        "company": "कंपनी",
+        "privacyPolicy": "गोपनीयता नीति",
+        "products": "उत्पाद",
+        "refundPolicy": "रिफंड नीति",
+        "rightsReserved": "सर्वाधिकार सुरक्षित।",
+        "services": "सेवाएं",
+        "sitemap": "साइटमैप",
+        "terms": "शर्तें"
       },
-      {
-        "title": "सार्थक जिम्मेदारी",
-        "detail": "हम मार्गदर्शन और स्पष्ट जवाबदेही मानकों के साथ शुरुआत में ही जिम्मेदारी सौंपते हैं।",
-        "icon": "briefcase"
+      "header": {
+        "allProductsLink": "सभी उत्पाद",
+        "closeNavigation": "नेविगेशन बंद करें",
+        "homeLabel": "वन एंड ओनली — होम",
+        "morePages": "साइट के और पृष्ठ",
+        "openMenu": "मेनू खोलें",
+        "otherCategories": "अन्य श्रेणियां",
+        "primaryNavigation": "प्राथमिक नेविगेशन"
+      },
+      "language": {
+        "english": "अंग्रेज़ी",
+        "hindi": "हिन्दी",
+        "hindiFull": "हिन्दी (Hindi)",
+        "label": "भाषा चुनें"
+      },
+      "mobile": {
+        "bestSellers": "लोकप्रिय उत्पाद",
+        "getQuote": "कोटेशन लें",
+        "newArrivals": "नए उत्पाद",
+        "openSearch": "खोज खोलें",
+        "primaryNavigation": "मोबाइल प्राथमिक नेविगेशन",
+        "quote": "कोट प्राप्त करें",
+        "savedPlans": "सहेजी गई योजनाएं",
+        "searchForm": "मोबाइल उत्पाद खोज",
+        "searchProducts": "उत्पाद खोजें",
+        "submitSearch": "मोबाइल खोज सबमिट करें"
+      },
+      "navigation": {
+        "about": "हमारे बारे में",
+        "aboutUs": "हमारे बारे में",
+        "afterSales": "बिक्री के बाद",
+        "allProducts": "सभी उत्पाद",
+        "careers": "करियर",
+        "clients": "ग्राहक",
+        "contact": "संपर्क",
+        "contactUs": "संपर्क करें",
+        "downloads": "डाउनलोड",
+        "faq": "सामान्य प्रश्न (FAQ)",
+        "memberDashboard": "सदस्य डैशबोर्ड",
+        "more": "और",
+        "planner": "प्लानर",
+        "plannerHelp": "प्लानर सहायता",
+        "planning": "योजना",
+        "portfolio": "पोर्टफोलियो",
+        "products": "उत्पाद",
+        "showrooms": "शोरूम",
+        "signIn": "साइन इन",
+        "solutions": "समाधान",
+        "sustainability": "स्थिरता",
+        "trustedBy": "विश्वसनीय ग्राहक"
+      },
+      "quickContact": {
+        "call": "टीम को कॉल करें",
+        "callDetail": "सहायता से बात करें",
+        "close": "व्हाट्सएप त्वरित संपर्क बंद करें",
+        "dialog": "त्वरित संपर्क",
+        "email": "हमें ईमेल करें",
+        "emailDetail": "अपना विवरण भेजें",
+        "fullContact": "पूरा संपर्क पृष्ठ खोलें",
+        "open": "व्हाट्सएप त्वरित संपर्क खोलें",
+        "subtitle": "टीम तक सीधे पहुंचें।",
+        "title": "त्वरित संपर्क",
+        "whatsapp": "अभी व्हाट्सएप करें",
+        "whatsappDetail": "सबसे तेज़ जवाब"
+      },
+      "search": {
+        "aiRanked": "AI रैंकिंग",
+        "allProducts": "सभी उत्पाद",
+        "formLabel": "साइट उत्पाद खोज",
+        "inputLabel": "उत्पाद खोजें",
+        "localSearch": "स्थानीय खोज",
+        "noResults": "कोई परिणाम नहीं",
+        "noSearchResults": "कोई खोज परिणाम नहीं।",
+        "placeholder": "उत्पाद खोजें...",
+        "portfolio": "पोर्टफोलियो",
+        "quickLinks": "त्वरित लिंक",
+        "results": "परिणाम",
+        "searching": "खोजा जा रहा है",
+        "searchingProducts": "उत्पाद खोजे जा रहे हैं।",
+        "solutions": "समाधान",
+        "staticFallback": "स्थिर वैकल्पिक परिणाम",
+        "submit": "खोज सबमिट करें",
+        "typeAtLeastTwo": "खोजने के लिए कम से कम दो अक्षर लिखें।"
       }
-    ],
-    "openingsTitle": "वर्तमान रिक्तियां",
-    "openingsAvailableTemplate": "{count} पद उपलब्ध",
-    "processKicker": "यहाँ करियर कैसे बढ़ता है",
-    "processTitle": "काम जो वास्तविक परियोजनाओं और वास्तविक जिम्मेदारी के करीब रहता है।",
-    "processDescription": "टीम योजना, उत्पाद परामर्श, वाणिज्यिक समन्वय, साइट निष्पादन और बिक्री उपरांत सहायता में काम करती है। इसका अर्थ है कि भूमिकाएं वास्तविक ग्राहक परिणामों से जुड़ी रहती हैं।",
-    "processSteps": [
-      {
-        "title": "ग्राहक-केंद्रित सीख",
-        "detail": "आप केवल आंतरिक प्रशिक्षण सामग्री के बजाय सक्रिय कार्यक्षेत्र विवरणों, अनुमोदनों और जमीनी डिलीवरी वास्तविकताओं से सीखते हैं।"
-      },
-      {
-        "title": "बहु-कार्यात्मक अनुभव",
-        "detail": "तेज़ निर्णयों और स्पष्ट जवाबदेही के लिए बिक्री, योजना, संचालन और सहायता एक साथ काम करते हैं।"
-      },
-      {
-        "title": "मापी गई जिम्मेदारी",
-        "detail": "प्रदर्शन के साथ जिम्मेदारी बढ़ती है, और प्रतिक्रिया गुणवत्ता, निष्पादन व व्यावसायिकता पर अपेक्षाएं स्पष्ट रहती हैं।"
-      }
-    ],
-    "fallbackTitle": "अभी कोई उपयुक्त पद नहीं मिला?",
-    "fallbackDescription": "अपना प्रोफाइल भेजें और बताएं कि आप कहाँ योगदान दे सकते हैं। हम बिक्री, संचालन, योजना और सहायता कार्यों के लिए नियमित रूप से आवेदनों की समीक्षा करते हैं।",
-    "careersEmail": "careers@oando.co.in",
-    "supportTitle": "निश्चित नहीं कि कौन सी भूमिका आपकी पृष्ठभूमि के लिए उपयुक्त है?",
-    "supportDescription": "अपने अनुभव क्षेत्र और पसंदीदा कार्य के साथ एक संक्षिप्त नोट भेजें। हम आपको सबसे उपयुक्त योजना, बिक्री, संचालन या सहायता लेन की ओर निर्देशित करेंगे।",
-    "supportPrimaryCta": "टीम से संपर्क करें",
-    "supportSecondaryCta": "योजना पृष्ठ खोलें",
-    "ctaKicker": "निश्चित नहीं कि आप कहाँ उपयुक्त हैं?",
-    "ctaTitleLead": "टीम से",
-    "ctaTitleAccent": "बात करें।",
-    "ctaDescription": "अपनी पृष्ठभूमि साझा करें — हम आपको सही योजना, बिक्री, संचालन या सहायता लेन की ओर निर्देशित करेंगे।",
-    "ctaPrimary": "टीम से संपर्क करें",
-    "ctaSecondary": "योजना पृष्ठ खोलें"
+    },
+    "clients": {
+      "contactCta": "संपर्क करें",
+      "ctaDescription": "कर्मचारियों की संख्या, स्थान का प्रकार और समय-सीमा साझा करें — हम उपयुक्त श्रेणियां, फिनिश और एक व्यावहारिक वितरण मार्ग तय करेंगे।",
+      "ctaKicker": "अगला कदम",
+      "ctaTitleAccent": "योजना टीम को बताएं।",
+      "ctaTitleLead": "हमारी विशेषज्ञ",
+      "deliveryQuotesLabel": "ग्राहक परियोजना अनुभव",
+      "emptyDescription": "स्थापना के चित्र तैयार किए जा रहे हैं। चयनित ग्राहक प्रमाण देखें या टीम से संपर्क करें।",
+      "emptyTitle": "गैलरी अपडेट हो रही है",
+      "eyebrow": "केस स्टडी",
+      "heroBackgroundImage": "/assets/marketing/clients/DMRC/dmrc-1.webp",
+      "heroSubtitle": "सरकार, वित्त, शिक्षा, ऊर्जा और विनिर्माण क्षेत्रों में कार्यालय फर्नीचर परियोजनाएं एवं कार्यस्थल समाधान।",
+      "heroSubtitleTemplate": "सरकार, वित्त, ऊर्जा और विनिर्माण में {clients} संगठन।",
+      "heroTitleAccent": "ग्राहक।",
+      "heroTitleLead": "विश्वसनीय",
+      "planningCta": "योजना परामर्श का अनुरोध करें",
+      "pullQuotes": [
+        {
+          "attribution": "सुविधा प्रमुख, कॉर्पोरेट फिट-आउट",
+          "quote": "टीम ने हमारे विवरण को एक व्यावहारिक लेआउट में परिवर्तित किया, जिसे हमने तुरंत स्वीकृति दी — और स्थापित परिणाम हमारे द्वारा अनुमोदित योजना के बिल्कुल अनुरूप था।"
+        },
+        {
+          "attribution": "परियोजना समन्वयक, संस्थागत कार्यक्षेत्र",
+          "quote": "डेस्किंग से लेकर मीटिंग रूम तक डिलीवरी पूरी तरह समन्वित रही। पूरे कार्यक्रम के दौरान दायरा, समय-सीमा और हैंडओवर बिल्कुल स्पष्ट थे।"
+        }
+      ],
+      "selectedClientsDescription": "सत्यापित संस्थानों का एक क्यूरेटेड समूह जो ऊपर प्रदर्शित स्थापना कार्य को दर्शाता है। यह कोई संपूर्ण सार्वजनिक सूची नहीं है।",
+      "selectedClientsKicker": "प्रमुख ग्राहक",
+      "selectedClientsTitle": "प्रमुख ग्राहक संगठनों का एक विशेष चयन।",
+      "trustedCta": "चयनित ग्राहक देखें"
+    },
+    "downloads": {
+      "craftAttribution": "रिसोर्स डेस्क · वन एंड ओनली",
+      "craftQuote": "अपना विवरण भेजें। हम नवीनतम पैक तैयार करते हैं — पुरानी सार्वजनिक PDF सूची नहीं।",
+      "ctaDescription": "श्रेणियां, सीट संख्या और शहर साझा करें — हम वर्तमान कैटलॉग, शीट और अगला योजना संपर्क भेजेंगे।",
+      "ctaKicker": "दस्तावेज़ अनुवर्ती",
+      "ctaTitleAccent": "पैक के लिए तैयार हैं",
+      "ctaTitleLead": "सही",
+      "heroKicker": "रिसोर्स डेस्क",
+      "heroPrimaryCta": "दस्तावेज़ पैक का अनुरोध करें",
+      "heroTitleAccent": "विवरण के अनुरूप",
+      "heroTitleLead": "दस्तावेज़ आपके",
+      "openPlanning": "योजना खोलें",
+      "planningSupport": "योजना सहायता",
+      "resources": [
+        {
+          "cta": "कैटलॉग पैक का अनुरोध करें",
+          "detail": "कलेक्शन अवलोकन, श्रेणी सारांश और अनुशंसित उत्पाद संयोजन।",
+          "href": "/contact",
+          "title": "उत्पाद कैटलॉग"
+        },
+        {
+          "cta": "तकनीकी शीट का अनुरोध करें",
+          "detail": "सामग्री विनिर्देश, आयाम, वारंटी शर्तें और उपयोग मार्गदर्शन।",
+          "href": "/contact",
+          "title": "तकनीकी शीट"
+        },
+        {
+          "cta": "योजना संदर्भ का अनुरोध करें",
+          "detail": "लेआउट उदाहरण, वर्कस्टेशन घनत्व और निष्पादन सर्वोत्तम अभ्यास।",
+          "href": "/planning",
+          "title": "योजना संदर्भ"
+        }
+      ]
+    },
+    "faq": {
+      "ctaDescription": "शहर, परियोजना का दायरा और समय-सीमा बताएं। हम फोन या ईमेल द्वारा उत्तर देंगे।",
+      "ctaKicker": "विशेषज्ञ से बात करें",
+      "ctaPrimary": "संपर्क करें",
+      "ctaSecondary": "योजना सेवा",
+      "ctaTitleAccent": "टीम से पूछें।",
+      "ctaTitleLead": "हमारी विशेषज्ञ",
+      "heroKicker": "सहायता",
+      "heroSubtitle": "भारत भर में डिलीवरी, स्थापना, वारंटी और हमारी कार्यप्रणाली। यदि आपका प्रश्न यहाँ सूचीबद्ध नहीं है, तो टीम से संपर्क करें।",
+      "heroTitle": "सामान्य प्रश्न (FAQ)",
+      "heroTitleAccent": "प्रश्न",
+      "heroTitleLead": "अक्सर पूछे जाने वाले",
+      "items": [
+        {
+          "a": "हम पूरे भारत में वाणिज्यिक कार्यालय फर्नीचर वितरित करते हैं, जिसमें बहु-शहर और बहु-मंजिला परियोजनाएं शामिल हैं। लॉजिस्टिक्स का समन्वय सीधे हमारी टीम द्वारा किया जाता है — कोई तृतीय-पक्ष बिचौलिया नहीं।",
+          "q": "आप किन शहरों में सेवाएं प्रदान करते हैं?"
+        },
+        {
+          "a": "ब्रीफ की स्वीकृति के 7 कार्य दिवसों के भीतर दायरा और डिज़ाइन पूरा किया जाता है। डिलीवरी और स्थापना की समय-सीमा ऑर्डर की मात्रा पर निर्भर करती है और उत्पादन शुरू होने से पहले लिखित रूप में तय की जाती है।",
+          "q": "डिलीवरी और स्थापना में कितना समय लगता है?"
+        },
+        {
+          "a": "हाँ। सभी ऑर्डरों में साइट पर डिलीवरी और हमारी टीम द्वारा निर्देशित स्थापना शामिल है। स्थापना के बाद की आवश्यक सहायता भी प्रदान की जाती है।",
+          "q": "क्या कीमत में स्थापना शामिल है?"
+        },
+        {
+          "a": "उत्पादों पर निर्माता की वारंटी होती है (उत्पाद श्रेणी के आधार पर आमतौर पर 2 से 5 वर्ष)। बिक्री के बाद की सहायता का प्रबंधन सीधे हमारी टीम द्वारा किया जाता है।",
+          "q": "आप क्या वारंटी प्रदान करते हैं?"
+        },
+        {
+          "a": "हाँ। हमने कई मंजिलों और परिसरों में सरकारी और कॉर्पोरेट परियोजनाएं सफलतापूर्वक निष्पादित की हैं। योजना या संपर्क के माध्यम से अपना विवरण साझा करें और हम अगला कदम सुनिश्चित करेंगे।",
+          "q": "क्या आप बड़े या चरणबद्ध कार्यालय सेटअप का प्रबंधन कर सकते हैं?"
+        }
+      ],
+      "metadataDescription": "भारत भर में One&Only की डिलीवरी, स्थापना, वारंटी और बहु-स्थान कार्यालय परियोजनाओं से जुड़े प्रश्नों के उत्तर।",
+      "metadataTitle": "सामान्य प्रश्न | कार्यालय फर्नीचर डिलीवरी एवं स्थापना"
+    },
+    "planning": {
+      "craftAttribution": "योजना प्रमुख, One and Only",
+      "craftQuote": "अच्छी योजना अनुमान हटाती है — खरीद शुरू होने से पहले लेआउट, श्रेणियां और BOQ एकरूप होते हैं।",
+      "deliverables": [
+        "स्थान आवंटन एवं घनत्व समीक्षा",
+        "श्रेणी विनिर्देश पत्रक",
+        "2D लेआउट अवधारणाएं और एलिवेशन संदर्भ",
+        "बजट-अनुरूप BOQ ड्राफ्ट",
+        "चरणबद्ध स्थापना अनुसूची"
+      ],
+      "heroKicker": "कार्यस्थल योजना",
+      "heroTitleAccent": "स्थापना-तैयार तक।",
+      "heroTitleLead": "विचार से",
+      "plannerCta": "3D प्लानर शुरू करें",
+      "steps": [
+        {
+          "detail": "हम परियोजना मापदंडों को परिभाषित करने के लिए फ्लोर प्लान, टीम संख्या, कार्यशैली और भंडारण आवश्यकताओं की समीक्षा करते हैं।",
+          "step": "01",
+          "title": "ब्रीफ एवं स्पेस ऑडिट"
+        },
+        {
+          "detail": "हमारी टीम हेडकाउंट, ज़ोनिंग और प्रदर्शन लक्ष्यों के अनुरूप 2D/3D अवधारणाएं और फर्नीचर विनिर्देश विकसित करती है।",
+          "step": "02",
+          "title": "लेआउट एवं विनिर्देश"
+        },
+        {
+          "detail": "आपको BOQ-तैयार दस्तावेज़, चरणबद्ध क्रियान्वयन विकल्प और खरीद व फिट-आउट टीमों के लिए स्पष्ट हैंडओवर योजना प्राप्त होती है।",
+          "step": "03",
+          "title": "BOQ एवं क्रियान्वयन योजना"
+        }
+      ]
+    },
+    "portfolio": {
+      "contactCta": "संपर्क करें",
+      "ctaDescription": "कर्मचारियों की संख्या, स्थान का प्रकार और समय-सीमा साझा करें — हम उपयुक्त श्रेणियां, फिनिश और एक व्यावहारिक वितरण मार्ग तय करेंगे।",
+      "ctaKicker": "अगला कदम",
+      "ctaTitleAccent": "योजना टीम को बताएं।",
+      "ctaTitleLead": "हमारी विशेषज्ञ",
+      "deliveryQuotesLabel": "पोर्टफोलियो स्थापना अनुभव",
+      "emptyDescription": "स्थापना के चित्र तैयार किए जा रहे हैं। चयनित ग्राहक प्रमाण देखें या टीम से संपर्क करें।",
+      "emptyTitle": "गैलरी अपडेट हो रही है",
+      "eyebrow": "परियोजना गैलरी",
+      "heroBackgroundImage": "/assets/marketing/clients/DMRC/dmrc-1.webp",
+      "heroSubtitle": "ग्राहक परियोजनाओं द्वारा समूहीकृत वास्तविक डिलीवरी तस्वीरें।",
+      "heroSubtitleTemplate": "सरकार, वित्त, शिक्षा, ऊर्जा और विनिर्माण क्षेत्रों के {clients} प्रमुख संगठन।",
+      "heroTitle": "पोर्टफोलियो",
+      "heroTitleAccent": "परियोजनाएं।",
+      "heroTitleLead": "कार्यस्थल",
+      "planningCta": "योजना परामर्श का अनुरोध करें",
+      "pullQuotes": [
+        {
+          "attribution": "सुविधा प्रमुख, कॉर्पोरेट फिट-आउट",
+          "quote": "टीम ने हमारे विवरण को एक व्यावहारिक लेआउट में परिवर्तित किया, जिसे हमने तुरंत स्वीकृति दी — और स्थापित परिणाम हमारे द्वारा अनुमोदित योजना के बिल्कुल अनुरूप था।"
+        },
+        {
+          "attribution": "परियोजना समन्वयक, संस्थागत कार्यक्षेत्र",
+          "quote": "डेस्किंग से लेकर मीटिंग रूम तक डिलीवरी पूरी तरह समन्वित रही। पूरे कार्यक्रम के दौरान दायरा, समय-सीमा और हैंडओवर बिल्कुल स्पष्ट थे।"
+        }
+      ],
+      "selectedClientsDescription": "सत्यापित संस्थानों का एक क्यूरेटेड समूह जो ऊपर प्रदर्शित स्थापना कार्य को दर्शाता है। यह कोई संपूर्ण सार्वजनिक सूची नहीं है।",
+      "selectedClientsKicker": "प्रमुख ग्राहक",
+      "selectedClientsTitle": "प्रमुख ग्राहक संगठनों का एक विशेष चयन।",
+      "title": "उत्कृष्टता।",
+      "totalTemplate": "{clients} ग्राहक - {photos} तस्वीरें",
+      "trustedCta": "चयनित ग्राहक देखें"
+    },
+    "service": {
+      "channels": [
+        {
+          "href": "tel:+919031022875",
+          "kind": "supportPhone",
+          "label": "फोन सहायता",
+          "value": "+91 90310 22875"
+        },
+        {
+          "href": "mailto:sales@oando.co.in",
+          "kind": "salesEmail",
+          "label": "ईमेल डेस्क",
+          "value": "sales@oando.co.in"
+        },
+        {
+          "href": "https://wa.me/919031022875",
+          "kind": "whatsapp",
+          "label": "व्हाट्सएप सहायता",
+          "value": "चैट शुरू करें"
+        }
+      ],
+      "craftAttribution": "सेवा डेस्क · वन एंड ओनली",
+      "craftQuote": "सहायता जो स्थापना से शुरू होती है और वारंटी तक रहती है — स्पष्ट रूटिंग और जवाबदेह अनुवर्ती।",
+      "ctaDescription": "सहायता का अनुरोध करें, ऑर्डर ट्रैक करें या दस्तावेज़ों के लिए रिसोर्स डेस्क खोलें।",
+      "ctaKicker": "अगला कदम",
+      "ctaTitleAccent": "बात करें।",
+      "ctaTitleLead": "सहायता से",
+      "heroKicker": "स्थापना के बाद",
+      "heroTitleAccent": "और सहायता।",
+      "heroTitleLead": "सेवा",
+      "pillars": [
+        {
+          "detail": "सभी वाणिज्यिक श्रेणियों पर निर्माता समर्थित वारंटी और सीधे पार्ट्स समन्वय की सुविधा।",
+          "title": "प्रत्यक्ष वारंटी सहायता"
+        },
+        {
+          "detail": "वर्कस्टेशन और एर्गोनोमिक कुर्सियों के लिए रखरखाव प्रक्रियाएं, सतह देखभाल दिशानिर्देश और संचालन जांच।",
+          "title": "निवारक देखभाल मार्गदर्शन"
+        },
+        {
+          "detail": "शीघ्र ऑन-साइट उपस्थिति चाहने वाले कॉर्पोरेट ग्राहकों के लिए फोन, ईमेल और व्हाट्सएप सहायता।",
+          "title": "त्वरित समाधान सहायता"
+        }
+      ]
+    },
+    "showrooms": {
+      "craftAttribution": "वन एंड ओनली · जगत ट्रेड सेंटर · फ्रेज़र रोड, पटना",
+      "craftQuote": "सीटिंग, फ़िनिश और सिस्टम को संदर्भ में देखें — फिर स्पष्टता के साथ योजना टीम को जानकारी दें।",
+      "ctaDescription": "शोरूम बातचीत बुक करें या जब लेआउट को संरेखण चाहिए तो योजना कॉल शुरू करें।",
+      "ctaKicker": "अगला कदम",
+      "ctaPrimary": "टीम से संपर्क करें",
+      "ctaSecondary": "योजना कॉल का अनुरोध करें",
+      "ctaTitleAccent": "पहले योजना बनाएं।",
+      "ctaTitleLead": "यात्रा करें या",
+      "heroKicker": "शोरूम · पटना",
+      "heroTitleAccent": "मिलें।",
+      "heroTitleLead": "हमसे",
+      "highlights": [
+        {
+          "detail": "चरणबद्ध योजना और स्थापना हैंडओवर के साथ वितरित कार्यस्थल प्रणालियाँ।",
+          "title": "DMRC कार्यालय"
+        },
+        {
+          "detail": "टीम की आवश्यकताओं के अनुरूप एर्गोनोमिक सीटिंग और वर्कस्टेशन की स्थापना।",
+          "title": "Titan पटना मुख्यालय"
+        },
+        {
+          "detail": "बड़े कॉर्पोरेट और संस्थागत परिसरों के लिए टर्नकी योजना, आपूर्ति और निष्पादन।",
+          "title": "एंटरप्राइज फिट-आउट्स"
+        }
+      ],
+      "highlightsTitle": "हाल की डिलीवरी",
+      "mapHeading": "शोरूम का पता लगाएं",
+      "visitCta": "यात्रा की योजना बनाएं",
+      "visitKicker": "अपनी यात्रा की योजना बनाएं",
+      "visitRows": [
+        {
+          "detail": "फ्रेज़र रोड, पटना, बिहार 800001",
+          "kind": "address",
+          "title": "401, जगत ट्रेड सेंटर"
+        },
+        {
+          "detail": "यात्रा से पहले टीम से संपर्क करें",
+          "kind": "hours",
+          "title": "सोमवार – शनिवार"
+        },
+        {
+          "detail": "सहायता और शोरूम पूछताछ",
+          "kind": "phone",
+          "title": "+91 90310 22875"
+        }
+      ],
+      "visitTitle": "शोरूम विवरण"
+    },
+    "sitemap": {
+      "kicker": "साइट अनुक्रमणिका",
+      "metadataDescription": "सार्वजनिक वन एंड ओनली पृष्ठों का HTML साइटमैप — उत्पाद, समाधान, योजना, सेवा, प्लानर और कंपनी।",
+      "metadataTitle": "साइटमैप | वन एंड ओनली कार्यालय फर्नीचर मार्ग",
+      "subtitle": "उत्पादों, योजना, प्लानर, कंपनी, कानूनी और एडमिन पृष्ठों के सार्वजनिक मार्ग।",
+      "title": "साइटमैप"
+    },
+    "sustainability": {
+      "craftAttribution": "विनिर्देश दृष्टिकोण, वन एंड ओनली योजना",
+      "craftQuote": "दीर्घकालिक कार्यस्थल ईमानदार सामग्री विकल्पों से शुरू होते हैं — रखरखाव योग्य, मरम्मत योग्य और वास्तविक उपयोग के लिए निर्दिष्ट।",
+      "ctaDescription": "कैटलॉग देखें, रिसोर्स डेस्क खोलें या लाइव विवरण पर सामग्री मार्गदर्शन के लिए योजना कॉल का अनुरोध करें।",
+      "ctaKicker": "अगला कदम",
+      "ctaPrimary": "उत्पाद देखें",
+      "ctaSecondary": "टीम से संपर्क करें",
+      "ctaTitleAccent": "इरादे से योजना बनाएं।",
+      "ctaTitleLead": "दीर्घकालिक",
+      "ecoScoreKicker": "इको-स्कोर",
+      "heroCta": "उत्पाद देखें",
+      "heroKicker": "स्थिरता",
+      "heroTitleAccent": "लंबे उपयोग के लिए।",
+      "heroTitleLead": "बना है",
+      "introTitleAccent": "सिस्टम",
+      "introTitleLeadShort": "दीर्घकालिक",
+      "productsCta": "वाणिज्यिक उत्पाद देखें"
+    },
+    "trustedBy": {
+      "craftAttribution": "वितरण दृष्टिकोण, One and Only कार्यक्रम",
+      "craftQuote": "विश्वास बार-बार मिलने वाले कार्यक्रमों में झलकता है — समन्वित डिलीवरी, जवाबदेह हैंडओवर और स्थापना के बाद भी निरंतर सहयोग।",
+      "deliveryQuotesLabel": "परियोजना अनुभव",
+      "heroKicker": "विश्वास",
+      "quotes": [
+        {
+          "attribution": "सुविधा प्रबंधन टीम, पटना कार्यालय",
+          "quote": "उन्होंने सहमत तारीखों पर स्थापना पूरी की और वर्कस्टेशन तकनीकी रेखाचित्रों के बिल्कुल अनुरूप थे।"
+        },
+        {
+          "attribution": "परियोजना समन्वयक, बैंक कार्यक्रम",
+          "quote": "भवन के शेष कार्य को बाधित किए बिना दो मंजिलों की स्थापना सुचारू रूप से संपन्न हुई।"
+        }
+      ],
+      "rosterDescription": "हमारे द्वारा वितरित कार्यक्रमों के नाम और संस्थान। स्थापना के वास्तविक चित्र क्लाइंट्स गैलरी में उपलब्ध हैं।"
+    }
   },
-  "downloads": {
-    "metadataTitle": "संसाधन डेस्क",
-    "metadataDescription": "अपने कार्यक्षेत्र की आवश्यकताओं के अनुसार उत्पाद कैटलॉग, तकनीकी शीट और योजना संदर्भ का अनुरोध करें।",
-    "heroTitle": "संसाधन डेस्क",
-    "heroSubtitle": "अपने कार्यक्षेत्र के लिए उपयुक्त उत्पाद पैक, तकनीकी शीट और योजना संदर्भ का अनुरोध करें।",
-    "resourceKicker": "संसाधन रूटिंग",
-    "resourceTitle": "हमें बताएं कि आप क्या योजना बना रहे हैं और हम सही दस्तावेज़ पैक भेजेंगे।",
-    "resourceDescription": "हमारा कैटलॉग विभिन्न श्रेणियों, फ़िनिश और योजना आवश्यकताओं में विकसित होता रहता है। पुराने सार्वजनिक डाउनलोड के बजाय, हम प्रत्येक अनुरोध को आपके प्रोजेक्ट के लिए नवीनतम पैक से जोड़ते हैं।",
-    "processKicker": "यह कैसे काम करता है",
-    "processTitle": "सक्रिय परियोजनाओं के लिए बनाया गया अनुरोध-आधारित डेस्क।",
-    "processSteps": [
+  "news": {
+    "cards": [
       {
-        "title": "अपना कार्यक्षेत्र विवरण साझा करें",
-        "detail": "हमें श्रेणियां, सीट संख्या, शहर और समय सीमा बताएं ताकि हम सही उत्पाद सेट का मिलान कर सकें।"
+        "category": "योजना फोकस",
+        "summary": "अधिक परियोजनाएं चरणों में आगे बढ़ रही हैं, जहां योजना, अनुमोदन और श्रेणी निर्णय कई परिचालन मील के पत्थरों में विभाजित हैं।",
+        "title": "टीमें चरणबद्ध कार्यक्षेत्र उन्नयन की योजना कैसे बना रही हैं"
       },
       {
-        "title": "हम नवीनतम पैक तैयार करते हैं",
-        "detail": "हमारी टीम वर्तमान कैटलॉग, तकनीकी शीट और योजना संदर्भ भेजती है जो आपकी आवश्यकता के अनुरूप हों।"
+        "category": "उत्पाद मार्गदर्शन",
+        "summary": "टास्क सीटिंग, मॉड्यूलर वर्कस्टेशन, सहयोग फ़र्नीचर और स्टोरेज सिस्टम को लंबे प्रतिस्थापन चक्रों को ध्यान में रखकर चुना जा रहा है।",
+        "title": "लंबे समय तक उपयोगी रहने वाली श्रेणियों का चयन"
       },
       {
-        "title": "योजना सहायता के साथ समीक्षा करें",
-        "detail": "यदि आवश्यक हो, तो हम विकल्पों को सीमित करने, विनिर्देशों को स्पष्ट करने और फ़ाइलों को आपके लेआउट या BOQ चर्चा से जोड़ने में मदद करते हैं।"
+        "category": "सहायता कार्यप्रवाह",
+        "summary": "लाइव रूट सिस्टम अब आगंतुकों को सही संपर्क और संसाधन डेस्क लेन की ओर निर्देशित करता है।",
+        "title": "दस्तावेज़, ट्रैकिंग और बिक्री उपरांत अनुरोधों के लिए स्पष्ट मार्ग"
       }
     ],
-    "noteTitle": "आप क्या अनुरोध कर सकते हैं",
-    "noteBody": "अनुरोध पैक में श्रेणी कैटलॉग, तकनीकी शीट, योजना संदर्भ, फ़िनिश विकल्प, वारंटी विवरण और मॉडल-विशिष्ट दस्तावेज़ शामिल हो सकते हैं।",
-    "notePoints": [
-      "श्रेणी और उपयोग के आधार पर समूहीकृत उत्पाद कैटलॉग",
-      "आयाम, सामग्री और वारंटी मार्गदर्शन वाली तकनीकी शीट",
-      "वर्कस्टेशन घनत्व, लेआउट और निष्पादन प्रवाह के लिए योजना संदर्भ"
-    ],
-    "urgentKicker": "त्वरित प्रतिक्रिया चाहिए?",
-    "urgentDescription": "अपनी आवश्यकता और आवश्यक श्रेणियां भेजें। हम नवीनतम उपलब्ध पैक और आपकी परियोजना के लिए सही संपर्क के साथ उत्तर देंगे।",
-    "primaryCta": "दस्तावेज़ पैक का अनुरोध करें",
-    "secondaryCta": "बिक्री डेस्क को ईमेल करें",
-    "tertiaryCta": "व्हाट्सएप पर बात करें"
+    "ctaDescription": "जब आपको किसी लाइव प्रोजेक्ट के लिए नवीनतम श्रेणी पैक, सेवा रूटिंग या योजना संदर्भ की आवश्यकता हो, तो संपर्क और संसाधन डेस्क मार्गों का उपयोग करें।",
+    "ctaTitle": "क्या आपको वर्तमान उत्पाद, योजना या सहायता अपडेट की आवश्यकता है?",
+    "heroSubtitle": "कार्यक्षेत्र मार्गदर्शन, परियोजना विषय और सेवा अपडेट।",
+    "heroTitle": "समाचार और अपडेट",
+    "introDescription": "यह पृष्ठ आगंतुकों को यह समझने में मदद करता है कि टीम उत्पादों, योजना, सहायता और परियोजना वितरण में किस पर ध्यान केंद्रित कर रही है।",
+    "introKicker": "हमारा फोकस",
+    "introTitle": "वर्तमान दिशा के लिए एक स्पष्ट मार्ग।",
+    "primaryCta": "संसाधन डेस्क खोलें",
+    "secondaryCta": "टीम से संपर्क करें"
   },
-  "gallery": {
-    "heroTitle": "परियोजना गैलरी",
-    "heroSubtitle": "कॉर्पोरेट, सार्वजनिक और संस्थागत वातावरण में चयनित कार्यक्षेत्र वितरण।",
-    "kicker": "हाल की मुख्य झलकियां",
-    "title": "वास्तविक परियोजनाएं, वास्तविक स्थापना।",
-    "description": "विभिन्न परियोजना प्रकारों में फ़िनिश गुणवत्ता, लेआउट शैलियों और डिलीवरी पैमाने को समझने के लिए पूर्ण साइट फ़ोटो देखें।"
+  "planner": {
+    "export": {
+      "copyLink": "लिंक कॉपी करें",
+      "downloadPrefix": "डाउनलोड",
+      "downloaded": "डाउनलोड हो गया!",
+      "exporting": "निर्यात हो रहा है…",
+      "failed": "निर्यात विफल रहा। कृपया पुन: प्रयास करें।",
+      "formatLabel": "प्रारूप",
+      "linkCopied": "कॉपी हो गया!",
+      "pdfStyleLabel": "PDF शैली",
+      "ready": "आपकी {format} फ़ाइल तैयार है।",
+      "subtitle": "एक प्रारूप चुनें, फिर डाउनलोड करें या लिंक साझा करें।",
+      "title": "अपनी योजना निर्यात करें"
+    },
+    "newProject": "नया प्रोजेक्ट",
+    "roomPresets": "कमरे के प्रीसेट",
+    "session": {
+      "delete": "हटाएं",
+      "description": "साझा प्लानर वर्कस्पेस में सहेजें, स्थानीय ड्राफ्ट पास रखें, प्रामाणिक प्लानर दस्तावेज़ आयात करें, या 3D में वही योजना पुनः खोलें।",
+      "exportJson": "प्लान JSON निर्यात करें",
+      "importJson": "प्लान JSON आयात करें",
+      "noPlans": "अभी कोई स्थानीय ड्राफ्ट या क्लाउड योजना नहीं है।",
+      "open3d": "3D व्यूअर में खोलें",
+      "rename": "नाम बदलें",
+      "saveAsNew": "नए सत्र के रूप में सहेजें",
+      "saveCloud": "क्लाउड में सहेजें",
+      "saveDraft": "स्थानीय ड्राफ्ट सहेजें",
+      "savedPlans": "सहेजी गई योजनाएं",
+      "title": "योजना सत्र"
+    },
+    "title": "स्पेस प्लानर"
+  },
+  "plannerLanding": {
+    "bottomCta": "मुफ्त शुरू करें — खाता नहीं चाहिए।",
+    "description": "सही पैमाने की फ्लोर प्लान, कैटलॉग फर्नीचर, PDF निर्यात।",
+    "featureAi": "AI सहायता",
+    "featureAiTag": "अटकने पर पहली लेआउट।",
+    "featureCatalog": "कैटलॉग",
+    "featureCatalogTag": "असली फर्नीचर डालें।",
+    "featureMeasure": "कमरे का नाप",
+    "featureMeasureTag": "दीवारें मिलीमीटर में बनाएँ।",
+    "featurePdf": "PDF",
+    "featurePdfTag": "प्लान निर्यात करें।",
+    "featuresCta": "सभी सुविधाएँ",
+    "howItWorksAccent": "काम करता है",
+    "howItWorksLead": "कैसे",
+    "kicker": "स्पेस प्लानर",
+    "primaryCta": "मुफ्त शुरू करें",
+    "secondaryCta": "साइन इन",
+    "step1": "फ्लोर स्केच करें",
+    "step2": "कैटलॉग फर्नीचर लगाएँ",
+    "step3": "निर्यात और कोट",
+    "titleAccent": "ऑफिस",
+    "titleLead": "अपना",
+    "whatItDoesAccent": "करता है",
+    "whatItDoesLead": "यह"
   },
   "planning": {
-    "heroTitle": "योजना सेवा",
-    "heroSubtitle": "कार्यक्षेत्र योजना जो कार्यप्रवाह, बजट और निष्पादन समयसीमा को संतुलित करती है।",
-    "workflowKicker": "योजना कार्यप्रवाह",
-    "workflowTitle": "इरादे से लेकर क्रियान्वयन-तैयार योजनाओं तक।",
+    "bestForDescription": "नए कार्यालय, फ़्लोर विस्तार, कार्यक्षेत्र आधुनिकीकरण और उद्यम फ़िट-आउट जहां योजना की गुणवत्ता सीधे लागत और समयसीमा को प्रभावित करती है।",
+    "bestForKicker": "इसके लिए सर्वोत्तम",
+    "craftAttribution": "योजना प्रमुख, One and Only",
+    "craftQuote": "अच्छी योजना अनुमान हटाती है — खरीद शुरू होने से पहले लेआउट, श्रेणियां और BOQ एकरूप होते हैं।",
+    "deliverables": [
+      "स्थान आवंटन एवं घनत्व समीक्षा",
+      "श्रेणी विनिर्देश पत्रक",
+      "2D लेआउट अवधारणाएं और एलिवेशन संदर्भ",
+      "बजट-अनुरूप BOQ ड्राफ्ट",
+      "चरणबद्ध स्थापना अनुसूची"
+    ],
     "deliverablesKicker": "आपको क्या प्राप्त होगा",
     "deliverablesTitle": "स्पष्ट परिणाम जिन्हें आपकी टीम क्रियान्वित कर सकती है।",
-    "bestForKicker": "इसके लिए सर्वोत्तम",
-    "bestForDescription": "नए कार्यालय, फ़्लोर विस्तार, कार्यक्षेत्र आधुनिकीकरण और उद्यम फ़िट-आउट जहां योजना की गुणवत्ता सीधे लागत और समयसीमा को प्रभावित करती है।",
+    "deskDescription": "यदि आपकी टीम को योजना कॉल से पहले श्रेणी पैक, तकनीकी शीट या लेआउट संदर्भ की आवश्यकता है, तो संसाधन डेस्क से शुरुआत करें।",
     "deskKicker": "सहायता इनपुट",
     "deskTitle": "दस्तावेज़ों, योजनाओं और उत्पाद प्रश्नों को एक ही कार्यप्रवाह में लाएं।",
-    "deskDescription": "यदि आपकी टीम को योजना कॉल से पहले श्रेणी पैक, तकनीकी शीट या लेआउट संदर्भ की आवश्यकता है, तो संसाधन डेस्क से शुरुआत करें।",
+    "heroSubtitle": "कार्यक्षेत्र योजना जो कार्यप्रवाह, बजट और निष्पादन समयसीमा को संतुलित करती है।",
+    "heroTitle": "योजना सेवा",
+    "plannerCta": "3D प्लानर शुरू करें",
     "primaryCta": "योजना कॉल का अनुरोध करें",
     "secondaryCta": "उत्पाद देखें",
-    "tertiaryCta": "संसाधन डेस्क खोलें"
+    "steps": [
+      {
+        "detail": "हम परियोजना मापदंडों को परिभाषित करने के लिए फ्लोर प्लान, टीम संख्या, कार्यशैली और भंडारण आवश्यकताओं की समीक्षा करते हैं।",
+        "step": "01",
+        "title": "ब्रीफ एवं स्पेस ऑडिट"
+      },
+      {
+        "detail": "हमारी टीम हेडकाउंट, ज़ोनिंग और प्रदर्शन लक्ष्यों के अनुरूप 2D/3D अवधारणाएं और फर्नीचर विनिर्देश विकसित करती है।",
+        "step": "02",
+        "title": "लेआउट एवं विनिर्देश"
+      },
+      {
+        "detail": "आपको BOQ-तैयार दस्तावेज़, चरणबद्ध क्रियान्वयन विकल्प और खरीद व फिट-आउट टीमों के लिए स्पष्ट हैंडओवर योजना प्राप्त होती है।",
+        "step": "03",
+        "title": "BOQ एवं क्रियान्वयन योजना"
+      }
+    ],
+    "tertiaryCta": "संसाधन डेस्क खोलें",
+    "workflowKicker": "योजना कार्यप्रवाह",
+    "workflowTitle": "इरादे से लेकर क्रियान्वयन-तैयार योजनाओं तक।"
   },
   "portfolio": {
-    "heroTitle": "पोर्टफोलियो",
-    "heroSubtitle": "ग्राहक परियोजनाओं द्वारा समूहीकृत वास्तविक डिलीवरी तस्वीरें।",
+    "contactCta": "संपर्क करें",
+    "ctaDescription": "कर्मचारियों की संख्या, स्थान का प्रकार और समय-सीमा साझा करें — हम उपयुक्त श्रेणियां, फिनिश और एक व्यावहारिक वितरण मार्ग तय करेंगे।",
+    "ctaKicker": "अगला कदम",
+    "ctaTitleAccent": "योजना टीम को बताएं।",
+    "ctaTitleLead": "हमारी विशेषज्ञ",
+    "deliveryQuotesLabel": "पोर्टफोलियो स्थापना अनुभव",
+    "emptyDescription": "स्थापना के चित्र तैयार किए जा रहे हैं। चयनित ग्राहक प्रमाण देखें या टीम से संपर्क करें।",
+    "emptyTitle": "गैलरी अपडेट हो रही है",
     "eyebrow": "परियोजना गैलरी",
+    "heroBackgroundImage": "/assets/marketing/clients/DMRC/dmrc-1.webp",
+    "heroSubtitle": "ग्राहक परियोजनाओं द्वारा समूहीकृत वास्तविक डिलीवरी तस्वीरें।",
+    "heroSubtitleTemplate": "सरकार, वित्त, शिक्षा, ऊर्जा और विनिर्माण क्षेत्रों के {clients} प्रमुख संगठन।",
+    "heroTitle": "पोर्टफोलियो",
+    "heroTitleAccent": "परियोजनाएं।",
+    "heroTitleLead": "कार्यस्थल",
+    "planningCta": "योजना परामर्श का अनुरोध करें",
+    "pullQuotes": [
+      {
+        "attribution": "सुविधा प्रमुख, कॉर्पोरेट फिट-आउट",
+        "quote": "टीम ने हमारे विवरण को एक व्यावहारिक लेआउट में परिवर्तित किया, जिसे हमने तुरंत स्वीकृति दी — और स्थापित परिणाम हमारे द्वारा अनुमोदित योजना के बिल्कुल अनुरूप था।"
+      },
+      {
+        "attribution": "परियोजना समन्वयक, संस्थागत कार्यक्षेत्र",
+        "quote": "डेस्किंग से लेकर मीटिंग रूम तक डिलीवरी पूरी तरह समन्वित रही। पूरे कार्यक्रम के दौरान दायरा, समय-सीमा और हैंडओवर बिल्कुल स्पष्ट थे।"
+      }
+    ],
+    "selectedClientsDescription": "सत्यापित संस्थानों का एक क्यूरेटेड समूह जो ऊपर प्रदर्शित स्थापना कार्य को दर्शाता है। यह कोई संपूर्ण सार्वजनिक सूची नहीं है।",
+    "selectedClientsKicker": "प्रमुख ग्राहक",
+    "selectedClientsTitle": "प्रमुख ग्राहक संगठनों का एक विशेष चयन।",
     "title": "उत्कृष्टता।",
-    "totalTemplate": "{clients} ग्राहक - {photos} तस्वीरें"
+    "totalTemplate": "{clients} ग्राहक - {photos} तस्वीरें",
+    "trustedCta": "चयनित ग्राहक देखें"
   },
-  "clients": {
-    "heroTitle": "ग्राहक",
-    "heroTitleLead": "हमारे",
-    "heroTitleAccent": "ग्राहक",
-    "eyebrow": "डिलीवरी",
-    "heroSubtitleTemplate": "सरकार, वित्त, ऊर्जा, विनिर्माण आदि में {clients} संगठन।",
-    "featuredLabel": "चयनित संगठन",
-    "featuredTitle": "ग्राहक सूची",
-    "allLabel": "क्षेत्रवार विवरण",
-    "showcase": {
-      "sectionHeading": "हमारे ग्राहक",
-      "emptySector": "{sector} में अभी तक कोई प्रकाशित ग्राहक नहीं हैं।"
-    }
+  "products": {
+    "categories": {
+      "education": "शिक्षा",
+      "seating": "कुर्सियां",
+      "soft-seating": "सॉफ्ट सीटिंग",
+      "storages": "स्टोरेज",
+      "tables": "मेज",
+      "workstations": "वर्कस्टेशन"
+    },
+    "categoriesTitleAccent": "उत्पाद श्रेणियां",
+    "categoriesTitleLead": "ब्राउज़ करें",
+    "categoryRoutesCta": "सभी श्रेणियां देखें",
+    "categoryRoutesDescription": "एक श्रेणी पर जाएं, शॉर्टलिस्ट करें और पूछताछ करें।",
+    "categoryRoutesKicker": "त्वरित लिंक",
+    "craftAttribution": "वन एंड ओनली",
+    "craftQuote": "हम इसी कैटलॉग से बेचते हैं और इंस्टॉल करते हैं।",
+    "deskDescription": "टीम का आकार, लेआउट और समयसीमा साझा करें। हम एक अनुशंसित संयोजन और स्पष्ट अगले कदमों के साथ उत्तर देंगे।",
+    "deskKicker": "क्या आपको शॉर्टलिस्ट चाहिए?",
+    "deskPrimaryCta": "कोटेशन का अनुरोध करें",
+    "deskSecondaryCta": "समाधान देखें",
+    "deskTertiaryCta": "दस्तावेज़ पैक डाउनलोड करें",
+    "deskTitle": "एक विवरण भेजें।",
+    "featureBullets": [
+      "टास्क, कार्यकारी और आगंतुक क्षेत्रों के लिए कुर्सियां।",
+      "विस्तार योग्य टीम लेआउट के लिए मॉड्यूलर वर्कस्टेशन।",
+      "साझा स्थानों के लिए टेबल और सहयोग फ़र्नीचर।",
+      "दैनिक संचालन के लिए स्टोरेज और सहायक उपकरण।",
+      "लाउंज, रिसेप्शन और अनौपचारिक बैठकों के लिए सॉफ्ट सीटिंग।",
+      "कक्षाओं, प्रशिक्षण और परिसरों के लिए शिक्षा फ़र्नीचर।"
+    ],
+    "headlineAccent": "उत्पाद",
+    "headlineLead": "वर्कस्पेस",
+    "heroKicker": "उत्पाद कैटलॉग",
+    "heroPrimaryCta": "श्रेणियां ब्राउज़ करें",
+    "heroSecondaryCta": "बिक्री टीम से बात करें",
+    "heroSubtitle": "लाइव कैटलॉग से श्रेणियां ब्राउज़ करें और अपनी टीम के लिए सही मिक्स चुनें।",
+    "introDescription": "हर मॉडल की फोटो, नाप और फ़िनिश।",
+    "introKicker": "श्रेणियां",
+    "introTitleAccent": "खोलें",
+    "introTitleLead": "एक श्रेणी",
+    "pillars": [
+      {
+        "detail": "हम टीम के आकार, उपयोग पैटर्न और बजट का मिलान करते हैं ताकि उत्पाद विकल्प पहले दिन से व्यावहारिक हों।",
+        "icon": "check-circle",
+        "title": "विनिर्देश-आधारित मार्गदर्शन"
+      },
+      {
+        "detail": "मॉड्यूलर श्रेणियां और संरचित योजना टीमों को अनुमोदन से स्थापना तक नियंत्रण के साथ आगे बढ़ने में मदद करती हैं।",
+        "icon": "clock",
+        "title": "विश्वसनीय समयसीमा"
+      },
+      {
+        "detail": "वारंटी कवरेज और सेवा सहायता प्रत्येक प्रस्ताव का हिस्सा हैं।",
+        "icon": "shield",
+        "title": "बिक्री के बाद विश्वास"
+      }
+    ],
+    "pillarsIntro": "हम फ़िनिश और समयसीमा से पहले टीम के आकार, उपयोग और बजट का मिलान करते हैं।",
+    "pillarsKicker": "हम कैसे काम करते हैं",
+    "pillarsTitleAccent": "निर्दिष्ट करते हैं।",
+    "pillarsTitleLead": "हम कैसे",
+    "rangeKicker": "छह श्रेणियां",
+    "rangeTitleAccent": "ब्राउज़ करें।",
+    "rangeTitleLead": "आवश्यकतानुसार"
   },
   "service": {
-    "heroTitle": "सेवा और सहायता",
-    "heroSubtitle": "विश्वसनीयता, जवाबदेही और दीर्घकालिक प्रदर्शन के लिए डिज़ाइन की गई बिक्री के बाद की सहायता।",
-    "frameworkKicker": "सहायता ढांचा",
-    "frameworkTitle": "स्थापना से लेकर बिक्री के बाद की सहायता तक एक ही सेवा भागीदार।",
+    "channels": [
+      {
+        "href": "tel:+919031022875",
+        "kind": "supportPhone",
+        "label": "फोन सहायता",
+        "value": "+91 90310 22875"
+      },
+      {
+        "href": "mailto:sales@oando.co.in",
+        "kind": "salesEmail",
+        "label": "ईमेल डेस्क",
+        "value": "sales@oando.co.in"
+      },
+      {
+        "href": "https://wa.me/919031022875",
+        "kind": "whatsapp",
+        "label": "व्हाट्सएप सहायता",
+        "value": "चैट शुरू करें"
+      }
+    ],
     "channelsKicker": "सेवा चैनल",
     "channelsTitle": "हमारी सहायता टीम से सीधे संपर्क करें।",
-    "supportKicker": "तत्काल सहायता चाहिए?",
-    "supportDescription": "अपनी परियोजना या सेवा संदर्भ संख्या और समस्या का सारांश साझा करें। हमारी टीम सही विशेषज्ञ को निर्देशित करेगी।",
-    "supportDeskKicker": "सहायता रूटिंग",
-    "supportDeskTitle": "क्या आपको पहले दस्तावेज़, वारंटी संदर्भ या योजना रिकॉर्ड चाहिए?",
-    "supportDeskDescription": "जब सबसे तेज़ अगला कदम आपके कार्यक्षेत्र सेटअप से जुड़ा दस्तावेज़ पैक या तकनीकी शीट हो, तो संसाधन डेस्क का उपयोग करें।",
+    "frameworkKicker": "सहायता ढांचा",
+    "frameworkTitle": "स्थापना से लेकर बिक्री के बाद की सहायता तक एक ही सेवा भागीदार।",
+    "heroSubtitle": "विश्वसनीयता, जवाबदेही और दीर्घकालिक प्रदर्शन के लिए डिज़ाइन की गई बिक्री के बाद की सहायता।",
+    "heroTitle": "सेवा और सहायता",
+    "pillars": [
+      {
+        "detail": "सभी वाणिज्यिक श्रेणियों पर निर्माता समर्थित वारंटी और सीधे पार्ट्स समन्वय की सुविधा।",
+        "title": "प्रत्यक्ष वारंटी सहायता"
+      },
+      {
+        "detail": "वर्कस्टेशन और एर्गोनोमिक कुर्सियों के लिए रखरखाव प्रक्रियाएं, सतह देखभाल दिशानिर्देश और संचालन जांच।",
+        "title": "निवारक देखभाल मार्गदर्शन"
+      },
+      {
+        "detail": "शीघ्र ऑन-साइट उपस्थिति चाहने वाले कॉर्पोरेट ग्राहकों के लिए फोन, ईमेल और व्हाट्सएप सहायता।",
+        "title": "त्वरित समाधान सहायता"
+      }
+    ],
     "primaryCta": "सहायता अनुरोध दर्ज करें",
     "secondaryCta": "ऑर्डर ट्रैक करें",
+    "supportDescription": "अपनी परियोजना या सेवा संदर्भ संख्या और समस्या का सारांश साझा करें। हमारी टीम सही विशेषज्ञ को निर्देशित करेगी।",
+    "supportDeskDescription": "जब सबसे तेज़ अगला कदम आपके कार्यक्षेत्र सेटअप से जुड़ा दस्तावेज़ पैक या तकनीकी शीट हो, तो संसाधन डेस्क का उपयोग करें।",
+    "supportDeskKicker": "सहायता रूटिंग",
+    "supportDeskTitle": "क्या आपको पहले दस्तावेज़, वारंटी संदर्भ या योजना रिकॉर्ड चाहिए?",
+    "supportKicker": "तत्काल सहायता चाहिए?",
     "tertiaryCta": "संसाधन डेस्क खोलें"
   },
   "showrooms": {
-    "heroTitle": "शोरूम, यात्रा और ग्राहक डिलीवरी।",
-    "heroSubtitle": "हमारे निष्पादन मॉडल, परियोजना उपस्थिति और हम पर भरोसा करने वाली टीमों पर एक नज़र।",
-    "trustedKicker": "एक नज़र में विश्वास",
+    "aboutDescription": "हमने क्षेत्रीय कार्यालय परियोजनाओं से शुरुआत की और बहु-शहर निष्पादन में विस्तार किया। हमारा संचालन मॉडल सुसंगत है।",
     "aboutKicker": "हमारे बारे में",
     "aboutTitle": "स्पष्ट योजना, विश्वसनीय आपूर्ति और जवाबदेह वितरण के साथ कार्यक्षेत्र निर्माण।",
-    "aboutDescription": "हमने क्षेत्रीय कार्यालय परियोजनाओं से शुरुआत की और बहु-शहर निष्पादन में विस्तार किया। हमारा संचालन मॉडल सुसंगत है।",
-    "clientsKicker": "ग्राहक जिनकी हमने सेवा की है",
     "clientsCta": "पूरी ग्राहक सूची देखें",
-    "highlightsKicker": "प्रमुख डिलीवरी",
+    "clientsKicker": "ग्राहक जिनकी हमने सेवा की है",
+    "heroSubtitle": "हमारे निष्पादन मॉडल, परियोजना उपस्थिति और हम पर भरोसा करने वाली टीमों पर एक नज़र।",
+    "heroTitle": "शोरूम, यात्रा और ग्राहक डिलीवरी।",
+    "highlights": [
+      {
+        "detail": "चरणबद्ध योजना और स्थापना हैंडओवर के साथ वितरित कार्यस्थल प्रणालियाँ।",
+        "title": "DMRC कार्यालय"
+      },
+      {
+        "detail": "टीम की आवश्यकताओं के अनुरूप एर्गोनोमिक सीटिंग और वर्कस्टेशन की स्थापना।",
+        "title": "Titan पटना मुख्यालय"
+      },
+      {
+        "detail": "बड़े कॉर्पोरेट और संस्थागत परिसरों के लिए टर्नकी योजना, आपूर्ति और निष्पादन।",
+        "title": "एंटरप्राइज फिट-आउट्स"
+      }
+    ],
     "highlightsCta": "पोर्टफोलियो देखें",
-    "sustainabilityTitle": "जिम्मेदारी से डिज़ाइन किया गया, व्यावहारिक रूप से वितरित।",
-    "sustainabilitySubtitle": "स्थिरता",
+    "highlightsKicker": "प्रमुख डिलीवरी",
+    "mapHeading": "शोरूम का पता लगाएं",
+    "sustainabilityCta": "स्थिरता प्रतिबद्धताएं पढ़ें",
     "sustainabilityDescription": "सामग्री चयन से लेकर दीर्घकालिक उत्पाद योजना तक, हम उन कार्यक्षेत्र प्रणालियों पर ध्यान केंद्रित करते हैं जो अपशिष्ट को कम करती हैं।",
-    "sustainabilityCta": "स्थिरता प्रतिबद्धताएं पढ़ें"
+    "sustainabilitySubtitle": "स्थिरता",
+    "sustainabilityTitle": "जिम्मेदारी से डिज़ाइन किया गया, व्यावहारिक रूप से वितरित।",
+    "trustedKicker": "एक नज़र में विश्वास"
   },
   "social": {
-    "heroTitle": "सोशल मुख्य अंश",
-    "heroSubtitle": "परियोजना के क्षण, कार्यक्षेत्र विचार और वास्तविक श्रेणियों से जुड़ी उत्पाद प्रेरणा।",
-    "introKicker": "सामाजिक प्रमाण और प्रेरणा",
-    "introTitle": "परियोजना प्रेरणा और वास्तविक उत्पाद मार्गों के बीच एक स्वच्छ सेतु।",
-    "introDescription": "यह पृष्ठ बिना किसी नकली सोशल एपीआई के कार्यस्थल विचारों और पूर्ण किए गए वातावरण पर प्रकाश डालता है।",
-    "handleLabel": "@OneAndOnlyFurn",
+    "ctaDescription": "समान उत्पाद और संसाधन डेस्क मार्गों के माध्यम से प्रेरणा से श्रेणी शॉर्टलिस्ट और दस्तावेज़ अनुरोधों की ओर बढ़ें।",
+    "ctaTitle": "किसी संदर्भ को वास्तविक कार्यक्षेत्र योजना में बदलने में सहायता चाहिए?",
+    "feedDescription": "बिना टूटे लिंक या गढ़े गए सोशल एकीकरण के दृश्य प्रेरणा से योजना या उत्पादों पर जाने के लिए इस पृष्ठ का उपयोग करें।",
     "feedKicker": "चयनित मुख्य अंश",
     "feedTitle": "वास्तविक कार्यक्षेत्र श्रेणियों पर आधारित विचार।",
-    "feedDescription": "बिना टूटे लिंक या गढ़े गए सोशल एकीकरण के दृश्य प्रेरणा से योजना या उत्पादों पर जाने के लिए इस पृष्ठ का उपयोग करें।",
-    "ctaTitle": "किसी संदर्भ को वास्तविक कार्यक्षेत्र योजना में बदलने में सहायता चाहिए?",
-    "ctaDescription": "समान उत्पाद और संसाधन डेस्क मार्गों के माध्यम से प्रेरणा से श्रेणी शॉर्टलिस्ट और दस्तावेज़ अनुरोधों की ओर बढ़ें।",
+    "handleLabel": "@OneAndOnlyFurn",
+    "heroSubtitle": "परियोजना के क्षण, कार्यक्षेत्र विचार और वास्तविक श्रेणियों से जुड़ी उत्पाद प्रेरणा।",
+    "heroTitle": "सोशल मुख्य अंश",
+    "introDescription": "यह पृष्ठ बिना किसी नकली सोशल एपीआई के कार्यस्थल विचारों और पूर्ण किए गए वातावरण पर प्रकाश डालता है।",
+    "introKicker": "सामाजिक प्रमाण और प्रेरणा",
+    "introTitle": "परियोजना प्रेरणा और वास्तविक उत्पाद मार्गों के बीच एक स्वच्छ सेतु।",
     "primaryCta": "उत्पाद ब्राउज़ करें",
     "secondaryCta": "संसाधन डेस्क खोलें"
   },
+  "solutions": {
+    "categoriesTitleAccent": "समाधान",
+    "categoriesTitleLead": "ब्राउज़ करें",
+    "categoryAllCta": "सभी समाधान",
+    "categoryBodyDescription": "{description} लाइव उत्पाद कैटलॉग ब्राउज़ करें या इस श्रेणी के अनुरूप कार्यक्षेत्र लेआउट के लिए योजना डेस्क से बात करें।",
+    "categoryBodyKicker": "विनिर्देश",
+    "categoryBodyTitle": "कैटलॉग से लेआउट तक",
+    "categoryBrowseCta": "उत्पाद ब्राउज़ करें",
+    "categoryContactCta": "योजना डेस्क से संपर्क करें",
+    "categoryCraftAttribution": "योजना डेस्क · वन एंड ओनली",
+    "categoryCraftQuote": "इन्वेंट्री केवल शुरुआत है — लेआउट और आवागमन तय करते हैं कि श्रेणी साइट पर काम करती है या नहीं।",
+    "categoryDeskDescription": "सीट संख्या, समयसीमा और साइट की बाधाएं साझा करें — हम उत्पादों और एक व्यावहारिक लेआउट पथ का सुझाव देंगे।",
+    "categoryDeskKicker": "अगला कदम",
+    "categoryDeskPrimaryCta": "योजना कॉल",
+    "categoryDeskSecondaryCta": "प्लानर खोलें",
+    "categoryDeskTertiaryCta": "सभी समाधान",
+    "categoryDeskTitle": "इस श्रेणी की योजना बनाएं",
+    "categoryHeroKicker": "समाधान श्रेणी",
+    "categoryHeroPrimaryCta": "उत्पाद ब्राउज़ करें",
+    "categoryHeroSecondaryCta": "सभी समाधान",
+    "deliveryDescription": "स्पष्ट दायरा, व्यावहारिक योजना और जवाबदेह स्थापना।",
+    "deliveryKicker": "वितरण",
+    "deliveryMedia": {
+      "alt": "कार्यक्षेत्र योजना और वितरण",
+      "src": "/assets/marketing/hero/pages/about-oneandonly-bright.webp"
+    },
+    "deliveryTitle": "विश्वसनीय वितरण",
+    "heroBackgroundImage": "/assets/marketing/hero/pages/about-oneandonly-bright.webp",
+    "heroKicker": "संपूर्ण कार्यक्षेत्र",
+    "heroPrimaryCta": "योजना कॉल",
+    "heroSecondaryCta": "उत्पाद ब्राउज़ करें",
+    "heroSubtitle": "योजना से डिलीवरी तक — एक टीम, स्पष्ट समयरेखा, मापनीय परिणाम।",
+    "heroTitle": "समाधान",
+    "heroTitleAccent": "समाधान",
+    "heroTitleLead": "वर्कस्पेस",
+    "metadataDescription": "एकाग्रता, सहयोग, बैठकों, स्टोरेज और शिक्षा के लिए कार्यक्षेत्र फ़र्नीचर समाधान।",
+    "metadataTitle": "कार्यक्षेत्र समाधान",
+    "phaseLabelTemplate": "चरण {number}",
+    "planningCtas": [
+      {
+        "href": "/contact",
+        "label": "योजना कॉल",
+        "variant": "primary"
+      },
+      {
+        "href": "/products",
+        "label": "उत्पाद ब्राउज़ करें",
+        "variant": "outline"
+      },
+      {
+        "href": "/downloads",
+        "label": "संसाधन डेस्क",
+        "variant": "outline"
+      }
+    ],
+    "planningDescription": "साइट विवरण, समयसीमा और सीट संख्या — हम एक व्यावहारिक मार्ग का प्रस्ताव करते हैं।",
+    "planningKicker": "योजना शुरू करें",
+    "planningPrimaryCta": "योजना कॉल",
+    "planningSecondaryCta": "उत्पाद ब्राउज़ करें",
+    "planningTertiaryCta": "संसाधन डेस्क",
+    "planningTitle": "अपनी आवश्यकता पर चर्चा करें",
+    "stats": [
+      {
+        "label": "कार्यक्षेत्र परियोजनाओं में वर्ष",
+        "value": "14+"
+      },
+      {
+        "label": "वितरित परियोजनाएं",
+        "value": "120+"
+      },
+      {
+        "label": "सेवा प्राप्त ग्राहक संगठन",
+        "value": "120+"
+      },
+      {
+        "label": "सेवा प्राप्त शहर",
+        "value": "20+"
+      }
+    ]
+  },
+  "supportIvr": {
+    "heroSubtitle": "दस्तावेज़ों, ट्रैकिंग, सेवा या योजना अनुवर्ती के लिए सही लेन तक पहुँचने के लिए विज़ुअल सहायता मेनू का उपयोग करें।",
+    "heroTitle": "सहायता रूटिंग",
+    "introDescription": "यह पृष्ठ सामान्य संपर्क अनुरोधों के बजाय आगंतुकों को जल्दी से सही सहायता लेन में निर्देशित करता है।",
+    "introKicker": "सहायता मेनू",
+    "introTitle": "सही सहायता बातचीत का एक स्पष्ट मार्ग।",
+    "noteDescription": "यहाँ से शुरुआत करें जब आपको सहायता की आवश्यकता हो, लेकिन आप अभी तक सुनिश्चित नहीं हैं कि अनुरोध सेवा, दस्तावेज़, डिलीवरी ट्रैकिंग या योजना सहायता से संबंधित है।",
+    "noteTitle": "सर्वोत्तम उपयोग"
+  },
   "sustainability": {
-    "heroTitle": "व्यवहार में स्थिरता।",
+    "badges": [
+      {
+        "detail": "उच्च स्कोर वाले उत्पाद आम तौर पर वर्तमान कैटलॉग डेटा में मजबूत जीवनचक्र संकेत दिखाते हैं।",
+        "title": "इको-स्कोर: 8+"
+      },
+      {
+        "detail": "मध्यम स्कोर आंशिक स्थिरता संकेत दर्शाते हैं और इनकी तकनीकी संदर्भ के साथ समीक्षा की जानी चाहिए।",
+        "title": "इको-स्कोर: 5-7"
+      }
+    ],
+    "commitments": [
+      {
+        "detail": "उत्पाद और लेआउट लंबे समय तक उपयोगी रहने चाहिए ताकि टीमें समय से पहले फ़िट-आउट न बदलें।",
+        "title": "लंबा सेवा जीवन"
+      },
+      {
+        "detail": "हम ऐसी सामग्री और उत्पाद संरचनाओं को प्राथमिकता देते हैं जो स्थायित्व, रखरखाव और कम पर्यावरणीय प्रभाव को संतुलित करती हैं।",
+        "title": "जिम्मेदार विनिर्देश"
+      },
+      {
+        "detail": "बेहतर प्रारंभिक योजना वितरण और स्थापना के दौरान पुनर्कार्य और अपशिष्ट को कम करती है।",
+        "title": "योजना दक्षता"
+      }
+    ],
+    "commitmentsKicker": "हम क्या प्राथमिकता देते हैं",
+    "commitmentsTitle": "सामान्य दावों के बजाय व्यावहारिक प्रतिबद्धताएं।",
+    "ecoScoreDescription": "जहां स्कोर डेटा उपलब्ध है, इको-स्कोर (1 से 10) का उपयोग विनिर्देशों के साथ एक दिशात्मक योजना संकेत के रूप में किया जाता है।",
+    "ecoScoreItems": [
+      {
+        "detail": "सामग्री संरचना, पुनर्चक्रित सामग्री संकेत और स्थायित्व उपयुक्तता जहां डेटा उपलब्ध है।",
+        "index": "1",
+        "title": "सामग्री"
+      },
+      {
+        "detail": "वर्तमान उत्पाद रिकॉर्ड या भागीदार दस्तावेज़ों में दर्ज विनिर्माण और सोर्सिंग संदर्भ।",
+        "index": "2",
+        "title": "विनिर्माण"
+      },
+      {
+        "detail": "अपेक्षित सेवा जीवन, रखरखाव व्यावहारिकता और सक्रिय उपयोग में प्रतिस्थापन जोखिम।",
+        "index": "3",
+        "title": "दीर्घायु"
+      }
+    ],
+    "ecoScoreKicker": "इको-स्कोर",
+    "ecoScoreTitle": "हमारा इको-स्कोर सिस्टम",
     "heroSubtitle": "हम टिकाऊ कार्यक्षेत्र प्रणालियों, व्यावहारिक सामग्री विकल्पों और योजना एवं वितरण में कम पुनर्कार्य पर ध्यान केंद्रित करते हैं।",
-    "introTitleLead": "हमारा दृष्टिकोण ",
-    "introTitleEmphasis": "दीर्घकालिक कार्यक्षेत्रों के लिए है।",
+    "heroTitle": "व्यवहार में स्थिरता।",
     "introDescription": "कार्यालय परियोजनाओं में स्थिरता सामग्री चयन, रखरखाव और योजना अनुशासन पर निर्भर करती है।",
     "introKicker": "व्यवहार में स्थिरता",
-    "introTitle": "कम जीवनचक्र अपशिष्ट वाली दीर्घकालिक कार्यक्षेत्र प्रणालियाँ।",
     "introPoints": [
       "हम टिकाऊ श्रेणियों, बदलने योग्य घटकों और उन योजना विकल्पों को प्राथमिकता देते हैं जो अनावश्यक उत्पाद अपव्यय को कम करते हैं।",
       "सामग्री चयन, परिवहन दक्षता और दीर्घकालिक रखरखाव सभी महत्वपूर्ण हैं।",
       "हम असमर्थित प्रमाणपत्रों या मेट्रिक्स का वादा करने से बचते हैं जहां औपचारिक साक्ष्य उपलब्ध नहीं हैं।"
     ],
+    "introTitle": "कम जीवनचक्र अपशिष्ट वाली दीर्घकालिक कार्यक्षेत्र प्रणालियाँ।",
+    "introTitleEmphasis": "दीर्घकालिक कार्यक्षेत्रों के लिए है।",
+    "introTitleLead": "हमारा दृष्टिकोण ",
     "pillars": [
       {
-        "title": "सामग्री-सचेत विनिर्देश",
         "detail": "हम प्रत्येक उपयोग के मामले के लिए स्पष्ट सामग्री जानकारी और मजबूत सेवा-जीवन उपयुक्तता वाले विकल्पों को प्राथमिकता देते हैं।",
-        "icon": "leaf"
+        "icon": "leaf",
+        "title": "सामग्री-सचेत विनिर्देश"
       },
       {
-        "title": "मरम्मत और प्रतिस्थापन मानसिकता",
         "detail": "हम उन श्रेणियों और विन्यासों को प्राथमिकता देते हैं जिन्हें जल्दी बदलने के बजाय बनाए रखा, मरम्मत या पुनर्गठित किया जा सकता है।",
-        "icon": "recycle"
+        "icon": "recycle",
+        "title": "मरम्मत और प्रतिस्थापन मानसिकता"
       },
       {
-        "title": "योजना जो अपशिष्ट को कम करती है",
         "detail": "स्पष्ट मात्रा योजना और उपयुक्तता जांच बेमेल, रिटर्न और ऑन-साइट पुनर्कार्य को कम करने में मदद करती है।",
-        "icon": "lightbulb"
+        "icon": "lightbulb",
+        "title": "योजना जो अपशिष्ट को कम करती है"
       }
     ],
-    "ecoScoreTitle": "हमारा इको-स्कोर सिस्टम",
-    "ecoScoreDescription": "जहां स्कोर डेटा उपलब्ध है, इको-स्कोर (1 से 10) का उपयोग विनिर्देशों के साथ एक दिशात्मक योजना संकेत के रूप में किया जाता है।",
-    "ecoScoreItems": [
-      {
-        "index": "1",
-        "title": "सामग्री",
-        "detail": "सामग्री संरचना, पुनर्चक्रित सामग्री संकेत और स्थायित्व उपयुक्तता जहां डेटा उपलब्ध है।"
-      },
-      {
-        "index": "2",
-        "title": "विनिर्माण",
-        "detail": "वर्तमान उत्पाद रिकॉर्ड या भागीदार दस्तावेज़ों में दर्ज विनिर्माण और सोर्सिंग संदर्भ।"
-      },
-      {
-        "index": "3",
-        "title": "दीर्घायु",
-        "detail": "अपेक्षित सेवा जीवन, रखरखाव व्यावहारिकता और सक्रिय उपयोग में प्रतिस्थापन जोखिम।"
-      }
-    ],
-    "badges": [
-      {
-        "title": "इको-स्कोर: 8+",
-        "detail": "उच्च स्कोर वाले उत्पाद आम तौर पर वर्तमान कैटलॉग डेटा में मजबूत जीवनचक्र संकेत दिखाते हैं।"
-      },
-      {
-        "title": "इको-स्कोर: 5-7",
-        "detail": "मध्यम स्कोर आंशिक स्थिरता संकेत दर्शाते हैं और इनकी तकनीकी संदर्भ के साथ समीक्षा की जानी चाहिए।"
-      }
-    ],
-    "verifiedTitle": "स्थिरता संकेत",
+    "productsCta": "वाणिज्यिक उत्पाद देखें",
+    "routeNoteDescription": "जब आपको सामग्री मार्गदर्शन, श्रेणी अनुशंसाओं या प्रोजेक्ट स्पष्टीकरण की आवश्यकता हो, तो उत्पाद पैक मांगें।",
+    "routeNotePrimaryCta": "संसाधन डेस्क खोलें",
+    "routeNoteSecondaryCta": "योजना कॉल का अनुरोध करें",
+    "routeNoteTitle": "लाइव प्रोजेक्ट के लिए स्थिरता जानकारी चाहिए?",
     "verifiedDescription": "हम कैटलॉग-समर्थित स्थिरता संकेत प्रस्तुत करते हैं और असमर्थित दावों से बचते हैं।",
     "verifiedLabels": [
       "कैटलॉग-समर्थित",
       "डेटा समीक्षित",
       "दीर्घायु केंद्रित"
     ],
-    "commitmentsKicker": "हम क्या प्राथमिकता देते हैं",
-    "commitmentsTitle": "सामान्य दावों के बजाय व्यावहारिक प्रतिबद्धताएं।",
-    "commitments": [
-      {
-        "title": "लंबा सेवा जीवन",
-        "detail": "उत्पाद और लेआउट लंबे समय तक उपयोगी रहने चाहिए ताकि टीमें समय से पहले फ़िट-आउट न बदलें।"
-      },
-      {
-        "title": "जिम्मेदार विनिर्देश",
-        "detail": "हम ऐसी सामग्री और उत्पाद संरचनाओं को प्राथमिकता देते हैं जो स्थायित्व, रखरखाव और कम पर्यावरणीय प्रभाव को संतुलित करती हैं।"
-      },
-      {
-        "title": "योजना दक्षता",
-        "detail": "बेहतर प्रारंभिक योजना वितरण और स्थापना के दौरान पुनर्कार्य और अपशिष्ट को कम करती है।"
-      }
-    ],
-    "routeNoteTitle": "लाइव प्रोजेक्ट के लिए स्थिरता जानकारी चाहिए?",
-    "routeNoteDescription": "जब आपको सामग्री मार्गदर्शन, श्रेणी अनुशंसाओं या प्रोजेक्ट स्पष्टीकरण की आवश्यकता हो, तो उत्पाद पैक मांगें।",
-    "routeNotePrimaryCta": "संसाधन डेस्क खोलें",
-    "routeNoteSecondaryCta": "योजना कॉल का अनुरोध करें"
+    "verifiedTitle": "स्थिरता संकेत"
   },
   "tracking": {
-    "heroTitle": "ऑर्डर और डिलीवरी ट्रैकिंग",
     "heroSubtitle": "ऑर्डर संदर्भ, डिलीवरी स्थिति, स्थापना या बिक्री उपरांत अनुवर्ती अनुरोधों के लिए सही सहायता लेन का उपयोग करें।",
+    "heroTitle": "ऑर्डर और डिलीवरी ट्रैकिंग",
+    "introDescription": "यह पृष्ठ नकली सार्वजनिक ट्रैकर के बजाय यह बताता है कि सही ऑर्डर या प्रोजेक्ट संदर्भ कैसे साझा करें ताकि सहायता टीम सटीक उत्तर दे सके।",
     "introKicker": "सही इनपुट के साथ ट्रैकिंग",
     "introTitle": "डिलीवरी-स्थिति सहायता के लिए एक सच्चा मार्ग।",
-    "introDescription": "यह पृष्ठ नकली सार्वजनिक ट्रैकर के बजाय यह बताता है कि सही ऑर्डर या प्रोजेक्ट संदर्भ कैसे साझा करें ताकि सहायता टीम सटीक उत्तर दे सके।",
-    "referenceTitle": "अपने अनुरोध में क्या शामिल करें",
+    "lanes": [
+      {
+        "detail": "इसका उपयोग तब करें जब आपको प्रेषण समय, अपेक्षित डिलीवरी क्रम या शिपमेंट स्थिति अपडेट की आवश्यकता हो।",
+        "title": "डिलीवरी स्थिति"
+      },
+      {
+        "detail": "इसका उपयोग तब करें जब प्रश्न साइट की तैयारी, स्थापना समय या हैंडओवर सहायता से संबंधित हो।",
+        "title": "स्थापना समन्वय"
+      },
+      {
+        "detail": "इसका उपयोग तब करें जब आपको पहले ही डिलीवरी मिल चुकी हो और आपको बिक्री के बाद सहायता की आवश्यकता हो।",
+        "title": "सेवा या समस्या अनुवर्ती"
+      }
+    ],
+    "lanesTitle": "सही मार्ग चुनें",
+    "primaryCta": "सहायता अनुरोध दर्ज करें",
     "referenceItems": [
       "ऑर्डर संदर्भ संख्या या कोटेशन आईडी",
       "परियोजना या कंपनी का नाम",
       "डिलीवरी शहर या स्थापना स्थान",
       "आपका मुख्य प्रश्न: प्रेषण, डिलीवरी समय, स्थापना या सेवा अनुवर्ती"
     ],
-    "lanesTitle": "सही मार्ग चुनें",
-    "lanes": [
-      {
-        "title": "डिलीवरी स्थिति",
-        "detail": "इसका उपयोग तब करें जब आपको प्रेषण समय, अपेक्षित डिलीवरी क्रम या शिपमेंट स्थिति अपडेट की आवश्यकता हो।"
-      },
-      {
-        "title": "स्थापना समन्वय",
-        "detail": "इसका उपयोग तब करें जब प्रश्न साइट की तैयारी, स्थापना समय या हैंडओवर सहायता से संबंधित हो।"
-      },
-      {
-        "title": "सेवा या समस्या अनुवर्ती",
-        "detail": "इसका उपयोग तब करें जब आपको पहले ही डिलीवरी मिल चुकी हो और आपको बिक्री के बाद सहायता की आवश्यकता हो।"
-      }
-    ],
-    "supportTitle": "अपना ऑर्डर संदर्भ साझा करने के लिए तैयार हैं?",
-    "supportDescription": "सबसे तेज़ तरीका यह है कि सार्वजनिक ट्रैकर पर निर्भर रहने के बजाय संदर्भ और अनुरोध सारांश सीधे सहायता टीम को भेजें।",
-    "primaryCta": "सहायता अनुरोध दर्ज करें",
+    "referenceTitle": "अपने अनुरोध में क्या शामिल करें",
     "secondaryCta": "सहायता को कॉल करें",
+    "supportDescription": "सबसे तेज़ तरीका यह है कि सार्वजनिक ट्रैकर पर निर्भर रहने के बजाय संदर्भ और अनुरोध सारांश सीधे सहायता टीम को भेजें।",
+    "supportTitle": "अपना ऑर्डर संदर्भ साझा करने के लिए तैयार हैं?",
     "tertiaryCta": "संसाधन डेस्क खोलें"
   },
   "trustedBy": {
-    "heroTitle": "विश्वसनीय",
-    "heroTitleLead": "विश्वसनीय",
-    "heroTitleAccent": "ग्राहक",
+    "craftAttribution": "वितरण दृष्टिकोण, One and Only कार्यक्रम",
+    "craftQuote": "विश्वास बार-बार मिलने वाले कार्यक्रमों में झलकता है — समन्वित डिलीवरी, जवाबदेह हैंडओवर और स्थापना के बाद भी निरंतर सहयोग।",
+    "ctaDescription": "शहर, हेडकाउंट और समय। फोन या ईमेल पर जवाब देंगे।",
+    "ctaKicker": "अगला कदम",
+    "ctaPrimary": "संपर्क करें",
+    "ctaSecondary": "इंस्टॉल देखें",
+    "ctaTitleAccent": "बताएँ",
+    "ctaTitleLead": "स्पेस",
+    "deliveryQuotesLabel": "परियोजना अनुभव",
+    "heroKicker": "विश्वास",
     "heroSubtitle": "२०११ से बैंक, कारखाने, सरकारी दफ्तर और स्कूल जिनका फर्नीचर हमने लगाया है।",
+    "heroTitle": "विश्वसनीय",
+    "heroTitleAccent": "ग्राहक",
+    "heroTitleLead": "विश्वसनीय",
+    "overviewDescription": "डेस्किंग, सीटिंग और पूरे फ्लोर का फिट-आउट — टिकाऊ फर्नीचर।",
     "overviewKicker": "२०११ से",
     "overviewTitle": "जिन संगठनों के साथ हम काम करते हैं",
-    "overviewDescription": "डेस्किंग, सीटिंग और पूरे फ्लोर का फिट-आउट — टिकाऊ फर्नीचर।",
-    "statsKicker": "एक नज़र में",
-    "sectorsKicker": "क्षेत्र",
-    "sectorsTitle": "जहाँ हम इंस्टॉल करते हैं",
-    "sectorsDescription": "सरकार, बैंकिंग, विनिर्माण, ऑटो, शिक्षा और ऊर्जा।",
-    "rosterKicker": "ग्राहक सूची",
-    "rosterTitle": "जो वन एंड ओनली पर भरोसा करते हैं।",
+    "quotes": [
+      {
+        "attribution": "सुविधा प्रबंधन टीम, पटना कार्यालय",
+        "quote": "उन्होंने सहमत तारीखों पर स्थापना पूरी की और वर्कस्टेशन तकनीकी रेखाचित्रों के बिल्कुल अनुरूप थे।"
+      },
+      {
+        "attribution": "परियोजना समन्वयक, बैंक कार्यक्रम",
+        "quote": "भवन के शेष कार्य को बाधित किए बिना दो मंजिलों की स्थापना सुचारू रूप से संपन्न हुई।"
+      }
+    ],
     "quotesKicker": "साइट से",
     "quotesTitle": "काम कैसे बैठा",
-    "ctaKicker": "अगला कदम",
-    "ctaTitleLead": "स्पेस",
-    "ctaTitleAccent": "बताएँ",
-    "ctaDescription": "शहर, हेडकाउंट और समय। फोन या ईमेल पर जवाब देंगे।",
-    "ctaPrimary": "संपर्क करें",
-    "ctaSecondary": "इंस्टॉल देखें"
+    "rosterDescription": "हमारे द्वारा वितरित कार्यक्रमों के नाम और संस्थान। स्थापना के वास्तविक चित्र क्लाइंट्स गैलरी में उपलब्ध हैं।",
+    "rosterKicker": "ग्राहक सूची",
+    "rosterTitle": "जो वन एंड ओनली पर भरोसा करते हैं।",
+    "sectorsDescription": "सरकार, बैंकिंग, विनिर्माण, ऑटो, शिक्षा और ऊर्जा।",
+    "sectorsKicker": "क्षेत्र",
+    "sectorsTitle": "जहाँ हम इंस्टॉल करते हैं",
+    "statsKicker": "एक नज़र में"
   },
-  "supportIvr": {
-    "heroTitle": "सहायता रूटिंग",
-    "heroSubtitle": "दस्तावेज़ों, ट्रैकिंग, सेवा या योजना अनुवर्ती के लिए सही लेन तक पहुँचने के लिए विज़ुअल सहायता मेनू का उपयोग करें।",
-    "introKicker": "सहायता मेनू",
-    "introTitle": "सही सहायता बातचीत का एक स्पष्ट मार्ग।",
-    "introDescription": "यह पृष्ठ सामान्य संपर्क अनुरोधों के बजाय आगंतुकों को जल्दी से सही सहायता लेन में निर्देशित करता है।",
-    "noteTitle": "सर्वोत्तम उपयोग",
-    "noteDescription": "यहाँ से शुरुआत करें जब आपको सहायता की आवश्यकता हो, लेकिन आप अभी तक सुनिश्चित नहीं हैं कि अनुरोध सेवा, दस्तावेज़, डिलीवरी ट्रैकिंग या योजना सहायता से संबंधित है।"
-  },
-  "marketing": {
-    "chrome": {
-      "navigation": {
-        "products": "उत्पाद",
-        "solutions": "समाधान",
-        "clients": "ग्राहक",
-        "portfolio": "पोर्टफोलियो",
-        "planner": "प्लानर",
-        "about": "हमारे बारे में",
-        "aboutUs": "हमारे बारे में",
-        "contact": "संपर्क",
-        "contactUs": "संपर्क करें",
-        "signIn": "साइन इन",
-        "more": "और",
-        "allProducts": "सभी उत्पाद",
-        "trustedBy": "विश्वसनीय ग्राहक",
-        "sustainability": "स्थिरता",
-        "showrooms": "शोरूम",
-        "careers": "करियर",
-        "afterSales": "बिक्री के बाद",
-        "downloads": "डाउनलोड",
-        "plannerHelp": "प्लानर सहायता",
-        "planning": "Planning",
-        "faq": "FAQ",
-        "memberDashboard": "सदस्य डैशबोर्ड"
-      },
-      "search": {
-        "formLabel": "साइट उत्पाद खोज",
-        "inputLabel": "उत्पाद खोजें",
-        "placeholder": "उत्पाद खोजें...",
-        "submit": "खोज सबमिट करें",
-        "quickLinks": "त्वरित लिंक",
-        "searching": "खोजा जा रहा है",
-        "results": "परिणाम",
-        "noResults": "कोई परिणाम नहीं",
-        "searchingProducts": "उत्पाद खोजे जा रहे हैं।",
-        "noSearchResults": "कोई खोज परिणाम नहीं।",
-        "typeAtLeastTwo": "खोजने के लिए कम से कम दो अक्षर लिखें।",
-        "allProducts": "सभी उत्पाद",
-        "solutions": "समाधान",
-        "portfolio": "पोर्टफोलियो",
-        "aiRanked": "AI रैंकिंग",
-        "staticFallback": "स्थिर वैकल्पिक परिणाम",
-        "localSearch": "स्थानीय खोज"
-      },
-      "language": {
-        "label": "भाषा चुनें",
-        "english": "अंग्रेज़ी",
-        "hindi": "हिन्दी",
-        "hindiFull": "हिन्दी (Hindi)"
-      },
-      "header": {
-        "homeLabel": "वन एंड ओनली — होम",
-        "openMenu": "मेनू खोलें",
-        "closeNavigation": "नेविगेशन बंद करें",
-        "primaryNavigation": "प्राथमिक नेविगेशन",
-        "morePages": "साइट के और पृष्ठ",
-        "otherCategories": "अन्य श्रेणियां",
-        "allProductsLink": "सभी उत्पाद"
-      },
-      "mobile": {
-        "openSearch": "खोज खोलें",
-        "primaryNavigation": "मोबाइल प्राथमिक नेविगेशन",
-        "searchForm": "मोबाइल उत्पाद खोज",
-        "savedPlans": "सहेजी गई योजनाएं",
-        "newArrivals": "नए उत्पाद",
-        "bestSellers": "लोकप्रिय उत्पाद",
-        "submitSearch": "मोबाइल खोज सबमिट करें",
-        "searchProducts": "उत्पाद खोजें",
-        "getQuote": "कोटेशन लें",
-        "quote": "Quote"
-      },
-      "footer": {
-        "products": "उत्पाद",
-        "company": "कंपनी",
-        "services": "सेवाएं",
-        "refundPolicy": "रिफंड नीति",
-        "privacyPolicy": "गोपनीयता नीति",
-        "terms": "शर्तें",
-        "sitemap": "साइटमैप",
-        "rightsReserved": "सर्वाधिकार सुरक्षित।"
-      },
-      "cookie": {
-        "title": "कुकी प्राथमिकताएं",
-        "compact": "जब तक आप वैकल्पिक एनालिटिक्स स्वीकार नहीं करते, केवल आवश्यक कुकीज़ उपयोग होंगी।",
-        "description": "हम खोज और उपयोगकर्ता अनुभव बेहतर बनाने के लिए आवश्यक कुकीज़ और वैकल्पिक एनालिटिक्स एवं एट्रिब्यूशन कुकीज़ उपयोग करते हैं।",
-        "privacyNotice": "गोपनीयता सूचना",
-        "reject": "अस्वीकार करें",
-        "rejectNonEssential": "गैर-आवश्यक कुकीज़ अस्वीकार करें",
-        "accept": "सभी स्वीकार करें",
-        "acceptAll": "सभी कुकीज़ स्वीकार करें"
-      },
-      "quickContact": {
-        "open": "व्हाट्सएप त्वरित संपर्क खोलें",
-        "close": "व्हाट्सएप त्वरित संपर्क बंद करें",
-        "dialog": "त्वरित संपर्क",
-        "title": "त्वरित संपर्क",
-        "subtitle": "टीम तक सीधे पहुंचें।",
-        "whatsapp": "अभी व्हाट्सएप करें",
-        "whatsappDetail": "सबसे तेज़ जवाब",
-        "call": "टीम को कॉल करें",
-        "callDetail": "सहायता से बात करें",
-        "email": "हमें ईमेल करें",
-        "emailDetail": "अपना विवरण भेजें",
-        "fullContact": "पूरा संपर्क पृष्ठ खोलें"
-      }
-    },
-    "planning": {
-      "heroKicker": "कार्यस्थल योजना",
-      "heroTitleLead": "विचार से",
-      "heroTitleAccent": "स्थापना-तैयार तक।",
-      "craftQuote": "अच्छी योजना अनुमान हटाती है — खरीद शुरू होने से पहले लेआउट, श्रेणियां और BOQ एकरूप होते हैं।",
-      "craftAttribution": "योजना डेस्क · वन एंड ओनली",
-      "plannerCta": "ओआंडो प्लानर खोलें",
-      "steps": [
-        { "title": "जानकारी और विवरण संरेखण", "detail": "डिज़ाइन शुरू होने से पहले हम टीम संरचना, कार्यप्रवाह, बजट सीमाएं और अनुमोदन चरणों का मानचित्र बनाते हैं।" },
-        { "title": "लेआउट और विनिर्देश", "detail": "हमारी टीम हेडकाउंट, ज़ोनिंग और प्रदर्शन लक्ष्यों के अनुरूप 2D/3D अवधारणाएं और फर्नीचर विनिर्देश विकसित करती है।" },
-        { "title": "निष्पादन तत्परता", "detail": "आपको BOQ-तैयार दस्तावेज़, चरणबद्ध कार्यान्वयन विकल्प और खरीद व फिट-आउट टीमों के लिए स्पष्ट हैंडओवर योजना मिलती है।" }
-      ],
-      "deliverables": ["कार्यस्थल योजना कार्यशाला", "स्पेस ज़ोनिंग और फर्नीचर लेआउट", "श्रेणी-वार फर्नीचर अनुशंसाएं", "बजट-अनुरूप BOQ ड्राफ्ट", "कार्यान्वयन रोडमैप"]
-    },
-    "service": {
-      "heroKicker": "स्थापना के बाद",
-      "heroTitleLead": "सेवा",
-      "heroTitleAccent": "और सहायता।",
-      "craftQuote": "सहायता जो स्थापना से शुरू होती है और वारंटी तक रहती है — स्पष्ट रूटिंग और जवाबदेह अनुवर्ती।",
-      "craftAttribution": "सेवा डेस्क · वन एंड ओनली",
-      "pillars": [
-        { "title": "स्थापना", "detail": "साइट पर असेंबली, प्लेसमेंट और कार्यात्मक जांच।" },
-        { "title": "वारंटी", "detail": "स्पष्ट ट्रैकिंग के साथ दावे, प्रतिस्थापन और सुधारात्मक सेवा।" },
-        { "title": "देखभाल", "detail": "दीर्घकालिक प्रदर्शन के लिए निरीक्षण और रखरखाव मार्गदर्शन।" }
-      ],
-      "channels": [
-        { "label": "फोन सहायता", "kind": "supportPhone" },
-        { "label": "ईमेल सहायता", "kind": "salesEmail" },
-        { "label": "व्हाट्सएप सहायता", "kind": "whatsapp", "value": "चैट शुरू करें", "href": "https://wa.me/919031022875?text=Hi%2C%20I%20need%20support%20for%20an%20installed%20workspace%20project." }
-      ],
-      "ctaKicker": "अगला कदम",
-      "ctaTitleLead": "सहायता से",
-      "ctaTitleAccent": "बात करें।",
-      "ctaDescription": "सहायता का अनुरोध करें, ऑर्डर ट्रैक करें या दस्तावेज़ों के लिए रिसोर्स डेस्क खोलें।"
-    },
-    "downloads": {
-      "heroTitleLead": "दस्तावेज़ आपके",
-      "heroTitleAccent": "विवरण के अनुरूप",
-      "craftQuote": "अपना विवरण भेजें। हम नवीनतम पैक तैयार करते हैं — पुरानी सार्वजनिक PDF सूची नहीं।",
-      "craftAttribution": "रिसोर्स डेस्क · वन एंड ओनली",
-      "resources": [
-        { "title": "उत्पाद कैटलॉग", "detail": "कलेक्शन अवलोकन, श्रेणी सारांश और अनुशंसित उत्पाद संयोजन।", "cta": "कैटलॉग पैक का अनुरोध करें", "href": "/contact" },
-        { "title": "तकनीकी शीट", "detail": "सामग्री विनिर्देश, आयाम, वारंटी शर्तें और उपयोग मार्गदर्शन।", "cta": "तकनीकी शीट का अनुरोध करें", "href": "/contact" },
-        { "title": "योजना संदर्भ", "detail": "लेआउट उदाहरण, वर्कस्टेशन घनत्व और निष्पादन सर्वोत्तम अभ्यास।", "cta": "योजना संदर्भ का अनुरोध करें", "href": "/planning" }
-      ],
-      "ctaKicker": "दस्तावेज़ अनुवर्ती",
-      "ctaTitleLead": "सही",
-      "ctaTitleAccent": "पैक के लिए तैयार हैं",
-      "ctaDescription": "श्रेणियां, सीट संख्या और शहर साझा करें — हम वर्तमान कैटलॉग, शीट और अगला योजना संपर्क भेजेंगे।",
-      "planningSupport": "योजना सहायता",
-      "openPlanning": "योजना खोलें"
-    },
-    "showrooms": {
-      "heroKicker": "शोरूम · पटना",
-      "heroTitleLead": "हमसे",
-      "heroTitleAccent": "मिलें।",
-      "craftQuote": "सीटिंग, फ़िनिश और सिस्टम को संदर्भ में देखें — फिर स्पष्टता के साथ योजना टीम को जानकारी दें।",
-      "craftAttribution": "वन एंड ओनली · जगत ट्रेड सेंटर · फ्रेज़र रोड, पटना",
-      "visitKicker": "अपनी यात्रा की योजना बनाएं",
-      "visitTitle": "शोरूम विवरण",
-      "visitCta": "यात्रा की योजना बनाएं",
-      "visitRows": [
-        { "kind": "address", "title": "401, जगत ट्रेड सेंटर", "detail": "फ्रेज़र रोड, पटना, बिहार 800001" },
-        { "kind": "hours", "title": "सोमवार – शनिवार", "detail": "यात्रा से पहले टीम से संपर्क करें" },
-        { "kind": "phone", "title": "+91 90310 22875", "detail": "सहायता और शोरूम पूछताछ" }
-      ],
-      "highlightsTitle": "हाल की डिलीवरी",
-      "highlights": [
-        { "title": "DMRC कार्यालय", "detail": "चरणबद्ध योजना और स्थापना हैंडओवर के साथ वितरित कार्यस्थल सिस्टम।" },
-        { "title": "टाइटन पटना मुख्यालय", "detail": "टीम-स्तरीय आवश्यकताओं के अनुरूप एर्गोनोमिक सीटिंग और वर्कस्टेशन तैनाती।" },
-        { "title": "एंटरप्राइज फिट-आउट", "detail": "बड़े कार्यालय और संस्थागत स्थानों के लिए टर्नकी योजना, आपूर्ति और निष्पादन।" }
-      ],
-      "ctaKicker": "अगला कदम",
-      "ctaTitleLead": "यात्रा करें या",
-      "ctaTitleAccent": "पहले योजना बनाएं।",
-      "ctaDescription": "शोरूम बातचीत बुक करें या जब लेआउट को संरेखण चाहिए तो योजना कॉल शुरू करें।",
-      "ctaPrimary": "टीम से संपर्क करें",
-      "ctaSecondary": "योजना कॉल का अनुरोध करें",
-      "mapHeading": "शोरूम खोजें"
-    },
-    "sustainability": {
-      "heroKicker": "स्थिरता",
-      "heroTitleLead": "बना है",
-      "heroTitleAccent": "लंबे उपयोग के लिए।",
-      "heroCta": "उत्पाद देखें",
-      "craftQuote": "दीर्घकालिक कार्यस्थल ईमानदार सामग्री विकल्पों से शुरू होते हैं — रखरखाव योग्य, मरम्मत योग्य और वास्तविक उपयोग के लिए निर्दिष्ट।",
-      "craftAttribution": "विनिर्देश दृष्टिकोण, वन एंड ओनली योजना",
-      "introTitleLeadShort": "दीर्घकालिक",
-      "introTitleAccent": "सिस्टम",
-      "ctaKicker": "अगला कदम",
-      "ctaTitleLead": "दीर्घकालिक",
-      "ctaTitleAccent": "इरादे से योजना बनाएं।",
-      "ctaDescription": "कैटलॉग देखें, रिसोर्स डेस्क खोलें या लाइव विवरण पर सामग्री मार्गदर्शन के लिए योजना कॉल का अनुरोध करें।",
-      "ctaPrimary": "उत्पाद देखें",
-      "ctaSecondary": "टीम से संपर्क करें",
-      "ecoScoreKicker": "इको-स्कोर"
-    },
-    "trustedBy": {
-      "quotes": [
-        { "quote": "उन्होंने तय तारीखों पर स्थापना की और वर्कस्टेशन ड्रॉइंग के अनुरूप थे।", "attribution": "फैसिलिटीज़ टीम, पटना कार्यालय" },
-        { "quote": "भवन के बाकी हिस्से को रोके बिना दो फ्लोर स्थापित हो गए।", "attribution": "प्रोजेक्ट समन्वयक, बैंक कार्यक्रम" }
-      ],
-      "deliveryQuotesLabel": "डिलीवरी अनुभव"
-    },
-    "clients": {
-      "heroTitleLead": "विश्वसनीय",
-      "heroTitleAccent": "ग्राहक।",
-      "heroSubtitle": "सरकार, वित्त, ऊर्जा और विनिर्माण में निष्पादित कार्यस्थल डिलीवरी।",
-      "heroSubtitleTemplate": "सरकार, वित्त, ऊर्जा और विनिर्माण में {clients} संगठन।",
-      "eyebrow": "केस स्टडी",
-      "emptyTitle": "गैलरी अपडेट हो रही है",
-      "emptyDescription": "स्थापना तस्वीरें तैयार की जा रही हैं। विश्वसनीय ग्राहकों को देखें या टीम से संपर्क करें।",
-      "contactCta": "संपर्क करें",
-      "trustedCta": "विश्वसनीय ग्राहक",
-      "planningCta": "योजना कॉल का अनुरोध करें",
-      "pullQuotes": [
-        { "quote": "टीम ने हमारे विवरण को व्यावहारिक लेआउट में बदला और स्थापित परिणाम हमारे अनुमोदन के अनुरूप था।", "attribution": "फैसिलिटीज़ लीड, कॉर्पोरेट फिट-आउट" },
-        { "quote": "डेस्किंग से मीटिंग रूम तक डिलीवरी समन्वित रही। दायरा, समयसीमा और हैंडओवर पूरे कार्यक्रम में स्पष्ट रहे।", "attribution": "प्रोजेक्ट समन्वयक, संस्थागत कार्यस्थल" }
-      ],
-      "ctaKicker": "अगला कदम",
-      "ctaTitleLead": "योजना टीम को",
-      "ctaTitleAccent": "अपना विवरण दें।",
-      "ctaDescription": "हेडकाउंट, स्थान प्रकार और समय साझा करें — हम श्रेणी मिश्रण, फ़िनिश और व्यावहारिक डिलीवरी मार्ग तय करेंगे।",
-      "deliveryQuotesLabel": "ग्राहक डिलीवरी अनुभव"
-    },
-    "sitemap": {
-      "metadataTitle": "साइटमैप | वन एंड ओनली कार्यालय फर्नीचर मार्ग",
-      "metadataDescription": "सार्वजनिक वन एंड ओनली पृष्ठों का HTML साइटमैप — उत्पाद, समाधान, योजना, सेवा, प्लानर और कंपनी।",
-      "kicker": "साइट अनुक्रमणिका",
-      "title": "साइटमैप",
-      "subtitle": "उत्पादों, योजना, प्लानर, कंपनी, कानूनी और एडमिन पृष्ठों के सार्वजनिक मार्ग।"
+  "workspace": {
+    "accessPanelDescription": "ओएंडओ सूट का अनुभव करें। हमारे उपकरण टीमों में सटीकता, प्रदर्शन और स्पष्ट सहयोग के लिए डिज़ाइन किए गए हैं।",
+    "accessPanelTitle": "योजना में सटीकता",
+    "backToHome": "होम पर वापस जाएं",
+    "plannerEntry": {
+      "accessStatusLabel": "प्लानर एक्सेस स्थिति",
+      "guestHint": "कैटलॉग देखें और लेआउट तैयार करें। प्लान सहेजने या खोलने के लिए साइन इन करें।",
+      "guestLabel": "अतिथि वर्कस्पेस",
+      "signInToSave": "सहेजने के लिए साइन इन करें",
+      "signedInHint": "आपके सहेजे गए प्लान प्रोजेक्ट सूची में उपलब्ध हैं।",
+      "signedInLabel": "साइन-इन वर्कस्पेस",
+      "viewSavedPlans": "सहेजे गए प्लान देखें"
     }
   }
 }

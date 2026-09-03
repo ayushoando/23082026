@@ -14,27 +14,35 @@ import { MarketingImage } from "@/components/site/MarketingImage";
 const FEATURED_CLIENT_PHOTOS = [
   {
     name: "Titan",
+    sector: "Corporate & Retail",
     location: "Patna, Bihar",
     summary: "Collaborative office zones with modular seating and meeting layouts.",
     image: "/assets/marketing/clients/Titan/titan-hero.webp",
+    tags: ["150+ Workstations", "Executive Cabins", "Acoustic Partitioning"],
   },
   {
     name: "TVS Group",
+    sector: "Automotive & Corporate",
     location: "Patna, Bihar",
     summary: "Workspace planning across leadership cabins, desking, and collaboration bays.",
     image: "/assets/marketing/clients/TVS/hero.webp",
+    tags: ["Multi-Floor Rollout", "Turnkey Delivery", "Zero Downtime"],
   },
   {
     name: "Franklin Templeton",
+    sector: "Financial Services",
     location: "India",
     summary: "Formal workspace setups with consistent finishes and executive-ready detailing.",
     image: "/assets/marketing/clients/FranklinTempleton/franklin-templeton-office.webp",
+    tags: ["Conference Systems", "Ergonomic Task Seating", "Global Standards"],
   },
   {
     name: "DMRC",
+    sector: "Public Infrastructure",
     location: "New Delhi",
     summary: "Operational office furniture delivery built for high-use enterprise teams.",
     image: "/assets/marketing/clients/DMRC/dmrc.webp",
+    tags: ["24/7 Operations", "Heavy-Duty Ergonomics", "10-Year Durability"],
   },
 ] as const;
 
@@ -476,13 +484,13 @@ export function TrustedByPageView({
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
               <div>
                 <p data-trusted-reveal className="home-kicker">
-                  Workplace Photography
+                  Workplace Photography & Case Stories
                 </p>
                 <h2 data-trusted-reveal className="home-heading mt-2">
-                  Featured installations
+                  Featured installations & client delivery
                 </h2>
-                <p data-trusted-reveal className="page-copy text-body mt-2 max-w-xl">
-                  Real furniture systems deployed across regional headquarters, corporate offices, and operations centres.
+                <p data-trusted-reveal className="page-copy text-body mt-2 max-w-2xl">
+                  Real furniture systems deployed across regional headquarters, corporate offices, and operations centres with accountable delivery.
                 </p>
               </div>
               <div data-trusted-reveal className="shrink-0">
@@ -497,57 +505,81 @@ export function TrustedByPageView({
               </div>
             </div>
 
-            <div className="trusted-by-photos-grid">
-              {FEATURED_CLIENT_PHOTOS.map((item) => (
-                <div key={item.name} data-trusted-reveal className="trusted-by-photo-card">
-                  <div className="trusted-by-photo-card__media">
-                    <MarketingImage
-                      src={item.image}
-                      alt={`${item.name} workspace installation`}
-                      sizes="(max-width: 768px) 100vw, 25vw"
-                      loading="eager"
-                      className="trusted-by-photo-card__img object-cover"
-                    />
-                    <span className="trusted-by-photo-card__badge">{item.name}</span>
-                  </div>
-                  <div className="trusted-by-photo-card__body">
-                    <span className="trusted-by-photo-card__location">{item.location}</span>
-                    <p className="trusted-by-photo-card__summary">{item.summary}</p>
-                  </div>
-                </div>
-              ))}
+            <section
+              ref={quotesRef}
+              data-testid="trusted-by-quotes"
+              aria-label={deliveryQuotesLabel}
+              className="mb-8"
+            >
+              <p data-trusted-reveal className="home-kicker">
+                {quotesKicker}
+              </p>
+              <h3 data-trusted-reveal className="home-heading mt-2">
+                {quotesTitle}
+              </h3>
+            </section>
+
+            <div className="trusted-by-split-showcase">
+              {FEATURED_CLIENT_PHOTOS.map((item, idx) => {
+                const isReversed = idx % 2 === 1;
+                const clientQuote = quotes[idx] ?? null;
+
+                return (
+                  <article
+                    key={item.name}
+                    data-trusted-reveal
+                    className={`trusted-by-split-card${isReversed ? " trusted-by-split-card--reversed" : ""}`}
+                  >
+                    <div className="trusted-by-split-card__media">
+                      <MarketingImage
+                        src={item.image}
+                        alt={`${item.name} workspace installation`}
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        loading="eager"
+                        className="trusted-by-split-card__img object-cover"
+                      />
+                      <span className="trusted-by-split-card__badge">{item.name}</span>
+                    </div>
+
+                    <div className="trusted-by-split-card__content">
+                      <div className="trusted-by-split-card__header">
+                        <div className="trusted-by-split-card__meta">
+                          <span>{item.sector}</span>
+                          <span aria-hidden="true">·</span>
+                          <span>{item.location}</span>
+                        </div>
+                        <h4 className="trusted-by-split-card__title">{item.name} Headquarters</h4>
+                        <p className="trusted-by-split-card__scope">{item.summary}</p>
+                      </div>
+
+                      {clientQuote ? (
+                        <figure className="clients-pull-quote trusted-by-split-card__quote">
+                          <blockquote className="clients-pull-quote__text trusted-by-split-card__quote-text text-pretty">
+                            {clientQuote.quote}
+                          </blockquote>
+                          <figcaption className="clients-pull-quote__attribution trusted-by-split-card__quote-author">
+                            {clientQuote.attribution}
+                          </figcaption>
+                        </figure>
+                      ) : null}
+
+                      <div className="trusted-by-split-card__specs">
+                        {item.tags.map((tag) => (
+                          <span key={tag} className="trusted-by-split-card__tag">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
             </div>
           </section>
         </HomeSectionInner>
       </HomeSection>
 
-      <section
-        ref={quotesRef}
-        className="clients-trust-strip scheme-accent-wash"
-        aria-label={deliveryQuotesLabel}
-        data-testid="trusted-by-quotes"
-      >
-        <div className="home-shell-xl">
-          <p data-trusted-reveal className="home-kicker">
-            {quotesKicker}
-          </p>
-          <h2 data-trusted-reveal className="home-heading mt-3 mb-8">
-            {quotesTitle}
-          </h2>
-          <div className="clients-pull-quotes">
-            {quotes.map((item) => (
-              <figure key={item.attribution} data-trusted-reveal className="clients-pull-quote">
-                <blockquote className="clients-pull-quote__text text-balance">
-                  {item.quote}
-                </blockquote>
-                <figcaption className="clients-pull-quote__attribution">{item.attribution}</figcaption>
-              </figure>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <HomeSection variant="soft" spacing="md" borderY>
+      <HomeSection variant="white" spacing="md" borderY>
         <HomeSectionInner>
           <section ref={sectorsRef} className="trusted-by-sectors" data-testid="trusted-by-sectors">
             <p data-trusted-reveal className="home-kicker">
@@ -559,7 +591,7 @@ export function TrustedByPageView({
             <p data-trusted-reveal className="page-copy text-body max-w-xl">
               {sectorsDescription}
             </p>
-            <ul className="trusted-by-sectors__list" >
+            <ul className="trusted-by-sectors__list">
               {sectors.map((sector) => (
                 <li key={sector} data-trusted-reveal className="trusted-by-sector-row">
                   {sector}

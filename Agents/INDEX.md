@@ -66,6 +66,14 @@ read-only, so a route that writes must call the mode-aware store wrapper, never 
 raw disk helper. Selectors: `site/lib/Planner/plannerPersistenceMode.ts`,
 `site/lib/catalog/furnitureCatalogMode.ts`.
 
+Enterprise client registry: 116 canonical clients across 4 sectors in
+`site/lib/clients/clientRegistry.ts`, verified vector logos in
+`site/public/assets/marketing/client-logos/`, zero letter monogram fallbacks, and
+quiet luxury proof surfaces on `/trusted-by` and `/clients`. Hardened security:
+CSP headers in `site/next.config.js`/`mjs` and `site/proxy.ts`, secure cookies,
+and input sanitization in `site/lib/security/`. Complete i18n: 861 keys across 26
+namespaces with 100% Hindi Devanagari parity in `site/i18n/messages/{en,hi}.json`.
+
 ## Where to look
 
 | Need | Open |
@@ -74,6 +82,7 @@ raw disk helper. Selectors: `site/lib/Planner/plannerPersistenceMode.ts`,
 | Index | [`../CONTENTS.md`](../CONTENTS.md) · [`../DOC-MAP.md`](../DOC-MAP.md) |
 | Deploy / migrate | [`../OPERATIONS_RUNBOOK.md`](../OPERATIONS_RUNBOOK.md) · `pnpm run ops:list` |
 | Where code goes | [`../docs/architecture/product-map.md`](../docs/architecture/product-map.md) |
+| Client registry & logos | [`../docs/architecture/product-map.md`](../docs/architecture/product-map.md) · [`../docs/architecture/routes.md`](../docs/architecture/routes.md) |
 | Stack | [`../docs/architecture/stack.md`](../docs/architecture/stack.md) |
 | Routes | [`../docs/architecture/routes.md`](../docs/architecture/routes.md) |
 | Schema / DB ops | [`../docs/database/schema.md`](../docs/database/schema.md) · [`../docs/database/drizzle.md`](../docs/database/drizzle.md) · [`../docs/database/ops.md`](../docs/database/ops.md) |
@@ -81,6 +90,7 @@ raw disk helper. Selectors: `site/lib/Planner/plannerPersistenceMode.ts`,
 | Programme rules | [`../docs/governance/rules.md`](../docs/governance/rules.md) |
 | Blockers | [`../Failures.md`](../Failures.md) |
 | Product | [`../README.md`](../README.md) |
+| Proof surfaces & FOCSS | [`../docs/architecture/css.md`](../docs/architecture/css.md) |
 | Security / i18n | [`../docs/architecture/stack.md`](../docs/architecture/stack.md) §7–8 · [`../docs/governance/rules.md`](../docs/governance/rules.md) |
 | Tests / coverage | [`../Testing-handbook.md`](../Testing-handbook.md) |
 

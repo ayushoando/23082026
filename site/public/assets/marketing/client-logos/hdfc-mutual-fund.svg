@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" width="320" height="80">
+  <g transform="translate(12, 12)">
+    <rect width="56" height="56" rx="6" fill="#004C8F"/>
+    <rect x="14" y="14" width="28" height="28" fill="#DA291C"/>
+    <rect x="22" y="22" width="12" height="12" fill="#FFFFFF"/>
+  </g>
+  <text x="78" y="37" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="900" fill="#004C8F" letter-spacing="0.5">HDFC</text>
+  <text x="150" y="37" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="800" fill="#DA291C" letter-spacing="0.5">MUTUAL FUND</text>
+  <text x="79" y="53" font-family="system-ui, -apple-system, sans-serif" font-size="9.5" font-weight="600" fill="#64748B" letter-spacing="0.3">HDFC Asset Management Company</text>
+</svg>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" width="320" height="80">
+  <g transform="translate(12, 12)">
+    <rect width="56" height="56" rx="10" fill="#991B1B"/>
+    <line x1="12" y1="44" x2="44" y2="12" stroke="#F59E0B" stroke-width="3" stroke-linecap="round"/>
+    <line x1="12" y1="12" x2="44" y2="44" stroke="#F59E0B" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="28" cy="28" r="10" fill="#991B1B" stroke="#FEF08A" stroke-width="2"/>
+    <path d="M28 20 L31 26 L37 26 L32 30 L34 36 L28 32 L22 36 L24 30 L19 26 L25 26 Z" fill="#FEF08A"/>
+  </g>
+  <text x="78" y="36" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="900" fill="#991B1B" letter-spacing="1">INDIAN ARMY</text>
+  <text x="79" y="53" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="700" fill="#B45309" letter-spacing="0.5">सेवा अस्माकं धर्मः · Service Before Self</text>
+</svg>

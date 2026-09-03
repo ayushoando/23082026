@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" width="320" height="80">
+  <g transform="translate(10, 10)">
+    <circle cx="30" cy="30" r="26" fill="#006837"/>
+    <path d="M24 16 A6 6 0 1 1 24 28 A6 6 0 1 1 24 16 Z" fill="#F37023"/>
+    <path d="M36 20 A4 4 0 1 1 36 28 A4 4 0 1 1 36 20 Z" fill="#ffffff"/>
+    <path d="M18 46 C20 34 32 32 38 36 C42 39 44 46 44 48 C40 48 24 48 18 46 Z" fill="#F37023"/>
+    <path d="M32 46 C34 38 42 37 46 40 C49 42 50 46 50 48 Z" fill="#ffffff" opacity="0.9"/>
+  </g>
+  <text x="75" y="38" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="800" fill="#006837" letter-spacing="-0.5">HelpAge India</text>
+  <text x="76" y="54" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="600" fill="#F37023" letter-spacing="0.3">Fighting isolation, poverty, neglect</text>
+</svg>

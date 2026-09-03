@@ -35,11 +35,15 @@ import {
   sitemapMustExcludePaths,
 } from "@/features/site/data/siteSeoContract";
 import {
+  buildClientsItemListJsonLd,
   buildPageMetadata,
   buildProductJsonLd,
   countBrandPipeSegments,
   resolveDocumentTitle,
 } from "@/features/site/data/seo";
+import { getPublishedRecords } from "@/lib/clients/clientRegistry";
+import { SITE_NAV_LINKS, SITE_FOOTER_NAV } from "@/features/site/data/navigation";
+import { buildSitemapSections } from "@/features/site/data/htmlSitemap";
 import {
   ACCESS_PAGE_METADATA,
   CHOOSE_PRODUCT_PAGE_METADATA,
@@ -258,3 +262,100 @@ describe("SITE-SEO-04 structured data matches visible product fields", () => {
     }
   });
 });
+
+describe("SITE-SEO-05 /clients Schema.org ItemList with 116 published clients", () => {
+  it("buildClientsItemListJsonLd produces valid Schema.org ItemList with 116 ListItem items", () => {
+    const clients = getPublishedRecords();
+    expect(clients.length).toBe(116);
+
+    const itemList = buildClientsItemListJsonLd(SITE_URL, clients);
+    expect(itemList["@context"]).toBe("https://schema.org");
+    expect(itemList["@type"]).toBe("ItemList");
+    expect(itemList["@id"]).toContain("/clients/#clients-directory");
+    expect(itemList.numberOfItems).toBe(116);
+    expect(itemList.itemListElement).toHaveLength(116);
+
+    for (let i = 0; i < itemList.itemListElement.length; i++) {
+      const el = itemList.itemListElement[i];
+      expect(el["@type"]).toBe("ListItem");
+      expect(el.position).toBe(i + 1);
+
+      const org = el.item;
+      expect(org["@type"]).toBe("Organization");
+      expect(org["@id"]).toContain(`/clients/#${clients[i].canonicalId}-org`);
+      expect(org.url).toContain(`/clients/#${clients[i].canonicalId}`);
+      expect(org.name).toBe(clients[i].displayName);
+      expect(org.logo).toMatch(/^https?:\/\/.+\/assets\/marketing\/client-logos\/.+/);
+      expect(org.image).toBe(org.logo);
+    }
+  });
+});
+
+describe("SITE-SEO-06 100% Navigation, Footer & Sitemap Synchronization", () => {
+  it("every header nav link points to a canonical route that is indexed in sitemaps with zero redirects", async () => {
+    const sitemapEntries = await sitemap();
+    const sitemapUrls = sitemapEntries.map((e) => e.url);
+
+    for (const link of SITE_NAV_LINKS) {
+      const classification = getRouteClassification(link.href);
+      expect(
+        classification?.classification,
+        `Header link ${link.href} must be classified as public`,
+      ).toBe("public");
+      expect(
+        classification?.indexable,
+        `Header link ${link.href} must be indexable`,
+      ).toBe(true);
+
+      expect(
+        sitemapUrlsIncludeExactPath(sitemapUrls, link.href),
+        `Header link ${link.href} must be present in XML sitemap`,
+      ).toBe(true);
+    }
+  });
+
+  it("every footer link points to a canonical public route with zero redirects or 404s", async () => {
+    const sitemapEntries = await sitemap();
+    const sitemapUrls = sitemapEntries.map((e) => e.url);
+
+    const footerHrefs = SITE_FOOTER_NAV.flatMap((col) => col.links).map((l) => l.href);
+    const legalHrefs = ["/refund-and-return-policy", "/privacy", "/terms", "/sitemap"];
+    const allFooterHrefs = [...footerHrefs, ...legalHrefs];
+
+    for (const href of allFooterHrefs) {
+      const classification = getRouteClassification(href);
+      expect(
+        classification?.classification,
+        `Footer link ${href} must be classified as public`,
+      ).toBe("public");
+      expect(
+        classification?.indexable,
+        `Footer link ${href} must be indexable`,
+      ).toBe(true);
+
+      expect(
+        sitemapUrlsIncludeExactPath(sitemapUrls, href),
+        `Footer link ${href} must be present in XML sitemap`,
+      ).toBe(true);
+    }
+  });
+
+  it("HTML sitemap and XML sitemap have zero redirect sources and zero 404 targets", () => {
+    const htmlSections = buildSitemapSections();
+    const htmlHrefs = htmlSections.flatMap((s) => s.links).map((l) => l.href);
+
+    for (const href of htmlHrefs) {
+      if (href === "/sitemap.xml") continue;
+      const classification = getRouteClassification(href);
+      expect(
+        classification?.classification,
+        `HTML sitemap link ${href} must not be a redirect or private route`,
+      ).toBe("public");
+      expect(
+        classification?.indexable,
+        `HTML sitemap link ${href} must be indexable`,
+      ).toBe(true);
+    }
+  });
+});
+

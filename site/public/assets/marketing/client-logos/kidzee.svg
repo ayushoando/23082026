@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="300" height="80">
+  <g transform="translate(15, 14)">
+    <text x="0" y="34" font-family="system-ui, -apple-system, sans-serif" font-size="34" font-weight="900" fill="#F97316">k</text>
+    <text x="20" y="34" font-family="system-ui, -apple-system, sans-serif" font-size="34" font-weight="900" fill="#84CC16">i</text>
+    <text x="30" y="34" font-family="system-ui, -apple-system, sans-serif" font-size="34" font-weight="900" fill="#EAB308">d</text>
+    <text x="52" y="34" font-family="system-ui, -apple-system, sans-serif" font-size="34" font-weight="900" fill="#A855F7">z</text>
+    <text x="70" y="34" font-family="system-ui, -apple-system, sans-serif" font-size="34" font-weight="900" fill="#06B6D4">e</text>
+    <text x="90" y="34" font-family="system-ui, -apple-system, sans-serif" font-size="34" font-weight="900" fill="#EF4444">e</text>
+    <path d="M6 42 Q58 56 106 42" fill="none" stroke="#F97316" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <text x="136" y="48" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" font-weight="700" fill="#475569" letter-spacing="0.2">Where kids love to learn</text>
+</svg>

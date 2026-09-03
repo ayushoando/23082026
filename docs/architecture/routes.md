@@ -26,7 +26,8 @@ This reference maps known `site/app/**/page.tsx` and `site/app/api/**/route.ts` 
 - `/access` → `app/(site)/access/page.tsx`
 - `/career` → `app/(site)/career/page.tsx`
 - `/choose-product` → `app/(site)/choose-product/page.tsx`
-- `/portfolio` → `app/(site)/portfolio/page.tsx` (`/clients` 308s here)
+- `/clients` → `app/(site)/clients/page.tsx` (canonical 116 enterprise client directory & sector showcase with Schema.org ItemList)
+- `/portfolio` → `app/(site)/portfolio/page.tsx` (workplace installation photography & case studies)
 - `/compare` → `app/(site)/compare/page.tsx`
 - `/contact` → `app/(site)/contact/page.tsx`
 - `/dashboard` → `app/(site)/dashboard/page.tsx`
@@ -57,7 +58,7 @@ This reference maps known `site/app/**/page.tsx` and `site/app/api/**/route.ts` 
 - `/terms` → `app/(site)/terms/page.tsx`
 - `/tools/meeting-room-capacity-calculator` → `app/(site)/tools/meeting-room-capacity-calculator/page.tsx`
 - `/tools/office-space-calculator` → `app/(site)/tools/office-space-calculator/page.tsx`
-- `/trusted-by` → `app/(site)/trusted-by/page.tsx`
+- `/trusted-by` → `app/(site)/trusted-by/page.tsx` (quiet luxury proof showcase, installation photos, client metrics, and quotes)
 - `/login` → `app/(site)/login/page.tsx`
 
 **Note (2026-08-06):** the old "missing `@/features/planner/*` imports" item is no

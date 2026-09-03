@@ -118,6 +118,22 @@ an equivalent same-function control elsewhere on the page already meets the floo
 imports, structure, and token usage — none of them measures a rendered box. The floor/advisory
 split above is only verifiable by the browser audit or a DOM-level test.
 
+## Quiet luxury proof surfaces & FOCSS token alignment
+
+Proof and directory pages (`/trusted-by`, `/clients`) follow Herman Miller / Vitra architectural quiet luxury standards using pure FOCSS semantic tokens:
+
+1. **Curated, borderless brand mark presentation**:
+   - Heavy, clunky card borders and drop-shadow containers are eliminated.
+   - Logos render in a borderless, airy roster (`.client-badge-group--dense`) with calibrated opacity and dark/light contrast.
+2. **Integrated split-story case highlights**:
+   - Workplace installation photography is directly paired with real client testimonials and project scope summaries (`.trusted-by-story`, `.trusted-by-photo-card`).
+3. **Clean metric counter strip**:
+   - Generic grey stat boxes are replaced by an integrated, lightweight metric counter strip (`.trusted-by-stats-grid`, `.trusted-by-stat-card`).
+4. **Sector-wise client directory**:
+   - Accessible keyboard-navigable sector tabs (`SECTOR_TABS`) and showcase grid (`.clients-showcase`, `.clients-showcase__grid`, `.clients-showcase__logo`) with verified vector SVG assets and zero letter monogram fallbacks.
+5. **Universal FOCSS token discipline**:
+   - All public routes share cohesive typography (`--font-sans`, `--type-*`), semantic surface colors (`--surface-canvas`, `--surface-soft`, `--surface-elevated`), semantic text colors (`--text-strong`, `--text-body`, `--text-muted`), and consistent border radii, with zero raw color hex leaks.
+
 ## Migration status (FOCSS)
 
 | Area | Live state |

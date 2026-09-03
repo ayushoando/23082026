@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   buildBreadcrumbJsonLd,
   buildCareerJobsJsonLd,
+  buildClientsItemListJsonLd,
   buildFaqJsonLd,
   buildGlobalJsonLd,
   buildPageMetadata,
@@ -13,6 +14,7 @@ import {
   sanitizeCanonicalPath,
   buildCanonicalUrl,
 } from "@/features/site/data/seo";
+import { getPublishedRecords } from "@/lib/clients/clientRegistry";
 import {
   SEO01_STATIC_METADATA,
   expectedStaticSitemapPaths,
@@ -164,6 +166,30 @@ describe("SEO Standards Audit: Schema.org Rich Results Compliance", () => {
         text: "Yes, our workstations meet BIFMA X5.5 commercial performance standards.",
       },
     });
+  });
+
+  it("buildClientsItemListJsonLd produces valid ItemList with all 116 published clients and absolute logos", () => {
+    const clients = getPublishedRecords();
+    const itemList = buildClientsItemListJsonLd(TEST_SITE_URL, clients);
+
+    expect(itemList["@context"]).toBe("https://schema.org");
+    expect(itemList["@type"]).toBe("ItemList");
+    expect(itemList["@id"]).toBe("https://oando.co.in/clients/#clients-directory");
+    expect(itemList.name).toBe("One&Only Enterprise & Institutional Client Directory");
+    expect(itemList.numberOfItems).toBe(116);
+    expect(itemList.itemListElement).toHaveLength(116);
+
+    for (let i = 0; i < itemList.itemListElement.length; i++) {
+      const entry = itemList.itemListElement[i];
+      expect(entry["@type"]).toBe("ListItem");
+      expect(entry.position).toBe(i + 1);
+      expect(entry.item["@type"]).toBe("Organization");
+      expect(entry.item["@id"]).toBe(`https://oando.co.in/clients/#${clients[i].canonicalId}-org`);
+      expect(entry.item.url).toBe(`https://oando.co.in/clients/#${clients[i].canonicalId}`);
+      expect(entry.item.name).toBe(clients[i].displayName);
+      expect(entry.item.logo).toBe(`https://oando.co.in${clients[i].logoPath}`);
+      expect(entry.item.image).toBe(`https://oando.co.in${clients[i].logoPath}`);
+    }
   });
 });
 

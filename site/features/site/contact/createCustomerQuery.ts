@@ -5,6 +5,7 @@ import { rateLimit } from "@/lib/rateLimit";
 import { sendStaffQueryNotification } from "@/lib/email/sendStaffQueryNotification";
 import { API_ERROR_CODES } from "@/features/shared/api/ApiError";
 import type { PreferredContact } from "@/features/site/contact/customerQuerySchema";
+import { sanitizeInput } from "@/lib/security/sanitize";
 
 export type CustomerQueryInput = {
   name?: string;
@@ -69,10 +70,7 @@ const preferredContactValues: PreferredContact[] = [
 ];
 
 function normalizeText(value: unknown, max = 3000): string {
-  if (typeof value !== "string") {
-    return "";
-  }
-  return value.trim().slice(0, max);
+  return sanitizeInput(value, max);
 }
 
 function normalizePreferredContact(value: unknown): PreferredContact {

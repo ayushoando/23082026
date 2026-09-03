@@ -13,6 +13,7 @@ import {
   buildLocalBusinessJsonLd,
   buildShowroomsLocalBusinessJsonLd,
   buildFaqJsonLd,
+  buildClientsItemListJsonLd,
   canonicalPath,
   sanitizeCanonicalPath,
   resolveDocumentTitle,
@@ -22,6 +23,8 @@ import {
 } from '@/features/site/data/seo';
 import { SITE_BRAND } from '@/features/site/data/brand';
 import { SITE_CONTACT, googleMapsOpenHref } from '@/features/site/data/contact';
+import { getPublishedRecords } from '@/lib/clients/clientRegistry';
+import { sanitizeJsonForScript } from '@/lib/security/sanitize';
 
 type OpenGraphFields = {
   type?: string;
@@ -868,3 +871,84 @@ describe('seo leftover path / product branches', () => {
     expect(ld.url).toBe('https://example.com');
   });
 });
+
+// ---------------------------------------------------------------------------
+// buildClientsItemListJsonLd
+// ---------------------------------------------------------------------------
+
+describe('buildClientsItemListJsonLd', () => {
+  it('returns valid Schema.org ItemList with correct metadata and counts', () => {
+    const published = getPublishedRecords();
+    const ld = buildClientsItemListJsonLd(TEST_SITE_URL, published);
+
+    expect(ld['@context']).toBe('https://schema.org');
+    expect(ld['@type']).toBe('ItemList');
+    expect(ld['@id']).toBe('https://example.com/clients/#clients-directory');
+    expect(ld.name).toBe('One&Only Enterprise & Institutional Client Directory');
+    expect(ld.description).toContain('Verified workplace installations');
+    expect(ld.numberOfItems).toBe(116);
+    expect(ld.itemListElement).toHaveLength(116);
+  });
+
+  it('incorporates all 116 published records with 1-indexed sequential positions', () => {
+    const published = getPublishedRecords();
+    const ld = buildClientsItemListJsonLd(TEST_SITE_URL, published);
+
+    expect(ld.itemListElement.length).toBe(116);
+    ld.itemListElement.forEach((entry, index) => {
+      expect(entry['@type']).toBe('ListItem');
+      expect(entry.position).toBe(index + 1);
+
+      const org = entry.item;
+      expect(org['@type']).toBe('Organization');
+      expect(org['@id']).toBe(`https://example.com/clients/#${published[index].canonicalId}-org`);
+      expect(org.url).toBe(`https://example.com/clients/#${published[index].canonicalId}`);
+      expect(org.name).toBe(published[index].displayName);
+
+      // Every published client organisation must have verified absolute logo and image URLs
+      expect(org.logo).toBeDefined();
+      expect(org.image).toBeDefined();
+      expect(org.logo).toBe(`https://example.com${published[index].logoPath}`);
+      expect(org.image).toBe(`https://example.com${published[index].logoPath}`);
+      expect(org.logo).toMatch(/^https:\/\/example\.com\/assets\/marketing\/client-logos\/.+/);
+    });
+  });
+
+  it('handles client records without logoPath by omitting logo and image properties', () => {
+    const synthetic = [
+      { canonicalId: 'test-org', displayName: 'Test Organization' },
+    ];
+    const ld = buildClientsItemListJsonLd(TEST_SITE_URL, synthetic);
+
+    expect(ld.numberOfItems).toBe(1);
+    expect(ld.itemListElement).toHaveLength(1);
+    const org = ld.itemListElement[0].item;
+    expect(org.name).toBe('Test Organization');
+    expect(org.url).toBe('https://example.com/clients/#test-org');
+    expect(org).not.toHaveProperty('logo');
+    expect(org).not.toHaveProperty('image');
+  });
+
+  it('handles empty client array gracefully', () => {
+    const ld = buildClientsItemListJsonLd(TEST_SITE_URL, []);
+    expect(ld.numberOfItems).toBe(0);
+    expect(ld.itemListElement).toEqual([]);
+  });
+
+  it('serializes cleanly to script-safe JSON-LD', () => {
+    const published = getPublishedRecords();
+    const ld = buildClientsItemListJsonLd(TEST_SITE_URL, published);
+    const serialized = sanitizeJsonForScript(ld);
+
+    expect(typeof serialized).toBe('string');
+    expect(serialized).not.toContain('<script');
+    expect(serialized).not.toContain('</script>');
+
+    const parsed = JSON.parse(serialized);
+    expect(parsed['@context']).toBe('https://schema.org');
+    expect(parsed['@type']).toBe('ItemList');
+    expect(parsed.numberOfItems).toBe(116);
+    expect(parsed.itemListElement).toHaveLength(116);
+  });
+});
+

@@ -51,8 +51,7 @@ export function ClientLogoArea({
         <img
           src={logoPath}
           alt={`${displayName} logo`}
-          loading="lazy"
-          className="clients-showcase__logo-img"
+          loading="eager"
           onError={() => setImgFailed(true)}
         />
       )}

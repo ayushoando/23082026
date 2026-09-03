@@ -33,6 +33,13 @@ Suite chrome: `shell-global-nav.css` (dashboard/portal header), `shell-portal.cs
 - Forbidden: raw hex/rgb in product TSX; parallel CSS trees; nested `focss` packages.
 - Fix structure before adding sheets.
 
+## Quiet luxury proof styling & FOCSS tokens
+- Proof surfaces (`/trusted-by`, `/clients`) adhere to Herman Miller / Vitra quiet luxury standards.
+- Borderless brand mark showcases (`.client-badge-group--dense`) without heavy borders or clunky drop shadows.
+- Editorial split-story cards (`.trusted-by-story`, `.trusted-by-photo-card`) pairing installation photography with testimonials.
+- Lightweight metric counter strips (`.trusted-by-stats-grid`, `.trusted-by-stat-card`).
+- Pure semantic tokens: `--surface-canvas`, `--surface-soft`, `--surface-elevated`, `--text-strong`, `--text-body`, `--text-muted`. Zero raw color hex.
+
 ## Verify
 ```powershell
 pnpm run verify:focss

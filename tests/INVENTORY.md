@@ -8,13 +8,13 @@ Generated executable-test and support-file inventory. Layout rules: `tests/CONTE
 
 | Kind | Count |
 |---|---:|
-| Vitest executable files | 773 |
+| Vitest executable files | 775 |
 | Playwright executable specs | 85 |
 | Helpers | 38 |
 | Fixtures | 15 |
 | Snapshots | 12 |
 | Other assets | 10 |
-| **Total files** | **933** |
+| **Total files** | **935** |
 
 ## vitest
 
@@ -218,7 +218,7 @@ Generated executable-test and support-file inventory. Layout rules: `tests/CONTE
 - `tests/unit/app/api/Studio/furniture/[id]/route.test.ts`
 - `tests/unit/app/api/Studio/furniture/route.test.ts`
 - `tests/unit/app/api/Studio/furniture/upload/route.test.ts`
-- … +573 more
+- … +575 more
 
 ## playwright
 

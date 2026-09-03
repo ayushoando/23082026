@@ -15,7 +15,12 @@ async function createCookieBoundClient<TDatabase>(url: string, anonKey: string) 
       setAll(cookiesToSet) {
         try {
           cookiesToSet.forEach(({ name, value, options }) =>
-            cookieStore.set(name, value, options),
+            cookieStore.set(name, value, {
+              ...options,
+              httpOnly: options?.httpOnly ?? true,
+              secure: options?.secure ?? (process.env.NODE_ENV === "production"),
+              sameSite: (options?.sameSite as "lax" | "strict" | "none") ?? "lax",
+            }),
           );
         } catch {
           // setAll from a Server Component — middleware may refresh sessions.

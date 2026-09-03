@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="300" height="80">
+  <g transform="translate(12, 14)">
+    <circle cx="26" cy="26" r="24" fill="#E11D48"/>
+    <path d="M16 16 L36 36 M36 16 L16 36" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="26" cy="26" r="4" fill="#FFFFFF"/>
+  </g>
+  <text x="70" y="38" font-family="system-ui, -apple-system, sans-serif" font-size="26" font-weight="800" fill="#0F172A" letter-spacing="-0.5">nxtra</text>
+  <text x="136" y="38" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="700" fill="#E11D48" letter-spacing="0.2">by airtel</text>
+  <text x="71" y="54" font-family="system-ui, -apple-system, sans-serif" font-size="9" font-weight="600" fill="#64748B" letter-spacing="0.5">DATA CENTERS &amp; CLOUD</text>
+</svg>

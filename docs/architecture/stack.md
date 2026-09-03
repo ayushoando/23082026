@@ -208,9 +208,10 @@ Do not claim DB release authority without a live publish path and proof.
 | Item | Value |
 |------|-------|
 | Framework | `next-intl` **^4.14.1** — marketing site only |
-| Config | `site/i18n/{config,routing,request}.ts`; locales `en`, `hi` only (default `en`). Hindi is machine-generated. |
-| Messages | `site/i18n/messages/{en,hi}.json` |
-| Parity | `hi` must match **every** top-level namespace in `en.json`. `wave1Namespaces` in `site/i18n/marketing-parity-manifest.json` is the **sync-hi-wave1** write scope, not a weaker parity bar. |
+| Config | `site/i18n/{config,routing,request}.ts`; locales `en`, `hi` only (default `en`). |
+| Messages | `site/i18n/messages/{en,hi}.json` — **861 leaf keys** across **26 top-level namespaces** |
+| Parity | **100% key parity** between `en.json` and `hi.json` (verified by `scripts/check-i18n-key-parity.mjs` and `verify_i18n_complete.js`). Zero empty strings, zero undefined values, root `faq` namespace integrated, and zero untranslated English leaks in Hindi navigation strings. |
+| Runtime copy loader | `site/lib/i18n/withLocaleCopy.ts` merges runtime TypeScript copy definitions with locale dictionaries across all 16 public marketing routes and feature views |
 | **Runtime** | `request.ts` reads `NEXT_LOCALE`, accepts `en` or `hi`, defaults invalid/missing values to `en`, and loads the matching message bundle; LanguageSwitcher writes the cookie and reloads the prefixless URL |
 | Plugin | `createNextIntlPlugin("./i18n/request.ts")` in `site/next.config.js` |
 | Root shim | `i18n/request.ts` re-exports `site/i18n/request.ts`. Required: next-intl validates against `process.cwd()` (often the monorepo root for `next build site`), while webpack’s app context is `site/` — do **not** pass `./site/i18n/...` or the prefix doubles under `site/` |
@@ -222,32 +223,37 @@ Planner, Studio and Admin are English-oriented; they are not wired to `next-intl
 
 ## 8. Security at runtime
 
-**Edge:** Next 16 uses `site/proxy.ts` — `export async function proxy` plus
-`export const config.matcher`, not `middleware.ts`. It applies CSP (nonce +
-`'self'`, **not** `strict-dynamic`) and security headers, the protected-page
-cookie bounce (presence only), maintenance-mode write 503s, and member-only
-write blocks for sensitive API prefixes.
+**Next.js configuration headers:** Root security headers are configured in `site/next.config.js` and re-exported in `site/next.config.mjs`, covering `/:path*` and `/api/:path*`:
+- `X-Frame-Options: DENY` (clickjacking protection across all HTML/API routes)
+- `X-Content-Type-Options: nosniff` (MIME sniffing prevention)
+- `Referrer-Policy: strict-origin-when-cross-origin`
+- `Permissions-Policy: camera=(), microphone=(), geolocation=(), browsing-topics=(), payment=(), usb=()`
+- `Strict-Transport-Security: max-age=31536000; includeSubDomains; preload`
+- `X-DNS-Prefetch-Control: on`
+- `X-XSS-Protection: 1; mode=block`
+- Universal `Content-Security-Policy`: `default-src 'self'`, `frame-ancestors 'none'`, `form-action 'self'`, `object-src 'none'`, `base-uri 'self'`, with scoped allowlists for Supabase (`*.supabase.co`, `*.supabase.in`), Vercel analytics/insights, Cloudflare, and Google Analytics.
 
-**Handlers:** most product APIs use `withAuth({ role, requireCsrf })` plus rate
-limits — `admin` | `member` | `guest`. Exceptions exist (e.g.
-`/api/customer-queries/manage` uses admin session **or** `x-admin-token`, not
-pure `withAuth`). Public contact intake uses origin + rate + honeypot, not CSRF.
+**Edge proxy:** Next 16 uses `site/proxy.ts` (`export async function proxy` plus `export const config.matcher`, not `middleware.ts`). It applies per-request CSP nonces, edge CSP including `frame-ancestors 'none'` and `form-action 'self'`, the protected-page cookie bounce (presence only), maintenance-mode write 503s, and member-only write blocks for sensitive API prefixes.
 
-**Secrets:** `.env.local` and deploy secrets only. CSRF helpers under
-`site/lib/security/`. `DEV_AUTH_BYPASS=1` is set by `pnpm dev` for local only and
-is hard-ignored when `NODE_ENV=production`.
+**Cookie security:** `site/lib/security/cookies.ts` defines `DEFAULT_SECURE_COOKIE_OPTIONS` and `STRICT_SECURE_COOKIE_OPTIONS` enforcing `httpOnly: true`, `secure: true` (in production), and `sameSite: "lax" | "strict"`. Supabase SSR server client in `site/platform/supabase/server.ts` guarantees session cookie mutations inherit these secure defaults.
+
+**Input sanitization:** `site/lib/security/sanitize.ts` provides `sanitizeInput`, `sanitizeQueryParam`, `escapeHtml`, `stripHtml`, `sanitizeFormData`, and `sanitizeJsonForScript`. Public customer query intake (`site/features/site/contact/createCustomerQuery.ts`) and JSON-LD script blocks across public routes sanitize all inputs and serialized payloads.
+
+**Handlers:** most product APIs use `withAuth({ role, requireCsrf })` plus rate limits — `admin` | `member` | `guest`. Exceptions exist (e.g. `/api/customer-queries/manage` uses admin session **or** `x-admin-token`, not pure `withAuth`). Public contact intake uses origin + rate + honeypot, not CSRF.
+
+**Secrets:** `.env.local` and deploy secrets only. CSRF helpers under `site/lib/security/`. `DEV_AUTH_BYPASS=1` is set by `pnpm dev` for local only and is hard-ignored when `NODE_ENV=production`.
 
 ---
 
 ## 9. Package policy
 
-- A direct dependency needs a **live import** or a documented build role. §4 lists
-  the current exceptions.
-- License check before adding. Prefer an existing platform library. No competitor
-  assets or trade dress.
+- A direct dependency needs a **live import** or a documented build role. §4 lists the current exceptions.
+- Unreferenced devDependencies (`@secretlint/secretlint-rule-preset-recommend`, `secretlint`, `oxlint-tsgolint`) were pruned from `package.json`, keeping `pnpm-lock.yaml` aligned.
+- License check before adding. Prefer an existing platform library. No competitor assets or trade dress.
 - Benchmark-only packages do not belong in root product deps.
-- New package scripts use `pnpm exec`, not `npx` — `check:governance` ratchets the
-  `npx` count.
+- New package scripts use `pnpm exec`, not `npx` — `check:governance` ratchets the `npx` count.
+
+---
 
 ## 10. Honesty
 

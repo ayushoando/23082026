@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="300" height="80">
+  <g transform="translate(12, 12)">
+    <circle cx="28" cy="28" r="26" fill="#166534"/>
+    <path d="M28 46 C28 32 38 24 38 16 C30 20 28 30 28 46 Z" fill="#4ADE80"/>
+    <path d="M28 46 C28 32 18 24 18 16 C26 20 28 30 28 46 Z" fill="#86EFAC"/>
+    <path d="M28 48 C28 38 28 22 28 14" stroke="#FEF08A" stroke-width="2"/>
+    <circle cx="28" cy="13" r="2" fill="#FEF08A"/>
+  </g>
+  <text x="78" y="37" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="900" fill="#166534" letter-spacing="1">BAMETI</text>
+  <text x="79" y="53" font-family="system-ui, -apple-system, sans-serif" font-size="9.5" font-weight="600" fill="#CA8A04" letter-spacing="0.2">Dept. of Agriculture · Govt. of Bihar</text>
+</svg>
