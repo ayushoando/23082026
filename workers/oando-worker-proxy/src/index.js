@@ -1,7 +1,6 @@
 import {
   apexRedirectLocation,
   cacheControlForPath,
-  cfCacheTtlForPath,
   shouldCacheResponse,
 } from './cachePolicy.js';
 
@@ -221,24 +220,12 @@ export default {
     upstreamRequest.headers.set('x-forwarded-host', url.host);
     upstreamRequest.headers.set('x-forwarded-proto', url.protocol.replace(':', ''));
 
-    const requestLooksCacheable = shouldCacheResponse({
-      method: request.method,
-      pathname,
-      cookieHeader: request.headers.get('cookie') || '',
-      status: 200,
-      setCookie: false,
-    });
-
     const upstreamResponse = await fetch(upstreamRequest, {
       redirect: 'manual',
-      cf: requestLooksCacheable
-        ? {
-            cacheEverything: true,
-            cacheTtl: cfCacheTtlForPath(pathname),
-          }
-        : {
-            cacheEverything: false,
-          },
+      // Do not tell the edge to cache before the upstream status and Set-Cookie
+      // headers are known. Static assets are served from the explicit R2 path;
+      // dynamic responses receive cache directives only after this inspection.
+      cf: { cacheEverything: false },
     });
 
     // Rebuild headers so we can fully control indexing directives.

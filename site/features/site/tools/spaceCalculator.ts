@@ -112,7 +112,8 @@ export function seatsByDensity(usableSqm: number, sqmPerSeat: number): number {
 
 export type CalculateSpaceInput = {
   dims: RoomDimensions;
-  presetId: DensityPresetId;
+  /** Runtime input is validated by calculateSpace before lookup. */
+  presetId: string;
 };
 
 export type CalculateSpaceResult = {
@@ -124,6 +125,9 @@ export type CalculateSpaceResult = {
 };
 
 export function calculateSpace(input: CalculateSpaceInput): CalculateSpaceResult {
+  if (!isDensityPresetId(input.presetId)) {
+    throw new RangeError(`Unknown density preset: ${input.presetId}`);
+  }
   const preset = DENSITY_PRESETS[input.presetId];
   const gross = grossAreaSqm(input.dims);
   const usable = usableAreaSqm(gross, preset.circulationRatio);

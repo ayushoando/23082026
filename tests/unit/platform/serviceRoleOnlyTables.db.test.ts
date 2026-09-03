@@ -10,9 +10,9 @@
  *   - a policy appears on a pinned table  → data opens to anon/authenticated
  *   - a *new* table has RLS on, 0 policies → probably an oversight, not a design
  *
- * As of 2026-08-13 both DBs have zero such tables (all RLS tables carry
- * policies), so both pinned sets are empty. Re-add entries when a deliberate
- * zero-policy store is introduced.
+ * As of 2026-09-03, `rate_limits` is the only intentional Admin-DB table with
+ * RLS enabled and no policies. Re-add entries when a deliberate zero-policy
+ * store is introduced.
  *
  * The intent is also recorded in the database itself; see
  * `migrations{,.admin}/20260801120000_document_service_role_only_tables.sql`.
@@ -24,11 +24,10 @@ import { describe, it, expect } from "vitest";
 const ADMIN_URL = process.env.SUPABASE_AUTH_DATABASE_URL?.trim() ?? "";
 const PRODUCTS_URL = process.env.PRODUCTS_DATABASE_URL?.trim() ?? "";
 
-// All Admin-DB `public` tables now carry RLS policies (verified 2026-08-13),
-// so nothing is zero-policy service-role-only any longer. Former pins
-// (block_descriptors, product_studio_*, workspace_editor_config*) all have
-// policies=1.
-const ADMIN_SERVICE_ROLE_ONLY: string[] = [];
+// `rate_limits` is used solely by the service-role RPC created in
+// 20260903170000_rate_limits_atomic.sql. Former pins (block_descriptors,
+// product_studio_*, workspace_editor_config*) all have policies=1.
+const ADMIN_SERVICE_ROLE_ONLY: string[] = ["rate_limits"];
 
 // Catalog/descriptor/theme/rev tables moved to the Admin DB (2026-08-06+); the
 // Products-DB furniture mirror is retired to `archive`. No service-role-only

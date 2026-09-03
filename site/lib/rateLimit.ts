@@ -127,11 +127,7 @@ function memoryRateLimitOrFailClosed(
   limit: number,
   windowMs: number,
 ): RateLimitResult {
-  if (
-    process.env.NODE_ENV === "production" &&
-    isAiScopedRateLimitKey(key) &&
-    !hasDistributedRateLimit()
-  ) {
+  if (process.env.NODE_ENV === "production" && isAiScopedRateLimitKey(key)) {
     return {
       success: false,
       limit,

@@ -28,7 +28,7 @@ as $$
 declare
   now_ms bigint := floor(extract(epoch from clock_timestamp()) * 1000)::bigint;
 begin
-  if p_key = '' then
+  if p_key is null or btrim(p_key) = '' then
     raise exception 'Rate limit key must not be empty';
   end if;
   if p_limit <= 0 then
@@ -45,8 +45,7 @@ begin
   set
     count = case
       when rate_limit.window_start <= now_ms - p_window_ms then 1
-      when rate_limit.count < p_limit then rate_limit.count + 1
-      else rate_limit.count
+      else rate_limit.count + 1
     end,
     window_start = case
       when rate_limit.window_start <= now_ms - p_window_ms then now_ms

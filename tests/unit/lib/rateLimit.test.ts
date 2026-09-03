@@ -129,6 +129,9 @@ describe('rateLimit', () => {
       const res3 = await backend.check('user-5', 10, 60000);
       // fallback memory limit will succeed as count is reset or tracked locally
       expect(res3.success).toBe(true);
+
+      const aiResult = await backend.check('filter:203.0.113.1', 10, 60000);
+      expect(aiResult.success).toBe(false);
     });
   });
 

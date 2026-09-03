@@ -54,6 +54,15 @@ describe("spaceCalculator", () => {
     expect(calculateSpaceFromDims(0, 5, "open-office").seats).toBe(0);
   });
 
+  it("rejects an unknown runtime density preset before lookup", () => {
+    expect(() =>
+      calculateSpace({
+        dims: { lengthM: 6, widthM: 4 },
+        presetId: "not-a-preset",
+      }),
+    ).toThrow(RangeError);
+  });
+
   it("does not import Planner or Studio (path contract)", () => {
     const srcPath = [
       path.resolve(process.cwd(), "site/features/site/tools/spaceCalculator.ts"),

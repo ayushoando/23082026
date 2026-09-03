@@ -72,5 +72,9 @@ describe("12.1 worker origin single source of truth", () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
     const upstream = fetchMock.mock.calls[0][0] as Request;
     expect(upstream.url).toBe("https://origin.example/about");
+    expect(fetchMock.mock.calls[0][1]).toMatchObject({
+      redirect: "manual",
+      cf: { cacheEverything: false },
+    });
   });
 });

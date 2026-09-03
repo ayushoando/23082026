@@ -39,7 +39,7 @@ describe("editor primitives", () => {
     const onValueChange = vi.fn();
     render(<NumberStepper id="count" value={2} onValueChange={onValueChange} />);
 
-    fireEvent.change(screen.getByRole("spinbutton", { name: "Number" }), {
+    fireEvent.change(screen.getByRole("spinbutton"), {
       target: { value: "" },
     });
 
