@@ -39,6 +39,20 @@ export default {
     const url = new URL(request.url);
     const pathname = url.pathname;
 
+    // `new URL("//host/path", origin)` changes hosts. `pathname` is
+    // client-controlled, so reject protocol-relative paths before it is used
+    // to construct the trusted Vercel origin URL below.
+    if (pathname.startsWith('//')) {
+      return new Response('Invalid request path', {
+        status: 400,
+        headers: {
+          'content-type': 'text/plain; charset=utf-8',
+          'strict-transport-security': HSTS_HEADER,
+          'x-oando-proxy': 'invalid-path',
+        },
+      });
+    }
+
     const apexLocation = apexRedirectLocation(url);
     if (apexLocation) {
       return new Response(null, {

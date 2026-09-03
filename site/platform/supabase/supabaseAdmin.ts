@@ -14,8 +14,8 @@ export function createSupabaseAdminClient() {
   // only if a dedicated server URL isn't provided. Admin operations must use
   // the service role key and a non-public URL where possible.
   const supabaseUrl =
-    process.env.SUPABASE_URL?.trim() ??
-    process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() ??
+    process.env.SUPABASE_URL?.trim() ||
+    process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() ||
     "";
   if (!supabaseUrl) {
     throw new Error(

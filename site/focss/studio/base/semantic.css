@@ -7,8 +7,8 @@
   --surface-inverse: var(--color-midnight-900);
   --surface-accent-wash: color-mix(in srgb, var(--color-bronze-300) 8%, var(--color-white-50));
 
-  --text-strong: var(--color-pure-black);
-  --text-body: var(--color-pure-black);
+  --text-strong: var(--color-ink-900);
+  --text-body: var(--color-ink-800);
   --text-muted: var(--color-ink-600);
   --text-subtle: var(--color-ink-500);
   --text-inverse: var(--color-ink-25);

@@ -15,7 +15,7 @@ const testRoots = [testsRoot];
 const gateConfigPath = path.join(repoRoot, "config", "build", "playwright-gate-specs.json");
 const exceptionPath = path.join(testsRoot, "manifests", "skip-exceptions.json");
 const TEST_SOURCE = /\.[cm]?[jt]sx?$/i;
-const skipRe = /\b(?:test|describe|it)\s*\.\s*(?:skip(?:If)?|fixme)\s*\(/;
+const skipRe = /\b(?:test|describe|it)\s*\.\s*(?:skip(?:If)?|fixme|runIf)\s*\(/;
 const patterns = [
   { id: "contains-skip", re: skipRe, source: "code" },
   { id: "contains-test-info-skip", re: /\btestInfo\s*\.\s*skip\s*\(/, source: "code" },

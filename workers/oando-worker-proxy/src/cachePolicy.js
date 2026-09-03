@@ -24,7 +24,9 @@ const PRIVATE_PREFIXES = [
 
 export function requestHasSessionCookie(cookieHeader) {
   if (!cookieHeader) return false;
-  return /(?:^|;\s*)sb-[^=;\s]+-auth-token=/.test(cookieHeader);
+  // Supabase SSR splits larger sessions into `.0`, `.1`, etc. cookies. Those
+  // chunks are authenticated requests too and must never enter the public cache.
+  return /(?:^|;\s*)sb-[^=;\s]+-auth-token(?:\.\d+)?=/.test(cookieHeader);
 }
 
 export function pathIsPrivate(pathname) {

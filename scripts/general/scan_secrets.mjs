@@ -60,8 +60,6 @@ function isLocalEnvFile(file) {
 
 function isSafeReferenceOrExample(line) {
   return (
-    /\benv\s*\(/i.test(line) ||
-    /\b(?:Deno|process)\.env\b/.test(line) ||
     /Format:\s*postgresql:\/\/user:password@/i.test(line) ||
     // Doc placeholders: KEY=... or postgresql://...
     /=\s*\.\.\.\s*$/.test(line) ||

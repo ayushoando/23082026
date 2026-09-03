@@ -1417,7 +1417,7 @@ const Studio = () => {
             <p className="canvas-empty-cta__hint">Start from template</p>
           </div>
         )}
-        <Rulers fabricRef={fabricRef} scale={SCALE_PX_PER_MM} zoom={core.zoom} cursorMm={cursorMm} offset={undefined} />
+        <Rulers fabricRef={fabricRef} scale={SCALE_PX_PER_MM} zoom={core.zoom} cursorMm={cursorMm} />
         <DraggableCanvasOverlay storageKey="oostudio.canvas-overlay.v1">
           <DockPanelButtons
             items={[

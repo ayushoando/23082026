@@ -16,6 +16,24 @@ export interface RateLimitBackend {
   check(key: string, limit: number, windowMs: number): Promise<RateLimitResult>;
 }
 
+type RateLimitRpcRow = {
+  allowed: boolean;
+  count: number;
+  window_start: number;
+};
+
+type RateLimitRpcResponse = {
+  data: unknown;
+  error: { message?: string } | null;
+};
+
+type RateLimitRpcClient = {
+  rpc: (
+    functionName: "consume_rate_limit",
+    args: { p_key: string; p_limit: number; p_window_ms: number },
+  ) => Promise<RateLimitRpcResponse>;
+};
+
 const MEMORY_MAP_MAX_KEYS = 10_000;
 const AI_RATE_LIMIT_KEY_PATTERN =
   /^(ai-advisor|planner-ai-advisor|planner-sketch-to-plan|filter|generate-alt|configurator-smart-wizard|nav-search|studio-ai-generate|studio-ai-suggest|studio-ai-restyle):/i;
@@ -174,69 +192,39 @@ export async function createSupabaseRateLimitBackend(): Promise<RateLimitBackend
   return {
     async check(key, limit, windowMs) {
       try {
-        const now = Date.now();
-        const windowStart = now - windowMs;
-        const { data: rawData, error } = await supabase
-          .from("rate_limits")
-          .select("count, window_start")
-          .eq("key", key)
-          .maybeSingle();
-
-        const data = rawData as { count?: number | null; window_start?: number | null } | null;
-
+        // `consume_rate_limit` owns the whole reset/increment decision in one
+        // database statement, so concurrent server instances cannot overwrite
+        // one another's increments with a read-then-upsert race.
+        const rateLimitClient = supabase as unknown as RateLimitRpcClient;
+        const { data, error } = await rateLimitClient.rpc("consume_rate_limit", {
+          p_key: key,
+          p_limit: limit,
+          p_window_ms: windowMs,
+        });
         if (error) {
-          warnDistributedBackendDegraded("query error");
+          warnDistributedBackendDegraded(error.message ?? "RPC error");
           return memoryRateLimitOrFailClosed(key, limit, windowMs);
         }
 
-        let currentCount = 0;
-        let currentWindow = now;
-
+        const row = Array.isArray(data) ? data[0] : null;
         if (
-          data &&
-          typeof data.window_start === "number" &&
-          data.window_start > windowStart
+          !row ||
+          typeof row !== "object" ||
+          typeof (row as Partial<RateLimitRpcRow>).allowed !== "boolean" ||
+          typeof (row as Partial<RateLimitRpcRow>).count !== "number" ||
+          typeof (row as Partial<RateLimitRpcRow>).window_start !== "number"
         ) {
-          currentCount = Number(data.count) || 0;
-          currentWindow = data.window_start;
-        }
-
-        if (currentCount >= limit) {
-          return {
-            success: false,
-            limit,
-            remaining: 0,
-            reset: currentWindow + windowMs,
-          };
-        }
-
-        const nextCount = currentCount + 1;
-        const upsertPayload = {
-          key,
-          count: nextCount,
-          window_start: currentWindow,
-        } as { key: string; count: number; window_start: number };
-        // rate_limits table rows not present in generated supabase DB types (platform/drizzle or config/database/types); cast to allow upsert of known shape. Reason: runtime table for rate limiting. Owner: lib/rateLimit. Removal: when rate_limits added to schema + regen types.
-        type RateLimitsUpsertClient = {
-          upsert: (payload: {
-            key: string;
-            count: number;
-            window_start: number;
-          }) => Promise<{ error: unknown }>;
-        };
-        const rateLimitsTable = supabase.from("rate_limits") as unknown as RateLimitsUpsertClient;
-        const { error: upsertError } = await rateLimitsTable.upsert(upsertPayload);
-
-        if (upsertError) {
-          warnDistributedBackendDegraded("upsert error");
+          warnDistributedBackendDegraded("invalid RPC response");
           return memoryRateLimitOrFailClosed(key, limit, windowMs);
         }
+
+        const result = row as RateLimitRpcRow;
 
         return {
-          success: true,
+          success: result.allowed,
           limit,
-          remaining: limit - nextCount,
-          reset: currentWindow + windowMs,
+          remaining: Math.max(0, limit - result.count),
+          reset: result.window_start + windowMs,
         };
       } catch {
         warnDistributedBackendDegraded("unexpected check failure");

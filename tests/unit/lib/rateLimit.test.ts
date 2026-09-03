@@ -2,9 +2,9 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import type * as rateLimitType0 from "../../../site/lib/rateLimit";
 import { setNodeEnv } from "@/tests/helpers/setNodeEnv";
 
-const mockFrom = vi.fn();
+const mockRpc = vi.fn();
 const mockCreateClient = vi.fn().mockImplementation(() => ({
-  from: mockFrom,
+  rpc: mockRpc,
 }));
 
 vi.mock('@supabase/supabase-js', () => ({
@@ -97,24 +97,11 @@ describe('rateLimit', () => {
       process.env.SUPABASE_URL = 'https://supabase.co';
       process.env.SUPABASE_SERVICE_ROLE_KEY = 'srv-key';
 
-      const mockMaybeSingle = vi.fn();
-      const mockUpsert = vi.fn();
-
-      mockFrom.mockImplementation((_tableName: string) => {
-        const builder = {
-          select: vi.fn(),
-          eq: vi.fn(),
-          maybeSingle: mockMaybeSingle,
-          upsert: mockUpsert,
-        };
-        builder.select.mockReturnValue(builder);
-        builder.eq.mockReturnValue(builder);
-        return builder;
-      });
-
       // 1. Happy path: new request
-      mockMaybeSingle.mockResolvedValue({ data: null, error: null });
-      mockUpsert.mockResolvedValue({ error: null });
+      mockRpc.mockResolvedValue({
+        data: [{ allowed: true, count: 1, window_start: Date.now() }],
+        error: null,
+      });
 
       const backend = await rateLimitModule.createSupabaseRateLimitBackend();
       expect(mockCreateClient).toHaveBeenCalledWith('https://supabase.co', 'srv-key', expect.any(Object));
@@ -122,10 +109,15 @@ describe('rateLimit', () => {
       const res1 = await backend.check('user-5', 2, 60000);
       expect(res1.success).toBe(true);
       expect(res1.remaining).toBe(1);
+      expect(mockRpc).toHaveBeenCalledWith('consume_rate_limit', {
+        p_key: 'user-5',
+        p_limit: 2,
+        p_window_ms: 60000,
+      });
 
       // 2. Path: exceeding limit
-      mockMaybeSingle.mockResolvedValue({
-        data: { count: 2, window_start: Date.now() },
+      mockRpc.mockResolvedValue({
+        data: [{ allowed: false, count: 2, window_start: Date.now() }],
         error: null,
       });
 
@@ -133,7 +125,7 @@ describe('rateLimit', () => {
       expect(res2.success).toBe(false);
 
       // 3. Path: error fallback to memory rate limiter
-      mockMaybeSingle.mockResolvedValue({ data: null, error: { message: 'db error' } });
+      mockRpc.mockResolvedValue({ data: null, error: { message: 'db error' } });
       const res3 = await backend.check('user-5', 10, 60000);
       // fallback memory limit will succeed as count is reset or tracked locally
       expect(res3.success).toBe(true);

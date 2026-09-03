@@ -54,11 +54,13 @@ describe("audit-gate-skips", () => {
     expect(skipRe.test("describe.skip('x', () => {})")).toBe(true);
     expect(skipRe.test("test.skipIf(true)('x', () => {})")).toBe(true);
     expect(skipRe.test("test.fixme('x', () => {})")).toBe(true);
+    expect(skipRe.test("describe.runIf(hasDb)('x', () => {})")).toBe(true);
     expect(skipRe.test("test('ok', () => {})")).toBe(false);
   });
 
   it.each([
     ["test.skipIf(true)('conditional', () => {})", "contains-skip"],
+    ["describe.runIf(hasDb)('conditional', () => {})", "contains-skip"],
     ["testInfo.skip(true, 'browser condition')", "contains-test-info-skip"],
     ["test.only('focused', () => {})", "contains-focused-test"],
     ["/* istanbul" + " ignore next */ export const value = 1;", "contains-coverage-ignore"],

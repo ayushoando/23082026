@@ -3149,7 +3149,7 @@ const Planner = ({
         >
           <canvas ref={canvasElRef} data-testid="planner-canvas" />
         </div>
-        <Rulers fabricRef={fabricRef} scale={SCALE_PX_PER_MM} zoom={core.zoom} cursorMm={cursorMm} offset={{ x: 0, y: 0 }} />
+        <Rulers fabricRef={fabricRef} scale={SCALE_PX_PER_MM} zoom={core.zoom} cursorMm={cursorMm} />
         <PlannerAlignBar
           visible={flag("plannerAlignDistribute") && selectedIds.length >= 2}
           count={selectedIds.length}

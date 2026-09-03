@@ -627,9 +627,11 @@ describe("Feature: site-ui-content-links-audit, Property 5: Zero product-code mu
     let raw: string;
     try {
       raw = await readFile(manifestPath, "utf8");
-    } catch {
-      // No persisted run on disk in this environment
-      return;
+    } catch (error) {
+      throw new Error(
+        `Required Wave 0 run manifest is unreadable: ${manifestPath}`,
+        { cause: error },
+      );
     }
     const parsed: unknown = JSON.parse(raw);
 

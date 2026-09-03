@@ -24,6 +24,78 @@
       "reason": "Conditional profile/env guards: every test is assigned to a specific Playwright project (profile.project) so it skips on non-matching browsers; conflict/undo journeys skip when required env vars are absent. Skips fire only on unsupported environments or missing config, never as placeholders.",
       "expires": "2027-09-01",
       "replacementTest": "tests/e2e/planner-comprehensive-audit-browser.spec.ts — same file; skips are the guards, not placeholders"
+    },
+    {
+      "file": "tests/unit/platform/serviceRoleOnlyTables.db.test.ts",
+      "rule": "contains-skip",
+      "owner": "repository-owner",
+      "reason": "Admin and Products service-role smoke suites only register when their corresponding live database URL is configured.",
+      "expires": "2027-09-03",
+      "replacementTest": "Live Admin and Products database verification for the service-role-only table contract"
+    },
+    {
+      "file": "tests/unit/platform/plannerHandoffsRlsPolicy.test.ts",
+      "rule": "contains-skip",
+      "owner": "repository-owner",
+      "reason": "The planner_handoffs RLS smoke suite only registers when the live Admin database URL is configured.",
+      "expires": "2027-09-03",
+      "replacementTest": "Live Admin database verification for planner_handoffs owner-read policy"
+    },
+    {
+      "file": "tests/unit/platform/Planner/plannerSupabaseMutation.db.smoke.test.ts",
+      "rule": "contains-skip",
+      "owner": "repository-owner",
+      "reason": "The atomic Planner mutation smoke suite requires explicit Admin Supabase credentials.",
+      "expires": "2027-09-03",
+      "replacementTest": "Live Admin database verification for Planner atomic mutation"
+    },
+    {
+      "file": "tests/unit/features/site/contact/createCustomerQuery.db.smoke.test.ts",
+      "rule": "contains-skip",
+      "owner": "repository-owner",
+      "reason": "The customer query persistence smoke suite requires explicit Admin Supabase credentials.",
+      "expires": "2027-09-03",
+      "replacementTest": "Live Admin database verification for customer query persistence"
+    },
+    {
+      "file": "tests/unit/scripts/asset-cutover-r2.smoke.test.ts",
+      "rule": "contains-skip",
+      "owner": "repository-owner",
+      "reason": "The R2 clean-bucket smoke suite requires an explicitly configured bucket and credentials.",
+      "expires": "2027-09-03",
+      "replacementTest": "Live R2 verification for the asset cutover bucket"
+    },
+    {
+      "file": "tests/unit/app/api/customer-queries/route.db.smoke.test.ts",
+      "rule": "contains-skip",
+      "owner": "repository-owner",
+      "reason": "The live customer-query API smoke suite requires Admin Supabase credentials.",
+      "expires": "2027-09-03",
+      "replacementTest": "Live Admin database verification for the customer-query API route"
+    },
+    {
+      "file": "tests/unit/lib/Planner/projectsStore.supabase.db.smoke.test.ts",
+      "rule": "contains-skip",
+      "owner": "repository-owner",
+      "reason": "The Planner projects Supabase smoke suite requires Admin Supabase credentials.",
+      "expires": "2027-09-03",
+      "replacementTest": "Live Admin database verification for Planner projects persistence"
+    },
+    {
+      "file": "tests/unit/lib/Planner/handoff/createPlannerHandoff.db.smoke.test.ts",
+      "rule": "contains-skip",
+      "owner": "repository-owner",
+      "reason": "The Planner handoff persistence smoke suite requires Admin Supabase credentials.",
+      "expires": "2027-09-03",
+      "replacementTest": "Live Admin database verification for Planner handoff persistence"
+    },
+    {
+      "file": "tests/unit/lib/catalog/furnitureCatalogStore.supabase.db.smoke.test.ts",
+      "rule": "contains-skip",
+      "owner": "repository-owner",
+      "reason": "The furniture catalog Supabase smoke suite requires Admin Supabase credentials.",
+      "expires": "2027-09-03",
+      "replacementTest": "Live Admin database verification for furniture catalog persistence"
     }
   ]
 }

@@ -35,6 +35,17 @@ describe("editor primitives", () => {
     expect(onValueChange).toHaveBeenCalledWith(2);
   });
 
+  it("does not emit non-finite values while a number input is incomplete", () => {
+    const onValueChange = vi.fn();
+    render(<NumberStepper id="count" value={2} onValueChange={onValueChange} />);
+
+    fireEvent.change(screen.getByRole("spinbutton", { name: "Number" }), {
+      target: { value: "" },
+    });
+
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
+
   it("renders FOCSS panel and toolbar structure", () => {
     render(
       <Panel aria-label="Inspector">

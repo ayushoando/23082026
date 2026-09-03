@@ -27,6 +27,11 @@ describe("worker cache policy", () => {
 
   it("detects supabase session cookies", () => {
     expect(requestHasSessionCookie("sb-abc-auth-token=x")).toBe(true);
+    expect(
+      requestHasSessionCookie(
+        "sb-abc-auth-token.0=first; sb-abc-auth-token.1=second",
+      ),
+    ).toBe(true);
     expect(requestHasSessionCookie("theme=light")).toBe(false);
   });
 

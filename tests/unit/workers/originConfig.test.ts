@@ -46,6 +46,19 @@ describe("12.1 worker origin single source of truth", () => {
     expect(response.headers.get("strict-transport-security")).toBeTruthy();
   });
 
+  it("rejects protocol-relative paths before selecting an upstream origin", async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+
+    const response = await worker.fetch(makeRequest("//evil.example/steal"), {
+      VERCEL_ORIGIN: "https://origin.example",
+    });
+
+    expect(response.status).toBe(400);
+    expect(response.headers.get("x-oando-proxy")).toBe("invalid-path");
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
   it("builds the upstream URL from env.VERCEL_ORIGIN when configured", async () => {
     const fetchMock = vi.fn(async () => new Response("ok", { status: 200 }));
     vi.stubGlobal("fetch", fetchMock);

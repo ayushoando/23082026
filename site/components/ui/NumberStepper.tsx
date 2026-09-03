@@ -53,7 +53,12 @@ function NumberStepper({
         id={id}
         type="number"
         value={Number.isFinite(value) ? value : ""}
-        onChange={(e) => emit(clamp(Number(e.target.value)))}
+        onChange={(e) => {
+          const nextValue = e.currentTarget.valueAsNumber;
+          if (Number.isFinite(nextValue)) {
+            emit(clamp(nextValue));
+          }
+        }}
       />
       <Button
         type="button"

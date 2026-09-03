@@ -8,10 +8,9 @@ type RulersProps = {
   scale: number;
   zoom: number;
   cursorMm?: { x: number; y: number };
-  offset?: { x: number; y: number };
 };
 
-export const Rulers = ({ fabricRef, scale, zoom, cursorMm, offset }: RulersProps) => {
+export const Rulers = ({ fabricRef, scale, zoom, cursorMm }: RulersProps) => {
   const topRef = useRef<HTMLCanvasElement>(null);
   const leftRef = useRef<HTMLCanvasElement>(null);
   const cornerRef = useRef<HTMLDivElement>(null);
@@ -111,26 +110,28 @@ export const Rulers = ({ fabricRef, scale, zoom, cursorMm, offset }: RulersProps
         lctx.fillRect(0, cy - 0.5, 22, 1);
       }
     };
-    draw();
-    const onResize = () => draw();
-    window.addEventListener("resize", onResize);
     let raf = 0;
-    const loop = () => {
-      draw();
-      raf = requestAnimationFrame(loop);
+    const scheduleDraw = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(draw);
     };
-    raf = requestAnimationFrame(loop);
+    const canvas = fabricRef.current;
+    scheduleDraw();
+    const onResize = () => scheduleDraw();
+    window.addEventListener("resize", onResize);
+    canvas?.on("after:render", scheduleDraw);
     return () => {
       window.removeEventListener("resize", onResize);
+      canvas?.off("after:render", scheduleDraw);
       cancelAnimationFrame(raf);
     };
-  }, [fabricRef, scale, zoom, cursorMm, offset]);
+  }, [fabricRef, scale, zoom, cursorMm]);
 
   return (
     <>
-      <div className="ruler-corner" ref={cornerRef} />
-      <canvas className="ruler ruler--h" ref={topRef} />
-      <canvas className="ruler ruler--v" ref={leftRef} />
+      <div className="ruler-corner" ref={cornerRef} aria-hidden="true" />
+      <canvas className="ruler ruler--h" ref={topRef} aria-hidden="true" />
+      <canvas className="ruler ruler--v" ref={leftRef} aria-hidden="true" />
     </>
   );
 };

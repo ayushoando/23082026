@@ -93,4 +93,28 @@ describe("scan_secrets (name-mirror)", () => {
       fs.rmSync(tmp, { recursive: true, force: true });
     }
   });
+
+  it("does not allow an env reference to hide a real secret on the same line", () => {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "scan-secrets-env-reference-"));
+    fs.writeFileSync(
+      path.join(tmp, "readme.md"),
+      "const token = 'CLOUDFLARE_API_TOKEN=shpat_12345678901234567890123456789012'; // process.env fallback\n",
+      "utf8",
+    );
+    try {
+      let code = 0;
+      try {
+        execFileSync(process.execPath, [scriptPath], {
+          cwd: tmp,
+          encoding: "utf8",
+          stdio: ["ignore", "pipe", "pipe"],
+        });
+      } catch (err) {
+        code = (err as { status?: number }).status ?? 1;
+      }
+      expect(code).toBe(1);
+    } finally {
+      fs.rmSync(tmp, { recursive: true, force: true });
+    }
+  });
 });
