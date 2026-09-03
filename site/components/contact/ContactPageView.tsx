@@ -1,13 +1,15 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { MapPin, Phone, Envelope as Mail } from "@phosphor-icons/react";
+import { ArrowRight, Envelope as Mail, MapPin, Phone, WhatsappLogo } from "@phosphor-icons/react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
 import { CustomerQueryForm } from "@/components/contact/CustomerQueryForm";
 import { HomeSection, HomeSectionInner } from "@/components/home/layout";
+import { OfficeMap } from "@/components/shared/OfficeMap";
 import { EditorialHeroMedia } from "@/components/site/EditorialHeroMedia";
 import { MarketingCtaLink } from "@/components/ui/MarketingCtaLink";
 import { CONTACT_HERO_IMAGE, CONTACT_HERO_MEDIA } from "@/features/site/data/contactPage";
@@ -204,7 +206,29 @@ export function ContactPageView({
                 <span className="text-accent-italic-on-dark">{heroTitleAccent}</span>
               </span>
             </h1>
-
+            <p
+              data-contact-hero-reveal
+              className="contact-hero__lead text-inverse-body mt-4 max-w-2xl"
+            >
+              Share your team size, city, and scope. Our workspace planning desk reviews your requirements and follows up with tailored options and direct manufacturer pricing.
+            </p>
+            <div data-contact-hero-reveal className="contact-hero__actions mt-6 flex flex-wrap gap-3">
+              <a
+                href="#enquiry-form"
+                className="btn-primary inline-flex items-center justify-center px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors min-h-11"
+              >
+                Start Project Brief
+              </a>
+              <a
+                href="https://wa.me/919031022875?text=Hi%2C%20I%20would%20like%20to%20consult%20on%20an%20office%20furniture%20project."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-outline-light inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors min-h-11 text-inverse border border-white/20 hover:bg-white/10"
+              >
+                <WhatsappLogo size={18} weight="fill" className="text-emerald-400" />
+                WhatsApp Consultation
+              </a>
+            </div>
           </div>
         </div>
 
@@ -218,7 +242,26 @@ export function ContactPageView({
       <HomeSection variant="white" spacing="sm" className="border-t-0">
         <HomeSectionInner>
           <section ref={mainRef} className="contact-main" data-testid="contact-main">
+            {/* Left Column: Media + Structured Channels */}
             <div className="contact-summary">
+              {/* High-res verified installation / showroom media */}
+              <div className="contact-photo-card" data-testid="contact-photo-card">
+                <Image
+                  src="/assets/marketing/clients/Titan/titan-hero.webp"
+                  alt="One and Only workplace installation for Titan Corporate"
+                  fill
+                  priority
+                  unoptimized
+                  sizes="(min-width: 56rem) 45vw, 100vw"
+                  className="contact-photo-card__img"
+                />
+                <div className="contact-photo-card__scrim" aria-hidden="true" />
+                <div className="contact-photo-card__caption">
+                  <span className="contact-photo-card__badge">Verified Installation</span>
+                  <p className="contact-photo-card__title">Titan Corporate Headquarters · Patna</p>
+                </div>
+              </div>
+
               <div className="contact-summary__intro">
                 <p className="home-kicker">{sectionTitle}</p>
                 <h2 className="home-heading mt-2">{introTitle}</h2>
@@ -298,45 +341,134 @@ export function ContactPageView({
                   </div>
                 </div>
               </div>
+
+              {/* Direct WhatsApp Consultation Banner */}
+              <a
+                href="https://wa.me/919031022875?text=Hi%2C%20I%20would%20like%20to%20consult%20on%20an%20office%20furniture%20project."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="contact-whatsapp-card group"
+              >
+                <div className="contact-whatsapp-card__icon-wrap" aria-hidden="true">
+                  <WhatsappLogo size={26} weight="fill" className="text-white" />
+                </div>
+                <div className="contact-whatsapp-card__copy">
+                  <span className="contact-whatsapp-card__title">Direct WhatsApp Consultation</span>
+                  <span className="contact-whatsapp-card__detail">Fastest response · Connect directly with our planning lead</span>
+                </div>
+                <ArrowRight
+                  size={18}
+                  weight="bold"
+                  className="contact-whatsapp-card__arrow group-hover:translate-x-1 transition-transform text-primary"
+                  aria-hidden="true"
+                />
+              </a>
             </div>
 
+            {/* Right Column: Polished Enquiry Form Card */}
             <div
+              id="enquiry-form"
               className="contact-form-band"
               data-testid="contact-form-band"
               data-contact-form-reveal
             >
-              <div className="contact-quick-desk" data-testid="contact-quick-desk">
-                <p className="home-kicker">{quickDeskKicker}</p>
-                <h2 className="contact-form-band__title">{quickDeskTitle}</h2>
-                <p className="page-copy-sm text-body">{quickDeskDescription}</p>
-                <div className="contact-quick-desk__actions">
-                  <MarketingCtaLink
-                    href="/downloads"
-                    label={quickDeskPrimaryCta}
-                    surface="contact-quick-desk"
-                    variant="outline"
-                    className="w-full justify-center sm:w-auto"
-                  >
-                    {quickDeskPrimaryCta}
-                  </MarketingCtaLink>
-                  <MarketingCtaLink
-                    href="/planning"
-                    label={quickDeskSecondaryCta}
-                    surface="contact-quick-desk"
-                    variant="primary"
-                    className="w-full justify-center sm:w-auto"
-                  >
-                    {quickDeskSecondaryCta}
-                  </MarketingCtaLink>
+              <div className="contact-form-card">
+                <div className="contact-quick-desk" data-testid="contact-quick-desk">
+                  <p className="home-kicker">{quickDeskKicker}</p>
+                  <h2 className="contact-form-band__title">{quickDeskTitle}</h2>
+                  <p className="page-copy-sm text-body">{quickDeskDescription}</p>
+                  <div className="contact-quick-desk__actions">
+                    <MarketingCtaLink
+                      href="/downloads"
+                      label={quickDeskPrimaryCta}
+                      surface="contact-quick-desk"
+                      variant="outline"
+                      className="w-full justify-center sm:w-auto"
+                    >
+                      {quickDeskPrimaryCta}
+                    </MarketingCtaLink>
+                    <MarketingCtaLink
+                      href="/planning"
+                      label={quickDeskSecondaryCta}
+                      surface="contact-quick-desk"
+                      variant="primary"
+                      className="w-full justify-center sm:w-auto"
+                    >
+                      {quickDeskSecondaryCta}
+                    </MarketingCtaLink>
+                  </div>
                 </div>
-              </div>
-              <div>
-                <CustomerQueryForm intent={intent} source={source} />
+
+                <div className="contact-form-card__form-wrap mt-6">
+                  <CustomerQueryForm intent={intent} source={source} />
+                </div>
               </div>
             </div>
           </section>
         </HomeSectionInner>
       </HomeSection>
+
+      {/* Office location & map section */}
+      <HomeSection variant="soft" spacing="md" borderY>
+        <HomeSectionInner>
+          <OfficeMap heading="Patna Headquarters & Showroom" />
+        </HomeSectionInner>
+      </HomeSection>
+
+      {/* Next Step Route CTA band */}
+      <section
+        className="about-cta-ink contact-next-steps"
+        aria-labelledby="contact-next-steps-heading"
+        data-testid="contact-next-steps"
+      >
+        <div className="home-shell-xl">
+          <div className="contact-next-steps__header">
+            <p className="typ-label text-inverse-muted">Next steps</p>
+            <h2 id="contact-next-steps-heading" className="home-heading mt-2 text-inverse">
+              Explore installations, verified clients &amp;{" "}
+              <span className="text-accent-italic-on-dark">planning tools</span>
+            </h2>
+          </div>
+
+          <div className="contact-next-steps__grid mt-8">
+            <Link href="/portfolio" className="contact-step-card group">
+              <span className="contact-step-card__badge">Installs &amp; Proof</span>
+              <h3 className="contact-step-card__title">Completed Portfolio</h3>
+              <p className="contact-step-card__desc">
+                High-resolution photography from over 120 turnkey office installations across India.
+              </p>
+              <div className="contact-step-card__link">
+                <span>Browse portfolio</span>
+                <ArrowRight size={16} weight="bold" className="group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
+
+            <Link href="/clients" className="contact-step-card group">
+              <span className="contact-step-card__badge">Client Roster</span>
+              <h3 className="contact-step-card__title">Verified Clients</h3>
+              <p className="contact-step-card__desc">
+                Curated directory across government, enterprise, banking, and education sectors.
+              </p>
+              <div className="contact-step-card__link">
+                <span>View client directory</span>
+                <ArrowRight size={16} weight="bold" className="group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
+
+            <Link href="/planner" className="contact-step-card group">
+              <span className="contact-step-card__badge">Spatial CAD</span>
+              <h3 className="contact-step-card__title">Oando Planner</h3>
+              <p className="contact-step-card__desc">
+                Lay out workstation clusters, meeting rooms, and task seating directly on a floor grid.
+              </p>
+              <div className="contact-step-card__link">
+                <span>Launch planner</span>
+                <ArrowRight size={16} weight="bold" className="group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
+          </div>
+        </div>
+      </section>
     </>
   );
 }

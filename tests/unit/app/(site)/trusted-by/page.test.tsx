@@ -280,7 +280,7 @@ describe("app/(site)/trusted-by/page.tsx", () => {
     const badges = container.querySelectorAll(".client-badge");
     expect(badges).toHaveLength(TRUSTED_BY_CLIENTS.length);
     expect(screen.getByText("Titan")).toBeInTheDocument();
-    expect(screen.getByText("HDFC")).toBeInTheDocument();
+    expect(screen.getByText("HDFC Bank")).toBeInTheDocument();
 
     // Quotes section
     expect(screen.getByTestId("trusted-by-quotes")).toBeInTheDocument();

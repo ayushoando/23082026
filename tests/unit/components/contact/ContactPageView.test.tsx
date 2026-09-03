@@ -46,6 +46,8 @@ vi.mock("@phosphor-icons/react", () => ({
   MapPin: () => <span data-testid="mappin-icon" />,
   Phone: () => <span data-testid="phone-icon" />,
   Envelope: () => <span data-testid="envelope-icon" />,
+  WhatsappLogo: () => <span data-testid="whatsapp-icon" />,
+  ArrowRight: () => <span data-testid="arrow-right-icon" />,
 }));
 
 const contact = enMessages.contact as {

@@ -2,7 +2,6 @@ import {
   PLANNER_MARKETING_SITEMAP_PATHS,
   PUBLIC_INDEXABLE_STATIC_PATHS,
   SOLUTION_CATEGORY_IDS,
-  SOLUTION_CATEGORY_SITEMAP_PATHS,
 } from "@/features/site/data/routeClassification";
 import { SOLUTION_CATEGORIES } from "@/features/site/data/solutionsPage";
 import { getCatalogCategoryLabel } from "@/lib/catalog/site/categories";
@@ -61,9 +60,10 @@ const STATIC_PATH_LABELS: Record<string, string> = {
   "/": "Home",
   "/products": "All products",
   "/solutions": "Solutions overview",
-  "/about": "About",
+  "/about": "About Us",
   "/portfolio": "Portfolio",
-  "/contact": "Contact",
+  "/clients": "Clients",
+  "/contact": "Contact Us",
   "/service": "Service & after-sales",
   "/showrooms": "Showrooms",
   "/sustainability": "Sustainability",
@@ -114,6 +114,7 @@ const ADMIN_PATH_LABELS: Record<string, string> = {
 const COMPANY_SERVICE_PATHS = [
   "/about",
   "/portfolio",
+  "/clients",
   "/contact",
   "/service",
   "/showrooms",
@@ -229,11 +230,6 @@ export function buildSitemapSections(): SitemapSection[] {
     ...productCategoryLinks,
   ];
 
-  const solutionLinks: SitemapLink[] = [
-    linkForPath("/solutions"),
-    ...SOLUTION_CATEGORY_SITEMAP_PATHS.map((path) => linkForPath(path)),
-  ];
-
   const plannerLinks: SitemapLink[] = PLANNER_MARKETING_SITEMAP_PATHS.map((path) =>
     linkForPath(path),
   );
@@ -250,7 +246,6 @@ export function buildSitemapSections(): SitemapSection[] {
   // are never linked from the public page (they are noindex + auth-guarded).
   return [
     { heading: "Products & catalog", links: productsLinks },
-    { heading: "Solutions", links: solutionLinks },
     { heading: "Planner", links: plannerLinks },
     { heading: "Company & service", links: companyLinks },
     { heading: "Legal & policies", links: legalLinks },

@@ -461,8 +461,9 @@ export function TrustedByPageView({
             }
             description={ctaDescription}
             actions={[
-              { href: "/clients", label: "Sector-wise clients", variant: "primary" },
+              { href: "/contact", label: ctaPrimary, variant: "primary" },
               { href: "/portfolio", label: ctaSecondary, variant: "outline-light" },
+              { href: "/clients", label: "Sector-wise clients", variant: "outline-light" },
               { href: "/planning", label: "Workplace planning", variant: "outline-light" },
             ]}
           />

@@ -25,12 +25,12 @@ describe("htmlSitemap buildSitemapSections", () => {
     }
   });
 
-  it("includes planner marketing and solution category sitemap paths", () => {
+  it("includes planner marketing sitemap paths and excludes solutions", () => {
     for (const path of PLANNER_MARKETING_SITEMAP_PATHS) {
       expect(hrefs).toContain(path);
     }
     for (const path of SOLUTION_CATEGORY_SITEMAP_PATHS) {
-      expect(hrefs).toContain(path);
+      expect(hrefs).not.toContain(path);
     }
   });
 
@@ -71,10 +71,9 @@ describe("htmlSitemap buildSitemapSections", () => {
     }
   });
 
-  it("organizes links into five public sections (no admin)", () => {
+  it("organizes links into four public sections (no admin)", () => {
     expect(sections.map((section) => section.heading)).toEqual([
       "Products & catalog",
-      "Solutions",
       "Planner",
       "Company & service",
       "Legal & policies",
@@ -87,9 +86,9 @@ describe("htmlSitemap buildSitemapSections", () => {
   });
 
   it("documents conceptual product/solution category overlaps by slug", () => {
+    // Public sections no longer have a Solutions section (consolidated into Products)
     const overlaps = getSitemapConceptualOverlaps(sections);
-    expect(overlaps).toHaveLength(SOLUTION_CATEGORY_IDS.length);
-    expect(overlaps.map((overlap) => overlap.slug)).toEqual([...SOLUTION_CATEGORY_IDS]);
+    expect(overlaps).toEqual([]);
   });
 
   it("exports CSV rows for public links plus admin routes (ops tracking only)", () => {

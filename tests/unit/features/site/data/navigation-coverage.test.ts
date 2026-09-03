@@ -59,8 +59,8 @@ describe("SITE_NAV_LINKS", () => {
     expect(match?.href).toBe("/products");
   });
 
-  it("contains About page", () => {
-    const match = SITE_NAV_LINKS.find((l) => l.label === "About");
+  it("contains About Us page", () => {
+    const match = SITE_NAV_LINKS.find((l) => l.label === "About Us");
     expect(match).toBeDefined();
     expect(match?.href).toBe("/about");
   });
@@ -77,10 +77,10 @@ describe("SITE_NAV_LINKS", () => {
     expect(match?.href).toBe("/planner");
   });
 
-  it("contains Solutions page", () => {
-    const match = SITE_NAV_LINKS.find((l) => l.label === "Solutions");
+  it("contains Clients page", () => {
+    const match = SITE_NAV_LINKS.find((l) => l.label === "Clients");
     expect(match).toBeDefined();
-    expect(match?.href).toBe("/solutions");
+    expect(match?.href).toBe("/clients");
   });
 
   it("Products opens mega menu (hasMega)", () => {
@@ -96,20 +96,19 @@ describe("SITE_NAV_LINKS", () => {
     expect(new Set(labels).size).toBe(labels.length);
   });
 
-  it("uses a 9-link primary header (no More overflow)", () => {
+  it("uses an 8-link primary header (no More overflow)", () => {
     expect(SITE_HEADER_PRIMARY_LINKS.map((l) => l.label)).toEqual([
       "Products",
-      "Solutions",
       "Portfolio",
-      "Planner",
-      "About",
-      "Contact",
+      "Clients",
       "Trusted By",
-      "Sustainability",
+      "Planner",
+      "About Us",
+      "Contact Us",
       "FAQ",
     ]);
     expect(SITE_HEADER_MORE_LINKS).toEqual([]);
-    expect(SITE_HEADER_PRIMARY_LINKS.length + SITE_HEADER_MORE_LINKS.length).toBeLessThanOrEqual(9);
+    expect(SITE_HEADER_PRIMARY_LINKS.length + SITE_HEADER_MORE_LINKS.length).toBeLessThanOrEqual(8);
     expect(SITE_HEADER_PRIMARY_LINKS).toEqual(SITE_NAV_LINKS);
     const products = SITE_NAV_LINKS.find((l) => l.label === "Products");
     expect(products && "hasMega" in products && products.hasMega).toBe(true);
@@ -226,7 +225,6 @@ describe("SITE_FOOTER_NAV", () => {
     const products = SITE_FOOTER_NAV.find((section) => section.heading === "Products");
     expect(products?.links.map((link) => link.label)).toEqual([
       "All Products",
-      "Solutions",
       "Planner",
       "Planner help",
     ]);
@@ -234,6 +232,7 @@ describe("SITE_FOOTER_NAV", () => {
     expect(company?.links.map((link) => link.label)).toEqual([
       "About Us",
       "Portfolio",
+      "Clients",
       "Trusted By",
       "Sustainability",
       "Showrooms",

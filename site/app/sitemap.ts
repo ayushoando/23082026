@@ -3,7 +3,6 @@ import { buildProductStaticParams, buildCatalogLastModifiedByPath } from "@/lib/
 import {
   PLANNER_MARKETING_SITEMAP_PATHS,
   PUBLIC_INDEXABLE_STATIC_PATHS,
-  SOLUTION_CATEGORY_SITEMAP_PATHS,
 } from "@/features/site/data/routeClassification";
 import { buildCanonicalUrl, sanitizeCanonicalPath } from "@/features/site/data/seo";
 import { SITE_URL } from "@/lib/siteUrl";
@@ -15,7 +14,6 @@ const STATIC_SITEMAP_PATHS = Array.from(
   new Set<string>([
     ...PUBLIC_INDEXABLE_STATIC_PATHS,
     ...PLANNER_MARKETING_SITEMAP_PATHS,
-    ...SOLUTION_CATEGORY_SITEMAP_PATHS,
   ]),
 );
 

@@ -1,7 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef, useState, type RefObject } from "react";
+import { ArrowRight, Briefcase, Leaf, Question, Storefront } from "@phosphor-icons/react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
@@ -124,6 +126,45 @@ function useBodyReveal(scopeRef: RefObject<HTMLDivElement | null>) {
     { scope: scopeRef },
   );
 }
+
+const COMPANY_HUB_CARDS = [
+  {
+    title: "Sustainability & Circularity",
+    description:
+      "Long-life materials, Eco-Score certified products, and repairable component architecture designed to minimize workplace waste.",
+    href: "/sustainability",
+    cta: "Explore sustainability",
+    badge: "Eco-Grade",
+    icon: Leaf,
+  },
+  {
+    title: "Showrooms & Experience",
+    description:
+      "Walk through full-floor mockup layouts, test ergonomic task seating, and inspect commercial joinery finishes in person.",
+    href: "/showrooms",
+    cta: "Plan showroom visit",
+    badge: "Patna Flagship",
+    icon: Storefront,
+  },
+  {
+    title: "Careers & Culture",
+    description:
+      "Join an energetic team of workplace consultants, CAD planning engineers, project managers, and furniture craftspeople.",
+    href: "/career",
+    cta: "View open positions",
+    badge: "We're hiring",
+    icon: Briefcase,
+  },
+  {
+    title: "FAQ & Procurement Guide",
+    description:
+      "Direct answers regarding bulk institutional orders, freight timelines, warranty terms, and custom modular dimensions.",
+    href: "/faq",
+    cta: "Read client FAQ",
+    badge: "Knowledge Base",
+    icon: Question,
+  },
+] as const;
 
 export function AboutPageView({
   heroKicker,
@@ -333,6 +374,71 @@ export function AboutPageView({
         </HomeSection>
 
         <HomeSection variant="white" spacing="md" className="border-t-0">
+          <HomeSectionInner>
+            <section
+              className="about-hub-section"
+              data-testid="about-hub-section"
+              data-about-reveal-group
+            >
+              <div data-about-scroll-reveal className="about-hub-section__header">
+                <p className="home-kicker">Company &amp; Operations</p>
+                <h2 className="home-heading mt-2">
+                  Operational reach &amp;{" "}
+                  <span className="text-accent-italic">capabilities</span>
+                </h2>
+                <p className="about-story__lead mt-3 max-w-2xl">
+                  Explore our environmental standards, showroom experience centres, talent opportunities, and comprehensive procurement knowledge base.
+                </p>
+              </div>
+
+              <div className="about-hub-grid">
+                {COMPANY_HUB_CARDS.map((card) => {
+                  const Icon = card.icon;
+                  return (
+                    <Link
+                      key={card.href}
+                      href={card.href}
+                      className="about-hub-card group"
+                      data-about-scroll-reveal
+                    >
+                      <div>
+                        <div className="about-hub-card__top">
+                          <div className="about-hub-card__icon-wrap" aria-hidden="true">
+                            <Icon size={24} weight="duotone" className="text-primary" />
+                          </div>
+                          <span className="about-hub-card__badge">{card.badge}</span>
+                        </div>
+
+                        <div className="about-hub-card__body">
+                          <h3 className="about-hub-card__title">
+                            {card.title}
+                          </h3>
+                          <p className="about-hub-card__desc">
+                            {card.description}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="about-hub-card__footer">
+                        <span className="about-hub-card__cta">
+                          {card.cta}
+                        </span>
+                        <ArrowRight
+                          size={16}
+                          weight="bold"
+                          className="about-hub-card__arrow transition-transform duration-200 group-hover:translate-x-1"
+                          aria-hidden="true"
+                        />
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </section>
+          </HomeSectionInner>
+        </HomeSection>
+
+        <HomeSection variant="soft" spacing="md" borderY>
           <HomeSectionInner>
             <OfficeMap heading="Patna office" />
           </HomeSectionInner>

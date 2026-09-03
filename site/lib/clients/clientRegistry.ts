@@ -460,7 +460,7 @@ const ADDITIONAL_SOURCE_CLIENT_RECORDS: SourceClientRecord[] = [
   source("Dalmia Bharat Cement", "corporates-multinationals", {
     canonicalId: "dalmia-bharat-cement",
   }), // @review
-  source("HDFC", "financial-services", {
+  source("HDFC Bank", "financial-services", {
     canonicalId: "hdfc-bank",
     logoPath: "/assets/marketing/client-logos/hdfc-limited.jpg",
   }), // @review — preserve separately from HDFC Limited.
@@ -642,7 +642,7 @@ const CANONICAL_OVERRIDES: Readonly<
     displayName: "All India Institute of Medical Sciences (AIIMS)",
     sectorTab: "education-social-impact",
   },
-  "hdfc-bank": { displayName: "HDFC", sectorTab: "financial-services" },
+  "hdfc-bank": { displayName: "HDFC Bank", sectorTab: "financial-services" },
 };
 
 export const CURATED_LOGO_CLIENT_IDS = [

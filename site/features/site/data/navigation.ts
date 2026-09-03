@@ -6,17 +6,16 @@ import { PRODUCT_SUITE } from "@/features/site/data/productSuite";
  * Products opens the category mega menu (desktop) / accordion (mobile).
  * Secondary destinations live as direct footer links (no "More" dropdown).
  */
-/** Header destinations: 9 max. More is unused while the primary list is at that cap. */
+/** Header destinations: 8 clean links as per global standard. */
 export const SITE_NAV_LINKS = [
   { label: "Products", href: "/products", hasMega: true },
-  { label: "Solutions", href: "/solutions" },
   { label: "Portfolio", href: "/portfolio" },
+  { label: "Clients", href: "/clients" },
+  { label: "Trusted By", href: "/trusted-by" },
   /** Marketing planner landing (/planner). */
   { label: "Planner", href: PRODUCT_SUITE.planner.routes.landing },
-  { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
-  { label: "Trusted By", href: "/trusted-by" },
-  { label: "Sustainability", href: "/sustainability" },
+  { label: "About Us", href: "/about" },
+  { label: "Contact Us", href: "/contact" },
   { label: "FAQ", href: "/faq" },
 ] as const;
 
@@ -84,8 +83,8 @@ export const SITE_NAV_FEATURED_CARDS = [
 
 export const SITE_NAV_SEARCH_FALLBACK_LINKS = [
   { href: "/products", label: "All Products" },
-  { href: "/solutions", label: "Solutions" },
   { href: "/portfolio", label: "Portfolio" },
+  { href: "/clients", label: "Clients" },
   { href: PRODUCT_SUITE.planner.routes.landing, label: "Planner" },
   { href: PRODUCT_SUITE.planner.routes.help, label: "Planner help" },
   { href: "/trusted-by", label: "Trusted By" },
@@ -129,7 +128,6 @@ export const SITE_FOOTER_NAV = buildFooterNav([
     heading: "Products",
     links: [
       { href: "/products", label: "All Products" },
-      { href: "/solutions", label: "Solutions" },
       { href: PRODUCT_SUITE.planner.routes.landing, label: "Planner" },
       { href: PRODUCT_SUITE.planner.routes.help, label: "Planner help" },
     ],
@@ -139,6 +137,7 @@ export const SITE_FOOTER_NAV = buildFooterNav([
     links: [
       { href: "/about", label: "About Us" },
       { href: "/portfolio", label: "Portfolio" },
+      { href: "/clients", label: "Clients" },
       { href: "/trusted-by", label: "Trusted By" },
       { href: "/sustainability", label: "Sustainability" },
       { href: "/showrooms", label: "Showrooms" },

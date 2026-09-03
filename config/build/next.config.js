@@ -88,6 +88,10 @@ const nextConfig = {
   async redirects() {
     return [
       // Hard 308/301 for crawlers — do not rely on page-level redirect() (soft 200 in dev).
+      { source: "/solutions", destination: "/products/", permanent: true },
+      { source: "/solutions/", destination: "/products/", permanent: true },
+      { source: "/solutions/:category", destination: "/products/:category/", permanent: true },
+      { source: "/solutions/:category/", destination: "/products/:category/", permanent: true },
       { source: "/catalog", destination: "/downloads/", permanent: true },
       { source: "/catalog/", destination: "/downloads/", permanent: true },
       { source: "/brochure", destination: "/downloads/", permanent: true },

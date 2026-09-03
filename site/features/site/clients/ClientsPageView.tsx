@@ -124,7 +124,7 @@ export async function ClientsPageView() {
               },
               {
                 href: "/contact",
-                label: "Contact sales",
+                label: "Contact us",
                 variant: "outline-light",
               },
             ]}

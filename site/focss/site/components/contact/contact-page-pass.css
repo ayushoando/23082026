@@ -236,3 +236,198 @@
   padding-block-start: var(--editorial-hero-follow-gap);
   padding-block-end: var(--section-space-md);
 }
+
+/* ── Editorial Photo Card ── */
+.contact-photo-card {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  aspect-ratio: 16 / 10;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-panel);
+  background: var(--surface-muted);
+}
+
+.contact-photo-card__img {
+  object-fit: cover;
+  object-position: center;
+}
+
+.contact-photo-card__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, color-mix(in srgb, black 80%, transparent) 100%);
+  pointer-events: none;
+}
+
+.contact-photo-card__caption {
+  position: absolute;
+  bottom: 0.85rem;
+  left: 1rem;
+  right: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  z-index: 1;
+}
+
+.contact-photo-card__badge {
+  font-size: var(--type-label-size);
+  font-weight: var(--font-weight-copy-semibold);
+  letter-spacing: var(--type-letter-label-wide);
+  text-transform: uppercase;
+  color: var(--color-bronze-300);
+}
+
+.contact-photo-card__title {
+  margin: 0;
+  font-size: var(--type-small-size);
+  font-weight: var(--font-weight-copy-medium);
+  color: color-mix(in srgb, var(--color-white-50) 95%, transparent);
+  line-height: 1.4;
+}
+
+/* ── WhatsApp Consultation Card ── */
+.contact-whatsapp-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-xl);
+  background: color-mix(in srgb, var(--color-whatsapp) 9%, var(--surface-card));
+  border: 1px solid color-mix(in srgb, var(--color-whatsapp) 32%, var(--border-soft));
+  text-decoration: none;
+  transition:
+    transform var(--motion-base) var(--ease-standard),
+    border-color var(--motion-base) var(--ease-standard),
+    box-shadow var(--motion-base) var(--ease-standard);
+}
+
+.contact-whatsapp-card:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--color-whatsapp-hover) 60%, transparent);
+  box-shadow: var(--shadow-panel);
+}
+
+.contact-whatsapp-card__icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex-shrink: 0;
+  border-radius: var(--radius-lg);
+  background: var(--color-whatsapp);
+}
+
+.contact-whatsapp-card__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  flex: 1 1 auto;
+}
+
+.contact-whatsapp-card__title {
+  font-size: var(--type-body-size);
+  font-weight: var(--font-weight-copy-semibold);
+  color: var(--text-heading);
+}
+
+.contact-whatsapp-card__detail {
+  font-size: var(--type-small-size);
+  color: var(--text-body);
+  line-height: 1.4;
+}
+
+/* ── Form Card ── */
+.contact-form-card {
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-soft);
+  background: var(--surface-card);
+  padding: clamp(1.25rem, 2.5vw, 2rem);
+  box-shadow: var(--shadow-panel);
+}
+
+/* ── Next Step Route CTA Band ── */
+.contact-next-steps {
+  padding-block: clamp(2.5rem, 5vw, 4rem);
+}
+
+.contact-next-steps__header {
+  max-width: 42rem;
+}
+
+.contact-next-steps__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+@media (min-width: 48rem) {
+  .contact-next-steps__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.contact-step-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 13rem;
+  padding: clamp(1.25rem, 2vw, 1.65rem);
+  border-radius: var(--radius-xl);
+  border: 1px solid color-mix(in srgb, var(--color-white-50) 12%, transparent);
+  background: color-mix(in srgb, var(--color-white-50) 4%, transparent);
+  text-decoration: none;
+  color: var(--text-inverse);
+  transition:
+    transform var(--motion-base) var(--ease-standard),
+    border-color var(--motion-base) var(--ease-standard),
+    background var(--motion-base) var(--ease-standard);
+}
+
+.contact-step-card:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--color-white-50) 30%, transparent);
+  background: color-mix(in srgb, var(--color-white-50) 8%, transparent);
+}
+
+.contact-step-card__badge {
+  display: block;
+  font-size: var(--type-label-size);
+  font-weight: var(--font-weight-copy-semibold);
+  letter-spacing: var(--type-letter-label-wide);
+  text-transform: uppercase;
+  color: var(--color-bronze-300);
+  margin-bottom: 0.75rem;
+}
+
+.contact-step-card__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--type-body-lg-size);
+  font-weight: var(--font-weight-display-regular, 500);
+  color: var(--text-inverse);
+}
+
+.contact-step-card__desc {
+  margin: 0.5rem 0 0;
+  font-size: var(--type-small-size);
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--color-white-50) 75%, transparent);
+}
+
+.contact-step-card__link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid color-mix(in srgb, var(--color-white-50) 10%, transparent);
+  font-size: var(--type-label-size);
+  font-weight: var(--font-weight-copy-semibold);
+  letter-spacing: var(--type-letter-label);
+  text-transform: uppercase;
+  color: var(--color-bronze-200);
+}

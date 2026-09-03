@@ -31,8 +31,10 @@ describe('sitemap.ts', () => {
       expect(urls.some((url) => url.includes(`${path}/`) || url.endsWith(path))).toBe(true);
     }
     for (const path of SOLUTION_CATEGORY_SITEMAP_PATHS) {
-      expect(urls.some((url) => url.includes(`${path}/`) || url.endsWith(path))).toBe(true);
+      expect(urls.some((url) => url.includes(`${path}/`) || url.endsWith(path))).toBe(false);
     }
+    expect(urls.some((url) => url.includes('/clients/') || url.endsWith('/clients'))).toBe(true);
+    expect(urls.some((url) => url.includes('/solutions/'))).toBe(false);
 
     expect(urls.some((url) => url.includes('/quote-cart/'))).toBe(false);
     expect(urls.some((url) => url.includes('/tracking/'))).toBe(false);
