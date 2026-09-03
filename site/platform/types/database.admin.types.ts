@@ -863,6 +863,24 @@ export type Database = {
         }
         Relationships: []
       }
+      rate_limits: {
+        Row: {
+          key: string
+          count: number
+          window_start: number
+        }
+        Insert: {
+          key: string
+          count: number
+          window_start: number
+        }
+        Update: {
+          key?: string
+          count?: number
+          window_start?: number
+        }
+        Relationships: []
+      }
       team_members: {
         Row: {
           team_id: string

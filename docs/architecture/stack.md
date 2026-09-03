@@ -207,7 +207,7 @@ Do not claim DB release authority without a live publish path and proof.
 
 | Item | Value |
 |------|-------|
-| Framework | `next-intl` **^4.13.7** — marketing site only |
+| Framework | `next-intl` **^4.14.1** — marketing site only |
 | Config | `site/i18n/{config,routing,request}.ts`; locales `en`, `hi` only (default `en`). Hindi is machine-generated. |
 | Messages | `site/i18n/messages/{en,hi}.json` |
 | Parity | `hi` must match **every** top-level namespace in `en.json`. `wave1Namespaces` in `site/i18n/marketing-parity-manifest.json` is the **sync-hi-wave1** write scope, not a weaker parity bar. |

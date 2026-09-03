@@ -64,9 +64,3 @@ export function cacheControlForPath(pathname) {
   return "public, s-maxage=300, stale-while-revalidate=3600";
 }
 
-export function cfCacheTtlForPath(pathname) {
-  if (pathname.startsWith("/_next/static/")) {
-    return 31536000;
-  }
-  return 300;
-}

@@ -1,15 +1,11 @@
 # Plans
 
-Active sequence: [`PLAN.md`](./PLAN.md).
+The canonical sequence roadmap and specifications are consolidated in [`PLAN.md`](./PLAN.md).
 
-## Sequence Folders
+## Directory Structure
 
-| Folder | Phase | Scope |
-| --- | --- | --- |
-| [`client-hub/`](./client-hub/) | Spine | Public route map & journey flowchart |
-| [`chrome/`](./chrome/) | Phase 1 | Header, footer, and navigation chrome |
-| [`homepage/`](./homepage/) | Phase 2 | Homepage journey & design tokens |
-| [`map-equals-code/`](./map-equals-code/) | Phase 3 | HTTP 301/308 redirects & indexability |
-| [`walk/`](./walk/) | Phase 4 | Active browser verification on `http://localhost:3000` |
-
-*Note: `planner-comprehensive-audit/` contains TypeScript fixtures imported directly by unit/property tests.*
+| Path | Purpose | Role |
+|---|---|---|
+| [`PLAN.md`](./PLAN.md) | Living Master Plan | Contains full contracts for Phases 1–4 (Chrome, Homepage, Map Equals Code, Browser Walk). |
+| [`client-hub/`](./client-hub/) | Sequence Spine | Living public route map ([`flowcharts/clients-hub-flow.md`](./client-hub/flowcharts/clients-hub-flow.md)) and visual sitemap. |
+| [`planner-comprehensive-audit/`](./planner-comprehensive-audit/) | Test Fixtures | 16 TypeScript modules imported directly by Vitest test suites under `tests/unit/planner/`. |

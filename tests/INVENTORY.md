@@ -2,19 +2,19 @@
 
 Generated executable-test and support-file inventory. Layout rules: `tests/CONTENTS.md`.
 
-*Updated: 2026-09-01 — regenerate through the repository docs workflow.*
+*Updated: 2026-09-03 — regenerate through the repository docs workflow.*
 
 ## Counts
 
 | Kind | Count |
 |---|---:|
-| Vitest executable files | 754 |
-| Playwright executable specs | 83 |
+| Vitest executable files | 773 |
+| Playwright executable specs | 85 |
 | Helpers | 38 |
 | Fixtures | 15 |
 | Snapshots | 12 |
 | Other assets | 10 |
-| **Total files** | **912** |
+| **Total files** | **933** |
 
 ## vitest
 
@@ -71,6 +71,10 @@ Generated executable-test and support-file inventory. Layout rules: `tests/CONTE
 - `tests/site-ui-content-links-audit/property-05-zero-product-mutation.test.ts`
 - `tests/site-ui-content-links-audit/property-3-occurrence-expansion-finding-bijection.test.ts`
 - `tests/site-ui-content-links-audit/property-5-zero-product-code-mutation.test.ts`
+- `tests/site-ui-content-links-audit/property-w3-partition-isolation-closure.test.ts`
+- `tests/site-ui-content-links-audit/property-w5c-completion-proof-reconciliation.test.ts`
+- `tests/site-ui-content-links-audit/property-w5h-remediation-handoff-completeness.test.ts`
+- `tests/site-ui-content-links-audit/property-w5r-severity-duplicate-reconciliation.test.ts`
 - `tests/tech-docs-generator/app-overlay.test.tsx`
 - `tests/tech-docs-generator/auth-gate.test.tsx`
 - `tests/tech-docs-generator/auth-provider.test.tsx`
@@ -90,10 +94,12 @@ Generated executable-test and support-file inventory. Layout rules: `tests/CONTE
 - `tests/tech-docs-generator/generator/filesystem.test.ts`
 - `tests/tech-docs-generator/generator/generation.test.ts`
 - `tests/tech-docs-generator/generator/guards.test.ts`
+- `tests/tech-docs-generator/generator/impact-seeds.test.ts`
 - `tests/tech-docs-generator/generator/live-regeneration.test.ts`
 - `tests/tech-docs-generator/generator/output-contract.test.ts`
 - `tests/tech-docs-generator/generator/publication.test.ts`
 - `tests/tech-docs-generator/generator/repo-graph.test.ts`
+- `tests/tech-docs-generator/generator/repository-map.test.ts`
 - `tests/tech-docs-generator/generator/schema.test.ts`
 - `tests/tech-docs-generator/generator/source-coverage-contract.test.ts`
 - `tests/tech-docs-generator/generator/source-policy.test.ts`
@@ -117,7 +123,6 @@ Generated executable-test and support-file inventory. Layout rules: `tests/CONTE
 - `tests/unit/app/(site)/access/page.test.tsx`
 - `tests/unit/app/(site)/career/page.test.tsx`
 - `tests/unit/app/(site)/choose-product/page.test.tsx`
-- `tests/unit/app/(site)/portfolio/page.test.tsx`
 - `tests/unit/app/(site)/compare/page.test.tsx`
 - `tests/unit/app/(site)/contact/page.test.tsx`
 - `tests/unit/app/(site)/dashboard/layout.test.tsx`
@@ -137,6 +142,7 @@ Generated executable-test and support-file inventory. Layout rules: `tests/CONTE
 - `tests/unit/app/(site)/portal/guest/view/[id]/page.test.tsx`
 - `tests/unit/app/(site)/portal/layout.test.tsx`
 - `tests/unit/app/(site)/portal/page.test.tsx`
+- `tests/unit/app/(site)/portfolio/page.test.tsx`
 - `tests/unit/app/(site)/privacy/page.test.tsx`
 - `tests/unit/app/(site)/products/[category]/[product]/layout.test.tsx`
 - `tests/unit/app/(site)/products/[category]/[product]/page.test.tsx`
@@ -211,14 +217,8 @@ Generated executable-test and support-file inventory. Layout rules: `tests/CONTE
 - `tests/unit/app/api/Studio/furniture/[id]/publish/route.test.ts`
 - `tests/unit/app/api/Studio/furniture/[id]/route.test.ts`
 - `tests/unit/app/api/Studio/furniture/route.test.ts`
-- `tests/unit/app/api/theme/route.test.ts`
-- `tests/unit/app/api/tracking/route.test.ts`
-- `tests/unit/app/css/site/components/missing-components.test.ts`
-- `tests/unit/app/global-error.test.tsx`
-- `tests/unit/app/layout.test.tsx`
-- `tests/unit/app/not-found.test.tsx`
-- `tests/unit/app/offline/layout.test.tsx`
-- … +554 more
+- `tests/unit/app/api/Studio/furniture/upload/route.test.ts`
+- … +573 more
 
 ## playwright
 
@@ -237,6 +237,8 @@ Generated executable-test and support-file inventory. Layout rules: `tests/CONTE
 - `tests/e2e/canvas-ux-takeover.spec.ts`
 - `tests/e2e/changed-routes-browser-verification.spec.ts`
 - `tests/e2e/chrome-fab-viewport.spec.ts`
+- `tests/e2e/clients-showcase-keyboard.spec.ts`
+- `tests/e2e/clients-showcase-layout.spec.ts`
 - `tests/e2e/dashboard-verification.spec.ts`
 - `tests/e2e/design-kit-visual-regression.spec.ts`
 - `tests/e2e/home-hero-layout.spec.ts`

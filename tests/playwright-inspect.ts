@@ -1,4 +1,6 @@
 import { chromium } from "@playwright/test";
+import { mkdir } from "node:fs/promises";
+import path from "node:path";
 
 type PlannerRuntimeProbe = {
   exportDraft?: () => string | null | undefined;
@@ -116,7 +118,8 @@ async function main() {
   console.log("State Info:", JSON.stringify(stateInfo, null, 2));
 
   // Take a screenshot and save it
-  const screenshotPath = "C:\\Users\\AyushWeb\\.gemini\\antigravity-ide\\brain\\287d517a-2103-4b9d-8495-c2814b740954/scratch/playwright-screenshot.png";
+  const screenshotPath = path.resolve(process.cwd(), "results", "playwright-screenshot.png");
+  await mkdir(path.dirname(screenshotPath), { recursive: true });
   console.log("Taking screenshot and saving to:", screenshotPath);
   await page.screenshot({ path: screenshotPath });
 
