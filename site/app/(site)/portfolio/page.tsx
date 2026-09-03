@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
-import { ClientsPageView } from "@/features/site/clients/ClientsPageView";
+import { PortfolioPageView } from "@/features/site/portfolio/PortfolioPageView";
 import { CLIENTS_PAGE_METADATA } from "@/features/site/data/routeMetadata";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -10,5 +10,4 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function PortfolioPage() {
-  return ClientsPageView();
 }

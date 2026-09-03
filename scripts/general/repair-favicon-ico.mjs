@@ -221,6 +221,10 @@ async function main() {
     process.exit(1);
   }
   const repairable = rows.filter((r) => r.state === 'png');
+  if (repairable.length === 0 && rows.every((r) => r.ok)) {
+    console.log(`All ${TARGETS.length} targets are already valid ICOs; nothing to repair.`);
+    return;
+  }
   if (repairable.length !== TARGETS.length) {
     console.error(
       `Expected ${TARGETS.length} PNG targets to repair, found ${repairable.length}. Refusing partial repair.`,

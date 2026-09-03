@@ -23,6 +23,116 @@
   padding-block: clamp(1.1rem, 2.4vw, 2.25rem) var(--section-space-md);
 }
 
+.planning-workflow {
+  display: grid;
+  gap: clamp(1.75rem, 4vw, 3.5rem);
+}
+
+.planning-workflow__heading {
+  max-width: 43rem;
+}
+
+.planning-workflow__layout {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: center;
+}
+
+.planning-workflow__gallery {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.58fr);
+  align-items: end;
+  gap: clamp(0.65rem, 1.6vw, 1.1rem);
+  min-height: clamp(19rem, 48vw, 34rem);
+}
+
+.planning-workflow__figure {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  background: var(--surface-muted);
+  box-shadow: 0 1.25rem 3rem color-mix(in srgb, var(--surface-inverse) 16%, transparent);
+}
+
+.planning-workflow__figure > span:has(img) {
+  position: absolute !important;
+  inset: 0;
+  display: block;
+}
+
+.planning-workflow__figure--primary {
+  align-self: start;
+  aspect-ratio: 0.96;
+}
+
+.planning-workflow__figure--secondary {
+  aspect-ratio: 0.74;
+  margin-block-end: clamp(0.9rem, 5vw, 3.5rem);
+  border: clamp(0.35rem, 0.9vw, 0.7rem) solid var(--surface-page);
+}
+
+.planning-workflow__image {
+  object-fit: cover;
+  filter: saturate(0.88) contrast(1.04);
+  transition: transform var(--motion-slow) var(--ease-standard);
+}
+
+.planning-workflow__figure:hover .planning-workflow__image {
+  transform: scale(1.035);
+}
+
+.planning-workflow__content {
+  display: grid;
+  gap: clamp(1.4rem, 3vw, 2rem);
+}
+
+.planning-workflow__lead {
+  max-width: 35rem;
+  margin: 0;
+  color: var(--text-body);
+  font-size: var(--type-body-lg-size);
+  line-height: var(--type-leading-copy);
+}
+
+.planning-workflow__steps {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block: 1px solid color-mix(in srgb, var(--color-bronze-400) 20%, transparent);
+}
+
+.planning-workflow__step {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(0.85rem, 2vw, 1.25rem);
+  padding-block: clamp(1rem, 2.2vw, 1.3rem);
+}
+
+.planning-workflow__step + .planning-workflow__step {
+  border-block-start: 1px solid color-mix(in srgb, var(--color-bronze-400) 14%, transparent);
+}
+
+.planning-workflow__step-number,
+.planning-deliverables__number {
+  color: var(--text-accent);
+  font-family: var(--font-mono);
+  font-size: var(--type-label-size);
+  letter-spacing: var(--type-letter-label);
+  line-height: 1.45;
+}
+
+.planning-workflow__step-title {
+  margin: 0;
+}
+
+.planning-workflow__step-detail {
+  margin: 0.4rem 0 0;
+  color: var(--text-body);
+  line-height: var(--type-leading-copy);
+}
+
 .planning-deliverables {
   display: grid;
   gap: clamp(1.5rem, 3vw, 2.25rem);
@@ -57,8 +167,10 @@
 }
 
 .planning-deliverables__item {
-  padding-block: clamp(0.85rem, 2vw, 1.1rem);
-  padding-inline-start: clamp(1rem, 2.5vw, 1.35rem);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.9rem;
+  padding: clamp(0.9rem, 2vw, 1.15rem) clamp(1rem, 2.5vw, 1.35rem);
   border-inline-start: 2px solid color-mix(in srgb, var(--color-bronze-400) 55%, transparent);
   border-block-end: 1px solid color-mix(in srgb, var(--color-bronze-400) 10%, transparent);
   color: var(--text-body);
@@ -67,4 +179,16 @@
 
 .planning-deliverables__item:last-child {
   border-block-end: 0;
+}
+
+@media (min-width: 58rem) {
+  .planning-workflow__layout {
+    grid-template-columns: minmax(0, 0.96fr) minmax(19rem, 0.82fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .planning-workflow__image {
+    transition: none;
+  }
 }

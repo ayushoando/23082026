@@ -92,6 +92,47 @@ describe("audit-gate-skips", () => {
     }
   });
 
+  it("rejects a temporary skip that names its own file as the replacement", () => {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "audit-gate-skips-temporary-"));
+    try {
+      fs.mkdirSync(path.join(tmp, "config/build"), { recursive: true });
+      fs.mkdirSync(path.join(tmp, "tests/manifests"), { recursive: true });
+      fs.mkdirSync(path.join(tmp, "tests/unit/site/lib"), { recursive: true });
+      fs.writeFileSync(path.join(tmp, "config/build/playwright-gate-specs.json"), "{\"specs\":[]}\n");
+      fs.writeFileSync(
+        path.join(tmp, "tests/manifests/skip-exceptions.json"),
+        JSON.stringify({
+          version: 2,
+          exceptions: [{
+            file: "tests/unit/site/lib/sample.test.ts",
+            rule: "contains-skip",
+            exceptionType: "temporary-skip",
+            owner: "repository-owner",
+            reason: "Temporary quarantine",
+            expires: "2099-01-01",
+            replacementTest: "tests/unit/site/lib/sample.test.ts",
+          }],
+        }),
+      );
+      fs.writeFileSync(path.join(tmp, "tests/unit/site/lib/sample.test.ts"), "test.skip('temporary', () => {});\n");
+
+      let stderr = "";
+      try {
+        execFileSync(process.execPath, [scriptPath], {
+          cwd: monorepoRoot,
+          encoding: "utf8",
+          env: { ...process.env, MONOREPO_ROOT: tmp },
+          stdio: ["ignore", "pipe", "pipe"],
+        });
+      } catch (error) {
+        stderr = String((error as { stderr?: string }).stderr ?? "");
+      }
+      expect(stderr).toContain("invalid-exception");
+    } finally {
+      fs.rmSync(tmp, { recursive: true, force: true });
+    }
+  });
+
   it("ignores tests under external skip roots outside the audit scope", () => {
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "audit-gate-skips-external-"));
     try {

@@ -20,7 +20,10 @@ const BUCKET =
   process.env.CLOUDFLARE_R2_BUCKET?.trim() ||
   "";
 
+// Live R2 checks require a deliberate opt-in. Repository-wide unit runs must
+// remain deterministic even when a developer's local credentials are loaded.
 const hasR2 =
+  process.env.RUN_LIVE_R2_SMOKE === "1" &&
   Boolean(process.env.CLOUDFLARE_ACCOUNT_ID?.trim() || process.env.CLOUDFLARE_S3_URL?.trim()) &&
   Boolean(
     process.env.CLOUDFLARE_R2_ACCESS_KEY_ID?.trim() ||
@@ -64,7 +67,7 @@ async function firstImageKey(client: S3Client, prefix: string) {
   return null;
 }
 
-describe.runIf(hasR2 && Boolean(BUCKET))(`R2 clean bucket ${BUCKET || "(bucket not configured)"} (live)`, () => {
+describe.runIf(hasR2 && Boolean(BUCKET))(`R2 clean bucket ${BUCKET || "(bucket not configured)"} (live opt-in)`, () => {
   it("heads bucket and decodes sample marketing + catalog keys", async () => {
     const client = r2Client();
     await expect(client.send(new HeadBucketCommand({ Bucket: BUCKET }))).resolves.toBeDefined();

@@ -1,9 +1,10 @@
 {
-  "version": 1,
+  "version": 2,
   "exceptions": [
     {
       "file": "tests/e2e/planner-performance-required.spec.ts",
       "rule": "contains-skip",
+      "exceptionType": "environment-guard",
       "owner": "repository-owner",
       "reason": "Conditional browser-profile guard: performance evidence is only collected on chromium-desktop. Skip fires on all other browsers and projects to prevent false negatives from unsupported environments.",
       "expires": "2027-09-01",
@@ -12,6 +13,7 @@
     {
       "file": "tests/e2e/planner-comprehensive-audit-regression.spec.ts",
       "rule": "contains-skip",
+      "exceptionType": "environment-guard",
       "owner": "repository-owner",
       "reason": "Conditional profile/env guards: each rendered regression journey is assigned to a specific Playwright project (profile.project) so tests skip on non-matching browsers; the authenticated conflict journey skips unless PLANNER_CONFLICT_PROJECT_ID is set. Skips fire only on unsupported environments, never as placeholders.",
       "expires": "2027-09-01",
@@ -20,6 +22,7 @@
     {
       "file": "tests/e2e/planner-comprehensive-audit-browser.spec.ts",
       "rule": "contains-skip",
+      "exceptionType": "environment-guard",
       "owner": "repository-owner",
       "reason": "Conditional profile/env guards: every test is assigned to a specific Playwright project (profile.project) so it skips on non-matching browsers; conflict/undo journeys skip when required env vars are absent. Skips fire only on unsupported environments or missing config, never as placeholders.",
       "expires": "2027-09-01",
@@ -28,6 +31,7 @@
     {
       "file": "tests/unit/platform/serviceRoleOnlyTables.db.test.ts",
       "rule": "contains-skip",
+      "exceptionType": "environment-guard",
       "owner": "repository-owner",
       "reason": "Admin and Products service-role smoke suites only register when their corresponding live database URL is configured.",
       "expires": "2027-09-03",
@@ -36,6 +40,7 @@
     {
       "file": "tests/unit/platform/plannerHandoffsRlsPolicy.test.ts",
       "rule": "contains-skip",
+      "exceptionType": "environment-guard",
       "owner": "repository-owner",
       "reason": "The planner_handoffs RLS smoke suite only registers when the live Admin database URL is configured.",
       "expires": "2027-09-03",
@@ -44,6 +49,7 @@
     {
       "file": "tests/unit/platform/Planner/plannerSupabaseMutation.db.smoke.test.ts",
       "rule": "contains-skip",
+      "exceptionType": "environment-guard",
       "owner": "repository-owner",
       "reason": "The atomic Planner mutation smoke suite requires explicit Admin Supabase credentials.",
       "expires": "2027-09-03",
@@ -52,6 +58,7 @@
     {
       "file": "tests/unit/features/site/contact/createCustomerQuery.db.smoke.test.ts",
       "rule": "contains-skip",
+      "exceptionType": "environment-guard",
       "owner": "repository-owner",
       "reason": "The customer query persistence smoke suite requires explicit Admin Supabase credentials.",
       "expires": "2027-09-03",
@@ -60,14 +67,16 @@
     {
       "file": "tests/unit/scripts/asset-cutover-r2.smoke.test.ts",
       "rule": "contains-skip",
+      "exceptionType": "environment-guard",
       "owner": "repository-owner",
-      "reason": "The R2 clean-bucket smoke suite requires an explicitly configured bucket and credentials.",
+      "reason": "The R2 clean-bucket smoke suite requires explicit RUN_LIVE_R2_SMOKE=1 opt-in plus a configured bucket and credentials; normal unit runs must not call external storage.",
       "expires": "2027-09-03",
       "replacementTest": "Live R2 verification for the asset cutover bucket"
     },
     {
       "file": "tests/unit/app/api/customer-queries/route.db.smoke.test.ts",
       "rule": "contains-skip",
+      "exceptionType": "environment-guard",
       "owner": "repository-owner",
       "reason": "The live customer-query API smoke suite requires Admin Supabase credentials.",
       "expires": "2027-09-03",
@@ -76,6 +85,7 @@
     {
       "file": "tests/unit/lib/Planner/projectsStore.supabase.db.smoke.test.ts",
       "rule": "contains-skip",
+      "exceptionType": "environment-guard",
       "owner": "repository-owner",
       "reason": "The Planner projects Supabase smoke suite requires Admin Supabase credentials.",
       "expires": "2027-09-03",
@@ -84,6 +94,7 @@
     {
       "file": "tests/unit/lib/Planner/handoff/createPlannerHandoff.db.smoke.test.ts",
       "rule": "contains-skip",
+      "exceptionType": "environment-guard",
       "owner": "repository-owner",
       "reason": "The Planner handoff persistence smoke suite requires Admin Supabase credentials.",
       "expires": "2027-09-03",
@@ -92,6 +103,7 @@
     {
       "file": "tests/unit/lib/catalog/furnitureCatalogStore.supabase.db.smoke.test.ts",
       "rule": "contains-skip",
+      "exceptionType": "environment-guard",
       "owner": "repository-owner",
       "reason": "The furniture catalog Supabase smoke suite requires Admin Supabase credentials.",
       "expires": "2027-09-03",

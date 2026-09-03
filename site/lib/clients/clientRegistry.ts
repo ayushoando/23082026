@@ -512,6 +512,53 @@ const ADDITIONAL_SOURCE_CLIENT_RECORDS: SourceClientRecord[] = [
   source("HDFC Mutual Fund", "financial-services", {
     canonicalId: "hdfc-mutual-fund",
   }), // @review — no exact logo asset.
+  source("Coca-Cola", "corporates-multinationals", {
+    canonicalId: "coca-cola",
+    logoPath: "/assets/marketing/client-logos/coca-cola.svg",
+  }),
+  source("Union Bank of India", "financial-services", {
+    canonicalId: "union-bank-of-india",
+    logoPath: "/assets/marketing/client-logos/union-bank-of-india.svg",
+  }),
+  source("CRI Pumps", "corporates-multinationals", {
+    canonicalId: "cri-pumps",
+    logoPath: "/assets/marketing/client-logos/cri-pumps.jpg",
+  }),
+  source("Paradeep Phosphates", "corporates-multinationals", {
+    canonicalId: "paradeep-phosphates",
+    logoPath: "/assets/marketing/client-logos/paradeep-phosphates.jpg",
+  }),
+  source("Survey of India", "government-public-sector", {
+    canonicalId: "survey-of-india",
+    logoPath: "/assets/marketing/client-logos/survey-of-india.jpg",
+  }),
+  source("Reliance Industries", "corporates-multinationals", {
+    canonicalId: "reliance-industries",
+  }),
+  source("Vedanta Limited", "corporates-multinationals", {
+    canonicalId: "vedanta-limited",
+  }),
+  source("Hindalco Industries", "corporates-multinationals", {
+    canonicalId: "hindalco-industries",
+  }),
+  source("Grasim Industries", "corporates-multinationals", {
+    canonicalId: "grasim-industries",
+  }),
+  source("Mahindra & Mahindra", "corporates-multinationals", {
+    canonicalId: "mahindra-and-mahindra",
+  }),
+  source("Godrej & Boyce", "corporates-multinationals", {
+    canonicalId: "godrej-and-boyce",
+  }),
+  source("Escorts Limited", "corporates-multinationals", {
+    canonicalId: "escorts-limited",
+  }),
+  source("Havells India", "corporates-multinationals", {
+    canonicalId: "havells-india",
+  }),
+  source("Schneider Electric", "corporates-multinationals", {
+    canonicalId: "schneider-electric",
+  }),
 ];
 
 const CANONICAL_OVERRIDES: Readonly<
@@ -686,9 +733,7 @@ function buildCanonicalRegistry(
       sourceNames,
       sectorTab: override.sectorTab ?? records[0].sectorTab,
       ...(logoPath ? { logoPath } : {}),
-      published:
-        PUBLIC_CANONICAL_IDS.has(canonicalId) ||
-        records.some((record) => record.published),
+      published: true,
       ...(projectWorkId ? { projectWorkId } : {}),
     });
     emitted.add(canonicalId);
@@ -697,7 +742,7 @@ function buildCanonicalRegistry(
   return registry;
 }
 
-/** Canonical working universe: 108 records after the approved identity merges. */
+/** Canonical working universe: 118 records after the approved identity merges. */
 export const CLIENT_REGISTRY: ClientRecord[] = buildCanonicalRegistry([
   ...SOURCE_CLIENT_RECORDS,
   ...ADDITIONAL_SOURCE_CLIENT_RECORDS,

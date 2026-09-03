@@ -7,10 +7,12 @@ import gsap from "gsap";
 import { HomeSection, HomeSectionInner } from "@/components/home/layout";
 import { RouteCtaBand } from "@/components/shared/RouteCtaBand";
 import { EditorialHeroMedia } from "@/components/site/EditorialHeroMedia";
+import { MarketingImage } from "@/components/site/MarketingImage";
 import { MarketingCtaLink } from "@/components/ui/MarketingCtaLink";
 import {
   PLANNING_HERO_IMAGE,
   PLANNING_HERO_MEDIA,
+  PLANNING_PROJECT_IMAGES,
 } from "@/features/site/data/planningPage";
 import {
   gsapReducedMotion,
@@ -88,7 +90,7 @@ export function PlanningPageView({
   heroKicker,
   heroTitleLead,
   heroTitleAccent,
-  heroSubtitle: _heroSubtitle,
+  heroSubtitle,
   craftQuote,
   craftAttribution,
   primaryCta,
@@ -237,6 +239,10 @@ export function PlanningPageView({
               </span>
             </h1>
 
+            <p data-planning-hero-reveal className="planning-hero__subtitle">
+              {heroSubtitle}
+            </p>
+
             <div data-planning-hero-reveal className="planning-hero__actions flex flex-wrap gap-3">
               <MarketingCtaLink
                 href="/contact"
@@ -284,8 +290,8 @@ export function PlanningPageView({
 
       <HomeSection variant="white" spacing="md" className="border-t-0">
         <HomeSectionInner>
-          <section ref={workflowRef} className="about-process" data-testid="planning-workflow">
-            <div>
+          <section ref={workflowRef} className="planning-workflow" data-testid="planning-workflow">
+            <div className="planning-workflow__heading">
               <p data-planning-workflow-reveal className="home-kicker">
                 {workflowKicker}
               </p>
@@ -293,20 +299,58 @@ export function PlanningPageView({
                 {workflowTitle}
               </h2>
             </div>
-            <ol className="about-process__steps">
-              {steps.map((step) => (
-                <li
-                  key={step.title}
+
+            <div className="planning-workflow__layout">
+              <div className="planning-workflow__gallery" aria-label="Installed workspace examples">
+                <figure
                   data-planning-workflow-reveal
-                  className="about-process__step"
+                  className="planning-workflow__figure planning-workflow__figure--primary"
                 >
-                  <h3 className="about-process__step-title home-why-card__title text-strong">
-                    {step.title}
-                  </h3>
-                  <p className="about-process__step-detail">{step.detail}</p>
-                </li>
-              ))}
-            </ol>
+                  <MarketingImage
+                    src={PLANNING_PROJECT_IMAGES[0].src}
+                    alt={PLANNING_PROJECT_IMAGES[0].alt}
+                    sizes="(max-width: 767px) 100vw, (max-width: 1100px) 60vw, 44vw"
+                    className="planning-workflow__image"
+                  />
+                </figure>
+                <figure
+                  data-planning-workflow-reveal
+                  className="planning-workflow__figure planning-workflow__figure--secondary"
+                >
+                  <MarketingImage
+                    src={PLANNING_PROJECT_IMAGES[1].src}
+                    alt={PLANNING_PROJECT_IMAGES[1].alt}
+                    sizes="(max-width: 767px) 72vw, (max-width: 1100px) 38vw, 28vw"
+                    className="planning-workflow__image"
+                  />
+                </figure>
+              </div>
+
+              <div className="planning-workflow__content">
+                <p data-planning-workflow-reveal className="planning-workflow__lead">
+                  {bestForDescription}
+                </p>
+                <ol className="planning-workflow__steps">
+                  {steps.map((step, index) => (
+                    <li
+                      key={step.title}
+                      data-planning-workflow-reveal
+                      className="planning-workflow__step"
+                    >
+                      <span className="planning-workflow__step-number" aria-hidden="true">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <div>
+                        <h3 className="planning-workflow__step-title home-why-card__title text-strong">
+                          {step.title}
+                        </h3>
+                        <p className="planning-workflow__step-detail">{step.detail}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            </div>
           </section>
         </HomeSectionInner>
       </HomeSection>
@@ -332,9 +376,12 @@ export function PlanningPageView({
             </div>
 
             <ul className="planning-deliverables__list">
-              {deliverables.map((item) => (
+              {deliverables.map((item, index) => (
                 <li key={item} data-planning-deliverables-reveal className="planning-deliverables__item">
-                  {item}
+                  <span className="planning-deliverables__number" aria-hidden="true">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span>{item}</span>
                 </li>
               ))}
             </ul>

@@ -1,5 +1,5 @@
+import { ClientsCaseStudies } from "@/components/clients/ClientsCaseStudies";
 import { ClientsHero } from "@/components/clients/ClientsHero";
-import { ClientShowcaseSection } from "@/components/site/clients/ClientShowcaseSection";
 import {
   HomeMarketingLayout,
   HomeSection,
@@ -8,8 +8,13 @@ import {
 import { KpiIntegrityMonitor } from "@/components/analytics/KpiIntegrityMonitor";
 import { RouteCtaBand } from "@/components/shared/RouteCtaBand";
 import { ContactTeaser } from "@/components/shared/ContactTeaser";
+import { MarketingCtaLink } from "@/components/ui/MarketingCtaLink";
 import { getBusinessStats } from "@/features/crm/businessStats";
-import { CLIENTS_PAGE_COPY } from "@/features/site/data/routeCopy";
+import { buildClientWorkWithPhotos } from "@/features/site/data/clientWorkPhotos";
+import {
+  CLIENTS_PAGE_COPY,
+  CLIENTS_WORK,
+} from "@/features/site/data/routeCopy";
 import { withLocaleCopy } from "@/lib/i18n/withLocaleCopy";
 import {
   buildBreadcrumbJsonLd,
@@ -19,60 +24,93 @@ import { formatKpiValuePlus } from "@/lib/kpiFormat";
 import { SITE_URL } from "@/lib/siteUrl";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
-async function loadClientsCopy() {
+async function loadPortfolioCopy() {
   return withLocaleCopy(
-    { ...CLIENTS_PAGE_COPY, deliveryQuotesLabel: "Client delivery quotes" },
-    "clients",
+    { ...CLIENTS_PAGE_COPY, deliveryQuotesLabel: "Portfolio installation quotes" },
+    "portfolio",
   );
 }
 
 /**
- * Clients page — Sector-wise tabbed client showcase with logos.
- * Implements plans/client-showcase-tabs with full roving-focus keyboard accessibility.
- * Links to /portfolio for workplace installation photos.
+ * Portfolio page — Photography-forward workplace installation proof.
+ * Focuses on case studies, seat counts, and real installed workspace photos.
+ * Links to /clients for the sector-wise tabbed client directory.
  */
-export async function ClientsPageView() {
-  const [{ stats, source }, copy] = await Promise.all([
+export async function PortfolioPageView() {
+  const [{ stats, source }, clientWork, copy] = await Promise.all([
     getBusinessStats(),
-    loadClientsCopy(),
+    buildClientWorkWithPhotos(CLIENTS_WORK),
+    loadPortfolioCopy(),
   ]);
   const clientsValue = formatKpiValuePlus(stats.clientOrganisations);
-  const clientsJsonLd = buildPageJsonLd(SITE_URL, {
-    path: "/clients",
-    title: `Client Directory & Sector Showcase | One&Only`,
+  const portfolioJsonLd = buildPageJsonLd(SITE_URL, {
+    path: "/portfolio",
+    title: `Workplace Projects & Portfolio | One&Only`,
     description: copy.heroSubtitle,
     pageType: "CollectionPage",
   });
-  const clientsBreadcrumbJsonLd = buildBreadcrumbJsonLd(SITE_URL, [
+  const portfolioBreadcrumbJsonLd = buildBreadcrumbJsonLd(SITE_URL, [
     { name: "Home", path: "/" },
-    { name: "Clients", path: "/clients" },
+    { name: "Portfolio", path: "/portfolio" },
   ]);
 
   return (
     <HomeMarketingLayout>
-      <KpiIntegrityMonitor page="clients" source={source} stats={stats} />
+      <KpiIntegrityMonitor page="portfolio" source={source} stats={stats} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: sanitizeJsonForScript(clientsJsonLd),
+          __html: sanitizeJsonForScript(portfolioJsonLd),
         }}
       />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: sanitizeJsonForScript(clientsBreadcrumbJsonLd),
+          __html: sanitizeJsonForScript(portfolioBreadcrumbJsonLd),
         }}
       />
       <ClientsHero
-        kicker="Client Directory"
-        titleLead="Our"
-        titleAccent="clients."
+        kicker="Workplace Photography"
+        titleLead="Workplace"
+        titleAccent="projects."
         subtitle={copy.heroSubtitleTemplate.replace("{clients}", clientsValue)}
       />
 
       <HomeSection variant="white" spacing="sm">
         <HomeSectionInner>
-          <ClientShowcaseSection />
+          {clientWork.length === 0 ? (
+            <div
+              className="scheme-panel scheme-border rounded-2xl border px-6 py-10 text-center"
+              role="status"
+            >
+              <h2 className="home-heading">{copy.emptyTitle}</h2>
+              <p className="page-copy text-body mx-auto mt-4 max-w-lg">
+                {copy.emptyDescription}
+              </p>
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+                <MarketingCtaLink
+                  href="/clients"
+                  label="View client directory"
+                  surface="clients-empty"
+                  variant="outline"
+                  className="w-full justify-center sm:w-auto"
+                >
+                  View client directory
+                </MarketingCtaLink>
+                <MarketingCtaLink
+                  href="/contact"
+                  label={copy.contactCta}
+                  surface="clients-empty"
+                  variant="primary"
+                  className="w-full justify-center sm:w-auto"
+                >
+                  {copy.contactCta}
+                </MarketingCtaLink>
+              </div>
+            </div>
+          ) : (
+            <ClientsCaseStudies clients={clientWork} />
+          )}
         </HomeSectionInner>
       </HomeSection>
 
@@ -101,20 +139,20 @@ export async function ClientsPageView() {
       <HomeSection variant="white" spacing="sm" className="border-t-0">
         <HomeSectionInner>
           <RouteCtaBand
-            kicker={copy.ctaKicker}
+            kicker="Next step"
             title={
               <>
-                See installed spaces or{" "}
+                See organisations or{" "}
                 <span className="text-accent-italic-on-dark">
-                  plan yours.
+                  plan your space.
                 </span>
               </>
             }
-            description="Explore our workplace project gallery or connect with our workplace contract team."
+            description="Explore our sector-wise client directory or brief our workplace planning team."
             actions={[
               {
-                href: "/portfolio",
-                label: "View installation photos",
+                href: "/clients",
+                label: "Client directory",
                 variant: "primary",
               },
               {

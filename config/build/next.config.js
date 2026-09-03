@@ -78,8 +78,8 @@ const findRepoRoot = (dir) => {
 const nextConfig = {
   output: "standalone",
   poweredByHeader: false,
-  devIndicators: false,
   agentRules: false,
+  devIndicators: false,
   env: {
     NEXT_PUBLIC_SITE_URL: resolvedSiteUrl,
     NEXT_PUBLIC_ASSET_BASE_URL: configuredAssetBaseUrl,
@@ -102,8 +102,6 @@ const nextConfig = {
       { source: "/gallery/", destination: "/portfolio/", permanent: true },
       { source: "/projects", destination: "/portfolio/", permanent: true },
       { source: "/projects/", destination: "/portfolio/", permanent: true },
-      { source: "/clients", destination: "/portfolio/", permanent: true },
-      { source: "/clients/", destination: "/portfolio/", permanent: true },
       { source: "/social", destination: "/portfolio/", permanent: true },
       { source: "/social/", destination: "/portfolio/", permanent: true },
       // Query param — HTTP redirects cannot reliably preserve URL fragments (#imprint).

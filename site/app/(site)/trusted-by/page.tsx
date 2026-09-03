@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { HomeMarketingLayout } from "@/components/home/layout";
 import { ContactTeaser } from "@/components/shared/ContactTeaser";
 import { TrustedByPageView } from "@/components/trusted-by/TrustedByPageView";
-import { TRUSTED_BY_CLIENTS } from "@/features/site/data/proof";
+import { TRUSTED_BY_CLIENTS, TRUSTED_BY_STATS } from "@/features/site/data/proof";
 import { TRUSTED_BY_PAGE_COPY } from "@/features/site/data/routeCopy";
 import { withLocaleCopy } from "@/lib/i18n/withLocaleCopy";
 import { buildBreadcrumbJsonLd, buildPageJsonLd, buildPageMetadata } from "@/features/site/data/seo";
@@ -60,8 +60,13 @@ export default async function TrustedByPage() {
         overviewTitle={copy.overviewTitle}
         overviewDescription={copy.overviewDescription}
         statsKicker={copy.statsKicker}
+        stats={TRUSTED_BY_STATS}
+        craftQuote={copy.craftQuote}
+        craftAttribution={copy.craftAttribution}
         clients={TRUSTED_BY_CLIENTS}
         rosterKicker={copy.rosterKicker}
+        rosterTitle={copy.rosterTitle}
+        rosterDescription={copy.rosterDescription}
         quotesKicker={copy.quotesKicker}
         quotesTitle={copy.quotesTitle}
         quotes={copy.quotes}

@@ -27,13 +27,18 @@ registerGsapPlugins();
 export interface TrustedByPageViewProps {
   heroTitleLead: string;
   heroTitleAccent: string;
-  heroSubtitle: string;
+  heroSubtitle?: string;
   overviewKicker: string;
   overviewTitle: string;
   overviewDescription: string;
-  statsKicker: string;
+  statsKicker?: string;
+  stats?: readonly { value: string; label: string }[];
+  craftQuote?: string;
+  craftAttribution?: string;
   clients: readonly ClientBadgeData[];
   rosterKicker: string;
+  rosterTitle?: string;
+  rosterDescription?: string;
   quotesKicker: string;
   quotesTitle: string;
   quotes: readonly { quote: string; attribution: string }[];
@@ -53,13 +58,18 @@ export interface TrustedByPageViewProps {
 export function TrustedByPageView({
   heroTitleLead,
   heroTitleAccent,
-  heroSubtitle: _heroSubtitle,
+  heroSubtitle,
   overviewKicker,
   overviewTitle,
   overviewDescription,
-  statsKicker: _statsKicker,
+  statsKicker,
+  stats,
+  craftQuote,
+  craftAttribution,
   clients,
   rosterKicker,
+  rosterTitle,
+  rosterDescription,
   quotesKicker,
   quotesTitle,
   quotes,
@@ -276,13 +286,27 @@ export function TrustedByPageView({
                 <span className="text-accent-italic-on-dark">{heroTitleAccent}</span>
               </span>
             </h1>
+            {heroSubtitle ? (
+              <p data-trusted-hero-reveal className="trusted-by-hero__subtitle">
+                {heroSubtitle}
+              </p>
+            ) : null}
 
-            <div data-trusted-hero-reveal className="trusted-by-hero__actions">
+            <div data-trusted-hero-reveal className="trusted-by-hero__actions flex flex-wrap gap-3">
+              <MarketingCtaLink
+                href="/clients"
+                label="Sector-wise clients"
+                surface="trusted-by-hero"
+                variant="primary"
+                context="hero"
+              >
+                Sector-wise clients
+              </MarketingCtaLink>
               <MarketingCtaLink
                 href="/portfolio"
                 label={ctaSecondary}
                 surface="trusted-by-hero"
-                variant="primary"
+                variant="outline"
                 context="hero"
               >
                 {ctaSecondary}
@@ -306,16 +330,56 @@ export function TrustedByPageView({
                 {overviewDescription}
               </p>
             </div>
+            {craftQuote ? (
+              <blockquote data-trusted-reveal className="trusted-by-craft-quote">
+                <p className="trusted-by-craft-quote__text">"{craftQuote}"</p>
+                {craftAttribution ? (
+                  <footer className="trusted-by-craft-quote__attribution">— {craftAttribution}</footer>
+                ) : null}
+              </blockquote>
+            ) : null}
           </section>
         </HomeSectionInner>
       </HomeSection>
 
+      {stats && stats.length > 0 ? (
+        <HomeSection variant="soft" spacing="sm" borderY>
+          <HomeSectionInner>
+            <section className="trusted-by-stats" aria-label={statsKicker || "Statistics"}>
+              {statsKicker ? (
+                <p data-trusted-reveal className="home-kicker">
+                  {statsKicker}
+                </p>
+              ) : null}
+              <div className="trusted-by-stats-grid">
+                {stats.map((item) => (
+                  <div key={item.label} data-trusted-reveal className="trusted-by-stat-card">
+                    <span className="trusted-by-stat-card__value">{item.value}</span>
+                    <span className="trusted-by-stat-card__label">{item.label}</span>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </HomeSectionInner>
+        </HomeSection>
+      ) : null}
+
       <HomeSection variant="white" spacing="md" className="border-t-0">
         <HomeSectionInner>
           <section ref={rosterRef} className="trusted-by-roster" data-testid="trusted-by-roster">
-            <h2 data-trusted-reveal className="home-kicker">
+            <p data-trusted-reveal className="home-kicker">
               {rosterKicker}
-            </h2>
+            </p>
+            {rosterTitle ? (
+              <h2 data-trusted-reveal className="home-heading mt-2 mb-2">
+                {rosterTitle}
+              </h2>
+            ) : null}
+            {rosterDescription ? (
+              <p data-trusted-reveal className="page-copy text-body mb-6 max-w-2xl">
+                {rosterDescription}
+              </p>
+            ) : null}
             <div
               className="client-badge-group client-badge-group--dense"
               aria-label={rosterKicker}
@@ -397,8 +461,9 @@ export function TrustedByPageView({
             }
             description={ctaDescription}
             actions={[
-              { href: "/contact", label: ctaPrimary, variant: "primary" },
+              { href: "/clients", label: "Sector-wise clients", variant: "primary" },
               { href: "/portfolio", label: ctaSecondary, variant: "outline-light" },
+              { href: "/planning", label: "Workplace planning", variant: "outline-light" },
             ]}
           />
         </HomeSectionInner>

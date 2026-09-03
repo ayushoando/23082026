@@ -152,7 +152,7 @@ describe("app/(site)/trusted-by/page.tsx", () => {
     );
     // Preservation baseline: the full set of non-roster prop mappings must remain present,
     // in order, so removing the duplicate rosterKicker cannot drop any sibling prop.
-    expect(nonRosterMappings).toHaveLength(22);
+    expect(nonRosterMappings).toHaveLength(27);
     expect(nonRosterMappings).toEqual([
       "heroTitleLead={copy.heroTitleLead}",
       "heroTitleAccent={copy.heroTitleAccent}",
@@ -161,7 +161,12 @@ describe("app/(site)/trusted-by/page.tsx", () => {
       "overviewTitle={copy.overviewTitle}",
       "overviewDescription={copy.overviewDescription}",
       "statsKicker={copy.statsKicker}",
+      "stats={TRUSTED_BY_STATS}",
+      "craftQuote={copy.craftQuote}",
+      "craftAttribution={copy.craftAttribution}",
       "clients={TRUSTED_BY_CLIENTS}",
+      "rosterTitle={copy.rosterTitle}",
+      "rosterDescription={copy.rosterDescription}",
       "quotesKicker={copy.quotesKicker}",
       "quotesTitle={copy.quotesTitle}",
       "quotes={copy.quotes}",
@@ -213,8 +218,8 @@ describe("app/(site)/trusted-by/page.tsx", () => {
       screen.queryByText(TRUSTED_BY_PAGE_COPY.heroKicker),
     ).not.toBeInTheDocument();
     expect(
-      screen.queryByText(TRUSTED_BY_PAGE_COPY.heroSubtitle),
-    ).not.toBeInTheDocument();
+      screen.getByText(TRUSTED_BY_PAGE_COPY.heroSubtitle),
+    ).toBeInTheDocument();
 
     expect(screen.getByTestId("mock-editorial-hero-media")).toBeInTheDocument();
     expect(screen.getByTestId("mock-editorial-hero-media")).toHaveAttribute(
@@ -267,11 +272,11 @@ describe("app/(site)/trusted-by/page.tsx", () => {
       screen.getByText(TRUSTED_BY_PAGE_COPY.rosterKicker),
     ).toBeInTheDocument();
     expect(
-      screen.queryByText(TRUSTED_BY_PAGE_COPY.rosterTitle),
-    ).not.toBeInTheDocument();
+      screen.getByText(TRUSTED_BY_PAGE_COPY.rosterTitle),
+    ).toBeInTheDocument();
     expect(
-      screen.queryByText(TRUSTED_BY_PAGE_COPY.rosterDescription),
-    ).not.toBeInTheDocument();
+      screen.getByText(TRUSTED_BY_PAGE_COPY.rosterDescription),
+    ).toBeInTheDocument();
     const badges = container.querySelectorAll(".client-badge");
     expect(badges).toHaveLength(TRUSTED_BY_CLIENTS.length);
     expect(screen.getByText("Titan")).toBeInTheDocument();

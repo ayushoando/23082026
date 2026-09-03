@@ -23,7 +23,7 @@ const BADGE_SECTOR_BY_TAB: Record<SectorTabId, string> = {
 
 /**
  * Curated canonical selection for the overview page. This is intentionally not
- * the complete 108-record registry: only selected proof records are surfaced.
+ * the complete 118-record registry: only selected proof records are surfaced.
  * Records without an exact asset keep ClientBadge's existing monogram fallback.
  */
 export const TRUSTED_BY_CLIENTS: ClientBadgeData[] =

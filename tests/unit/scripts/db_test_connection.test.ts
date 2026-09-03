@@ -21,7 +21,7 @@ describe("db_test_connection (name-mirror)", () => {
   it("fails when products URL is missing", async () => {
     const result = await checkDatabaseConnection({
       resolveProductsUrl: () => null,
-      resolvePlannerUrl: () => "postgres://planner",
+      resolvePlannerUrl: () => null,
       error: vi.fn(),
       log: vi.fn(),
       warn: vi.fn(),

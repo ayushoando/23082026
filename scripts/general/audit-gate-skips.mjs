@@ -52,10 +52,18 @@ function loadExceptions() {
 }
 
 function validException(entry) {
-  const required = ["file", "rule", "owner", "reason", "expires", "replacementTest"];
+  const required = ["file", "rule", "owner", "reason", "expires", "exceptionType"];
   if (required.some((field) => !String(entry[field] ?? "").trim())) return false;
   const expiry = Date.parse(entry.expires);
-  return !Number.isNaN(expiry) && expiry >= Date.now();
+  if (Number.isNaN(expiry) || expiry < Date.now()) return false;
+
+  if (entry.exceptionType === "environment-guard") return true;
+  if (entry.exceptionType !== "temporary-skip") return false;
+
+  const replacementTest = String(entry.replacementTest ?? "").trim();
+  if (!replacementTest) return false;
+  const replacementPath = replacementTest.split(/\s+â€”\s+/u, 1)[0];
+  return replacementPath !== entry.file;
 }
 
 const failures = [];
