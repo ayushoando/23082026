@@ -2,20 +2,14 @@
 
 Active sequence: [`PLAN.md`](./PLAN.md).
 
-## Sequence folders
+## Sequence Folders
 
-| Folder | Phase |
-|---|---|
-| [`client-hub/`](./client-hub/) | Spine — public/client route map |
-| [`chrome/`](./chrome/) | 1 — public chrome ([handover](./chrome/handover.md)) |
-| [`homepage/`](./homepage/) | 2 — homepage + CSS |
-| [`map-equals-code/`](./map-equals-code/) | 3 — redirects and indexability |
-| [`walk/`](./walk/) | 4 — browser |
+| Folder | Phase | Scope |
+| --- | --- | --- |
+| [`client-hub/`](./client-hub/) | Spine | Public route map & journey flowchart |
+| [`chrome/`](./chrome/) | Phase 1 | Header, footer, and navigation chrome |
+| [`homepage/`](./homepage/) | Phase 2 | Homepage journey & design tokens |
+| [`map-equals-code/`](./map-equals-code/) | Phase 3 | HTTP 301/308 redirects & indexability |
+| [`walk/`](./walk/) | Phase 4 | Active browser verification on `http://localhost:3000` |
 
-## Packets (input, not the spine)
-
-`ui-audit` (CSS/tokens), `seosec`, `planner-audit`, `studio-audit`, `admin-audit`, `ai-audit`, `packages`, `db-audit`, `testing-audit`, `worker-audit`, `execution-checklist.md`.
-
-`planner-comprehensive-audit/` is dated. Tests still import its `.ts` files. Do not treat it as the live plan.
-
-Route map: [`client-hub/flowcharts/clients-hub-flow.md`](./client-hub/flowcharts/clients-hub-flow.md). Architecture: `docs/`. Blockers: [`Failures.md`](../Failures.md).
+*Note: `planner-comprehensive-audit/` contains TypeScript fixtures imported directly by unit/property tests.*

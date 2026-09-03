@@ -534,8 +534,9 @@ export function SiteHeader() {
               ) : null}
             </nav>
 
-            {/* Right CTAs */}
-            <div className="flex h-full min-w-0 shrink-0 items-center gap-1 sm:gap-1.5">
+            {/* Right CTAs — site-header__right-cluster lets nav.css release
+                the shrink-0 lock below 1100px (see header breakpoint contract). */}
+            <div className="site-header__right-cluster flex h-full min-w-0 shrink-0 items-center gap-1 sm:gap-1.5">
               <HeaderSearchPanel
                 searchPanelRef={searchPanelRef}
                 searchQuery={searchQuery}
