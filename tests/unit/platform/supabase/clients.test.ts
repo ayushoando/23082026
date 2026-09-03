@@ -167,6 +167,13 @@ describe("supabase clients", () => {
       expect(mockCookieStore.set).toHaveBeenCalledWith(
         "new-cookie",
         "val",
+        expect.objectContaining({
+          path: "/",
+        }),
+      );
+    });
+
+    it("swallows setAll errors from Server Component contexts", async () => {
       const mockCookieStore = await cookies();
       vi.mocked(mockCookieStore.set).mockImplementation(() => {
         throw new Error("Cannot set headers");

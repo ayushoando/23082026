@@ -7,10 +7,10 @@ vi.mock("next-intl/plugin", () => {
 });
 
 import nextConfig from "../../../site/next.config.js";
-import { securityHeaders } from "../../../site/next.config.mjs";
+import { securityHeaders } from "../../../site/lib/security/headers";
 
 describe("Security Headers Configuration", () => {
-  it("exports security headers from site/next.config.mjs", () => {
+  it("exports security headers from site/lib/security/headers", () => {
     expect(securityHeaders).toBeDefined();
     expect(Array.isArray(securityHeaders)).toBe(true);
 
