@@ -576,6 +576,14 @@ async function handleCatalogAdvisor(
   const advisorStartTime = Date.now();
 
   if (advisorClients.length === 0) {
+    recordAdvisorRequest({
+      surface: "catalog",
+      provider: "unknown",
+      fallbackUsed: true,
+      degraded: true,
+      latencyMs: Date.now() - advisorStartTime,
+      fallbackReason: "no_chain",
+    });
     return stream
       ? createStreamResponse((controller) => streamResolvedResult(controller, fallbackResult))
       : success(fallbackResult);
@@ -600,6 +608,12 @@ async function handleCatalogAdvisor(
   const contextSummary = buildConfiguratorContextSummary(context);
   const systemPrompt = buildSystemPrompt(historyContext, contextSummary, productList);
   const fallbackBudget = context?.estimatedBudget || inferBudgetFromQuery(query);
+
+  // Map retrieval source labels to the observability-layer naming convention.
+  const mapRetrievalSources = (
+    sources: readonly ("vector" | "lexical" | "catalog-order")[],
+  ): AiRetrievalSource[] =>
+    sources.map((s) => (s === "catalog-order" ? "catalog_order" : s) as AiRetrievalSource);
 
   if (stream) {
     return createStreamResponse(async (controller) => {
@@ -628,6 +642,14 @@ async function handleCatalogAdvisor(
             : null;
 
           if (result) {
+            recordAdvisorRequest({
+              surface: "catalog",
+              provider: advisorClient.provider,
+              fallbackUsed: false,
+              degraded: false,
+              latencyMs: Date.now() - advisorStartTime,
+              retrievalSources: mapRetrievalSources(retrieved.sources),
+            });
             emitStreamEvent(controller, { type: "result", result });
             return;
           }
@@ -646,15 +668,18 @@ async function handleCatalogAdvisor(
         }
       }
 
+      recordAdvisorRequest({
+        surface: "catalog",
+        provider: "unknown",
+        fallbackUsed: true,
+        degraded: true,
+        latencyMs: Date.now() - advisorStartTime,
+        fallbackReason: "provider_error",
+        retrievalSources: mapRetrievalSources(retrieved.sources),
+      });
       await streamResolvedResult(controller, fallbackResult);
     });
   }
-
-  // Map retrieval source labels to the observability-layer naming convention.
-  const mapRetrievalSources = (
-    sources: readonly ("vector" | "lexical" | "catalog-order")[],
-  ): AiRetrievalSource[] =>
-    sources.map((s) => (s === "catalog-order" ? "catalog_order" : s) as AiRetrievalSource);
 
   for (const advisorClient of advisorClients) {
     try {

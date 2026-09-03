@@ -30,8 +30,8 @@ import {
 import { sanitizeUserInput } from "@/lib/ai/sanitizeUserInput";
 import { PlannerAdvisorRequestSchema } from "@/features/shared/api/schemas";
 import { normalizeClientIp } from "@/lib/clientIp";
-import { withAiObservability } from "@/lib/observability/aiMetrics";
 import { rateLimit } from "@/lib/rateLimit";
+import { recordAdvisorRequest, withAiObservability } from "@/lib/observability/aiMetrics";
 import {
  createPlannerHandler,
  createPlannerRejectedMethodHandler,
@@ -134,64 +134,97 @@ function createStreamResponse(
  * degraded result when no provider yields usable text.
  */
 async function streamPlannerAdvisor(
- controller: ReadableStreamDefaultController<Uint8Array>,
- callerMessages: Array<{
-  role: "system" | "user" | "assistant";
-  content: string;
- }>,
+	controller: ReadableStreamDefaultController<Uint8Array>,
+	callerMessages: Array<{
+		role: "system" | "user" | "assistant";
+		content: string;
+	}>,
 ): Promise<void> {
- const chain = resolveAdvisorModelChain();
- const messages = buildMessages(callerMessages);
+	const startTime = Date.now();
+	const chain = resolveAdvisorModelChain();
 
- for (const target of chain) {
-  let streamedAnyData = false;
-  emitStreamEvent(controller, {
-   type: "status",
-   message: `Consulting ${target.provider}`,
-  });
+	if (chain.length === 0) {
+		emitStreamEvent(controller, {
+			type: "result",
+			result: { content: FALLBACK_CONTENT, degraded: true },
+		});
+		recordAdvisorRequest({
+			surface: "planner",
+			provider: "unknown",
+			fallbackUsed: true,
+			degraded: true,
+			latencyMs: Date.now() - startTime,
+			fallbackReason: "no_chain",
+		});
+		return;
+	}
 
-  const abortController = new AbortController();
-  const timeoutId = setTimeout(
-   () => abortController.abort(),
-   PLANNER_ADVISOR_TIMEOUT_MS,
-  );
+	const messages = buildMessages(callerMessages);
 
-  try {
-   const content = await requestAdvisorMessages(target, messages, {
-    signal: abortController.signal,
-    stream: true,
-    onDelta: (delta) => {
-     streamedAnyData = true;
-     emitStreamEvent(controller, { type: "delta", text: delta });
-    },
-   });
+	for (const target of chain) {
+		let streamedAnyData = false;
+		emitStreamEvent(controller, {
+			type: "status",
+			message: `Consulting ${target.provider}`,
+		});
 
-   clearTimeout(timeoutId);
+		const abortController = new AbortController();
+		const timeoutId = setTimeout(
+			() => abortController.abort(),
+			PLANNER_ADVISOR_TIMEOUT_MS,
+		);
 
-   if (content && content.trim().length > 0) {
-    emitStreamEvent(controller, {
-     type: "result",
-     result: { content: content.trim(), provider: target.provider },
-    });
-    return;
-   }
-  } catch (providerErr) {
-   clearTimeout(timeoutId);
-   const timedOut = isAbortError(providerErr);
-   console.error(
-    `[planner/ai-advisor] ${target.provider} stream error${timedOut ? " (timeout)" : " (error)"}`,
-   );
-  }
+		try {
+			const content = await requestAdvisorMessages(target, messages, {
+				signal: abortController.signal,
+				stream: true,
+				onDelta: (delta) => {
+					streamedAnyData = true;
+					emitStreamEvent(controller, { type: "delta", text: delta });
+				},
+			});
 
-  if (streamedAnyData) {
-   break;
-  }
- }
+			clearTimeout(timeoutId);
 
- emitStreamEvent(controller, {
-  type: "result",
-  result: { content: FALLBACK_CONTENT, degraded: true },
- });
+			if (content && content.trim().length > 0) {
+				emitStreamEvent(controller, {
+					type: "result",
+					result: { content: content.trim(), provider: target.provider },
+				});
+				recordAdvisorRequest({
+					surface: "planner",
+					provider: target.provider,
+					fallbackUsed: false,
+					degraded: false,
+					latencyMs: Date.now() - startTime,
+				});
+				return;
+			}
+		} catch (providerErr) {
+			clearTimeout(timeoutId);
+			const timedOut = isAbortError(providerErr);
+			console.error(
+				`[planner/ai-advisor] ${target.provider} stream error${timedOut ? " (timeout)" : " (error)"}`,
+			);
+		}
+
+		if (streamedAnyData) {
+			break;
+		}
+	}
+
+	emitStreamEvent(controller, {
+		type: "result",
+		result: { content: FALLBACK_CONTENT, degraded: true },
+	});
+	recordAdvisorRequest({
+		surface: "planner",
+		provider: "unknown",
+		fallbackUsed: true,
+		degraded: true,
+		latencyMs: Date.now() - startTime,
+		fallbackReason: "provider_error",
+	});
 }
 
 // ---------------------------------------------------------------------------
