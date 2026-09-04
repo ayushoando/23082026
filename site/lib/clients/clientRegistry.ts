@@ -896,7 +896,7 @@ export const CURATED_LOGO_CLIENT_IDS = [
   "usha-international",
 ] as const;
 
-const PUBLIC_CANONICAL_IDS = new Set<string>([
+const _PUBLIC_CANONICAL_IDS = new Set<string>([
   ...CURATED_LOGO_CLIENT_IDS,
   "tvs-group",
   "dmrc",

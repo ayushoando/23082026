@@ -552,14 +552,31 @@ describe('buildGlobalJsonLd', () => {
       description: 'Indexable page description text.',
       path: '/on',
     });
-    expect(on.robots).toEqual({ index: true, follow: true });
+    expect(on.robots).toEqual({
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+        'max-video-preview': -1,
+      },
+    });
     const off = buildPageMetadata(TEST_SITE_URL, {
       title: 'Off',
       description: 'Utility page description text here.',
       path: '/off',
       indexable: false,
     });
-    expect(off.robots).toEqual({ index: false, follow: false });
+    expect(off.robots).toEqual({
+      index: false,
+      follow: false,
+      googleBot: {
+        index: false,
+        follow: false,
+      },
+    });
   });
 });
 
@@ -844,7 +861,14 @@ describe('seo leftover path / product branches', () => {
       indexable: false,
     });
     expect(meta.alternates?.languages).toBeUndefined();
-    expect(meta.robots).toEqual({ index: false, follow: false });
+    expect(meta.robots).toEqual({
+      index: false,
+      follow: false,
+      googleBot: {
+        index: false,
+        follow: false,
+      },
+    });
   });
 
   it('keeps a same-origin product URL and defaults brand when sku/category are omitted', () => {

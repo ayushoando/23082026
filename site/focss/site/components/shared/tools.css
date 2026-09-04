@@ -116,7 +116,7 @@
 }
 
 .tools-calculator__error {
-  color: var(--color-danger, #a31f1f);
+  color: var(--color-danger);
 }
 
 .tools-calculator__actions {
