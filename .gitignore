@@ -17,6 +17,9 @@ generated-documents/
 results/*
 !results/.gitkeep
 
+# Agent-generated audit reports are local evidence, not repository source.
+agent-reports/
+
 # Playwright / E2E artifacts (never commit trace bundles)
 playwright-report/
 test-results/
