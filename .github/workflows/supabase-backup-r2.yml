@@ -25,10 +25,19 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y postgresql-client
       - run: pnpm install --frozen-lockfile
-      - run: pnpm run ops backup:supabase:r2
+      - name: Upload database backups to R2
+        run: pnpm run ops backup:supabase:r2
         env:
           PRODUCTS_DATABASE_URL: ${{ secrets.PRODUCTS_DATABASE_URL }}
           SUPABASE_AUTH_DATABASE_URL: ${{ secrets.SUPABASE_AUTH_DATABASE_URL }}
+          CLOUDFLARE_S3_URL: ${{ secrets.CLOUDFLARE_S3_URL }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_R2_ACCESS_KEY_ID: ${{ secrets.CLOUDFLARE_R2_ACCESS_KEY_ID }}
+          CLOUDFLARE_R2_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_R2_SECRET_ACCESS_KEY }}
+          CLOUDFLARE_R2_CATALOG_BUCKET: ${{ secrets.CLOUDFLARE_R2_CATALOG_BUCKET }}
+      - name: Prune expired R2 backups
+        run: pnpm run ops backup:r2:prune
+        env:
           CLOUDFLARE_S3_URL: ${{ secrets.CLOUDFLARE_S3_URL }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_R2_ACCESS_KEY_ID: ${{ secrets.CLOUDFLARE_R2_ACCESS_KEY_ID }}

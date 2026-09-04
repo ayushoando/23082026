@@ -233,6 +233,7 @@ const COMMANDS = {
     ]),
   "catalog:snapshot:r2": () => runTsx("catalog_snapshot_upload_r2.ts"),
   "repo:backup:r2": () => runTsx("repo_backup_upload_r2.ts"),
+  "backup:r2:prune": (args) => runTsx("prune_r2_backups.ts", args),
   "backup:r2": () => {
     runTsx("db_backup_upload_r2.ts");
     runTsx("repo_backup_upload_r2.ts");
