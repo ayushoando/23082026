@@ -17,7 +17,7 @@ export type DatabaseBoundaryRow = {
 /** Live Supabase projects (never dual-write across them). */
 export const databaseBoundaries: DatabaseBoundaryRow[] = [
   {
-    role: 'Admin — auth, CRM, planner saves, furniture library',
+    role: 'Admin — auth, CRM, planner saves, furniture library, descriptors',
     projectId: 'rxzpznmxbaoxpikowmfc',
     urlEnv: 'NEXT_ADMIN_SUPABASE_URL (alias SUPABASE_AUTH_URL)',
     anonKeyEnv: 'NEXT_ADMIN_SUPABASE_ANON_KEY',
@@ -25,10 +25,10 @@ export const databaseBoundaries: DatabaseBoundaryRow[] = [
     serverEntry: '@/platform/supabase/server → createAuthServerClient() · auth-admin.ts for service role',
     migrations: 'site/platform/supabase/migrations.admin/',
     holds:
-      'oando_plans, profiles, handoffs, teams, price books, customer_queries, audit, furniture_catalog, catalog-assets bucket',
+      'oando_plans, profiles, handoffs, teams, price books, customer_queries, audit, furniture_catalog, block_descriptors, catalog-assets bucket',
   },
   {
-    role: 'Products — catalog, configurator, descriptors, flags',
+    role: 'Products — catalog, configurator, flags',
     projectId: 'erpweaiypimorcunaimz',
     urlEnv: 'NEXT_PUBLIC_SUPABASE_URL',
     anonKeyEnv: 'NEXT_PUBLIC_SUPABASE_ANON_KEY',
