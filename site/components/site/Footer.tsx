@@ -90,7 +90,7 @@ export function SiteFooter() {
   return (
     <footer className="site-footer w-full surface-inverse text-inverse">
       {/* home-shell-xl matches marketing body insets (shell-container is wider/off-axis). */}
-      <div className="home-shell-xl py-3 md:py-7">
+      <div className="home-shell-xl site-footer__main">
         <div className="site-footer__columns">
           <div className="site-footer__brand-col flex min-w-0 flex-col gap-4">
             <Link
@@ -144,8 +144,9 @@ export function SiteFooter() {
           </div>
 
           {SITE_FOOTER_NAV.map((col, index) => (
-            <div
+            <nav
               key={col.heading}
+              aria-label={footerHeading(col.heading)}
               className={`site-footer__nav-col min-w-0 ${
                 index === 0 ? "site-footer__nav-col--products" : ""
               } ${index === 1 ? "site-footer__nav-col--company" : ""} ${
@@ -155,7 +156,7 @@ export function SiteFooter() {
               <p className="site-footer__heading site-footer__nav-heading typ-overline mb-2 md:mb-3">
                 {footerHeading(col.heading)}
               </p>
-              <ul className="flex flex-col gap-0.5">
+              <ul className="site-footer__nav-list flex flex-col gap-0.5">
                 {col.links.map(({ href, label }) => (
                   <li key={`${href}-${label}`}>
                     <Link
@@ -168,7 +169,7 @@ export function SiteFooter() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </nav>
           ))}
         </div>
       </div>
@@ -205,7 +206,7 @@ export function SiteFooter() {
               {t("footer.sitemap")}
             </Link>
           </div>
-          <p className="site-footer__legal-copy mt-3">
+          <p className="site-footer__legal-copy">
             &copy; <span suppressHydrationWarning>{currentYear}</span> One and Only. {t("footer.rightsReserved")}
           </p>
         </div>

@@ -20,6 +20,8 @@ import {
   PLANNER_HELP_PAGE_METADATA,
   PLANNER_LANDING_PAGE_METADATA,
   PLANNING_PAGE_METADATA,
+  MEETING_ROOM_CAPACITY_PAGE_METADATA,
+  OFFICE_SPACE_CALCULATOR_PAGE_METADATA,
   PRODUCTS_PAGE_METADATA,
   CLIENTS_PAGE_METADATA,
   CLIENT_DIRECTORY_PAGE_METADATA,
@@ -58,6 +60,14 @@ export const SEO01_STATIC_METADATA: ReadonlyArray<{
   { path: "/products", metadata: PRODUCTS_PAGE_METADATA },
   { path: "/clients", metadata: CLIENT_DIRECTORY_PAGE_METADATA },
   { path: "/planning", metadata: PLANNING_PAGE_METADATA },
+  {
+    path: "/tools/office-space-calculator",
+    metadata: OFFICE_SPACE_CALCULATOR_PAGE_METADATA,
+  },
+  {
+    path: "/tools/meeting-room-capacity-calculator",
+    metadata: MEETING_ROOM_CAPACITY_PAGE_METADATA,
+  },
   { path: "/planner", metadata: PLANNER_LANDING_PAGE_METADATA },
   { path: "/planner/help", metadata: PLANNER_HELP_PAGE_METADATA },
   { path: "/planner/features", metadata: PLANNER_FEATURES_PAGE_METADATA },

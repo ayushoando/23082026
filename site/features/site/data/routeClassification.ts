@@ -56,8 +56,7 @@ export const SITE_ROUTE_CLASSIFICATION: SiteRouteMeta[] = [
     owner: "Marketing",
     canonicalUrl: canonicalFor("/tools/meeting-room-capacity-calculator"),
     primaryAction: "Use calculator",
-    indexable: false,
-    notes: "Page metadata is noindex. Engine is still a tools-engine-placeholder; keep off sitemap until the calculator is wired.",
+    indexable: true,
   },
   {
     route: "/tools/office-space-calculator",
@@ -67,8 +66,7 @@ export const SITE_ROUTE_CLASSIFICATION: SiteRouteMeta[] = [
     owner: "Marketing",
     canonicalUrl: canonicalFor("/tools/office-space-calculator"),
     primaryAction: "Use calculator",
-    indexable: false,
-    notes: "Page metadata is noindex. Engine is still a tools-engine-placeholder; keep off sitemap until the calculator is wired.",
+    indexable: true,
   },
   {
     route: "/products/[category]",

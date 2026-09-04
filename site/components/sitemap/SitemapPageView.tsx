@@ -32,6 +32,7 @@ export function SitemapPageView({ kicker, title, subtitle, sections }: SitemapPa
   const headerRef = useRef<HTMLElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const [motionReady, setMotionReady] = useState(false);
+  const totalLinks = sections.reduce((count, section) => count + section.links.length, 0);
 
   useEffect(() => {
     const id = requestAnimationFrame(() => {
@@ -104,21 +105,27 @@ export function SitemapPageView({ kicker, title, subtitle, sections }: SitemapPa
         data-testid="sitemap-header"
       >
         <div className="home-shell-xl sitemap-header__inner">
-          <div
-            data-sitemap-hero-reveal
-            className="sitemap-header__bronze-mark"
-            aria-hidden="true"
-            data-testid="sitemap-bronze-mark"
-          />
-          <p data-sitemap-hero-reveal className="typ-label text-contrast-accent">
-            {kicker}
-          </p>
-          <h1 id="sitemap-heading" data-sitemap-hero-reveal className="typ-page-title sitemap-header__title">
-            {title}
-          </h1>
-          <p data-sitemap-hero-reveal className="typ-body sitemap-header__copy text-body">
-            {subtitle}
-          </p>
+          <div className="sitemap-header__content">
+            <div
+              data-sitemap-hero-reveal
+              className="sitemap-header__bronze-mark"
+              aria-hidden="true"
+              data-testid="sitemap-bronze-mark"
+            />
+            <p data-sitemap-hero-reveal className="typ-label text-contrast-accent">
+              {kicker}
+            </p>
+            <h1 id="sitemap-heading" data-sitemap-hero-reveal className="typ-page-title sitemap-header__title">
+              {title}
+            </h1>
+            <p data-sitemap-hero-reveal className="typ-body sitemap-header__copy text-body">
+              {subtitle}
+            </p>
+          </div>
+          <div data-sitemap-hero-reveal className="sitemap-header__folio" aria-hidden="true">
+            <span>{String(sections.length).padStart(2, "0")}</span>
+            <span>{String(totalLinks).padStart(2, "0")}</span>
+          </div>
         </div>
       </header>
 
@@ -129,8 +136,9 @@ export function SitemapPageView({ kicker, title, subtitle, sections }: SitemapPa
       <HomeSection variant="white" spacing="md" className="border-t-0">
         <HomeSectionInner>
           <div ref={gridRef} className="sitemap-grid" data-testid="sitemap-grid">
-            {sections.map((section) => {
+            {sections.map((section, index) => {
               const headingId = `sitemap-${section.heading.replace(/\s+/g, "-").toLowerCase()}`;
+              const sectionIndex = String(index + 1).padStart(2, "0");
               return (
                 <nav
                   key={section.heading}
@@ -138,9 +146,17 @@ export function SitemapPageView({ kicker, title, subtitle, sections }: SitemapPa
                   data-sitemap-reveal
                   className="sitemap-section"
                 >
-                  <h2 id={headingId} className="typ-nav sitemap-section__title">
-                    {section.heading}
-                  </h2>
+                  <div className="sitemap-section__heading">
+                    <span className="sitemap-section__index" aria-hidden="true">
+                      {sectionIndex}
+                    </span>
+                    <h2 id={headingId} className="typ-nav sitemap-section__title">
+                      {section.heading}
+                    </h2>
+                    <span className="sitemap-section__count" aria-hidden="true">
+                      {String(section.links.length).padStart(2, "0")}
+                    </span>
+                  </div>
                   <ul className="sitemap-section__links">
                     {section.links.map((link) => (
                       <li key={`${section.heading}-${link.href}-${link.label}`}>
@@ -148,7 +164,10 @@ export function SitemapPageView({ kicker, title, subtitle, sections }: SitemapPa
                           href={link.href}
                           className="sitemap-section__link typ-body-sm"
                         >
-                          {link.label}
+                          <span>{link.label}</span>
+                          <span className="sitemap-section__arrow" aria-hidden="true">
+                            ↗
+                          </span>
                         </Link>
                       </li>
                     ))}

@@ -145,7 +145,11 @@ describe("SITE-SEO-03 sitemap, robots, classification agreement", () => {
       ACCESS_PAGE_METADATA,
       CHOOSE_PRODUCT_PAGE_METADATA,
     ]) {
-      expect(meta.robots).toEqual({ index: false, follow: false });
+      expect(meta.robots).toEqual({
+        index: false,
+        follow: false,
+        googleBot: { index: false, follow: false },
+      });
     }
   });
 
@@ -219,7 +223,17 @@ describe("SITE-SEO-03 sitemap, robots, classification agreement", () => {
       description: "A long enough description for SEO tests.",
       path: "/a",
     });
-    expect(indexed.robots).toEqual({ index: true, follow: true });
+    expect(indexed.robots).toEqual({
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+        "max-video-preview": -1,
+      },
+    });
 
     const blocked = buildPageMetadata("https://example.com", {
       title: "B",
@@ -227,7 +241,11 @@ describe("SITE-SEO-03 sitemap, robots, classification agreement", () => {
       path: "/b",
       indexable: false,
     });
-    expect(blocked.robots).toEqual({ index: false, follow: false });
+    expect(blocked.robots).toEqual({
+      index: false,
+      follow: false,
+      googleBot: { index: false, follow: false },
+    });
   });
 });
 

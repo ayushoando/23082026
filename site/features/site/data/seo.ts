@@ -408,6 +408,26 @@ export function buildPageMetadata(siteUrl: string, input: PageMetadataInput): Me
   const includeAlternates = input.alternates !== false;
   const indexable = input.indexable !== false;
   const resolvedTitle = resolveDocumentTitle(input.title);
+  const robots = indexable
+    ? {
+        index: true,
+        follow: true,
+        googleBot: {
+          index: true,
+          follow: true,
+          "max-image-preview": "large" as const,
+          "max-snippet": -1,
+          "max-video-preview": -1,
+        },
+      }
+    : {
+        index: false,
+        follow: false,
+        googleBot: {
+          index: false,
+          follow: false,
+        },
+      };
   // Always absolute so the root template cannot re-append the brand.
   const title: Metadata["title"] = { absolute: resolvedTitle };
 
@@ -416,9 +436,9 @@ export function buildPageMetadata(siteUrl: string, input: PageMetadataInput): Me
     title,
     description: input.description,
     keywords: input.keywords,
-    robots: indexable
-      ? { index: true, follow: true }
-      : { index: false, follow: false },
+    // Keep every page's crawler directive self-contained. This avoids relying
+    // on nested metadata merge behavior to retain Google preview controls.
+    robots,
     alternates: {
       canonical: canonicalUrl,
       ...(includeAlternates && indexable

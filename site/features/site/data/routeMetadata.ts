@@ -242,6 +242,34 @@ export const TRUSTED_BY_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
   ],
 });
 
+export const OFFICE_SPACE_CALCULATOR_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
+  title: "Office Space Calculator | Workstation Capacity | One&Only",
+  description:
+    "Estimate office workspace capacity from room dimensions. Compare planning presets for gross area, circulation allowance, usable area, and indicative workstation counts.",
+  path: "/tools/office-space-calculator",
+  keywords: [
+    "office space calculator India",
+    "workstation capacity calculator",
+    "office planning area calculator",
+    "workspace layout capacity",
+    "office circulation planning",
+  ],
+});
+
+export const MEETING_ROOM_CAPACITY_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
+  title: "Meeting Room Capacity Calculator | One&Only",
+  description:
+    "Estimate meeting room capacity from room dimensions. Compare boardroom, collaboration, and training presets for usable area and indicative attendee counts.",
+  path: "/tools/meeting-room-capacity-calculator",
+  keywords: [
+    "meeting room capacity calculator",
+    "conference room seating calculator",
+    "boardroom capacity planner",
+    "meeting room area calculator",
+    "training room capacity",
+  ],
+});
+
 export const ACCESS_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
   title: "Sign in | One&Only office furniture planner",
   description:

@@ -1,61 +1,70 @@
-import type { Metadata } from "next";
-
 import { HomeMarketingLayout } from "@/components/home/layout";
 import {
-  buildBreadcrumbJsonLd,
-  buildPageMetadata,
-} from "@/features/site/data/seo";
+  SpaceCalculator,
+  type SpaceCalculatorPreset,
+} from "@/components/tools/SpaceCalculator";
+import { MEETING_ROOM_CAPACITY_PAGE_METADATA } from "@/features/site/data/routeMetadata";
+import { buildBreadcrumbJsonLd } from "@/features/site/data/seo";
 import { SITE_URL } from "@/lib/siteUrl";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
 const TOOL_PATH = "/tools/meeting-room-capacity-calculator";
-const TOOL_TITLE = "Meeting Room Capacity Calculator — India NBC | One&Only";
-const TOOL_DESCRIPTION =
-  "Calculate meeting-room seating capacity from room dimensions with India NBC circulation norms. Enter length and width, select your layout preset, and get instant usable area and seat count recommendations for your workspace.";
+
+const MEETING_ROOM_PRESETS: readonly SpaceCalculatorPreset[] = [
+  {
+    id: "boardroom",
+    label: "Boardroom",
+    description: "A formal meeting layout with a central table and a 25% planning circulation allowance.",
+    circulationFraction: 0.25,
+    areaPerPersonSqm: 2.2,
+  },
+  {
+    id: "collaboration",
+    label: "Collaboration room",
+    description: "A flexible meeting setting with movable furniture and a 22% planning circulation allowance.",
+    circulationFraction: 0.22,
+    areaPerPersonSqm: 1.8,
+  },
+  {
+    id: "training",
+    label: "Training room",
+    description: "A classroom-oriented setup with a 28% planning circulation allowance.",
+    circulationFraction: 0.28,
+    areaPerPersonSqm: 1.6,
+  },
+];
 
 const TOOL_FAQS = [
   {
-    question: "How is meeting room capacity calculated?",
+    question: "How is meeting room capacity estimated?",
     answer:
-      "Gross area is calculated from length × width, usable area is derived by applying National Building Code (NBC) circulation allowances for the selected room preset (25% for conference/boardroom setups), and total capacity is determined by dividing usable area by standard square metres per seat (2.2 sqm per seat for conference setups).",
+      "The tool calculates the room’s gross area, removes the selected planning allowance for movement around furniture, and divides the remainder by the preset’s indicative area per attendee.",
   },
   {
-    question: "What room configurations work best with this tool?",
+    question: "Why use different room presets?",
     answer:
-      "The calculator supports standard rectangular meeting and conference spaces in metres, with density presets tailored for formal boardrooms, collaborative meeting rooms, classroom training setups, and hybrid open-office huddle spaces.",
+      "A boardroom, collaboration room, and training room need different circulation and individual-space assumptions. The presets make those trade-offs visible before a detailed layout is drawn.",
   },
   {
-    question: "How does NBC compliance affect meeting room planning?",
+    question: "Can the result be used for occupancy or fire approval?",
     answer:
-      "The National Building Code of India (NBC 2016) specifies minimum occupant load allowances and mandatory egress circulation paths. Adhering to these standards ensures your conference rooms remain safe, comfortable, and fully compliant with fire and occupancy regulations.",
+      "No. It is an early planning estimate, not an occupancy, egress, accessibility, or fire-safety determination. Verify the final room with the project’s qualified consultants and local authority requirements.",
   },
   {
-    question: "Do I need an account or email to use this tool?",
+    question: "How do I turn an estimate into a room layout?",
     answer:
-      "No — this calculator is completely free, open, and ungated. You can calculate room capacities immediately without creating an account or providing contact details.",
+      "Use the estimate to define the brief, then test table sizes, screen position, doors, circulation, and furniture clearances in a measured layout before committing to a specification.",
   },
 ] as const;
 
-export const metadata: Metadata = buildPageMetadata(SITE_URL, {
-  title: TOOL_TITLE,
-  description: TOOL_DESCRIPTION,
-  path: TOOL_PATH,
-  indexable: false,
-  keywords: [
-    "meeting room capacity calculator",
-    "meeting room seating capacity",
-    "conference room capacity calculator India",
-    "NBC meeting room norms",
-    "how many seats in meeting room",
-  ],
-});
+export const metadata = MEETING_ROOM_CAPACITY_PAGE_METADATA;
 
 export default function MeetingRoomCapacityCalculatorPage() {
   const breadcrumbJsonLd = buildBreadcrumbJsonLd(SITE_URL, [
     { name: "Home", path: "/" },
-    { name: "Tools", path: "/tools" },
     { name: "Meeting Room Capacity Calculator", path: TOOL_PATH },
   ]);
+
   return (
     <HomeMarketingLayout>
       <script
@@ -64,27 +73,26 @@ export default function MeetingRoomCapacityCalculatorPage() {
       />
       <section className="home-section" aria-labelledby="tool-heading">
         <div className="home-section__inner">
-          <p className="home-kicker">Free tools · India NBC norms</p>
+          <p className="home-kicker">Free planning tool</p>
           <h1 id="tool-heading" className="home-heading">
             Meeting Room Capacity Calculator
           </h1>
           <p className="home-lead">
-            Enter meeting-room length and width in metres, pick a density preset
-            with India-calibrated circulation allowances, and receive instant
-            recommendations for usable area and comfortable seating capacity.
+            Test a meeting room’s first-pass capacity before the detailed layout work begins.
+            Choose a room setup to compare gross area, planning circulation, usable room area,
+            and an indicative attendee count.
           </p>
-          <div
-            className="tools-engine-placeholder"
-            data-testid="meeting-room-capacity-calculator-placeholder"
-          >
-            <p>
-              Interactive calculator interface — select dimensions and room
-              preset to view instant area breakdown and recommended seating
-              capacity according to Indian commercial building standards.
-            </p>
-          </div>
+
+          <SpaceCalculator
+            id="meeting-room-capacity-calculator"
+            title="Balance capacity with room usability."
+            capacityLabel="attendees"
+            initialPresetId="boardroom"
+            presets={MEETING_ROOM_PRESETS}
+          />
+
           <div className="tools-faq">
-            <h2>Frequently Asked Questions</h2>
+            <h2>Meeting room planning questions</h2>
             <dl>
               {TOOL_FAQS.map((faq) => (
                 <div key={faq.question}>

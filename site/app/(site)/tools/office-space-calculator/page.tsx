@@ -1,62 +1,70 @@
-import type { Metadata } from "next";
-
 import { HomeMarketingLayout } from "@/components/home/layout";
 import {
-  buildBreadcrumbJsonLd,
-  buildPageMetadata,
-} from "@/features/site/data/seo";
+  SpaceCalculator,
+  type SpaceCalculatorPreset,
+} from "@/components/tools/SpaceCalculator";
+import { OFFICE_SPACE_CALCULATOR_PAGE_METADATA } from "@/features/site/data/routeMetadata";
+import { buildBreadcrumbJsonLd } from "@/features/site/data/seo";
 import { SITE_URL } from "@/lib/siteUrl";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
 const TOOL_PATH = "/tools/office-space-calculator";
-const TOOL_TITLE =
-  "Office Space Calculator — Workstations per Sq Ft (India NBC) | One&Only";
-const TOOL_DESCRIPTION =
-  "Plan commercial workstations per square foot with India NBC circulation norms. Enter length and width, select a density preset, and receive instant gross area, usable area after circulation, and workstation count recommendations.";
+
+const OFFICE_PRESETS: readonly SpaceCalculatorPreset[] = [
+  {
+    id: "open-workspace",
+    label: "Open workspace",
+    description: "A collaborative setting with shared workstations and a 32% planning circulation allowance.",
+    circulationFraction: 0.32,
+    areaPerPersonSqm: 6,
+  },
+  {
+    id: "focused-workstations",
+    label: "Focused workstations",
+    description: "A more enclosed workstation setting with a 35% planning circulation allowance.",
+    circulationFraction: 0.35,
+    areaPerPersonSqm: 8,
+  },
+  {
+    id: "training-space",
+    label: "Training space",
+    description: "A flexible learning setup with a 28% planning circulation allowance.",
+    circulationFraction: 0.28,
+    areaPerPersonSqm: 3,
+  },
+];
 
 const TOOL_FAQS = [
   {
-    question: "What NBC circulation deduction does this calculator use?",
+    question: "How does the office space calculator work?",
     answer:
-      "The calculator deducts a planning circulation ratio per density preset (open office 32%, cubicle 35%, meeting 25%, classroom 28%, clinic waiting 30%) from gross floor area to determine net usable space before calculating seat counts. These ratios reflect National Building Code of India (NBC 2016) commercial occupancy and circulation allowances.",
+      "It multiplies the room length and width to establish gross area, applies the selected planning circulation allowance, and divides the remaining area by the preset’s indicative area per workstation or learner.",
   },
   {
-    question: "Which density preset should I choose for my office?",
+    question: "Which planning preset should I choose?",
     answer:
-      "Select Open Office (6 sqm gross per seat) for collaborative linear benches and hot-desks, Cubicle (8 sqm) for 120° or partitioned workstations with dedicated storage, and Meeting (2.2 sqm) for conference and presentation spaces.",
+      "Choose Open workspace for shared benching, Focused workstations where each user needs more personal territory, or Training space for learning and presentation layouts. Start broad, then refine with a site plan.",
   },
   {
-    question: "How accurate is the seat count estimate?",
+    question: "Is this a compliance calculation?",
     answer:
-      "The result provides an architecturally accurate seat-capacity planning range based on standard floorplate efficiency. For exact millimeter-level layout fitting and product placement, use our interactive Planner workspace.",
+      "No. The tool supports early workspace planning only. A final layout must be verified against the applicable building, fire, accessibility, and local approval requirements for the actual site.",
   },
   {
-    question: "Do I need to create an account or provide contact details?",
+    question: "What should happen after the estimate?",
     answer:
-      "No — this planning calculator is completely free, open, and ungated. You can test multiple room configurations and density ratios immediately.",
+      "Use the result to frame a planning brief, then move into a measured layout and furniture specification with the project team before procurement or construction decisions are made.",
   },
 ] as const;
 
-export const metadata: Metadata = buildPageMetadata(SITE_URL, {
-  title: TOOL_TITLE,
-  description: TOOL_DESCRIPTION,
-  path: TOOL_PATH,
-  indexable: false,
-  keywords: [
-    "office space calculator India",
-    "workstations per sq ft",
-    "office seating capacity India",
-    "NBC office space norms",
-    "how many workstations per square foot",
-  ],
-});
+export const metadata = OFFICE_SPACE_CALCULATOR_PAGE_METADATA;
 
 export default function OfficeSpaceCalculatorPage() {
   const breadcrumbJsonLd = buildBreadcrumbJsonLd(SITE_URL, [
     { name: "Home", path: "/" },
-    { name: "Tools", path: "/tools" },
     { name: "Office Space Calculator", path: TOOL_PATH },
   ]);
+
   return (
     <HomeMarketingLayout>
       <script
@@ -65,27 +73,26 @@ export default function OfficeSpaceCalculatorPage() {
       />
       <section className="home-section" aria-labelledby="tool-heading">
         <div className="home-section__inner">
-          <p className="home-kicker">Free tools · India NBC norms</p>
+          <p className="home-kicker">Free planning tool</p>
           <h1 id="tool-heading" className="home-heading">
             Office Space Calculator
           </h1>
           <p className="home-lead">
-            Enter room length and width in metres, choose a density preset
-            calibrated to Indian NBC circulation allowances, and receive instant
-            calculations for gross area, usable area, and workstation capacity.
+            Turn a rectangular room into a first-pass workspace capacity estimate. Choose a
+            planning preset to see gross area, allowance for circulation, usable planning area,
+            and an indicative workstation count.
           </p>
-          <div
-            className="tools-engine-placeholder"
-            data-testid="office-space-calculator-placeholder"
-          >
-            <p>
-              Interactive calculator interface — adjust dimensions and density
-              presets to explore floorplate utilization, circulation efficiency,
-              and workstation counts for your commercial fit-out.
-            </p>
-          </div>
+
+          <SpaceCalculator
+            id="office-space-calculator"
+            title="Map the capacity before the layout."
+            capacityLabel="workstations"
+            initialPresetId="open-workspace"
+            presets={OFFICE_PRESETS}
+          />
+
           <div className="tools-faq">
-            <h2>Frequently Asked Questions</h2>
+            <h2>Office space planning questions</h2>
             <dl>
               {TOOL_FAQS.map((faq) => (
                 <div key={faq.question}>

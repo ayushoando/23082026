@@ -2,8 +2,40 @@
 
 .site-footer {
   position: relative;
+  overflow: clip;
   background: var(--surface-inverse);
   color: var(--text-inverse-body);
+}
+
+.site-footer::before {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-bronze-400), transparent);
+  content: "";
+}
+
+.site-footer__main {
+  padding-block: clamp(2.25rem, 5vw, 4.5rem);
+}
+
+.site-footer .site-footer__columns {
+  gap: clamp(1.5rem, 3vw, 3.5rem);
+}
+
+@media (min-width: 64rem) {
+  .site-footer .site-footer__columns {
+    grid-template-columns: minmax(15rem, 1.35fr) repeat(3, minmax(0, 1fr));
+  }
+
+  .site-footer__brand-col {
+    padding-right: clamp(1rem, 2.5vw, 2.5rem);
+    border-right: 1px solid color-mix(in srgb, var(--border-inverse) 70%, transparent);
+  }
+
+  .site-footer__nav-col {
+    padding-top: 0.15rem;
+  }
 }
 
 .site-footer__heading {
@@ -21,6 +53,10 @@
 
 .site-footer__link:hover {
   color: var(--text-inverse-body);
+}
+
+.site-footer__nav-list {
+  gap: 0.35rem;
 }
 
 .site-footer__social {
@@ -49,6 +85,10 @@
 }
 
 .site-footer__legal-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 2rem;
   padding-bottom: 1.25rem;
   padding-left: max(1rem, var(--site-fab-side-left));
   padding-right: max(1rem, var(--site-fab-side-right));
@@ -56,8 +96,8 @@
 }
 
 @media (width < theme(--breakpoint-md)) {
-  .site-footer .home-shell-xl {
-    padding-block: 0.75rem;
+  .site-footer__main {
+    padding-block: 2rem;
   }
 
   .site-footer .site-footer__columns {
@@ -77,6 +117,7 @@
   }
 
   .site-footer__legal-row {
+    flex-direction: column;
     padding-top: 0.75rem;
     /* Clear the fixed phone tab bar (3.5rem + border) overlaying the pane
        bottom — the scroll container's own padding sits above the footer. */
@@ -91,6 +132,7 @@
 
   .site-footer__legal-copy {
     margin-top: 0.5rem;
+    text-align: center;
   }
 }
 
@@ -105,6 +147,7 @@
 .site-footer__legal-copy {
   margin: 0;
   color: var(--text-inverse-muted);
+  text-align: right;
 }
 
 .site-footer .typ-body-sm {
