@@ -82,7 +82,9 @@ describe("adminNav", () => {
     expect(docs?.href).toMatch(/^https?:\/\//);
     // Vitest runs with NODE_ENV=test → dev default localhost:3001, prod Vercel URL on production.
     // Accept either — the exact host depends on env fallbacks and local .env defaults.
-    expect(["http://localhost:3001", "https://techdocsgenerator.vercel.app"]).toContain(docs?.href);
+    expect(["http://localhost:3001", "https://oando23.vercel.app"]).toContain(
+      docs?.href,
+    );
     // External links must never steal active state from admin routes
     expect(resolveAdminNavItem("/admin/settings")).toMatchObject({
       href: "/admin/settings",
