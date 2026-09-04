@@ -1,6 +1,15 @@
 name = "oando-worker-proxy"
 main = "src/index.js"
 compatibility_date = "2024-01-01"
+workers_dev = false
+
+[[routes]]
+pattern = "oando.co.in/*"
+zone_name = "oando.co.in"
+
+[[routes]]
+pattern = "www.oando.co.in/*"
+zone_name = "oando.co.in"
 
 [observability.logs]
 enabled = true
