@@ -27,9 +27,11 @@ describe("audit " + "eslint" + " suppress directives", () => {
     expect(source).toContain(token);
     expect(source).toContain("site/app");
     expect(source).toContain("site/features");
+    expect(source).toContain("site/hooks");
     expect(source).toContain("site/lib");
     expect(source).toContain("tests");
     expect(source).toContain("scripts");
+    expect(source).toContain("config/build");
     // SCAN_DIRS must stay product-only — no hidden external spec roots.
     const scanDirsMatch = source.match(/const SCAN_DIRS = \[([\s\S]*?)\]/);
     expect(scanDirsMatch).not.toBeNull();
@@ -48,9 +50,11 @@ describe("audit " + "eslint" + " suppress directives", () => {
         "site/app",
         "site/components",
         "site/features",
+        "site/hooks",
         "site/lib",
         "tests",
         "scripts",
+        "config/build",
       ]) {
         fs.mkdirSync(path.join(tmp, dir), { recursive: true });
       }
@@ -102,6 +106,43 @@ describe("audit " + "eslint" + " suppress directives", () => {
       expect(failed).toBe(true);
       expect(stderr).toMatch(new RegExp(`audit-${token}: \\d+ file\\(s\\)`));
       expect(stderr.replaceAll("\\", "/")).toContain("site/lib/bad.ts");
+    } finally {
+      fs.rmSync(tmp, { recursive: true, force: true });
+    }
+  });
+
+  it("allows only the documented hook lifecycle suppressions", () => {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "eslint-audit-allowlist-"));
+    try {
+      const allowedPath = path.join(tmp, "site/hooks/Studio/useStudioFabric.ts");
+      fs.mkdirSync(path.dirname(allowedPath), { recursive: true });
+      fs.writeFileSync(
+        allowedPath,
+        `// ${token}-next-line react-hooks/exhaustive-deps\nuseEffect(() => {}, []);\n`,
+        "utf8",
+      );
+
+      const output = execFileSync(process.execPath, [scriptPath], {
+        cwd: monorepoRoot,
+        encoding: "utf8",
+        env: { ...process.env, MONOREPO_ROOT: tmp },
+        stdio: ["ignore", "pipe", "pipe"],
+      });
+      expect(output).toContain("audit-" + token + ": ok");
+
+      fs.writeFileSync(
+        allowedPath,
+        `// ${token}-next-line no-console\nconsole.log(1);\n`,
+        "utf8",
+      );
+      expect(() =>
+        execFileSync(process.execPath, [scriptPath], {
+          cwd: monorepoRoot,
+          encoding: "utf8",
+          env: { ...process.env, MONOREPO_ROOT: tmp },
+          stdio: ["ignore", "pipe", "pipe"],
+        }),
+      ).toThrow();
     } finally {
       fs.rmSync(tmp, { recursive: true, force: true });
     }

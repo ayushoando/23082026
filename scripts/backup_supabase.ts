@@ -180,16 +180,21 @@ function cleanupOldBackups(rootDir: string, retentionDays: number) {
   }
 }
 
-async function main() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
-  const supabaseKey = serviceKey || anonKey;
-  if (!supabaseUrl || !supabaseKey) {
+export function resolveProductsBackupCredentials(
+  env: NodeJS.ProcessEnv = process.env,
+): { supabaseUrl: string; serviceKey: string } {
+  const supabaseUrl = env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+  const serviceKey = env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+  if (!supabaseUrl || !serviceKey) {
     throw new Error(
-      "Missing NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY/NEXT_PUBLIC_SUPABASE_ANON_KEY",
+      "Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY. Supabase REST backups require the service role key; anon keys cannot read protected backup tables.",
     );
   }
+  return { supabaseUrl, serviceKey };
+}
+
+export async function main() {
+  const { supabaseUrl, serviceKey } = resolveProductsBackupCredentials();
 
   const tables = parseTablesFromEnv();
   const retentionDays = parseRetentionDays();
@@ -199,7 +204,7 @@ async function main() {
   const runDir = path.join(backupRoot, runId);
   ensureDir(runDir);
 
-  const client = createClient(supabaseUrl, supabaseKey, {
+  const client = createClient(supabaseUrl, serviceKey, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 
@@ -290,7 +295,7 @@ async function main() {
     createdAt: new Date().toISOString(),
     source: "supabase-rest",
     supabaseUrlHost: new URL(supabaseUrl).host,
-    usedServiceRoleKey: Boolean(serviceKey),
+    usedServiceRoleKey: true,
     pageSize: PAGE_SIZE,
     maxRetries,
     retentionDays,
@@ -317,7 +322,14 @@ async function main() {
   }
 }
 
-main().catch((error) => {
-  console.error(error instanceof Error ? error.message : String(error));
-  process.exit(1);
-});
+function isMain(): boolean {
+  const entry = (process.argv[1] ?? "").replace(/\\/g, "/");
+  return entry.endsWith("backup_supabase.ts") || entry.endsWith("backup_supabase.js");
+}
+
+if (isMain()) {
+  main().catch((error) => {
+    console.error(error instanceof Error ? error.message : String(error));
+    process.exit(1);
+  });
+}

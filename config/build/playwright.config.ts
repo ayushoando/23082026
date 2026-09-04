@@ -1,9 +1,10 @@
 import fs from "node:fs";
+import { createRequire } from "node:module";
 import path from "node:path";
 import { defineConfig, devices } from "@playwright/test";
-// eslint-disable-next-line @typescript-eslint/no-require-imports
+
+const require = createRequire(import.meta.url);
 const { loadEnvLocal } = require("../../scripts/general/loadEnvLocal.cjs");
-// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { forcePlaywrightBaseURLEnv } = require("./playwrightBaseURL.cjs");
 
 interface VisualBaselineManifest {

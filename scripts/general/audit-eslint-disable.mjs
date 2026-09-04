@@ -17,11 +17,20 @@ const SCAN_DIRS = [
   "site/app",
   "site/components",
   "site/features",
+  "site/hooks",
   "site/lib",
   "tests",
   "scripts",
+  "config/build",
 ];
 const SCAN_SKIP_FILES = new Set(["scripts/general/audit-eslint-disable.mjs"]);
+const ALLOWED_SUPPRESSIONS = new Map([
+  ["site/hooks/Studio/useStudioFabric.ts", [/react-hooks\/exhaustive-deps/]],
+  ["site/hooks/Planner/usePlannerFabric.ts", [/react-hooks\/exhaustive-deps/]],
+  ["site/hooks/Studio/useStudioKeyboardShortcuts.ts", [/react-hooks\/exhaustive-deps/]],
+  ["site/hooks/Planner/usePlannerKeyboardShortcuts.ts", [/react-hooks\/exhaustive-deps/]],
+  ["site/hooks/Planner/usePlannerSessionWarning.ts", [/react-hooks\/exhaustive-deps/]],
+]);
 /** Real disable directives only — not the substring in script names / prose. */
 const DISABLE_RE = /(?:\/\/|\/\*)\s*eslint-disable(?:-next-line|-line)?\b/;
 
@@ -39,6 +48,13 @@ function walk(dir, files = []) {
   return files;
 }
 
+function hasOnlyAllowedSuppressions(rel, source) {
+  const allowed = ALLOWED_SUPPRESSIONS.get(rel);
+  if (!allowed) return false;
+  const lines = source.split(/\r?\n/).filter((line) => DISABLE_RE.test(line));
+  return lines.length > 0 && lines.every((line) => allowed.some((re) => re.test(line)));
+}
+
 const failures = [];
 
 for (const dir of SCAN_DIRS) {
@@ -47,7 +63,7 @@ for (const dir of SCAN_DIRS) {
     const rel = path.relative(monorepoRoot, file).replaceAll("\\", "/");
     if (SCAN_SKIP_FILES.has(rel)) continue;
     const source = readFileSync(file, "utf8");
-    if (DISABLE_RE.test(source)) {
+    if (DISABLE_RE.test(source) && !hasOnlyAllowedSuppressions(rel, source)) {
       failures.push(rel);
     }
   }
