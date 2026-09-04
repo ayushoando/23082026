@@ -4,7 +4,6 @@
  */
 import { describe, it, expect } from "vitest";
 import robots from "@/app/robots";
-import { ROBOTS_DISALLOW_PREFIXES } from "@/features/site/data/routeClassification";
 import { SITE_URL } from "@/lib/siteUrl";
 
 describe("robots.ts (stable import)", () => {
@@ -24,33 +23,15 @@ describe("robots.ts (stable import)", () => {
         ? [config.sitemap]
         : [];
     expect(sitemaps[0]).toContain("/sitemap.xml");
-    expect(first?.disallow).toEqual([...ROBOTS_DISALLOW_PREFIXES]);
-    expect(first?.disallow).toContain("/portal/");
-    expect(first?.disallow).toContain("/ooplanner/");
+    expect(first?.disallow).toBeUndefined();
   });
 
-  it("disallows admin, api, private planner, portal, dashboard, access, offline", () => {
+  it("does not emit disallow blocks to allow crawler discovery of page-level noindex", () => {
     const config = robots();
     const rules = Array.isArray(config.rules) ? config.rules : [config.rules];
-    const disallow = rules[0]?.disallow ?? [];
-    const disallowList = Array.isArray(disallow) ? disallow : [disallow];
-    for (const prefix of [
-      "/admin/",
-      "/api/",
-      "/portal/",
-      "/dashboard/",
-      "/access/",
-      "/login/",
-      "/ooplanner/",
-      "/offline/",
-      "/quote-cart/",
-      "/choose-product/",
-    ]) {
-      expect(disallowList, prefix).toContain(prefix);
+    for (const rule of rules) {
+      expect(rule?.disallow).toBeUndefined();
     }
-    // Marketing planner landing stays allowlisted (not in disallow).
-    expect(disallowList).not.toContain("/planner/");
-    expect(disallowList).not.toContain("/products/");
   });
 
   it("uses SITE_URL host for sitemap and emits no non-standard host field", () => {

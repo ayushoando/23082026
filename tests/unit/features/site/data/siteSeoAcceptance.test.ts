@@ -20,7 +20,6 @@ vi.mock("@/lib/catalog/catalogDrizzle", () => ({
 import {
   PLANNER_MARKETING_SITEMAP_PATHS,
   PUBLIC_INDEXABLE_STATIC_PATHS,
-  ROBOTS_DISALLOW_PREFIXES,
   SITE_ROUTE_CLASSIFICATION,
   getRouteClassification,
 } from "@/features/site/data/routeClassification";
@@ -169,24 +168,12 @@ describe("SITE-SEO-03 sitemap, robots, classification agreement", () => {
     );
   });
 
-  it("robots.txt disallows protected and utility prefixes", () => {
+  it("robots.txt allows crawl access without disallow blocks", () => {
     const config = robots();
     const rules = Array.isArray(config.rules) ? config.rules : [config.rules];
-    const disallow = rules[0]?.disallow ?? [];
-    const disallowList = Array.isArray(disallow) ? disallow : [disallow];
-    for (const prefix of ROBOTS_DISALLOW_PREFIXES) {
-      expect(disallowList).toContain(prefix);
+    for (const rule of rules) {
+      expect(rule?.disallow).toBeUndefined();
     }
-    expect(disallowList).toContain("/quote-cart/");
-    expect(disallowList).toContain("/tracking/");
-    expect(disallowList).toContain("/choose-product/");
-    expect(disallowList).toContain("/portal/");
-    expect(disallowList).toContain("/admin/");
-    expect(disallowList).toContain("/api/");
-    expect(disallowList).toContain("/dashboard/");
-    expect(disallowList).toContain("/access/");
-    expect(disallowList).toContain("/offline/");
-    expect(disallowList).toContain("/ooplanner/");
   });
 
   it("sitemap includes only indexable static + planner marketing paths", async () => {

@@ -681,21 +681,6 @@ export const SOLUTION_CATEGORY_SITEMAP_PATHS = SOLUTION_CATEGORY_IDS.map(
   (id) => `/solutions/${id}` as const,
 );
 
-export const ROBOTS_DISALLOW_PREFIXES = [
-  "/api/",
-  "/admin/",
-  "/crm/",
-  "/ops/",
-  "/portal/",
-  "/dashboard/",
-  "/login/",
-  "/access/",
-  "/quote-cart/",
-  "/tracking/",
-  "/choose-product/",
-  "/support-ivr/",
-  "/offline/",
-  // App shells — also noindex via metadata; robots deny is defense in depth.
-  "/oostudio/",
-  "/ooplanner/",
-] as const;
+// De-indexing is handled directly via <meta name="robots" content="noindex, nofollow">
+// to prevent Google Search Console "Indexed, though blocked by robots.txt" warnings.
+export const ROBOTS_DISALLOW_PREFIXES: readonly string[] = [] as const;

@@ -144,18 +144,8 @@ describe("PUBLIC_INDEXABLE_ROUTES derivation", () => {
     expect(PLANNER_MARKETING_SITEMAP_PATHS).not.toContain("/planner/features/3d-view");
   });
 
-  it("disallows protected and utility prefixes in robots", () => {
-    expect(ROBOTS_DISALLOW_PREFIXES).toContain("/portal/");
-    expect(ROBOTS_DISALLOW_PREFIXES).toContain("/ooplanner/");
-    expect(ROBOTS_DISALLOW_PREFIXES).toContain("/quote-cart/");
-    expect(ROBOTS_DISALLOW_PREFIXES).toContain("/tracking/");
-    expect(ROBOTS_DISALLOW_PREFIXES).toContain("/choose-product/");
-    expect(ROBOTS_DISALLOW_PREFIXES).toContain("/login/");
-    expect(ROBOTS_DISALLOW_PREFIXES).toContain("/access/");
-    expect(ROBOTS_DISALLOW_PREFIXES).toContain("/admin/");
-    expect(ROBOTS_DISALLOW_PREFIXES).toContain("/api/");
-    expect(ROBOTS_DISALLOW_PREFIXES).toContain("/dashboard/");
-    expect(ROBOTS_DISALLOW_PREFIXES).toContain("/offline/");
+  it("leaves robots disallow empty so crawlers can discover page-level noindex", () => {
+    expect(ROBOTS_DISALLOW_PREFIXES).toEqual([]);
   });
 
   it("keeps solution sitemap paths in lockstep with SOLUTION_CATEGORY_IDS", () => {

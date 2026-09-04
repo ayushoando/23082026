@@ -4,7 +4,6 @@
  * `host` was removed (Yandex-only non-standard field): it must stay absent.
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { ROBOTS_DISALLOW_PREFIXES } from "@/features/site/data/routeClassification";
 
 describe("app/robots.ts", () => {
   const originalEnv = { ...process.env };
@@ -18,7 +17,7 @@ describe("app/robots.ts", () => {
     process.env = originalEnv;
   });
 
-  it("disallows protected prefixes and points sitemap at SITE_URL host", async () => {
+  it("allows crawl access and points sitemap at SITE_URL host", async () => {
     delete process.env.NEXT_PUBLIC_SITE_URL;
     delete process.env.SITE_URL;
 
@@ -28,7 +27,7 @@ describe("app/robots.ts", () => {
     const rules = Array.isArray(config.rules) ? config.rules : [config.rules];
     const firstRule = rules[0];
     expect(firstRule?.userAgent).toBe("*");
-    expect(firstRule?.disallow).toEqual([...ROBOTS_DISALLOW_PREFIXES]);
+    expect(firstRule?.disallow).toBeUndefined();
     expect(config.host).toBeUndefined();
     expect(sitemap).toBe("https://oando.co.in/sitemap.xml");
     expect(sitemap).not.toMatch(/localhost|127\.0\.0\.1/i);
