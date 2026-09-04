@@ -20,7 +20,7 @@ bucket_name = "oando-asset-cdn"
 
 # Environment variables
 [vars]
-VERCEL_ORIGIN = "https://oando1408.vercel.app"
+VERCEL_ORIGIN = "https://23082026.vercel.app"
 # Comma-separated hosts that must NOT inherit Vercel preview noindex.
 # (Worker rewrites Host to *.vercel.app for origin routing.)
 PUBLIC_INDEXABLE_HOSTS = "oando.co.in,www.oando.co.in"
