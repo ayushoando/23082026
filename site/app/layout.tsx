@@ -4,6 +4,7 @@ import { ciscoSans, helveticaNeue } from "@/lib/fonts";
 import { getHtmlLang } from "@/lib/i18n/htmlLang";
 import { defaultLocale } from "@/i18n/config";
 import { getRequestNonce } from "@/lib/security/requestNonce";
+import { NewRelicScript } from "@/components/analytics/NewRelicScript";
 
 export const metadata: Metadata = {
   title: "One&Only",
@@ -33,6 +34,9 @@ export default async function RootLayout({
       nonce={nonce}
       suppressHydrationWarning
     >
+      <head>
+        <NewRelicScript nonce={nonce} />
+      </head>
       <body
         /* helveticaNeue.className applies the body face directly; CSS vars still
            drive --font-sans / --font-display for utilities + marketing type. */

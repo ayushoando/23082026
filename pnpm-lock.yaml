@@ -30,6 +30,9 @@ importers:
       '@ai-sdk/amazon-bedrock':
         specifier: 5.0.66
         version: 5.0.66(zod@4.5.4)
+      '@ai-sdk/otel':
+        specifier: ^1.0.91
+        version: 1.0.91(zod@4.5.4)
       '@aws-sdk/client-s3':
         specifier: ^3.1121.0
         version: 3.1121.0
@@ -41,13 +44,13 @@ importers:
         version: 5.9.1(@standard-schema/spec@1.1.0)(ajv@8.20.0)(react-hook-form@7.87.0(react@19.2.8))(zod@4.5.4)
       '@mastra/core':
         specifier: ^1.63.2
-        version: 1.63.2(supports-color@10.2.2)(zod@4.5.4)
+        version: 1.63.2(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4)
       '@mastra/memory':
         specifier: ^1.28.1
-        version: 1.28.1(@mastra/core@1.63.2(supports-color@10.2.2)(zod@4.5.4))(supports-color@10.2.2)
+        version: 1.28.1(@mastra/core@1.63.2(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4))(supports-color@10.2.2)
       '@mastra/rag':
         specifier: ^2.6.0
-        version: 2.6.0(@mastra/core@1.63.2(supports-color@10.2.2)(zod@4.5.4))(zod@4.5.4)
+        version: 2.6.0(@mastra/core@1.63.2(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4))(zod@4.5.4)
       '@orama/orama':
         specifier: ^3.1.18
         version: 3.1.18
@@ -78,6 +81,9 @@ importers:
       '@vercel/speed-insights':
         specifier: ^2.0.0
         version: 2.0.0(next@16.3.3(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@26.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)
+      ai:
+        specifier: ^7.0.91
+        version: 7.0.91(zod@4.5.4)
       clsx:
         specifier: 2.1.1
         version: 2.1.1
@@ -383,11 +389,21 @@ packages:
     peerDependencies:
       zod: ^3.25.76 || ^4.1.8
 
+  '@ai-sdk/gateway@4.0.73':
+    resolution: {integrity: sha512-1Gp6QtVHfegKoMcf1pjk4fpgDg1cUdK5NnrEiUsYhLWa6owDMmF7kP+qL7ZgQNDYKTOijT+5cTeHrL281kUiiQ==}
+    engines: {node: '>=22'}
+    peerDependencies:
+      zod: ^3.25.76 || ^4.1.8
+
   '@ai-sdk/openai@4.0.50':
     resolution: {integrity: sha512-e2Jepw5RbSwsCsPwyiNzdlmOHoCQefCziNp3k1UxfIv8QD0/p4SF6+cx7GuWX98jAVNiWLjRv1W3NVSmx3FuEQ==}
     engines: {node: '>=22'}
     peerDependencies:
       zod: ^3.25.76 || ^4.1.8
+
+  '@ai-sdk/otel@1.0.91':
+    resolution: {integrity: sha512-kh0Hipw122yE08SN1DepqhFyQaXQjD+2XXV1PqanELRK5ewddfWCxnM7dfiQx+amFloGiYnaIMoRBZhp7FkZ0w==}
+    engines: {node: '>=22'}
 
   '@ai-sdk/provider-utils@3.0.30':
     resolution: {integrity: sha512-NCJ9JKow5ENAgEZxzvEvF20thwDiH+hutvzmrUDbloRX0azpJHNst8+7pZIVryYhLM9wgpT5/ShTSjPTFhkxEQ==}
@@ -413,6 +429,12 @@ packages:
     peerDependencies:
       zod: ^3.25.76 || ^4.1.8
 
+  '@ai-sdk/provider-utils@5.0.36':
+    resolution: {integrity: sha512-MFXBn6XDyf37PNQAge/HTatPJE8Vmg/g/w4WPtjSV53jq8FKAzoaN5+43hsdQa9bqgN+/13jxug9ChvsG+godQ==}
+    engines: {node: '>=22'}
+    peerDependencies:
+      zod: ^3.25.76 || ^4.1.8
+
   '@ai-sdk/provider@2.0.3':
     resolution: {integrity: sha512-h88OPkavHTiN9tMn2l5awAznGB0lXzjcLhgR1/rvjB2zlLprsNxbM2tt6OJsHUxduLC3klq0/eqaSf6fX5XVww==}
     engines: {node: '>=18'}
@@ -420,6 +442,10 @@ packages:
   '@ai-sdk/provider@3.0.14':
     resolution: {integrity: sha512-5X1k57JBJ4H7H1QjX7CnJYAB1I19r/trVZTMcSms7/kLNZ8RaU4Nt2agcwZzv82Hfx6Q7/TOLU7agAKeFfc8cA==}
     engines: {node: '>=18'}
+
+  '@ai-sdk/provider@4.0.10':
+    resolution: {integrity: sha512-fX2ENAc7iDpZ+Wp4+Rk06Usn/Ys7dI9uAkGv0jlF6XVrW13NkRWx5Ou+U6lIM2E1fTLkCs16GGrUAaVvroag7A==}
+    engines: {node: '>=22'}
 
   '@ai-sdk/provider@4.0.4':
     resolution: {integrity: sha512-tbHKNLirllUNF3ZlkCsXnwab2ZV1Sl4b1H/Cp9ruCce15IBmskE8Gwkk0yo9xDWY+jho2of7lVXtwSsyrq7cwQ==}
@@ -2774,6 +2800,10 @@ packages:
       vue-router:
         optional: true
 
+  '@vercel/oidc@3.2.0':
+    resolution: {integrity: sha512-UycprH3T6n3jH0k44NHMa7pnFHGu/N05MjojYr+Mc6I7obkoLIJujSWwin1pCvdy/eOxrI/l3uDLQsmcrOb4ug==}
+    engines: {node: '>= 20'}
+
   '@vercel/otel@2.1.3':
     resolution: {integrity: sha512-Ofvzs9qhftRD1YMLuPnhbXjQZG6IKrJ9AmEKmRHRGfoWlV89ed2gAOkvddkFiZDFZJm2rrFNdeZKRVxoCdnWiw==}
     engines: {node: ^18.19.0 || >=20.6.0}
@@ -2881,6 +2911,12 @@ packages:
   agentkeepalive@4.6.0:
     resolution: {integrity: sha512-kja8j7PjmncONqaTsB8fQ+wE2mSU2DJ9D4XKoJ5PFWIdRMa6SLSN1ff4mOr4jCbfRSsxR4keIiySJU0N9T5hIQ==}
     engines: {node: '>= 8.0.0'}
+
+  ai@7.0.91:
+    resolution: {integrity: sha512-Hn0iIQY1FXow2wd+DxzdA/4ijY+6TP9CREqpN3aIs01wnBW9119yHW0Dvn53sTQzkk7+rSVXaXlDAYM5hhMJZA==}
+    engines: {node: '>=22'}
+    peerDependencies:
+      zod: ^3.25.76 || ^4.1.8
 
   ajv@8.20.0:
     resolution: {integrity: sha512-Thbli+OlOj+iMPYFBVBfJ3OmCAnaSyNn4M1vz9T6Gka5Jt9ba/HIR56joy65tY6kx/FCF5VXNB819Y7/GUrBGA==}
@@ -5112,11 +5148,26 @@ snapshots:
       '@ai-sdk/provider-utils': 5.0.32(zod@4.5.4)
       zod: 4.5.4
 
+  '@ai-sdk/gateway@4.0.73(zod@4.5.4)':
+    dependencies:
+      '@ai-sdk/provider': 4.0.10
+      '@ai-sdk/provider-utils': 5.0.36(zod@4.5.4)
+      '@vercel/oidc': 3.2.0
+      zod: 4.5.4
+
   '@ai-sdk/openai@4.0.50(zod@4.5.4)':
     dependencies:
       '@ai-sdk/provider': 4.0.8
       '@ai-sdk/provider-utils': 5.0.32(zod@4.5.4)
       zod: 4.5.4
+
+  '@ai-sdk/otel@1.0.91(zod@4.5.4)':
+    dependencies:
+      '@ai-sdk/provider': 4.0.10
+      '@opentelemetry/api': 1.9.1
+      ai: 7.0.91(zod@4.5.4)
+    transitivePeerDependencies:
+      - zod
 
   '@ai-sdk/provider-utils@3.0.30(zod@4.5.4)':
     dependencies:
@@ -5149,11 +5200,24 @@ snapshots:
       undici: 7.29.0
       zod: 4.5.4
 
+  '@ai-sdk/provider-utils@5.0.36(zod@4.5.4)':
+    dependencies:
+      '@ai-sdk/provider': 4.0.10
+      '@standard-schema/spec': 1.1.0
+      '@workflow/serde': 4.1.0
+      eventsource-parser: 3.1.1
+      undici: 7.29.0
+      zod: 4.5.4
+
   '@ai-sdk/provider@2.0.3':
     dependencies:
       json-schema: 0.4.0
 
   '@ai-sdk/provider@3.0.14':
+    dependencies:
+      json-schema: 0.4.0
+
+  '@ai-sdk/provider@4.0.10':
     dependencies:
       json-schema: 0.4.0
 
@@ -5959,7 +6023,7 @@ snapshots:
     dependencies:
       '@lukeed/csprng': 1.1.0
 
-  '@mastra/core@1.63.2(supports-color@10.2.2)(zod@4.5.4)':
+  '@mastra/core@1.63.2(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4)':
     dependencies:
       '@a2a-js/sdk-v0_3': '@a2a-js/sdk@0.3.14'
       '@a2a-js/sdk-v1': '@a2a-js/sdk@1.0.1'
@@ -5976,7 +6040,7 @@ snapshots:
       '@sindresorhus/slugify': 2.2.1
       '@standard-schema/spec': 1.1.0
       ajv: 8.20.0
-      chat: 4.39.0(supports-color@10.2.2)(zod@4.5.4)
+      chat: 4.39.0(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4)
       croner: 10.0.1
       dotenv: 17.4.2
       execa: 9.6.1
@@ -6005,9 +6069,9 @@ snapshots:
       - utf-8-validate
       - workflow
 
-  '@mastra/memory@1.28.1(@mastra/core@1.63.2(supports-color@10.2.2)(zod@4.5.4))(supports-color@10.2.2)':
+  '@mastra/memory@1.28.1(@mastra/core@1.63.2(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4))(supports-color@10.2.2)':
     dependencies:
-      '@mastra/core': 1.63.2(supports-color@10.2.2)(zod@4.5.4)
+      '@mastra/core': 1.63.2(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4)
       '@mastra/schema-compat': 1.3.7(zod@4.5.4)
       async-mutex: 0.5.0
       diff: 8.0.4
@@ -6020,10 +6084,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@mastra/rag@2.6.0(@mastra/core@1.63.2(supports-color@10.2.2)(zod@4.5.4))(zod@4.5.4)':
+  '@mastra/rag@2.6.0(@mastra/core@1.63.2(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4))(zod@4.5.4)':
     dependencies:
       '@aws-sdk/client-bedrock-agent-runtime': 3.1121.0
-      '@mastra/core': 1.63.2(supports-color@10.2.2)(zod@4.5.4)
+      '@mastra/core': 1.63.2(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4)
       big.js: 7.0.1
       js-tiktoken: 1.0.21
       node-html-better-parser: 1.5.9
@@ -6921,6 +6985,8 @@ snapshots:
       next: 16.3.3(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@26.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react: 19.2.8
 
+  '@vercel/oidc@3.2.0': {}
+
   '@vercel/otel@2.1.3(@opentelemetry/api-logs@0.221.0)(@opentelemetry/api@1.9.1)(@opentelemetry/instrumentation@0.221.0(@opentelemetry/api@1.9.1)(supports-color@10.2.2))(@opentelemetry/resources@2.10.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-logs@0.221.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-metrics@2.10.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.10.0(@opentelemetry/api@1.9.1))':
     dependencies:
       '@opentelemetry/api': 1.9.1
@@ -7016,6 +7082,13 @@ snapshots:
   agentkeepalive@4.6.0:
     dependencies:
       humanize-ms: 1.2.1
+
+  ai@7.0.91(zod@4.5.4):
+    dependencies:
+      '@ai-sdk/gateway': 4.0.73(zod@4.5.4)
+      '@ai-sdk/provider': 4.0.10
+      '@ai-sdk/provider-utils': 5.0.36(zod@4.5.4)
+      zod: 4.5.4
 
   ajv@8.20.0:
     dependencies:
@@ -7129,7 +7202,7 @@ snapshots:
 
   character-entities@2.0.2: {}
 
-  chat@4.39.0(supports-color@10.2.2)(zod@4.5.4):
+  chat@4.39.0(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4):
     dependencies:
       '@workflow/serde': 4.1.0
       mdast-util-to-string: 4.0.0
@@ -7139,6 +7212,7 @@ snapshots:
       remend: 1.3.1
       unified: 11.0.5
     optionalDependencies:
+      ai: 7.0.91(zod@4.5.4)
       zod: 4.5.4
     transitivePeerDependencies:
       - supports-color

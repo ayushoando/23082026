@@ -1,6 +1,6 @@
 import "server-only";
 
-import type { Agent } from "@mastra/core/agent";
+import { Agent } from "@mastra/core/agent";
 
 import { resolveAdvisorModelChain, toMastraModel } from "./providers";
 import { getAdvisorMemory } from "./advisorMemory";
@@ -27,13 +27,10 @@ const INSTRUCTIONS: Record<AdvisorRole, string> = {
 
 const agents = new Map<AdvisorRole, Agent>();
 
-export async function getAdvisorAgent(role: AdvisorRole = "workspace"): Promise<Agent> {
+export function createAdvisorAgent(role: AdvisorRole = "workspace"): Agent {
   const cached = agents.get(role);
   if (cached) return cached;
 
-  await ensureCatalogVectorIndex();
-
-  const { Agent } = await import("@mastra/core/agent");
   const chain = resolveAdvisorModelChain();
   const catalogSearchTool = createCatalogVectorQueryTool();
 
@@ -55,7 +52,16 @@ export async function getAdvisorAgent(role: AdvisorRole = "workspace"): Promise<
   return agent;
 }
 
+export async function getAdvisorAgent(role: AdvisorRole = "workspace"): Promise<Agent> {
+  const cached = agents.get(role);
+  if (cached) return cached;
+
+  await ensureCatalogVectorIndex();
+  return createAdvisorAgent(role);
+}
+
 /** @deprecated Use getAdvisorAgent("workspace") */
 export const getWorkspaceAdvisorAgent = () => getAdvisorAgent("workspace");
 /** @deprecated Use getAdvisorAgent("catalog") */
 export const getCatalogAdvisorAgent = () => getAdvisorAgent("catalog");
+

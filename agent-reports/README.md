@@ -2,7 +2,7 @@
 
 **Last Updated:** 2026-09-04  
 **Location:** [`agent-reports/`](file:///d:/23082026/agent-reports/)  
-**Coverage:** **100% Repository-Wide Folder & Subsystem Coverage (38 Reports)**
+**Coverage:** **Exhaustive Monorepo Architecture & Subsystem Coverage (46 Reports)**
 
 ---
 
@@ -26,7 +26,22 @@
 
 ---
 
-## 2. Monorepo Root & Subsystem Audits
+## 2. Core Subsystems & Deep Architecture Audits
+
+| Subsystem Domain | Audit Report File | Core Insights & Findings |
+| :--- | :--- | :--- |
+| **Database & Migrations** | [`database-and-migrations-audit.md`](file:///d:/23082026/agent-reports/database-and-migrations-audit.md) | Dual Supabase architecture (Admin `rxzpznmxbaoxpikowmfc` vs Products `erpweaiypimorcunaimz`), Drizzle ORM wire mappings, RLS ownership policies, and the `P4_migration_no_rollback` governance ratchet. |
+| **API Surface & Security** | [`api-routes-and-security-audit.md`](file:///d:/23082026/agent-reports/api-routes-and-security-audit.md) | Exhaustive inventory of 47 API routes, CSRF HMAC token signing, fail-closed distributed rate limiting for AI endpoints, and dev-route production 404 quarantine. |
+| **Observability & Metrics** | [`observability-telemetry-and-metrics-audit.md`](file:///d:/23082026/agent-reports/observability-telemetry-and-metrics-audit.md) | Real-time OpenTelemetry (OTLP) pipeline, Grafana Cloud (Tempo traces & Mimir metrics) wiring, `GET /api/metrics` Prometheus exposition format, and Bedrock LLM spans. |
+| **Studio & Planner Suites** | [`studio-and-planner-suites-audit.md`](file:///d:/23082026/agent-reports/studio-and-planner-suites-audit.md) | Strict fork boundary isolation (`scan-boundaries.mjs`), Fabric.js 2D canvas instances, Dockview multi-panel layout, symbol PNG contract, and mode-aware persistence. |
+| **Admin Control Plane** | [`admin-portal-architecture-audit.md`](file:///d:/23082026/agent-reports/admin-portal-architecture-audit.md) | 13 administrative modules in `site/app/admin`, role-based authorization, enterprise price-book engines, dynamic feature flags, and immutable audit event logs. |
+| **AI Advisor & Mastra ML** | [`ai-advisor-and-ml-subsystem-audit.md`](file:///d:/23082026/agent-reports/ai-advisor-and-ml-subsystem-audit.md) | Mastra Agent Framework architecture, catalog RAG semantic vector embeddings, approved provider allowlist (Gemini, Bedrock, OpenRouter, OpenAI), and abuse prevention. |
+| **Results & Test Artifacts** | [`results-and-ephemeral-evidence-audit.md`](file:///d:/23082026/agent-reports/results-and-ephemeral-evidence-audit.md) | Ephemeral evidence sink under `results/`, strict 4-hour TTL policy, cache sanitization, and automated cleanup scripts. |
+| **Developer Tooling & Meta** | [`developer-tooling-and-meta-audit.md`](file:///d:/23082026/agent-reports/developer-tooling-and-meta-audit.md) | CommandCode shell permissions allowlist (`settings.json`), VS Code & Antigravity IDE launch targets, Vercel project linkage, and `.agents/` plugin authority. |
+
+---
+
+## 3. Monorepo Root & Infrastructure Audits
 
 | Target Folder | Audit Report File | Core Insights & Findings |
 | :--- | :--- | :--- |
@@ -46,14 +61,14 @@
 
 ---
 
-## 3. Operational, Quality & Targeted Root-Cause Audits
+## 4. Operational & Quality Root-Cause Audits
 
 | Investigation Topic | Audit Report File | Key Findings & Insights |
 | :--- | :--- | :--- |
 | **Oxlint Strictness** | [`oxlint-suppressions-audit.md`](file:///d:/23082026/agent-reports/oxlint-suppressions-audit.md) | Audits the 4 suppression layers, explains the 7 inline suppressions in `site/hooks/` and `config/build/`, and provides a drop-in strict configuration. |
 | **Area-Wise Quality** | [`repository-operational-audit.md`](file:///d:/23082026/agent-reports/repository-operational-audit.md) | Quality report across 8 core domains with Executive Quality Scorecards (Grades A to D). |
 | **Scripts Inventory** | [`scripts-inventory-audit.md`](file:///d:/23082026/agent-reports/scripts-inventory-audit.md) | Exhaustive audit of all 264 scripts. Categorizes 94 candidates for removal (35.6% dead code) and actionable blueprints for 170 retained scripts. |
-| **Three-Domain Audit** | [`three-domain-technical-audit.md`](file:///d:/23082026/agent-reports/three-domain-technical-audit.md) | Deep dives across Domain 1 (Database/Assets), Domain 2 (CI/Gates), and Domain 3 (Tech-Docs Engine). *Single-agent domain-partitioned execution.* |
+| **Three-Domain Audit** | [`three-domain-technical-audit.md`](file:///d:/23082026/agent-reports/three-domain-technical-audit.md) | Deep dives across Domain 1 (Database/Assets), Domain 2 (CI/Gates), and Domain 3 (Tech-Docs Engine). |
 | **Test Coverage & Strength** | [`test-coverage-and-strength-audit.md`](file:///d:/23082026/agent-reports/test-coverage-and-strength-audit.md) | Unit-wise breakdown of 937 test files, anti-hollow checks, and critical uncovered surfaces (`site/proxy.ts`, `app/api/**`). |
 | **Infrastructure Config** | [`infrastructure-config-audit.md`](file:///d:/23082026/agent-reports/infrastructure-config-audit.md) | Topology audit for Dual Supabase, Cloudflare R2 bucket `oando-asset-cdn`, Vercel `bom1`, and Cloudflare Worker reverse proxy. |
 | **MCPs & Skills** | [`mcp-plugins-skills-audit.md`](file:///d:/23082026/agent-reports/mcp-plugins-skills-audit.md) | Evaluates active plugins (42 skills), flags 65% stack bloat (irrelevant GCP/Firebase tools), and blueprints Supabase and Cloudflare MCPs. |

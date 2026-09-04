@@ -71,8 +71,8 @@ export function normalizeRepositoryInput(repoRoot, inputPath) {
   }
   const relative = path.relative(canonicalRoot, absolute).replace(/\\/g, '/')
   if (!relative || relative === '.') return null
-  const firstSegment = relative.split('/')[0]
-  if (EXCLUDED_REPOSITORY_ROOTS.includes(firstSegment)) return null
+  const segments = relative.split('/')
+  if (segments.some((segment) => EXCLUDED_REPOSITORY_ROOTS.includes(segment))) return null
   return relative
 }
 

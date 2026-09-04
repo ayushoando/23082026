@@ -7,8 +7,10 @@ import { env } from "@/lib/env.server";
 export const CATALOG_EMBEDDER_MODEL = "google/gemini-embedding-001" as const;
 export const CATALOG_EMBEDDING_DIMENSION = 768;
 
+export type EmbedderModelId = `${string}/${string}`;
+
 /** Embedding model id for Mastra memory + RAG (Gemini preferred, OpenRouter fallback). */
-export function resolveEmbedderModel(): string | null {
+export function resolveEmbedderModel(): EmbedderModelId | null {
   const geminiKey = env.GEMINI_API_KEY?.trim() || process.env.GEMINI_API_KEY?.trim();
   if (geminiKey) {
     return CATALOG_EMBEDDER_MODEL;
@@ -28,8 +30,19 @@ export function resolveMastraEmbeddingModel(): ModelRouterEmbeddingModel | null 
   if (!model) {
     return null;
   }
-  return new ModelRouterEmbeddingModel(model);
+  const apiKey =
+    model === CATALOG_EMBEDDER_MODEL
+      ? (env.GEMINI_API_KEY?.trim() ||
+         process.env.GEMINI_API_KEY?.trim() ||
+         process.env.GOOGLE_API_KEY?.trim() ||
+         process.env.GOOGLE_GENERATIVE_AI_API_KEY?.trim())
+      : (env.OPENROUTER_API_KEY_PRIMARY?.trim() ||
+         env.OPENROUTER_API_KEY_BACKUP?.trim() ||
+         process.env.OPENROUTER_API_KEY?.trim());
+
+  return new ModelRouterEmbeddingModel(apiKey ? { id: model, apiKey } : model);
 }
+
 
 export function isVectorRecallEnabled(): boolean {
   return resolveEmbedderModel() !== null;

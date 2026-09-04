@@ -76,7 +76,12 @@ function addEdge(edges, edgeIds, edge) {
 function graphInputFingerprint(repoRoot, relativePaths) {
   const hash = createHash('sha256')
   for (const relativePath of relativePaths) {
-    const stats = statSync(path.join(repoRoot, relativePath))
+    let stats
+    try {
+      stats = statSync(path.join(repoRoot, relativePath))
+    } catch {
+      continue
+    }
     hash.update(relativePath)
     hash.update('\0')
     hash.update(String(stats.size))
