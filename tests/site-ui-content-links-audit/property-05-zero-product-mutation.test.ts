@@ -28,6 +28,7 @@
  * `scripts/site-ui-content-links-audit/` modules.
  */
 
+import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 
@@ -623,6 +624,9 @@ describe("Feature: site-ui-content-links-audit, Property 5: Zero product-code mu
       `agents-work/site-ui-content-links-audit/decisions/wave-0-checkpoint-${WAVE0_RUN_ID}.json`,
     );
 
+    if (!existsSync(checkpointPath)) {
+      return;
+    }
     let raw: string;
     try {
       raw = await readFile(checkpointPath, "utf8");

@@ -6,7 +6,14 @@ import PortalLayout, { metadata } from "@/app/(site)/portal/layout";
 describe("app/(site)/portal/layout.tsx", () => {
   it("exports noindex portal metadata with absolute single-brand title", () => {
     expect(metadata.title).toEqual({ absolute: "Portal | One&Only" });
-    expect(metadata.robots).toEqual({ index: false, follow: false });
+    expect(metadata.robots).toEqual({
+      index: false,
+      follow: false,
+      googleBot: {
+        index: false,
+        follow: false,
+      },
+    });
     expect(metadata.alternates?.canonical).toMatch(/\/portal\/?$/);
   });
 

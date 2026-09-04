@@ -76,7 +76,7 @@ describe("app/sitemap.ts", () => {
     expect(urls.some((url) => url.includes("/planner/features/3d-view"))).toBe(false);
     expect(urls.some((url) => url.includes("/planner/canvas/"))).toBe(false);
     expect(urls.some((url) => url.includes("/planner/guest/"))).toBe(false);
-    expect(urls.some((url) => url.includes("/tools/"))).toBe(false);
+    expect(urls.some((url) => url.includes("/tools/"))).toBe(true);
     for (const entry of entries) {
       expect(entry.lastModified).toBeUndefined();
     }

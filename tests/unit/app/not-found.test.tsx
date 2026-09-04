@@ -22,7 +22,14 @@ vi.mock("@/components/ui/MarketingCtaLink", () => ({
 
 describe("app/not-found.tsx", () => {
   it("exports noindex 404 metadata (no soft homepage shell SEO)", () => {
-    expect(metadata.robots).toEqual({ index: false, follow: false });
+    expect(metadata.robots).toEqual({
+      index: false,
+      follow: false,
+      googleBot: {
+        index: false,
+        follow: false,
+      },
+    });
     const title =
       typeof metadata.title === "string"
         ? metadata.title

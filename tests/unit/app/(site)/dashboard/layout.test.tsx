@@ -33,7 +33,14 @@ describe("app/(site)/dashboard/layout.tsx", () => {
     expect(metadata.title).toMatchObject({
       absolute: expect.stringContaining("Member dashboard"),
     });
-    expect(metadata.robots).toEqual({ index: false, follow: false });
+    expect(metadata.robots).toEqual({
+      index: false,
+      follow: false,
+      googleBot: {
+        index: false,
+        follow: false,
+      },
+    });
     expect(metadata.alternates?.canonical).toMatch(/\/dashboard\/?$/);
   });
 
