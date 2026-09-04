@@ -69,6 +69,7 @@ export default async function PlanningPage() {
         primaryCta={copy.primaryCta}
         plannerCta={copy.plannerCta}
         tertiaryCta={copy.tertiaryCta}
+        heroSignals={copy.heroSignals}
         workflowKicker={copy.workflowKicker}
         workflowTitle={copy.workflowTitle}
         steps={copy.steps}
@@ -77,6 +78,9 @@ export default async function PlanningPage() {
         deliverables={copy.deliverables}
         bestForKicker={copy.bestForKicker}
         bestForDescription={copy.bestForDescription}
+        inputsKicker={copy.inputsKicker}
+        inputsTitle={copy.inputsTitle}
+        inputs={copy.inputs}
         deskKicker={copy.deskKicker}
         deskTitle={copy.deskTitle}
         deskDescription={copy.deskDescription}

@@ -647,6 +647,14 @@ export const PLANNING_PAGE_COPY = {
   secondaryCta: "View products",
   plannerCta: "Open Oando Planner",
   tertiaryCta: "Open Resource Desk",
+  heroSignals: ["Brief aligned", "Layouts resolved", "BOQ-ready scope"],
+  inputsKicker: "Before the first call",
+  inputsTitle: "Bring the decisions that shape the plan.",
+  inputs: [
+    "Team size, work patterns, and the spaces people need to use",
+    "Site context, handover dates, and any non-negotiable constraints",
+    "Budget range, approval path, and categories already under consideration",
+  ],
 } as const;
 
 export const PLANNING_PAGE_STEPS = [

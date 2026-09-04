@@ -535,7 +535,6 @@ export function TrustedByPageView({
                         src={item.image}
                         alt={`${item.name} workspace installation`}
                         sizes="(max-width: 768px) 100vw, 50vw"
-                        loading="eager"
                         className="trusted-by-split-card__img object-cover"
                       />
                       <span className="trusted-by-split-card__badge">{item.name}</span>

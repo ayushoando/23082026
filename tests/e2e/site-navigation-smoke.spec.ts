@@ -76,6 +76,13 @@ test.describe("site navigation smoke", () => {
     await expect(page.getByRole("heading", { level: 1 })).toContainText(/Planning Service/i);
     await expect(page.getByRole("heading", { name: /From intent to implementation-ready plans/i })).toBeVisible();
     await expect(page.getByRole("link", { name: /Request planning call/i }).first()).toBeVisible();
+    await expect(page.getByRole("list", { name: "Planning progression" })).toContainText(
+      /Brief aligned.*Layouts resolved.*BOQ-ready scope/s,
+    );
+    await expect(page.getByText("Titan workplace installation")).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Bring the decisions that shape the plan." }),
+    ).toBeVisible();
   });
 
   test("/products catalog loads with first category card visible", async ({ page }) => {

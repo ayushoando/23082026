@@ -331,9 +331,9 @@ function applySecurityHeaders(
   nonce: string,
 ) {
   response.headers.set("X-Content-Type-Options", "nosniff");
-  response.headers.set("X-Frame-Options", "SAMEORIGIN");
+  response.headers.set("X-Frame-Options", "DENY");
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
-  response.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=(self), browsing-topics=(), payment=(), usb=()");
+  response.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=(), browsing-topics=(), payment=(), usb=()");
   response.headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
   // allow-popups: Supabase/OAuth-style flows; tighten to same-origin only if login never pops.
   response.headers.set("Cross-Origin-Opener-Policy", "same-origin-allow-popups");

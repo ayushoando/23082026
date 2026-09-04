@@ -36,6 +36,7 @@ export interface PlanningPageViewProps {
   primaryCta: string;
   plannerCta: string;
   tertiaryCta: string;
+  heroSignals: readonly string[];
   workflowKicker: string;
   workflowTitle: string;
   steps: readonly PlanningStep[];
@@ -44,6 +45,9 @@ export interface PlanningPageViewProps {
   deliverables: readonly string[];
   bestForKicker: string;
   bestForDescription: string;
+  inputsKicker: string;
+  inputsTitle: string;
+  inputs: readonly string[];
   deskKicker: string;
   deskTitle: string;
   deskDescription: string;
@@ -96,6 +100,7 @@ export function PlanningPageView({
   primaryCta,
   plannerCta,
   tertiaryCta,
+  heroSignals,
   workflowKicker,
   workflowTitle,
   steps,
@@ -104,6 +109,9 @@ export function PlanningPageView({
   deliverables,
   bestForKicker,
   bestForDescription,
+  inputsKicker,
+  inputsTitle,
+  inputs,
   deskKicker,
   deskTitle,
   deskDescription,
@@ -263,6 +271,19 @@ export function PlanningPageView({
                 {plannerCta}
               </MarketingCtaLink>
             </div>
+
+            <ul
+              data-planning-hero-reveal
+              className="planning-hero__signals"
+              aria-label="Planning progression"
+            >
+              {heroSignals.map((signal, index) => (
+                <li key={signal} className="planning-hero__signal">
+                  <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                  {signal}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>
@@ -312,6 +333,10 @@ export function PlanningPageView({
                     sizes="(max-width: 767px) 100vw, (max-width: 1100px) 60vw, 44vw"
                     className="planning-workflow__image"
                   />
+                  <figcaption className="planning-workflow__caption">
+                    <span>{PLANNING_PROJECT_IMAGES[0].label}</span>
+                    <span aria-hidden="true">01</span>
+                  </figcaption>
                 </figure>
                 <figure
                   data-planning-workflow-reveal
@@ -323,6 +348,10 @@ export function PlanningPageView({
                     sizes="(max-width: 767px) 72vw, (max-width: 1100px) 38vw, 28vw"
                     className="planning-workflow__image"
                   />
+                  <figcaption className="planning-workflow__caption">
+                    <span>{PLANNING_PROJECT_IMAGES[1].label}</span>
+                    <span aria-hidden="true">02</span>
+                  </figcaption>
                 </figure>
               </div>
 
@@ -373,6 +402,19 @@ export function PlanningPageView({
                 <span className="typ-label text-body">{bestForKicker}</span>
                 <span className="planning-best-for__copy">{bestForDescription}</span>
               </p>
+
+              <aside data-planning-deliverables-reveal className="planning-brief-card">
+                <p className="typ-label planning-brief-card__kicker">{inputsKicker}</p>
+                <h3 className="planning-brief-card__title">{inputsTitle}</h3>
+                <ul className="planning-brief-card__list">
+                  {inputs.map((input, index) => (
+                    <li key={input}>
+                      <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                      {input}
+                    </li>
+                  ))}
+                </ul>
+              </aside>
             </div>
 
             <ul className="planning-deliverables__list">

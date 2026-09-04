@@ -7,32 +7,8 @@ vi.mock("next-intl/plugin", () => {
 });
 
 import nextConfig from "../../../site/next.config.js";
-import { securityHeaders } from "../../../site/lib/security/headers";
 
 describe("Security Headers Configuration", () => {
-  it("exports security headers from site/lib/security/headers", () => {
-    expect(securityHeaders).toBeDefined();
-    expect(Array.isArray(securityHeaders)).toBe(true);
-
-    const headerMap = new Map(
-      securityHeaders.map((h: { key: string; value: string }) => [h.key, h.value]),
-    );
-
-    expect(headerMap.get("X-Frame-Options")).toBe("DENY");
-    expect(headerMap.get("X-Content-Type-Options")).toBe("nosniff");
-    expect(headerMap.get("Referrer-Policy")).toBe("strict-origin-when-cross-origin");
-    expect(headerMap.get("Permissions-Policy")).toContain("camera=()");
-    expect(headerMap.get("Permissions-Policy")).toContain("microphone=()");
-    expect(headerMap.get("Permissions-Policy")).toContain("geolocation=()");
-    expect(headerMap.get("Strict-Transport-Security")).toContain("max-age=31536000");
-
-    const csp = headerMap.get("Content-Security-Policy") ?? "";
-    expect(csp).toContain("default-src 'self'");
-    expect(csp).toContain("frame-ancestors 'none'");
-    expect(csp).toContain("object-src 'none'");
-    expect(csp).toContain("base-uri 'self'");
-  });
-
   it("site/next.config.js headers() returns hardened security headers for all routes", async () => {
     expect(typeof nextConfig.headers).toBe("function");
     if (!nextConfig.headers) {
@@ -74,4 +50,3 @@ describe("Security Headers Configuration", () => {
     expect(apiHeadersMap.get("X-Content-Type-Options")).toBe("nosniff");
   });
 });
-

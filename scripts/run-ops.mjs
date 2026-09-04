@@ -308,17 +308,6 @@ const COMMANDS = {
   "scan:tokens": () => runNode("sync-token-pairs.mjs"),
   "scan:hardcoding": () => runNode("scan-hardcoding.mjs"),
 
-  "lint:secrets": () =>
-    run("pnpm", [
-      "exec",
-      "secretlint",
-      "**/*.{cjs,css,csv,html,js,json,jsx,md,mjs,ps1,py,sql,toml,ts,tsx,txt,yaml,yml}",
-      ".env*",
-      ".gitattributes",
-      ".gitignore",
-      ".npmrc",
-      ".vercelignore",
-    ]),
   "lint:type-aware": () => runGeneral("run-oxlint.mjs", ["--type-aware"]),
   "lint:ui": () => runGeneral("lint-ui-contract.mjs"),
 

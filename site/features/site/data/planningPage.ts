@@ -16,9 +16,11 @@ export const PLANNING_PROJECT_IMAGES = [
   {
     src: "/assets/marketing/projects/Titan/titan-office.webp",
     alt: "Open office with shared workstations and partition screens",
+    label: "Titan workplace installation",
   },
   {
     src: "/assets/marketing/projects/DMRC/dmrc-office-01.webp",
     alt: "Workstations arranged around blue partition screens",
+    label: "DMRC workplace installation",
   },
 ] as const;
