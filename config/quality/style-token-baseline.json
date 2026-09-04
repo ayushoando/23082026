@@ -1,5 +1,5 @@
 {
- "total": 201,
+ "total": 200,
  "perFile": {
   "site/app/(site)/choose-product/page.tsx": 1,
   "site/app/(site)/loading.tsx": 1,
@@ -40,7 +40,7 @@
   "site/features/shared/auth/components/AuthControls.tsx": 1,
   "site/features/shared/auth/components/AuthShell.tsx": 3,
   "site/features/shared/auth/components/LoginPage.tsx": 1,
-  "site/features/shared/auth/components/SignupPage.tsx": 2,
+  "site/features/shared/auth/components/SignupPage.tsx": 1,
   "site/features/shared/auth/components/SuspendedPage.tsx": 2,
   "site/features/shared/components/GuestBadge.tsx": 3,
   "site/features/shared/components/RestrictedActionButton.tsx": 2,

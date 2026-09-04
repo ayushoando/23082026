@@ -1,7 +1,7 @@
 import { normalizeRequestedCategoryId } from '@/lib/catalog/site/categories';
 import { isPublishableCatalogProduct } from "@/lib/catalog/site/catalogProductFilters";
 import localCatalogIndex from "@/features/site/data/localCatalogIndex.json";
-import { catalogProductIdFromSlug, normalizeCatalogProductId } from "@/lib/uuid/normalizeUuid";
+import { normalizeCatalogProductId } from "@/lib/uuid/normalizeUuid";
 import type { Product } from "./types";
 import { normalizeProducts } from "./adapters";
 
