@@ -215,6 +215,9 @@ export const CLIENTS_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
   ],
 });
 
+/** Alias with a semantically correct name for use in portfolio/page.tsx. */
+export const PORTFOLIO_PAGE_METADATA = CLIENTS_PAGE_METADATA;
+
 export const CLIENT_DIRECTORY_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
   title: "Client Directory & Sector Showcase | One&Only",
   description:
