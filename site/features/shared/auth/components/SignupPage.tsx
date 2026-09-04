@@ -68,20 +68,20 @@ export function SignupForm({ onSuccess }: { onSuccess?: () => void }) {
       <div className="flex flex-col items-center text-center">
         <span
           aria-hidden="true"
-          className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-success-soft text-success dark:bg-green-950/40 dark:text-green-400"
+          className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-success-soft text-success"
         >
           <CheckCircle2 size={24} />
         </span>
-        <h1 className="text-2xl font-semibold tracking-tight text-heading dark:text-foreground">
+        <h1 className="text-2xl font-semibold tracking-tight text-heading">
           Check your inbox
         </h1>
-        <p className="mt-2 text-ui-13 text-muted dark:text-subtle">
+        <p className="mt-2 text-ui-13 text-muted">
           We sent a verification link to{' '}
-          <span className="font-medium text-body dark:text-inverse-muted">{email}</span>.
+          <span className="font-medium text-body">{email}</span>.
           Click it to finish setting up your account.
         </p>
-        <div className="mt-6 w-full border-t border-soft pt-5 dark:border-strong">
-          <p className="mb-1 text-ui-11 text-muted dark:text-subtle">
+        <div className="mt-6 w-full border-t border-soft pt-5">
+          <p className="mb-1 text-ui-11 text-muted">
             Didn&apos;t get the email? Check your spam folder or resend:
           </p>
           <ResendVerificationButton email={email} />
@@ -124,7 +124,7 @@ export function SignupForm({ onSuccess }: { onSuccess?: () => void }) {
         <div className="space-y-1.5">
           <label
             htmlFor="signup-password"
-            className="block text-ui-13 font-medium text-body dark:text-inverse-muted"
+            className="block text-ui-13 font-medium text-body"
           >
             Password
           </label>
@@ -143,7 +143,7 @@ export function SignupForm({ onSuccess }: { onSuccess?: () => void }) {
           />
           <p
             id="signup-password-hint"
-            className="text-ui-11 text-muted dark:text-subtle"
+            className="text-ui-11 text-muted"
           >
             8+ characters.
           </p>
@@ -167,13 +167,13 @@ export function SignupForm({ onSuccess }: { onSuccess?: () => void }) {
           {busy ? 'Creating account…' : 'Create account'}
         </Button>
 
-        <p className="text-center text-ui-11 leading-relaxed text-muted dark:text-subtle">
+        <p className="text-center text-ui-11 leading-relaxed text-muted">
           By creating an account you agree to our{' '}
           <Link
             href="/terms"
             target="_blank"
             rel="noopener noreferrer"
-            className="underline hover:text-body dark:hover:text-inverse-muted"
+            className="underline hover:text-body"
           >
             Terms
           </Link>{' '}
@@ -182,7 +182,7 @@ export function SignupForm({ onSuccess }: { onSuccess?: () => void }) {
             href="/privacy"
             target="_blank"
             rel="noopener noreferrer"
-            className="underline hover:text-body dark:hover:text-inverse-muted"
+            className="underline hover:text-body"
           >
             Privacy Policy
           </Link>
@@ -218,11 +218,11 @@ export function SignupPage() {
 
       <AuthLinks>
         <span />
-        <span className="text-subtle dark:text-muted">
+        <span className="text-subtle">
           Already have an account?{' '}
           <Link
             href="/login"
-            className="font-medium text-[color:var(--color-blueprint-strong)] dark:text-[color:var(--color-blueprint)] hover:underline"
+            className="font-medium text-[color:var(--color-blueprint-strong)] hover:underline"
           >
             Sign in
           </Link>

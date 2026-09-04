@@ -1,6 +1,6 @@
 "use client";
 import React, { useMemo, useRef, useEffect } from "react";
-import { DockviewReact, themeAbyss, themeLight } from "dockview-react";
+import { DockviewReact, themeLight } from "dockview-react";
 import "dockview-react/dist/styles/dockview.css";
 import "@focss/planner/dock.css";
 import type { DockPanelDef, DockviewApiLike } from "@planner/lib/plannerTypes";
@@ -12,7 +12,6 @@ type DockviewReactProps = React.ComponentProps<typeof DockviewReact>;
 type DockShellProps = {
   panels: DockPanelDef[];
   onReadyApi?: (api: DockviewApiLike) => void;
-  theme?: "light" | "dark";
   storageKey?: string;
 };
 
@@ -47,7 +46,7 @@ function pruneRetiredPanels(api: DockviewApiLike, allowed: Set<string>) {
   }
 }
 
-export const DockShell = ({ panels, onReadyApi, theme = "light", storageKey }: DockShellProps) => {
+export const DockShell = ({ panels, onReadyApi, storageKey }: DockShellProps) => {
   const apiRef = useRef<DockviewApiLike | null>(null);
   const previousIdsRef = useRef<string[]>([]);
 
@@ -179,8 +178,7 @@ export const DockShell = ({ panels, onReadyApi, theme = "light", storageKey }: D
     previousIdsRef.current = currentIds;
   }, [panels]);
 
-  // dockview 7 defaults to themeAbyss (dark) when `theme` is omitted
-  const dockTheme = theme === "dark" ? themeAbyss : themeLight;
+  const dockTheme = themeLight;
   const themeClass = dockTheme.className;
 
   return (

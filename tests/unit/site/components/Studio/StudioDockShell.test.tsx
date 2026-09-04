@@ -11,7 +11,6 @@ vi.mock("dockview-react", () => ({
     dockviewCapture.props = props;
     return <div data-testid="dockview-double" />;
   },
-  themeAbyss: { className: "dockview-theme-abyss" },
   themeLight: { className: "dockview-theme-light" },
 }));
 vi.mock("@studio/components/ui/StudioDockFloatHeaderActions", () => ({ DockFloatHeaderActions: () => null }));
@@ -67,8 +66,8 @@ describe("Studio DockShell", () => {
   });
 
   it("uses Studio-owned chrome without importing Planner tab geometry", () => {
-    render(<DockShell panels={panelDefinitions} theme="dark" />);
-    expect(screen.getByTestId("dock-shell")).toHaveClass("dockview-theme-abyss");
+    render(<DockShell panels={panelDefinitions} />);
+    expect(screen.getByTestId("dock-shell")).toHaveClass("dockview-theme-light");
     expect(capturedProps().floatingGroupBounds).toEqual({
       minimumWidthWithinViewport: 48,
       minimumHeightWithinViewport: 48,

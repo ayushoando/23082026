@@ -11,23 +11,7 @@ describe("SITE_VIEWPORT", () => {
     expect(SITE_VIEWPORT.viewportFit).toBe("cover");
   });
 
-  it("provides light and dark themeColor chrome tokens", () => {
-    expect(Array.isArray(SITE_VIEWPORT.themeColor)).toBe(true);
-    const colors = SITE_VIEWPORT.themeColor as Array<{
-      media: string;
-      color: string;
-    }>;
-    expect(colors).toEqual(
-      expect.arrayContaining([
-        {
-          media: "(prefers-color-scheme: light)",
-          color: "var(--color-white-50)",
-        },
-        {
-          media: "(prefers-color-scheme: dark)",
-          color: "var(--color-dark-midnight-blue-950)",
-        },
-      ]),
-    );
+  it("uses a single light themeColor for browser chrome", () => {
+    expect(SITE_VIEWPORT.themeColor).toBe("var(--color-white-50)");
   });
 });

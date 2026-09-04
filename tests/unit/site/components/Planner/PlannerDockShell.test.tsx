@@ -11,7 +11,6 @@ vi.mock("dockview-react", () => ({
     dockviewCapture.props = props;
     return <div data-testid="dockview-double" />;
   },
-  themeAbyss: { className: "dockview-theme-abyss" },
   themeLight: { className: "dockview-theme-light" },
 }));
 vi.mock("@planner/components/ui/PlannerDockFloatHeaderActions", () => ({ DockFloatHeaderActions: () => null }));

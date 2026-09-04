@@ -26,7 +26,7 @@ export function AuthShell({
       <header className="px-6 pt-6 sm:pt-8">
         <Link
           href="/"
-          className="inline-flex items-center gap-2.5 font-semibold tracking-tight text-heading dark:text-foreground"
+          className="inline-flex items-center gap-2.5 font-semibold tracking-tight text-heading"
           aria-label="One&Only home"
         >
           <OneAndOnlyLogo variant="orange" className="h-8 max-w-[10rem]" />
@@ -34,7 +34,7 @@ export function AuthShell({
       </header>
       <main className="flex-1 flex items-start justify-center px-6 pt-10 pb-12 sm:pt-16">
         <div className="w-full max-w-md">
-          <div className="rounded-md border border-[color:var(--color-paper-line)] bg-[color:var(--color-paper-raised)] p-8 shadow-sm dark:border-strong dark:bg-inverse/80">
+          <div className="rounded-md border border-[color:var(--color-paper-line)] bg-[color:var(--color-paper-raised)] p-8 shadow-sm">
             {children}
           </div>
         </div>
@@ -52,10 +52,10 @@ export function AuthHeading({
 }) {
   return (
     <div className="mb-6 space-y-1.5">
-      <h1 className="text-2xl font-semibold tracking-tight text-heading dark:text-foreground">
+      <h1 className="text-2xl font-semibold tracking-tight text-heading">
         {title}
       </h1>
-      <p className="text-ui-13 text-muted dark:text-subtle">{subtitle}</p>
+      <p className="text-ui-13 text-muted">{subtitle}</p>
     </div>
   )
 }
@@ -73,7 +73,7 @@ export function AuthFieldLabel({
     <div className="space-y-1.5">
       <label
         htmlFor={htmlFor}
-        className="block text-ui-13 font-medium text-body dark:text-inverse-muted"
+        className="block text-ui-13 font-medium text-body"
       >
         {label}
       </label>
@@ -87,7 +87,7 @@ export function AuthErrorBanner({ id, message }: { id: string; message: string }
     <div
       id={id}
       role="alert"
-      className="mb-4 flex items-start gap-2.5 rounded-md border border-accent border-l-4 border-l-red-500 bg-danger-soft px-3 py-2.5 text-ui-13 text-red-800 dark:border-red-900/60 dark:border-l-red-500 dark:bg-red-950/40 dark:text-red-200"
+      className="mb-4 flex items-start gap-2.5 rounded-md border border-accent border-l-4 border-l-red-500 bg-danger-soft px-3 py-2.5 text-ui-13 text-red-800"
     >
       <AlertCircle size={16} className="mt-0.5 flex-shrink-0" aria-hidden="true" />
       <span>{message}</span>
