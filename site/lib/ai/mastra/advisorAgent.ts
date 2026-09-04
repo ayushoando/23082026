@@ -41,7 +41,7 @@ export function createAdvisorAgent(role: AdvisorRole = "workspace"): Agent {
     id: `${role}-advisor`,
     name: role === "catalog" ? "Catalog Advisor" : "Workspace Advisor",
     instructions: INSTRUCTIONS[role],
-    model: toMastraModel(chain[0]) ?? "google/gemini-2.5-flash",
+    model: toMastraModel(chain[0]) ?? "google/gemini-3.6-flash",
     memory: getAdvisorMemory(),
     ...(catalogSearchTool
       ? { tools: { catalog_vector_search: catalogSearchTool } }

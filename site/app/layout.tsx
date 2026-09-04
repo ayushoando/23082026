@@ -5,6 +5,7 @@ import { getHtmlLang } from "@/lib/i18n/htmlLang";
 import { defaultLocale } from "@/i18n/config";
 import { getRequestNonce } from "@/lib/security/requestNonce";
 import { NewRelicScript } from "@/components/analytics/NewRelicScript";
+import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 
 export const metadata: Metadata = {
   title: "One&Only",
@@ -36,6 +37,7 @@ export default async function RootLayout({
     >
       <head>
         <NewRelicScript nonce={nonce} />
+        <GoogleAnalytics nonce={nonce} />
       </head>
       <body
         /* helveticaNeue.className applies the body face directly; CSS vars still

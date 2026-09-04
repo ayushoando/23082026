@@ -177,6 +177,14 @@ const CSP_NEW_RELIC_SCRIPT_ORIGINS = "https://js-agent.newrelic.com";
 const CSP_NEW_RELIC_CONNECT_ORIGINS =
   "https://bam.nr-data.net https://*.nr-data.net";
 
+/** Google Tag Manager / Analytics script origin (mounted when GA measurement ID is present outside test suite). */
+function getGtmScriptOrigin(): string {
+  if (process.env.NODE_ENV !== "test" && process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID) {
+    return " https://www.googletagmanager.com";
+  }
+  return "";
+}
+
 export type CspBuildOptions = {
   /**
    * Per-request nonce (base64). Stamped on inline / framework script tags.
@@ -203,7 +211,7 @@ export function buildContentSecurityPolicy(
   // and the live console blocks the whole app.
   const noncePart = options.nonce ? `'nonce-${options.nonce}' ` : "";
   const evalPart = allowsUnsafeEval(pathname) ? " 'unsafe-eval'" : "";
-  const scriptSrc = `script-src 'self' ${noncePart}${evalPart} blob: ${CSP_ANALYTICS_ORIGINS} ${CSP_NEW_RELIC_SCRIPT_ORIGINS}`;
+  const scriptSrc = `script-src 'self' ${noncePart}${evalPart} blob: ${CSP_ANALYTICS_ORIGINS} ${CSP_NEW_RELIC_SCRIPT_ORIGINS}${getGtmScriptOrigin()}`;
 
   return [
     "default-src 'self'",

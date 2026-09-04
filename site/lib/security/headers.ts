@@ -31,7 +31,7 @@ export const securityHeaders = [
     key: "Content-Security-Policy",
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-eval' blob: https://va.vercel-scripts.com https://vitals.vercel-insights.com https://vercel.live https://static.cloudflareinsights.com https://js-agent.newrelic.com",
+      "script-src 'self' 'unsafe-eval' blob: https://va.vercel-scripts.com https://vitals.vercel-insights.com https://vercel.live https://static.cloudflareinsights.com https://js-agent.newrelic.com https://www.googletagmanager.com",
       "worker-src 'self' blob:",
       "style-src 'self' 'unsafe-inline' data: https://fonts.googleapis.com",
       "img-src 'self' data: blob: https:",

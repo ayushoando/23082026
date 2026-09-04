@@ -1,6 +1,6 @@
 # Observability & Telemetry Guide
 
-**Stack:** Next.js 16 (App Router) · OpenTelemetry (OTLP) · New Relic Full-Stack (Browser RUM + Host Infrastructure + Server APM) · Grafana · Prometheus · Vercel AI SDK · Gemini · Mastra · Drizzle ORM
+**Stack:** Next.js 16 (App Router) · OpenTelemetry (OTLP) · New Relic Full-Stack (Browser RUM + Server APM) · Google Analytics 4 (GA4) · Grafana · Prometheus · Vercel AI SDK · Gemini · Mastra · Drizzle ORM
 
 This guide explains how to use, configure, and monitor Oando's built-in observability stack. Telemetry is gathered across two cooperative layers:
 1. **Frontend Client (RUM & Session Replay):** Instrumented via the New Relic Pro + SPA Browser Agent (`oando-web`).
@@ -98,7 +98,24 @@ For security compliance, New Relic domains are whitelisted in both [`site/next.c
 
 ---
 
-## 4. Backend OpenTelemetry Configuration (`ai-planner-backend`)
+## 4. Google Analytics 4 (Business & Traffic Analytics)
+
+While New Relic focuses on code health, application latency, errors, and session replays, **Google Analytics 4 (GA4)** tracks business analytics, visitor traffic, user demographics, and marketing attribution.
+
+- **Measurement ID:** `G-CTPK6318CR`
+- **Configuration:** Set in `.env.local`:
+  ```env
+  NEXT_PUBLIC_GA_MEASUREMENT_ID=G-CTPK6318CR
+  ```
+- **Component:** [`site/components/analytics/GoogleAnalytics.tsx`](file:///d:/23082026/site/components/analytics/GoogleAnalytics.tsx) mounted in [`site/app/layout.tsx`](file:///d:/23082026/site/app/layout.tsx).
+- **CSP Whitelist:**
+  - `script-src`: `https://www.googletagmanager.com`
+  - `connect-src`: `https://www.google-analytics.com`, `https://region1.google-analytics.com`, `https://stats.g.doubleclick.net`
+- **Dashboard:** Access live traffic, user locations, and conversion funnels at [analytics.google.com](https://analytics.google.com/).
+
+---
+
+## 5. Backend OpenTelemetry Configuration (`ai-planner-backend`)
 
 Next.js 16 automatically invokes [`site/instrumentation.ts`](file:///d:/23082026/site/instrumentation.ts) on server startup:
 
@@ -140,7 +157,7 @@ OTEL_EXPORTER_OTLP_HEADERS='api-key=<YOUR_NEW_RELIC_LICENSE_KEY>'
 
 ---
 
-## 5. Scraping Prometheus Metrics (`/api/metrics`)
+## 6. Scraping Prometheus Metrics (`/api/metrics`)
 
 Oando exposes application and Node.js runtime metrics via [`site/app/api/metrics/route.ts`](file:///d:/23082026/site/app/api/metrics/route.ts) using `@prometheus-io/client`.
 
@@ -169,7 +186,7 @@ In production environments:
 
 ---
 
-## 6. Exploring Telemetry in New Relic One
+## 7. Exploring Telemetry in New Relic One
 
 Log into [New Relic One](https://one.newrelic.com):
 
@@ -187,11 +204,7 @@ Log into [New Relic One](https://one.newrelic.com):
   - **Database Query:** Supabase Postgres query timings via Drizzle ORM.
   - **AI Model Execution:** Gemini LLM prompt token counts, completion token counts, and model inference latency.
 
-### 3. Host Infrastructure (`oando`)
-- Navigate to **Infrastructure > Hosts** and select **`oando`**.
-- Review Windows machine CPU usage, memory utilization, disk activity, and active Node/pnpm processes.
-
-### 4. Useful NRQL Queries (Query Builder / `Ctrl+E`)
+### 3. NRQL Queries (Query Builder / `Ctrl+E`)
 
 ```sql
 -- 1. Browser Core Web Vitals (LCP, INP, CLS)
@@ -215,7 +228,7 @@ FROM Span WHERE service.name = 'ai-planner-backend' AND (name LIKE '%ai%' OR nam
 
 ---
 
-## 7. Alternative: Grafana Cloud Setup
+## 8. Alternative: Grafana Cloud Setup
 
 If routing telemetry to Grafana Cloud instead of New Relic:
 1. In your **Grafana Cloud Portal**, navigate to **Connections > Add new connection > OpenTelemetry**.
@@ -229,7 +242,7 @@ If routing telemetry to Grafana Cloud instead of New Relic:
 
 ---
 
-## 8. Quick Troubleshooting
+## 9. Quick Troubleshooting
 
 | Symptom | Cause | Resolution |
 | :--- | :--- | :--- |
