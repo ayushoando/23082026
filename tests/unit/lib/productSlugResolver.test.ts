@@ -16,6 +16,7 @@ vi.mock('@/lib/catalog/catalogDrizzle', () => ({
 
 const mockFallbackProducts = [
   { slug: 'fallback-slug', name: 'Fallback Product' },
+  { slug: 'oando-seating--copse', name: 'Copse', metadata: { sourceSlug: 'copse' } },
 ];
 vi.mock('@/lib/catalog/fallback', () => ({
   buildLocalCatalogFallbackProducts: vi.fn(() => mockFallbackProducts),
@@ -73,6 +74,19 @@ describe('productSlugResolver', () => {
 
     const res = await resolver.resolveProductByUrlKey('fallback-slug');
     expect(res.row).toEqual({ slug: 'fallback-slug', name: 'Fallback Product' });
+    expect(res.resolvedViaAlias).toBe(false);
+  });
+
+  it('should resolve fallback product via sourceSlug or suffix segment', async () => {
+    mockFetchCatalogSlugAliasLive.mockResolvedValue(null);
+    mockFetchCatalogProductBySlugLive.mockResolvedValue(null);
+
+    const res = await resolver.resolveProductByUrlKey('copse');
+    expect(res.row).toEqual({
+      slug: 'oando-seating--copse',
+      name: 'Copse',
+      metadata: { sourceSlug: 'copse' },
+    });
     expect(res.resolvedViaAlias).toBe(false);
   });
 });

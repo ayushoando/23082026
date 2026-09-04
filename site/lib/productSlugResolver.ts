@@ -26,9 +26,20 @@ async function fetchProductBySlug<T>(slug: string): Promise<T | null> {
 }
 
 function fetchFallbackProductBySlug<T>(slug: string): T | null {
-  const fallbackProduct = buildLocalCatalogFallbackProducts().find(
-    (product) => product.slug === slug,
-  );
+  const normalized = normalizeProductUrlKey(slug);
+  const fallbackProduct = buildLocalCatalogFallbackProducts().find((product) => {
+    const pSlug = normalizeProductUrlKey(product.slug || "");
+    if (pSlug === normalized) return true;
+    const sourceSlug = normalizeProductUrlKey(
+      (product.metadata as { sourceSlug?: string } | null)?.sourceSlug || "",
+    );
+    if (sourceSlug === normalized) return true;
+    const splitIndex = pSlug.indexOf("--");
+    if (splitIndex !== -1 && pSlug.slice(splitIndex + 2) === normalized) {
+      return true;
+    }
+    return false;
+  });
   return (fallbackProduct as T) ?? null;
 }
 

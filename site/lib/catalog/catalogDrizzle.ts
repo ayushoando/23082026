@@ -84,10 +84,25 @@ export async function fetchCatalogProductBySlugLive(slug: string): Promise<Produ
   if (!canQueryCatalogDatabase()) {return null;}
 
   try {
+    const normalized = String(slug || "").trim().toLowerCase();
+    if (!normalized) {return null;}
+    const candidates = [
+      normalized,
+      `oando-seating--${normalized}`,
+      `oando-soft-seating--${normalized}`,
+      `oando-chairs--${normalized}`,
+      `oando-collaborative--${normalized}`,
+      `oando-storage--${normalized}`,
+      `oando-storages--${normalized}`,
+      `oando-workstations--${normalized}`,
+      `oando-tables--${normalized}`,
+      `oando-educational--${normalized}`,
+    ];
+
     const rows = await productsDb
       .select()
       .from(catalogProducts)
-      .where(eq(catalogProducts.slug, slug))
+      .where(inArray(catalogProducts.slug, candidates))
       .limit(1);
     return rows[0] ? rowToProduct(rows[0]) : null;
   } catch (error) {
@@ -148,6 +163,21 @@ export async function fetchCatalogSlugAliasLive(
   if (!canQueryCatalogDatabase()) {return null;}
 
   try {
+    const normalized = String(aliasSlug || "").trim().toLowerCase();
+    if (!normalized) {return null;}
+    const candidateAliases = [
+      normalized,
+      `oando-seating--${normalized}`,
+      `oando-soft-seating--${normalized}`,
+      `oando-chairs--${normalized}`,
+      `oando-collaborative--${normalized}`,
+      `oando-storage--${normalized}`,
+      `oando-storages--${normalized}`,
+      `oando-workstations--${normalized}`,
+      `oando-tables--${normalized}`,
+      `oando-educational--${normalized}`,
+    ];
+
     const rows = await productsDb
       .select({
         alias_slug: catalogProductSlugAliases.alias_slug,
@@ -156,7 +186,7 @@ export async function fetchCatalogSlugAliasLive(
       .from(catalogProductSlugAliases)
       .where(
         and(
-          eq(catalogProductSlugAliases.alias_slug, aliasSlug),
+          inArray(catalogProductSlugAliases.alias_slug, candidateAliases),
           eq(catalogProductSlugAliases.is_active, true),
         ),
       )

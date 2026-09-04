@@ -1,7 +1,7 @@
 import { normalizeRequestedCategoryId } from '@/lib/catalog/site/categories';
 import { isPublishableCatalogProduct } from "@/lib/catalog/site/catalogProductFilters";
 import localCatalogIndex from "@/features/site/data/localCatalogIndex.json";
-import { catalogProductIdFromSlug } from "@/lib/uuid/normalizeUuid";
+import { catalogProductIdFromSlug, normalizeCatalogProductId } from "@/lib/uuid/normalizeUuid";
 import type { Product } from "./types";
 import { normalizeProducts } from "./adapters";
 
@@ -39,7 +39,7 @@ export function buildLocalCatalogFallbackProducts(): Product[] {
     images?: string[];
     flagship_image?: string;
   }>) {
-    const folderName = String(entry.id || entry.slug || "").trim();
+    const folderName = String(entry.slug || entry.id || "").trim();
     if (!folderName) {continue;}
 
     if (
@@ -63,7 +63,7 @@ export function buildLocalCatalogFallbackProducts(): Product[] {
     const images = entry.images || [];
 
     products.push({
-      id: catalogProductIdFromSlug(folderName),
+      id: normalizeCatalogProductId(entry.id, folderName),
       category_id: categoryId,
       series: categoryId,
       name: productName || folderName,
