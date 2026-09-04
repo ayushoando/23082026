@@ -53,7 +53,7 @@ function workerReviewSources(context: ReleaseChangeContext): WorkerReviewSources
         "[[r2_buckets]]",
         'binding = "ASSET_BUCKET"',
         "[vars]",
-        'VERCEL_ORIGIN = "https://oando1408.vercel.app"',
+        'VERCEL_ORIGIN = "https://23082026.vercel.app"',
       ].join("\n"),
     ),
     workerSource: repositorySource(

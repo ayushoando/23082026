@@ -121,9 +121,9 @@ export function extractWorkerReview(sources: WorkerReviewSources): WorkerReviewE
     ),
     fact(
       "worker-vercel-origin",
-      "The Worker depends on VERCEL_ORIGIN and the repository config supplies https://oando1408.vercel.app.",
+      "The Worker depends on VERCEL_ORIGIN and the repository config supplies https://23082026.vercel.app.",
       sources.wrangler,
-      '[vars] VERCEL_ORIGIN = "https://oando1408.vercel.app"',
+      '[vars] VERCEL_ORIGIN = "https://23082026.vercel.app"',
     ),
   ];
 

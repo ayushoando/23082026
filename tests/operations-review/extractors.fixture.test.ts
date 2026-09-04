@@ -125,7 +125,7 @@ function makeWorkerSources(overrides?: Partial<WorkerReviewSources>): WorkerRevi
         'bucket_name = "oando-asset-cdn"',
         "",
         "[vars]",
-        'VERCEL_ORIGIN = "https://oando1408.vercel.app"',
+        'VERCEL_ORIGIN = "https://23082026.vercel.app"',
       ].join("\n"),
     ),
     workerSource: src(

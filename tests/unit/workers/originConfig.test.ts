@@ -31,9 +31,9 @@ describe("12.1 worker origin single source of truth", () => {
 
   it("keeps wrangler.toml [vars] as the only place the origin literal exists", () => {
     expect(wranglerToml).toMatch(/\[vars\]/);
-    expect(wranglerToml).toContain('VERCEL_ORIGIN = "https://oando1408.vercel.app"');
+    expect(wranglerToml).toContain('VERCEL_ORIGIN = "https://23082026.vercel.app"');
     // The literal must not appear in worker source (no code fallback).
-    expect(workerSource).not.toContain("oando1408.vercel.app");
+    expect(workerSource).not.toContain("23082026.vercel.app");
     // The env dependency itself stays (operations-review extractor requires it).
     expect(workerSource).toContain("env.VERCEL_ORIGIN");
   });

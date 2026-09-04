@@ -30,7 +30,7 @@ prerequisite (also required by CI/deploy runbooks).
 ## Configuration
 
 - **R2 Bucket**: `oando-asset-cdn` (bound as `ASSET_BUCKET`)
-- **Vercel Origin**: `https://oando1408.vercel.app` (configurable via `VERCEL_ORIGIN` env var)
+- **Vercel Origin**: `https://23082026.vercel.app` (configurable via `VERCEL_ORIGIN` env var)
 
 ## Environment Variables
 
