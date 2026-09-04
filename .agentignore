@@ -1,0 +1,5 @@
+# Antigravity & Agent Ignore Rules
+# Protect designated documentation archives and sensitive records from agent indexing, searching, and modification
+
+docs/protected-folder/
+docs/protected-folder/**

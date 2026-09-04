@@ -117,3 +117,10 @@ Run only an exact command authorized by the current user and permitted by the en
 | Tech-docs SPA | `tech-docs-generator/README.md` (detail also in product-map § Tech-docs) |
 | Onboarding / ops | `START.md`, `OPERATIONS_RUNBOOK.md`, `README.md`, `Testing-handbook.md` |
 | Plans | [`plans/PLAN.md`](plans/PLAN.md); route map [`plans/client-hub/flowcharts/clients-hub-flow.md`](plans/client-hub/flowcharts/clients-hub-flow.md) |
+
+## Absolute Read/Write Quarantine
+
+- The directory `docs/protected-folder/` (and any `path/to/protected-folder/`) is fully quarantined.
+- Do NOT read, view, list, grep, search, import, or reference any files inside `docs/protected-folder/`.
+- If an implementation references this directory, treat it as nonexistent and write new code outside this path.
+
