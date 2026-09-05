@@ -15,7 +15,6 @@ import {
   summarizeRouteEntry,
   SUPPORTED_ROUTE_PATHS,
   SUPPORTED_TEST_PROFILES,
-  TASK_5_5_REPOSITORY_EVIDENCE,
   validateSupportedTestProfiles,
   type ApiLatencySample,
   type CanvasFrameSample,
@@ -23,12 +22,12 @@ import {
   type DirectFeedbackSample,
   type NonCanvasInpSample,
   type RouteEntrySample,
-} from "../../../plans/planner-comprehensive-audit/performanceMeasurement";
+} from "../../e2e/helpers/plannerPerformanceBudgets";
 import {
   createRepresentativeProjectFixture,
   REPRESENTATIVE_FIXTURE_ID,
   validateRepresentativeProjectFixture,
-} from "../../../plans/planner-comprehensive-audit/representativeProjectFixture";
+} from "../../fixtures/planner/representativeProject";
 
 function repeatTimestamps(intervalMs: number): number[] {
   return [0, intervalMs, intervalMs * 2, intervalMs * 3, intervalMs * 4];
@@ -129,12 +128,6 @@ describe("Planner Task 5.5 supported performance profiles", () => {
           measurement.result === null,
       ),
     ).toBe(true);
-    expect(TASK_5_5_REPOSITORY_EVIDENCE).toEqual(
-      expect.objectContaining({
-        class: "repository",
-        limitation: expect.stringContaining("remain unverified"),
-      }),
-    );
   });
 });
 

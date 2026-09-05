@@ -20,7 +20,7 @@ import {
   SUPPORTED_ROUTE_PATHS,
   type CanvasInteraction,
   type NonCanvasInteraction,
-} from "../../plans/planner-comprehensive-audit/performanceMeasurement";
+} from "./helpers/plannerPerformanceBudgets";
 import { createRepresentativeProjectTestFixture } from "../fixtures/planner/representativeProject";
 import { enterGuestPlannerWorkspace } from "./guestProjectSetup";
 import {

@@ -1,35 +1,27 @@
 // @vitest-environment node
 //
-// Feature: planner-comprehensive-audit, Tasks 4.9-4.11
-// Repository-only evidence for the existing Admin migration and the
-// Task 4.10 no-migration branch.
+// Admin database migration contract and Drizzle schema alignment for
+// Planner revision, schema version, and atomic idempotency.
 
+import fs from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 
-import {
-  TASK_4_10_BRANCH,
-  TASK_4_9_COMPLETED_ACTIONS,
-  TASK_4_9_SCHEMA_GAP_DECISION,
-} from "../../../../plans/planner-comprehensive-audit/schemaGapDecision";
+const SITE_ROOT = fs.existsSync(path.join(process.cwd(), "site"))
+  ? path.join(process.cwd(), "site")
+  : process.cwd();
 
 const ADMIN_MIGRATIONS_PATH = path.join(
-  process.cwd(),
+  SITE_ROOT,
   "platform/supabase/migrations.admin",
 );
 const MIGRATION_FILE_NAME = "20260823090000_planner_revision_idempotency.sql";
 const MIGRATION_PATH = path.join(ADMIN_MIGRATIONS_PATH, MIGRATION_FILE_NAME);
 
 const DRIZZLE_PATH = path.join(
-  process.cwd(),
+  SITE_ROOT,
   "platform/drizzle/schema/planner.ts",
-);
-
-export const PLANNER_SCHEMA_GAP_DECISION = TASK_4_9_SCHEMA_GAP_DECISION;
-
-export const COMPLETED_PLANNER_ADMIN_COMMANDS = TASK_4_9_COMPLETED_ACTIONS.map(
-  (action) => action.exactCommand,
 );
 
 async function migrationParts(): Promise<{ forward: string; rollback: string }> {
@@ -43,46 +35,14 @@ async function migrationParts(): Promise<{ forward: string; rollback: string }> 
   };
 }
 
-describe("Planner Admin schema-gap decision", () => {
-  it("binds the no-migration branch to the completed Admin workflow", () => {
-    expect(PLANNER_SCHEMA_GAP_DECISION.branch).toBe(TASK_4_10_BRANCH);
-    expect(PLANNER_SCHEMA_GAP_DECISION.branch).toBe("no-migration");
-    expect(PLANNER_SCHEMA_GAP_DECISION.schemaDefectVerified).toBe(false);
-    expect(PLANNER_SCHEMA_GAP_DECISION.migrationNeededForTask4_10).toBe(false);
-    expect(PLANNER_SCHEMA_GAP_DECISION.database).toBe("Admin");
-    expect(PLANNER_SCHEMA_GAP_DECISION.evidenceRefs).toContain(
-      "evidence:task-4.9-admin-migration-contract",
-    );
-    expect(PLANNER_SCHEMA_GAP_DECISION.task4_10Control).toContain(
-      "do not create duplicate Admin SQL",
-    );
-    expect(COMPLETED_PLANNER_ADMIN_COMMANDS).toEqual([
-      "pnpm run db:apply:admin -- --dry",
-      "pnpm run db:apply:admin",
-      "pnpm run db:types:admin",
-    ]);
-    expect(TASK_4_9_COMPLETED_ACTIONS).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          exactCommand: "pnpm run db:apply:admin -- --dry",
-          status: "completed",
-        }),
-        expect.objectContaining({
-          exactCommand: "pnpm run db:types:admin",
-          status: "completed",
-        }),
-      ]),
-    );
-  });
-});
-
-describe("Existing Planner revision/idempotency Admin migration evidence", () => {
+describe("Planner revision/idempotency Admin migration evidence", () => {
   it("keeps the existing schema evidence under the Admin migration path", async () => {
     const migrationFiles = await readdir(ADMIN_MIGRATIONS_PATH);
     expect(migrationFiles).toContain(MIGRATION_FILE_NAME);
+    expect(MIGRATION_FILE_NAME).toMatch(/^\d{14}_planner_revision_idempotency\.sql$/);
     expect(path.dirname(MIGRATION_PATH)).toBe(ADMIN_MIGRATIONS_PATH);
     expect(path.dirname(MIGRATION_PATH)).not.toBe(
-      path.join(process.cwd(), "platform/supabase/migrations"),
+      path.join(SITE_ROOT, "platform/supabase/migrations"),
     );
   });
 
@@ -95,6 +55,10 @@ describe("Existing Planner revision/idempotency Admin migration evidence", () =>
     expect(forward).toContain("payload -> 'schema_version'");
     expect(forward).toContain("else 1");
     expect(forward).toContain("else 0");
+    expect(forward).toContain("alter column revision set default 1");
+    expect(forward).toContain("alter column revision set not null");
+    expect(forward).toContain("alter column schema_version set default 1");
+    expect(forward).toContain("alter column schema_version set not null");
     expect(forward).toContain("oando_plans_revision_check check (revision >= 1)");
     expect(forward).toContain("oando_plans_schema_version_check check (schema_version >= 0)");
   });
@@ -102,7 +66,11 @@ describe("Existing Planner revision/idempotency Admin migration evidence", () =>
   it("defines owner/operation/project/key idempotency without a project foreign key", async () => {
     const { forward } = await migrationParts();
     expect(forward).toContain("create table if not exists public.planner_operation_idempotency");
+    expect(forward).toContain("owner_id uuid not null references public.profiles (id) on delete cascade");
     expect(forward).toContain("unique (owner_id, operation, project_id, idempotency_key)");
+    expect(forward).toContain("check (operation in ('create', 'save', 'delete'))");
+    expect(forward).toContain("char_length(idempotency_key) between 1 and 120");
+    expect(forward).toContain("check (response_status in ('processing', 'success', 'not_found', 'conflict'))");
     expect(forward).toContain("planner_operation_idempotency_created_at_idx");
     expect(forward).not.toMatch(/project_id uuid[^\n]*references public\.oando_plans/);
   });
@@ -154,6 +122,7 @@ describe("Existing Planner revision/idempotency Admin migration evidence", () =>
 
   it("combines owner RLS with least-privilege grants and no anonymous access", async () => {
     const { forward } = await migrationParts();
+    expect(forward).toContain("alter table public.planner_operation_idempotency enable row level security");
     expect(forward).toContain("auth.uid() = user_id");
     expect(forward).toContain("auth.uid() = owner_id");
     expect(forward).toContain("revoke all on table public.oando_plans from public, anon");
@@ -174,6 +143,8 @@ describe("Existing Planner revision/idempotency Admin migration evidence", () =>
     expect(schema).toContain('text("response_plan_status")');
     expect(schema).toContain('timestamp("response_created_at", { withTimezone: true })');
     expect(schema).toContain('timestamp("response_updated_at", { withTimezone: true })');
+    expect(schema).toContain('check("oando_plans_revision_check"');
+    expect(schema).toContain('check("oando_plans_schema_version_check"');
   });
 
   it("contains dependency-safe rollback for every introduced object", async () => {

@@ -1,26 +1,7 @@
-import type {
-  EvidenceClass,
-  EvidenceRecord,
-  InputMethod,
-  RequirementRef,
-  ViewportClass,
-} from "./auditModel";
 import {
   REPRESENTATIVE_FIXTURE_ID,
   REPRESENTATIVE_FIXTURE_VERSION,
-} from "./representativeProjectFixture";
-
-export const TASK_5_5_REQUIREMENTS = [
-  "16.1",
-  "16.2",
-  "16.3",
-  "16.4",
-  "16.5",
-  "16.6",
-  "16.7",
-  "18.1",
-  "19.4",
-] as const satisfies readonly RequirementRef[];
+} from "../../fixtures/planner/representativeProject";
 
 export const PLANNER_PERFORMANCE_BUDGETS = {
   lcpP75Ms: 2_500,
@@ -79,7 +60,12 @@ export type MeasurementKind =
   | "api-latency"
   | "listener-subscription-cleanup";
 export type WarmColdStatus = "cold" | "warm";
-export type MeasurementInputMethod = InputMethod | "programmatic";
+export type ViewportClass = "desktop" | "tablet" | "phone";
+export type MeasurementInputMethod =
+  | "pointer"
+  | "touch"
+  | "keyboard"
+  | "programmatic";
 export type MeasurementExecutionState = "not-run";
 export type BudgetStatus = "within-budget" | "budget-missed";
 
@@ -141,7 +127,7 @@ export interface SupportedTestProfile {
   sampleCount: number;
   sampleDistribution: string;
   method: string;
-  evidenceClass: Extract<EvidenceClass, "browser" | "integration">;
+  evidenceClass: "browser" | "integration";
 }
 
 export interface PlannedMeasurement {
@@ -225,7 +211,8 @@ export const SUPPORTED_TEST_PROFILES: readonly SupportedTestProfile[] = [
     inputMethod: "pointer",
     warmColdStatus: "cold",
     sampleCount: 60,
-    sampleDistribution: "20 isolated browser contexts for each of the three supported Planner routes",
+    sampleDistribution:
+      "20 isolated browser contexts for each of the three supported Planner routes",
     method:
       "Create a fresh browser context per sample, navigate directly to the route, collect largest-contentful-paint entries until page hide, and sum layout-shift entries that had no recent input.",
     evidenceClass: "browser",
@@ -236,7 +223,8 @@ export const SUPPORTED_TEST_PROFILES: readonly SupportedTestProfile[] = [
     inputMethod: "pointer",
     warmColdStatus: "warm",
     sampleCount: 20,
-    sampleDistribution: "5 samples for each of four named non-canvas interactions",
+    sampleDistribution:
+      "5 samples for each of four named non-canvas interactions",
     method:
       "After route and fixture stabilization, perform each named control interaction and record Event Timing duration for the interaction id; exclude canvas gestures.",
     evidenceClass: "browser",
@@ -247,7 +235,8 @@ export const SUPPORTED_TEST_PROFILES: readonly SupportedTestProfile[] = [
     inputMethod: "pointer",
     warmColdStatus: "warm",
     sampleCount: 30,
-    sampleDistribution: "5 two-second traces for each of pan, zoom, selection, move, rotate, and resize",
+    sampleDistribution:
+      "5 two-second traces for each of pan, zoom, selection, move, rotate, and resize",
     method:
       "With the representative project visible, collect requestAnimationFrame timestamps during each named canvas manipulation and derive FPS from positive adjacent frame intervals.",
     evidenceClass: "browser",
@@ -258,7 +247,8 @@ export const SUPPORTED_TEST_PROFILES: readonly SupportedTestProfile[] = [
     inputMethod: "pointer",
     warmColdStatus: "warm",
     sampleCount: 30,
-    sampleDistribution: "5 samples for each of pan, zoom, selection, move, rotate, and resize start feedback",
+    sampleDistribution:
+      "5 samples for each of pan, zoom, selection, move, rotate, and resize start feedback",
     method:
       "Mark input dispatch and the first requestAnimationFrame containing the corresponding visible feedback, then subtract the monotonic timestamps.",
     evidenceClass: "browser",
@@ -269,7 +259,8 @@ export const SUPPORTED_TEST_PROFILES: readonly SupportedTestProfile[] = [
     inputMethod: "programmatic",
     warmColdStatus: "cold",
     sampleCount: 3,
-    sampleDistribution: "1 explicitly cold local integration request for each of list, load, and save",
+    sampleDistribution:
+      "1 explicitly cold local integration request for each of list, load, and save",
     method:
       "Start from the documented inactive local integration service state and time one complete request per operation; retain cold values separately from the warm p95 budget.",
     evidenceClass: "integration",
@@ -280,7 +271,8 @@ export const SUPPORTED_TEST_PROFILES: readonly SupportedTestProfile[] = [
     inputMethod: "programmatic",
     warmColdStatus: "warm",
     sampleCount: 60,
-    sampleDistribution: "20 warmed local integration requests for each of list, load, and save",
+    sampleDistribution:
+      "20 warmed local integration requests for each of list, load, and save",
     method:
       "After one excluded warm-up request, measure monotonic client request-to-complete duration against the authorized local integration environment and compute p95 per operation.",
     evidenceClass: "integration",
@@ -291,7 +283,8 @@ export const SUPPORTED_TEST_PROFILES: readonly SupportedTestProfile[] = [
     inputMethod: "pointer",
     warmColdStatus: "warm",
     sampleCount: PLANNER_PERFORMANCE_BUDGETS.cleanupCycles,
-    sampleDistribution: "20 sequential load/open/close cycles of the same representative project",
+    sampleDistribution:
+      "20 sequential load/open/close cycles of the same representative project",
     method:
       "Instrument project-scoped listener and subscription registration, capture one pre-cycle baseline, and compare both counters after each close for exactly 20 cycles.",
     evidenceClass: "browser",
@@ -306,24 +299,6 @@ export const PLANNED_MEASUREMENTS: readonly PlannedMeasurement[] =
     limitation:
       "This is a deterministic measurement definition only. No browser, integration, hosted, or deployment result has been executed or claimed.",
   }));
-
-export const TASK_5_5_REPOSITORY_EVIDENCE: EvidenceRecord = {
-  id: "evidence:task-5.5-performance-fixtures-and-measurement-code",
-  class: "repository",
-  summary:
-    "Task 5.5 defines a deterministic representative project, complete supported profiles, and pure reducers for every required performance and cleanup metric.",
-  sourceRefs: [
-    "plans/planner-comprehensive-audit/representativeProjectFixture.ts",
-    "plans/planner-comprehensive-audit/performanceMeasurement.ts",
-    "tests/unit/planner/plannerPerformanceMeasurement.test.ts",
-  ],
-  limitation:
-    "Static repository evidence proves only that fixtures, profiles, and measurement reducers are authored. Browser values, API integration latency, cleanup behavior, and budget compliance remain unverified until separately authorized execution.",
-  artifact: {
-    authorship: "authored",
-    path: "plans/planner-comprehensive-audit/performanceMeasurement.ts",
-  },
-};
 
 export interface MeasurementSummaryMetadata {
   profile: SupportedTestProfile;
@@ -505,9 +480,12 @@ export function summarizeRouteEntry(
   samples: readonly RouteEntrySample[],
 ): RouteEntrySummary {
   assertProfile(supportedProfile, "route-lcp-cls", samples.length);
-  const expectedPerRoute = supportedProfile.sampleCount / SUPPORTED_ROUTE_PATHS.length;
+  const expectedPerRoute =
+    supportedProfile.sampleCount / SUPPORTED_ROUTE_PATHS.length;
   if (!Number.isInteger(expectedPerRoute)) {
-    throw new Error("Route sample count must divide evenly across supported routes.");
+    throw new Error(
+      "Route sample count must divide evenly across supported routes.",
+    );
   }
   for (const sample of samples) {
     assertFiniteNonNegative(sample.lcpMs, "Route LCP");
@@ -523,7 +501,10 @@ export function summarizeRouteEntry(
     SUPPORTED_ROUTE_PATHS.map((route) => [
       route,
       {
-        lcpP75Ms: percentile(grouped[route].map((sample) => sample.lcpMs), 0.75),
+        lcpP75Ms: percentile(
+          grouped[route].map((sample) => sample.lcpMs),
+          0.75,
+        ),
         clsMaximum: Math.max(...grouped[route].map((sample) => sample.cls)),
       },
     ]),
@@ -568,10 +549,16 @@ export function summarizeNonCanvasInp(
   const interactionP75Ms = Object.fromEntries(
     NON_CANVAS_INTERACTIONS.map((interaction) => [
       interaction,
-      percentile(grouped[interaction].map((sample) => sample.durationMs), 0.75),
+      percentile(
+        grouped[interaction].map((sample) => sample.durationMs),
+        0.75,
+      ),
     ]),
   ) as Record<NonCanvasInteraction, number>;
-  const inpP75Ms = percentile(samples.map((sample) => sample.durationMs), 0.75);
+  const inpP75Ms = percentile(
+    samples.map((sample) => sample.durationMs),
+    0.75,
+  );
   return {
     profile: structuredClone(supportedProfile),
     actualSampleCount: samples.length,
@@ -583,7 +570,9 @@ export function summarizeNonCanvasInp(
 
 function framesPerSecond(frameTimestampsMs: readonly number[]): number {
   if (frameTimestampsMs.length < 2) {
-    throw new Error("A canvas FPS trace requires at least two frame timestamps.");
+    throw new Error(
+      "A canvas FPS trace requires at least two frame timestamps.",
+    );
   }
   const intervals: number[] = [];
   for (let index = 1; index < frameTimestampsMs.length; index += 1) {
@@ -611,7 +600,9 @@ export function summarizeCanvasFps(
   const expectedPerInteraction =
     supportedProfile.sampleCount / CANVAS_INTERACTIONS.length;
   if (!Number.isInteger(expectedPerInteraction)) {
-    throw new Error("Canvas FPS sample count must divide evenly across interactions.");
+    throw new Error(
+      "Canvas FPS sample count must divide evenly across interactions.",
+    );
   }
   const grouped = valuesForScenario(
     CANVAS_INTERACTIONS,
@@ -622,7 +613,11 @@ export function summarizeCanvasFps(
   const interactionMedianFps = Object.fromEntries(
     CANVAS_INTERACTIONS.map((interaction) => [
       interaction,
-      median(grouped[interaction].map((sample) => framesPerSecond(sample.frameTimestampsMs))),
+      median(
+        grouped[interaction].map((sample) =>
+          framesPerSecond(sample.frameTimestampsMs),
+        ),
+      ),
     ]),
   ) as Record<CanvasInteraction, number>;
   const medianFps = median(
@@ -648,10 +643,15 @@ export function summarizeDirectFeedback(
   const expectedPerInteraction =
     supportedProfile.sampleCount / DIRECT_FEEDBACK_INTERACTIONS.length;
   if (!Number.isInteger(expectedPerInteraction)) {
-    throw new Error("Direct-feedback sample count must divide evenly across interactions.");
+    throw new Error(
+      "Direct-feedback sample count must divide evenly across interactions.",
+    );
   }
   for (const sample of samples) {
-    assertFiniteNonNegative(sample.inputTimestampMs, "Direct-feedback input timestamp");
+    assertFiniteNonNegative(
+      sample.inputTimestampMs,
+      "Direct-feedback input timestamp",
+    );
     assertFiniteNonNegative(
       sample.visibleFeedbackTimestampMs,
       "Direct-feedback visible timestamp",
@@ -671,7 +671,8 @@ export function summarizeDirectFeedback(
       interaction,
       Math.max(
         ...grouped[interaction].map(
-          (sample) => sample.visibleFeedbackTimestampMs - sample.inputTimestampMs,
+          (sample) =>
+            sample.visibleFeedbackTimestampMs - sample.inputTimestampMs,
         ),
       ),
     ]),
@@ -698,19 +699,31 @@ export function summarizeApiLatency(
   coldProfile: SupportedTestProfile,
   samples: readonly ApiLatencySample[],
 ): ApiLatencySummary {
-  const warmSamples = samples.filter((sample) => sample.warmColdStatus === "warm");
-  const coldSamples = samples.filter((sample) => sample.warmColdStatus === "cold");
+  const warmSamples = samples.filter(
+    (sample) => sample.warmColdStatus === "warm",
+  );
+  const coldSamples = samples.filter(
+    (sample) => sample.warmColdStatus === "cold",
+  );
   assertProfile(warmProfile, "api-latency", warmSamples.length);
   assertProfile(coldProfile, "api-latency", coldSamples.length);
-  if (warmProfile.warmColdStatus !== "warm" || coldProfile.warmColdStatus !== "cold") {
+  if (
+    warmProfile.warmColdStatus !== "warm" ||
+    coldProfile.warmColdStatus !== "cold"
+  ) {
     throw new Error("API profiles must keep warm and cold samples separate.");
   }
   for (const sample of samples) {
     assertFiniteNonNegative(sample.durationMs, "API latency");
   }
-  const warmPerOperation = warmProfile.sampleCount / PROJECT_API_OPERATIONS.length;
-  const coldPerOperation = coldProfile.sampleCount / PROJECT_API_OPERATIONS.length;
-  if (!Number.isInteger(warmPerOperation) || !Number.isInteger(coldPerOperation)) {
+  const warmPerOperation =
+    warmProfile.sampleCount / PROJECT_API_OPERATIONS.length;
+  const coldPerOperation =
+    coldProfile.sampleCount / PROJECT_API_OPERATIONS.length;
+  if (
+    !Number.isInteger(warmPerOperation) ||
+    !Number.isInteger(coldPerOperation)
+  ) {
     throw new Error("API sample counts must divide evenly across operations.");
   }
   const groupedWarm = valuesForScenario(
@@ -728,7 +741,10 @@ export function summarizeApiLatency(
   const warmP95Ms = Object.fromEntries(
     PROJECT_API_OPERATIONS.map((operation) => [
       operation,
-      percentile(groupedWarm[operation].map((sample) => sample.durationMs), 0.95),
+      percentile(
+        groupedWarm[operation].map((sample) => sample.durationMs),
+        0.95,
+      ),
     ]),
   ) as Record<ProjectApiOperation, number>;
   const coldMs = Object.fromEntries(
@@ -740,7 +756,10 @@ export function summarizeApiLatency(
   const warmStatus = Object.fromEntries(
     PROJECT_API_OPERATIONS.map((operation) => [
       operation,
-      statusAtMost(warmP95Ms[operation], PLANNER_PERFORMANCE_BUDGETS.apiWarmP95Ms),
+      statusAtMost(
+        warmP95Ms[operation],
+        PLANNER_PERFORMANCE_BUDGETS.apiWarmP95Ms,
+      ),
     ]),
   ) as Record<ProjectApiOperation, BudgetStatus>;
   return {
@@ -769,7 +788,10 @@ export function summarizeCleanupCycles(
     );
   }
   assertFiniteNonNegative(baseline.projectEventListeners, "Baseline listeners");
-  assertFiniteNonNegative(baseline.projectSubscriptions, "Baseline subscriptions");
+  assertFiniteNonNegative(
+    baseline.projectSubscriptions,
+    "Baseline subscriptions",
+  );
   const cycleDeltas = samples.map((sample, index) => {
     if (sample.cycle !== index + 1) {
       throw new Error("Cleanup cycles must be sequential and one-indexed.");
@@ -784,7 +806,9 @@ export function summarizeCleanupCycles(
       sample.whileOpen.projectEventListeners < baseline.projectEventListeners ||
       sample.whileOpen.projectSubscriptions < baseline.projectSubscriptions
     ) {
-      throw new Error("Open-cycle resource counts cannot be below the pre-cycle baseline.");
+      throw new Error(
+        "Open-cycle resource counts cannot be below the pre-cycle baseline.",
+      );
     }
     return {
       cycle: sample.cycle,
@@ -822,10 +846,17 @@ export function validateSupportedTestProfiles(
     ids.add(supportedProfile.id);
     representedKinds.add(supportedProfile.measurementKind);
     if (supportedProfile.orientation !== supportedProfile.viewport.orientation) {
-      issues.push(`Profile ${supportedProfile.id} has inconsistent orientation metadata.`);
+      issues.push(
+        `Profile ${supportedProfile.id} has inconsistent orientation metadata.`,
+      );
     }
-    if (supportedProfile.sampleCount <= 0 || supportedProfile.method.trim().length === 0) {
-      issues.push(`Profile ${supportedProfile.id} requires a sample count and method.`);
+    if (
+      supportedProfile.sampleCount <= 0 ||
+      supportedProfile.method.trim().length === 0
+    ) {
+      issues.push(
+        `Profile ${supportedProfile.id} requires a sample count and method.`,
+      );
     }
     if (
       supportedProfile.browser.id.trim().length === 0 ||
@@ -833,16 +864,22 @@ export function validateSupportedTestProfiles(
       supportedProfile.cpu.id.trim().length === 0 ||
       supportedProfile.network.id.trim().length === 0
     ) {
-      issues.push(`Profile ${supportedProfile.id} requires browser, device, CPU, and network fixtures.`);
+      issues.push(
+        `Profile ${supportedProfile.id} requires browser, device, CPU, and network fixtures.`,
+      );
     }
     if (
       supportedProfile.projectFixture.id !== REPRESENTATIVE_FIXTURE_ID ||
       supportedProfile.projectFixture.version !== REPRESENTATIVE_FIXTURE_VERSION
     ) {
-      issues.push(`Profile ${supportedProfile.id} does not reference the representative project.`);
+      issues.push(
+        `Profile ${supportedProfile.id} does not reference the representative project.`,
+      );
     }
     const expectedEvidenceClass =
-      supportedProfile.measurementKind === "api-latency" ? "integration" : "browser";
+      supportedProfile.measurementKind === "api-latency"
+        ? "integration"
+        : "browser";
     if (supportedProfile.evidenceClass !== expectedEvidenceClass) {
       issues.push(
         `Profile ${supportedProfile.id} must use ${expectedEvidenceClass} evidence.`,
@@ -868,14 +905,18 @@ export function validateSupportedTestProfiles(
       .map((candidate) => candidate.warmColdStatus),
   );
   if (!apiStatuses.has("cold") || !apiStatuses.has("warm")) {
-    issues.push("API latency requires separate cold and warm supported profiles.");
+    issues.push(
+      "API latency requires separate cold and warm supported profiles.",
+    );
   }
   return issues.sort();
 }
 
 const profileIssues = validateSupportedTestProfiles();
 if (profileIssues.length > 0) {
-  throw new Error(`Invalid supported Planner test profiles:\n${profileIssues.join("\n")}`);
+  throw new Error(
+    `Invalid supported Planner test profiles:\n${profileIssues.join("\n")}`,
+  );
 }
 
 export function getSupportedTestProfile(id: string): SupportedTestProfile {
