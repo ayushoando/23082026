@@ -156,6 +156,7 @@
   overflow: hidden;
   isolation: isolate;
   background: var(--surface-muted);
+  cursor: zoom-in;
 }
 
 /* next/image `fill` wraps in a span — pin to media layer (z-0) */
@@ -178,6 +179,8 @@
   object-fit: cover;
 }
 
+/* Mosaic row is the horizontal snap scroller (phone). Desktop mosaic
+   layout lives in clients-page.css @ 48rem. */
 .portfolio-case__mosaic {
   min-width: 0;
 }

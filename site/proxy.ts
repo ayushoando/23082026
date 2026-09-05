@@ -169,7 +169,7 @@ const CSP_ANALYTICS_ORIGINS =
 
 /** Google Analytics 4 collection endpoints (Zaraz GA4 tag beacons). */
 const CSP_GA4_ORIGINS =
-  "https://www.google-analytics.com https://region1.google-analytics.com https://stats.g.doubleclick.net";
+  "https://www.google-analytics.com https://region1.google-analytics.com https://stats.g.doubleclick.net https://analytics.google.com https://www.google.com";
 
 
 /** Google Tag Manager / Analytics script origin (mounted when GA measurement ID is present outside test suite). */

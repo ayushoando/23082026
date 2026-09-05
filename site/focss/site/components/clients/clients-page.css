@@ -114,31 +114,81 @@
   display: block;
 }
 
-.clients-work__mosaic {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.75rem;
+/* Required TSX class names (this FOCSS agent does not edit TSX):
+   Mosaic scroller (already on page): .clients-work__mosaic.portfolio-case__mosaic
+   Zoom trigger: button.portfolio-case__zoom (overlay or wrap .portfolio-case__media)
+   Lightbox: dialog.portfolio-lightbox[open] > img.portfolio-lightbox__img
+   Nav: button.btn.btn-outline-light.portfolio-lightbox__prev|__next|__close */
+
+.clients-work__mosaic,
+.portfolio-case__mosaic {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  gap: var(--space-3);
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 0;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
 }
 
-.clients-work__media {
+.clients-work__mosaic::-webkit-scrollbar,
+.portfolio-case__mosaic::-webkit-scrollbar {
+  display: none;
+}
+
+.clients-work__media,
+.portfolio-case__mosaic > .portfolio-case__media {
   position: relative;
   overflow: hidden;
-  min-height: 8.5rem;
+  flex: 0 0 86%;
+  width: 86%;
+  min-height: 12.5rem;
+  aspect-ratio: 16 / 10;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
   border-radius: 0.35rem;
   background: var(--surface-muted);
+  cursor: zoom-in;
+}
+
+.clients-work__mosaic--solo .clients-work__media,
+.clients-work__mosaic--solo .portfolio-case__media {
+  flex-basis: 100%;
+  width: 100%;
 }
 
 .clients-work__media--primary {
-  grid-column: span 2;
   aspect-ratio: 16 / 10;
   min-height: 12.5rem;
 }
 
 .clients-work__media--secondary {
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 16 / 10;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .clients-work__mosaic,
+  .portfolio-case__mosaic {
+    scroll-behavior: auto;
+  }
 }
 
 @media (min-width: 48rem) {
+  .clients-work__mosaic,
+  .portfolio-case__mosaic {
+    display: grid;
+    overflow: visible;
+    scroll-snap-type: none;
+    scroll-behavior: auto;
+    scrollbar-width: auto;
+  }
+
   .clients-work__mosaic--dual {
     grid-template-columns: repeat(12, minmax(0, 1fr));
     grid-template-rows: repeat(2, minmax(0, 1fr));
@@ -151,10 +201,15 @@
     height: 34rem;
   }
 
-  .clients-work__media {
+  .clients-work__media,
+  .portfolio-case__mosaic > .portfolio-case__media {
+    flex: none;
+    width: auto;
     min-height: 0;
     aspect-ratio: auto;
     height: 100%;
+    scroll-snap-align: unset;
+    scroll-snap-stop: normal;
   }
 
   .clients-work__media--primary {
@@ -169,11 +224,121 @@
 
   .clients-work__media--secondary {
     grid-column: span 5;
+    aspect-ratio: auto;
   }
 
   .clients-work__media--secondary-solo {
     grid-row: span 2;
   }
+}
+
+/* Lightbox / click-to-zoom overlay — mount from TSX; hidden until [open] / --open */
+.portfolio-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  padding: var(--space-4);
+  padding-top: calc(var(--space-4) + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
+  border: 0;
+  background: var(--overlay-inverse-78);
+  color: var(--text-inverse);
+  cursor: zoom-out;
+}
+
+.portfolio-lightbox[open],
+.portfolio-lightbox.is-open,
+.portfolio-lightbox--open {
+  display: flex;
+}
+
+.portfolio-lightbox::backdrop {
+  background: var(--overlay-inverse-78);
+}
+
+.portfolio-lightbox__stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.portfolio-lightbox__img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+.portfolio-lightbox__prev,
+.portfolio-lightbox__next,
+.portfolio-lightbox__close {
+  position: absolute;
+  z-index: var(--z-canvas-overlay);
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  cursor: pointer;
+}
+
+.portfolio-lightbox__prev,
+.portfolio-lightbox__next {
+  inset-block: 0;
+  margin-block: auto;
+  height: 2.75rem;
+}
+
+.portfolio-lightbox__prev {
+  inset-inline-start: var(--space-4);
+}
+
+.portfolio-lightbox__next {
+  inset-inline-end: var(--space-4);
+}
+
+.portfolio-lightbox__close {
+  inset-block-start: calc(var(--space-4) + env(safe-area-inset-top, 0px));
+  inset-inline-end: var(--space-4);
+}
+
+.portfolio-lightbox__prev:focus-visible,
+.portfolio-lightbox__next:focus-visible,
+.portfolio-lightbox__close:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.portfolio-case__zoom {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-canvas-overlay);
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: zoom-in;
+}
+
+.portfolio-case__zoom:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
 }
 
 .clients-pull-quote {

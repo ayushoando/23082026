@@ -3,7 +3,9 @@ import type { Metadata } from "next";
 import { HomeMarketingLayout } from "@/components/home/layout";
 import { ContactTeaser } from "@/components/shared/ContactTeaser";
 import { TrustedByPageView } from "@/components/trusted-by/TrustedByPageView";
-import { TRUSTED_BY_CLIENTS, TRUSTED_BY_STATS } from "@/features/site/data/proof";
+import { TRUSTED_BY_CLIENTS } from "@/features/site/data/proof";
+import { getBusinessStats } from "@/features/crm/businessStats";
+import { KpiIntegrityMonitor } from "@/components/analytics/KpiIntegrityMonitor";
 import { TRUSTED_BY_PAGE_COPY } from "@/features/site/data/routeCopy";
 import { withLocaleCopy } from "@/lib/i18n/withLocaleCopy";
 import { buildBreadcrumbJsonLd, buildPageJsonLd, buildPageMetadata } from "@/features/site/data/seo";
@@ -28,7 +30,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
 /** Client proof page — roster, stats, quotes. Photos stay on /clients. */
 export default async function TrustedByPage() {
-  const copy = await loadTrustedByCopy();
+  const [copy, { stats, source }] = await Promise.all([
+    loadTrustedByCopy(),
+    getBusinessStats(),
+  ]);
   const sectors = Array.from(new Set(TRUSTED_BY_CLIENTS.map((client) => client.sector)));
 
   const trustedByJsonLd = buildPageJsonLd(SITE_URL, {
@@ -52,7 +57,9 @@ export default async function TrustedByPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(breadcrumbJsonLd) }}
       />
+      <KpiIntegrityMonitor page="trusted-by" source={source} stats={stats} />
       <TrustedByPageView
+        businessStats={stats}
         heroTitleLead={copy.heroTitleLead}
         heroTitleAccent={copy.heroTitleAccent}
         heroSubtitle={copy.heroSubtitle}
@@ -60,7 +67,6 @@ export default async function TrustedByPage() {
         overviewTitle={copy.overviewTitle}
         overviewDescription={copy.overviewDescription}
         statsKicker={copy.statsKicker}
-        stats={TRUSTED_BY_STATS}
         craftQuote={copy.craftQuote}
         craftAttribution={copy.craftAttribution}
         clients={TRUSTED_BY_CLIENTS}

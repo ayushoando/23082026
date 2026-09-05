@@ -222,6 +222,8 @@ describe('proxy.ts', () => {
       expect(csp).toContain('https://www.google-analytics.com');
       expect(csp).toContain('https://region1.google-analytics.com');
       expect(csp).toContain('https://stats.g.doubleclick.net');
+      expect(csp).toContain('https://analytics.google.com');
+      expect(csp).toContain('https://www.google.com');
     });
 
     it('omits unused CDNs and bare http images from CSP', () => {

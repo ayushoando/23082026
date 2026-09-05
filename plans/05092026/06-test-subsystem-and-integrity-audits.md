@@ -10,7 +10,7 @@
 - [x] Dual-lane configs present
 - [ ] Full `pnpm run test` this session: default **exit 1** (6 files); tech-docs skipped. Those 6 files then **exit 0** (31 tests) after contract-aligned test edits. Dual-lane rerun still open.
 - [x] `test:audit`, `test:audit:fast`, `test:audit:fake-test` exit 0
-- [ ] `test:browser:gate` in flight (~432 tests); not a recorded pass
+- [ ] `test:browser:gate` recorded: **exit 1** — 402 passed, 27 failed, 3 did not run (432 total, 48.7m). Not a pass.
 - [ ] Test-folder classification/moves not executed
 - [ ] Fresh `results/tests/summary.json` not used as historical clearance
 

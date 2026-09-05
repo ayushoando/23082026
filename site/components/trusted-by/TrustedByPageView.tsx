@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { CaretLeft, CaretRight, MagnifyingGlass, X } from "@phosphor-icons/react";
 
 import { HomeSection, HomeSectionInner } from "@/components/home/layout";
 import { ClientBadge, type ClientBadgeData } from "@/components/ClientBadge";
@@ -10,6 +11,8 @@ import { RouteCtaBand } from "@/components/shared/RouteCtaBand";
 import { EditorialHeroMedia } from "@/components/site/EditorialHeroMedia";
 import { MarketingCtaLink } from "@/components/ui/MarketingCtaLink";
 import { MarketingImage } from "@/components/site/MarketingImage";
+import { TrustStrip } from "@/components/home/TrustStrip";
+import type { BusinessStats } from "@/lib/types/businessStats";
 
 const FEATURED_CLIENT_PHOTOS = [
   {
@@ -69,6 +72,7 @@ export interface TrustedByPageViewProps {
   overviewDescription: string;
   statsKicker?: string;
   stats?: readonly { value: string; label: string }[];
+  businessStats?: BusinessStats;
   craftQuote?: string;
   craftAttribution?: string;
   clients: readonly ClientBadgeData[];
@@ -98,8 +102,7 @@ export function TrustedByPageView({
   overviewKicker,
   overviewTitle,
   overviewDescription,
-  statsKicker,
-  stats,
+  businessStats,
   craftQuote,
   craftAttribution,
   clients,
@@ -127,6 +130,8 @@ export function TrustedByPageView({
   const quotesRef = useRef<HTMLElement>(null);
   const sectorsRef = useRef<HTMLElement>(null);
   const photosRef = useRef<HTMLElement>(null);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const photoCount = FEATURED_CLIENT_PHOTOS.length;
   const [motionReady, setMotionReady] = useState(false);
 
   useEffect(() => {
@@ -135,6 +140,33 @@ export function TrustedByPageView({
     });
     return () => cancelAnimationFrame(id);
   }, []);
+
+  useEffect(() => {
+    if (lightboxIndex === null) {
+      return;
+    }
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setLightboxIndex(null);
+      }
+      if (event.key === "ArrowRight") {
+        setLightboxIndex((current) =>
+          current === null ? current : (current + 1) % photoCount,
+        );
+      }
+      if (event.key === "ArrowLeft") {
+        setLightboxIndex((current) =>
+          current === null ? current : (current - 1 + photoCount) % photoCount,
+        );
+      }
+    };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [lightboxIndex, photoCount]);
 
   useGSAP(
     () => {
@@ -398,56 +430,13 @@ export function TrustedByPageView({
                 {overviewDescription}
               </p>
             </div>
-            {craftQuote ? (
-              <blockquote data-trusted-reveal className="trusted-by-craft-quote">
-                <p className="trusted-by-craft-quote__text">"{craftQuote}"</p>
-                {craftAttribution ? (
-                  <footer className="trusted-by-craft-quote__attribution">— {craftAttribution}</footer>
-                ) : null}
-              </blockquote>
-            ) : null}
           </section>
-        </HomeSectionInner>
-      </HomeSection>
-
-      {stats && stats.length > 0 ? (
-        <HomeSection variant="soft" spacing="sm" borderY>
-          <HomeSectionInner>
-            <section className="trusted-by-stats" aria-label={statsKicker || "Statistics"}>
-              {statsKicker ? (
-                <p data-trusted-reveal className="home-kicker">
-                  {statsKicker}
-                </p>
-              ) : null}
-              <div className="trusted-by-stats-grid">
-                {stats.map((item) => (
-                  <div key={item.label} data-trusted-reveal className="trusted-by-stat-card">
-                    <span className="trusted-by-stat-card__value">{item.value}</span>
-                    <span className="trusted-by-stat-card__label">{item.label}</span>
-                  </div>
-                ))}
-              </div>
-            </section>
-          </HomeSectionInner>
-        </HomeSection>
-      ) : null}
-
-      <HomeSection variant="white" spacing="md" className="border-t-0">
-        <HomeSectionInner>
+          {businessStats ? (
+            <div className="trusted-by-kpi" data-testid="trusted-by-kpi">
+              <TrustStrip stats={businessStats} embedded tone="light" />
+            </div>
+          ) : null}
           <section ref={rosterRef} className="trusted-by-roster" data-testid="trusted-by-roster">
-            <p data-trusted-reveal className="home-kicker">
-              {rosterKicker}
-            </p>
-            {rosterTitle ? (
-              <h2 data-trusted-reveal className="home-heading mt-2 mb-2">
-                {rosterTitle}
-              </h2>
-            ) : null}
-            {rosterDescription ? (
-              <p data-trusted-reveal className="page-copy text-body mb-6 max-w-2xl">
-                {rosterDescription}
-              </p>
-            ) : null}
             <div
               className="client-badge-group client-badge-group--dense"
               aria-label={rosterKicker}
@@ -475,6 +464,14 @@ export function TrustedByPageView({
               </MarketingCtaLink>
             </div>
           </section>
+          {craftQuote ? (
+            <blockquote data-trusted-reveal className="trusted-by-craft-quote">
+              <p className="trusted-by-craft-quote__text">"{craftQuote}"</p>
+              {craftAttribution ? (
+                <footer className="trusted-by-craft-quote__attribution">— {craftAttribution}</footer>
+              ) : null}
+            </blockquote>
+          ) : null}
         </HomeSectionInner>
       </HomeSection>
 
@@ -530,7 +527,12 @@ export function TrustedByPageView({
                     data-trusted-reveal
                     className={`trusted-by-split-card${isReversed ? " trusted-by-split-card--reversed" : ""}`}
                   >
-                    <div className="trusted-by-split-card__media">
+                    <button
+                      type="button"
+                      className="trusted-by-split-card__media"
+                      onClick={() => setLightboxIndex(idx)}
+                      aria-label={`Zoom ${item.name} installation photo`}
+                    >
                       <MarketingImage
                         src={item.image}
                         alt={`${item.name} workspace installation`}
@@ -538,7 +540,10 @@ export function TrustedByPageView({
                         className="trusted-by-split-card__img object-cover"
                       />
                       <span className="trusted-by-split-card__badge">{item.name}</span>
-                    </div>
+                      <span className="trusted-by-split-card__zoom" aria-hidden="true">
+                        <MagnifyingGlass size={20} weight="bold" />
+                      </span>
+                    </button>
 
                     <div className="trusted-by-split-card__content">
                       <div className="trusted-by-split-card__header">
@@ -574,6 +579,58 @@ export function TrustedByPageView({
                 );
               })}
             </div>
+            {lightboxIndex !== null ? (
+              <div
+                className="marketing-photo-lightbox"
+                role="dialog"
+                aria-modal="true"
+                aria-label={`${FEATURED_CLIENT_PHOTOS[lightboxIndex].name} installation photo`}
+              >
+                <button
+                  type="button"
+                  className="marketing-photo-lightbox__scrim"
+                  aria-label="Close photo"
+                  onClick={() => setLightboxIndex(null)}
+                />
+                <button
+                  type="button"
+                  className="marketing-photo-lightbox__nav marketing-photo-lightbox__nav--prev"
+                  aria-label="Previous photo"
+                  onClick={() =>
+                    setLightboxIndex((current) =>
+                      current === null ? 0 : (current - 1 + photoCount) % photoCount,
+                    )
+                  }
+                >
+                  <CaretLeft size={28} weight="bold" />
+                </button>
+                <img
+                  src={FEATURED_CLIENT_PHOTOS[lightboxIndex].image}
+                  alt={`${FEATURED_CLIENT_PHOTOS[lightboxIndex].name} workspace installation`}
+                  className="marketing-photo-lightbox__img"
+                />
+                <button
+                  type="button"
+                  className="marketing-photo-lightbox__nav marketing-photo-lightbox__nav--next"
+                  aria-label="Next photo"
+                  onClick={() =>
+                    setLightboxIndex((current) =>
+                      current === null ? 0 : (current + 1) % photoCount,
+                    )
+                  }
+                >
+                  <CaretRight size={28} weight="bold" />
+                </button>
+                <button
+                  type="button"
+                  className="marketing-photo-lightbox__close"
+                  aria-label="Close photo"
+                  onClick={() => setLightboxIndex(null)}
+                >
+                  <X size={22} weight="bold" />
+                </button>
+              </div>
+            ) : null}
           </section>
         </HomeSectionInner>
       </HomeSection>

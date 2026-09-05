@@ -1,5 +1,14 @@
 "use client";
 
+import { useCallback, useRef, useState } from "react";
+import { CaretLeft, CaretRight, X } from "@phosphor-icons/react";
+import {
+  Dialog as AriaDialog,
+  Heading,
+  Modal as AriaModal,
+  ModalOverlay as AriaModalOverlay,
+} from "react-aria-components";
+
 import { MarketingImage } from "@/components/site/MarketingImage";
 
 export type ClientCaseStudy = {
@@ -14,6 +23,24 @@ type ClientsCaseStudiesProps = {
   clients: ClientCaseStudy[];
 };
 
+function wrapIndex(index: number, length: number): number {
+  if (length <= 0) {
+    return 0;
+  }
+  return ((index % length) + length) % length;
+}
+
+function secondaryPhotoIndexes(photoCount: number, primaryIndex: number): number[] {
+  if (photoCount <= 1) {
+    return [];
+  }
+  const indexes: number[] = [];
+  for (let offset = 1; offset < photoCount && indexes.length < 2; offset += 1) {
+    indexes.push(wrapIndex(primaryIndex + offset, photoCount));
+  }
+  return indexes;
+}
+
 /**
  * Photography-forward case mosaic — static layout.
  * Signature motion lives on ClientsProofStrip (one beat per page).
@@ -21,66 +48,248 @@ type ClientsCaseStudiesProps = {
 export function ClientsCaseStudies({ clients }: ClientsCaseStudiesProps) {
   return (
     <div className="clients-work">
-      {clients.map((client, index) => {
-        const secondaryPhotos = client.photos.slice(1, 3);
-        const mosaicVariant =
-          secondaryPhotos.length === 0 ? "clients-work__mosaic--solo" : "clients-work__mosaic--dual";
+      {clients.map((client, index) => (
+        <CaseStudyArticle key={client.id} client={client} index={index} />
+      ))}
+    </div>
+  );
+}
 
-        return (
-          <article
-            key={client.id}
-            className="clients-work__case portfolio-case"
-            aria-labelledby={`clients-work-${client.id}`}
+function CaseStudyArticle({
+  client,
+  index,
+}: {
+  client: ClientCaseStudy;
+  index: number;
+}) {
+  const photos = client.photos;
+  const mosaicRef = useRef<HTMLDivElement>(null);
+  const [mosaicIndex, setMosaicIndex] = useState(0);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  const openLightbox = useCallback((photoIndex: number) => {
+    if (photos.length === 0) {
+      return;
+    }
+    setLightboxIndex(wrapIndex(photoIndex, photos.length));
+  }, [photos.length]);
+
+  const closeLightbox = useCallback(() => {
+    setLightboxIndex(null);
+  }, []);
+
+  const stepLightbox = useCallback(
+    (delta: number) => {
+      if (photos.length <= 1) {
+        return;
+      }
+      setLightboxIndex((current) => wrapIndex((current ?? 0) + delta, photos.length));
+    },
+    [photos.length],
+  );
+
+  const scrollMosaic = useCallback((delta: number) => {
+    const node = mosaicRef.current;
+    if (!node) {
+      return;
+    }
+    const distance = Math.max(node.clientWidth * 0.55, 160);
+    node.scrollBy({ left: delta * distance, behavior: "smooth" });
+  }, []);
+
+  const stepMosaic = useCallback(
+    (delta: number) => {
+      if (photos.length <= 1) {
+        return;
+      }
+      setMosaicIndex((current) => wrapIndex(current + delta, photos.length));
+      scrollMosaic(delta);
+    },
+    [photos.length, scrollMosaic],
+  );
+
+  if (photos.length === 0) {
+    return null;
+  }
+
+  const secondaryIndexes = secondaryPhotoIndexes(photos.length, mosaicIndex);
+  const mosaicVariant =
+    secondaryIndexes.length === 0 ? "clients-work__mosaic--solo" : "clients-work__mosaic--dual";
+  const lightboxOpen = lightboxIndex !== null;
+  const activeLightboxIndex = lightboxIndex ?? 0;
+  const lightboxPhoto = photos[activeLightboxIndex];
+  const canBrowse = photos.length > 1;
+  const primaryPhoto = photos[mosaicIndex] ?? photos[0];
+
+  return (
+    <article
+      className="clients-work__case portfolio-case"
+      aria-labelledby={`clients-work-${client.id}`}
+    >
+      <div className="clients-work-caption">
+        <p className="clients-work__index home-kicker text-contrast-accent" aria-hidden="true">
+          {String(index + 1).padStart(2, "0")}
+        </p>
+        <h2 id={`clients-work-${client.id}`} className="clients-work__title home-heading">
+          {client.name}
+        </h2>
+        <p className="clients-work__location typ-body text-muted">{client.location}</p>
+        <p className="clients-work-caption__scope page-copy text-body">{client.summary}</p>
+      </div>
+
+      <div
+        ref={mosaicRef}
+        className={`clients-work__mosaic portfolio-case__mosaic overflow-x-auto ${mosaicVariant}`}
+      >
+        <div
+          className={
+            secondaryIndexes.length > 0
+              ? "clients-work__media clients-work__media--primary portfolio-case__media"
+              : "clients-work__media clients-work__media--primary clients-work__media--primary-solo portfolio-case__media"
+          }
+        >
+          <MarketingImage
+            src={primaryPhoto}
+            alt={`${client.name} installed workplace — primary view`}
+            sizes={secondaryIndexes.length > 0 ? "(max-width: 768px) 100vw, 58vw" : "100vw"}
+            className="portfolio-case__img object-cover"
+            priority={index < 2}
+          />
+          <button
+            type="button"
+            className="portfolio-case__zoom absolute inset-0 z-[1] cursor-zoom-in border-0 bg-transparent p-0"
+            aria-label={`Zoom ${client.name} photo ${mosaicIndex + 1} of ${photos.length}`}
+            onClick={() => openLightbox(mosaicIndex)}
+          />
+        </div>
+        {secondaryIndexes.map((photoIndex, slotIndex) => (
+          <div
+            key={`${photos[photoIndex]}-${photoIndex}`}
+            className={
+              secondaryIndexes.length === 1
+                ? "clients-work__media clients-work__media--secondary clients-work__media--secondary-solo portfolio-case__media"
+                : "clients-work__media clients-work__media--secondary portfolio-case__media"
+            }
           >
-            <div className="clients-work-caption">
-              <p className="clients-work__index home-kicker text-contrast-accent" aria-hidden="true">
-                {String(index + 1).padStart(2, "0")}
-              </p>
-              <h2 id={`clients-work-${client.id}`} className="clients-work__title home-heading">
-                {client.name}
-              </h2>
-              <p className="clients-work__location typ-body text-muted">{client.location}</p>
-              <p className="clients-work-caption__scope page-copy text-body">{client.summary}</p>
-            </div>
+            <MarketingImage
+              src={photos[photoIndex] ?? primaryPhoto}
+              alt={`${client.name} installed workplace — detail ${slotIndex + 2}`}
+              sizes="(max-width: 768px) 50vw, 42vw"
+              className="portfolio-case__img object-cover"
+              loading="eager"
+            />
+            <button
+              type="button"
+              className="portfolio-case__zoom absolute inset-0 z-[1] cursor-zoom-in border-0 bg-transparent p-0"
+              aria-label={`Zoom ${client.name} photo ${photoIndex + 1} of ${photos.length}`}
+              onClick={() => openLightbox(photoIndex)}
+            />
+          </div>
+        ))}
+      </div>
 
-            <div className={`clients-work__mosaic portfolio-case__mosaic ${mosaicVariant}`}>
-              <div
-                className={
-                  secondaryPhotos.length > 0
-                    ? "clients-work__media clients-work__media--primary portfolio-case__media"
-                    : "clients-work__media clients-work__media--primary clients-work__media--primary-solo portfolio-case__media"
+      {canBrowse ? (
+        <div className="clients-work__mosaic-nav mt-3 flex items-center gap-2">
+          <button
+            type="button"
+            className="shell-icon-button h-11 w-11 min-h-11 min-w-11"
+            aria-label={`Previous ${client.name} photo`}
+            onClick={() => stepMosaic(-1)}
+          >
+            <CaretLeft size={18} weight="bold" aria-hidden="true" />
+          </button>
+          <p className="typ-body text-muted" aria-live="polite">
+            <span className="sr-only">
+              {`Photo ${mosaicIndex + 1} of ${photos.length} for ${client.name}`}
+            </span>
+            <span aria-hidden="true">
+              {mosaicIndex + 1} / {photos.length}
+            </span>
+          </p>
+          <button
+            type="button"
+            className="shell-icon-button h-11 w-11 min-h-11 min-w-11"
+            aria-label={`Next ${client.name} photo`}
+            onClick={() => stepMosaic(1)}
+          >
+            <CaretRight size={18} weight="bold" aria-hidden="true" />
+          </button>
+        </div>
+      ) : null}
+
+      {lightboxOpen && lightboxPhoto ? (
+        <AriaModalOverlay
+          isOpen
+          isDismissable
+          onOpenChange={(open) => {
+            if (!open) {
+              closeLightbox();
+            }
+          }}
+          className="portfolio-lightbox-scrim fixed inset-0 z-[80] flex items-center justify-center bg-scrim"
+        >
+          <AriaModal className="portfolio-lightbox outline-none">
+            <AriaDialog
+              className="outline-none"
+              aria-label={`${client.name} photo ${activeLightboxIndex + 1} of ${photos.length}`}
+              onKeyDown={(event) => {
+                if (event.key === "ArrowLeft") {
+                  event.preventDefault();
+                  stepLightbox(-1);
+                } else if (event.key === "ArrowRight") {
+                  event.preventDefault();
+                  stepLightbox(1);
                 }
-              >
+              }}
+            >
+              <Heading slot="title" className="sr-only">
+                {`${client.name} installed workplace — photo ${activeLightboxIndex + 1} of ${photos.length}`}
+              </Heading>
+              <div className="portfolio-lightbox__toolbar mb-3 flex items-center justify-end gap-2">
+                <button
+                  type="button"
+                  className="shell-icon-button h-11 w-11 min-h-11 min-w-11"
+                  aria-label="Close photo"
+                  onClick={closeLightbox}
+                >
+                  <X size={18} weight="bold" aria-hidden="true" />
+                </button>
+              </div>
+              <div className="portfolio-lightbox__stage relative h-[min(80dvh,40rem)] w-[min(96vw,72rem)] overflow-hidden">
                 <MarketingImage
-                  src={client.photos[0]}
-                  alt={`${client.name} installed workplace — primary view`}
-                  sizes={secondaryPhotos.length > 0 ? "(max-width: 768px) 100vw, 58vw" : "100vw"}
-                  className="portfolio-case__img object-cover"
-                  priority={index < 2}
+                  src={lightboxPhoto}
+                  alt={`${client.name} installed workplace — photo ${activeLightboxIndex + 1} of ${photos.length}`}
+                  sizes="100vw"
+                  className="portfolio-lightbox__img object-contain"
                 />
               </div>
-              {secondaryPhotos.map((photo, photoIndex) => (
-                <div
-                  key={photo}
-                  className={
-                    secondaryPhotos.length === 1
-                      ? "clients-work__media clients-work__media--secondary clients-work__media--secondary-solo portfolio-case__media"
-                      : "clients-work__media clients-work__media--secondary portfolio-case__media"
-                  }
-                >
-                  <MarketingImage
-                    src={photo}
-                    alt={`${client.name} installed workplace — detail ${photoIndex + 2}`}
-                    sizes="(max-width: 768px) 50vw, 42vw"
-                    className="portfolio-case__img object-cover"
-                    loading="eager"
-                  />
+              {canBrowse ? (
+                <div className="portfolio-lightbox__nav mt-3 flex items-center justify-center gap-2">
+                  <button
+                    type="button"
+                    className="shell-icon-button h-11 w-11 min-h-11 min-w-11"
+                    aria-label={`Previous ${client.name} photo`}
+                    onClick={() => stepLightbox(-1)}
+                  >
+                    <CaretLeft size={18} weight="bold" aria-hidden="true" />
+                  </button>
+                  <p className="typ-body text-heading" aria-live="polite">
+                    {activeLightboxIndex + 1} / {photos.length}
+                  </p>
+                  <button
+                    type="button"
+                    className="shell-icon-button h-11 w-11 min-h-11 min-w-11"
+                    aria-label={`Next ${client.name} photo`}
+                    onClick={() => stepLightbox(1)}
+                  >
+                    <CaretRight size={18} weight="bold" aria-hidden="true" />
+                  </button>
                 </div>
-              ))}
-            </div>
-          </article>
-        );
-      })}
-    </div>
+              ) : null}
+            </AriaDialog>
+          </AriaModal>
+        </AriaModalOverlay>
+      ) : null}
+    </article>
   );
 }
