@@ -8,6 +8,7 @@ import {
 } from "@/features/site/planner/landing/plannerFeaturePages";
 import { SITE_URL } from "@/lib/siteUrl";
 import { buildBreadcrumbJsonLd, buildPageJsonLd, buildPageMetadata } from "@/features/site/data/seo";
+import { getRequestNonce } from "@/lib/security/requestNonce";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
 type PageProps = {
@@ -33,7 +34,7 @@ export async function generateMetadata({ params }: PageProps) {
 }
 
 export default async function PlannerFeatureRoute({ params }: PageProps) {
-  const { slug } = await params;
+  const [{ slug }, nonce] = await Promise.all([params, getRequestNonce()]);
   if (!isPlannerFeatureSlug(slug)) {
     notFound();
   }
@@ -56,6 +57,7 @@ export default async function PlannerFeatureRoute({ params }: PageProps) {
         <script
           key={item["@type"] === "BreadcrumbList" ? "breadcrumb" : "page"}
           type="application/ld+json"
+          nonce={nonce}
           dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(item) }}
         />
       ))}

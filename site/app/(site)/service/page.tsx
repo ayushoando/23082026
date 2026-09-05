@@ -15,6 +15,7 @@ import {
 } from "@/features/site/data/seo";
 import { withLocaleCopy } from "@/lib/i18n/withLocaleCopy";
 import { SITE_URL } from "@/lib/siteUrl";
+import { getRequestNonce } from "@/lib/security/requestNonce";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
 async function loadServiceCopy() {
@@ -33,7 +34,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ServicePage() {
-  const copy = await loadServiceCopy();
+  const [copy, nonce] = await Promise.all([
+    loadServiceCopy(),
+    getRequestNonce(),
+  ]);
   const serviceJsonLd = buildPageJsonLd(SITE_URL, {
     path: "/service",
     title: `${copy.heroTitle} | One&Only`,
@@ -49,12 +53,14 @@ export default async function ServicePage() {
     <HomeMarketingLayout>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{
           __html: sanitizeJsonForScript(serviceJsonLd),
         }}
       />
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{
           __html: sanitizeJsonForScript(breadcrumbJsonLd),
         }}

@@ -6,6 +6,7 @@ import { HomeMarketingLayout } from "@/components/home/layout";
 import { CONTACT_PAGE_METADATA } from "@/features/site/data/routeMetadata";
 import { buildBreadcrumbJsonLd, buildPageJsonLd } from "@/features/site/data/seo";
 import { SITE_URL } from "@/lib/siteUrl";
+import { getRequestNonce } from "@/lib/security/requestNonce";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
 /** Canonical SEO for /contact (title length, locales, brands, OG). */
@@ -25,8 +26,11 @@ export default async function ContactPage({
 }: {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const t = await getTranslations("contact");
-  const resolvedSearchParams = searchParams ? await searchParams : {};
+  const [t, nonce, resolvedSearchParams] = await Promise.all([
+    getTranslations("contact"),
+    getRequestNonce(),
+    searchParams ? searchParams : Promise.resolve({} as Record<string, string | string[] | undefined>),
+  ]);
   const intent = firstValue(resolvedSearchParams.intent);
   const source = firstValue(resolvedSearchParams.source);
   const offices = t.raw("offices") as ContactOffice[];
@@ -46,10 +50,12 @@ export default async function ContactPage({
     <HomeMarketingLayout>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(contactJsonLd) }}
       />
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(breadcrumbJsonLd) }}
       />
       <ContactPageView

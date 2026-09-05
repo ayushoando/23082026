@@ -15,6 +15,7 @@ import {
 } from "@/features/site/data/seo";
 import { withLocaleCopy } from "@/lib/i18n/withLocaleCopy";
 import { SITE_URL } from "@/lib/siteUrl";
+import { getRequestNonce } from "@/lib/security/requestNonce";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
 async function loadPlanningCopy() {
@@ -33,7 +34,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function PlanningPage() {
-  const copy = await loadPlanningCopy();
+  const [copy, nonce] = await Promise.all([
+    loadPlanningCopy(),
+    getRequestNonce(),
+  ]);
   const planningJsonLd = buildPageJsonLd(SITE_URL, {
     path: "/planning",
     title: `${copy.heroTitle} | One&Only`,
@@ -49,12 +53,14 @@ export default async function PlanningPage() {
     <HomeMarketingLayout>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{
           __html: sanitizeJsonForScript(planningJsonLd),
         }}
       />
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{
           __html: sanitizeJsonForScript(breadcrumbJsonLd),
         }}

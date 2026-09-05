@@ -24,6 +24,7 @@ import {
   buildProductJsonLd,
 } from "@/features/site/data/seo";
 import { resolvePdpPlanSvgThumbFromDisk } from "@/features/site/planSvg/resolvePdpPlanSvgThumb.server";
+import { getRequestNonce } from "@/lib/security/requestNonce";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
 const BASE_URL = SITE_URL;
@@ -154,7 +155,10 @@ async function ProductContent({
   categoryId: string;
   productUrlKey: string;
 }) {
-  const productResolution = await resolveProductByUrlKey<Product>(productUrlKey, "*");
+  const [productResolution, nonce] = await Promise.all([
+    resolveProductByUrlKey<Product>(productUrlKey, "*"),
+    getRequestNonce(),
+  ]);
   const rawProduct = productResolution.row;
 
   if (!rawProduct) {
@@ -337,10 +341,12 @@ async function ProductContent({
     <>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(breadcrumbJsonLd) }}
       />
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(productJsonLd) }}
       />
       <ProductViewer

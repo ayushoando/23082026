@@ -2,6 +2,7 @@ import { PlannerFeaturesHubPage } from "@/features/site/planner/landing/PlannerF
 import { PLANNER_FEATURES_PAGE_METADATA } from "@/features/site/data/routeMetadata";
 import { buildBreadcrumbJsonLd, buildPageJsonLd } from "@/features/site/data/seo";
 import { SITE_URL } from "@/lib/siteUrl";
+import { getRequestNonce } from "@/lib/security/requestNonce";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
 export const metadata = PLANNER_FEATURES_PAGE_METADATA;
@@ -18,13 +19,15 @@ const BREADCRUMB_JSON_LD = buildBreadcrumbJsonLd(SITE_URL, [
   { name: "Features", path: "/planner/features" },
 ]);
 
-export default function PlannerFeaturesHubRoute() {
+export default async function PlannerFeaturesHubRoute() {
+  const nonce = await getRequestNonce();
   return (
     <>
       {[PAGE_JSON_LD, BREADCRUMB_JSON_LD].map((jsonLd) => (
         <script
           key={jsonLd["@type"] === "BreadcrumbList" ? "breadcrumb" : "page"}
           type="application/ld+json"
+          nonce={nonce}
           dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(jsonLd) }}
         />
       ))}

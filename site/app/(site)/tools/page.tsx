@@ -5,6 +5,7 @@ import { HomeMarketingLayout } from "@/components/home/layout";
 import { TOOLS_PAGE_METADATA } from "@/features/site/data/routeMetadata";
 import { buildBreadcrumbJsonLd, buildPageJsonLd } from "@/features/site/data/seo";
 import { SITE_URL } from "@/lib/siteUrl";
+import { getRequestNonce } from "@/lib/security/requestNonce";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
 export const metadata = TOOLS_PAGE_METADATA;
@@ -39,7 +40,8 @@ const TOOLS_LIST = [
   },
 ] as const;
 
-export default function ToolsHubPage() {
+export default async function ToolsHubPage() {
+  const nonce = await getRequestNonce();
   const pageJsonLd = buildPageJsonLd(SITE_URL, {
     path: "/tools",
     title: "Workspace Planning Tools & Calculators | One&Only",
@@ -57,10 +59,12 @@ export default function ToolsHubPage() {
     <HomeMarketingLayout>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(pageJsonLd) }}
       />
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(breadcrumbJsonLd) }}
       />
 

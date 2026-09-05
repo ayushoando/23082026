@@ -25,6 +25,7 @@ import { normalizeAssetPath, PRODUCT_IMAGE_FALLBACK } from "@/lib/assetPaths";
 import { COMPARE_ROUTE_COPY } from "@/features/site/data/routeCopy";
 import { buildPageJsonLd } from "@/features/site/data/seo";
 import { SITE_URL } from "@/lib/siteUrl";
+import { getRequestNonce } from "@/lib/security/requestNonce";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
 const COMPARE_PAGE_JSON_LD = buildPageJsonLd(SITE_URL, {
@@ -158,7 +159,10 @@ export async function ComparePageView({
 }) {
   const resolvedSearchParams = searchParams ? await searchParams : {};
   const keys = parseItemKeys(resolvedSearchParams.items);
-  const items = await resolveCompareItems(keys);
+  const [items, nonce] = await Promise.all([
+    resolveCompareItems(keys),
+    getRequestNonce(),
+  ]);
 
   const allCompareRows = [
     { key: "category", label: "Category" },
@@ -186,6 +190,7 @@ export async function ComparePageView({
     <HomeMarketingLayout>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{
           __html: sanitizeJsonForScript(COMPARE_PAGE_JSON_LD),
         }}

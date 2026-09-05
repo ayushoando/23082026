@@ -48,9 +48,8 @@ let defaultBackendPromise: Promise<RateLimitBackend> | null = null;
 
 export function hasDistributedRateLimit(): boolean {
   return Boolean(
-    process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() &&
-      (process.env.SUPABASE_URL?.trim() ||
-        process.env.NEXT_PUBLIC_SUPABASE_URL?.trim()),
+    process.env.NEXT_ADMIN_SUPABASE_URL?.trim() &&
+      process.env.SUPABASE_ADMIN_SERVICE_ROLE_KEY?.trim(),
   );
 }
 
@@ -153,57 +152,72 @@ export async function rateLimit(
   return memoryRateLimitOrFailClosed(key, limit, windowMs);
 }
 
-export async function createSupabaseRateLimitBackend(): Promise<RateLimitBackend> {
-  const { createAdminServiceClient } = await import("@/platform/supabase/adminServer");
-  const supabase = createAdminServiceClient();
-
-  if (!supabase) {
-    return {
-      check(key, limit, windowMs) {
-        return Promise.resolve(
-          memoryRateLimitOrFailClosed(key, limit, windowMs),
-        );
-      },
-    };
-  }
-
+function memoryFallbackBackend(): RateLimitBackend {
   return {
-    async check(key, limit, windowMs) {
-      try {
-        // `consume_rate_limit` owns the whole reset/increment decision in one
-        // database statement, so concurrent server instances cannot overwrite
-        // one another's increments with a read-then-upsert race.
-        const { data, error } = await supabase.rpc("consume_rate_limit", {
-          p_key: key,
-          p_limit: limit,
-          p_window_ms: windowMs,
-        });
-        if (error) {
-          warnDistributedBackendDegraded(error.message ?? "RPC error");
-          return memoryRateLimitOrFailClosed(key, limit, windowMs);
-        }
-
-        const row = data?.[0];
-        if (
-          !row ||
-          typeof row.allowed !== "boolean" ||
-          typeof row.count !== "number" ||
-          typeof row.window_start !== "number"
-        ) {
-          warnDistributedBackendDegraded("invalid RPC response");
-          return memoryRateLimitOrFailClosed(key, limit, windowMs);
-        }
-
-        return {
-          success: row.allowed,
-          limit,
-          remaining: Math.max(0, limit - row.count),
-          reset: row.window_start + windowMs,
-        };
-      } catch {
-        warnDistributedBackendDegraded("unexpected check failure");
-        return memoryRateLimitOrFailClosed(key, limit, windowMs);
-      }
+    check(key, limit, windowMs) {
+      return Promise.resolve(
+        memoryRateLimitOrFailClosed(key, limit, windowMs),
+      );
     },
   };
+}
+
+export async function createSupabaseRateLimitBackend(): Promise<RateLimitBackend> {
+  // Admin project owns `consume_rate_limit`. Missing Admin env must not throw
+  // into API routes — same fail-open / AI fail-closed path as a null client.
+  if (!hasDistributedRateLimit()) {
+    return memoryFallbackBackend();
+  }
+
+  try {
+    const { createSupabaseAuthAdminClient } = await import(
+      "@/platform/supabase/auth-admin"
+    );
+    const supabase = createSupabaseAuthAdminClient();
+
+    return {
+      async check(key, limit, windowMs) {
+        try {
+          // `consume_rate_limit` owns the whole reset/increment decision in one
+          // database statement, so concurrent server instances cannot overwrite
+          // one another's increments with a read-then-upsert race.
+          const { data, error } = await supabase.rpc("consume_rate_limit", {
+            p_key: key,
+            p_limit: limit,
+            p_window_ms: windowMs,
+          });
+          if (error) {
+            warnDistributedBackendDegraded(error.message ?? "RPC error");
+            return memoryRateLimitOrFailClosed(key, limit, windowMs);
+          }
+
+          const row = data?.[0];
+          if (
+            !row ||
+            typeof row.allowed !== "boolean" ||
+            typeof row.count !== "number" ||
+            typeof row.window_start !== "number"
+          ) {
+            warnDistributedBackendDegraded("invalid RPC response");
+            return memoryRateLimitOrFailClosed(key, limit, windowMs);
+          }
+
+          return {
+            success: row.allowed,
+            limit,
+            remaining: Math.max(0, limit - row.count),
+            reset: row.window_start + windowMs,
+          };
+        } catch {
+          warnDistributedBackendDegraded("unexpected check failure");
+          return memoryRateLimitOrFailClosed(key, limit, windowMs);
+        }
+      },
+    };
+  } catch (error) {
+    warnDistributedBackendDegraded(
+      error instanceof Error ? error.message : "admin client unavailable",
+    );
+    return memoryFallbackBackend();
+  }
 }

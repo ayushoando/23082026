@@ -6,6 +6,7 @@ import {
 import { OFFICE_SPACE_CALCULATOR_PAGE_METADATA } from "@/features/site/data/routeMetadata";
 import { buildBreadcrumbJsonLd } from "@/features/site/data/seo";
 import { SITE_URL } from "@/lib/siteUrl";
+import { getRequestNonce } from "@/lib/security/requestNonce";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
 const TOOL_PATH = "/tools/office-space-calculator";
@@ -59,7 +60,8 @@ const TOOL_FAQS = [
 
 export const metadata = OFFICE_SPACE_CALCULATOR_PAGE_METADATA;
 
-export default function OfficeSpaceCalculatorPage() {
+export default async function OfficeSpaceCalculatorPage() {
+  const nonce = await getRequestNonce();
   const breadcrumbJsonLd = buildBreadcrumbJsonLd(SITE_URL, [
     { name: "Home", path: "/" },
     { name: "Office Space Calculator", path: TOOL_PATH },
@@ -69,6 +71,7 @@ export default function OfficeSpaceCalculatorPage() {
     <HomeMarketingLayout>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(breadcrumbJsonLd) }}
       />
       <section className="home-section" aria-labelledby="tool-heading">

@@ -23,7 +23,9 @@ describe('rateLimit', () => {
     vi.clearAllMocks();
     vi.resetModules();
     originalEnv = { ...process.env };
-    // Clear Supabase env keys to test memory rate limit by default
+    // Clear Admin (and leftover Products) env so tests default to memory limiting
+    delete process.env.NEXT_ADMIN_SUPABASE_URL;
+    delete process.env.SUPABASE_ADMIN_SERVICE_ROLE_KEY;
     delete process.env.SUPABASE_URL;
     delete process.env.SUPABASE_SERVICE_ROLE_KEY;
     delete process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -94,8 +96,8 @@ describe('rateLimit', () => {
     });
 
     it('should instantiate supabase client when keys exist and perform rate limiting', async () => {
-      process.env.SUPABASE_URL = 'https://supabase.co';
-      process.env.SUPABASE_SERVICE_ROLE_KEY = 'srv-key';
+      process.env.NEXT_ADMIN_SUPABASE_URL = 'https://supabase.co';
+      process.env.SUPABASE_ADMIN_SERVICE_ROLE_KEY = 'srv-key';
 
       // 1. Happy path: new request
       mockRpc.mockResolvedValue({
@@ -147,13 +149,13 @@ describe('rateLimit', () => {
   describe('10.1 degradation warning', () => {
     it('warns (throttled) when the configured distributed backend setup fails, then serves memory results', async () => {
       setNodeEnv('production');
-      process.env.SUPABASE_URL = 'https://supabase.co';
-      process.env.SUPABASE_SERVICE_ROLE_KEY = 'srv-key';
+      process.env.NEXT_ADMIN_SUPABASE_URL = 'https://supabase.co';
+      process.env.SUPABASE_ADMIN_SERVICE_ROLE_KEY = 'srv-key';
 
       const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       const adminError = new Error('admin client unavailable');
-      vi.doMock('@/platform/supabase/adminServer', () => ({
-        createAdminServiceClient: vi.fn(() => {
+      vi.doMock('@/platform/supabase/auth-admin', () => ({
+        createSupabaseAuthAdminClient: vi.fn(() => {
           throw adminError;
         }),
       }));
@@ -172,7 +174,7 @@ describe('rateLimit', () => {
         expect(warnSpy).toHaveBeenCalledTimes(1); // throttled within 60s
       } finally {
         warnSpy.mockRestore();
-        vi.doUnmock('@/platform/supabase/adminServer');
+        vi.doUnmock('@/platform/supabase/auth-admin');
         vi.resetModules();
         rateLimitModule = await import('../../../site/lib/rateLimit');
       }

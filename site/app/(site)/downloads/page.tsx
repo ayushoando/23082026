@@ -11,6 +11,7 @@ import {
 import { buildBreadcrumbJsonLd, buildPageJsonLd, buildPageMetadata } from "@/features/site/data/seo";
 import { withLocaleCopy } from "@/lib/i18n/withLocaleCopy";
 import { SITE_URL } from "@/lib/siteUrl";
+import { getRequestNonce } from "@/lib/security/requestNonce";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
 async function loadDownloadsCopy() {
@@ -37,7 +38,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function DownloadsPage() {
-  const copy = await loadDownloadsCopy();
+  const [copy, nonce] = await Promise.all([
+    loadDownloadsCopy(),
+    getRequestNonce(),
+  ]);
   const downloadsJsonLd = buildPageJsonLd(SITE_URL, {
     path: "/downloads",
     title: `${copy.heroTitle} | One&Only`,
@@ -53,10 +57,12 @@ export default async function DownloadsPage() {
     <HomeMarketingLayout>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(downloadsJsonLd) }}
       />
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(breadcrumbJsonLd) }}
       />
       <DownloadsPageView

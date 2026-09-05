@@ -6,6 +6,7 @@ import {
 import { MEETING_ROOM_CAPACITY_PAGE_METADATA } from "@/features/site/data/routeMetadata";
 import { buildBreadcrumbJsonLd } from "@/features/site/data/seo";
 import { SITE_URL } from "@/lib/siteUrl";
+import { getRequestNonce } from "@/lib/security/requestNonce";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
 const TOOL_PATH = "/tools/meeting-room-capacity-calculator";
@@ -59,7 +60,8 @@ const TOOL_FAQS = [
 
 export const metadata = MEETING_ROOM_CAPACITY_PAGE_METADATA;
 
-export default function MeetingRoomCapacityCalculatorPage() {
+export default async function MeetingRoomCapacityCalculatorPage() {
+  const nonce = await getRequestNonce();
   const breadcrumbJsonLd = buildBreadcrumbJsonLd(SITE_URL, [
     { name: "Home", path: "/" },
     { name: "Meeting Room Capacity Calculator", path: TOOL_PATH },
@@ -69,6 +71,7 @@ export default function MeetingRoomCapacityCalculatorPage() {
     <HomeMarketingLayout>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(breadcrumbJsonLd) }}
       />
       <section className="home-section" aria-labelledby="tool-heading">

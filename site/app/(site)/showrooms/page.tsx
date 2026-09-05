@@ -15,6 +15,7 @@ import {
 } from "@/features/site/data/seo";
 import { withLocaleCopy } from "@/lib/i18n/withLocaleCopy";
 import { SITE_URL } from "@/lib/siteUrl";
+import { getRequestNonce } from "@/lib/security/requestNonce";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
 async function loadShowroomsCopy() {
@@ -38,7 +39,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ShowroomsPage() {
-  const copy = await loadShowroomsCopy();
+  const [copy, nonce] = await Promise.all([
+    loadShowroomsCopy(),
+    getRequestNonce(),
+  ]);
   const showroomsJsonLd = buildPageJsonLd(SITE_URL, {
     path: "/showrooms",
     title: `${copy.heroTitle} | One&Only`,
@@ -55,14 +59,17 @@ export default async function ShowroomsPage() {
     <HomeMarketingLayout>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(showroomsJsonLd) }}
       />
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(breadcrumbJsonLd) }}
       />
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(localBusinessJsonLd) }}
       />
       <ShowroomsPageView

@@ -10,6 +10,7 @@ import { TRUSTED_BY_PAGE_COPY } from "@/features/site/data/routeCopy";
 import { withLocaleCopy } from "@/lib/i18n/withLocaleCopy";
 import { buildBreadcrumbJsonLd, buildPageJsonLd, buildPageMetadata } from "@/features/site/data/seo";
 import { SITE_URL } from "@/lib/siteUrl";
+import { getRequestNonce } from "@/lib/security/requestNonce";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
 async function loadTrustedByCopy() {
@@ -30,9 +31,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
 /** Client proof page — roster, stats, quotes. Photos stay on /clients. */
 export default async function TrustedByPage() {
-  const [copy, { stats, source }] = await Promise.all([
+  const [copy, { stats, source }, nonce] = await Promise.all([
     loadTrustedByCopy(),
     getBusinessStats(),
+    getRequestNonce(),
   ]);
   const sectors = Array.from(new Set(TRUSTED_BY_CLIENTS.map((client) => client.sector)));
 
@@ -51,10 +53,12 @@ export default async function TrustedByPage() {
     <HomeMarketingLayout>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(trustedByJsonLd) }}
       />
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(breadcrumbJsonLd) }}
       />
       <KpiIntegrityMonitor page="trusted-by" source={source} stats={stats} />

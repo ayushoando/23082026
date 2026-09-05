@@ -154,6 +154,7 @@ export const CLIENT_LOGO_SRC_BY_NAME: Readonly<Record<string, string>> = {
   "United Bank of India": "/assets/marketing/client-logos/united-bank-limited.png",
   "United Nations": "/assets/marketing/client-logos/united-nations.svg",
   "United Spirits": "/assets/marketing/client-logos/united-spirits.svg",
+  "USHA": "/assets/marketing/client-logos/usha-international-ltd.png",
   "Usha": "/assets/marketing/client-logos/usha-international-ltd.png",
   "Usha International": "/assets/marketing/client-logos/usha-international-ltd.png",
   "Usha International Ltd": "/assets/marketing/client-logos/usha-international-ltd.png",

@@ -14,6 +14,7 @@ import { ContactTeaser } from "@/components/shared/ContactTeaser";
 import { PRODUCTS_HERO_IMAGE } from "@/features/site/data/productsPage";
 import { buildPageJsonLd, buildPageMetadata } from "@/features/site/data/seo";
 import { SITE_URL } from "@/lib/siteUrl";
+import { getRequestNonce } from "@/lib/security/requestNonce";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
 /**
@@ -101,7 +102,10 @@ async function ProductsCatalogSections({ copy }: { copy: ProductsCopy }) {
 }
 
 export default async function ProductsPage() {
-  const copy = await loadProductsCopy();
+  const [copy, nonce] = await Promise.all([
+    loadProductsCopy(),
+    getRequestNonce(),
+  ]);
   const title = [copy.heroTitleLead, copy.heroTitleAccent].filter(Boolean).join(" ");
 
   const productsJsonLd = buildPageJsonLd(SITE_URL, {
@@ -115,6 +119,7 @@ export default async function ProductsPage() {
     <HomeMarketingLayout>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(productsJsonLd) }}
       />
       <link

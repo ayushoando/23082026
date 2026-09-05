@@ -7,6 +7,7 @@ import { SOLUTION_CATEGORIES } from "@/features/site/data/solutionsPage";
 import { SOLUTIONS_PAGE_METADATA } from "@/features/site/data/routeMetadata";
 import { buildBreadcrumbJsonLd, buildPageJsonLd } from "@/features/site/data/seo";
 import { SITE_URL } from "@/lib/siteUrl";
+import { getRequestNonce } from "@/lib/security/requestNonce";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
 export const metadata = SOLUTIONS_PAGE_METADATA;
@@ -18,7 +19,10 @@ type DeliveryMedia = { src: string; alt: string };
  * Category detail: `/solutions/[category]` (premium pass 2026-07-23).
  */
 export default async function SolutionsPage() {
-  const t = await getTranslations("solutions");
+  const [t, nonce] = await Promise.all([
+    getTranslations("solutions"),
+    getRequestNonce(),
+  ]);
   const deliveryMedia = t.raw("deliveryMedia") as DeliveryMedia;
 
   const solutionsJsonLd = buildPageJsonLd(SITE_URL, {
@@ -36,10 +40,12 @@ export default async function SolutionsPage() {
     <HomeMarketingLayout>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(solutionsJsonLd) }}
       />
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(breadcrumbJsonLd) }}
       />
       <SolutionsPageView

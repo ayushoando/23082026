@@ -1,13 +1,7 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { CaretLeft, CaretRight, X } from "@phosphor-icons/react";
-import {
-  Dialog as AriaDialog,
-  Heading,
-  Modal as AriaModal,
-  ModalOverlay as AriaModalOverlay,
-} from "react-aria-components";
 
 import { MarketingImage } from "@/components/site/MarketingImage";
 
@@ -64,6 +58,7 @@ function CaseStudyArticle({
 }) {
   const photos = client.photos;
   const mosaicRef = useRef<HTMLDivElement>(null);
+  const lightboxRef = useRef<HTMLDialogElement>(null);
   const [mosaicIndex, setMosaicIndex] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
@@ -108,6 +103,26 @@ function CaseStudyArticle({
     [photos.length, scrollMosaic],
   );
 
+  const lightboxOpen = lightboxIndex !== null;
+
+  useEffect(() => {
+    if (!lightboxOpen) {
+      return;
+    }
+    const dialog = lightboxRef.current;
+    if (!dialog) {
+      return;
+    }
+    if (!dialog.open) {
+      dialog.showModal();
+    }
+    return () => {
+      if (dialog.open) {
+        dialog.close();
+      }
+    };
+  }, [lightboxOpen]);
+
   if (photos.length === 0) {
     return null;
   }
@@ -115,7 +130,6 @@ function CaseStudyArticle({
   const secondaryIndexes = secondaryPhotoIndexes(photos.length, mosaicIndex);
   const mosaicVariant =
     secondaryIndexes.length === 0 ? "clients-work__mosaic--solo" : "clients-work__mosaic--dual";
-  const lightboxOpen = lightboxIndex !== null;
   const activeLightboxIndex = lightboxIndex ?? 0;
   const lightboxPhoto = photos[activeLightboxIndex];
   const canBrowse = photos.length > 1;
@@ -157,7 +171,7 @@ function CaseStudyArticle({
           />
           <button
             type="button"
-            className="portfolio-case__zoom absolute inset-0 z-[1] cursor-zoom-in border-0 bg-transparent p-0"
+            className="portfolio-case__zoom"
             aria-label={`Zoom ${client.name} photo ${mosaicIndex + 1} of ${photos.length}`}
             onClick={() => openLightbox(mosaicIndex)}
           />
@@ -180,7 +194,7 @@ function CaseStudyArticle({
             />
             <button
               type="button"
-              className="portfolio-case__zoom absolute inset-0 z-[1] cursor-zoom-in border-0 bg-transparent p-0"
+              className="portfolio-case__zoom"
               aria-label={`Zoom ${client.name} photo ${photoIndex + 1} of ${photos.length}`}
               onClick={() => openLightbox(photoIndex)}
             />
@@ -218,77 +232,63 @@ function CaseStudyArticle({
       ) : null}
 
       {lightboxOpen && lightboxPhoto ? (
-        <AriaModalOverlay
-          isOpen
-          isDismissable
-          onOpenChange={(open) => {
-            if (!open) {
-              closeLightbox();
+        <dialog
+          ref={lightboxRef}
+          className="portfolio-lightbox is-open"
+          aria-label={`${client.name} photo ${activeLightboxIndex + 1} of ${photos.length}`}
+          onClose={closeLightbox}
+          onClick={(event) => {
+            if (event.target === event.currentTarget) {
+              event.currentTarget.close();
             }
           }}
-          className="portfolio-lightbox-scrim fixed inset-0 z-[80] flex items-center justify-center bg-scrim"
+          onKeyDown={(event) => {
+            if (event.key === "ArrowLeft") {
+              event.preventDefault();
+              stepLightbox(-1);
+            } else if (event.key === "ArrowRight") {
+              event.preventDefault();
+              stepLightbox(1);
+            }
+          }}
         >
-          <AriaModal className="portfolio-lightbox outline-none">
-            <AriaDialog
-              className="outline-none"
-              aria-label={`${client.name} photo ${activeLightboxIndex + 1} of ${photos.length}`}
-              onKeyDown={(event) => {
-                if (event.key === "ArrowLeft") {
-                  event.preventDefault();
-                  stepLightbox(-1);
-                } else if (event.key === "ArrowRight") {
-                  event.preventDefault();
-                  stepLightbox(1);
-                }
-              }}
+          <div className="portfolio-lightbox__stage">
+            <MarketingImage
+              src={lightboxPhoto}
+              alt={`${client.name} installed workplace — photo ${activeLightboxIndex + 1} of ${photos.length}`}
+              sizes="100vw"
+              className="portfolio-lightbox__img"
+            />
+          </div>
+          {canBrowse ? (
+            <button
+              type="button"
+              className="btn btn-outline-light portfolio-lightbox__prev"
+              aria-label={`Previous ${client.name} photo`}
+              onClick={() => stepLightbox(-1)}
             >
-              <Heading slot="title" className="sr-only">
-                {`${client.name} installed workplace — photo ${activeLightboxIndex + 1} of ${photos.length}`}
-              </Heading>
-              <div className="portfolio-lightbox__toolbar mb-3 flex items-center justify-end gap-2">
-                <button
-                  type="button"
-                  className="shell-icon-button h-11 w-11 min-h-11 min-w-11"
-                  aria-label="Close photo"
-                  onClick={closeLightbox}
-                >
-                  <X size={18} weight="bold" aria-hidden="true" />
-                </button>
-              </div>
-              <div className="portfolio-lightbox__stage relative h-[min(80dvh,40rem)] w-[min(96vw,72rem)] overflow-hidden">
-                <MarketingImage
-                  src={lightboxPhoto}
-                  alt={`${client.name} installed workplace — photo ${activeLightboxIndex + 1} of ${photos.length}`}
-                  sizes="100vw"
-                  className="portfolio-lightbox__img object-contain"
-                />
-              </div>
-              {canBrowse ? (
-                <div className="portfolio-lightbox__nav mt-3 flex items-center justify-center gap-2">
-                  <button
-                    type="button"
-                    className="shell-icon-button h-11 w-11 min-h-11 min-w-11"
-                    aria-label={`Previous ${client.name} photo`}
-                    onClick={() => stepLightbox(-1)}
-                  >
-                    <CaretLeft size={18} weight="bold" aria-hidden="true" />
-                  </button>
-                  <p className="typ-body text-heading" aria-live="polite">
-                    {activeLightboxIndex + 1} / {photos.length}
-                  </p>
-                  <button
-                    type="button"
-                    className="shell-icon-button h-11 w-11 min-h-11 min-w-11"
-                    aria-label={`Next ${client.name} photo`}
-                    onClick={() => stepLightbox(1)}
-                  >
-                    <CaretRight size={18} weight="bold" aria-hidden="true" />
-                  </button>
-                </div>
-              ) : null}
-            </AriaDialog>
-          </AriaModal>
-        </AriaModalOverlay>
+              <CaretLeft size={18} weight="bold" aria-hidden="true" />
+            </button>
+          ) : null}
+          {canBrowse ? (
+            <button
+              type="button"
+              className="btn btn-outline-light portfolio-lightbox__next"
+              aria-label={`Next ${client.name} photo`}
+              onClick={() => stepLightbox(1)}
+            >
+              <CaretRight size={18} weight="bold" aria-hidden="true" />
+            </button>
+          ) : null}
+          <button
+            type="button"
+            className="btn btn-outline-light portfolio-lightbox__close"
+            aria-label="Close photo"
+            onClick={() => lightboxRef.current?.close()}
+          >
+            <X size={18} weight="bold" aria-hidden="true" />
+          </button>
+        </dialog>
       ) : null}
     </article>
   );

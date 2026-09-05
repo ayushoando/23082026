@@ -17,6 +17,7 @@ import { getCatalog } from "@/lib/catalog/site/getProducts";
 import { CATEGORY_LISTING_HERO } from "@/features/site/data/productsPage";
 import { HomeCatalogLayout } from "@/components/home/layout";
 import { SITE_URL } from "@/lib/siteUrl";
+import { getRequestNonce } from "@/lib/security/requestNonce";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
 import { FilterGrid } from "./FilterGrid";
@@ -42,7 +43,8 @@ function GridSkeleton() {
 }
 
 export async function CategoryPageView({ categoryId }: { categoryId: string }) {
-  const requestedCatalog = buildRequestedCategoryCatalog(await getCatalog());
+  const [catalog, nonce] = await Promise.all([getCatalog(), getRequestNonce()]);
+  const requestedCatalog = buildRequestedCategoryCatalog(catalog);
   const category = requestedCatalog.find((c: CompatCategory) => c.id === categoryId);
 
   if (requestedCatalog.length === 0) {
@@ -96,15 +98,18 @@ export async function CategoryPageView({ categoryId }: { categoryId: string }) {
     <HomeCatalogLayout>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(categoryJsonLd) }}
       />
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(breadcrumbJsonLd) }}
       />
       {faqJsonLd ? (
         <script
           type="application/ld+json"
+          nonce={nonce}
           dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(faqJsonLd) }}
         />
       ) : null}

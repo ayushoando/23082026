@@ -2,6 +2,7 @@ import { PlannerLandingPage } from "@/features/site/planner/landing/PlannerLandi
 import { PLANNER_LANDING_PAGE_METADATA } from "@/features/site/data/routeMetadata";
 import { buildBreadcrumbJsonLd, buildPageJsonLd } from "@/features/site/data/seo";
 import { SITE_URL } from "@/lib/siteUrl";
+import { getRequestNonce } from "@/lib/security/requestNonce";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
 export const metadata = PLANNER_LANDING_PAGE_METADATA;
@@ -42,19 +43,23 @@ const SOFTWARE_APP_JSON_LD = JSON.stringify({
   ],
 });
 
-export default function PlannerLandingRoute() {
+export default async function PlannerLandingRoute() {
+  const nonce = await getRequestNonce();
   return (
     <>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(PAGE_JSON_LD) }}
       />
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(BREADCRUMB_JSON_LD) }}
       />
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(SOFTWARE_APP_JSON_LD) }}
       />
       <PlannerLandingPage />

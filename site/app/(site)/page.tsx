@@ -9,6 +9,7 @@ import { Collections } from "@/components/home/Collections";
 import { SITE_BRAND } from "@/features/site/data/brand";
 import { buildPageJsonLd, buildPageMetadata } from "@/features/site/data/seo";
 import { SITE_URL } from "@/lib/siteUrl";
+import { getRequestNonce } from "@/lib/security/requestNonce";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
 export const metadata: Metadata = buildPageMetadata(SITE_URL, {
@@ -19,7 +20,10 @@ export const metadata: Metadata = buildPageMetadata(SITE_URL, {
 });
 
 export default async function Home() {
-  const t = await getTranslations("home");
+  const [t, nonce] = await Promise.all([
+    getTranslations("home"),
+    getRequestNonce(),
+  ]);
   // Organization / FurnitureStore live in (site)/layout sitewide graph — home only adds WebPage.
   const homeJsonLd = buildPageJsonLd(SITE_URL, {
     path: "/",
@@ -43,6 +47,7 @@ export default async function Home() {
     <HomeMarketingLayout>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(homeJsonLd) }}
       />
 

@@ -12,6 +12,7 @@ import {
 } from "@/features/site/data/seo";
 import { withLocaleCopy } from "@/lib/i18n/withLocaleCopy";
 import { SITE_URL } from "@/lib/siteUrl";
+import { getRequestNonce } from "@/lib/security/requestNonce";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
 const FAQ_PATH = "/faq";
@@ -25,7 +26,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function FaqPage() {
-  const copy = await loadFaqCopy();
+  const [copy, nonce] = await Promise.all([
+    loadFaqCopy(),
+    getRequestNonce(),
+  ]);
   const faqJsonLd = buildFaqJsonLd(
     SITE_URL,
     FAQ_PATH,
@@ -48,6 +52,7 @@ export default async function FaqPage() {
         <script
           key={String(jsonLd["@type"])}
           type="application/ld+json"
+          nonce={nonce}
           dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(jsonLd) }}
         />
       ))}

@@ -6,6 +6,7 @@ import {
   HomeSectionInner,
 } from "@/components/home/layout";
 import { KpiIntegrityMonitor } from "@/components/analytics/KpiIntegrityMonitor";
+import { getRequestNonce } from "@/lib/security/requestNonce";
 import { RouteCtaBand } from "@/components/shared/RouteCtaBand";
 import { ContactTeaser } from "@/components/shared/ContactTeaser";
 import { MarketingCtaLink } from "@/components/ui/MarketingCtaLink";
@@ -37,10 +38,11 @@ async function loadPortfolioCopy() {
  * Links to /clients for the sector-wise tabbed client directory.
  */
 export async function PortfolioPageView() {
-  const [{ stats, source }, clientWork, copy] = await Promise.all([
+  const [{ stats, source }, clientWork, copy, nonce] = await Promise.all([
     getBusinessStats(),
     buildClientWorkWithPhotos(CLIENTS_WORK),
     loadPortfolioCopy(),
+    getRequestNonce(),
   ]);
   const clientsValue = formatKpiValuePlus(stats.clientOrganisations);
   const portfolioJsonLd = buildPageJsonLd(SITE_URL, {
@@ -59,12 +61,14 @@ export async function PortfolioPageView() {
       <KpiIntegrityMonitor page="portfolio" source={source} stats={stats} />
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{
           __html: sanitizeJsonForScript(portfolioJsonLd),
         }}
       />
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{
           __html: sanitizeJsonForScript(portfolioBreadcrumbJsonLd),
         }}

@@ -3,6 +3,7 @@ import { PLANNER_HELP_FAQ_ITEMS } from "@/features/site/planner/help/helpSection
 import { PLANNER_HELP_PAGE_METADATA } from "@/features/site/data/routeMetadata";
 import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildPageJsonLd } from "@/features/site/data/seo";
 import { SITE_URL } from "@/lib/siteUrl";
+import { getRequestNonce } from "@/lib/security/requestNonce";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
 export const metadata = PLANNER_HELP_PAGE_METADATA;
@@ -21,13 +22,15 @@ const BREADCRUMB_JSON_LD = buildBreadcrumbJsonLd(SITE_URL, [
 
 const FAQ_JSON_LD = buildFaqJsonLd(SITE_URL, "/planner/help", PLANNER_HELP_FAQ_ITEMS);
 
-export default function PlannerHelpRoute() {
+export default async function PlannerHelpRoute() {
+  const nonce = await getRequestNonce();
   return (
     <>
       {[PAGE_JSON_LD, BREADCRUMB_JSON_LD, FAQ_JSON_LD].map((jsonLd) => (
         <script
           key={jsonLd["@type"] === "FAQPage" ? "faq" : jsonLd["@type"] === "BreadcrumbList" ? "breadcrumb" : "page"}
           type="application/ld+json"
+          nonce={nonce}
           dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(jsonLd) }}
         />
       ))}

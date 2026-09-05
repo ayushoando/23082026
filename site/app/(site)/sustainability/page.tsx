@@ -11,6 +11,7 @@ import {
   buildPageJsonLd,
 } from "@/features/site/data/seo";
 import { SITE_URL } from "@/lib/siteUrl";
+import { getRequestNonce } from "@/lib/security/requestNonce";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
 async function loadSustainabilityCopy() {
@@ -26,7 +27,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
 /** Editorial sustainability — photography-forward hero, bronze punctuation, pillar rows. */
 export default async function SustainabilityPage() {
-  const copy = await loadSustainabilityCopy();
+  const [copy, nonce] = await Promise.all([
+    loadSustainabilityCopy(),
+    getRequestNonce(),
+  ]);
   const sustainabilityJsonLd = buildPageJsonLd(SITE_URL, {
     path: "/sustainability",
     title: `${copy.heroTitle} | One&Only`,
@@ -42,12 +46,14 @@ export default async function SustainabilityPage() {
     <HomeMarketingLayout>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{
           __html: sanitizeJsonForScript(sustainabilityJsonLd),
         }}
       />
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{
           __html: sanitizeJsonForScript(breadcrumbJsonLd),
         }}

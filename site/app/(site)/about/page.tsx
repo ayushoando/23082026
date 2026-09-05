@@ -10,6 +10,7 @@ import {
 } from "@/features/site/data/routeMetadata";
 import { buildBreadcrumbJsonLd, buildPageJsonLd } from "@/features/site/data/seo";
 import { SITE_URL } from "@/lib/siteUrl";
+import { getRequestNonce } from "@/lib/security/requestNonce";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
 /** Canonical SEO for /about (title length, description, OG, Twitter, canonical, hreflang). */
@@ -23,7 +24,10 @@ type AboutProcessStep = { title: string; detail: string };
  * Benchmark: premium B2B interior editorial (Vitra / Muuto restraint), not template SaaS grids.
  */
 export default async function AboutPage() {
-  const t = await getTranslations("about");
+  const [t, nonce] = await Promise.all([
+    getTranslations("about"),
+    getRequestNonce(),
+  ]);
   const pillars = t.raw("modelPillars") as AboutPillar[];
   const processSteps = t.raw("processSteps") as AboutProcessStep[];
 
@@ -42,10 +46,12 @@ export default async function AboutPage() {
     <HomeMarketingLayout>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(aboutJsonLd) }}
       />
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(breadcrumbJsonLd) }}
       />
       <AboutPageView

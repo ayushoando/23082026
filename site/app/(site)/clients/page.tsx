@@ -5,6 +5,7 @@ import { ClientsPageView } from "@/features/site/clients/ClientsPageView";
 import { CLIENT_DIRECTORY_PAGE_METADATA } from "@/features/site/data/routeMetadata";
 import { buildClientsItemListJsonLd } from "@/features/site/data/seo";
 import { getPublishedRecords } from "@/lib/clients/clientRegistry";
+import { getRequestNonce } from "@/lib/security/requestNonce";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 import { SITE_URL } from "@/lib/siteUrl";
 
@@ -19,12 +20,16 @@ export default async function ClientsPage() {
     SITE_URL,
     publishedClients,
   );
-  const view = await ClientsPageView();
+  const [view, nonce] = await Promise.all([
+    ClientsPageView(),
+    getRequestNonce(),
+  ]);
 
   return (
     <>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{
           __html: sanitizeJsonForScript(clientsItemListJsonLd),
         }}

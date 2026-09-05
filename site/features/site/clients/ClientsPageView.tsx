@@ -17,6 +17,7 @@ import {
 } from "@/features/site/data/seo";
 import { formatKpiValuePlus } from "@/lib/kpiFormat";
 import { SITE_URL } from "@/lib/siteUrl";
+import { getRequestNonce } from "@/lib/security/requestNonce";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
 async function loadClientsCopy() {
@@ -32,9 +33,10 @@ async function loadClientsCopy() {
  * Links to /portfolio for workplace installation photos.
  */
 export async function ClientsPageView() {
-  const [{ stats, source }, copy] = await Promise.all([
+  const [{ stats, source }, copy, nonce] = await Promise.all([
     getBusinessStats(),
     loadClientsCopy(),
+    getRequestNonce(),
   ]);
   const clientsValue = formatKpiValuePlus(stats.clientOrganisations);
   const clientsJsonLd = buildPageJsonLd(SITE_URL, {
@@ -53,12 +55,14 @@ export async function ClientsPageView() {
       <KpiIntegrityMonitor page="clients" source={source} stats={stats} />
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{
           __html: sanitizeJsonForScript(clientsJsonLd),
         }}
       />
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{
           __html: sanitizeJsonForScript(clientsBreadcrumbJsonLd),
         }}

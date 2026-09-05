@@ -10,6 +10,7 @@ import {
   buildPageJsonLd,
 } from "@/features/site/data/seo";
 import { SITE_URL } from "@/lib/siteUrl";
+import { getRequestNonce } from "@/lib/security/requestNonce";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 
 export const metadata = CAREER_PAGE_METADATA;
@@ -18,7 +19,10 @@ type CareerPillar = { title: string; detail: string; icon: string };
 type CareerProcessStep = { title: string; detail: string };
 
 export default async function CareerPage() {
-  const t = await getTranslations("career");
+  const [t, nonce] = await Promise.all([
+    getTranslations("career"),
+    getRequestNonce(),
+  ]);
   const pillars = t.raw("pillars") as CareerPillar[];
   const processSteps = t.raw("processSteps") as CareerProcessStep[];
 
@@ -38,18 +42,21 @@ export default async function CareerPage() {
     <>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{
           __html: sanitizeJsonForScript(careerPageJsonLd),
         }}
       />
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{
           __html: sanitizeJsonForScript(careerJobsJsonLd),
         }}
       />
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(breadcrumbJsonLd) }}
       />
       <HomeMarketingLayout>
