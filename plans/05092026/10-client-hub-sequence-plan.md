@@ -23,17 +23,17 @@
 
 | Phase | Title | Scope & Contract | Status |
 | :---: | :--- | :--- | :---: |
-| **—** | **Spine** | [`../client-hub/`](../client-hub/) — Public route map, redirect register §4 | ✅ Complete |
-| **1** | **Chrome** | Public header, footer, mobile tab bar, and navigation contracts | ✅ Complete (Modernized) |
-| **2** | **Homepage** | `/` customer journey start, FOCSS design tokens, and hero contracts | ✅ Complete |
-| **3** | **Map Equals Code** | HTTP 301/308 redirects, calculator indexability alignment | ✅ Complete (Remedied) |
-| **4** | **Browser Walk** | Visual verification on `http://localhost:3000` (desktop & phone) | 🔄 Active (Blocked by `BROWSER-ORIGIN-02`) |
+| **—** | **Spine** | [`../client-hub/`](../client-hub/) — Public route map, redirect register §4 | Current reconciliation pending |
+| **1** | **Chrome** | Public header, footer, mobile tab bar, and navigation contracts | Current verification pending |
+| **2** | **Homepage** | `/` customer journey start, FOCSS design tokens, and hero contracts | Current verification pending |
+| **3** | **Map Equals Code** | HTTP 301/308 redirects, calculator indexability alignment | Reconciliation required |
+| **4** | **Browser Walk** | Visual verification on `http://localhost:3000` (desktop & phone) | Unrun in this planning update |
 
 ---
 
 ## 3. Phase Details & Live Code Contracts
 
-### Phase 1 — Chrome (Header, Footer, Tabs) — ✅ Complete (Modernized)
+### Phase 1 — Chrome (Header, Footer, Tabs) — Verification pending
 
 - **Navigation Contract:** Defined in [`site/features/site/data/navigation.ts`](file:///d:/23082026/site/features/site/data/navigation.ts).
 - **Header Structure:** Flat 8-link primary navigation bar capped at 9 links:
@@ -52,7 +52,7 @@
 
 ---
 
-### Phase 2 — Homepage (`/`) — ✅ Complete
+### Phase 2 — Homepage (`/`) — Verification pending
 
 - **Customer Journey Start:** Starting point for Journeys 1–2 on the client-hub map.
 - **Primary Actions:** Target destinations are `/products`, proof (`/trusted-by` or `/clients`), `/planner`, and `/contact`.
@@ -95,13 +95,13 @@
     1. Boot dev server: `cross-env DEV_AUTH_BYPASS=1 pnpm run dev`
     2. Run browser gate: `pnpm run test:browser:gate`
     3. Verify mobile scroller (`.mobile-app-main`) and GSAP ScrollTrigger bindings.
-    4. Delete row `BROWSER-ORIGIN-02` from `Failures.md`.
+    4. Reconcile `BROWSER-ORIGIN-02` against current `Failures.md`; clear it only when fresh matching evidence resolves the recorded condition.
 - **Key User Journeys Tested:**
   1. `/` $\to$ `/products` $\to$ category $\to$ product detail $\to$ `/contact`
   2. `/trusted-by` and `/clients` verified as peer proof siblings
   3. `/planning` and `/planner` landing pages route to `/ooplanner` only when explicitly launching the app
   4. `/access` reached only from Sign in / Account utilities
-- **Leak Prevention:** Continuous validation ensuring unauthenticated sessions do not leak into `/ooplanner`, `/portal`, `/dashboard`, or `/admin`.
+- **Access Boundaries:** Verify private member/Admin access separately from intentionally supported guest `/ooplanner` entry. Guest Planner access must not be classified as a leak solely because it is unauthenticated.
 ## Test reconciliation update (2026-09-05)
 
 ### Detailed work packages: public journey completion

@@ -112,7 +112,7 @@ The build is defined in `tech-docs-generator/vite.config.ts`:
 - **Port Discipline:** Explicitly sets `server.port = 3001` and `server.strictPort = true`. It will fail rather than steal port 3000 from Next.js.
 - **Monorepo FS Access:** `server.fs.allow: [repoRoot]` allows serving FOCSS tokens and shared contracts from `site/focss/` and `site/lib/`.
 - **Zero Temporary Stages:** Builds directly into `generated-documents/site/` without intermediate `.tmp` directories that could pollute Git status.
-- **Base URL Guarantee:** Uses `base: '/'` to prevent asset loading failures on deep path refreshes on Vercel (`https://oando23.vercel.app`).
+- **Base URL Contract:** `base: '/'` describes asset URL resolution, not a guarantee of hosted SPA fallback. Verify deep-link refresh and asset responses separately when hosting checks are authorized.
 
 ---
 
@@ -120,7 +120,7 @@ The build is defined in `tech-docs-generator/vite.config.ts`:
 
 Tech-Docs is verified in Vitest as an independent execution lane to guarantee that documentation builds never break or regress:
 - **Configuration File:** `tests/vitest.tech-docs.config.ts`
-- **Scope:** 42 test files, 224 specifications covering components, data parsers, and diagram generators.
+- **Scope:** Package-local `tech-docs-generator/tests/**`; the earlier 42-file/224-specification figures are historical, not a current execution result.
 - **Environment:** `happy-dom` with `isolate: true` and `maxWorkers: 1` (serial execution to prevent memory contention on CI/CD runners).
 
 ---
