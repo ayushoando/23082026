@@ -59,7 +59,7 @@ export function MobileAppShell({
               label={primaryAction.label}
               surface="mobile-app-bar"
               aria-label="Get quote — contact sales"
-              className="btn-primary mobile-app-bar__cta"
+              className="hidden"
             >
               {primaryAction.label}
             </TrackedLink>

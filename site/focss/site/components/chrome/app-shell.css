@@ -6,6 +6,10 @@
 }
 
 @media (width < theme(--breakpoint-md)) {
+  :root {
+    --mobile-tab-bar-height: calc(3.5rem + env(safe-area-inset-bottom, 0px));
+  }
+
   .site-header {
     display: none !important;
   }
@@ -47,7 +51,9 @@
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-y: contain;
     padding-top: calc(3.25rem + env(safe-area-inset-top, 0px));
-    padding-bottom: calc(3.5rem + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(
+      var(--mobile-tab-bar-height) + var(--cookie-consent-bar-height, 0px)
+    );
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
@@ -67,19 +73,18 @@
   }
 
   /*
-   * The cookie consent bar is fixed at bottom:0, but so is the tab bar (z-60),
-   * so the bar's action buttons rendered *behind* the tab bar. Lift the bar to
-   * sit directly on top of the tab bar (height = 3.5rem tab + 1px border).
+   * Keep consent above the tab bar and reserve its measured height in the
+   * scroll pane, so it does not cover the categories a visitor is browsing.
    */
   [data-cookie-consent-bar] {
-    bottom: calc(3.5rem + 1px + env(safe-area-inset-bottom, 0px));
+    bottom: calc(var(--mobile-tab-bar-height) + 1px);
   }
 
   /*
    * The floating assistant/contact FABs raise themselves to clear the consent
-   * bar, but on a phone the stacked (tall) consent bar + tab bar pushes them up
-   * into page content. Hide them while consent is pending; once the bar is
-   * dismissed they reappear just above the tab bar (--site-fab-bottom = 4.25rem).
+   * bar, but on a phone the stacked consent bar + tab bar pushes them into page
+   * content. Hide them while consent is pending; once it is dismissed they
+   * return immediately above the tab bar.
    */
   html:has([data-cookie-consent-bar]) .site-fab-launcher {
     display: none;
