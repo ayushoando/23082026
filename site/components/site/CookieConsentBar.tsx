@@ -139,10 +139,9 @@ export function CookieConsentBar() {
     if (!visible || !element) {return;}
 
     const syncHeight = () => {
-      document.documentElement.style.setProperty(
-        "--cookie-consent-bar-height",
-        `${Math.ceil(element.getBoundingClientRect().height)}px`,
-      );
+      const height = `${Math.ceil(element.getBoundingClientRect().height)}px`;
+      document.documentElement.style.setProperty("--cookie-consent-bar-height", height);
+      document.documentElement.style.setProperty("--cookie-consent-bar-offset", height);
     };
     const observer = new ResizeObserver(syncHeight);
     syncHeight();
@@ -151,6 +150,7 @@ export function CookieConsentBar() {
     return () => {
       observer.disconnect();
       document.documentElement.style.removeProperty("--cookie-consent-bar-height");
+      document.documentElement.style.removeProperty("--cookie-consent-bar-offset");
     };
   }, [visible]);
 

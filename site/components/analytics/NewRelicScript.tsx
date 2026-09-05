@@ -1,3 +1,5 @@
+import Script from "next/script";
+
 // New Relic Browser Agent (Pro + SPA) - Account 8474489 / App 1134725588
 export function NewRelicScript({ nonce }: { nonce?: string }) {
   if (process.env.NODE_ENV === "test") {
@@ -5,12 +7,12 @@ export function NewRelicScript({ nonce }: { nonce?: string }) {
   }
 
   return (
-    <script
+    <Script
       id="newrelic-browser-agent"
-      type="text/javascript"
       src="/newrelic.js"
+      strategy="afterInteractive"
       nonce={nonce}
-      suppressHydrationWarning
     />
   );
 }
+

@@ -35,10 +35,7 @@ export default async function RootLayout({
       nonce={nonce}
       suppressHydrationWarning
     >
-      <head>
-        <NewRelicScript nonce={nonce} />
-        <GoogleAnalytics nonce={nonce} />
-      </head>
+      <head />
       <body
         /* helveticaNeue.className applies the body face directly; CSS vars still
            drive --font-sans / --font-display for utilities + marketing type. */
@@ -46,6 +43,8 @@ export default async function RootLayout({
         suppressHydrationWarning
       >
         {children}
+        <NewRelicScript nonce={nonce} />
+        <GoogleAnalytics nonce={nonce} />
       </body>
     </html>
   );

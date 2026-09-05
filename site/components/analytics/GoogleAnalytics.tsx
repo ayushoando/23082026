@@ -1,3 +1,5 @@
+import Script from "next/script";
+
 // Google Analytics 4 (GA4) Tag - Measurement ID: G-CTPK6318CR
 export function GoogleAnalytics({
   gaId,
@@ -15,13 +17,15 @@ export function GoogleAnalytics({
 
   return (
     <>
-      <script
-        async
+      <Script
+        id="google-analytics-tag"
+        strategy="afterInteractive"
         src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
         nonce={nonce}
       />
-      <script
+      <Script
         id="google-analytics-init"
+        strategy="afterInteractive"
         nonce={nonce}
         dangerouslySetInnerHTML={{
           __html: `window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${measurementId}', { page_path: window.location.pathname });`,
@@ -30,3 +34,4 @@ export function GoogleAnalytics({
     </>
   );
 }
+
