@@ -30,7 +30,6 @@ export default async function RootLayout({
     <html
       lang={getHtmlLang(locale)}
       className={`${ciscoSans.variable} ${helveticaNeue.variable} scroll-smooth`}
-      data-scroll-behavior="smooth"
       nonce={nonce}
       suppressHydrationWarning
     >
