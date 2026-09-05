@@ -5,6 +5,7 @@ import {
   isProductsDatabaseConfigured,
   resolvePlannerDatabaseUrl,
   isPlannerDatabaseUrlConfigured,
+  rewriteSupabasePoolerToTransactionPort,
 } from "@/platform/drizzle/databaseUrls";
 
 describe("platform/drizzle/databaseUrls", () => {
@@ -34,6 +35,38 @@ describe("platform/drizzle/databaseUrls", () => {
     it("returns trimmed URL when set", () => {
       process.env.PRODUCTS_DATABASE_URL = "  postgres://products/db  ";
       expect(resolveProductsDatabaseUrl()).toBe("postgres://products/db");
+    });
+
+    it("rewrites Products session-mode pooler :5432 to transaction :6543", () => {
+      process.env.PRODUCTS_DATABASE_URL =
+        "postgres://user:secret@aws-1-ap-northeast-1.pooler.supabase.com:5432/postgres";
+      expect(resolveProductsDatabaseUrl()).toBe(
+        "postgres://user:secret@aws-1-ap-northeast-1.pooler.supabase.com:6543/postgres",
+      );
+    });
+  });
+
+  describe("rewriteSupabasePoolerToTransactionPort", () => {
+    it("leaves direct db hosts on 5432 unchanged", () => {
+      const direct =
+        "postgres://user:secret@db.erpweaiypimorcunaimz.supabase.co:5432/postgres";
+      expect(rewriteSupabasePoolerToTransactionPort(direct)).toBe(direct);
+    });
+
+    it("leaves transaction-mode pooler :6543 unchanged", () => {
+      const txn =
+        "postgres://user:secret@aws-1-ap-northeast-1.pooler.supabase.com:6543/postgres";
+      expect(rewriteSupabasePoolerToTransactionPort(txn)).toBe(txn);
+    });
+
+    it("adds :6543 when pooler host has no port", () => {
+      expect(
+        rewriteSupabasePoolerToTransactionPort(
+          "postgres://user:secret@aws-1-ap-northeast-1.pooler.supabase.com/postgres",
+        ),
+      ).toBe(
+        "postgres://user:secret@aws-1-ap-northeast-1.pooler.supabase.com:6543/postgres",
+      );
     });
   });
 
