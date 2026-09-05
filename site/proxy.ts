@@ -172,10 +172,6 @@ const CSP_ANALYTICS_ORIGINS =
 const CSP_GA4_ORIGINS =
   "https://www.google-analytics.com https://region1.google-analytics.com https://stats.g.doubleclick.net";
 
-/** New Relic Browser Agent CDN and ingest beacon endpoints. */
-const CSP_NEW_RELIC_SCRIPT_ORIGINS = "https://js-agent.newrelic.com";
-const CSP_NEW_RELIC_CONNECT_ORIGINS =
-  "https://bam.nr-data.net https://*.nr-data.net";
 
 /** Google Tag Manager / Analytics script origin (mounted when GA measurement ID is present outside test suite). */
 function getGtmScriptOrigin(): string {

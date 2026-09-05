@@ -4,7 +4,6 @@ import { ciscoSans, helveticaNeue } from "@/lib/fonts";
 import { getHtmlLang } from "@/lib/i18n/htmlLang";
 import { defaultLocale } from "@/i18n/config";
 import { getRequestNonce } from "@/lib/security/requestNonce";
-import { NewRelicScript } from "@/components/analytics/NewRelicScript";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 
 export const metadata: Metadata = {
@@ -43,7 +42,6 @@ export default async function RootLayout({
         suppressHydrationWarning
       >
         {children}
-        <NewRelicScript nonce={nonce} />
         <GoogleAnalytics nonce={nonce} />
       </body>
     </html>
