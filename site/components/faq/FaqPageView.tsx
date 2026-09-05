@@ -9,7 +9,6 @@ import {
   ChatCircleDots,
   Clock,
   MagnifyingGlass,
-  PhoneCall,
   ShieldCheck,
   Truck,
   X,
