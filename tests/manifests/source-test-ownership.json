@@ -2,8 +2,13 @@
   "version": 1,
   "mode": "hybrid-migration",
   "canonicalTestKinds": ["unit", "integration", "e2e"],
-  "standaloneTestRoots": [],
+  "standaloneTestRoots": [
+    "tech-docs-generator/tests",
+    "tests/operations-review",
+    "tests/site-ui-content-links-audit"
+  ],
   "sourceRoots": [
+    { "sourceRoot": "site", "testRoot": "site", "domain": "site" },
     { "sourceRoot": "site/app", "testRoot": "site/app", "domain": "site-routes" },
     { "sourceRoot": "site/components", "testRoot": "site/components", "domain": "site-components" },
     { "sourceRoot": "site/features", "testRoot": "site/features", "domain": "site-features" },
@@ -139,13 +144,6 @@
       "replacementRoot": "tests/e2e/site/app/"
     },
     {
-      "prefix": "tests/tech-docs-generator/",
-      "owner": "Repository Owner",
-      "reason": "Split tests between mirrored unit/integration/e2e tech-docs roots.",
-      "expires": "2026-12-31",
-      "replacementRoot": "tests/unit/tech-docs-generator/"
-    },
-    {
       "prefix": "tests/helpers/",
       "owner": "Repository Owner",
       "reason": "Move shared helpers to tests/support.",
@@ -158,6 +156,13 @@
       "reason": "Move fixtures to tests/support/fixtures.",
       "expires": "2026-12-31",
       "replacementRoot": "tests/support/fixtures/"
+    },
+    {
+      "prefix": "tests/unit/e2e-helpers/",
+      "owner": "Repository Owner",
+      "reason": "Move e2e helper tests under tests/support/ or e2e test suite.",
+      "expires": "2026-12-31",
+      "replacementRoot": "tests/support/"
     }
   ]
 }

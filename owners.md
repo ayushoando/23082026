@@ -22,6 +22,7 @@ Use this reference to assign repository work without overlapping writes or evide
 | Validation evidence | [`Testing-handbook.md`](./Testing-handbook.md) |
 | Deploy and migration procedure | [`OPERATIONS_RUNBOOK.md`](./OPERATIONS_RUNBOOK.md) |
 | Product architecture | [`docs/architecture/product-map.md`](./docs/architecture/product-map.md) |
+| Observability and telemetry | [`OBSERVABILITY.md`](./OBSERVABILITY.md) |
 
 ## Handoff requirements
 

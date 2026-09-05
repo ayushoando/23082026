@@ -26,6 +26,7 @@ Canonical sources: the [process floor](./AGENTS.md), root `package.json`, [activ
 | Audits | `test:audit:hollow` · `test:audit:gate-skips` · `test:audit:api-routes` · `test:audit:fake-test` |
 | Fork / CSS | `scan:boundaries` · `verify:focss` · `lint:ui:strict` · `check:style-tokens` · `check:composer-styles` |
 | DB / deploy / R2 | `db:apply` · `db:test` · `vercel:prod` · `worker:deploy` · `r2:backup` · `ops:list` |
+| Observability | Cloud telemetry (GA4, Vercel RUM, OTel); see [`OBSERVABILITY.md`](./OBSERVABILITY.md) |
 
 Lint: `lint` (oxlint) · `lint:ui:strict`. DOM: **happy-dom**.  PowerShell stderr ≠ fail — trust the exit code.
 

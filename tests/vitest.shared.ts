@@ -129,9 +129,8 @@ export const VITEST_COMMON_EXCLUDE = [
  * tests and times out under load.
  */
 export const VITEST_TECH_DOCS_EXCLUDE = [
-  "**/tech-docs-generator/**",
-  "../tests/tech-docs-generator/**",
-  "**/tests/tech-docs-generator/**",
+  "../tech-docs-generator/tests/**",
+  "**/tech-docs-generator/tests/**",
 ] as const;
 
 export const VITEST_DEFAULT_EXCLUDE = [

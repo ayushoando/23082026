@@ -12,8 +12,8 @@ export default mergeConfig(
   defineConfig({
     resolve: {
       // `mermaid` and `highlight.js` are declared only in this package's own
-      // package.json (not hoisted to the workspace root). Test files live outside
-      // this package under tests/tech-docs-generator/, so Vite must pin both to
+      // package.json (not hoisted to the workspace root). Test files live in this
+      // package under tests/, so Vite must pin both to
       // the same resolved path the components use under src/.
       alias: {
         mermaid: path.resolve(packageRoot, 'node_modules/mermaid'),
@@ -26,7 +26,7 @@ export default mergeConfig(
       // is now the default (one fork per file). isolate:true recycles module
       // state per file so mocks stay file-local and ts-morph ASTs do not
       // accumulate. Cross-file model cost is paid once via disk cache in
-      // tests/tech-docs-generator/helpers/shared-repo-model.mjs.
+      // tests/helpers/shared-repo-model.mjs.
       pool: 'forks',
       isolate: true,
       fileParallelism: false,
@@ -38,10 +38,9 @@ export default mergeConfig(
       // matches plans/README.md R1 note on this lane's timeout risk.
       testTimeout: 120_000,
       hookTimeout: 120_000,
-      // Tests live under monorepo tests/tech-docs-generator/ (not package-local tests/)
-      include: ['../tests/tech-docs-generator/**/*.test.{ts,tsx}'],
-      globalSetup: ['../tests/tech-docs-generator/global-setup.mjs'],
-      setupFiles: ['../tests/setup.ts', '../tests/tech-docs-generator/setup.ts'],
+      include: ['tests/**/*.test.{ts,tsx}'],
+      globalSetup: ['tests/global-setup.mjs'],
+      setupFiles: ['../tests/setup.ts', 'tests/setup.ts'],
       coverage: {
         provider: 'v8',
         reporter: ['text', 'json-summary', 'lcov'],

@@ -46,7 +46,7 @@ describe("vitest dual-lane (Phase 4 parallel contention)", () => {
     expect(shared).toContain("VITEST_TECH_DOCS_EXCLUDE");
     expect(techDocs).toMatch(/maxWorkers:\s*1/);
     expect(techDocs).toMatch(/fileParallelism:\s*false/);
-    expect(techDocs).toContain("../tests/tech-docs-generator/**/*.test.{ts,tsx}");
+    expect(techDocs).toContain("../tech-docs-generator/tests/**/*.test.{ts,tsx}");
   });
 
   it("does not include external spec trees in the site test lane (site tests are product-only)", () => {

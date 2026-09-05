@@ -131,13 +131,14 @@ export function extractRunnerSelection({ repoRoot = defaultRepoRoot } = {}) {
   const selections = []
   const gaps = []
 
-  // All tests under monorepo tests/ (product + tech-docs-generator)
+  // Product tests remain under monorepo tests/; the Tech-Docs suite is package-local.
   const testFiles = [
     ...walkFiles(repoRoot, 'tests', (relativePath) => /\.(test|spec)\.[cm]?[jt]sx?$/.test(relativePath)),
+    ...walkFiles(repoRoot, 'tech-docs-generator/tests', (relativePath) => /\.(test|spec)\.[cm]?[jt]sx?$/.test(relativePath)),
   ].sort((left, right) => comparePaths(left, right))
 
   for (const testFile of testFiles) {
-    const root = testFile.startsWith('tests/tech-docs-generator/')
+    const root = testFile.startsWith('tech-docs-generator/tests/')
       ? 'tech-docs-generator'
       : testFile.startsWith('tests/')
         ? 'site'
@@ -146,7 +147,7 @@ export function extractRunnerSelection({ repoRoot = defaultRepoRoot } = {}) {
       if (runner.kind === 'vitest' && runner.root === root) {
         const relativeToRoot =
           root === 'tech-docs-generator'
-            ? testFile.replace(/^tests\/tech-docs-generator\//, '')
+            ? testFile.replace(/^tech-docs-generator\//, '')
             : testFile.replace(/^tests\//, '')
         if (runner.exclude?.length && matchesAnyPattern(relativeToRoot, runner.exclude)) return false
         return matchesAnyPattern(relativeToRoot, runner.include)

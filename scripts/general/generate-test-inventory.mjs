@@ -43,9 +43,7 @@ export function classifyTestInventoryPath(relative) {
 }
 
 export function collectTestInventoryFiles(repoRoot = REPO_ROOT) {
-  const testRoot = path.join(repoRoot, "tests");
-
-  return walk(testRoot)
+  return CANONICAL_TEST_ROOTS.flatMap((relativeRoot) => walk(path.join(repoRoot, relativeRoot)))
     .map((absolute) => {
       const relative = posix(path.relative(repoRoot, absolute));
       const classification = classifyTestInventoryPath(relative);

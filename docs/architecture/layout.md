@@ -23,6 +23,8 @@ This reference maps top-level repository paths and their roles. Verify a path ag
 | `mcp/` | MCP tool definitions |
 | `.archive/` / `.tmp/` / `.vercel/` / `.vscode/` / `node_modules/` / `.qoder/` | Legacy / local / tooling — not source of truth (`.qoder` = disposable AI repowiki, gitignored, regenerated locally) |
 
+The Tech-Docs test source and support files are package-local at `tech-docs-generator/tests/`. The root `tests/vitest.tech-docs.config.ts` remains the serial second-lane orchestrator for `pnpm run test`.
+
 ## Top-level files
 
 | File | Role |

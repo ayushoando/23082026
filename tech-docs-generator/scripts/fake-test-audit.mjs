@@ -25,7 +25,7 @@ function walkTests(dir, out = []) {
 export function auditTests({ root = packageRoot } = {}) {
   const violations = []
   const repoRoot = path.resolve(root, '..')
-  const testsDir = path.join(repoRoot, 'tests', 'tech-docs-generator')
+  const testsDir = path.join(root, 'tests')
 
   for (const absPath of walkTests(testsDir)) {
     const relPath = path.relative(repoRoot, absPath).replace(/\\/g, '/')
@@ -54,7 +54,7 @@ export function auditTests({ root = packageRoot } = {}) {
       })
     }
 
-    if (relPath.startsWith('tests/tech-docs-generator/generator/')) {
+    if (relPath.startsWith('tech-docs-generator/tests/generator/')) {
       const hasWeak = /\bexpect\([^)]*\)\.(toBeDefined|toBeTruthy)\s*\(/.test(text)
 
       const hasStrong =

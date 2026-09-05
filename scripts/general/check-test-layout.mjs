@@ -10,6 +10,7 @@ const repoRoot = process.env.MONOREPO_ROOT
   ? path.resolve(process.env.MONOREPO_ROOT)
   : path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const testsRoot = path.join(repoRoot, "tests");
+const techDocsTestsRoot = path.join(repoRoot, "tech-docs-generator", "tests");
 const manifestPath = path.join(testsRoot, "manifests", "source-test-ownership.json");
 const TEST_FILE = /\.(test|spec)\.[cm]?[jt]sx?$/i;
 const SOURCE_ROOTS = [
@@ -155,7 +156,7 @@ for (const root of SOURCE_ROOTS) {
 
 const canonicalPrefixes = canonicalTestPrefixes(manifest);
 const e2eRoots = manifest.e2eRouteRoots ?? [];
-const scanRoots = [testsRoot];
+const scanRoots = [testsRoot, techDocsTestsRoot];
 for (const scanRoot of scanRoots) {
   for (const absolute of walk(scanRoot)) {
     const relative = posix(path.relative(repoRoot, absolute));

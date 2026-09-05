@@ -79,16 +79,16 @@ import {
   isMaintenanceMutationAllowed,
   isGuestProductContext,
   shouldRedirectWwwToApex,
-} from '../../site/proxy';
+} from '../../../site/proxy';
 import { NextRequest } from 'next/server';
-import { PLANNER_GUEST_COOKIE } from '../../site/lib/auth/constants';
+import { PLANNER_GUEST_COOKIE } from '../../../site/lib/auth/constants';
 
-vi.mock('../../site/lib/platform/maintenanceMode', () => ({
+vi.mock('../../../site/lib/platform/maintenanceMode', () => ({
   isMaintenanceReadonly: vi.fn(() => false),
 }));
 
-vi.mock('../../site/lib/auth/devAuthBypass', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../../site/lib/auth/devAuthBypass')>();
+vi.mock('../../../site/lib/auth/devAuthBypass', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../../../site/lib/auth/devAuthBypass')>();
   return {
     ...actual,
     isDevAuthBypassEnabled: vi.fn(actual.isDevAuthBypassEnabled),
@@ -96,8 +96,8 @@ vi.mock('../../site/lib/auth/devAuthBypass', async (importOriginal) => {
   };
 });
 
-import { isMaintenanceReadonly } from '../../site/lib/platform/maintenanceMode';
-import { isDevAuthBypassActiveForRequest } from '../../site/lib/auth/devAuthBypass';
+import { isMaintenanceReadonly } from '../../../site/lib/platform/maintenanceMode';
+import { isDevAuthBypassActiveForRequest } from '../../../site/lib/auth/devAuthBypass';
 
 describe('proxy.ts', () => {
   describe('guest product surfaces', () => {

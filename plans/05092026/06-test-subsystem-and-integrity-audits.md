@@ -52,9 +52,9 @@ The Oando verification platform implements a dual-lane testing pipeline orchestr
 - **Short-Circuit Invariant:** If Lane 1 exits with a non-zero code, [`scripts/run-full-vitest.mjs#L71-L74`](file:///d:/23082026/scripts/run-full-vitest.mjs#L71-L74) immediately calls `process.exit(mainStatus)`. Lane 2 is never executed, codegen is skipped, and `summary.json` is not written.
 
 ### Lane 2: Tech-Docs Vitest Suite (`tests/vitest.tech-docs.config.ts`)
-- **Execution Scope:** 42 test files (224 specs) under `tests/tech-docs-generator/**`.
+- **Execution Scope:** 42 test files (224 specs) under `tech-docs-generator/tests/**`.
 - **Pre-execution Codegen:** Synchronously invokes [`tech-docs-generator/scripts/generate-all.mjs`](file:///d:/23082026/tech-docs-generator/scripts/generate-all.mjs) before running Vitest (`scripts/run-full-vitest.mjs#L83-L94`). Without this, tests would evaluate stale or absent bytes in `generated-documents/data/*.json`.
-- **Global Setup & Cache Invalidation:** `tests/tech-docs-generator/global-setup.mjs` executes `clearSharedRepoModelCache()` once per run to wipe the cross-fork generator-model cache.
+- **Global Setup & Cache Invalidation:** `tech-docs-generator/tests/global-setup.mjs` executes `clearSharedRepoModelCache()` once per run to wipe the cross-fork generator-model cache.
 - **Worker & Resource Throttling:** `pool: "forks"`, `maxWorkers: 1`, `fileParallelism: false`, and `isolate: true` (`tests/vitest.tech-docs.config.ts#L76-L79`). Heavy AST parsing and disk generation are executed serially to prevent CPU saturation.
 - **Extended Timeouts:** `testTimeout: 120_000` and `hookTimeout: 120_000` to prevent flake during full repository model synthesis.
 - **Dependency Isolation:** Aliases `mermaid`, `highlight.js`, `react-router-dom`, and `framer-motion` directly to `tech-docs-generator/node_modules/` to prevent React Router context cross-contamination from root-hoisted packages.

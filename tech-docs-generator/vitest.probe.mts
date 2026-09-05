@@ -20,8 +20,8 @@ export default defineConfig({
     maxWorkers: 1,
     fileParallelism: false,
     environment: 'happy-dom',
-    include: ['../tests/tech-docs-generator/**/*.test.{ts,tsx}'],
-    setupFiles: ['../tests/setup.ts', '../tests/tech-docs-generator/setup.ts'],
+    include: ['tests/**/*.test.{ts,tsx}'],
+    setupFiles: ['../tests/setup.ts', 'tests/setup.ts'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json-summary', 'lcov'],

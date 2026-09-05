@@ -42,7 +42,7 @@ Admin **System → Architecture docs** is an external link via `site/lib/admin/t
 
 ## Tests
 
-Specs live under `tests/tech-docs-generator/` — the **second lane** of `pnpm run test`. Check both lane summaries (or `results/tests/vitest-tech-docs-results.json`). The lane is serial and slow by design (per-file `testTimeout: 120_000`); a short probe timeout is not a failure signal.
+Specs live under `tech-docs-generator/tests/` — the **second lane** of `pnpm run test`. Check both lane summaries (or `results/tests/vitest-tech-docs-results.json`). The lane is serial and slow by design (per-file `testTimeout: 120_000`); a short probe timeout is not a failure signal.
 
 ```bash
 pnpm exec vitest run --config tests/vitest.tech-docs.config.ts

@@ -1,5 +1,5 @@
 /**
- * Low-concurrency lane for `tests/tech-docs-generator/**`.
+ * Low-concurrency lane for `tech-docs-generator/tests/**`.
  *
  * Those cases do real filesystem + codegen work (often 10–35s each). Running them
  * in the default high-fan-out fork pool with ~8000 other tests causes timeouts
@@ -27,7 +27,7 @@ const techDocsConsole = path.resolve(
 const techDocsPackageRoot = path.resolve(VITEST_WORKSPACE_ROOT, "tech-docs-generator");
 const techDocsSetupFile = path.resolve(
   VITEST_WORKSPACE_ROOT,
-  "tests/tech-docs-generator/setup.ts",
+  "tech-docs-generator/tests/setup.ts",
 );
 
 export default defineConfig({
@@ -50,7 +50,7 @@ export default defineConfig({
       "@": VITEST_REPO_ROOT,
       // `mermaid` and `highlight.js` are declared only in tech-docs-generator's
       // package.json (not hoisted to the workspace root). This lane's tests live
-      // under tests/tech-docs-generator/, so bare-specifier mocks must resolve to
+      // under tech-docs-generator/tests/, so bare-specifier mocks must resolve to
       // the same module id as the component imports under tech-docs-generator/src/.
       // react-router-dom MUST resolve to the tech-docs package instance too —
       // the root copy is a different version, and Router context does not cross
@@ -87,7 +87,7 @@ export default defineConfig({
     // entry was removed (finding 18.2).
     setupFiles: [VITEST_SETUP_FILE, techDocsSetupFile],
     globalSetup: [
-      path.resolve(VITEST_WORKSPACE_ROOT, "tests/tech-docs-generator/global-setup.mjs"),
+      path.resolve(VITEST_WORKSPACE_ROOT, "tech-docs-generator/tests/global-setup.mjs"),
     ],
     reporters: [
       "default",
@@ -97,7 +97,7 @@ export default defineConfig({
     outputFile: {
       json: techDocsJson,
     },
-    include: ["../tests/tech-docs-generator/**/*.test.{ts,tsx}"],
+    include: ["../tech-docs-generator/tests/**/*.test.{ts,tsx}"],
     exclude: [...VITEST_COMMON_EXCLUDE],
   },
 });

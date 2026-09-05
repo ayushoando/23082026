@@ -9,6 +9,8 @@ Tests are organized by test kind and then mirror their owning repository source 
 - `support/` — fixtures, page objects, accessibility, visual, and UI-state helpers.
 - `manifests/` — ownership, coverage exceptions, skip exceptions, and visual baselines.
 
+The Tech-Docs Vitest suite and its support files are package-local at `tech-docs-generator/tests/`.
+
 Canonical examples:
 
 ```text
@@ -20,4 +22,4 @@ tests/unit/scripts/general/check-test-layout.test.ts
 
 Planner and Studio tests remain independent. A test under a Planner path must not import `@studio/*`, and a Studio test must not import `@planner/*`.
 
-Legacy locations are temporary migration debt recorded in `manifests/source-test-ownership.json`. New tests must use canonical paths. Generated inventory lives in `INVENTORY.md` and `results/test-inventory.json`.
+Legacy locations are temporary migration debt recorded in `manifests/source-test-ownership.json`. New tests must use canonical paths. Generated inventory covers `tests/`; it lives in `INVENTORY.md` and `results/test-inventory.json`.

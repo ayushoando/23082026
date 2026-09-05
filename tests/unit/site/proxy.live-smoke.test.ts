@@ -69,7 +69,7 @@ vi.mock("next/server", () => {
   };
 });
 
-vi.mock("../../site/lib/platform/maintenanceMode", () => ({
+vi.mock("../../../site/lib/platform/maintenanceMode", () => ({
   isMaintenanceReadonly: vi.fn(() => false),
 }));
 
@@ -77,9 +77,9 @@ import {
   proxy,
   buildContentSecurityPolicy,
   isCanvasHeavyPath,
-} from "../../site/proxy";
+} from "../../../site/proxy";
 import { NextRequest } from "next/server";
-import { isMaintenanceReadonly } from "../../site/lib/platform/maintenanceMode";
+import { isMaintenanceReadonly } from "../../../site/lib/platform/maintenanceMode";
 
 describe("04c proxy verify checklist", () => {
   beforeEach(() => {

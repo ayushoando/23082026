@@ -326,7 +326,7 @@ Vitest executes under the `happy-dom` environment (`tests/vitest.config.ts:75`):
   - `tests/vitest.site.config.ts`: Covers Site marketing logic and routes.
   - `tests/vitest.admin.coverage.config.ts`: Covers Admin operations and CRM views.
   - `tests/vitest.coverage.inventory.config.ts`: Unthresholded diagnostic rollup profile.
-- **`site/proxy.ts` Middleware Coverage Reality:** `site/proxy.ts` (20 KB reverse proxy middleware) has active unit tests in `tests/unit/proxy.test.ts` and `tests/unit/proxy.live-smoke.test.ts`. However, it is currently included only in the diagnostic inventory profile (`VITEST_PLANNER_INVENTORY_COVERAGE_INCLUDE`), rather than the strict release gate profile (`VITEST_PLANNER_GATE_COVERAGE_INCLUDE`). Adding `site/proxy.ts` to `vitest.site.config.ts` will formalize its coverage gating without requiring new test mock infrastructure.
+- **`site/proxy.ts` Middleware Coverage Reality:** `site/proxy.ts` (20 KB reverse proxy middleware) has active unit tests in `tests/unit/site/proxy.test.ts` and `tests/unit/site/proxy.live-smoke.test.ts`. However, it is currently included only in the diagnostic inventory profile (`VITEST_PLANNER_INVENTORY_COVERAGE_INCLUDE`), rather than the strict release gate profile (`VITEST_PLANNER_GATE_COVERAGE_INCLUDE`). Adding `site/proxy.ts` to `vitest.site.config.ts` will formalize its coverage gating without requiring new test mock infrastructure.
 
 ### 7.4 Test Results Storage Routing & Git Purity
 - **Census File:** [`tests/INVENTORY.md`](../../tests/INVENTORY.md) is the sole Git-tracked census of all **940 test files** (780 vitest, 85 playwright, 75 test support files). Drift is detected via `pnpm run docs:check` (running `git diff --exit-code -- tests/INVENTORY.md`).

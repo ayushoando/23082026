@@ -8,13 +8,13 @@ Generated executable-test and support-file inventory. Layout rules: `tests/CONTE
 
 | Kind | Count |
 |---|---:|
-| Vitest executable files | 769 |
+| Vitest executable files | 727 |
 | Playwright executable specs | 85 |
-| Helpers | 39 |
+| Helpers | 36 |
 | Fixtures | 15 |
-| Snapshots | 12 |
-| Other assets | 10 |
-| **Total files** | **930** |
+| Snapshots | 6 |
+| Other assets | 9 |
+| **Total files** | **878** |
 
 ## vitest
 
@@ -75,48 +75,6 @@ Generated executable-test and support-file inventory. Layout rules: `tests/CONTE
 - `tests/site-ui-content-links-audit/property-w5c-completion-proof-reconciliation.test.ts`
 - `tests/site-ui-content-links-audit/property-w5h-remediation-handoff-completeness.test.ts`
 - `tests/site-ui-content-links-audit/property-w5r-severity-duplicate-reconciliation.test.ts`
-- `tests/tech-docs-generator/app-overlay.test.tsx`
-- `tests/tech-docs-generator/auth-gate.test.tsx`
-- `tests/tech-docs-generator/auth-provider.test.tsx`
-- `tests/tech-docs-generator/auth-roles.test.ts`
-- `tests/tech-docs-generator/component-branch-coverage.test.tsx`
-- `tests/tech-docs-generator/data-branch-coverage.test.ts`
-- `tests/tech-docs-generator/data-loaders.test.ts`
-- `tests/tech-docs-generator/deployment-page-coverage.test.tsx`
-- `tests/tech-docs-generator/features-page.test.tsx`
-- `tests/tech-docs-generator/generated-domain-section.test.tsx`
-- `tests/tech-docs-generator/generated-status-card.test.tsx`
-- `tests/tech-docs-generator/generated-tables.test.tsx`
-- `tests/tech-docs-generator/generator/check-coverage.test.ts`
-- `tests/tech-docs-generator/generator/database-page-contract.test.ts`
-- `tests/tech-docs-generator/generator/domain-extractors.test.ts`
-- `tests/tech-docs-generator/generator/extractor-mutation.test.ts`
-- `tests/tech-docs-generator/generator/extractors.test.ts`
-- `tests/tech-docs-generator/generator/filesystem.test.ts`
-- `tests/tech-docs-generator/generator/generation.test.ts`
-- `tests/tech-docs-generator/generator/guards.test.ts`
-- `tests/tech-docs-generator/generator/impact-seeds.test.ts`
-- `tests/tech-docs-generator/generator/live-regeneration.test.ts`
-- `tests/tech-docs-generator/generator/output-contract.test.ts`
-- `tests/tech-docs-generator/generator/publication.test.ts`
-- `tests/tech-docs-generator/generator/repo-graph.test.ts`
-- `tests/tech-docs-generator/generator/repository-map.test.ts`
-- `tests/tech-docs-generator/generator/schema.test.ts`
-- `tests/tech-docs-generator/generator/source-coverage-contract.test.ts`
-- `tests/tech-docs-generator/generator/source-policy.test.ts`
-- `tests/tech-docs-generator/generator/theme-alignment.test.ts`
-- `tests/tech-docs-generator/lib-auth-env.test.ts`
-- `tests/tech-docs-generator/login-page.test.tsx`
-- `tests/tech-docs-generator/main.test.ts`
-- `tests/tech-docs-generator/package-data.test.ts`
-- `tests/tech-docs-generator/package.test.ts`
-- `tests/tech-docs-generator/rendering.test.tsx`
-- `tests/tech-docs-generator/routeDomainTypes.test.ts`
-- `tests/tech-docs-generator/security-page.test.tsx`
-- `tests/tech-docs-generator/snapshot.test.ts`
-- `tests/tech-docs-generator/techstack-branches.test.tsx`
-- `tests/tech-docs-generator/testing-data-coverage.test.ts`
-- `tests/tech-docs-generator/useSearch.test.tsx`
 - `tests/unit/app/.well-known/api-catalog/route.test.ts`
 - `tests/unit/app/(site)/_template.homepage.test.tsx`
 - `tests/unit/app/(site)/about/page.test.tsx`
@@ -218,7 +176,49 @@ Generated executable-test and support-file inventory. Layout rules: `tests/CONTE
 - `tests/unit/app/api/products/route.test.ts`
 - `tests/unit/app/api/Studio/furniture/[id]/publish/route.test.ts`
 - `tests/unit/app/api/Studio/furniture/[id]/route.test.ts`
-- … +569 more
+- `tests/unit/app/api/Studio/furniture/route.test.ts`
+- `tests/unit/app/api/Studio/furniture/upload/route.test.ts`
+- `tests/unit/app/api/theme/route.test.ts`
+- `tests/unit/app/api/tracking/route.test.ts`
+- `tests/unit/app/css/site/components/missing-components.test.ts`
+- `tests/unit/app/global-error.test.tsx`
+- `tests/unit/app/layout.test.tsx`
+- `tests/unit/app/not-found.test.tsx`
+- `tests/unit/app/offline/layout.test.tsx`
+- `tests/unit/app/offline/page.test.tsx`
+- `tests/unit/app/offline/ReloadButton.test.tsx`
+- `tests/unit/app/plannerRootViewportLock.test.ts`
+- `tests/unit/app/robots.test.ts`
+- `tests/unit/app/sitemap.test.ts`
+- `tests/unit/components/analytics/KpiIntegrityMonitor.test.tsx`
+- `tests/unit/components/career/CareerPageView.test.tsx`
+- `tests/unit/components/career/JobCard.test.tsx`
+- `tests/unit/components/ClientBadge.test.tsx`
+- `tests/unit/components/contact/ContactPageView.test.tsx`
+- `tests/unit/components/contact/CustomerQueryForm.test.tsx`
+- `tests/unit/components/home/CategoryGrid.test.tsx`
+- `tests/unit/components/home/CollectionsSectionHeading.test.tsx`
+- `tests/unit/components/home/HomepageHero.test.tsx`
+- `tests/unit/components/home/InteractiveTools.test.tsx`
+- `tests/unit/components/home/KpiCounter.test.tsx`
+- `tests/unit/components/home/layout/HomeCatalogLayout.test.tsx`
+- `tests/unit/components/home/layout/HomeMarketingLayout.test.tsx`
+- `tests/unit/components/home/layout/HomeSection.test.tsx`
+- `tests/unit/components/home/layout/HomeSectionInner.test.tsx`
+- `tests/unit/components/home/layout/index.test.ts`
+- `tests/unit/components/home/layout/SiteWorkspaceShell.test.tsx`
+- `tests/unit/components/home/marketingSurfaces.test.tsx`
+- `tests/unit/components/home/ShowcaseCarousel.test.tsx`
+- `tests/unit/components/home/WhyChooseUs.test.tsx`
+- `tests/unit/components/legal/QuerySectionScroll.test.tsx`
+- `tests/unit/components/Planner/Planner.test.tsx`
+- `tests/unit/components/Planner/PlannerEntry.test.tsx`
+- `tests/unit/components/Planner/PlannerErrorBoundary.test.tsx`
+- `tests/unit/components/Planner/PlannerProjectAccessState.test.tsx`
+- `tests/unit/components/Planner/PlannerProjectLoadState.test.tsx`
+- `tests/unit/components/Planner/PlannerProjectsList.test.tsx`
+- `tests/unit/components/Planner/plannerProjectsListState.test.ts`
+- … +527 more
 
 ## playwright
 
@@ -339,9 +339,6 @@ Generated executable-test and support-file inventory. Layout rules: `tests/CONTE
 - `tests/support/ui-states/assertNoOverflow.ts`
 - `tests/support/ui-states/uiStateMatrix.ts`
 - `tests/support/visual/visualBaseline.ts`
-- `tests/tech-docs-generator/global-setup.mjs`
-- `tests/tech-docs-generator/helpers/shared-repo-model.mjs`
-- `tests/tech-docs-generator/setup.ts`
 - `tests/vitest.admin.coverage.config.ts`
 - `tests/vitest.admin.live.coverage.config.ts`
 - `tests/vitest.config.ts`
@@ -376,12 +373,6 @@ Generated executable-test and support-file inventory. Layout rules: `tests/CONTE
 - `tests/e2e/design-kit-visual-regression.spec.ts-snapshots/design-kit-site-materials.png`
 - `tests/e2e/design-kit-visual-regression.spec.ts-snapshots/design-kit-site-surfaces.png`
 - `tests/e2e/fixtures/sketch-1x1.png`
-- `tests/e2e/site-visual-regression.spec.ts-snapshots/wave1-about.png`
-- `tests/e2e/site-visual-regression.spec.ts-snapshots/wave1-contact.png`
-- `tests/e2e/site-visual-regression.spec.ts-snapshots/wave1-homepage.png`
-- `tests/e2e/site-visual-regression.spec.ts-snapshots/wave2-products.png`
-- `tests/e2e/site-visual-regression.spec.ts-snapshots/wave2-quote-cart.png`
-- `tests/e2e/site-visual-regression.spec.ts-snapshots/wave2-solutions.png`
 
 ## asset
 
@@ -392,6 +383,5 @@ Generated executable-test and support-file inventory. Layout rules: `tests/CONTE
 - `tests/manifests/source-test-ownership.json`
 - `tests/manifests/visual-baselines.json`
 - `tests/package.json`
-- `tests/tech-docs-generator/tsconfig.json`
 - `tests/tsconfig.json`
 - `tests/tsconfig.tsbuildinfo`
