@@ -30,16 +30,8 @@ const ICONS = { SquaresFour, PencilSimple, UsersThree, ChatCircle, UserCircle } 
  * that already own an app action (planner/canvas, account), no extra top-bar
  * CTA is shown; the tab bar + route chrome already cover it.
  */
-function mobilePrimaryAction(
-  pathname: string,
-  t: ReturnType<typeof useTranslations<"marketing.chrome">>,
-): { label: string; href: string } | null {
-  const p = (pathname || "/").replace(/\/+$/, "") || "/";
-  if (p.startsWith("/ooplanner") || p.startsWith("/planner")) return null;
-  if (p.startsWith("/access") || p.startsWith("/dashboard") || p.startsWith("/portal")) {
-    return null;
-  }
-  return { label: t("mobile.getQuote"), href: "/contact" };
+function mobilePrimaryAction(): { label: string; href: string } | null {
+  return null;
 }
 
 export function MobileAppShell({
@@ -52,7 +44,7 @@ export function MobileAppShell({
   const active = activeTabFor(pathname);
   const [navOpen, setNavOpen] = useState(false);
   const showSiteFooter = resolveRouteChromeMode(pathname).footer === "full";
-  const primaryAction = mobilePrimaryAction(pathname, t);
+  const primaryAction = mobilePrimaryAction();
 
   return (
     <div className="mobile-app-shell">
@@ -134,7 +126,7 @@ export function MobileAppShell({
           );
         })}
       </nav>
-      <MobileNavDrawer open={navOpen} onClose={() => setNavOpen(false)} />
+      <MobileNavDrawer open={navOpen} onClose={() => setNavOpen(false)} variant="mobile" />
     </div>
   );
 }

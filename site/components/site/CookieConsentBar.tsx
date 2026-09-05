@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 const CONSENT_COOKIE = "oando_cookie_consent";
 const CONSENT_ACCEPTED = "accepted";
@@ -107,6 +107,7 @@ export function CookieConsentBar() {
   const t = useTranslations("marketing.chrome.cookie");
   const [dismissed, setDismissed] = useState(false);
   const [showDelayElapsed, setShowDelayElapsed] = useState(false);
+  const consentBarRef = useRef<HTMLElement>(null);
   const consent = useSyncExternalStore(
     () => () => {},
     () => readCookie(CONSENT_COOKIE),
@@ -132,6 +133,26 @@ export function CookieConsentBar() {
   }, [consent, dismissed]);
 
   const visible = !dismissed && !consent && showDelayElapsed;
+
+  useEffect(() => {
+    const element = consentBarRef.current;
+    if (!visible || !element) {return;}
+
+    const syncHeight = () => {
+      document.documentElement.style.setProperty(
+        "--cookie-consent-bar-height",
+        `${Math.ceil(element.getBoundingClientRect().height)}px`,
+      );
+    };
+    const observer = new ResizeObserver(syncHeight);
+    syncHeight();
+    observer.observe(element);
+
+    return () => {
+      observer.disconnect();
+      document.documentElement.style.removeProperty("--cookie-consent-bar-height");
+    };
+  }, [visible]);
 
   useEffect(() => {
     if (dismissed || consent || !visible) {return;}
@@ -177,6 +198,7 @@ export function CookieConsentBar() {
 
   return (
     <section
+      ref={consentBarRef}
       role="dialog"
       aria-live="polite"
       aria-labelledby="cookie-dialog-title"

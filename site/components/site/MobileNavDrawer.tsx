@@ -56,7 +56,18 @@ async function resolveSearchDestination(
 interface MobileNavDrawerProps {
   open: boolean;
   onClose: () => void;
+  /** Phone chrome exposes only secondary navigation; tablet header retains its full menu. */
+  variant?: "header" | "mobile";
 }
+
+const MOBILE_DRAWER_OVERFLOW_LINKS = [
+  { label: "About", href: "/about" },
+  { label: "Clients", href: "/clients" },
+  { label: "Trusted By", href: "/trusted-by" },
+  { label: "FAQ", href: "/faq" },
+  { label: "Planning", href: "/planning" },
+  { label: "Downloads", href: "/downloads" },
+] as const;
 
 const DRAWER_SHORTCUTS = [
   { href: "/products?sort=new-arrivals", translationKey: "mobile.newArrivals" },
@@ -93,7 +104,7 @@ const drawerSearchResultClass =
 const drawerSearchNoteClass = "shell-search-meta";
 const drawerCountClass = "shell-search-meta shrink-0";
 
-export function MobileNavDrawer({ open, onClose }: MobileNavDrawerProps) {
+export function MobileNavDrawer({ open, onClose, variant = "header" }: MobileNavDrawerProps) {
   const t = useTranslations("marketing.chrome");
   const navigationLabel = (label: string) =>
     t(`navigation.${NAVIGATION_LABEL_KEYS[label] ?? label}`);
@@ -357,128 +368,151 @@ export function MobileNavDrawer({ open, onClose }: MobileNavDrawerProps) {
             )}
           </div>
 
-          <ul className="drawer-primary min-w-0 space-y-1">
-            {SITE_HEADER_PRIMARY_LINKS.map((link) => {
-              const hasMega = "hasMega" in link && link.hasMega;
-              const label = navigationLabel(link.label);
-              if (hasMega) {
+          {variant === "mobile" ? (
+            <ul className="drawer-overflow min-w-0 space-y-1">
+              {MOBILE_DRAWER_OVERFLOW_LINKS.map((link) => {
+                const label = navigationLabel(link.label);
                 return (
-                  <li key={link.label}>
-                    <button
-                      type="button"
-                      aria-expanded={productsOpen}
-                      aria-controls="mobile-nav-products"
-                      onClick={() => setProductsOpen((open) => !open)}
-                      className={`${drawerLinkClass} justify-between`}
-                    >
-                      {label}
-                      <CaretDown
-                        size={16}
-                        weight="bold"
-                        aria-hidden="true"
-                        className={productsOpen ? "rotate-180" : undefined}
-                      />
-                    </button>
-                    {productsOpen ? (
-                      <ul id="mobile-nav-products" className="mt-1 space-y-1 ps-3">
-                        <li>
-                          <TrackedLink
-                            href="/products"
-                            label={t("navigation.allProducts")}
-                            surface="mobile-nav"
-                            className={drawerLinkClass}
-                            onClick={handleClose}
-                          >
-                            {t("navigation.allProducts")}
-                          </TrackedLink>
-                        </li>
-                        {NAV_CATEGORY_GROUP_ORDER.map((groupId) => (
-                          <li key={groupId}>
-                            <TrackedLink
-                              href={`/products/${groupId}`}
-                              label={NAV_CATEGORY_GROUPS[groupId].label}
-                              surface="mobile-nav"
-                              className={drawerLinkClass}
-                              onClick={handleClose}
-                            >
-                              {NAV_CATEGORY_GROUPS[groupId].label}
-                            </TrackedLink>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : null}
-                  </li>
-                );
-              }
-
-              if (isPlannerEntryHref(link.href)) {
-                return (
-                  <li key={link.label}>
-                    <PlannerLaunchLink
+                  <li key={link.href}>
+                    <TrackedLink
                       href={link.href}
-                      surface="mobile-nav"
                       label={label}
+                      surface="mobile-nav"
                       className={drawerLinkClass}
                       onClick={handleClose}
                     >
                       {label}
-                    </PlannerLaunchLink>
+                    </TrackedLink>
                   </li>
                 );
-              }
+              })}
+            </ul>
+          ) : (
+            <>
+              <ul className="drawer-primary min-w-0 space-y-1">
+                {SITE_HEADER_PRIMARY_LINKS.map((link) => {
+                  const hasMega = "hasMega" in link && link.hasMega;
+                  const label = navigationLabel(link.label);
+                  if (hasMega) {
+                    return (
+                      <li key={link.label}>
+                        <button
+                          type="button"
+                          aria-expanded={productsOpen}
+                          aria-controls="mobile-nav-products"
+                          onClick={() => setProductsOpen((open) => !open)}
+                          className={`${drawerLinkClass} justify-between`}
+                        >
+                          {label}
+                          <CaretDown
+                            size={16}
+                            weight="bold"
+                            aria-hidden="true"
+                            className={productsOpen ? "rotate-180" : undefined}
+                          />
+                        </button>
+                        {productsOpen ? (
+                          <ul id="mobile-nav-products" className="mt-1 space-y-1 ps-3">
+                            <li>
+                              <TrackedLink
+                                href="/products"
+                                label={t("navigation.allProducts")}
+                                surface="mobile-nav"
+                                className={drawerLinkClass}
+                                onClick={handleClose}
+                              >
+                                {t("navigation.allProducts")}
+                              </TrackedLink>
+                            </li>
+                            {NAV_CATEGORY_GROUP_ORDER.map((groupId) => (
+                              <li key={groupId}>
+                                <TrackedLink
+                                  href={`/products/${groupId}`}
+                                  label={NAV_CATEGORY_GROUPS[groupId].label}
+                                  surface="mobile-nav"
+                                  className={drawerLinkClass}
+                                  onClick={handleClose}
+                                >
+                                  {NAV_CATEGORY_GROUPS[groupId].label}
+                                </TrackedLink>
+                              </li>
+                            ))}
+                          </ul>
+                        ) : null}
+                      </li>
+                    );
+                  }
 
-              return (
-                <li key={link.label}>
-                  <TrackedLink
-                    href={link.href}
-                    label={label}
-                    surface="mobile-nav"
-                    className={drawerLinkClass}
-                    onClick={handleClose}
-                  >
-                    {label}
-                  </TrackedLink>
-                </li>
-              );
-            })}
-          </ul>
+                  if (isPlannerEntryHref(link.href)) {
+                    return (
+                      <li key={link.label}>
+                        <PlannerLaunchLink
+                          href={link.href}
+                          surface="mobile-nav"
+                          label={label}
+                          className={drawerLinkClass}
+                          onClick={handleClose}
+                        >
+                          {label}
+                        </PlannerLaunchLink>
+                      </li>
+                    );
+                  }
 
-          {SITE_HEADER_MORE_LINKS.length > 0 ? (
-          <ul className="drawer-more mt-4 min-w-0 space-y-1">
-            {SITE_HEADER_MORE_LINKS.map((link) => {
-              const label = navigationLabel(link.label);
-              return (
-                <li key={link.href}>
-                  <TrackedLink
-                    href={link.href}
-                    label={label}
-                    surface="mobile-nav"
-                    className={drawerLinkClass}
-                    onClick={handleClose}
-                  >
-                    {label}
-                  </TrackedLink>
-                </li>
-              );
-            })}
-          </ul>
-          ) : null}
+                  return (
+                    <li key={link.label}>
+                      <TrackedLink
+                        href={link.href}
+                        label={label}
+                        surface="mobile-nav"
+                        className={drawerLinkClass}
+                        onClick={handleClose}
+                      >
+                        {label}
+                      </TrackedLink>
+                    </li>
+                  );
+                })}
+              </ul>
 
-          <ul className="drawer-shortcuts mt-4 min-w-0 space-y-1">
-            {DRAWER_SHORTCUTS.map((link) => (
-              <li key={link.href}>
-                <TrackedLink
-                  href={link.href}
-                  label={t(link.translationKey)}
-                  surface="mobile-nav"
-                  className={drawerLinkClass}
-                  onClick={handleClose}
-                >
-                  {t(link.translationKey)}
-                </TrackedLink>
-              </li>
-            ))}
-          </ul>
+              {SITE_HEADER_MORE_LINKS.length > 0 ? (
+                <ul className="drawer-more mt-4 min-w-0 space-y-1">
+                  {SITE_HEADER_MORE_LINKS.map((link) => {
+                    const label = navigationLabel(link.label);
+                    return (
+                      <li key={link.href}>
+                        <TrackedLink
+                          href={link.href}
+                          label={label}
+                          surface="mobile-nav"
+                          className={drawerLinkClass}
+                          onClick={handleClose}
+                        >
+                          {label}
+                        </TrackedLink>
+                      </li>
+                    );
+                  })}
+                </ul>
+              ) : null}
+
+              <ul className="drawer-shortcuts mt-4 min-w-0 space-y-1">
+                {DRAWER_SHORTCUTS.map((link) => (
+                  <li key={link.href}>
+                    <TrackedLink
+                      href={link.href}
+                      label={t(link.translationKey)}
+                      surface="mobile-nav"
+                      className={drawerLinkClass}
+                      onClick={handleClose}
+                    >
+                      {t(link.translationKey)}
+                    </TrackedLink>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
         </nav>
           </div>
         </Dialog>
