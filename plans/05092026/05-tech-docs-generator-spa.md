@@ -1,4 +1,4 @@
-﻿# Oando Subsystem Remediation Plan: Tech-Docs Generator SPA Architecture
+# Oando Subsystem Remediation Plan: Tech-Docs Generator SPA Architecture
 
 **File Target:** `plans/05092026/05-tech-docs-generator-spa.md`  
 **Governing Standard:** `AGENTS.md` (Authority floor: User instruction > live code/fresh command output > `AGENTS.md`)  
@@ -72,6 +72,39 @@ A centerpiece of the Tech-Docs SPA is the live visualization of the dual-databas
   - Highlights persistence mode selectors (`plannerPersistenceMode.ts` and `furnitureCatalogMode.ts`).
 
 ---
+
+## 3a. Authentication Layer (`AuthGate`, `AuthProvider`, `AuthScreenShell`)
+
+The Tech-Docs SPA is **not purely public**. It ships a full authentication layer:
+
+| Component | File | Role |
+|-----------|------|------|
+| `AuthProvider` | `src/auth/AuthProvider.tsx` | Wraps the app and exposes auth context (`useAuth()`). |
+| `AuthGate` | `src/auth/AuthGate.tsx` | Route guard — renders `AuthScreenShell` for unauthenticated users. |
+| `AuthScreenShell` | `src/auth/AuthScreenShell.tsx` | Hosts `LoginPage` for sign-in flow. |
+| `LoginPage` | `src/auth/LoginPage.tsx` | Credentials form. |
+
+- **Boundary Rule:** Auth components live under `src/auth/` and must never import from `src/pages/`. Pages import from `src/auth/` only through `useAuth()` context.
+- **Gate behaviour:** `AuthGate` wraps all 12 documentation routes. Unauthenticated requests see the login screen; authenticated sessions proceed to content.
+- **No impact on Next.js auth:** The tech-docs auth system is fully independent. It must never share session tokens or Supabase clients with the main `site/` app.
+
+---
+
+## 3b. Live-Data & Interactive UI Features
+
+Beyond static documentation, several components provide real-time repository intelligence:
+
+| Component | File | Capability |
+|-----------|------|-----------|
+| `LiveRepoSection` | `src/components/LiveRepoSection.tsx` | Fetches and renders live stats from `generated-documents/data/*.json` (refreshed by `generate-all.mjs`). Displays test pass rates, migration counts, and governance baselines. |
+| `CommandPalette` | `src/components/CommandPalette.tsx` | Keyboard-driven navigation (⌘K / Ctrl+K). Indexes all 12 routes and section headings. Allows fuzzy jump-to-section. |
+| `MermaidDiagram` | `src/components/MermaidDiagram.tsx` | Client-side Mermaid.js rendering of ER diagrams, sequence flows, and dependency graphs. Aliased to `tech-docs-generator/node_modules/mermaid` to prevent root-hoisted version conflicts. |
+| `ReadingProgress` | `src/components/ReadingProgress.tsx` | Thin scroll-progress bar tracking position within long documentation pages. |
+
+- **`LiveRepoSection` data freshness:** If `generate-all.mjs` has not been run before the Lane 2 Vitest suite starts, `LiveRepoSection` tests will evaluate stale or absent data files. Lane 2 always runs `generate-all.mjs` as a pre-step (see `scripts/run-full-vitest.mjs#L83-L94`).
+- **`CommandPalette` — no cross-app dependency:** It must only index `tech-docs-generator` routes. Never reference `site/features/site/data/navigation.ts` or any `site/` module.
+
+
 
 ## 4. Vite Configuration & Server Isolation
 

@@ -1,4 +1,4 @@
-﻿# Oando Subsystem Remediation Plan: Blockers Clearance and Ship Gate Protocol
+# Oando Subsystem Remediation Plan: Blockers Clearance and Ship Gate Protocol
 
 **File Target:** `plans/05092026/09-blockers-clearance-and-ship-gate.md`  
 **Governing Standard:** `AGENTS.md` (Authority floor: User instruction > live code/fresh command output > `AGENTS.md`)  
@@ -76,6 +76,15 @@ Enforced by [`scripts/general/check-failures.mjs#L7-L14`](file:///d:/23082026/sc
     ]
   }
   ```
+- **Live Empirical Evidence Already Available:**
+  `results/tests/summary.json` (written `2026-09-05T03:57:36Z`) confirms 0 failures across both lanes:
+  ```json
+  { "lanes": [
+    { "lane": "default",   "failed": 0, "total": 4296 },
+    { "lane": "tech-docs", "failed": 0, "total": 224  }
+  ]}
+  ```
+  This proves the code fixes are already in place. The only remaining step is a fresh **live** run to get a current-session exit code.
 - **Clearance Step:**
   Upon authorized execution of `pnpm run test`, observe exit code 0, and remove the `GATE-RECHECK-01` row from [`Failures.md`](file:///d:/23082026/Failures.md).
 

@@ -13,7 +13,7 @@ This multi-file planning suite provides exhaustive, horizontal and vertical tech
 
 | File | Subsystem & Scope |
 |------|-------------------|
-| [`phased-remedy-plan.md`](./phased-remedy-plan.md) | Unified 514-line master remedy blueprint across all 11 technical areas. |
+| [`phased-remedy-plan.md`](./phased-remedy-plan.md) | Unified 559-line master remedy blueprint across all 11 technical areas. |
 | [`01-ui-focss-and-mobile-chrome.md`](./01-ui-focss-and-mobile-chrome.md) | FOCSS 4-zone CSS engine, token ratchet (baseline 200), GSAP `.mobile-app-main` scroller, Phosphor icons, mobile chrome (<768px). |
 | [`02-route-contracts-seo-and-i18n.md`](./02-route-contracts-seo-and-i18n.md) | Static SEO registry (`SEO01_STATIC_METADATA`), XML/HTML sitemaps, and `next-intl` bilingual key parity (861 keys across 26 namespaces). |
 | [`03-interactive-workspaces-studio-planner.md`](./03-interactive-workspaces-studio-planner.md) | Fork boundary isolation (`scan:boundaries`), scale invariants (Studio 0.2 px/mm vs Planner 0.05 px/mm vs PNG 2 px/mm), Dockview shells, Fabric 7 canvas. |

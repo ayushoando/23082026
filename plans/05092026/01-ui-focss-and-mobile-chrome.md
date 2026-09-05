@@ -1,4 +1,4 @@
-﻿# Subsystem Module 1: UI Alignment, FOCSS Tokens & Mobile Chrome (<768px)
+# Subsystem Module 1: UI Alignment, FOCSS Tokens & Mobile Chrome (<768px)
 
 **Document:** `plans/05092026/01-ui-focss-and-mobile-chrome.md`  
 **Governing Standard:** `AGENTS.md` (Authority floor: User instruction > live code/fresh command output > `AGENTS.md` > `Agents/` > `docs/`)  
@@ -16,8 +16,13 @@ site/focss/
   ├── base/             # Shared tokens, typography, document baseline
   │     ├── tokens/     # palette.css, semantic.css, layout.css
   │     ├── type/       # typography.css, type.css (typ-* utilities)
-  │     ├── scan.css    # @import "tailwindcss" scanner
-  │     └── runtime.css # @import "tw-animate-css"
+  │     ├── animations.css  # @keyframes and motion utilities
+  │     ├── containers.css  # Container query definitions
+  │     ├── document.css    # <html>/<body> base resets and vars
+  │     ├── index.css       # Consolidated foundation (imports above)
+  │     ├── root.css        # :root custom-property declarations
+  │     ├── runtime.css     # @import "tw-animate-css"
+  │     └── scan.css        # @import "tailwindcss" scanner
   ├── site/             # Public marketing zone entrypoint (site/entry.css)
   ├── admin/            # Admin portal zone entrypoint (admin/entry.css)
   ├── planner/          # Planner workspace self-contained fork (planner/entry.css)

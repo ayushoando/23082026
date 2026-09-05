@@ -1,4 +1,4 @@
-﻿# Oando Subsystem Remediation Plan: Route Contracts, SEO Registry, and Bilingual i18n
+# Oando Subsystem Remediation Plan: Route Contracts, SEO Registry, and Bilingual i18n
 
 **File Target:** `plans/05092026/02-route-contracts-seo-and-i18n.md`  
 **Governing Standard:** `AGENTS.md` (Authority floor: User instruction > live code/fresh command output > `AGENTS.md`)  
@@ -174,6 +174,30 @@ To audit route contracts, SEO metadata, and i18n parity without modifying any so
    pnpm vitest run tests/unit/lib/i18n/parity.test.ts
    pnpm vitest run tests/unit/i18n/messages.test.ts
    ```
+
+---
+
+## 5. Supplementary Route Data Files (`site/features/site/data/`)
+
+Beyond `siteSeoContract.ts`, the data directory contains additional files that govern per-route behaviour. Every agent touching route metadata must be aware of the full surface:
+
+| File | Role | Relationship to SEO Contract |
+|------|------|------------------------------|
+| [`siteSeoContract.ts`](file:///d:/23082026/site/features/site/data/siteSeoContract.ts) | `SEO01_STATIC_METADATA` registry — the authoritative source for all 24 indexed routes. | Root contract — all others are downstream. |
+| [`routeMetadata.ts`](file:///d:/23082026/site/features/site/data/routeMetadata.ts) | `buildPageMetadata()` factory — constructs the Next.js `Metadata` object from a registry entry. Called by every `page.tsx` in `(site)/`. | Consumes `SEO01_STATIC_METADATA` entries. Adding a route here without `siteSeoContract.ts` breaks the SEO gate. |
+| [`routeClassification.ts`](file:///d:/23082026/site/features/site/data/routeClassification.ts) | Per-route `indexable` / `noindex` flags and HTTP status codes. Source of truth for `htmlSitemap.ts` and XML sitemaps. | Must agree with `SEO01_STATIC_METADATA`. Drift between the two causes `siteSeoAcceptance.test.ts` to fail. |
+| [`routeChromeRules.ts`](file:///d:/23082026/site/features/site/data/routeChromeRules.ts) | Per-route chrome layout rules (e.g. which routes hide the header, show a fullscreen canvas shell, or suppress the mobile bottom tab bar). | Independent of SEO; consumed by `MobileAppShell.tsx` and `Header.tsx`. |
+| [`routeCopy.ts`](file:///d:/23082026/site/features/site/data/routeCopy.ts) | Route-level editorial copy (hero headlines, section subtitles) kept separate from i18n messages for non-translated content variants. | No SEO dependency, but copy must be bilingual-safe. |
+| [`solutionsPage.ts`](file:///d:/23082026/site/features/site/data/solutionsPage.ts) | Static data for the Solutions editorial route — product groupings and use-case copy. | Solutions is routed under `/products/`; check `siteSeoContract.ts` for the canonical entry. |
+| [`assistant.ts`](file:///d:/23082026/site/features/site/data/assistant.ts) | AI assistant configuration data — suggested prompts, persona copy, and feature-flag gate. | No SEO dependency. |
+
+### Invariant: Route Addition Protocol (Updated)
+When adding any new public route in `site/app/(site)/`:
+1. Add an entry to `SEO01_STATIC_METADATA` in `siteSeoContract.ts`.
+2. Add `indexable` status in `routeClassification.ts`.
+3. Add a metadata factory call in `routeMetadata.ts`.
+4. Add the path to `htmlSitemap.ts` and `site/app/sitemap.ts`.
+5. If the route has non-standard chrome (no header, fullscreen), add a rule to `routeChromeRules.ts`.
 
 ---
 

@@ -1,7 +1,7 @@
-﻿# Oando Subsystem Remediation Plan: Client-Hub Sequence & Public Route Roadmap
+# Oando Subsystem Remediation Plan: Client-Hub Sequence & Public Route Roadmap
 
 **File Target:** `plans/05092026/10-client-hub-sequence-plan.md`  
-**Relocated & Renamed From:** `plans/PLAN.md` (Consolidated into `plans/05092026/` Master Suite)  
+**Note:** `plans/PLAN.md` now contains a redirect stub pointing here. The original content lives in this file.  
 **Governing Standard:** `AGENTS.md` (Authority floor: User instruction > live code/fresh command output > `AGENTS.md`)  
 **Execution State:** **FROZEN / PLANNING ONLY** (`NO CODE CHANGE`, `NO AUTO IMPLEMENT`)  
 **Spine:** [`../client-hub/flowcharts/clients-hub-flow.md`](../client-hub/flowcharts/clients-hub-flow.md)  

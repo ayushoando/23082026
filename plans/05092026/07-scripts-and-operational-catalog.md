@@ -1,4 +1,4 @@
-﻿# Oando Subsystem Remediation Plan: Scripts and Operational Catalog
+# Oando Subsystem Remediation Plan: Scripts and Operational Catalog
 
 **File Target:** `plans/05092026/07-scripts-and-operational-catalog.md`  
 **Governing Standard:** `AGENTS.md` (Authority floor: User instruction > live code/fresh command output > `AGENTS.md`)  
@@ -42,12 +42,18 @@ The scripting system is strictly partitioned into distinct directories based on 
 
 | Directory | Count | Purpose & Invariants | Key Reference Documents |
 |-----------|-------|----------------------|-------------------------|
-| `scripts/` | 111 files | Primary entrypoints called directly from `package.json` scripts. Contains domain roots and subdirectories. | [`docs/architecture/scripts.csv`](file:///d:/23082026/docs/architecture/scripts.csv) |
-| `scripts/general/` | 56 files | Secondary helpers, static code audits, and maintenance utilities invoked by root scripts or the ops dispatcher. | [`scripts/general/README.md`](file:///d:/23082026/scripts/general/README.md) |
+| `scripts/` | 111 files | Primary entrypoints called directly from `package.json` scripts. Contains domain roots and subdirectories. Breakdown: **58 `.mjs`**, **45 `.ts`** (tsx-executed migration helpers, type generators, and data-sync scripts), **3 `.ps1`** (Windows backup-secret sync), **2 `.json`** (registry/manifest), **1 `.sql`**, **1 `.py`**, **1 `.txt`**. | [`docs/architecture/scripts.csv`](file:///d:/23082026/docs/architecture/scripts.csv) |
+| `scripts/general/` | 56 files | Secondary helpers, static code audits, and maintenance utilities invoked by root scripts or the ops dispatcher. Breakdown: **45 `.mjs`**, **6 `.py`** (data-processing and platform-specific utilities — see §2.1 below), **3 `.cjs`**, **1 `.js`**, **1 `.md`**. | [`scripts/general/README.md`](file:///d:/23082026/scripts/general/README.md) |
 | `scripts/AsNeeded/` | 8 files | Restricted tools for on-demand diagnostics, static cycles, and heavy catalog verification. | [`scripts/AsNeeded/ALLOWLIST.md`](file:///d:/23082026/scripts/AsNeeded/ALLOWLIST.md) |
 | `scripts/generate-svg/` | 12 files | Standalone SVG plan symbol rasterizer and test fixtures packaged into production standalone. | `scripts/generate-svg/README.md` |
 | `scripts/codemods/` | 4 files | One-off AST transformation scripts for migrations. | — |
 | `scripts/lib/` | 8 files | Shared utility functions (logging, chalk, spawn wrappers, path helpers) for Node scripts. | — |
+
+### 2.1 Python Scripts in `scripts/general/` (6 files)
+
+Six Python scripts reside in `scripts/general/`. They cover data-processing tasks that are impractical in Node.js (e.g. image analysis, binary file manipulation). These scripts are **not part of the gate pipeline** but may be run as needed via `python scripts/general/<name>.py`. They must not introduce Windows/Linux portability issues in CI. Any gate dependency on a Python script would fail `check:governance` rule `D6_nonportable_in_gate`.
+
+
 
 ### As-Needed Directory & Allowlist Reconciliation
 Inspection of `scripts/AsNeeded/` reveals 8 physical files on disk:
@@ -61,7 +67,7 @@ Inspection of `scripts/AsNeeded/` reveals 8 physical files on disk:
 8. `verify-focss.mjs`: Canonical FOCSS structure and boundary verification (`pnpm run verify:focss`).
 
 > [!IMPORTANT]
-> **Allowlist Discrepancy Note:** [`scripts/AsNeeded/ALLOWLIST.md#L12-L20`](file:///d:/23082026/scripts/AsNeeded/ALLOWLIST.md#L12-L20) currently lists only 6 script basenames in its markdown table (+ `ALLOWLIST.md`). `audit-seo-indexability.mjs` was introduced in commit `32c0a87` and is active in the filesystem, but was omitted from the markdown documentation table. This discrepancy must be rectified during documentation cleanup.
+> **Allowlist Action Required:** `scripts/AsNeeded/ALLOWLIST.md` markdown table currently lists only 6 script basenames. `audit-seo-indexability.mjs` (introduced in commit `32c0a87`) exists on the filesystem but is absent from the table. **Before the next commit touching `scripts/AsNeeded/`, add `audit-seo-indexability.mjs` to `ALLOWLIST.md` table and to `docs/architecture/scripts.csv`.**
 
 ---
 

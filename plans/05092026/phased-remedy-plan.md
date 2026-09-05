@@ -1,4 +1,4 @@
-﻿# Exhaustive Subsystem Master Remedy & Platform Blueprint (2026-09-05)
+# Exhaustive Subsystem Master Remedy & Platform Blueprint (2026-09-05)
 
 **Document:** `plans/05092026/phased-remedy-plan.md`  
 **Governing Standard:** `AGENTS.md` (Authority floor: User instruction > live code/fresh command output > `AGENTS.md` > `Agents/` > `docs/`)  
@@ -277,7 +277,7 @@ Both applications build upon Fabric.js `7.4.0`, but maintain distinct physical s
 ## 6. Subsystem Module 5: Test Subsystem, Test Integrity & Release Gating
 
 ### 6.1 Dual-Lane Vitest Architecture
-The test suite spans **780 Vitest files** and **85 Playwright specs** (940 total test assets). To prevent out-of-memory errors and runner crashes on Windows, tests execute in two isolated lanes via `scripts/run-full-vitest.mjs`:
+The test suite spans **738 Lane 1 + 42 Lane 2 = 780 Vitest files combined**, plus **85 Playwright spec files** in `tests/e2e/` (of which **8 are required by the browser release gate** — `config/build/playwright-gate-specs.json`). To prevent out-of-memory errors and runner crashes on Windows, tests execute in two isolated lanes via `scripts/run-full-vitest.mjs`:
 
 ```
                            pnpm run test
@@ -286,7 +286,7 @@ The test suite spans **780 Vitest files** and **85 Playwright specs** (940 total
                  ▼                               ▼
        [Lane 1: Default Vitest]       [Lane 2: Tech-Docs Vitest]
        Config: tests/vitest.config.ts Config: tests/vitest.tech-docs.config.ts
-       - 780 test files               - 42 test files, 224 specs
+       - 738 test files               - 42 test files, 224 specs
        - High fan-out worker pool     - Serial forks, maxWorkers: 1
        - Unit & integration tests     - happy-dom environment
        - Output: vitest-results.json  - Regenerates data via generate-all.mjs
