@@ -124,6 +124,7 @@ Mobile viewports must cleanly coordinate 5 interactive floating layers without c
 2. **Drawer Menu Scope:**
    - Slide-over drawer menu is restricted strictly to the 6 designated overflow destinations: `About`, `Clients`, `Trusted By`, `FAQ`, `Planning`, `Downloads`.
 3. **Dynamic Offset Rules (`site/focss/site/components/chrome/app-shell.css`):**
-   - Floating Action Button (FAB) bottom offset: `--site-fab-bottom: calc(var(--mobile-tab-bar-height) + 0.75rem);`.
-   - Cookie consent bar position: `bottom: calc(var(--mobile-tab-bar-height) + 1px) !important;` at `z-index: 40`.
-   - Collision suppression: `html:has([data-cookie-consent-bar]) .site-fab-launcher { display: none; }`.
+    - Floating Action Button (FAB) bottom offset: `--site-fab-bottom: calc(var(--mobile-tab-bar-height) + 0.75rem);`.
+    - Cookie consent bar position: `bottom: calc(var(--mobile-tab-bar-height) + 1px) !important;` at `z-index: 40`.
+    - Do not hide either FAB merely because the cookie bar is present. Preserve visible FABs above the tab bar with safe-area padding; allow a narrowly scoped hide only when the open consent bar creates a demonstrated collision with no safe placement.
+4. **Viewport Acceptance:** At 375px, verify the top bar has no `Get Quote`, bottom tabs retain `Products`, `Planner`, `Quote`, `Portfolio`, and `Sign in`, the drawer has only the six overflow links, and the cookie bar is above the tab bar. Compare the desktop header before accepting the mobile change.

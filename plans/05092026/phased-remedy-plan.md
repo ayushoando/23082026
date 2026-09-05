@@ -332,6 +332,8 @@ The platform enforces five static test integrity gates (`node scripts/general/ru
 ### 6.3 Hard Blocker Clearance Protocol (`Failures.md`)
 
 #### Blocker 1: `GATE-RECHECK-01` (Ship bar currently stops at Vitest lane)
+- **Current reconciliation (supersedes the historical remediation claim below):** A current-tree Vitest run initially had four failing files. The subsequent authorized re-run of exactly those four passed `htmlSitemap.test.ts`, `siteSeoContract.test.ts`, and `providers.test.ts`, but `siteSeoAcceptance.test.ts` still failed: the footer expects `/tools` to classify as `public`, while `routeClassification.ts` returns `not-found`.
+- **Decision gate:** Canonical-host HTTP status takes precedence over source presence. The last observed canonical-host responses for `/tools` and both calculator routes were `404`. Do not index, title, or add dead routes to a sitemap to satisfy the test. Before code changes, decide whether to remove every public `/tools` reference or restore and verify a real public `200` route. Only fresh successful required tests and gate results may clear `Failures.md`.
 - **Observed Cause:** Vitest reported failures in 4 test files:
   1. `tests/unit/features/site/data/htmlSitemap.test.ts` (missing `/tools` path).
   2. `tests/unit/features/site/data/siteSeoAcceptance.test.ts` (missing `/tools` SEO entry).
@@ -446,7 +448,8 @@ The Tech-Docs Generator (`tech-docs-generator/`) is an independent React 19 appl
 - **Dynamic CSS Offsets:**
   - FAB bottom offset: `--site-fab-bottom: calc(var(--mobile-tab-bar-height) + 0.75rem);`.
   - Cookie consent banner: `bottom: calc(var(--mobile-tab-bar-height) + 1px) !important;`.
-  - Collision suppression: `html:has([data-cookie-consent-bar]) .site-fab-launcher { display: none; }`.
+  - The presence of a cookie bar alone must **not** hide WhatsApp or assistant FABs. Raise them with the tab-bar offset and safe-area padding. Conditional hiding is permitted only for a demonstrated, otherwise-unsolvable collision while consent is visible; it must not affect desktop.
+- **Acceptance evidence:** At a `<768px` viewport, confirm no top-bar Quote CTA, the six-link overflow drawer, cookie bar above the tab bar, and both FABs visible when they have non-overlapping space. Recheck the desktop header and FAB placement unchanged.
 
 ---
 ## 11. Master Sequential Execution Runbook
@@ -554,5 +557,5 @@ While Modules 1–9 define the horizontal and vertical engineering infrastructur
 
 ### 12.2 Integration of Technical Remedy with Product Sequence
 1. **Header Modernization:** Phase 1 in `PLAN.md` previously described a legacy "More" dropdown. This has been reconciled with live code (`navigation.ts`), which enforces a flat 8-link bar with `SITE_HEADER_MORE_LINKS: []`.
-2. **SEO & Sitemap Parity:** Phase 3 previously assumed `/tools/*` calculators were unindexed placeholders. Live reality proves `/tools/meeting-room-capacity-calculator`, `/tools/office-space-calculator`, and `/tools` are fully indexed (`indexable: true`) and registered in `SEO01_STATIC_METADATA` (`siteSeoContract.ts`), resolving the prior `GATE-RECHECK-01` failure.
+2. **SEO & Sitemap Parity:** Canonical-host HTTP status is authoritative over source-file presence. The last observed canonical-host state for `/tools`, `/tools/meeting-room-capacity-calculator`, and `/tools/office-space-calculator` was `404`; their intended classification is therefore `not-found` and nonindexable. They must not enter public navigation, footer links, HTML/XML sitemaps, or a new metadata contract unless a later live `200` verification and product decision explicitly restore them.
 3. **Browser Walk Verification:** Phase 4 directly orchestrates the clearance of `BROWSER-ORIGIN-02` by validating that all 8 Playwright gate specs pass against `http://localhost:3000` with the `.mobile-app-main` scroller active.

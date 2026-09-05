@@ -37,7 +37,7 @@ The Oando public platform combines a Next.js 16.3.3 App Router frontend (`site/a
 ```
 
 ### Core Invariants
-1. **Zero Route Drift:** Every public indexable route MUST be registered in `SEO01_STATIC_METADATA`.
+1. **Route Lifecycle Before SEO:** A public indexable route MUST return the expected canonical-host `200` and be registered in `SEO01_STATIC_METADATA`. A route classified `not-found`, redirected, access-controlled, or otherwise non-public must not be put in public navigation, the footer, or HTML/XML sitemaps merely because a source component or metadata object exists.
 2. **Canonical URL Sanitization:** All canonical URLs must route through `sanitizeCanonicalPath` to reject open redirects and protocol-relative attacks.
 3. **Google Hreflang Compliance:** With `localePrefix: "never"`, all locales share one URL; Google rejects identical hrefs across multiple hreflang tags. Thus, hreflang emits only the serving language + `x-default`.
 4. **100% Bilingual Parity:** `site/i18n/messages/en.json` and `site/i18n/messages/hi.json` must have identical leaf keys, identical argument placeholders, and zero English leakage in Hindi navigation keys.
@@ -46,7 +46,7 @@ The Oando public platform combines a Next.js 16.3.3 App Router frontend (`site/a
 
 ## 2. Public & Marketing Route Inventory
 
-The platform defines 24 primary static marketing and utility routes registered in `SEO01_STATIC_METADATA` (`site/features/site/data/siteSeoContract.ts#L48-L97`):
+The platform defines the following source-route inventory. A source component is not a deployment contract: inclusion in a public sitemap requires a current public `200` and an `indexable` route classification.
 
 | Path | Page Component | Metadata Helper / Source | JSON-LD Schema Type |
 |------|---------------|--------------------------|----------------------|
@@ -55,9 +55,9 @@ The platform defines 24 primary static marketing and utility routes registered i
 | `/products` | `site/app/(site)/products/page.tsx` | `PRODUCTS_PAGE_METADATA` | `CollectionPage` |
 | `/clients` | `site/app/(site)/clients/page.tsx` | `CLIENT_DIRECTORY_PAGE_METADATA` | `CollectionPage` |
 | `/planning` | `site/app/(site)/planning/page.tsx` | `PLANNING_PAGE_METADATA` | `WebPage` |
-| `/tools` | `site/app/(site)/tools/page.tsx` | `TOOLS_PAGE_METADATA` | `CollectionPage` |
-| `/tools/office-space-calculator` | `site/app/(site)/tools/office-space-calculator/page.tsx` | `OFFICE_SPACE_CALCULATOR_PAGE_METADATA` | `ItemPage` |
-| `/tools/meeting-room-capacity-calculator` | `site/app/(site)/tools/meeting-room-capacity-calculator/page.tsx` | `MEETING_ROOM_CAPACITY_PAGE_METADATA` | `ItemPage` |
+| `/tools` | `site/app/(site)/tools/page.tsx` | Source metadata may exist; **current lifecycle: `not-found`, nonindexable** | None while canonical host is `404` |
+| `/tools/office-space-calculator` | `site/app/(site)/tools/office-space-calculator/page.tsx` | Source metadata may exist; **current lifecycle: `not-found`, nonindexable** | None while canonical host is `404` |
+| `/tools/meeting-room-capacity-calculator` | `site/app/(site)/tools/meeting-room-capacity-calculator/page.tsx` | Source metadata may exist; **current lifecycle: `not-found`, nonindexable** | None while canonical host is `404` |
 | `/planner` | `site/app/(site)/planner/page.tsx` | `PLANNER_LANDING_PAGE_METADATA` | `WebPage` |
 | `/planner/help` | `site/app/(site)/planner/help/page.tsx` | `PLANNER_HELP_PAGE_METADATA` | `ItemPage` |
 | `/planner/features` | `site/app/(site)/planner/features/page.tsx` | `PLANNER_FEATURES_PAGE_METADATA` | `ItemPage` |
@@ -191,17 +191,17 @@ Beyond `siteSeoContract.ts`, the data directory contains additional files that g
 | [`solutionsPage.ts`](file:///d:/23082026/site/features/site/data/solutionsPage.ts) | Static data for the Solutions editorial route — product groupings and use-case copy. | Solutions is routed under `/products/`; check `siteSeoContract.ts` for the canonical entry. |
 | [`assistant.ts`](file:///d:/23082026/site/features/site/data/assistant.ts) | AI assistant configuration data — suggested prompts, persona copy, and feature-flag gate. | No SEO dependency. |
 
-### Invariant: Route Addition Protocol (Updated)
-When adding any new public route in `site/app/(site)/`:
-1. Add an entry to `SEO01_STATIC_METADATA` in `siteSeoContract.ts`.
-2. Add `indexable` status in `routeClassification.ts`.
-3. Add a metadata factory call in `routeMetadata.ts`.
-4. Add the path to `htmlSitemap.ts` and `site/app/sitemap.ts`.
-5. If the route has non-standard chrome (no header, fullscreen), add a rule to `routeChromeRules.ts`.
+### Invariant: Route Lifecycle Protocol (Updated)
+For every route in `site/app/(site)/`, first record the intended lifecycle: public `200`, redirect, authenticated/utility, or `not-found`.
+
+1. For a new public `200`, add the `SEO01_STATIC_METADATA` entry, `indexable` classification, metadata factory call, and sitemap entries together.
+2. For a redirect, authenticated/utility route, or `not-found`, set its classification first and exclude it from public navigation/footer and HTML/XML sitemaps.
+3. A source page or historical metadata object does not justify adding SEO titles, sitemap URLs, or footer links to a dead route.
+4. If the route has non-standard chrome (no header, fullscreen), add a rule to `routeChromeRules.ts` independently of SEO.
 
 ---
 
 ## 6. Preflight & Remediation Guardrails
 
 - **Zero Untranslated English in UI:** When adding or updating marketing copy, developers must never commit English strings directly into `hi.json`. Use `scripts/sync-marketing-i18n-messages.mjs` to synchronize schema keys before manual Hindi translation.
-- **Route Additions Protocol:** Any newly created route in `site/app/(site)/` must simultaneously add an entry into `SEO01_STATIC_METADATA` in `site/features/site/data/siteSeoContract.ts` and `site/app/sitemap.ts`.
+- **Route Additions Protocol:** Only a newly verified public `200` route receives an entry in `SEO01_STATIC_METADATA` and `site/app/sitemap.ts`; all other lifecycle states must be excluded from public discovery surfaces.

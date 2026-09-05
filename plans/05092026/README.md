@@ -9,7 +9,7 @@
 
 ## 1. Suite Overview & Index
 
-This multi-file planning suite provides exhaustive, horizontal and vertical technical blueprints covering all subsystems of the Oando repository (`D:\23082026`). In accordance with user directives, visual changes are strictly limited to **alignment and polish** (FOCSS tokens, Phosphor icons, mobile chrome offsets, localization parity) without visual redesign.
+This multi-file planning suite provides horizontal and vertical technical blueprints for the Oando repository (`D:\23082026`). It is a planning coverage map, not proof that a code path is deployed, indexable, or gate-green. In accordance with user directives, visual changes are strictly limited to **alignment and polish** (FOCSS tokens, Phosphor icons, mobile chrome offsets, localization parity) without visual redesign.
 
 | File | Subsystem & Scope |
 |------|-------------------|
@@ -24,6 +24,27 @@ This multi-file planning suite provides exhaustive, horizontal and vertical tech
 | [`08-standalone-packaging-and-sizing.md`](./08-standalone-packaging-and-sizing.md) | Next.js standalone distribution footprint, asset copy automation (`prepare-standalone.cjs`), Webpack optimizations, bundle externalization. |
 | [`09-blockers-clearance-and-ship-gate.md`](./09-blockers-clearance-and-ship-gate.md) | Sequential blocker clearance protocol for `Failures.md` (`GATE-RECHECK-01` and `BROWSER-ORIGIN-02`), followed by master 4-phase ship gating runbook. |
 | [`10-client-hub-sequence-plan.md`](./10-client-hub-sequence-plan.md) | Client-hub sequence roadmap (relocated from `plans/PLAN.md`), public route maps, flat 8-link header, indexable calculator contracts, and browser walk. |
+
+---
+
+## 1.1 Coverage, Evidence, and Completion Rules
+
+All ten planned areas have an owning document. Runtime security, third-party scripts, hydration, and release provenance span those areas and are controlled from the master plan rather than by an eleventh implementation document.
+
+| Area | Owning plan | Coverage status | Required evidence before completion |
+|------|-------------|-----------------|-------------------------------------|
+| UI, FOCSS, and mobile chrome | `01-ui-focss-and-mobile-chrome.md` | Covered; current cookie/FAB rule was reconciled | Desktop and `<768px` browser checks at the same revision |
+| Routes, SEO, and i18n | `02-route-contracts-seo-and-i18n.md` | Covered; route lifecycle policy added | Canonical-host HTTP status, route classification, sitemap, and navigation agree |
+| Studio and Planner | `03-interactive-workspaces-studio-planner.md` | Covered | Boundary scan and authorized workspace checks |
+| Data, persistence, and cloud | `04-data-persistence-and-cloud-infra.md` | Covered | Mode-aware persistence and cloud verification evidence |
+| Tech-docs SPA | `05-tech-docs-generator-spa.md` | Covered | Its separate build/test lane and deployed-origin check |
+| Tests and integrity audits | `06-test-subsystem-and-integrity-audits.md` | Covered | Fresh, authorized lane output; historical summaries are not clearance evidence |
+| Scripts and operations | `07-scripts-and-operational-catalog.md` | Covered | Inventory/governance checks against the current tree |
+| Standalone packaging | `08-standalone-packaging-and-sizing.md` | Covered | Fresh authorized production build and artifact inspection |
+| Blockers and ship gate | `09-blockers-clearance-and-ship-gate.md` | Covered; stale green claim removed | Each `Failures.md` row is cleared only by fresh successful evidence |
+| Client-hub product sequence | `10-client-hub-sequence-plan.md` | Covered; `/tools` state is now explicitly pending | Product decision plus live-host and SEO contract verification |
+
+Cross-cutting rule: distinguish **source presence**, **current `HEAD`**, and **canonical-host behaviour**. A route component, metadata entry, or historical result is not evidence that the canonical host returns a public `200`. Record the command or URL, revision, timestamp, and result before advancing any phase.
 
 ---
 
