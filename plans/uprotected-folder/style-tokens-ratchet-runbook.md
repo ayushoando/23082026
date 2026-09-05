@@ -3,15 +3,15 @@
 **Audited & Updated:** 2026-09-05  
 **Governing Authority:** [`AGENTS.md`](file:///d:/23082026/AGENTS.md) and [`oando-master`](file:///d:/23082026/.agents/skills/oando-master/SKILL.md)  
 **Location:** [`config/quality/style-token-baseline.json`](file:///d:/23082026/config/quality/style-token-baseline.json)  
-**Goal:** Ratchet down the 201 legacy inline style token exceptions in admin and CRM views to enforce design system purity.
+**Goal:** Ratchet down the 200 legacy inline style token exceptions in admin and CRM views to enforce design system purity.
 
 ---
 
 ## 1. Problem Statement & Baseline Status
 
 The CI gate enforces zero regressions against [`config/quality/style-token-baseline.json`](file:///d:/23082026/config/quality/style-token-baseline.json), which currently tracks:
-- **Total Exceptions:** 201
-- **Registered Files:** 30 files
+- **Total Exceptions:** 200
+- **Registered Files:** 58 files
 
 Any new unapproved inline style attribute fails `pnpm run check:style-tokens`.
 
@@ -22,8 +22,9 @@ Any new unapproved inline style attribute fails `pnpm run check:style-tokens`.
 The following files account for the majority of registered violations:
 
 1. **`site/features/crm/QuotesView.tsx` (20 exceptions):** Replace inline layout and typography styles with `@focss/components` or utility classes.
-2. **`site/features/crm/ClientsView.tsx` (12 exceptions):** Migrate inline modal and table padding to design token variables.
-3. **`site/features/shared/auth/components/LoginPage.tsx`:** Convert auth shell inline properties to `@focss/tokens`.
+2. **`site/features/crm/ProjectDetailView.tsx` (13 exceptions):** Replace inline status, layout, and header styles with design tokens.
+3. **`site/features/crm/ClientsView.tsx` (12 exceptions):** Migrate inline modal and table padding to design token variables.
+4. **`site/components/ui/ViewportControls.tsx` (10 exceptions) & `site/lib/ui/KeyboardShortcuts.tsx` (10 exceptions):** Replace inline canvas overlay and key-cap styling with utility tokens.
 
 ---
 

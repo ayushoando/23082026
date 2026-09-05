@@ -13,12 +13,12 @@
 | :--- | :---: | :--- | :--- |
 | **Database & Backups** | **A** | Dual DBs verified; backup pruner passes 12/12 unit tests. | **RESOLVED** — `scripts/sync-github-backup-secrets.ps1` updated with canonical `CLOUDFLARE_R2_ACCESS_KEY_ID`, `CLOUDFLARE_R2_SECRET_ACCESS_KEY`, and `CLOUDFLARE_S3_URL`. |
 | **Static Code & Lint** | **A-** | Oxlint passes code 0; zero manual `any` enforced. | **RESOLVED** — `"react-hooks"` plugin active in `.oxlintrc.json`; `"react-hooks/exhaustive-deps": "error"` active; `audit-eslint-disable.mjs` scans `site/hooks` and `config/build`. |
-| **UI, CSS & FOCSS** | **A** | 151 CSS files pass FOCSS compiler; 0 raw hex literals. | 201 legacy inline token exceptions tracked in `config/quality/style-token-baseline.json`; documented in `style-tokens-ratchet-runbook.md`. |
+| **UI, CSS & FOCSS** | **A** | 151 CSS files pass FOCSS compiler; 0 raw hex literals. | 200 legacy inline token exceptions tracked across 58 registered files in `config/quality/style-token-baseline.json`; documented in `style-tokens-ratchet-runbook.md`. |
 | **SEO & Sitemap** | **B** | Dynamic sitemap generated from database catalog via `sitemap.ts`. | Sitemap is DB-backed; follows Google Search Central standards (`<loc>` and `<lastmod>`, omitting obsolete `<priority>`). |
 | **Security & Governance** | **A** | Secret scanner, governance ratchet, and edge headers active. | `assertNotServiceRoleKey()` active; `governance-baseline.json` 6 zero-tolerance metrics passing. |
 | **Edge Proxy (`workers/`)** | **A** | Cloudflare Worker proxy (`oando-worker-proxy`) active. | Routes traffic between apex domain, R2 bucket (`oando-asset-cdn`), Vectorize (`catalog-nav`), and Vercel origin. |
-| **Testing & Test Harness** | **B+** | 937 test files; 0 hollow tests; 0 unapproved skips. | 4 unit tests need alignment to clear `GATE-RECHECK-01` in `Failures.md`. See `blockers-clearance-runbook.md`. |
-| **Script Inventory** | **B** | 229 total scripts in `scripts/`. | Candidate list of ~59 obsolete scripts identified; safe deprecation protocol in `scripts-cleanup-runbook.md`. |
+| **Testing & Test Harness** | **B+** | 940 test files (780 vitest, 85 playwright, 75 support); 0 hollow tests. | 4 unit tests pass individually; full vitest lane clearance tracked in `Failures.md`. See `blockers-clearance-runbook.md`. |
+| **Script Inventory** | **B** | 229 total scripts in `scripts/`. | Candidate list of 43 dead/obsolete scripts identified; safe deprecation protocol in `scripts-cleanup-runbook.md`. |
 
 ---
 
@@ -70,11 +70,11 @@ Request (oando.co.in)
   ├── 3. Apex Redirect: www.oando.co.in ──► 308 Permanent Redirect to apex
   ├── 4. Asset Offload: /assets/*, /images/* ──► Cloudflare R2 (oando-asset-cdn)
   ├── 5. Vector Search: /api/vector/* ──► Vectorize Index (catalog-nav)
-  └── 6. Dynamic SSR / App: Forward to Vercel (https://oando1408.vercel.app)
+  └── 6. Dynamic SSR / App: Forward to Vercel (https://23082026.vercel.app)
 ```
 
 **Bindings (`wrangler.toml`):**
-- Origin: `VERCEL_ORIGIN = "https://oando1408.vercel.app"`
+- Origin: `VERCEL_ORIGIN = "https://23082026.vercel.app"`
 - R2 Bucket: `ASSET_BUCKET` -> `oando-asset-cdn`
 - Vectorize: `CATALOG_VECTORS` -> `catalog-nav`
 

@@ -27,13 +27,12 @@ Resolve 4 failing unit tests so `pnpm run test` exits with code 0, enabling the 
      tests/unit/features/site/data/siteSeoContract.test.ts `
      tests/unit/lib/ai/mastra/providers.test.ts
    ```
-2. Diagnose failure assertions:
-   - For SEO/sitemap tests: align test expectations with the canonical routes in `site/features/site/data/routeClassification.ts` and `buildProductStaticParams()`.
-   - For Mastra provider test: ensure mock fallbacks handle missing API keys gracefully.
-3. Verify fixes pass across both lanes:
+   *(Note: These 4 test files currently pass 51/51 individually; re-run verifies zero regressions in these areas).*
+2. Verify full suite passes across both Vitest lanes:
    ```powershell
    pnpm run test
    ```
+   *(Checks both default and tech-docs Vitest lanes; confirm exit code 0).*
 
 ---
 

@@ -16,10 +16,12 @@ Scripts must only be removed in batches following explicit operator instruction.
 
 ---
 
-## 2. Target Candidate Inventory (~59 Files)
+## 2. Target Candidate Inventory (43 Dead/Obsolete Scripts)
 
-### Batch 1: Completed Audit & Review Subsystems
-1. `scripts/operations-review/` (9 files) — Legacy operational review scripts.
+*(Inventory of 43 primary candidate scripts across obsolete audit suites, defunct migration scripts, and throwaway helpers; expandable to ~50-59 with nested extractors and additional one-offs).*
+
+### Batch 1: Completed Audit & Review Subsystems (35 files)
+1. `scripts/operations-review/` (9 root files) — Legacy operational review scripts.
 2. `scripts/site-ui-content-links-audit/` (26 files) — HTML link crawling suite superseded by `audit:sitemap-health`.
 
 ### Batch 2: Dead Root Migration Scripts
