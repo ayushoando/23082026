@@ -1,7 +1,7 @@
 # Audit Synthesis & Platform Operations Master Index
 
 **Audited & Published:** 2026-09-05  
-**Directory:** `plans/audit 05092026/`  
+**Directory:** `docs/audit 05092026/`  
 **Governing Authority:** [`AGENTS.md`](../../AGENTS.md) and [`oando-master`](../../.agents/skills/oando-master/SKILL.md)  
 **Authority Hierarchy:** `User instruction > live code / fresh command output > AGENTS.md > Agents/ > docs/`
 

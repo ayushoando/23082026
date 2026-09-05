@@ -12,7 +12,7 @@ This reference maps top-level repository paths and their roles. Verify a path ag
 | `tech-docs-generator/` | Source-driven docs generator + Vite inventory SPA (second vitest lane; `ops tech-docs:generate` → `generated-documents/`) |
 | `docs/` | Canonical docs — this tree (`architecture/`, `database/`, `governance/`). See [`docs/README.md`](../README.md) |
 | `Agents/` | Agent handbooks (`01-standard` … `07-css`, `INDEX.md`) |
-| `plans/` | Active sequence [`PLAN.md`](../../plans/PLAN.md). Route map: [`client-hub/flowcharts/clients-hub-flow.md`](../../plans/client-hub/flowcharts/clients-hub-flow.md). Phase folders: `chrome`, `homepage`, `map-equals-code`, `walk`. Named packets stay as input. `planner-comprehensive-audit/` is dated (tests still import it). |
+| `plans/` | Active sequence [`PLAN.md`](../../plans/PLAN.md). Route map: [`client-hub/flowcharts/clients-hub-flow.md`](../../plans/client-hub/flowcharts/clients-hub-flow.md). Active remedy suite: `05092026/`. Test fixtures and performance budgets live cleanly under `tests/fixtures/planner/` and `tests/e2e/helpers/`. |
 | `config/` | Cross-task config: `config/build/` (next/playwright), `config/quality/` (baselines) |
 | `workers/` | Cloudflare Workers (e.g. `oando-worker-proxy/` — apex asset edge) |
 | `supabase/` | Supabase CLI / project config |

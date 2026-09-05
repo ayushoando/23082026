@@ -519,7 +519,7 @@ pnpm run gate
 **Governing Plan:** [`plans/05092026/10-client-hub-sequence-plan.md`](./10-client-hub-sequence-plan.md) (relocated from `plans/PLAN.md`)  
 **Spine Route Map:** [`../client-hub/flowcharts/clients-hub-flow.md`](../client-hub/flowcharts/clients-hub-flow.md)  
 **Living HTML Sitemap:** [`../client-hub/flowcharts/non-admin-site-map.html`](../client-hub/flowcharts/non-admin-site-map.html)  
-**Vitest Test Fixtures:** [`../planner-comprehensive-audit/`](../planner-comprehensive-audit/) (16 TypeScript modules directly imported by 50+ Vitest test suites under `tests/unit/planner/`, `tests/integration/planner/`, and `tests/fixtures/`).
+**Vitest Test Fixtures:** Canonical Planner test fixtures live under `tests/fixtures/planner/` and performance budgets live under `tests/e2e/helpers/`.
 
 ### 12.1 Client-Hub 4-Phase Sequence Architecture
 

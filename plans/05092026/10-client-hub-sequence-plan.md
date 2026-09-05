@@ -15,7 +15,7 @@
 - **Asset Delivery:** Cloudflare R2 serves optimized WebP images (`unoptimized` flag on client components).
 - **Persistence Mode:** Production filesystem is read-only (`EROFS`); remote mutations route through Admin Supabase (`rxzpznmxbaoxpikowmfc`).
 - **Evidence Floor:** User instruction > live code and fresh command output > `AGENTS.md` > `Agents/` > `docs/`.
-- **Vitest Test Suite Invariant:** [`../planner-comprehensive-audit/`](../planner-comprehensive-audit/) contains 16 TypeScript modules imported directly by Vitest test suites under `tests/unit/planner/`, `tests/integration/planner/`, and `tests/fixtures/`. It must never be removed.
+- **Vitest Test Suite Invariant:** Canonical Planner test fixtures live under `tests/fixtures/planner/` and performance budgets live under `tests/e2e/helpers/`.
 
 ---
 

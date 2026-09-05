@@ -58,7 +58,7 @@ The six governance rules enforce:
 - **`S2_stray_report` (Count: 0):** Scans `plans/` to prevent placement of stray report files matching `/(report|handover|outstanding|finish-plan|completion-contract)/i` outside canonical programme plans.
 
 ### 1.3 Package Scripts & Operational Dispatcher
-The repository defines exactly **100 scripts** in `package.json`. Operational workflows route through `scripts/run-ops.mjs` via `pnpm run ops <command>`:
+The repository defines exactly **101 scripts** in `package.json`. Operational workflows route through `scripts/run-ops.mjs` via `pnpm run ops <command>`:
 - `pnpm run ops db:test` $\rightarrow$ Executes `scripts/db_test_connection.ts`.
 - `pnpm run ops db:apply` / `db:apply:admin` $\rightarrow$ Executes Supabase database migrations (dry-run supported via `-- --dry`).
 - `pnpm run ops db:types` / `db:types:admin` $\rightarrow$ Generates TypeScript database interfaces into `site/platform/supabase/`.
@@ -67,7 +67,7 @@ The repository defines exactly **100 scripts** in `package.json`. Operational wo
 - `pnpm run ops seed:furniture` $\rightarrow$ Off-read-path furniture catalog database seeder.
 
 ### 1.4 Script Inventory Reality & Cleanup Targets
-A full census confirms **229 total scripts** in `scripts/` (correcting the legacy audit estimate of 264). A total of **59 candidate scripts** are identified for safe retirement under [`scripts-cleanup-runbook.md`](./scripts-cleanup-runbook.md):
+A full census confirms **234 total files** in `scripts/` across all subdirectories (correcting the legacy audit estimate of 264 and the earlier calibrated estimate of 229 — the 5-file difference is 5 JSON fixture files in `scripts/generate-svg/_fixtures/` counted as part of the directory total). A total of **59 candidate files** are identified for safe retirement under [`scripts-cleanup-runbook.md`](./scripts-cleanup-runbook.md), reducing the total to ~175:
 1. `scripts/operations-review/` (14 files: 9 root TS files + 5 in `extractors/`): Unintegrated operational audit prototype.
 2. `scripts/site-ui-content-links-audit/` (26 files): Legacy multi-wave crawling framework superseded by dynamic sitemap health checks.
 3. Dead Recovery Scripts (13 files): `merge-recovery-into-majors.mjs`, `five-majors-hash-dedup.mjs`, `planner-lift-project-trees.mjs`, `deleteR2Bucket.ts`, etc.

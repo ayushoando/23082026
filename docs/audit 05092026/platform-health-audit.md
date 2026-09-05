@@ -2,7 +2,7 @@
 
 **Audited & Updated:** 2026-09-05  
 **Governing Authority:** [`AGENTS.md`](file:///d:/23082026/AGENTS.md) and [`oando-master`](file:///d:/23082026/.agents/skills/oando-master/SKILL.md)  
-**Location:** [`plans/uprotected-folder/platform-health-audit.md`](file:///d:/23082026/plans/uprotected-folder/platform-health-audit.md)  
+**Location:** [`docs/audit 05092026/platform-health-audit.md`](file:///d:/23082026/docs/audit%2005092026/platform-health-audit.md)  
 **Method:** Live codebase inspection, configuration analysis, and test run evidence.
 
 ---
@@ -17,7 +17,7 @@
 | **SEO & Sitemap** | **B** | Dynamic sitemap generated from database catalog via `sitemap.ts`. | Sitemap is DB-backed; follows Google Search Central standards (`<loc>` and `<lastmod>`, omitting obsolete `<priority>`). |
 | **Security & Governance** | **A** | Secret scanner, governance ratchet, and edge headers active. | `assertNotServiceRoleKey()` active; `governance-baseline.json` 6 zero-tolerance metrics passing. |
 | **Edge Proxy (`workers/`)** | **A** | Cloudflare Worker proxy (`oando-worker-proxy`) active. | Routes traffic between apex domain, R2 bucket (`oando-asset-cdn`), Vectorize (`catalog-nav`), and Vercel origin. |
-| **Testing & Test Harness** | **B+** | 940 test files (780 vitest, 85 playwright, 75 support); 0 hollow tests. | 4 unit tests pass individually; full vitest lane clearance tracked in `Failures.md`. See `blockers-clearance-runbook.md`. |
+| **Testing & Test Harness** | **B+** | 940 test files (780 vitest, 85 playwright, 75 support); 0 hollow tests. | `GATE-RECHECK-01` has empirical passing evidence — `results/tests/summary.json` (2026-09-05T03:57:36Z) shows 0 failed / 4296 + 0 failed / 224. Pending live `pnpm run test` confirmation and `Failures.md` row deletion. See `blockers-clearance-runbook.md`. |
 | **Script Inventory** | **B** | 229 total scripts in `scripts/`. | Candidate list of 43 dead/obsolete scripts identified; safe deprecation protocol in `scripts-cleanup-runbook.md`. |
 
 ---
@@ -97,8 +97,9 @@ Request (oando.co.in)
 
 Per [`Failures.md`](file:///d:/23082026/Failures.md), exactly 2 blockers are active:
 
-1. **`GATE-RECHECK-01` (P1):**
-   - 4 unit tests failing in `tests/unit/features/site/data/` and `tests/unit/lib/ai/mastra/`.
+1. **`GATE-RECHECK-01` (P1 — Pending Deletion):**
+   - Tests are **passing**: `results/tests/summary.json` (2026-09-05T03:57:36Z) confirms 0 failed / 4296 (lane 1) and 0 failed / 224 (lane 2). The code fixes (routes, providers model string) are committed.
+   - **Remaining action:** Run `pnpm run test` live to get a current-session exit code 0, then delete the `GATE-RECHECK-01` row from `Failures.md`.
    - Resolution steps detailed in [`blockers-clearance-runbook.md`](./blockers-clearance-runbook.md).
 2. **`BROWSER-ORIGIN-02` (P1):**
    - Requires starting local app on `http://localhost:3000` (strictly forbidden to use `127.0.0.1`) and executing `pnpm run test:browser:gate`.

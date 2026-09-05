@@ -23,7 +23,7 @@ This runbook establishes a strict, non-destructive retirement protocol. Scripts 
 
 ## 2. Total Script Inventory & Directory Distribution
 
-Live inspection of `scripts/` reveals the following exact distribution of 229 files:
+Live inspection of `scripts/` reveals the following exact distribution of **234 files** (229 executable scripts + 5 test fixture files in `generate-svg/_fixtures/`):
 
 | Subdirectory | File Count | Primary Role |
 | :--- | :---: | :--- |
@@ -32,10 +32,10 @@ Live inspection of `scripts/` reveals the following exact distribution of 229 fi
 | `scripts/site-ui-content-links-audit/` | 26 | **Abandoned** August 2026 multi-wave link crawl audit suite |
 | `scripts/operations-review/` | 14 | **Abandoned** operational review framework (9 root + 5 in `extractors/`) |
 | `scripts/lib/` | 11 | Shared utilities (`resolvePgDump`, `cdnAssetResolver`, `scriptEnv`) |
-| `scripts/AsNeeded/` | 8 | On-demand verifiers (`verify-focss.mjs`, `audit-seo-indexability`) |
-| `scripts/generate-svg/` | 2 | SVG pipeline tools (plus 5 test fixtures in `_fixtures/`) |
+| `scripts/AsNeeded/` | 8 | On-demand verifiers (`verify-focss.mjs`, `audit-seo-indexability.mjs`) |
+| `scripts/generate-svg/` | 7 | 2 pipeline scripts (`pipelineCore.ts`, `svgo.config.cjs`) + 5 JSON fixture files in `_fixtures/` |
 | `scripts/codemods/` | 1 | Dialect codemod (`homepage-dialect.mjs`) |
-| **Total Live Files** | **229** | **Full Monorepo Script Footprint** |
+| **Total Live Files** | **234** | **Full Monorepo Script Footprint (including 5 fixtures)** |
 
 ---
 
@@ -271,7 +271,7 @@ pnpm run check:docs-all
 ## 5. Exit Criteria
 
 The script rationalization procedure is complete when:
-1. **Inventory Reduction:** Total file count in `scripts/` is reduced from 229 to **~170 files** (eliminating 59 obsolete files).
+1. **Inventory Reduction:** Total file count in `scripts/` is reduced from 234 to **~175 files** (eliminating 59 obsolete files).
 2. **Ops Dispatcher Purity:** `pnpm run ops:list` executes without errors and all registered commands point to existing files.
 3. **Governance Compliance:** `pnpm run check:governance` exits with code 0 and records zero violations against `config/quality/governance-baseline.json`.
 4. **Layout Compliance:** `pnpm run check:repo-layout.mjs` exits with code 0.
