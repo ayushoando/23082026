@@ -251,7 +251,7 @@ The design system is implemented via FOCSS, structured into **151 modular CSS pa
 
 ### 6.3 Style Token Ratchet Baseline (200 Baseline Violations)
 To eliminate legacy inline style attributes without halting active feature development, [`config/quality/style-token-baseline.json`](../../config/quality/style-token-baseline.json) maintains a strict ratchet baseline:
-- **Baseline Count:** Exactly **200 violations** tracked across **61 files**.
+- **Baseline Count:** Exactly **200 violations** tracked across **58 files**.
 - **Enforcing Script:** `scripts/general/check-style-tokens.mjs` (run via `pnpm run check:style-tokens`).
 - **Checked Violation Rules:**
   - `C5_arbitrary`: Arbitrary bracket classes (`\b[a-z-]+\[[^\]]+\]`, e.g., `rounded-[14px]`, `p-[7px]`).

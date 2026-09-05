@@ -18,7 +18,7 @@
 | **Security & Governance** | **A** | Secret scanner, governance ratchet, and edge headers active. | `assertNotServiceRoleKey()` active; `governance-baseline.json` 6 zero-tolerance metrics passing. |
 | **Edge Proxy (`workers/`)** | **A** | Cloudflare Worker proxy (`oando-worker-proxy`) active. | Routes traffic between apex domain, R2 bucket (`oando-asset-cdn`), Vectorize (`catalog-nav`), and Vercel origin. |
 | **Testing & Test Harness** | **B+** | 940 test files (780 vitest, 85 playwright, 75 support); 0 hollow tests. | `GATE-RECHECK-01` has empirical passing evidence — `results/tests/summary.json` (2026-09-05T03:57:36Z) shows 0 failed / 4296 + 0 failed / 224. Pending live `pnpm run test` confirmation and `Failures.md` row deletion. See `blockers-clearance-runbook.md`. |
-| **Script Inventory** | **B** | 229 total scripts in `scripts/`. | Candidate list of 43 dead/obsolete scripts identified; safe deprecation protocol in `scripts-cleanup-runbook.md`. |
+| **Script Inventory** | **B** | 234 total files in `scripts/` (229 scripts + 5 fixtures). | Candidate list of 59 dead/obsolete files identified; safe deprecation protocol reduces total to ~175. See `scripts-cleanup-runbook.md`. |
 
 ---
 

@@ -11,7 +11,7 @@
 
 ## 1. Executive Summary & Governance Authority
 
-The `scripts/` directory currently contains **229 total files** (calibrated from prior preliminary estimates of 264). Over successive recovery phases (Drive E: and D: data recoveries, raster asset cutovers, and link crawl campaigns), numerous one-off audit frameworks, throwaway scripts, and obsolete recovery tools accumulated in the repository.
+The `scripts/` directory currently contains **234 total files** (229 executable scripts + 5 JSON fixture files in `generate-svg/_fixtures/`; previously miscounted as 264 in legacy audits). Over successive recovery phases (Drive E: and D: data recoveries, raster asset cutovers, and link crawl campaigns), numerous one-off audit frameworks, throwaway scripts, and obsolete recovery tools accumulated in the repository.
 
 ### Governance Safety Floor (Rule E4 & `AGENTS.md` §1):
 > **“Never clean, reset, restore, delete, or apply report recommendations unless the user specifically names the targets.”**

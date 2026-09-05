@@ -32,7 +32,7 @@ The repository enforces a strict downward-ratcheting quality gate for style toke
 
 ### Live Baseline Metrics:
 - **Total Inline Style Exceptions:** Exactly **200**
-- **Files with Registered Exceptions:** Exactly **59**
+- **Files with Registered Exceptions:** Exactly **58**
 
 ### Rules Checked by `scripts/general/check-style-tokens.mjs`:
 The gate specifically inspects `className` attributes, `style={{ ... }}` objects, and non-token `.css` declarations:

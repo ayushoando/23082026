@@ -18,7 +18,7 @@ Every procedure, command line, and verification check in this runbook has been v
 ### Active Ledger Status in [`Failures.md`](../../Failures.md):
 | ID | Priority | Blocker Summary | Target Area |
 | :--- | :---: | :--- | :--- |
-| **`GATE-RECHECK-01`** | **P1** | Ship bar stops at Vitest lane (4 test failures) | Unit & Integration Test Suites |
+| **`GATE-RECHECK-01`** | **P1 — Pending Deletion** | Tests passing (0 failures per `summary.json`); row not yet deleted from `Failures.md` | Unit & Integration Test Suites |
 | **`BROWSER-ORIGIN-02`** | **P1** | Local app unavailable (`net::ERR_CONNECTION_REFUSED` at `http://localhost:3000`) | Dev Server & Playwright Browser Gate |
 
 ### Cleared Blockers (DO NOT RE-INVESTIGATE):
@@ -29,8 +29,14 @@ Every procedure, command line, and verification check in this runbook has been v
 
 ## 2. Active Blocker 1: `GATE-RECHECK-01` (Vitest Lane Failures)
 
-### 2.1 Problem Description & Impact
-The repository ship bar (`pnpm run gate`) stops immediately at the Vitest testing lane. In `Failures.md`, `pnpm run test` exited with status code 1 due to 4 test failures out of 4,296 total tests. Consequently, CI/CD and deployment workflows cannot reach packaging, build, coverage validation, governance, or browser-gate steps.
+### 2.1 Current Status & Remaining Action
+`results/tests/summary.json` (written `2026-09-05T03:57:36Z`) confirms **0 failures** across both Vitest lanes (0/4296 Lane 1, 0/224 Lane 2). The code fixes for all 4 previously failing tests have been committed:
+- `htmlSitemap.ts` — `/tools` routes registered ✅
+- `siteSeoAcceptance.test.ts` — canonical URL formation correct ✅
+- `siteSeoContract.ts` — `/tools` in `SEO01_STATIC_METADATA` at line 64 ✅
+- `providers.test.ts` — model string `gemini-2.5-flash` at line 168 ✅
+
+**Remaining action:** Run `pnpm run test` in the current session, observe exit code 0, then delete the `GATE-RECHECK-01` row from `Failures.md`. The §2.2–2.4 steps below document the historical RCA and are retained for reference.
 
 ---
 
@@ -220,14 +226,14 @@ Test-NetConnection -ComputerName localhost -Port 3000
 ```
 
 #### Step 3: Run the Playwright Browser Gate
-Execute the 4-viewport browser walk:
+Execute the browser walk across the full project matrix:
 ```powershell
 pnpm run test:browser:gate
 ```
-*Viewport Coverage:*
-- `chromium-desktop` (1280×800)
-- `firefox-tablet` (768×1024)
-- `webkit-mobile` (375×667)
+*Project Matrix (from `tests/manifests/visual-baselines.json`):*
+- **3 browsers:** `chromium`, `firefox`, `webkit`
+- **3 viewport tiers per browser:** `desktop` (1440×900), `tablet` (1024×768), `mobile` (390×844)
+- **= 9 total projects** × **8 gate specs** (`playwright-gate-specs.json`) = 72 spec runs
 
 **Exit Requirement:** Browser gate must pass with 0 errors and all route screenshots captured.
 
