@@ -113,6 +113,19 @@ Enforced by [`scripts/general/check-failures.mjs#L7-L14`](file:///d:/23082026/sc
 
 ---
 
+### Blocker 3: `AUTH-LOOP-03` (Priority: P1)
+- **Documented Blocker:** Visiting `/access` with expired/invalid session cookies triggers an infinite HTTP 307 loop (`ERR_TOO_MANY_REDIRECTS`), and signing out from `/dashboard` crashes in the browser due to missing client environment variables.
+- **Root Causes:**
+  1. In `site/proxy.ts:442-454`, `hasSessionAuthCookies()` detects cookie presence and redirects to `/dashboard`. The server layout rejects the invalid cookie and bounces to `/access`, looping indefinitely.
+  2. In `site/features/shared/dashboard/DashboardClient.tsx:142`, client-side `createAuthClient().auth.signOut()` tries to read server-only `NEXT_ADMIN_SUPABASE_URL`.
+- **Clearance Steps:**
+  1. Modify `site/proxy.ts` to allow `/access` to render without unverified cookie redirect, and allow local access under `DEV_AUTH_BYPASS=1`.
+  2. Update `DashboardClient.tsx` to invoke the `signOutFromSupabase()` server action.
+  3. In browser at `http://localhost:3000`, verify `/access` renders with expired cookies and `/dashboard` sign-out succeeds without errors.
+  4. Delete the `AUTH-LOOP-03` row from [`Failures.md`](file:///d:/23082026/Failures.md).
+
+---
+
 ## 4. End-to-End Release Ship Gating Protocol
 
 Once blockers are cleared, the platform must pass the complete release ship gate:

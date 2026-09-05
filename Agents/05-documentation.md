@@ -13,6 +13,7 @@ Use this workflow to place, edit, and report repository documentation without cr
 | Durable facts (stack / routes / schema / rules) | `docs/architecture/*` · `docs/database/*` · `docs/governance/*` |
 | Deploy / migrate | [`../OPERATIONS_RUNBOOK.md`](../OPERATIONS_RUNBOOK.md) |
 | Testing | [`../Testing-handbook.md`](../Testing-handbook.md) |
+| Observability | [`../OBSERVABILITY.md`](../OBSERVABILITY.md) |
 | Coordination and active plans | [`../plans/README.md`](../plans/README.md) and its indexed plan folders — never a durable fact source |
 
 ## Rules

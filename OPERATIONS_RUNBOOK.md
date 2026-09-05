@@ -147,4 +147,14 @@ Prove with a restore drill (P5). Pre-2026-08-01 dumps still contain public legac
 
 Ops routes include `db:apply`, `db:test`, `backup:supabase:r2`, `gate:site-ui`, and `list`. Confirm current names with `pnpm run ops:list` when that exact command is authorized.
 
+---
+
+## 8. Observability & Monitoring
+
+The platform uses a lean, cloud-first telemetry architecture (documented in [`OBSERVABILITY.md`](./OBSERVABILITY.md)):
+- **Real User Monitoring (RUM):** `@vercel/analytics` and `@vercel/speed-insights` deployed with the Next.js site.
+- **Business Metrics:** Google Analytics 4 (`NEXT_PUBLIC_GA_MEASUREMENT_ID`).
+- **Distributed Tracing:** Native Next.js OpenTelemetry instrumentation in `site/instrumentation.ts`.
+- **Metrics Scraping:** Optional `/api/metrics` Prometheus-compatible endpoint.
+
 Blockers: [`Failures.md`](./Failures.md) only.

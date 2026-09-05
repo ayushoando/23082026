@@ -23,7 +23,7 @@ This reference maps known `site/app/**/page.tsx` and `site/app/api/**/route.ts` 
 
 - `/` → `app/(site)/page.tsx` (marketing home)
 - `/about` → `app/(site)/about/page.tsx`
-- `/access` → `app/(site)/access/page.tsx`
+- `/access` → `app/(site)/access/page.tsx` (staff/client login; see `AUTH-LOOP-03` in `Failures.md` for edge proxy cookie redirect behavior)
 - `/career` → `app/(site)/career/page.tsx`
 - `/choose-product` → `app/(site)/choose-product/page.tsx`
 - `/clients` → `app/(site)/clients/page.tsx` (canonical 116 enterprise client directory & sector showcase with Schema.org ItemList)
@@ -144,7 +144,7 @@ Live Next config (`site/next.config.ts`) is a minimal stub — **no redirect tab
 | GET | `/api/git-user` |
 | GET | `/api/health` |
 | POST | `/api/log-error` |
-| GET | `/api/metrics` |
+| GET | `/api/metrics` — Prometheus scrapable metric exposition; see [`../../OBSERVABILITY.md`](../../OBSERVABILITY.md) |
 | GET | `/api/nav-categories` |
 | GET, POST | `/api/nav-search` |
 | POST | `/api/Planner/ai-advisor` |

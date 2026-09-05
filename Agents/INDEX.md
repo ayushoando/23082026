@@ -98,6 +98,7 @@ hosted at `https://oando23.vercel.app` (dev `:3001`).
 | Proof surfaces & FOCSS | [`../docs/architecture/css.md`](../docs/architecture/css.md) |
 | Security / i18n | [`../docs/architecture/stack.md`](../docs/architecture/stack.md) §7–8 · [`../docs/governance/rules.md`](../docs/governance/rules.md) |
 | Tests / coverage | [`../Testing-handbook.md`](../Testing-handbook.md) |
+| Observability | [`../OBSERVABILITY.md`](../OBSERVABILITY.md) |
 
 ## VS Code Customizations
 

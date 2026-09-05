@@ -141,7 +141,7 @@ has a dominant one.
 | Supabase client | `@supabase/supabase-js` + `@supabase/ssr` | Service-role and request-scoped clients under `site/platform/supabase/` (`@/platform/supabase/*`) |
 | SQL / schema | `drizzle-orm` (7 files), `postgres` (1) | Schema under `site/platform/drizzle/schema/`; drizzle-kit journal at `site/platform/drizzle/migrations/meta/_journal.json`. Ship migrations are raw SQL under `site/platform/supabase/migrations*` |
 | Object storage | `@aws-sdk/client-s3` | 2 files — **R2 backup/ops only**, never a live write path |
-| Analytics | `@vercel/analytics`, `@vercel/speed-insights` | Marketing |
+| Analytics & Telemetry | `@vercel/analytics`, `@vercel/speed-insights`, `@next/third-parties/google`, `@opentelemetry/api` | Cloud-first telemetry (Vercel RUM, GA4, OpenTelemetry); see [`../../OBSERVABILITY.md`](../../OBSERVABILITY.md) |
 | AI | `@mastra/core` (7 files), `@orama/orama` (1) | Retrieval for the advisor surface; vectors via Cloudflare Vectorize REST (no LanceDB dependency) |
 
 ### Declared but not imported

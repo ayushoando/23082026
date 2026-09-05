@@ -26,6 +26,15 @@ The worker package uses wrangler, binds the `oando-asset-cdn` R2 bucket, referen
 
 The cache policy is security-sensitive: changes to private-prefix matching can expose authenticated or personalized responses. It should be validated with an authorized deployment/browser check whenever route prefixes change.
 
+## Telemetry and observability
+
+Observability follows the lean, cloud-first architecture documented in [`OBSERVABILITY.md`](../OBSERVABILITY.md). The platform relies on three decoupled, production-grade telemetry mechanisms without heavyweight agent daemons (New Relic, Datadog, Traceloop, and Cast have been audited and removed from repository dependencies, scripts, and environment templates):
+
+1. **Client Real User Monitoring (RUM) & Core Web Vitals:** `@vercel/analytics` and `@vercel/speed-insights` in [`site/components/analytics/SiteAnalytics.tsx`](../site/components/analytics/SiteAnalytics.tsx) provide production Core Web Vitals tracking (LCP, INP, CLS) without custom script overhead.
+2. **Business & Marketing Analytics:** Google Analytics 4 via `@next/third-parties/google` in [`site/components/analytics/GoogleAnalytics.tsx`](../site/components/analytics/GoogleAnalytics.tsx) activated when `NEXT_PUBLIC_GA_MEASUREMENT_ID` is present.
+3. **Distributed Tracing & APM:** Standard OpenTelemetry via Next.js instrumentation hook in [`site/instrumentation.ts`](../site/instrumentation.ts) (`@opentelemetry/api`, `@opentelemetry/sdk-node`).
+4. **Metrics Endpoint:** Local Prometheus `/api/metrics` scraping endpoint is available for ad-hoc inspection without requiring local Docker containers.
+
 ## Operational records
 
 [`Failures.md`](../Failures.md) records a rejected Cloudflare API token that blocked Vectorize creation and worker deployment. It also records a prior full-gate failure, later targeted test fixes that were not followed by a complete re-gate, earlier command-hook authorization blocks, and a browser walk that could not connect to localhost. These are historical repository records; this report does not convert them into current status.
@@ -39,6 +48,7 @@ The release workflow declares Node 24 and environment-driven test/build/browser 
 3. Resolve the Cloudflare credential blocker before claiming worker/Vectorize readiness.
 4. Re-run both test lanes and the full authorized gate after the recorded fixes.
 5. Keep generated tech-docs output separate from hand-maintained source and document the publish boundary.
+6. Maintain cloud-first telemetry posture; do not introduce heavy APM agent dependencies into production builds.
 
 ## Evidence
 
@@ -50,6 +60,7 @@ The release workflow declares Node 24 and environment-driven test/build/browser 
 - [`tech-docs-generator/package.json`](../tech-docs-generator/package.json)
 - [`workers/oando-worker-proxy/package.json`](../workers/oando-worker-proxy/package.json)
 - [`workers/oando-worker-proxy/wrangler.toml`](../workers/oando-worker-proxy/wrangler.toml)
+- [`OBSERVABILITY.md`](../OBSERVABILITY.md)
 - [`Failures.md`](../Failures.md)
 - [`.github/workflows/release-gate.yml`](../.github/workflows/release-gate.yml)
 

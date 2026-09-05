@@ -44,6 +44,10 @@ Planner responses are allowlisted by [`plannerApiResponse.ts`](../site/lib/Plann
 
 [`staticAdminToken.ts`](../site/lib/security/staticAdminToken.ts) documents a sunset of 2026-12-01 for the `x-admin-token` fallback used by [`customer-queries/manage/route.ts`](<../site/app/api/customer-queries/manage/route.ts>). The comparison is timing-safe and warnings are logged, so this is contained but should be removed on schedule.
 
+### Active defect: Edge proxy /access 307 redirect loop & client sign-out crash
+
+Forensic analysis confirmed that `site/proxy.ts:442` performs a superficial cookie check (`hasSessionAuthCookies()`) that automatically redirects `/access` visits to `/dashboard`. When a visitor has an expired or invalid `sb-*-auth-token`, the server layout guard in `site/lib/auth/session.ts` rejects the session and redirects back to `/access`, triggering an infinite HTTP 307 loop. Additionally, `DashboardClient.tsx:142` calls client `createAuthClient().auth.signOut()`, which crashes in the browser due to missing `NEXT_ADMIN_SUPABASE_URL` in client bundles. Remediation requires allowing `/access` to render without unverified cookie bounce and delegating sign-out to the `signOutFromSupabase()` server action.
+
 ### Operational gap: security posture is not currently certified
 
 The repository has security-focused source tests and gate scripts, but this research session did not execute them. No conclusion about current runtime CSP, auth, CSRF, or rate-limit behavior should be treated as a release result.

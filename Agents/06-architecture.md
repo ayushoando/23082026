@@ -56,6 +56,12 @@ backing location. Keep it that way (`pnpm run scan:boundaries`).
 - **Tech-docs URL**: `https://oando23.vercel.app` in production (dev `http://localhost:3001`). Loads from root `.env.local` for Supabase.
 - **Planning tools hub**: `/tools` (canonical public hub), `/tools/office-space-calculator`, `/tools/meeting-room-capacity-calculator`.
 
+## Observability & Telemetry
+- **Cloud-First Observability**: documented in [`../OBSERVABILITY.md`](../OBSERVABILITY.md).
+- **Client Analytics**: Vercel Web Analytics & Speed Insights (`site/components/analytics/SiteAnalytics.tsx`) and Google Analytics 4 (`site/components/analytics/GoogleAnalytics.tsx`).
+- **OpenTelemetry**: Native Next.js tracing in `site/instrumentation.ts` (`@opentelemetry/api`, `@opentelemetry/sdk-node`).
+- **No Heavyweight Agents**: Zero dependency on Datadog, New Relic, Traceloop, or Cast. Local Docker Prometheus/Grafana is unneeded.
+
 ## VS Code Customization
 
 When editing forked code under `site/{components,lib,hooks,store,server}/{Studio,Planner}/`,

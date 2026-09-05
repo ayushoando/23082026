@@ -1,4 +1,4 @@
-﻿# Oando Subsystem Remediation Plan: Data Persistence, Dual-Database Split, and Cloud Infrastructure
+# Oando Subsystem Remediation Plan: Data Persistence, Dual-Database Split, and Cloud Infrastructure
 
 **File Target:** `plans/05092026/04-data-persistence-and-cloud-infra.md`  
 **Governing Standard:** `AGENTS.md` (Authority floor: User instruction > live code/fresh command output > `AGENTS.md`)  
@@ -143,6 +143,19 @@ The edge worker handles pre-origin routing, performance caching, and security en
   ```powershell
   pwsh scripts/sync-github-backup-secrets.ps1
   ```
+
+---
+
+## 5.1 Environment Architecture & Cloud-First Telemetry
+
+### The 3-Way Environment Configuration
+To maintain strict hygiene and prevent key leakage across workspaces, environment variables are partitioned into three dedicated scopes:
+1. **Root Workstation (`.env.local` & `.env.example`):** Primary developer workspace configuration structured in 7 canonical sections (Database URLs, Supabase Public Keys, Auth Admin Secrets, Cloudflare & Storage, Site & AI Configuration, Development Flags, Observability).
+2. **Next.js Site (`site/.env.example`):** Minimal pushable template for the Next.js runtime containing public keys and server-only placeholders.
+3. **Tech-Docs Generator (`tech-docs-generator/.env.example`):** Isolated 4-variable template for the Vite documentation SPA on port `:3001` (`VITE_ADMIN_SUPABASE_URL`, `VITE_ADMIN_SUPABASE_ANON_KEY`, `VITE_APP_ENV`, `VITE_APP_URL`).
+
+### Telemetry & Vendor Hygiene
+Dead APM vendor keys (Datadog, New Relic, Traceloop, Cast) have been purged from environment templates and scripts (`vercel-env-push.mjs`). Observability follows the cloud-first standard in [`OBSERVABILITY.md`](../../OBSERVABILITY.md) (GA4, Vercel Analytics, OpenTelemetry).
 
 ---
 

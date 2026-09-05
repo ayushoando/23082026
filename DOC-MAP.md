@@ -47,10 +47,11 @@ user  >  live code + fresh commands  >  AGENTS.md  >  Agents/  >  docs/**
 | [`Testing-handbook.md`](./Testing-handbook.md) | Testing (two vitest lanes) |
 | [`Failures.md`](./Failures.md) | Open blockers only |
 | [`owners.md`](./owners.md) | Code and document ownership map |
+| [`OBSERVABILITY.md`](./OBSERVABILITY.md) | Cloud observability & telemetry guide |
 
 ## Durable docs (`docs/`)
 
-See [`docs/README.md`](./docs/README.md) for the full 14-file table. Highlights:
+See [`docs/README.md`](./docs/README.md) for the full table. Highlights:
 
 | Topic | Home |
 |-------|------|
@@ -63,6 +64,7 @@ See [`docs/README.md`](./docs/README.md) for the full 14-file table. Highlights:
 | Product placement + tech-docs | `docs/architecture/product-map.md` |
 | Database (schema, drizzle, ops) | `docs/database/*` |
 | Rules / benchmarks / charter / css-debt | `docs/governance/{rules,benchmarks,charter,focss-stop-drift}.md` |
+| Audit synthesis & platform health (05092026) | `docs/audit 05092026/README.md` · `homepage-and-auth-audit.md` · `tech-stack-audit.md` |
 
 ## Don't mix
 

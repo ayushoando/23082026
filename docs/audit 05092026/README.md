@@ -24,6 +24,8 @@ Architecture facts are evidence from the audit date. Current blocker, test, brow
 | **[`scripts-cleanup-runbook.md`](./scripts-cleanup-runbook.md)** | **Active Runbook** | Safe phased retirement protocol for ~59 dead or obsolete scripts across unintegrated frameworks, legacy cutover tools, and throwaway Python scripts under rule E4. |
 | **[`style-tokens-ratchet-runbook.md`](./style-tokens-ratchet-runbook.md)** | **Active Runbook** | Phased normalization workflow for the 200 legacy inline style exceptions recorded in [`config/quality/style-token-baseline.json`](../../config/quality/style-token-baseline.json), targeting high-debt CRM and admin views. |
 | **[`platform-health-audit.md`](./platform-health-audit.md)** | **Health Summary** | High-level executive scorecard across 8 areas, live database inventories, and Edge proxy topology. |
+| **[`tech-stack-audit.md`](./tech-stack-audit.md)** | **Tech-Docs Audit** | Evidence-led audit of `tech-docs-generator/` Vite SPA, authentication boundary, and port :3001 runtime contract. |
+| **[`homepage-and-auth-audit.md`](./homepage-and-auth-audit.md)** | **Master Audit & Synthesis** | Multi-viewport homepage UI audit (1920, 1440, 1080, 768, 390), authentication redirect loop forensic trace, telemetry census, and 3-way environment configuration. |
 
 ---
 

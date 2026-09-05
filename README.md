@@ -111,4 +111,5 @@ pnpm run typecheck && pnpm run scan:boundaries && pnpm run gate
 | Tests | [`Testing-handbook.md`](./Testing-handbook.md) |
 | Blockers | [`Failures.md`](./Failures.md) |
 | Agents | [`AGENTS.md`](./AGENTS.md) |
+| Observability | [`OBSERVABILITY.md`](./OBSERVABILITY.md) |
 

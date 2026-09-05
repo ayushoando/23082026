@@ -22,7 +22,7 @@ This plan gives those cross-cutting concerns a release owner and an evidence cha
 | `site/lib/security/requestNonce.ts` and root/site layouts | Forward and consume the request nonce. | Verify nonce propagation in rendered production HTML, not only in source. |
 | `site/app/api/metrics/route.ts` and `site/lib/observability/metrics.ts` | Prometheus metric export, production enablement, and optional bearer-token protection. | Metrics must be disabled or authenticated in production; never assume a local default is safe to expose. |
 | `site/lib/observability/reportClientError.ts` and Planner observability adapters | Bounded, privacy-aware error and event capture. | Telemetry must be failure-isolated and must not log secrets, cookies, raw request bodies, or unrestricted URLs. |
-| `config/observability/` | Local Prometheus/Grafana topology. | Local dashboards are not evidence of production observability or alert delivery. |
+| [`OBSERVABILITY.md`](../../OBSERVABILITY.md) | Cloud-first telemetry architecture (GA4, Vercel RUM, OpenTelemetry). | Lean cloud-first monitoring; zero dependencies on dead third-party APMs (Datadog, New Relic, Traceloop, Cast); local Docker Prometheus/Grafana is unneeded in production. |
 
 ---
 

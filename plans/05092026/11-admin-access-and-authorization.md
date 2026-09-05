@@ -72,9 +72,17 @@ For each matrix row, compare page and API enforcement. A gap is any of the follo
 - an API mutation that can reach business logic before authorization/CSRF/rate limiting;
 - a guest exception that grants unrelated product or admin access;
 - a `next` target that escapes the intended host/path namespace;
-- an indexable private route or a public navigation link to an unavailable authority surface.
+- an indexable private route or a public navigation link to an unavailable authority surface;
+- a superficial edge proxy cookie check triggering infinite redirect loops.
 
-Make a smallest-surface change only after identifying the authoritative guard. Do not move security logic from a handler into a client component, and do not make a guest exception global to simplify one product flow.
+### Phase B.1 — Remediation for `/access` 307 Loop & Client Sign-Out (`AUTH-LOOP-03`)
+1. **Edge Proxy Cookie Check Correction (`site/proxy.ts:442-454`):**
+   - Eliminate auto-redirecting visits to `/access` or `/login` based solely on unverified cookie presence (`hasSessionAuthCookies()`).
+   - If a visitor navigates directly to `/access`, allow the page to render. The server page component at `site/app/(site)/access/page.tsx` will independently verify whether an active session exists using the server client and handle validated redirects gracefully.
+   - For local development under `DEV_AUTH_BYPASS=1`, add a bypass escape parameter (e.g. `?direct=true` or host inspection) so developers are not permanently locked out from the `/access` UI on `http://localhost:3000`.
+2. **Client Sign-Out Delegation (`site/features/shared/dashboard/DashboardClient.tsx:142`):**
+   - Replace client-side direct invocation of `createAuthClient().auth.signOut()` (which fails on undefined server-only `NEXT_ADMIN_SUPABASE_URL`) with the server action `signOutFromSupabase()` in `site/features/shared/auth/actions.ts`.
+   - Ensure the server action deletes Supabase session cookies and redirects cleanly to `/access`.
 
 ### Phase C — Traceable Admin Operations
 

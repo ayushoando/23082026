@@ -128,21 +128,26 @@ Tech-Docs is verified in Vitest as an independent execution lane to guarantee th
 ## 6. Verification & Runbook
 
 ### Authorized Local Execution Commands
+Root `package.json` wires the package filters directly:
 ```bash
 # Start Tech-Docs SPA development server on port 3001
 pnpm run tech-docs:dev
 
 # Build Tech-Docs static output to generated-documents/site/
-pnpm run tech-docs:build
+pnpm --filter oando-tech-docs build
 
 # Preview built production output on port 3001
-pnpm run tech-docs:preview
+pnpm --filter oando-tech-docs preview
 
 # Run the dedicated Lane 2 Vitest test suite
 pnpm run test:tech-docs
+
+# Run the full package gate
+pnpm run tech-docs:gate
 ```
 
-### Preflight Checks for Documentation Updates
-1. When modifying database tables or relations, update the Mermaid diagram in `src/pages/Database.tsx` and data arrays in `src/data/databaseData.ts`.
-2. Run `pnpm run tech-docs:build` to confirm clean compilation with zero Tailwind v4 or TypeScript errors.
-3. Execute `pnpm run test:tech-docs` to ensure all 224 specs pass cleanly.
+### Authentication & Stack Audit Reconciliation
+Per [`docs/audit 05092026/tech-stack-audit.md`](../../docs/audit%2005092026/tech-stack-audit.md):
+1. **Authentication Boundary:** `src/lib/supabaseClient.ts` creates an independent in-memory client, but shares the Admin-Supabase public configuration (`NEXT_ADMIN_SUPABASE_URL` and `NEXT_ADMIN_SUPABASE_ANON_KEY`) with the main app.
+2. **Hosted Origin:** Production hostname `https://oando23.vercel.app` is referenced in admin links (`site/lib/admin/techDocsUrl.ts`) but the standalone hosted deployment state remains unobserved.
+3. **Preflight Checks:** Run `pnpm --filter oando-tech-docs build` to confirm clean compilation and `pnpm run test:tech-docs` to ensure Lane 2 passes cleanly.

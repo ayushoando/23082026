@@ -37,6 +37,7 @@ Secrets → repo-root `.env.local` (+ `site/.env.local`). Deploy: `pnpm run verc
 | Database schema / ops | [`docs/database/schema.md`](./docs/database/schema.md) · [`ops.md`](./docs/database/ops.md) · [`drizzle.md`](./docs/database/drizzle.md) |
 | Governance / rules | [`docs/governance/rules.md`](./docs/governance/rules.md) · [`benchmarks.md`](./docs/governance/benchmarks.md) · [`charter.md`](./docs/governance/charter.md) |
 | Deploy / migrate / rollback | [`OPERATIONS_RUNBOOK.md`](./OPERATIONS_RUNBOOK.md) |
+| Observability / Telemetry | [`OBSERVABILITY.md`](./OBSERVABILITY.md) |
 
 ## 4. Core rules (just enough to not break things)
 

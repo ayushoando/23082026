@@ -11,13 +11,13 @@ These reports expand the executive findings in [`report-source.md`](../report-so
 | Report | Module coverage | Main conclusion |
 | --- | --- | --- |
 | [01 - Architecture and routing](01-architecture-routing.md) | App Router, build configuration, route map, fork boundaries, FOCSS | The shell is coherent, but documentation and route ownership need continual reconciliation. |
-| [02 - Authentication and security](02-authentication-security.md) | Proxy, sessions, roles, CSRF, origin, rate limits, CSP, bypass | The layered security design is strong; the deprecated static admin token remains scheduled debt. |
+| [02 - Authentication and security](02-authentication-security.md) | Proxy, sessions, roles, CSRF, origin, rate limits, CSP, bypass | Strong layered design; active defect in `/access` proxy loop & sign-out (`AUTH-LOOP-03`); static token remains scheduled debt. |
 | [03 - Persistence and data](03-persistence-data.md) | Admin/Products split, mode selectors, stores, assets, migrations | Exclusive persistence is well guarded, with selector inconsistency and storage-doc drift. |
 | [04 - Planner](04-planner.md) | Canvas, canonical API, repositories, revision/idempotency, legacy routes | The canonical pipeline is disciplined, but a CRM caller uses the wrong contract and two APIs remain live. |
 | [05 - Studio](05-studio.md) | Furniture canvas, autosave, catalog, uploads, publishing | The fork is isolated and mode-aware; Supabase publishing has a disk-only top-PNG gap. |
 | [06 - Admin and CRM](06-admin-crm.md) | Admin shell, plans, analytics, CRM, customer queries, themes | Admin has strong session controls, but theme durability and source telemetry are incomplete. |
 | [07 - Marketing, catalog, and i18n](07-marketing-catalog-i18n.md) | Marketing routes, catalog, locale loading, site styling, shared assets | The public surface is broad and localized for en/hi; docs/comments overstate or understate parts of it. |
-| [08 - AI, tech docs, worker, and operations](08-ai-techdocs-worker-operations.md) | AI advisor, Vectorize, tech-docs SPA, Cloudflare worker, release posture | Auxiliary systems degrade gracefully in places, but external deployment state and full gates remain unverified. |
+| [08 - AI, tech docs, worker, and operations](08-ai-techdocs-worker-operations.md) | AI advisor, Vectorize, tech-docs SPA, Cloudflare worker, observability | Lean cloud-first observability (GA4, Vercel, OTel); auxiliary systems degrade gracefully; deployment state unverified. |
 | [09 - Archived work implementation audit](09-archived-work-implementation-audit.md) | All five requested `.archive/agents-work` areas and live-source cross-checks | The archive artifacts exist, but most are static evidence; runtime work and several Planner follow-ups remain unverified or open. |
 
 ## Validation boundary
