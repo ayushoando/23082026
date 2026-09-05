@@ -149,7 +149,16 @@ Derived from the empirical audit documented in `docs/audit 05092026/homepage-and
    - Cookie consent banner must stack cleanly above the 56px bottom tab bar (`--mobile-nav-height`) without permanently occluding >15% of the viewport.
 ## Test reconciliation update (2026-09-05)
 
+### Detailed work packages: rendered ownership and CSS causality
+
+1. Trace the visible element to its rendered component before naming an implementation target; the earlier MobileAppShell target is a candidate, not proof of ownership. Record the route, viewport, selector, component, stylesheet, winning declaration and overridden declarations.
+2. Build a layer-state matrix at 375px, 390px, 767px and 768px: consent open/closed, drawer open/closed, keyboard open/closed and scrolled/unscrolled. Measure cookie, tab and FAB rectangles; record safe-area inclusion so it is not counted twice.
+3. Resolve the consent/FAB policy with the current user instruction before implementation: earlier requests differ between collision-only hiding and hiding whenever consent is visible. Do not silently turn either into a universal rule.
+4. Separate mobile chrome work from the older desktop typography and hero proposals. A mobile-only batch must leave desktop rules and markup behavior unchanged; desktop polish requires its own approved scope.
+5. For CSS findings, distinguish declarations present in source from declarations applied at runtime. Trace zone entry imports, specificity and breakpoint activation; unused-selector heuristics alone cannot authorize deletion.
+
+Deliverable: element-to-owner ledger and measured state matrix, followed by an exact-file diff proposal. Acceptance: no duplicated primary drawer destinations, no blocked category interaction, no unintended desktop change, and no blanket CSS suppression. Roll back only the approved batch if another zone changes.
+
 Verify marketing selectors against current components before CSS changes; use measured 375px/768px header, drawer, cookie and FAB assertions plus desktop comparison. Separate capture-only jobs from regression tests and review replacement baselines for the six absent site screenshots.
 
 Acceptance: record current path, owner, destination/disposition, preserved assertions, affected commands, and evidence. A filename or age alone is insufficient grounds for retirement. Runtime validation remains pending; this update changes planning documents only.
-

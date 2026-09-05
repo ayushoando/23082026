@@ -200,6 +200,16 @@ pnpm run test:browser:gate
    - Re-deploy the prior stable worker revision via Cloudflare dashboard or `pnpm run ops worker:deploy`.
 ## Test reconciliation update (2026-09-05)
 
+### Detailed work packages: evidence admission and release decisions
+
+1. Treat named blockers and old green summaries above as historical until reconciled against current Failures.md and fresh output. Do not remove a blocker because a plan says it was remedied.
+2. Define one evidence row per authorized check: scope, command, revision, timestamps, exit code, executed/skipped counts and artifact location. Record unrun phases explicitly.
+3. If a prerequisite fails, stop dependent clearance claims. Re-running a targeted file does not clear unrelated failures or establish the full release bar.
+4. Reconcile test moves through Plan 06 before interpreting file-count changes as improvement. Fewer discovered tests can mean lost selection rather than fewer defects.
+5. Separate local verification, commit approval and deployment approval. A green gate grants neither environment rotation nor deployment authority.
+
+Deliverable: revision-scoped clearance matrix referencing the single blocker ledger. Acceptance: every cleared item has matching evidence, every remaining hard blocker stays in Failures.md, and no stale artifact is used as release proof.
+
 Require discovery reconciliation, failures and justified skips for each affected lane. Screenshot-file existence does not establish visual regression; historical summaries cannot clear Failures.md.
 
 Acceptance: record current path, owner, destination/disposition, preserved assertions, affected commands, and evidence. A filename or age alone is insufficient grounds for retirement. Runtime validation remains pending; this update changes planning documents only.

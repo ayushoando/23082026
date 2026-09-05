@@ -121,6 +121,16 @@ Triage order:
 - No quality fix crosses Studio/Planner boundaries or changes product scope without separate authorization.
 ## Test reconciliation update (2026-09-05)
 
+### Detailed work packages: interaction coverage beyond screenshots
+
+1. Pair each visual surface with keyboard traversal, visible focus, accessible name, dialog focus return and announcement expectations. A pixel comparison cannot establish these contracts.
+2. Distinguish narrow desktop-browser tests from touch emulation and actual device checks. Record which was used; add 375px and breakpoint-edge cases to the planned responsive checks without claiming device coverage.
+3. Specify zoom, long translated text, reduced motion, slow assets and keyboard-open cases for fixed chrome. Coordinate geometry ownership with Plan 01 instead of adding competing CSS rules.
+4. Record performance measurement conditions: production/development build, cold/warm state, browser, device profile, fixture size and sample count. Separate a repeatable measurement from a budget decision.
+5. Require functional assertions for canvas controls and customer journeys even when screenshot baselines pass; use scoped masking only for documented nondeterminism, never to hide broken controls.
+
+Deliverable: interaction/state/profile matrix with unobserved cases explicit. Acceptance: visual, behavioral, accessibility and performance results remain separate; one passing category cannot clear the others.
+
 Retain intentional browser-profile filters but investigate missing-settings/undo skips. Align baseline naming with browser/viewport identity; retain keyboard, focus, overflow and measured performance assertions.
 
 Acceptance: record current path, owner, destination/disposition, preserved assertions, affected commands, and evidence. A filename or age alone is insufficient grounds for retirement. Runtime validation remains pending; this update changes planning documents only.

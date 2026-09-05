@@ -589,6 +589,23 @@ Empirical auditing identified layout defects across the 5 responsive tiers:
 - **Telemetry Pruning:** Purged all dead APM vendor references (Datadog, New Relic, Traceloop, Cast) and standardized on cloud-first observability: Google Analytics 4 (`@next/third-parties/google`), Vercel Web Analytics & Speed Insights (`@vercel/analytics`, `@vercel/speed-insights`), and standard OpenTelemetry in `site/instrumentation.ts` per [`OBSERVABILITY.md`](../../OBSERVABILITY.md). Local Docker Prometheus/Grafana is optional dev-only.
 ## Test reconciliation update (2026-09-05)
 
+## Dependency-driven execution detail
+
+This sequence refines the earlier broad runbook; all commands still require current authorization. Historical version numbers, counts and blocker descriptions are not current verification.
+
+| Stage | Work and owner | Exit condition before dependent work |
+| --- | --- | --- |
+| A: Evidence contract | Plans 05/06 define source scope, run identity and stale/partial states | Reports distinguish facts, hypotheses and unrun checks |
+| B: Ownership reconciliation | Plans 06/07 map test files, helpers, assets and command consumers | Every proposed move has a preserved-coverage and consumer map |
+| C: Contract decisions | Plans 01/02/10 resolve rendered chrome ownership, consent behavior and retired routes | No conflicting requirement is silently implemented |
+| D: Bounded domain batches | Plans 03/04/11 own workspace, persistence and access changes separately | Exact files and isolated data effects approved; no fork mixing |
+| E: Quality evidence | Plans 01/06/13 supply authorized behavior, visual and interaction checks | Required scenarios executed; skips and failures remain visible |
+| F: Artifact and release decision | Plans 08/09/12 reconcile artifact identity and clearance | Matching evidence reviewed; deployment requires separate approval |
+
+For each batch retain: original problem, current evidence, proposed smallest change, excluded work, affected commands, expected failure behavior, acceptance result and rollback boundary. Path-only reorganizations and assertion changes are separate review units.
+
+Uncovered implementation detail is assigned in the README coverage-gap table rather than solved by expanding a generic master checklist. No stage can declare a later stage complete; ongoing concurrent edits require re-reading the affected files before integration.
+
 Coordinate the test cleanup through Plan 06: classify each file, move bounded ownership groups, repair assertions/baselines, then verify discovery and authorized execution. All thirteen domain plans retain ownership of their behavior contracts; historical counts and results are not current clearance evidence.
 
 Acceptance: record current path, owner, destination/disposition, preserved assertions, affected commands, and evidence. A filename or age alone is insufficient grounds for retirement. Runtime validation remains pending; this update changes planning documents only.

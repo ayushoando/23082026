@@ -120,6 +120,16 @@ Record a mismatch as a release-provenance incident. Do not change unrelated prod
 - No deployment, Cloudflare change, secret rotation, or vendor integration occurs merely to satisfy this plan.
 ## Test reconciliation update (2026-09-05)
 
+### Detailed work packages: telemetry and deployment identity
+
+1. Link each retained third party to its script source, effective policy, purpose and consent condition. Treat New Relic removal and retained GA as separate contracts, not permission to remove all analytics.
+2. Define evidence identity across local HEAD, dirty tree, built artifact and served deployment. Marker presence can show a difference; marker absence alone cannot prove the exact deployed commit.
+3. Specify diagnostic collection rules: console/component stack when available, request correlation and redacted error details. Never fabricate a component name from a minified error code.
+4. Define partial telemetry failure behavior: a blocked script or unavailable collector must not break the customer journey or silently erase the primary failure.
+5. Require an owner and authorization checkpoint for rollback, secret changes and external incident actions. Preserve historical incident evidence without copying sensitive request contents into public reports.
+
+Deliverable: release-provenance and telemetry-contract checklist. Acceptance: deployment claims have identifying evidence, analytics boundaries remain intentional, and diagnostic failures do not masquerade as application health.
+
 Reconcile CI and release selection after moves; record revision/browser provenance and external side effects of helpers. Capture-only jobs do not satisfy security or release checks.
 
 Acceptance: record current path, owner, destination/disposition, preserved assertions, affected commands, and evidence. A filename or age alone is insufficient grounds for retirement. Runtime validation remains pending; this update changes planning documents only.

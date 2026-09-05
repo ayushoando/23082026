@@ -173,6 +173,16 @@ pnpm vitest run tests/unit/lib/catalog/planSymbolPngContract.test.ts
 4. Ensure all symbol PNG dimensions adhere to the $2\,\text{px/mm} + 160\,\text{px}$ padding formula.
 ## Test reconciliation update (2026-09-05)
 
+### Detailed work packages: reproducibility and artifact membership
+
+1. Specify build identity: revision, dirty-tree scope, lockfile, runtime/package-manager versions and declared build inputs. Do not use historical bundle sizes as current measurements.
+2. Produce an intended artifact-membership checklist: server entry, static assets, public assets, required native dependencies and separate Tech-Docs output. Distinguish required runtime assets from fixtures, baselines and generated test evidence.
+3. Define cold-start and representative deep-link checks for an authorized isolated artifact run. A successful development server is not evidence of standalone completeness.
+4. Compare like-for-like size measurements: compressed transfer, emitted client bytes and server distribution bytes separately. Set budgets only after collecting an approved baseline.
+5. Inspect environment consumption by name at build/runtime boundaries; ensure the planned artifact review cannot print or publish secret values.
+
+Deliverable: artifact manifest and reproducible comparison procedure. Acceptance: required assets resolve from the artifact, unnecessary test evidence is identified without blind deletion, and rollback retains the previously approved artifact.
+
 Keep baseline images and fixtures separate from disposable captures. Inspect standalone artifact membership after relocation before claiming tests are excluded or package size has improved.
 
 Acceptance: record current path, owner, destination/disposition, preserved assertions, affected commands, and evidence. A filename or age alone is insufficient grounds for retirement. Runtime validation remains pending; this update changes planning documents only.

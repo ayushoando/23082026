@@ -183,6 +183,16 @@ pnpm vitest run tests/unit/lib/ai/mastra/providers.test.ts
 ```
 ## Test reconciliation update (2026-09-05)
 
+### Detailed work packages: failure and recovery ownership
+
+1. Inventory persistence entry points by entity, owning store, mode selector, allowed runtime and side effects. Document failure behavior for a missing configuration value; never propose production disk fallback.
+2. Define retry and duplicate-submission outcomes for existing mutators. Record whether the current implementation supports idempotency and conflict detection before proposing a new contract.
+3. Add an operational recovery worksheet: backup source, scope, freshness, recovery objective requiring owner approval, isolated restore destination and verification criteria. Backup command success alone is not restored-data evidence.
+4. Trace AI/search requests through timeout, cancellation, exhausted fallback and empty result. Keep model availability, model identifiers and provider configuration unverified until separately checked; do not change defaults to make a test pass.
+5. Give every cloud operation a named target, read/write classification and authorization prerequisite. Secret inventory records names and consumers only, never values.
+
+Deliverable: persistence/recovery matrix and bounded failure scenarios. Acceptance: single-store ownership remains explicit, partial writes have a stated recovery path, and remote mutation or restore is not implied by planning approval.
+
 Inventory filesystem/database writes and cleanup in guestProjectSetup and isolatedAdminSvgPublish helpers before moving them. Preserve mode selection, isolated fixtures and root calculations; credential-dependent skips cannot prove persistence.
 
 Acceptance: record current path, owner, destination/disposition, preserved assertions, affected commands, and evidence. A filename or age alone is insufficient grounds for retirement. Runtime validation remains pending; this update changes planning documents only.

@@ -108,6 +108,17 @@ Before declaring completion:
 6. Once verified, delete `AUTH-LOOP-03` row from [`Failures.md`](../../Failures.md).
 ## Test reconciliation update (2026-09-05)
 
+## Smallest executable follow-up, once authorized
+
+1. Pick one observed homepage or access defect; do not combine desktop polish, auth changes and mobile chrome merely because they share this document.
+2. Capture its current revision, rendered owner or redirect chain, expected result and reproduction state. Earlier audit descriptions are hypotheses until reproduced.
+3. For mobile chrome, decide consent/FAB behavior, identify the actual visible button owner and restrict the proposed CSS batch to the requested breakpoint. Use Plans 01 and 13 for state coverage.
+4. For access, use Plan 11's actor/session matrix; a bypass-backed page load does not reproduce or clear production authentication behavior.
+5. Propose exact changed files and affected checks, obtain the needed execution authorization, and record only observed results. Do not regenerate baselines as a shortcut to approval.
+6. Stop after the selected batch's evidence is reviewed. Refer wider test-folder work to Plan 06 and report-generation accuracy to Plan 05.
+
+Acceptance: one defect has a traceable cause, bounded change and matching evidence; unresolved cases remain pending. This short plan does not authorize implementing the older desktop proposals or deploying the result.
+
 Coordinate the test cleanup through Plan 06: classify each file, move bounded ownership groups, repair assertions/baselines, then verify discovery and authorized execution. All thirteen domain plans retain ownership of their behavior contracts; historical counts and results are not current clearance evidence.
 
 Acceptance: record current path, owner, destination/disposition, preserved assertions, affected commands, and evidence. A filename or age alone is insufficient grounds for retirement. Runtime validation remains pending; this update changes planning documents only.

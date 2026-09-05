@@ -145,6 +145,16 @@ pnpm run ops db:apply:admin -- --dry
 3. Every database migration must include a rollback block before running `pnpm run check:governance`.
 ## Test reconciliation update (2026-09-05)
 
+### Detailed work packages: command effects and dependency edges
+
+1. For every in-scope script, record callers, arguments, environment names, working-directory assumptions, inputs, outputs, exit propagation and side effects. Distinguish read-only inspection from generators, tests and remote mutations.
+2. Follow wrappers through nested commands; a harmless-looking audit name may generate files or invoke a build. Approval must cover the actual command behavior.
+3. Reconcile script path consumers in package manifests, CI, dispatchers and documentation before any move. Require a replacement mapping before retiring aliases.
+4. Check cancellation and partial-failure semantics for multi-step wrappers: which steps stop, which outputs can remain stale, and whether the original nonzero exit survives.
+5. Assign generated inventories one owning generator and agreed scan roots; do not maintain a competing hand-written count.
+
+Deliverable: command dependency/effect ledger. Acceptance: no dangling moved paths, no hidden deployment behind a check, and failure cannot be converted to success by a wrapper. Inventory freshness and execution authorization remain separate.
+
 Update explicit spec paths in package commands, ops, gates and CI alongside moves. Give capture-only tooling an explicit command; ensure inventory and layout checks discover the intended test roots.
 
 Acceptance: record current path, owner, destination/disposition, preserved assertions, affected commands, and evidence. A filename or age alone is insufficient grounds for retirement. Runtime validation remains pending; this update changes planning documents only.

@@ -188,6 +188,23 @@ pnpm run test:browser:gate
 4. Confirm no new `eslint-disable` comments exist outside the 5 authorized hook files.
 ## Test reconciliation update (2026-09-05)
 
+### Detailed work packages: discovery, profiles and evidence integrity
+
+| Work package | Required decision and deliverable | Completion evidence |
+| --- | --- | --- |
+| Per-file review | Record every spec/helper/asset with owner, behavioral assertions, consumers, side effects, destination and disposition | No initial file disappears without a reviewed mapping; inventory is revision-scoped |
+| Runner parity | Trace package scripts, gate lists, CI filters, include/exclude globs and package-local tests | Authorized before/after discovery sets reconcile; totals alone are insufficient |
+| Browser profiles | Current playwright.config.ts spreads Desktop Chrome/Firefox/Safari devices across viewport tiers; distinguish responsive width coverage from touch/mobile emulation | Explicit browser, viewport, touch, device scale and input-mode contract; no phone-device claim from width alone |
+| Server lifecycle | Config forces the base-URL environment; globalSetup/globalTeardown skip locking when that variable is present | Trace direct-run versus gate-owned lock paths, reuse policy and ownership before any lock change; runtime behavior remains unverified |
+| Fixture concurrency | Inspect identifiers, output names, mutable catalog fixtures and cleanup across workers/retries | Parallel cases cannot overwrite each other's data; cleanup does not remove pre-existing state |
+| Visual comparisons | Align manifest root, runner template and helper naming; separate capture jobs from comparisons | Reviewed baseline per intended profile, fresh actual image and meaningful diff; moving baselines preserves bytes |
+| Assertion integrity | Separate legitimate profile exclusions from missing-control skips and output-file-only checks | Required behavior fails when broken; skip reason and owner are explicit |
+| Result aggregation | Distinguish executed, failed, skipped, interrupted and unrun lanes | An old summary or a short-circuited second lane cannot produce a complete green report |
+
+Implementation order: classify files; agree profile/fixture contracts; move one owner batch without assertion changes; reconcile discovery; repair that batch's assertions; review visual baselines separately. Do not rewrite the suite.
+
+Each authorized run record must include command, working directory, revision/dirty scope, config, project selection, exit code, failure paths and skip counts. Preserve first-attempt failures when retries pass. Proposed acceptance tests are not execution evidence.
+
 ### Observed issues and required decisions
 
 The static inventory observed 85 E2E specs and 18 support/assets. Full semantic review of every file and runtime execution remain pending.

@@ -222,7 +222,16 @@ Derived from the forensic audit documented in `docs/audit 05092026/homepage-and-
 2. **Standard Handler:** All client sign-out events must invoke the Server Action `signOutFromSupabase()` in `site/lib/auth/supabaseServerActions.ts`.
 ## Test reconciliation update (2026-09-05)
 
+### Detailed work packages: route and rendering contracts
+
+1. Create one route row linking source classification, navigation consumers, metadata, canonical URL, XML/HTML sitemap membership and observed HTTP result. Keep intended behavior separate from last observed host behavior.
+2. Resolve retired routes across consumers without creating pages: include /tools and both calculators as explicit negative contracts. Treat redirects, genuine 404s, soft-404 HTML and login redirects as distinct outcomes.
+3. Define locale first-render cases: no cookie, supported cookie, unsupported cookie and changed locale after hydration. Require equal server/first-client text; do not prescribe a component fix until its stack and locale flow are observed.
+4. Cover direct entry, client navigation, trailing slash and query preservation separately. Locale parity by key count does not prove translated labels, canonical policy or working hrefs.
+5. Hand auth redirect ownership to Plan 11 and public journey expectations to Plan 10; keep one route decision shared by sitemap and navigation tests.
+
+Deliverable: route decision matrix with source anchors and unresolved product choices. Acceptance: each public/indexable classification has supporting evidence, retired routes remain excluded, and no unobserved URL is reported healthy.
+
 Map each navigation target to its source route and classification; separate /planner marketing from /ooplanner workspace journeys. Preserve negative/redirect tests for removed routes rather than recreating pages for stale assertions.
 
 Acceptance: record current path, owner, destination/disposition, preserved assertions, affected commands, and evidence. A filename or age alone is insufficient grounds for retirement. Runtime validation remains pending; this update changes planning documents only.
-

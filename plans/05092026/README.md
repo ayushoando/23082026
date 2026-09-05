@@ -96,6 +96,26 @@ Cross-cutting rule: distinguish **source presence**, **current `HEAD`**, and **c
 7. **Strict Quarantine:** `docs/protected-folder/` is fully quarantined. Never read, search, list, or reference it.
 ## Test reconciliation update (2026-09-05)
 
+## Coverage gaps now assigned to concrete deliverables
+
+A document existing means an area has a planning owner, not that the area is audited or complete. The following items were missing explicit acceptance contracts or were only broadly described.
+
+| Gap or under-specified area | Primary owner | Deliverable / dependency |
+| --- | --- | --- |
+| False report prevention and provenance | Plan 05 | Claim-to-collector ledger; stale/unknown/partial states; consumes Plan 06 run identity |
+| Mobile width versus device/input coverage | Plan 06 | Explicit profile contract; Plan 13 owns interaction acceptance |
+| Shared test-server and fixture lifecycle | Plan 06 | Direct/gate lock trace, worker/retry isolation and cleanup ownership |
+| CSS finding validity and rendered ownership | Plan 01 | Winning-rule evidence, breakpoint state matrix; feeds Plan 05 reporting |
+| Recovery and duplicate-write outcomes | Plan 04 | Entity/mode/recovery worksheet; no restore authorized |
+| Packaging reproducibility | Plan 08 | Build identity and artifact-membership checklist |
+| Command side effects and failure propagation | Plan 07 | Caller/output/exit-code dependency ledger |
+| Journey completion versus route presence | Plan 10 | Entry/transition/outcome mapping; routes owned by Plan 02 |
+| Completion claims and deployment identity | Plans 09 and 12 | Evidence admission followed by separately authorized release decisions |
+
+Each numbered plan now has detailed work packages and its own deliverable. These are planned checks, not newly discovered production defects; a complete source-by-source coverage audit is still pending.
+
+Before implementation, record the owner, exact files, prerequisites, retained behavior, acceptance evidence and rollback scope for one batch. Named personal owners and unresolved product decisions remain to be assigned; no automatic delegation or execution follows from this plan.
+
 Coordinate the test cleanup through Plan 06: classify each file, move bounded ownership groups, repair assertions/baselines, then verify discovery and authorized execution. All thirteen domain plans retain ownership of their behavior contracts; historical counts and results are not current clearance evidence.
 
 Acceptance: record current path, owner, destination/disposition, preserved assertions, affected commands, and evidence. A filename or age alone is insufficient grounds for retirement. Runtime validation remains pending; this update changes planning documents only.

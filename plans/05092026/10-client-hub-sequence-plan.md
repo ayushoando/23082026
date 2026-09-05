@@ -104,6 +104,16 @@
 - **Leak Prevention:** Continuous validation ensuring unauthenticated sessions do not leak into `/ooplanner`, `/portal`, `/dashboard`, or `/admin`.
 ## Test reconciliation update (2026-09-05)
 
+### Detailed work packages: public journey completion
+
+1. Revalidate navigation labels/hrefs against rendered markup and the source route contract; the earlier flat-header description is not a current browser observation.
+2. Define entry, transition and outcome for browse-to-product, proof-to-contact, planning-to-launch and sign-in journeys. Include direct entry, back navigation, empty catalog and rejected submission where the existing journey supports them.
+3. Resolve the footer /tools reference through Plan 02 without inventing calculator pages. Record a product decision before changing route availability.
+4. Keep public marketing navigation separate from explicit guest Planner launch. Guest workspace access is not itself an authorization leak; private Admin/member boundaries belong to Plan 11.
+5. Deduplicate navigation specs only when the remaining spec preserves each distinct journey assertion and profile.
+
+Deliverable: journey-to-route-to-test map with observed and pending states. Acceptance: each advertised destination has a verified outcome, private access is rejected appropriately, and completion labels are backed by the same revision's evidence.
+
 Assign public journey specs to actual route owners. Consolidate duplicate navigation coverage only after identifying retained assertions and maintain explicit transition/outcome checks.
 
 Acceptance: record current path, owner, destination/disposition, preserved assertions, affected commands, and evidence. A filename or age alone is insufficient grounds for retirement. Runtime validation remains pending; this update changes planning documents only.

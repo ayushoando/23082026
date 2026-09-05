@@ -153,6 +153,21 @@ Per [`docs/audit 05092026/tech-stack-audit.md`](../../docs/audit%2005092026/tech
 3. **Preflight Checks:** Run `pnpm --filter oando-tech-docs build` to confirm clean compilation and `pnpm run test:tech-docs` to ensure Lane 2 passes cleanly.
 ## Test reconciliation update (2026-09-05)
 
+### Detailed work packages: eliminate misleading audit results
+
+The preceding architecture inventory is not an audit of report accuracy. Regenerating JSON refreshes output bytes; it does not prove that the underlying observations are fresh.
+
+1. Trace each displayed claim from page/component to JSON field, generator, scanned input and collection method. Start with tech-stack versions, CSS findings, test status and source/test ownership; record exact source anchors rather than copying old report prose.
+2. Specify a provenance contract: source revision plus dirty-tree state, input scope, collector version, collection timestamp, command/exit code where applicable and completeness. Separate source inspection from executed checks and deployed observations.
+3. Specify explicit states for verified, failed, stale, unknown and partial data. Missing output, failed generation, an unrun lane or an older revision must not render as zero findings or a green result.
+4. Test the proposed reporting contract with synthetic fixtures: missing JSON, invalid JSON, old revision, partial generation, duplicate test roots, interrupted lane and disagreeing summaries. Define expected display and diagnostic behavior for each before changing collectors.
+5. For CSS, distinguish parser limitations, dynamic class construction, imported zones and observed computed styles. An unmatched selector is a review candidate, not proof of dead CSS; a token count is not a visual-quality score.
+6. Reconcile the root runner and package runner independently: selected files, code-generation prerequisites, cache invalidation and output destinations. A package run must not inherit an older successful root summary as its own result.
+7. Inspect generator inputs and watcher invalidation against output-contract.mjs; prove that generated outputs are not recursively treated as source evidence. Validate exclusions without reading quarantined content.
+8. Preserve the authentication boundary and separate hosting verification from local data accuracy. A configured hostname and base path do not prove a working deployed deep link.
+
+Deliverable: claim-provenance ledger, reporting-state table and fixture-backed collector/UI acceptance cases. Acceptance: every green claim is attributable to matching evidence; missing or stale input remains visible as such. Plan 06 owns execution integrity; this plan owns interpretation and display.
+
 Keep tests at tech-docs-generator/tests and reconcile package/root selection, setup, relative imports, fake-test audit and inventory ownership. File counts are not test-case counts; historical 224-case summaries require fresh execution.
 
 Acceptance: record current path, owner, destination/disposition, preserved assertions, affected commands, and evidence. A filename or age alone is insufficient grounds for retirement. Runtime validation remains pending; this update changes planning documents only.

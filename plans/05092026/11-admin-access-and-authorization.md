@@ -126,6 +126,16 @@ The existing Admin smoke coverage is a starting point, not proof that every API 
 - No Planner/Studio boundary is changed as part of authority work without its own scoped plan.
 ## Test reconciliation update (2026-09-05)
 
+### Detailed work packages: session transitions and operation outcomes
+
+1. Extend the route/API matrix with anonymous, permitted role, wrong role, expired session and sign-out states. UI concealment is not sufficient evidence that an operation is denied.
+2. Specify redirect termination and return-destination behavior for direct entry and client navigation; keep the loop hypothesis separate from a reproduced redirect chain.
+3. For existing mutations, record expected denial result and absence of side effects, as well as the allowed result. Isolate test-created entities and identify cleanup ownership.
+4. Separate bypass-backed usability evidence from real authentication evidence. Missing credentials produce a pending profile, not an authorization pass.
+5. Assign cross-tab/session-expiry behavior an explicit expected outcome before changing code; retain independent Tech-Docs session ownership under Plan 05.
+
+Deliverable: actor/state/operation matrix linked to retained tests. Acceptance: permitted operations work, denied operations have no unauthorized effect, and sign-out/re-entry results are evidenced without relaxing guards.
+
 Classify guest/member/admin profiles and session setup before moving auth tests. Bypass-mode execution cannot prove access control; preserve denied-access, expired-session and sign-out coverage.
 
 Acceptance: record current path, owner, destination/disposition, preserved assertions, affected commands, and evidence. A filename or age alone is insufficient grounds for retirement. Runtime validation remains pending; this update changes planning documents only.

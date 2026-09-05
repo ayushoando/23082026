@@ -166,6 +166,16 @@ pnpm vitest run tests/unit/lib/catalog/planSymbolPngContract.test.ts
 3. Re-run `pnpm run scan:boundaries` before staging any workspace commit.
 ## Test reconciliation update (2026-09-05)
 
+### Detailed work packages: workspace state transitions
+
+1. Review Planner and Studio independently, with separate owners and fixtures. Map each existing journey to load, edit, undo, redo, save, reload and export assertions instead of treating canvas visibility as completion.
+2. Inventory recovery cases per workspace: interrupted save, rejected save, stale version, offline-to-online transition and malformed imported data. Mark unsupported behaviors as product decisions, not automatically required new features.
+3. For geometry/export contracts, specify input units, canvas scale, serialized dimensions and output dimensions. Use one known fixture per fork and compare semantic dimensions, not screenshot resemblance alone.
+4. Trace test setup, persistence mode, created identifiers and cleanup ownership before executing a mutating journey. A test may delete only records or files it created.
+5. Separate path-only test moves from behavior repairs; map old assertions to retained assertions before consolidating similarly named specs.
+
+Deliverable: per-fork scenario/state matrix with evidence and cleanup contracts. Acceptance: no cross-import introduced, required controls cannot disappear through a conditional skip, and a successful reload demonstrates persisted state rather than cached canvas state.
+
 Map open3d, Planner and Studio specs to current implementations. Keep fork-specific helpers separate, compare overlapping comprehensive-audit assertions before consolidation, and replace missing-control skips when the control is required.
 
 Acceptance: record current path, owner, destination/disposition, preserved assertions, affected commands, and evidence. A filename or age alone is insufficient grounds for retirement. Runtime validation remains pending; this update changes planning documents only.
