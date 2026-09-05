@@ -13,6 +13,7 @@ import {
   resolveHeroTitleLines,
 } from "@/features/site/data/homepage";
 import { TrackedLink } from "@/components/ui/TrackedLink";
+import { MarketingCtaLink } from "@/components/ui/MarketingCtaLink";
 import { runAfterIdleOrInteraction } from "@/lib/client/afterIdle";
 import { gsapPageScroller, gsapReducedMotion } from "@/lib/helpers/gsapMotion";
 
@@ -232,6 +233,27 @@ export function HomepageHero() {
           <p className="home-kicker text-[color:var(--color-bronze-300)]">
             {kicker}
           </p>
+
+          <div className="home-actions">
+            <MarketingCtaLink
+              href={t("hero.primaryCta.href")}
+              label={t("hero.primaryCta.label")}
+              surface="homepage-hero"
+              context="hero"
+              variant="primary"
+            >
+              {t("hero.primaryCta.label")}
+            </MarketingCtaLink>
+            <MarketingCtaLink
+              href={t("hero.secondaryCta.href")}
+              label={t("hero.secondaryCta.label")}
+              surface="homepage-hero"
+              context="hero"
+              variant="outline-light"
+            >
+              {t("hero.secondaryCta.label")}
+            </MarketingCtaLink>
+          </div>
         </div>
 
         <div className="home-hero-glass-stack">

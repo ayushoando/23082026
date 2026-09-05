@@ -2,9 +2,8 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import React from "react";
 import { DashboardClient } from "@/features/shared/dashboard/DashboardClient";
-import { createAuthClient } from "@/platform/supabase/client";
+import { signOutFromSupabase } from "@/lib/auth/supabaseServerActions";
 
-// Mock next/navigation
 const mockReplace = vi.fn();
 const mockRefresh = vi.fn();
 vi.mock("next/navigation", () => ({
@@ -14,17 +13,9 @@ vi.mock("next/navigation", () => ({
   }),
 }));
 
-// Mock supabase client
-vi.mock("@/platform/supabase/client", () => {
-  const mockAuth = {
-    signOut: vi.fn(() => Promise.resolve()),
-  };
-  return {
-    createAuthClient: () => ({
-      auth: mockAuth,
-    }),
-  };
-});
+vi.mock("@/lib/auth/supabaseServerActions", () => ({
+  signOutFromSupabase: vi.fn(async () => ({ success: true })),
+}));
 
 // Mock workspaceHub
 vi.mock("@/features/shared/dashboard/workspaceHub", () => ({
@@ -72,11 +63,23 @@ describe("DashboardClient", () => {
 
     expect(screen.getByText("Signing out...")).toBeDefined();
 
-    const client = createAuthClient();
     await waitFor(() => {
-      expect(client.auth.signOut).toHaveBeenCalled();
+      expect(signOutFromSupabase).toHaveBeenCalled();
       expect(mockReplace).toHaveBeenCalledWith("/access");
       expect(mockRefresh).toHaveBeenCalled();
     });
+  });
+
+  it("does not navigate when server sign-out fails", async () => {
+    vi.mocked(signOutFromSupabase).mockResolvedValueOnce({ success: false });
+    render(<DashboardClient userEmail="user@example.com" />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Sign out" }));
+
+    await waitFor(() => {
+      expect(signOutFromSupabase).toHaveBeenCalled();
+    });
+    expect(mockReplace).not.toHaveBeenCalled();
+    expect(mockRefresh).not.toHaveBeenCalled();
   });
 });

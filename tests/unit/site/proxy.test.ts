@@ -358,6 +358,45 @@ describe('proxy.ts', () => {
       }
     });
 
+    it('renders /access without cookies (no 307 bounce)', async () => {
+      const request = new NextRequest('http://localhost/access');
+      const response = await proxy(request as unknown as NextRequest);
+      expect(response.status).toBe(200);
+      expect(response.headers.get('location')).toBeNull();
+    });
+
+    it('renders /access even when an unverified sb-*-auth-token cookie is present', async () => {
+      const request = new NextRequest('http://localhost/access');
+      request.cookies.set('sb-test-auth-token', 'expired');
+      const response = await proxy(request as unknown as NextRequest);
+      expect(response.status).toBe(200);
+      expect(response.headers.get('location')).toBeNull();
+    });
+
+    it('renders /access?next=/dashboard with stale auth cookies instead of looping to dashboard', async () => {
+      const request = new NextRequest('http://localhost/access?next=/dashboard');
+      request.cookies.set('sb-test-auth-token', 'expired');
+      const response = await proxy(request as unknown as NextRequest);
+      expect(response.status).toBe(200);
+      expect(response.headers.get('location')).toBeNull();
+    });
+
+    it('renders /access under DEV_AUTH_BYPASS=1 instead of bouncing to dashboard', async () => {
+      const prevBypass = process.env.DEV_AUTH_BYPASS;
+      const prevNode = process.env.NODE_ENV;
+      process.env.DEV_AUTH_BYPASS = '1';
+      setNodeEnv('development');
+      try {
+        const request = new NextRequest('http://localhost/access');
+        const response = await proxy(request as unknown as NextRequest);
+        expect(response.status).toBe(200);
+        expect(response.headers.get('location')).toBeNull();
+      } finally {
+        process.env.DEV_AUTH_BYPASS = prevBypass;
+        setNodeEnv(prevNode);
+      }
+    });
+
     it('allows /admin without cookies when DEV_AUTH_BYPASS=1 (local only)', async () => {
       const prevBypass = process.env.DEV_AUTH_BYPASS;
       const prevNode = process.env.NODE_ENV;

@@ -1,7 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { PLANNER_GUEST_COOKIE } from "./lib/auth/constants";
 import { isDevAuthBypassActiveForRequest } from "./lib/auth/devAuthBypass";
-import { sanitizeNextPath } from "./lib/auth/plannerRedirect";
 import { isMaintenanceReadonly } from "./lib/platform/maintenanceMode";
 import { SITE_URL } from "./lib/siteUrl";
 

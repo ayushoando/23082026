@@ -7,7 +7,6 @@ import { ArrowRight } from "@phosphor-icons/react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { PLANNER_GUEST_COOKIE } from "@/lib/auth/constants";
-import { createAuthClient } from "@/platform/supabase/client";
 import { signOutFromSupabase } from "@/lib/auth/supabaseServerActions";
 import {
   gsapReducedMotion,
@@ -140,16 +139,10 @@ export function DashboardClient({ userEmail, accessError }: DashboardClientProps
   async function handleSignOut() {
     setIsSigningOut(true);
     try {
-      try {
-        await signOutFromSupabase();
-      } catch {
-        // Fallback for mocked test environments
-      }
-      try {
-        const supabase = createAuthClient();
-        await supabase.auth.signOut();
-      } catch {
-        // Safe: browser client bundles omit server-only auth env vars
+      const result = await signOutFromSupabase();
+      if (!result.success) {
+        setIsSigningOut(false);
+        return;
       }
       document.cookie = `${PLANNER_GUEST_COOKIE}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC; SameSite=Lax`;
       router.replace("/access");

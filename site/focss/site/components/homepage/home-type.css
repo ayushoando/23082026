@@ -32,7 +32,7 @@
 
 @media (width >= theme(--breakpoint-lg)) {
   .home-hero-title-homepage {
-    max-width: 11ch;
+    max-width: 18ch;
     margin-inline: 0;
   }
 }

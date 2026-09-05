@@ -13,4 +13,3 @@ An empty blocker table is valid. Do not copy blocker identifiers into other docu
 
 | ID | Priority | Blocker | Evidence | Action |
 |----|----------|---------|----------|--------------|
-| BROWSER-ORIGIN-02 | P1 | Browser walk could not start because the required local app was unavailable | Muse-B attempted `http://localhost:3000` and Chromium returned `net::ERR_CONNECTION_REFUSED`; no routes or screenshots were observed | Start the app at `http://localhost:3000`, then rerun the four-viewport browser walk |

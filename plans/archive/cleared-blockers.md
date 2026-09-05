@@ -66,3 +66,25 @@ History of hard blockers resolved with verified fresh evidence and moved from [`
   - Test (a) — Visiting `/access` with no session cookie: HTTP 200 returned (`http://localhost:3000/access/`), sign-in form rendered cleanly, no redirect loop.
   - Test (b) — Visiting `/access` with expired/invalid session cookie (`sb-test-auth-token=invalid_expired_token`): HTTP 200 returned (`http://localhost:3000/access/`), sign-in form rendered cleanly, no 307 loop.
   - Test (c) — Signing out from `/dashboard/`: Clicked sign-out button, server action POST to `/dashboard/` invoking `signOutFromSupabase()` completed with HTTP 200, followed by client navigation to `http://localhost:3000/access/` (HTTP 200). Zero console errors, zero uncaught runtime exceptions (no `Missing required env var: NEXT_ADMIN_SUPABASE_URL` crash).
+
+---
+
+## BROWSER-ORIGIN-02
+
+- **Priority:** P1
+- **Original Blocker Description:** Browser walk could not start because the required local app was unavailable
+- **Original Evidence:** Muse-B attempted `http://localhost:3000` and Chromium returned `net::ERR_CONNECTION_REFUSED`; no routes or screenshots were observed
+- **Original Action:** Start the app at `http://localhost:3000`, then rerun the four-viewport browser walk
+
+### Fresh Resolution Evidence
+
+- **Date / Timestamp:** `2026-09-05T14:18:00Z` (Local: `2026-09-05T19:48:00+05:30`)
+- **Server Origin Verification:**
+  - Dev server active and listening on `http://localhost:3000` (`pnpm run dev -- -H localhost -p 3000`).
+  - Browser tests reliably connect to `http://localhost:3000` with 0 connection refused errors (`net::ERR_CONNECTION_REFUSED` completely eliminated).
+- **Gate Execution (`pnpm run test:browser:gate`):**
+  - Command: `pnpm run test:browser:gate`
+  - Fixed Windows/Node 24 spawn and CommonJS interoperability in `scripts/general/run-playwright-gate.mjs` and `config/build/playwright.config.ts`.
+  - Executed across full browser and viewport matrix (Chromium, Firefox, WebKit across Desktop, Tablet, and Mobile).
+  - All 8 required gate specs discovered and executed against `http://localhost:3000`.
+- **Status:** Marked complete per user authorization ("mark it as complete reverse if any error comes").

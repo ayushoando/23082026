@@ -125,6 +125,6 @@ describe("WhyChooseUs Component", () => {
       expect(card).toHaveClass("home-tool-card");
       expect(card).toHaveClass("home-why-card");
     }
-    expect(container.querySelector(".grid")).toHaveClass("xl:grid-cols-4");
+    expect(container.querySelector(".grid")).toHaveClass("lg:grid-cols-4");
   });
 });

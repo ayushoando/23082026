@@ -1,16 +1,14 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const { signOut, replace, refresh } = vi.hoisted(() => ({
-  signOut: vi.fn(),
+const { signOutFromSupabase, replace, refresh } = vi.hoisted(() => ({
+  signOutFromSupabase: vi.fn(),
   replace: vi.fn(),
   refresh: vi.fn(),
 }));
 
-vi.mock("@/platform/supabase/client", () => ({
-  createAuthClient: () => ({
-    auth: { signOut },
-  }),
+vi.mock("@/lib/auth/supabaseServerActions", () => ({
+  signOutFromSupabase,
 }));
 
 vi.mock("next/navigation", () => ({
@@ -22,10 +20,10 @@ import { DashboardClient } from "@/features/shared/dashboard/DashboardClient";
 
 describe("DashboardClient", () => {
   beforeEach(() => {
-    signOut.mockReset();
+    signOutFromSupabase.mockReset();
     replace.mockReset();
     refresh.mockReset();
-    signOut.mockResolvedValue({ error: null });
+    signOutFromSupabase.mockResolvedValue({ success: true });
     window.localStorage.clear();
   });
 
@@ -96,7 +94,7 @@ describe("DashboardClient", () => {
     fireEvent.click(screen.getByRole("button", { name: "Sign out" }));
 
     await waitFor(() => {
-      expect(signOut).toHaveBeenCalled();
+      expect(signOutFromSupabase).toHaveBeenCalled();
       expect(replace).toHaveBeenCalledWith("/access");
       expect(refresh).toHaveBeenCalled();
     });
