@@ -45,6 +45,8 @@ export async function PortfolioPageView() {
     getRequestNonce(),
   ]);
   const clientsValue = formatKpiValuePlus(stats.clientOrganisations);
+  const projectCount = clientWork.length;
+  const photoCount = clientWork.reduce((total, project) => total + project.photos.length, 0);
   const portfolioJsonLd = buildPageJsonLd(SITE_URL, {
     path: "/portfolio",
     title: `Workplace Projects & Portfolio | One&Only`,
@@ -79,6 +81,40 @@ export async function PortfolioPageView() {
         titleAccent="projects."
         subtitle={copy.heroSubtitleTemplate.replace("{clients}", clientsValue)}
       />
+
+      <HomeSection variant="white" spacing="sm" className="portfolio-index-section border-t-0">
+        <HomeSectionInner>
+          <div className="portfolio-index" aria-labelledby="portfolio-index-title">
+            <div className="portfolio-index__intro">
+              <p className="home-kicker">Selected installations</p>
+              <h2 id="portfolio-index-title" className="home-heading text-pretty">
+                Explore the work by project.
+              </h2>
+              <p className="portfolio-index__description page-copy text-body">
+                {projectCount} documented workplaces and {photoCount} installation photographs,
+                organised for quick review.
+              </p>
+            </div>
+            <nav className="portfolio-index__nav" aria-label="Portfolio project index">
+              {clientWork.map((project, index) => (
+                <a
+                  key={project.id}
+                  href={`#portfolio-project-${project.id}`}
+                  className="portfolio-index__link"
+                >
+                  <span className="portfolio-index__number" aria-hidden="true">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span>
+                    <strong>{project.name}</strong>
+                    <small>{project.location}</small>
+                  </span>
+                </a>
+              ))}
+            </nav>
+          </div>
+        </HomeSectionInner>
+      </HomeSection>
 
       <HomeSection variant="white" spacing="sm">
         <HomeSectionInner>

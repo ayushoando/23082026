@@ -7,8 +7,9 @@ import { TRUSTED_BY_CLIENTS } from "@/features/site/data/proof";
 import { getBusinessStats } from "@/features/crm/businessStats";
 import { KpiIntegrityMonitor } from "@/components/analytics/KpiIntegrityMonitor";
 import { TRUSTED_BY_PAGE_COPY } from "@/features/site/data/routeCopy";
+import { TRUSTED_BY_PAGE_METADATA } from "@/features/site/data/routeMetadata";
 import { withLocaleCopy } from "@/lib/i18n/withLocaleCopy";
-import { buildBreadcrumbJsonLd, buildPageJsonLd, buildPageMetadata } from "@/features/site/data/seo";
+import { buildBreadcrumbJsonLd, buildPageJsonLd } from "@/features/site/data/seo";
 import { SITE_URL } from "@/lib/siteUrl";
 import { getRequestNonce } from "@/lib/security/requestNonce";
 import { sanitizeJsonForScript } from "@/lib/security/sanitize";
@@ -20,13 +21,8 @@ async function loadTrustedByCopy() {
   );
 }
 
-export async function generateMetadata(): Promise<Metadata> {
-  const copy = await loadTrustedByCopy();
-  return buildPageMetadata(SITE_URL, {
-    title: `${copy.heroTitle} | One&Only`,
-    description: copy.heroSubtitle,
-    path: "/trusted-by",
-  });
+export function generateMetadata(): Metadata {
+  return TRUSTED_BY_PAGE_METADATA;
 }
 
 /** Client proof page — roster, stats, quotes. Photos stay on /clients. */

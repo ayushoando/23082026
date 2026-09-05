@@ -106,8 +106,91 @@
   gap: clamp(3rem, 6vw, 4rem);
 }
 
+.portfolio-index {
+  display: grid;
+  gap: clamp(2rem, 5vw, 4rem);
+  padding-block-end: clamp(1rem, 3vw, 2rem);
+  border-block-end: 1px solid var(--border-soft);
+}
+
+.portfolio-index__intro {
+  max-width: 40rem;
+}
+
+.portfolio-index__description {
+  max-width: 36rem;
+  margin-block-start: var(--space-3);
+}
+
+.portfolio-index__nav {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  border-block-start: 1px solid var(--border-soft);
+}
+
+.portfolio-index__link {
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: center;
+  min-height: 4.75rem;
+  padding: var(--space-3);
+  border-block-end: 1px solid var(--border-soft);
+  color: var(--text-strong);
+  text-decoration: none;
+  transition: background var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard);
+}
+
+.portfolio-index__link:hover {
+  background: var(--surface-soft);
+  color: var(--text-heading);
+}
+
+.portfolio-index__link:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.portfolio-index__number,
+.portfolio-index__link small {
+  color: var(--text-muted);
+  font-size: var(--type-label-size);
+}
+
+.portfolio-index__link strong,
+.portfolio-index__link small {
+  display: block;
+}
+
+.portfolio-index__link strong {
+  font-family: var(--font-display);
+  font-size: var(--type-body-lg-size);
+  font-weight: var(--font-weight-display-light);
+  line-height: var(--type-leading-copy-sm);
+}
+
+.portfolio-index__link small {
+  margin-block-start: 0.2rem;
+}
+
+@media (min-width: 48rem) {
+  .portfolio-index {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    align-items: start;
+  }
+
+  .portfolio-index__nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .portfolio-index__link:nth-child(odd) {
+    border-inline-end: 1px solid var(--border-soft);
+  }
+}
+
 .clients-work__case {
   min-width: 0;
+  scroll-margin-top: calc(var(--site-header-height, 5rem) + var(--space-4));
 }
 
 .clients-work__index {

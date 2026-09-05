@@ -205,7 +205,7 @@ export const CLIENTS_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
   description:
     "Office furniture projects and workplace fit-outs for government, finance, manufacturing, and institutions across India.",
   path: "/portfolio",
-  image: "/assets/marketing/hero/pages/Other3-oneandonly-bright.webp",
+  image: "/assets/marketing/clients/FranklinTempleton/franklin-templeton-office.webp",
   keywords: [
     "office furniture portfolio India",
     "office furniture projects India",
@@ -233,10 +233,11 @@ export const CLIENT_DIRECTORY_PAGE_METADATA: Metadata = buildPageMetadata(SITE_U
 });
 
 export const TRUSTED_BY_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
-  title: `${TRUSTED_BY_PAGE_COPY.heroTitle} | One&Only`,
-  description: TRUSTED_BY_PAGE_COPY.heroSubtitle,
+  title: "Office furniture clients in India | One&Only",
+  description:
+    "Explore selected government, banking, manufacturing, education, and enterprise clients furnished by One&Only across India since 2011.",
   path: "/trusted-by",
-  image: "/assets/marketing/hero/pages/Other3-oneandonly-bright.webp",
+  image: "/assets/marketing/clients/Titan/titan-hero.webp",
   keywords: [
     "trusted office furniture clients",
     "enterprise furniture clients India",

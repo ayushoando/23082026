@@ -137,6 +137,7 @@ function CaseStudyArticle({
 
   return (
     <article
+      id={`portfolio-project-${client.id}`}
       className="clients-work__case portfolio-case"
       aria-labelledby={`clients-work-${client.id}`}
     >

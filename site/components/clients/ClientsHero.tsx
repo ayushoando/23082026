@@ -23,7 +23,7 @@ export type ClientsHeroProps = {
 };
 
 /** Clients editorial hero — one signature entrance beat (copy stagger). */
-export function ClientsHero({ kicker, titleLead, titleAccent }: ClientsHeroProps) {
+export function ClientsHero({ kicker, titleLead, titleAccent, subtitle }: ClientsHeroProps) {
   const heroRef = useRef<HTMLElement>(null);
   const [motionReady, setMotionReady] = useState(false);
 
@@ -89,6 +89,9 @@ export function ClientsHero({ kicker, titleLead, titleAccent }: ClientsHeroProps
               <span className="text-accent-italic-on-dark">{titleAccent}</span>
             </span>
           </h1>
+          <p data-clients-hero-reveal className="clients-hero__subtitle text-pretty">
+            {subtitle}
+          </p>
         </div>
       </div>
     </section>

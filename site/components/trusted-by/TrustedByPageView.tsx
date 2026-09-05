@@ -131,8 +131,12 @@ export function TrustedByPageView({
   const sectorsRef = useRef<HTMLElement>(null);
   const photosRef = useRef<HTMLElement>(null);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [activeSector, setActiveSector] = useState("All");
   const photoCount = FEATURED_CLIENT_PHOTOS.length;
   const [motionReady, setMotionReady] = useState(false);
+  const visibleClients = activeSector === "All"
+    ? clients
+    : clients.filter((client) => client.sector === activeSector);
 
   useEffect(() => {
     const id = requestAnimationFrame(() => {
@@ -437,11 +441,46 @@ export function TrustedByPageView({
             </div>
           ) : null}
           <section ref={rosterRef} className="trusted-by-roster" data-testid="trusted-by-roster">
+            <div className="trusted-by-roster__header">
+              <div>
+                <p data-trusted-reveal className="home-kicker">
+                  {rosterKicker}
+                </p>
+                {rosterTitle ? (
+                  <h2 data-trusted-reveal className="home-heading text-pretty">
+                    {rosterTitle}
+                  </h2>
+                ) : null}
+                {rosterDescription ? (
+                  <p data-trusted-reveal className="trusted-by-roster__description page-copy text-body">
+                    {rosterDescription}
+                  </p>
+                ) : null}
+              </div>
+              <p className="trusted-by-roster__count" aria-live="polite">
+                Showing {visibleClients.length} of {clients.length} selected organisations
+              </p>
+            </div>
+
+            <div className="trusted-by-roster__filters" aria-label="Filter clients by sector">
+              {["All", ...sectors].map((sector) => (
+                <button
+                  key={sector}
+                  type="button"
+                  className="trusted-by-roster__filter"
+                  aria-pressed={activeSector === sector}
+                  onClick={() => setActiveSector(sector)}
+                >
+                  {sector}
+                </button>
+              ))}
+            </div>
+
             <div
               className="client-badge-group client-badge-group--dense"
               aria-label={rosterKicker}
             >
-              {clients.map((client) => (
+              {visibleClients.map((client) => (
                 <div key={client.name} data-trusted-reveal>
                   <ClientBadge
                     name={client.name}
@@ -458,9 +497,9 @@ export function TrustedByPageView({
                 href="/clients"
                 variant="outline"
                 surface="trusted-by-roster"
-                label="View all 118 clients across 4 sectors"
+                label="Browse the full client directory"
               >
-                View all 118 clients across 4 sectors →
+                Browse the full client directory →
               </MarketingCtaLink>
             </div>
           </section>
