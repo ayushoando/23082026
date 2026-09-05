@@ -97,13 +97,13 @@
 
 - **Environment & Origin Invariant:** Manual and automated browser verification strictly on `http://localhost:3000` (NEVER `127.0.0.1`).
 - **Viewports Matrix:** Desktop (1440px), Tablet (1024px), Mobile (390px iPhone 12/13/14).
-- **Blocker Resolution Protocol (`BROWSER-ORIGIN-02`):**
+- **Local origin:** Playwright and UI checks use `http://localhost:3000` only. [`Failures.md`](../../Failures.md) is empty; do not copy IDs.
   - Because `PLAYWRIGHT_BASE_URL` is configured, Playwright disables its internal web server spawner.
   - **Required Execution:**
     1. Boot dev server: `cross-env DEV_AUTH_BYPASS=1 pnpm run dev`
     2. Run browser gate: `pnpm run test:browser:gate`
     3. Verify mobile scroller (`.mobile-app-main`) and GSAP ScrollTrigger bindings.
-    4. Reconcile `BROWSER-ORIGIN-02` against current `Failures.md`; clear it only when fresh matching evidence resolves the recorded condition.
+    4. If `localhost:3000` refuses, record it in [`Failures.md`](../../Failures.md) with evidence. The table is empty now.
 - **Key User Journeys Tested:**
   1. `/` $\to$ `/products` $\to$ category $\to$ product detail $\to$ `/contact`
   2. `/trusted-by` and `/clients` verified as peer proof siblings

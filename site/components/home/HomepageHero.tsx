@@ -236,7 +236,7 @@ export function HomepageHero() {
 
           <div className="home-actions">
             <MarketingCtaLink
-              href="/ooplanner"
+              href={t("hero.primaryCta.href")}
               label={t("hero.primaryCta.label")}
               surface="homepage-hero"
               context="hero"
@@ -245,7 +245,7 @@ export function HomepageHero() {
               {t("hero.primaryCta.label")}
             </MarketingCtaLink>
             <MarketingCtaLink
-              href="/products"
+              href={t("hero.secondaryCta.href")}
               label={t("hero.secondaryCta.label")}
               surface="homepage-hero"
               context="hero"

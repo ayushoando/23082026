@@ -400,9 +400,9 @@ Database backup safety is maintained by an automated pipeline:
   3. Standard OpenTelemetry distributed tracing via Next.js runtime hook in `site/instrumentation.ts`.
   4. Local Prometheus `/api/metrics` scraping endpoint for ad-hoc inspection without requiring local Docker containers.
 - **3-Way Environment Architecture:**
-  1. Root `.env.local` / `.env.example`: Complete 7-section local developer workstation configuration.
-  2. Next.js Site `site/.env.example`: Lean template for Next.js runtime.
-  3. Tech-Docs SPA `tech-docs-generator/.env.example`: Isolated 4-variable template for `:3001`.
+  1. Root `.env.example` → `.env.local` and `site/.env.local`. Default `DEV_AUTH_BYPASS=1`.
+  2. `site/.env.example`: Next runtime. Default `DEV_AUTH_BYPASS=0`. Prod `https://oando.co.in`. Adds Bedrock/OTEL/metrics.
+  3. `tech-docs-generator/.env.example`: six public keys (`VITE_PORT`, `NEXT_PUBLIC_*`, `NEXT_ADMIN_SUPABASE_URL` / anon / publishable). No service role. `:3001` / `https://oando23.vercel.app`.
 
 ---
 

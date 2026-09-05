@@ -412,12 +412,12 @@
       },
       "kicker": "पैन-इंडिया · 2011 से",
       "primaryCta": {
-        "href": "/products",
-        "label": "उत्पाद देखें"
+        "href": "/ooplanner",
+        "label": "लेआउट प्लान लें"
       },
       "secondaryCta": {
-        "href": "/#contact",
-        "label": "कोटेशन अनुरोध"
+        "href": "/products",
+        "label": "उत्पाद देखें"
       },
       "title": [
         "कार्यक्षेत्र जो",

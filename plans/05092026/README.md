@@ -98,8 +98,8 @@ Cross-cutting rule: distinguish **source presence**, **current `HEAD`**, and **c
 
 ## 3. Core Operating Invariants
 
-1. **Zero Code Changes (`NO CODE CHANGE`):** Absolutely no modifications to application code, tests, or scripts during planning.
-2. **Zero Auto-Implementation (`NO AUTO IMPLEMENT`):** Planning, audit, and technical specification only.
+1. **Evidence over freeze:** This suite was executed. Remaining work is verification (`pnpm run gate`, recorded Playwright pass, bypass-off `/access`, Vercel env allowlist). Do not treat the old `NO CODE CHANGE` banner as current.
+2. **No auto-ship:** Do not run `vercel:prod` or `worker:deploy` without a named command. `vercel-env-push.mjs` skips `DEV_AUTH_BYPASS`.
 3. **User Wins (`AGENTS.md`):** User authority strictly supersedes documentation or prior agent output.
 4. **Boundary Isolation:** Studio and Planner are strictly forked trees with zero cross-imports (`pnpm run scan:boundaries`).
 5. **Persistence Safeguards:** Production filesystem is strictly read-only (`EROFS` protection). All writes must route through mode-aware persistence wrappers.

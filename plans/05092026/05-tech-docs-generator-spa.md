@@ -8,8 +8,8 @@
 ## Execution checklist (leave open)
 
 - [x] Port 3001 `strictPort`; outDir `generated-documents/site`
-- [ ] `pnpm --filter oando-tech-docs build` (in flight this session)
-- [ ] `pnpm run test:tech-docs` / `tech-docs:gate` (in flight or unrun)
+- [x] `pnpm --filter oando-tech-docs build` exit 0 → `generated-documents/site`
+- [x] `pnpm run test:tech-docs` 42 files / 224 tests; `tech-docs:gate` exit 0 after package-local RTL cleanup
 - [x] Env template is `tech-docs-generator/.env.example` (public Admin keys only; no service role)
 - [ ] Hosted origin `https://oando23.vercel.app` unobserved this session
 - [ ] Claim-provenance ledger still planning

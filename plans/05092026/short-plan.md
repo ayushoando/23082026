@@ -17,7 +17,7 @@ This is Plan 16. Unchecked = not finished.
 - [x] Dashboard sign-out does not call `createAuthClient` (`signOutFromSupabase` only)
 - [ ] `/access` cookie-loop proof on `http://localhost:3000` with **bypass off**
 - [ ] Dashboard sign-out lands on `/access` with bypass off (bypass run hung; not production auth)
-- [x] Hero `.home-actions` — live hrefs `/ooplanner` + `/products`
+- [x] Hero `.home-actions` — i18n hrefs `/ooplanner` + `/products`
 - [x] Hero title clamp `18ch` at `lg+`
 - [x] WhyChooseUs `lg:grid-cols-4` (4 columns observed at 1080)
 - [ ] Mobile 390 cookie + dock + FAB overlap with cookie bar visible
@@ -39,11 +39,11 @@ This focused plan translates the empirical findings from the multi-viewport home
 ├────────────────────────────────────────────────────────────────────────┤
 │ Phase 2: Multi-Viewport Homepage Alignment (1920, 1440, 1080, 768, 390)│
 │   • site/components/home/HomepageHero.tsx: Restore .home-actions CTAs  │
-│   • site/focss/site/components/homepage/home-type.css: Relax 11ch clamp│
-│   • site/components/home/WhyChooseUs.tsx: Lower grid threshold to lg   │
+│   • home-type.css lg+ 18ch (live)                                      │
+│   • WhyChooseUs lg:grid-cols-4 (live)                                  │
 ├────────────────────────────────────────────────────────────────────────┤
 │ Phase 3: Cloud Telemetry & 3-Way Environment Discipline                │
-│   • Retain .env.local, site/.env.example, tech-docs-generator/.env.ex  │
+│   • .env.example, site/.env.example, tech-docs-generator/.env.example  │
 │   • Maintain lean telemetry: GA4, Vercel, OpenTelemetry (OBSERVABILITY)│
 ├────────────────────────────────────────────────────────────────────────┤
 │ Phase 4: Verification & Blocker Clearance                              │

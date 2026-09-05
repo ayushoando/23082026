@@ -18,6 +18,7 @@ Use this index to find the canonical document for a task. Start with [onboarding
 | 10 | [`HANDOVER.md`](./HANDOVER.md) | Historical handoff context; verify against live state |
 | 11 | [`plans/05092026/README.md`](./plans/05092026/README.md) | Suite index (01–13 + short-plan + phased-remedy). Spine: [`plans/PLAN.md`](./plans/PLAN.md) · map [`plans/client-hub/flowcharts/clients-hub-flow.md`](./plans/client-hub/flowcharts/clients-hub-flow.md) |
 | 12 | [`OBSERVABILITY.md`](./OBSERVABILITY.md) | Cloud observability & telemetry guide |
+| 12a | [`.env.example`](./.env.example) · [`site/.env.example`](./site/.env.example) · [`tech-docs-generator/.env.example`](./tech-docs-generator/.env.example) | Env templates. Never commit `.env.local`. Never push `DEV_AUTH_BYPASS` to production |
 
 ## Agents / docs / tooling
 

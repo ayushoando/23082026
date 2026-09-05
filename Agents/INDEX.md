@@ -73,8 +73,7 @@ Enterprise client registry: 116 canonical clients across 4 sectors in
 `site/lib/clients/clientRegistry.ts`, verified vector logos in
 `site/public/assets/marketing/client-logos/`, zero letter monogram fallbacks, and
 quiet luxury proof surfaces on `/trusted-by` and `/clients`. Public planning tools
-on `/tools`. Hardened security: CSP headers in `site/next.config.js`/`mjs` and
-`site/proxy.ts`, secure cookies, and input sanitization in `site/lib/security/`.
+`/tools` is `not-found` / nonindexable in current source. Hardened security: CSP in `site/proxy.ts` plus static headers in `site/next.config.js` (no `next.config.mjs`), secure cookies, and input sanitization in `site/lib/security/`.
 Complete i18n: 861 keys across 26 namespaces with 100% Hindi Devanagari parity
 in `site/i18n/messages/{en,hi}.json`. Tech-docs SPA: Vite repository explorer
 hosted at `https://oando23.vercel.app` (dev `:3001`).

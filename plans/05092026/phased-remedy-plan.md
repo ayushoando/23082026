@@ -62,8 +62,8 @@ This master blueprint delivers an exhaustive architectural investigation and pha
 ```
 
 ### Core Master Invariants:
-1. **Zero Code Changes (`NO CODE CHANGE`):** Strictly zero edits to application source code, test files, or scripts during this blueprinting phase.
-2. **Zero Auto-Implementation (`NO AUTO IMPLEMENT`):** All output is delivered strictly as an authoritative technical blueprint and runbook.
+1. **Evidence over freeze:** Source in this suite has already changed. Do not treat `NO CODE CHANGE` as current. Remaining: recorded Playwright pass, `pnpm run gate`, bypass-off `/access`.
+2. **No auto-ship:** Named commands only. `scripts/vercel-env-push.mjs` skips `DEV_AUTH_BYPASS` and is allowlist-only.
 3. **User Wins & Authority Order:** Current user instruction > live code/fresh command output > `AGENTS.md` > `Agents/` > `docs/`. Tests, builds, gates, and browser checks require exact current-session user authorization.
 4. **Platform Boundary Isolation:** Studio (`/oostudio`) and Planner (`/ooplanner`) are strictly forked, isolated applications. Cross-imports between `@planner/*` and `@studio/*` are strictly forbidden and ratchet-checked via `pnpm run scan:boundaries`.
 5. **Dual-Database Split (Zero Dual-Write):**
