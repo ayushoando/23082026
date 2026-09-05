@@ -107,7 +107,6 @@ const mcpAssets = [
   { name: 'cloudflare-docs', purpose: 'Cloudflare documentation search and migration guidance', path: 'mcp/cloudflare-docs/tools/' },
   { name: 'github', purpose: 'Repository, pull request, issue, and security tool schemas', path: 'mcp/github/tools/' },
   { name: 'tasks', purpose: 'Task creation, updates, pausing, and result retrieval', path: 'mcp/tasks/tools/' },
-  { name: 'Datadog v11 data', purpose: 'Repository-local Datadog data index', path: 'mcp/Datadog/v11/' },
 ]
 
 /** New site-workflows modules — beautiful static rendering (module nav + walkthrough/current/goal + mermaid + images + instructions).

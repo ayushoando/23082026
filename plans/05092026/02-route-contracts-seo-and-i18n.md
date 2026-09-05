@@ -205,3 +205,19 @@ For every route in `site/app/(site)/`, first record the intended lifecycle: publ
 
 - **Zero Untranslated English in UI:** When adding or updating marketing copy, developers must never commit English strings directly into `hi.json`. Use `scripts/sync-marketing-i18n-messages.mjs` to synchronize schema keys before manual Hindi translation.
 - **Route Additions Protocol:** Only a newly verified public `200` route receives an entry in `SEO01_STATIC_METADATA` and `site/app/sitemap.ts`; all other lifecycle states must be excluded from public discovery surfaces.
+
+---
+
+## 7. Authentication & Edge Proxy Route Contracts (`/access` & `/dashboard`)
+
+Derived from the forensic audit documented in `docs/audit 05092026/homepage-and-auth-audit.md`:
+
+### 7.1 `/access` Edge Proxy Invariants (`site/proxy.ts`)
+1. **Loop Prevention on `/access`:** Edge middleware must never unconditionally redirect requests matching `/access` to `/dashboard` based on unverified client cookie presence (`hasSessionAuthCookies()`). An expired or corrupted `sb-*-auth-token` cookie will otherwise trigger an infinite HTTP 307 loop with server layout guards.
+2. **Local Development Bypass Exception:** When `DEV_AUTH_BYPASS=1` is active, navigating to `/access` must be permitted for sign-in testing without aggressive forced redirection to `/dashboard`.
+3. **Canonical Trailing Slash Sanitization:** `/access/` must redirect canonical 308 to `/access`, preserving query parameters (`?next=...`).
+
+### 7.2 Session Termination & Client Sign-Out Contract
+1. **Server Action Delegation:** Client-side components (such as `site/features/shared/dashboard/DashboardClient.tsx`) must never invoke `createAuthClient().auth.signOut()` directly in browser bundles, as server-only Supabase environment variables (`NEXT_ADMIN_SUPABASE_URL`) are omitted from client bundles and throw unhandled exceptions.
+2. **Standard Handler:** All client sign-out events must invoke the Server Action `signOutFromSupabase()` in `site/lib/auth/supabaseServerActions.ts`.
+

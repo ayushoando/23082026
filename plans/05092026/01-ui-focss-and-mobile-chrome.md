@@ -128,3 +128,23 @@ Mobile viewports must cleanly coordinate 5 interactive floating layers without c
     - Cookie consent bar position: `bottom: calc(var(--mobile-tab-bar-height) + 1px) !important;` at `z-index: 40`.
     - Do not hide either FAB merely because the cookie bar is present. Preserve visible FABs above the tab bar with safe-area padding; allow a narrowly scoped hide only when the open consent bar creates a demonstrated collision with no safe placement.
 4. **Viewport Acceptance:** At 375px, verify the top bar has no `Get Quote`, bottom tabs retain `Products`, `Planner`, `Quote`, `Portfolio`, and `Sign in`, the drawer has only the six overflow links, and the cookie bar is above the tab bar. Compare the desktop header before accepting the mobile change.
+
+---
+
+## 6. Multi-Viewport Layout Contract (1920px, 1440px, 1080px, 768px, 390px)
+
+Derived from the empirical audit documented in `docs/audit 05092026/homepage-and-auth-audit.md`:
+
+### 6.1 Viewport Breakpoints & Invariants
+1. **1920px (Desktop Ultrawide / 2XL):**
+   - Container max width: `--container-home-max: 82.5rem` (`1320px`) leaves ~300px side gutters.
+   - Title line-clamp relaxation: Relax `max-width: 11ch` on `.home-hero-title-homepage` in `site/focss/site/components/homepage/home-type.css` to allow the headline to span naturally across wide viewports rather than forcing an awkward 3-line word wrap.
+2. **1440px (Standard Desktop Baseline):**
+   - Hero Action CTAs restoration: In `site/components/home/HomepageHero.tsx`, restore the primary/secondary action buttons container (`.home-actions` with "Explore Catalog" and "Launch Planner").
+3. **1080px (Compact Desktop / FHD):**
+   - Value-props grid threshold: In `site/components/home/WhyChooseUs.tsx:48`, update `xl:grid-cols-4` to `lg:grid-cols-4` so 4 cards maintain a 4-column row between 1024px and 1280px instead of collapsing into 2 wide horizontal slabs.
+4. **768px (Tablet Boundary Fence):**
+   - Coordinate `app-shell.css` mobile chrome cutoff (`display: none` at `>=768px`) with desktop `SiteHeader` link density to prevent desktop navigation crowding between 768px and 1024px.
+5. **390px (Mobile Standard):**
+   - Cookie consent banner must stack cleanly above the 56px bottom tab bar (`--mobile-nav-height`) without permanently occluding >15% of the viewport.
+
