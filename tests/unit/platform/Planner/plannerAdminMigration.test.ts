@@ -90,8 +90,8 @@ describe("Planner revision/idempotency Admin migration evidence", () => {
     expect(forward).toContain(
       "returning revision, payload, name, thumbnail_url, status, created_at, updated_at",
     );
-    expect(forward).toContain(
-      "returning plan.revision, plan.payload, plan.name, plan.thumbnail_url,\n              plan.status, plan.created_at, plan.updated_at",
+    expect(forward).toMatch(
+      /returning plan\.revision,\s*plan\.payload,\s*plan\.name,\s*plan\.thumbnail_url,\s*plan\.status,\s*plan\.created_at,\s*plan\.updated_at/,
     );
     expect(forward).toMatch(
       /select receipt\.request_fingerprint,\s+receipt\.response_status,\s+receipt\.response_revision,\s+receipt\.response_payload,\s+receipt\.response_name,\s+receipt\.response_thumbnail_url,\s+receipt\.response_plan_status,\s+receipt\.response_created_at,\s+receipt\.response_updated_at/,

@@ -334,14 +334,14 @@ The platform enforces five static test integrity gates (`node scripts/general/ru
 #### Blocker 1: `GATE-RECHECK-01` (Ship bar currently stops at Vitest lane)
 - **Current reconciliation (supersedes the historical remediation claim below):** A current-tree Vitest run initially had four failing files. The subsequent authorized re-run of exactly those four passed `htmlSitemap.test.ts`, `siteSeoContract.test.ts`, and `providers.test.ts`, but `siteSeoAcceptance.test.ts` still failed: the footer expects `/tools` to classify as `public`, while `routeClassification.ts` returns `not-found`.
 - **Decision gate:** Canonical-host HTTP status takes precedence over source presence. The last observed canonical-host responses for `/tools` and both calculator routes were `404`. Do not index, title, or add dead routes to a sitemap to satisfy the test. Before code changes, decide whether to remove every public `/tools` reference or restore and verify a real public `200` route. Only fresh successful required tests and gate results may clear `Failures.md`.
-- **Observed Cause:** Vitest reported failures in 4 test files:
+- **Historical failure record (superseded):** Vitest reported failures in 4 test files:
   1. `tests/unit/features/site/data/htmlSitemap.test.ts` (missing `/tools` path).
   2. `tests/unit/features/site/data/siteSeoAcceptance.test.ts` (missing `/tools` SEO entry).
   3. `tests/unit/features/site/data/siteSeoContract.test.ts` (missing `/tools` metadata contract).
   4. `tests/unit/lib/ai/mastra/providers.test.ts` (mismatched default model string: `gemini-3.6-flash` vs `gemini-2.5-flash`).
-- **Remedy Verification Protocol:**
+- **Historical proposed remediation (do not treat as current route truth):**
   Commit `961e64413acf96ce6e9b5b10c954d94002d15e15` registered `/tools` in `htmlSitemap.ts`, added `TOOLS_PAGE_METADATA` to `siteSeoContract.ts`, and updated `providers.ts` to `gemini-2.5-flash`.
-  To clear the blocker, execute:
+  Historic targeted-test command reference:
   ```powershell
   pnpm exec vitest run --config tests/vitest.config.ts `
     tests/unit/features/site/data/htmlSitemap.test.ts `
@@ -349,7 +349,7 @@ The platform enforces five static test integrity gates (`node scripts/general/ru
     tests/unit/features/site/data/siteSeoContract.test.ts `
     tests/unit/lib/ai/mastra/providers.test.ts
   ```
-  Follow with a full headless gate `pnpm run release:gate:core`. Only after observing an exit code of `0`, delete the row from `Failures.md`.
+  Follow with the authorized full gate. Only fresh required exit code `0` results permit deletion from `Failures.md`.
 
 #### Blocker 2: `BROWSER-ORIGIN-02` (Browser walk app unavailable)
 - **Observed Cause:** Local server was not running when Playwright attempted connection to `http://localhost:3000`, causing `net::ERR_CONNECTION_REFUSED`. Prohibited from using `127.0.0.1`.
@@ -451,6 +451,12 @@ The Tech-Docs Generator (`tech-docs-generator/`) is an independent React 19 appl
   - The presence of a cookie bar alone must **not** hide WhatsApp or assistant FABs. Raise them with the tab-bar offset and safe-area padding. Conditional hiding is permitted only for a demonstrated, otherwise-unsolvable collision while consent is visible; it must not affect desktop.
 - **Acceptance evidence:** At a `<768px` viewport, confirm no top-bar Quote CTA, the six-link overflow drawer, cookie bar above the tab bar, and both FABs visible when they have non-overlapping space. Recheck the desktop header and FAB placement unchanged.
 
+### 10.3 Runtime Integrity, Third Parties & Release Provenance
+- **Three separate states:** Record source `HEAD`, response from the canonical host, and browser runtime output independently. A matching source file or a historical green summary never proves that production serves that revision.
+- **Security and analytics inventory:** Before a release, enumerate active first- and third-party scripts and their required CSP `script-src` / `connect-src` origins. Verify removals in rendered HTML and response headers; retain Google Analytics unless a scoped product decision changes it.
+- **Hydration and console check:** At the canonical homepage, collect browser-console output after a clean navigation. If React reports hydration error `#418`, capture the first component-stack line before proposing a code change. Do not add broad `suppressHydrationWarning` bypasses.
+- **Release verification:** After an authorized deployment, wait for propagation, fetch the canonical host again, and record final URL/host, status, selected HTML markers, CSP headers, and console result against the deployed revision. A mismatch is a release-provenance blocker, not a reason to alter unrelated features.
+
 ---
 ## 11. Master Sequential Execution Runbook
 
@@ -545,9 +551,9 @@ While Modules 1–9 define the horizontal and vertical engineering infrastructur
 │ • Primary CTA: /planner ("Get your layout plan")                       │
 │ • Cloudflare R2 WebP assets with unoptimized flag                      │
 ├────────────────────────────────────────────────────────────────────────┤
-│ Phase 3: Map Equals Code (Redirects & Calculator Indexability)         │
+│ Phase 3: Map Equals Code (Redirects & Route Lifecycle)                 │
 │ • Permanent 308/301 redirects in next.config.js (news, catalog, etc.)  │
-│ • Calculator routes (/tools/*) live status: indexable: true in SEO     │
+│ • /tools/* remains not-found/nonindexable while canonical host is 404  │
 ├────────────────────────────────────────────────────────────────────────┤
 │ Phase 4: Browser Walk (Manual & Playwright E2E Verification)           │
 │ • Origin invariant: http://localhost:3000 (never 127.0.0.1)           │

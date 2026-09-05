@@ -67,7 +67,7 @@
 
 ---
 
-### Phase 3 — Map Equals Code — ✅ Complete (Remedied)
+### Phase 3 — Map Equals Code — Reconciliation Required
 
 - **HTTP Redirects ([`config/build/next.config.js#L88-L140`](file:///d:/23082026/config/build/next.config.js#L88-L140)):**
   - News aliases $\to$ `/about/`
@@ -76,10 +76,11 @@
   - Support and tracking aliases $\to$ `/service/`
   - Auth sign-in aliases $\to$ `/access/`
   - Solutions aliases $\to$ `/products/`
-- **Calculator Indexability (Updated Truth):**
-  - *Prior Stale Assumption:* Claimed `/tools/*` were placeholder shells with `indexable: false`.
-  - *Remedied Reality:* Tools under `/tools/*` (`/tools/office-space-calculator` and `/tools/meeting-room-capacity-calculator`) as well as directory `/tools` are explicitly configured with **`indexable: true`** in [`routeClassification.ts#L52-L80`](file:///d:/23082026/site/features/site/data/routeClassification.ts#L52-L80).
-  - All three paths are registered in `SEO01_STATIC_METADATA` (`site/features/site/data/siteSeoContract.ts#L64-L72`) and included in `htmlSitemap.ts` and XML sitemaps.
+- **Calculator Route Lifecycle (Current Truth):**
+  - The last canonical-host observations for `/tools`, `/tools/office-space-calculator`, and `/tools/meeting-room-capacity-calculator` were `404`. Their intended `routeClassification.ts` state is therefore `not-found` and `indexable: false`.
+  - Source page files or metadata entries do not make these public routes. While canonical HTTP remains `404`, they must not appear in the public header/footer, HTML sitemap, XML sitemap, or an indexability contract.
+  - The current targeted SEO recheck leaves one explicit mismatch: the footer still expects `/tools` to be `public`, while the classifier returns `not-found`. This is pending product direction, not a prompt to add `/tools` pages or titles.
+  - Decision required: remove the public `/tools` reference if these routes stay retired, or restore and verify all required public `200` behaviour before reintroducing indexability.
 - **Utility Route Boundaries:** Non-marketing utility surfaces (`/compare`, `/quote-cart`, `/choose-product`) remain unlinked in public sitemaps.
 
 ---

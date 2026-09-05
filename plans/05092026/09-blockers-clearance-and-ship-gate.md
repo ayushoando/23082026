@@ -60,13 +60,13 @@ Enforced by [`scripts/general/check-failures.mjs#L7-L14`](file:///d:/23082026/sc
 ## 3. Detailed Resolution Plan for Active Blockers
 
 ### Blocker 1: `GATE-RECHECK-01` (Priority: P1)
-- **Documented Blocker:** Vitest failed on 4 tests: `htmlSitemap.test.ts`, `siteSeoAcceptance.test.ts`, `siteSeoContract.test.ts`, and `providers.test.ts`.
-- **Root Cause & Code Remediation:**
+- **Historical blocker record (superseded below):** Vitest failed on 4 tests: `htmlSitemap.test.ts`, `siteSeoAcceptance.test.ts`, `siteSeoContract.test.ts`, and `providers.test.ts`.
+- **Historical proposed remediation (not current route truth):**
   1. `htmlSitemap.test.ts` & `siteSeoAcceptance.test.ts`: Missing route `/tools` in company service path array. Remedied in `site/features/site/data/htmlSitemap.ts#L128`.
   2. `siteSeoContract.test.ts`: Route `/tools` was unmapped in the static registry. Remedied in `site/features/site/data/siteSeoContract.ts#L64`.
   3. `providers.test.ts`: Stale model identifier expectation. Remedied in `site/lib/ai/mastra/providers.ts#L168` pinning model default to `gemini-2.5-flash`.
-- **Live Empirical Evidence:**
-  The latest full test execution recorded in [`results/tests/summary.json`](file:///d:/23082026/results/tests/summary.json) confirms 0 failed tests:
+- **Historical archived result (not clearance evidence):**
+  [`results/tests/summary.json`](file:///d:/23082026/results/tests/summary.json) once recorded 0 failed tests:
   ```json
   {
     "generatedAt": "2026-09-05T03:57:36.303Z",
@@ -76,17 +76,22 @@ Enforced by [`scripts/general/check-failures.mjs#L7-L14`](file:///d:/23082026/sc
     ]
   }
   ```
-- **Live Empirical Evidence Already Available:**
-  `results/tests/summary.json` (written `2026-09-05T03:57:36Z`) confirms 0 failures across both lanes:
+- **Historical archived result (duplicate record):**
+  `results/tests/summary.json` (written `2026-09-05T03:57:36Z`) recorded 0 failures across both lanes:
   ```json
   { "lanes": [
     { "lane": "default",   "failed": 0, "total": 4296 },
     { "lane": "tech-docs", "failed": 0, "total": 224  }
   ]}
   ```
-  This proves the code fixes are already in place. The only remaining step is a fresh **live** run to get a current-session exit code.
-- **Clearance Step:**
-  Upon authorized execution of `pnpm run test`, observe exit code 0, and remove the `GATE-RECHECK-01` row from [`Failures.md`](file:///d:/23082026/Failures.md).
+  This historical output does not prove the current code or deployed revision is green. Use the reconciliation and clearance rule below.
+
+#### Current reconciliation (supersedes the historical block above)
+
+- A current-tree `pnpm run test` initially exited `1` with failures in `htmlSitemap.test.ts`, `siteSeoAcceptance.test.ts`, `siteSeoContract.test.ts`, and `providers.test.ts`.
+- The later authorized re-run of exactly those four files passed `htmlSitemap.test.ts`, `siteSeoContract.test.ts`, and `providers.test.ts`. One assertion remains in `siteSeoAcceptance.test.ts`: **expected** footer `/tools` classification `public`; **received** `not-found`.
+- The canonical host had returned `404` for `/tools` and both calculator paths. Treat that as authoritative: the remaining assertion is a public-footer/classification mismatch, not a reason to create pages, manufacture SEO titles, or put dead URLs into sitemaps.
+- Before code changes, a product owner must choose whether `/tools` stays retired (remove all public references) or is restored as a verified canonical `200` route (then reintroduce public SEO). Only after that scoped work and fresh successful required gates may `GATE-RECHECK-01` be removed.
 
 ---
 

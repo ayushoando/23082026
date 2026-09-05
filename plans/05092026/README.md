@@ -23,13 +23,16 @@ This multi-file planning suite provides horizontal and vertical technical bluepr
 | [`07-scripts-and-operational-catalog.md`](./07-scripts-and-operational-catalog.md) | Complete script inventory (111 root, 56 general, 8 allowlisted AsNeeded), central `run-ops.mjs` dispatcher, governance ratchet. |
 | [`08-standalone-packaging-and-sizing.md`](./08-standalone-packaging-and-sizing.md) | Next.js standalone distribution footprint, asset copy automation (`prepare-standalone.cjs`), Webpack optimizations, bundle externalization. |
 | [`09-blockers-clearance-and-ship-gate.md`](./09-blockers-clearance-and-ship-gate.md) | Sequential blocker clearance protocol for `Failures.md` (`GATE-RECHECK-01` and `BROWSER-ORIGIN-02`), followed by master 4-phase ship gating runbook. |
-| [`10-client-hub-sequence-plan.md`](./10-client-hub-sequence-plan.md) | Client-hub sequence roadmap (relocated from `plans/PLAN.md`), public route maps, flat 8-link header, indexable calculator contracts, and browser walk. |
+| [`10-client-hub-sequence-plan.md`](./10-client-hub-sequence-plan.md) | Client-hub sequence roadmap (relocated from `plans/PLAN.md`), public route maps, flat 8-link header, route-lifecycle contracts, and browser walk. |
+| [`11-admin-access-and-authorization.md`](./11-admin-access-and-authorization.md) | Dedicated authority plan for the access entry, member shells, Admin console, API role/CSRF/rate-limit contracts, and dev-bypass containment. |
+| [`12-security-observability-and-release.md`](./12-security-observability-and-release.md) | Dedicated production-integrity plan for CSP/header ownership, third-party inventory, metrics and error privacy, incident response, and release provenance. |
+| [`13-accessibility-performance-and-inclusive-ux.md`](./13-accessibility-performance-and-inclusive-ux.md) | Dedicated quality plan for WCAG coverage, keyboard/focus contracts, reduced motion, mobile ergonomics, and measured performance budgets. |
 
 ---
 
 ## 1.1 Coverage, Evidence, and Completion Rules
 
-All ten planned areas have an owning document. Runtime security, third-party scripts, hydration, and release provenance span those areas and are controlled from the master plan rather than by an eleventh implementation document.
+All thirteen planned areas have an owning document. The last three plans fill previously cross-cutting-only domains: authority, production integrity, and inclusive quality.
 
 | Area | Owning plan | Coverage status | Required evidence before completion |
 |------|-------------|-----------------|-------------------------------------|
@@ -41,8 +44,11 @@ All ten planned areas have an owning document. Runtime security, third-party scr
 | Tests and integrity audits | `06-test-subsystem-and-integrity-audits.md` | Covered | Fresh, authorized lane output; historical summaries are not clearance evidence |
 | Scripts and operations | `07-scripts-and-operational-catalog.md` | Covered | Inventory/governance checks against the current tree |
 | Standalone packaging | `08-standalone-packaging-and-sizing.md` | Covered | Fresh authorized production build and artifact inspection |
-| Blockers and ship gate | `09-blockers-clearance-and-ship-gate.md` | Covered; stale green claim removed | Each `Failures.md` row is cleared only by fresh successful evidence |
+| Blockers and ship gate | `09-blockers-clearance-and-ship-gate.md` | Covered; stale green claim explicitly superseded | Each `Failures.md` row is cleared only by fresh successful evidence |
 | Client-hub product sequence | `10-client-hub-sequence-plan.md` | Covered; `/tools` state is now explicitly pending | Product decision plus live-host and SEO contract verification |
+| Admin, member access, and authorization | `11-admin-access-and-authorization.md` | Newly covered | Route/API authorization matrix, CSRF and rate-limit evidence, and bypass containment checks |
+| Security, observability, and release operations | `12-security-observability-and-release.md` | Newly covered | Effective headers, third-party ledger, metrics access, incident path, and deployed-revision verification |
+| Accessibility, performance, and inclusive UX | `13-accessibility-performance-and-inclusive-ux.md` | Newly covered | WCAG/keyboard/reduced-motion evidence plus measured, approved performance budgets |
 
 Cross-cutting rule: distinguish **source presence**, **current `HEAD`**, and **canonical-host behaviour**. A route component, metadata entry, or historical result is not evidence that the canonical host returns a public `200`. Record the command or URL, revision, timestamp, and result before advancing any phase.
 

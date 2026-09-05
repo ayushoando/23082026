@@ -11,36 +11,28 @@
 
 ## 1. Executive Summary & Purpose
 
-This operational runbook provides exact, step-by-step instructions for clearing active repository blockers in [`Failures.md`](../../Failures.md), resolving nightly Supabase CI backup failures, and verifying that the full ship bar release gate passes cleanly.
+This operational runbook provides procedures for reproducing and clearing the current blockers linked from [`Failures.md`](../../Failures.md), describes independent Supabase backup operations, and defines the release-gate sequence.
 
-Every procedure, command line, and verification check in this runbook has been verified against live repository code as of September 5, 2026.
+The repository paths were inspected on September 5, 2026. Treat commands and historical RCA as guidance only; `Failures.md` and fresh authorized output determine current status.
 
-### Active Ledger Status in [`Failures.md`](../../Failures.md):
-| ID | Priority | Blocker Summary | Target Area |
-| :--- | :---: | :--- | :--- |
-| **`GATE-RECHECK-01`** | **P1 — Pending Deletion** | Tests passing (0 failures per `summary.json`); row not yet deleted from `Failures.md` | Unit & Integration Test Suites |
-| **`BROWSER-ORIGIN-02`** | **P1** | Local app unavailable (`net::ERR_CONNECTION_REFUSED` at `http://localhost:3000`) | Dev Server & Playwright Browser Gate |
+### Current Ledger Status
 
-### Cleared Blockers (DO NOT RE-INVESTIGATE):
-- **`CF-TOKEN-01`**: Cloudflare API token scope mismatch — **CLEARED** (canonical token provisioned in Cloudflare dashboard and `.env.local`; removed from `Failures.md`).
-- **`GATE-AUTH-02`**: Operator execution permission floor — **CLEARED** (current-session authorization hooks verified; removed from `Failures.md`).
+Do not duplicate blocker identifiers or statuses here. Read [`Failures.md`](../../Failures.md) before running any procedure. At this revision, it records one test-lane blocker and one local-browser-origin blocker; archived cleared incidents are intentionally omitted from this runbook.
 
 ---
 
-## 2. Active Blocker 1: `GATE-RECHECK-01` (Vitest Lane Failures)
+## 2. Test-Lane Blocker
 
 ### 2.1 Current Status & Remaining Action
-`results/tests/summary.json` (written `2026-09-05T03:57:36Z`) confirms **0 failures** across both Vitest lanes (0/4296 Lane 1, 0/224 Lane 2). The code fixes for all 4 previously failing tests have been committed:
-- `htmlSitemap.ts` — `/tools` routes registered ✅
-- `siteSeoAcceptance.test.ts` — canonical URL formation correct ✅
-- `siteSeoContract.ts` — `/tools` in `SEO01_STATIC_METADATA` at line 64 ✅
-- `providers.test.ts` — model string `gemini-2.5-flash` at line 168 ✅
+The last full result recorded in [`Failures.md`](../../Failures.md) has four failing files. The later authorized recheck of exactly those files passed `htmlSitemap.test.ts`, `siteSeoContract.test.ts`, and `providers.test.ts`, but `siteSeoAcceptance.test.ts` still failed because the footer expects `/tools` to be `public` while the route classifier returns `not-found`.
 
-**Remaining action:** Run `pnpm run test` in the current session, observe exit code 0, then delete the `GATE-RECHECK-01` row from `Failures.md`. The §2.2–2.4 steps below document the historical RCA and are retained for reference.
+The canonical host had returned `404` for `/tools` and its two calculator paths. Do not add pages, SEO titles, or sitemap URLs to satisfy the test. Obtain a product decision to either remove the public `/tools` references or restore a verified public `200` route. Then run the affected test followed by the authorized full suite and gate. An archived `results/tests/summary.json` cannot clear the ledger row.
 
 ---
 
-### 2.2 Currency Code Expectation Mismatch in PriceBook Service Tests
+### 2.2 Archived Diagnostic: PriceBook Currency Tests (Not an Active Blocker)
+
+This historical diagnostic is retained for context only. It is not named in the current [`Failures.md`](../../Failures.md) ledger and must not broaden work on the active test-lane blocker.
 
 #### Root Cause Analysis:
 The price book subsystem enforces strict contract invariants in `site/features/admin/pricing/`:
@@ -102,9 +94,9 @@ pnpm exec vitest run tests/unit/features/admin/pricing/priceBookService.test.ts
 
 ---
 
-### 2.3 Diagnostic & Resolution for the 4 Failing Test Suites Named in `Failures.md`
+### 2.3 Historical Four-File Inventory and Current Reconciliation
 
-`Failures.md` specifically enumerates 4 test files that failed on `main`:
+The last full test result recorded four failing files. This list is a diagnostic inventory, not a standing implementation instruction. The later targeted recheck passed the HTML sitemap, SEO contract, and provider tests; only the footer/classification assertion remains.
 
 #### 1. `tests/unit/features/site/data/htmlSitemap.test.ts`
 - **Target Command:**
@@ -112,17 +104,17 @@ pnpm exec vitest run tests/unit/features/admin/pricing/priceBookService.test.ts
   pnpm exec vitest run tests/unit/features/site/data/htmlSitemap.test.ts
   ```
 - **Diagnostic Area:** `buildSitemapSections()` and `getHtmlSitemapHrefs()`.
-- **Common Failure Mechanism:** A static route was added to `PUBLIC_INDEXABLE_STATIC_PATHS` in `site/features/site/data/routeClassification.ts` without being added to the expected sections in `site/features/site/data/htmlSitemap.ts`, causing `expect(hrefs).toContain(path)` to fail.
-- **Remediation:** Ensure all indexable routes in `routeClassification.ts` are categorized into a sitemap section in `htmlSitemap.ts`.
+- **Historical failure mechanism:** A public indexable static route may be absent from the expected sitemap section.
+- **Current guardrail:** Do not apply this remedy to `/tools` while the canonical host returns `404`; a `not-found` route belongs in neither public sitemap.
 
 #### 2. `tests/unit/features/site/data/siteSeoAcceptance.test.ts`
 - **Target Command:**
   ```powershell
   pnpm exec vitest run tests/unit/features/site/data/siteSeoAcceptance.test.ts
   ```
-- **Diagnostic Area:** Canonical URL formation, OpenGraph image tags, and robots meta.
-- **Common Failure Mechanism:** Protocol mismatches (`http:` vs `https:`) or trailing slash mismatches on canonical URL construction.
-- **Remediation:** Verify `siteUrl.ts` resolves to `https://oando.co.in` without trailing slashes.
+- **Current diagnostic area:** Footer-link route lifecycle agreement.
+- **Current failure mechanism:** The footer expects `/tools` to be `public`, while `routeClassification.ts` reports `not-found`.
+- **Resolution prerequisite:** Obtain the product decision to retire public references or restore a verified public `200`; do not alter canonical URLs, metadata, or sitemap contents as a substitute.
 
 #### 3. `tests/unit/features/site/data/siteSeoContract.test.ts`
 - **Target Command:**
@@ -158,7 +150,7 @@ pnpm run test
 
 ---
 
-## 3. Active Blocker 2: `BROWSER-ORIGIN-02` (Dev Server Availability)
+## 3. Browser-Origin Blocker
 
 ### 3.1 Problem Description & Impact
 The Playwright browser walk cannot start because the local application is unavailable, returning `net::ERR_CONNECTION_REFUSED` at `http://localhost:3000`. No screenshot baselines or browser route audits can be captured.
@@ -239,16 +231,16 @@ pnpm run test:browser:gate
 
 ---
 
-## 4. Documentation of Cleared Blockers
+## 4. Archived Operational Incidents
 
 To prevent duplicate investigations by operators or automated agents, the following blockers are confirmed **RESOLVED and CLEARED**:
 
-### 4.1 `CF-TOKEN-01` (Cloudflare Token Scope)
+### 4.1 Cloudflare Token Scope
 - **Previous Issue:** Worker deployment failed due to missing R2 bucket read/write permissions on the Cloudflare API token.
 - **Resolution Applied:** Cloudflare API token was granted `Workers Scripts:Edit`, `Workers R2 Storage:Edit`, and `Workers KV Storage:Edit`. Token verified and updated in Cloudflare secrets and `.env.local`.
 - **Status:** **CLEARED.** Removed from `Failures.md`. Do not re-open.
 
-### 4.2 `GATE-AUTH-02` (Gate Hook Authorization)
+### 4.2 Gate Hook Authorization
 - **Previous Issue:** Pre-commit/pre-push hooks halted on unverified execution flags.
 - **Resolution Applied:** Hook authorization scripts were reconciled with operator consent workflows.
 - **Status:** **CLEARED.** Removed from `Failures.md`. Do not re-open.
@@ -366,10 +358,10 @@ pnpm run gate
 Per [`AGENTS.md`](../../AGENTS.md) §1:
 > *“Remove a row only after an authorized rerun observes the fix.”*
 
-When `pnpm run gate` exits with code 0:
+After authorized reruns observe each corresponding fix:
 1. Open [`Failures.md`](../../Failures.md).
-2. Remove the rows for `GATE-RECHECK-01` and `BROWSER-ORIGIN-02`.
-3. The table may now be empty (an empty blocker table is valid per line 10 of `Failures.md`).
+2. Remove only the row whose fresh evidence supports clearance. A full gate does not retroactively prove an unrun browser-origin check.
+3. The table may be empty only when every active row has its own authorized successful evidence.
 4. Run the failures validation check:
    ```powershell
    pnpm run check:failures

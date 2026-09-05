@@ -183,6 +183,6 @@ pnpm run test:browser:gate
 
 ### Preflight Checklist Before Authorizing Commits
 1. Verify both Vitest lanes pass ($738 + 42 = 780$ test files).
-2. Confirm `results/tests/summary.json` records 0 failed tests across both lanes.
+2. Confirm a **fresh, current-session** `results/tests/summary.json` records 0 failed tests across both lanes; an archived summary cannot clear a blocker or authorize a commit.
 3. Verify all 5 test integrity audits exit code 0.
 4. Confirm no new `eslint-disable` comments exist outside the 5 authorized hook files.

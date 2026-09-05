@@ -9,9 +9,9 @@
 
 ## Overview & Purpose
 
-This directory serves as the unified, authoritative engineering synthesis of the repository-wide audit conducted across September 4–5, 2026. It condenses findings from 29 domain-specific deep dive audits (`agent-reports/new/`) and 2 root operational baselines (`agent-reports/`) into a definitive architectural reference and three actionable, verified operational runbooks.
+This directory is an engineering synthesis of the repository-wide audit conducted across September 4–5, 2026. It condenses findings from 29 domain-specific deep dive audits (`agent-reports/new/`) and 2 root operational baselines (`agent-reports/`) into an architectural reference and operational runbooks.
 
-All documented specifications have been forensically verified against live repository files, active configuration manifests, and passing test suites.
+Architecture facts are evidence from the audit date. Current blocker, test, browser, and deployment state is authoritative only in [`Failures.md`](../../Failures.md) and fresh command or browser evidence; archived reports and result files cannot clear a blocker.
 
 ---
 
@@ -20,10 +20,18 @@ All documented specifications have been forensically verified against live repos
 | Document | Category | Primary Focus & Scope |
 | :--- | :---: | :--- |
 | **[`platform-subsystems-reference.md`](./platform-subsystems-reference.md)** | **Architectural Reference** | The definitive 8-domain architectural blueprint covering governance, App Router, Studio/Planner isolation, dual-database partitioning, mode-aware persistence (`EROFS` prevention), FOCSS token engine, two-lane Vitest harness, and Cloudflare Worker proxy. |
-| **[`blockers-clearance-runbook.md`](./blockers-clearance-runbook.md)** | **Active Runbook** | Resolution procedures for active P1 blockers in [`Failures.md`](../../Failures.md) (`GATE-RECHECK-01` test lane clearance and `BROWSER-ORIGIN-02` local Playwright walk on `http://localhost:3000`). |
+| **[`blockers-clearance-runbook.md`](./blockers-clearance-runbook.md)** | **Active Runbook** | Resolution procedures for the active test-lane and local-browser-origin blockers linked from [`Failures.md`](../../Failures.md). |
 | **[`scripts-cleanup-runbook.md`](./scripts-cleanup-runbook.md)** | **Active Runbook** | Safe phased retirement protocol for ~59 dead or obsolete scripts across unintegrated frameworks, legacy cutover tools, and throwaway Python scripts under rule E4. |
 | **[`style-tokens-ratchet-runbook.md`](./style-tokens-ratchet-runbook.md)** | **Active Runbook** | Phased normalization workflow for the 200 legacy inline style exceptions recorded in [`config/quality/style-token-baseline.json`](../../config/quality/style-token-baseline.json), targeting high-debt CRM and admin views. |
 | **[`platform-health-audit.md`](./platform-health-audit.md)** | **Health Summary** | High-level executive scorecard across 8 areas, live database inventories, and Edge proxy topology. |
+
+---
+
+## Current Operational Reconciliation
+
+At this revision, [`Failures.md`](../../Failures.md) contains two active blockers: a full Vitest run with four failing files, and an unavailable local browser origin. A later authorized four-file recheck passed three files but still found a footer/classification mismatch for the retired `/tools` route. Do not use `results/tests/summary.json` as clearance evidence.
+
+The route decision is intentionally pending: while the canonical host returns `404`, `/tools` and its calculator paths remain `not-found` and nonindexable. The next approved change must either remove their public references or restore a verified public `200` implementation; it must not invent sitemap entries or SEO titles for dead URLs.
 
 ---
 
