@@ -56,6 +56,7 @@ This reference maps known `site/app/**/page.tsx` and `site/app/api/**/route.ts` 
 - `/solutions` → `app/(site)/solutions/page.tsx`
 - `/sustainability` → `app/(site)/sustainability/page.tsx`
 - `/terms` → `app/(site)/terms/page.tsx`
+- `/tools` → `app/(site)/tools/page.tsx` (planning tools & calculators hub)
 - `/tools/meeting-room-capacity-calculator` → `app/(site)/tools/meeting-room-capacity-calculator/page.tsx`
 - `/tools/office-space-calculator` → `app/(site)/tools/office-space-calculator/page.tsx`
 - `/trusted-by` → `app/(site)/trusted-by/page.tsx` (quiet luxury proof showcase, installation photos, client metrics, and quotes)
@@ -113,6 +114,7 @@ Live Next config (`site/next.config.ts`) is a minimal stub — **no redirect tab
 | PATCH, DELETE | `/api/admin/catalogs/[type]/[id]` |
 | GET, POST | `/api/admin/catalogs/[type]` — `type`: `standard`, `configurator` |
 | GET, PATCH | `/api/admin/features` |
+| POST | `/api/admin/indexnow` |
 | GET, PATCH | `/api/admin/plans/[id]` |
 | GET, PATCH, DELETE | `/api/admin/plans` |
 | POST | `/api/admin/price-books/[bookId]/action` |
@@ -132,6 +134,7 @@ Live Next config (`site/next.config.ts`) is a minimal stub — **no redirect tab
 | GET | `/api/dev/auth-bypass-status` |
 | POST | `/api/exports` |
 | GET | `/api/features` |
+| GET | `/api/files/catalog/[...path]` |
 | GET | `/api/files/exports/[filename]` |
 | GET | `/api/files/furniture/[filename]` — disk mode only; Supabase mode serves bucket URLs |
 | GET | `/api/files/projects/[filename]` |
@@ -141,8 +144,10 @@ Live Next config (`site/next.config.ts`) is a minimal stub — **no redirect tab
 | GET | `/api/git-user` |
 | GET | `/api/health` |
 | POST | `/api/log-error` |
+| GET | `/api/metrics` |
 | GET | `/api/nav-categories` |
 | GET, POST | `/api/nav-search` |
+| POST | `/api/Planner/ai-advisor` |
 | GET | `/api/Planner/catalog` |
 | POST | `/api/Planner/catalog/upload` |
 | POST | `/api/Planner/handoff` |

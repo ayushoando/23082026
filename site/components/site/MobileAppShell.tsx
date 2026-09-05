@@ -25,15 +25,6 @@ import { trackSiteTabSelected } from "@/lib/analytics/siteEvents";
 
 const ICONS = { SquaresFour, PencilSimple, UsersThree, ChatCircle, UserCircle } as const;
 
-/**
- * Marketing pages carry a single primary conversion — "Get Quote". On routes
- * that already own an app action (planner/canvas, account), no extra top-bar
- * CTA is shown; the tab bar + route chrome already cover it.
- */
-function mobilePrimaryAction(): { label: string; href: string } | null {
-  return null;
-}
-
 export function MobileAppShell({
   children,
 }: {
@@ -44,7 +35,6 @@ export function MobileAppShell({
   const active = activeTabFor(pathname);
   const [navOpen, setNavOpen] = useState(false);
   const showSiteFooter = resolveRouteChromeMode(pathname).footer === "full";
-  const primaryAction = mobilePrimaryAction();
 
   return (
     <div className="mobile-app-shell">
@@ -53,19 +43,6 @@ export function MobileAppShell({
           <OneAndOnlyLogo variant="orange" className="h-7" />
         </Link>
         <div className="mobile-app-bar__actions">
-          {primaryAction ? (
-            <TrackedLink
-              href={primaryAction.href}
-              label={primaryAction.label}
-              surface="mobile-app-bar"
-              aria-label="Get quote — contact sales"
-              className="hidden"
-            >
-              {primaryAction.label}
-            </TrackedLink>
-          ) : (
-            <span className="mobile-app-bar__spacer" />
-          )}
           <button
             type="button"
             aria-label={t("header.openMenu")}

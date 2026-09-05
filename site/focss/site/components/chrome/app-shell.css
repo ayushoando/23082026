@@ -8,6 +8,7 @@
 @media (width < theme(--breakpoint-md)) {
   :root {
     --mobile-tab-bar-height: calc(3.5rem + env(safe-area-inset-bottom, 0px));
+    --site-fab-bottom: calc(var(--mobile-tab-bar-height) + 0.75rem);
   }
 
   .site-header {
@@ -80,8 +81,8 @@
     bottom: calc(var(--mobile-tab-bar-height) + 1px) !important;
   }
 
-  html:has(.mobile-tab-bar) {
-    --site-fab-bottom: calc(var(--mobile-tab-bar-height) + 0.75rem);
+  html:has([data-cookie-consent-bar]) .site-fab-launcher {
+    display: none;
   }
 
   .mobile-app-bar {

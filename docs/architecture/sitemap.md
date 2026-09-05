@@ -14,7 +14,7 @@ Owning detail lives one level down: page + API inventory in [`routes.md`](./rout
 | `/privacy` · `/terms` · `/refund-and-return-policy` | Public legal/policy pages |
 | `/sitemap` | Public HTML route index (distinct from `/sitemap.xml`) |
 | `/compare` · `/quote-cart` · `/choose-product` | Public utilities (quote-cart / choose-product: noindex intent) |
-| `/tools/office-space-calculator` · `/tools/meeting-room-capacity-calculator` | Utility placeholder shells |
+| `/tools` · `/tools/office-space-calculator` · `/tools/meeting-room-capacity-calculator` | Public planning tools & calculators (`/tools` hub + interactive calculators) |
 
 ## 2. Planner marketing
 

@@ -2,19 +2,19 @@
 
 Generated executable-test and support-file inventory. Layout rules: `tests/CONTENTS.md`.
 
-*Updated: 2026-09-04 — regenerate through the repository docs workflow.*
+*Updated: 2026-09-05 — regenerate through the repository docs workflow.*
 
 ## Counts
 
 | Kind | Count |
 |---|---:|
-| Vitest executable files | 777 |
+| Vitest executable files | 780 |
 | Playwright executable specs | 85 |
 | Helpers | 38 |
 | Fixtures | 15 |
 | Snapshots | 12 |
 | Other assets | 10 |
-| **Total files** | **937** |
+| **Total files** | **940** |
 
 ## vitest
 
@@ -88,6 +88,7 @@ Generated executable-test and support-file inventory. Layout rules: `tests/CONTE
 - `tests/tech-docs-generator/generated-status-card.test.tsx`
 - `tests/tech-docs-generator/generated-tables.test.tsx`
 - `tests/tech-docs-generator/generator/check-coverage.test.ts`
+- `tests/tech-docs-generator/generator/database-page-contract.test.ts`
 - `tests/tech-docs-generator/generator/domain-extractors.test.ts`
 - `tests/tech-docs-generator/generator/extractor-mutation.test.ts`
 - `tests/tech-docs-generator/generator/extractors.test.ts`
@@ -217,8 +218,7 @@ Generated executable-test and support-file inventory. Layout rules: `tests/CONTE
 - `tests/unit/app/api/products/route.test.ts`
 - `tests/unit/app/api/Studio/furniture/[id]/publish/route.test.ts`
 - `tests/unit/app/api/Studio/furniture/[id]/route.test.ts`
-- `tests/unit/app/api/Studio/furniture/route.test.ts`
-- … +577 more
+- … +580 more
 
 ## playwright
 

@@ -4,7 +4,8 @@ Use this procedure for every repository task. The expected outcome is the smalle
 
 ## Bar
 
-- Root `AGENTS.md` wins.
+- Root `AGENTS.md` wins. **User Wins:** User always wins, User Wins.
+- Before a multi-file change, state the exact intended files.
 - Smallest sound change. Preserve unrelated work.
 - No handwritten `any`.
 - Before acting, read [`START.md`](../START.md), the relevant task guide, and live coordination sources; a session summary never substitutes for source evidence.
@@ -12,9 +13,10 @@ Use this procedure for every repository task. The expected outcome is the smalle
 ## Execution
 
 - Repository root only. **No worktrees.**
-- Do not start an additional agent unless the current user authorizes it and disjoint path ownership is explicit.
+- **Agents:** use at most four agents, with disjoint ownership and serial integration.
 - Use **pnpm** from the root only; never install from `site/` or `tech-docs-generator/`.
 - Secrets only in `.env.local` / `site/.env.local` when required.
+- UI work: `http://localhost:3000` only; never `127.0.0.1`.
 - Do not invent product behavior. Every how-to has **Goal · Files · Run · Expect · Evidence · Acceptance**.
 
 ## Evidence

@@ -186,7 +186,7 @@ Optional Vite SPA — **not** product authority. Admin System → Architecture d
 | | |
 |--|--|
 | Dev | `pnpm run tech-docs:dev` → http://localhost:3001/tech-stack (strict port; product stays **:3000**) |
-| Prod URL | `NEXT_PUBLIC_TECH_DOCS_URL` (default `https://docs.oando.co.in`) |
+| Prod URL | `NEXT_PUBLIC_TECH_DOCS_URL` (default `https://oando23.vercel.app`) |
 | Generate | `pnpm run ops tech-docs:generate` → `generated-documents/` (wiped each run) |
 | Gate | `pnpm run tech-docs:gate` |
 | CSS | `tech-docs-generator/src/styles/` — **not** FOCSS |

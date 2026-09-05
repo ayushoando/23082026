@@ -52,6 +52,10 @@ backing location. Keep it that way (`pnpm run scan:boundaries`).
 - **Message dictionaries**: `site/i18n/messages/{en,hi}.json` (861 keys across 26 namespaces, root `faq` added, 100% Hindi Devanagari parity, zero empty values).
 - **Runtime copy loader**: `site/lib/i18n/withLocaleCopy.ts` hydrates localized strings across all public marketing routes and feature views.
 
+## Tech-docs SPA & Planning tools
+- **Tech-docs URL**: `https://oando23.vercel.app` in production (dev `http://localhost:3001`). Loads from root `.env.local` for Supabase.
+- **Planning tools hub**: `/tools` (canonical public hub), `/tools/office-space-calculator`, `/tools/meeting-room-capacity-calculator`.
+
 ## VS Code Customization
 
 When editing forked code under `site/{components,lib,hooks,store,server}/{Studio,Planner}/`,

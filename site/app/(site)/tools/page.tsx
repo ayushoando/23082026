@@ -83,7 +83,7 @@ export default function ToolsHubPage() {
               return (
                 <article
                   key={tool.href}
-                  className="flex flex-col justify-between rounded-[var(--radius-card)] border border-theme-soft bg-surface-panel p-6 shadow-theme-panel transition-all duration-200 hover:border-theme-strong hover:shadow-lg"
+                  className="flex flex-col justify-between rounded-xl border border-theme-soft bg-surface-panel p-6 shadow-theme-panel transition-all duration-200 hover:border-theme-strong hover:shadow-lg"
                 >
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
@@ -121,7 +121,7 @@ export default function ToolsHubPage() {
             })}
           </div>
 
-          <div className="rounded-[var(--radius-card)] border border-theme-soft bg-surface-subtle p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="rounded-xl border border-theme-soft bg-surface-subtle p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             <div className="max-w-2xl space-y-2">
               <h3 className="typ-h3 text-strong">Need comprehensive workplace planning?</h3>
               <p className="typ-body text-muted">

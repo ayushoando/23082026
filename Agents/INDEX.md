@@ -34,8 +34,10 @@ change; that trio drifted once and failed the gate on files that were present.
 user instruction  >  live code + fresh commands  >  AGENTS.md  >  Agents/  >  docs/
 ```
 
+- **User Wins:** User always wins, User Wins.
 - The current task sets the goal. Clear goals execute without ceremony.
 - Fresh evidence decides PASS / FAIL / ship. No fake proof.
+- Before a multi-file change, state the exact intended files.
 - Programme direction: live code + coordination in `plans/`.
 - Active blockers: root `Failures.md` alone. Raw/generated output: `results/`, never PASS.
 
@@ -46,7 +48,8 @@ Builder: slice → build → prove with appropriately classified evidence. Integ
 
 ## Execution floor
 
-- Repo-root checkout. No worktrees. `pnpm` from root only.
+- Repo-root checkout. **Never create worktrees.** Use **`pnpm`** from root only.
+- **Agents:** use at most four agents, with disjoint ownership and serial integration.
 - Smallest sound change; preserve unrelated work; no handwritten `any`.
 - Secrets only in `.env.local` (and `site/.env.local` when Next loads from `site/`).
 - UI claims: `http://localhost:3000` only, never `127.0.0.1`.
@@ -69,10 +72,12 @@ raw disk helper. Selectors: `site/lib/Planner/plannerPersistenceMode.ts`,
 Enterprise client registry: 116 canonical clients across 4 sectors in
 `site/lib/clients/clientRegistry.ts`, verified vector logos in
 `site/public/assets/marketing/client-logos/`, zero letter monogram fallbacks, and
-quiet luxury proof surfaces on `/trusted-by` and `/clients`. Hardened security:
-CSP headers in `site/next.config.js`/`mjs` and `site/proxy.ts`, secure cookies,
-and input sanitization in `site/lib/security/`. Complete i18n: 861 keys across 26
-namespaces with 100% Hindi Devanagari parity in `site/i18n/messages/{en,hi}.json`.
+quiet luxury proof surfaces on `/trusted-by` and `/clients`. Public planning tools
+on `/tools`. Hardened security: CSP headers in `site/next.config.js`/`mjs` and
+`site/proxy.ts`, secure cookies, and input sanitization in `site/lib/security/`.
+Complete i18n: 861 keys across 26 namespaces with 100% Hindi Devanagari parity
+in `site/i18n/messages/{en,hi}.json`. Tech-docs SPA: Vite repository explorer
+hosted at `https://oando23.vercel.app` (dev `:3001`).
 
 ## Where to look
 

@@ -165,7 +165,7 @@ export function resolveAdvisorModelChain(): AdvisorModelTarget[] {
       provider: "gemini",
       label: "gemini",
       providerId: "google",
-      modelId: env.GEMINI_MODEL || "gemini-3.6-flash",
+      modelId: env.GEMINI_MODEL || "gemini-2.5-flash",
       url: "https://generativelanguage.googleapis.com/v1beta/openai/",
       apiKey: geminiKey,
     };

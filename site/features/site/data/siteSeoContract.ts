@@ -31,6 +31,7 @@ import {
   SOLUTIONS_PAGE_METADATA,
   SUSTAINABILITY_PAGE_METADATA,
   TERMS_PAGE_METADATA,
+  TOOLS_PAGE_METADATA,
   TRUSTED_BY_PAGE_METADATA,
 } from "./routeMetadata";
 import { SITE_BRAND } from "./brand";
@@ -60,6 +61,7 @@ export const SEO01_STATIC_METADATA: ReadonlyArray<{
   { path: "/products", metadata: PRODUCTS_PAGE_METADATA },
   { path: "/clients", metadata: CLIENT_DIRECTORY_PAGE_METADATA },
   { path: "/planning", metadata: PLANNING_PAGE_METADATA },
+  { path: "/tools", metadata: TOOLS_PAGE_METADATA },
   {
     path: "/tools/office-space-calculator",
     metadata: OFFICE_SPACE_CALCULATOR_PAGE_METADATA,

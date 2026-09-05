@@ -125,6 +125,7 @@ const COMPANY_SERVICE_PATHS = [
   "/trusted-by",
   "/career",
   "/planning",
+  "/tools",
   "/tools/office-space-calculator",
   "/tools/meeting-room-capacity-calculator",
   "/faq",
@@ -198,6 +199,7 @@ export function getSitemapConceptualOverlaps(
 ): SitemapConceptualOverlap[] {
   const productSection = sections.find((section) => section.heading === "Products & catalog");
   const solutionSection = sections.find((section) => section.heading === "Solutions");
+
   if (!productSection || !solutionSection) {
     return [];
   }

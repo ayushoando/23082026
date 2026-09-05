@@ -32,7 +32,7 @@ Use this index to find architecture, database, and governance references that sh
 | Tech-docs package | [`../tech-docs-generator/README.md`](../tech-docs-generator/README.md) |
 | Blockers | [`../Failures.md`](../Failures.md) |
 
-## Layout (14 files including this index)
+## Layout (15 files including this index)
 
 | Path | Owns |
 |------|------|

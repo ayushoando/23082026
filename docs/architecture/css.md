@@ -110,7 +110,7 @@ an equivalent same-function control elsewhere on the page already meets the floo
   to raise it to 40×40.
 - The browser audit (`scripts/site-page-audit.mjs`) implements this split as
   `targetFloorFailures` (24px, both axes, inline-link exempt) and `targetAdvisory` (40px, ≤768
-  only). See `plans/ref/remediation-unified/audit.md` D4 for how the prior single
+  only). The prior single
   `width < 40 || height < 40` heuristic (either axis, all viewports) produced a false-positive-heavy
   114-finding count by flagging ordinary inline links.
 

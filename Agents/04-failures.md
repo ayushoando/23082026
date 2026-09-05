@@ -21,9 +21,14 @@ See [`Failures.md`](../Failures.md) — blockers only. Residual audit handoff is
 Verified fix only. The repro command must exit 0 before the row is deleted.
 
 ## Vocabulary
-
+ 
 | Word | Meaning |
 |------|---------|
 | `verified` | I ran the repro command and saw the failure myself |
 | `not tested` | I did not run the repro command — do not treat as confirmed |
 | `could-not-reproduce` | I ran the repro command and it passed — needs re-check |
+
+## Prohibited words in Failures.md
+
+`scripts/general/check-failures.mjs` rejects `Failures.md` if it contains:
+`resolved`, `closed`, `passed`/`pass` (regex `/\bpass(?:ed)?\b/i`), `truth snapshot`, `history`/`historical`, or `[x]`. State honest current counts (e.g. "succeeded") instead.
