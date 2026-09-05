@@ -178,11 +178,13 @@ export async function loadProject(
 }
 
 export async function writeProject(project: Record<string, unknown>): Promise<void> {
+  assertDevDiskWritable();
   await ensureStorageDirs();
   await writeJson(path.join(PROJECTS_DIR, `${project.id}.json`), project);
 }
 
 export async function deleteProjectFiles(projectId: string): Promise<boolean> {
+  assertDevDiskWritable();
   await ensureStorageDirs();
   const entries = await fs.readdir(PROJECTS_DIR);
   const matched = entries.filter(

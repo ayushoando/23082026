@@ -204,7 +204,7 @@ export function CookieConsentBar() {
       aria-labelledby="cookie-dialog-title"
       aria-describedby="cookie-dialog-desc"
       data-cookie-consent-bar
-      className={`${consentBarClass} pb-[max(0.5rem,env(safe-area-inset-bottom,0px))]`}
+      className={`${consentBarClass} pb-2 md:pb-[max(0.5rem,env(safe-area-inset-bottom,0px))]`}
     >
       <div className="shell-container px-4 py-2.5 sm:px-6 sm:py-3 md:py-4 2xl:px-0">
         <div className="mx-auto flex max-w-6xl min-w-0 flex-col gap-2.5 sm:gap-3 md:flex-row md:items-center md:justify-between md:gap-4">

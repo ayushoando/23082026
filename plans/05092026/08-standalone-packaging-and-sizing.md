@@ -2,8 +2,18 @@
 
 **File Target:** `plans/05092026/08-standalone-packaging-and-sizing.md`  
 **Governing Standard:** `AGENTS.md` (Authority floor: User instruction > live code/fresh command output > `AGENTS.md`)  
-**Execution State:** **FROZEN / PLANNING ONLY** (`NO CODE CHANGE`, `NO AUTO IMPLEMENT`)  
+**Execution State:** **IN PROGRESS.** `build:site` exit 0 this session. `start:standalone` unrun.  
 **Methodology:** Next.js Standalone Build Optimization, Serverless Distribution Footprint, Catalog Symbol Raster Specifications, and Native Package Externalization.
+
+## Execution checklist (leave open)
+
+- [x] `output: "standalone"`; `prepare-standalone.cjs` on `build:site`
+- [x] `serverExternalPackages` includes sharp, lancedb, mastra
+- [x] `pnpm run build:site` exit 0; `server.js` + static + public + generate-svg in standalone
+- [ ] `start:standalone` not run
+- [x] `planSymbolPngContract` unit test 4/4
+- [ ] `@lancedb/lancedb` not in this NFT trace
+- [ ] Isolated standalone deep-link boot unrun
 
 ---
 

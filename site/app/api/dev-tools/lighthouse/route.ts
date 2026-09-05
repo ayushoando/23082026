@@ -12,13 +12,13 @@ function isAllowedFileName(name: string) {
 }
 
 export async function GET(req: Request) {
-    const rateError = await enforcePublicApiRateLimit(req, "dev-tools:lighthouse:get", 10, 60 * 1000);
-    if (rateError) {return rateError;}
-
-    // Prevent exposing dev artifacts in production
+    // Dev artifacts only — production must 404 before rate-limit or disk IO.
     if (process.env.NODE_ENV === "production") {
         return new Response("Not available", {status: 404});
     }
+
+    const rateError = await enforcePublicApiRateLimit(req, "dev-tools:lighthouse:get", 10, 60 * 1000);
+    if (rateError) {return rateError;}
 
     const url = new URL(req.url);
     const file = url.searchParams.get("file");

@@ -31,15 +31,17 @@
 
   .home-hero__copy .home-actions {
     width: 100%;
-    align-items: center;
+    flex-direction: column;
+    align-items: stretch;
     justify-content: center;
   }
 
   .home-hero__copy .home-actions a,
   .home-hero__copy .home-actions button {
-    width: auto;
+    width: 100%;
     max-width: 100%;
-    align-self: center;
+    min-height: var(--control-height-sm);
+    justify-content: center;
   }
 
   .home-marketing-layout:has(#home-hero) .home-hero__copy,
@@ -145,10 +147,6 @@
 
   .home-solutions-panel {
     padding: 1.5rem 1.125rem;
-  }
-
-  .home-solutions-title {
-    font-size: var(--type-title-lg-size) /* TODO token: closest var(--type-title-lg-size) — no exact match */;
   }
 
   @media (hover: none) {

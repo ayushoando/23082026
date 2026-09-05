@@ -32,7 +32,7 @@ Use this index to find architecture, database, and governance references that sh
 | Tech-docs package | [`../tech-docs-generator/README.md`](../tech-docs-generator/README.md) |
 | Observability (GA4, Vercel Analytics, OpenTelemetry) | [`../OBSERVABILITY.md`](../OBSERVABILITY.md) |
 | Audit synthesis (multi-viewport, auth loop, tech-docs) | [`audit 05092026/`](./audit 05092026/README.md) · [`homepage-and-auth-audit.md`](./audit 05092026/homepage-and-auth-audit.md) |
-| Quick execution plan (homepage & auth loop) | [`plans/05092026/`](./plans/05092026/README.md) |
+| Planning suite | [`../plans/05092026/README.md`](../plans/05092026/README.md) |
 | Blockers | [`../Failures.md`](../Failures.md) |
 
 ## Layout (15 files including this index)

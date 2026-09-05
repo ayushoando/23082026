@@ -396,7 +396,7 @@ Database backup safety is maintained by an automated pipeline:
 ### 8.6 Cloud-First Telemetry & 3-Way Environment Discipline
 - **Cloud-First Observability ([`OBSERVABILITY.md`](../../OBSERVABILITY.md)):** The platform standardizes on three lean, decoupled telemetry channels without running heavyweight third-party APM daemons:
   1. Client Core Web Vitals (LCP, INP, CLS) and real user monitoring via `@vercel/analytics` and `@vercel/speed-insights`.
-  2. Business analytics and conversion tracking via Google Analytics 4 (`@next/third-parties/google`).
+  2. Business analytics and conversion tracking via Google Analytics 4 (`GoogleAnalytics.tsx` + `NEXT_PUBLIC_GA_MEASUREMENT_ID`).
   3. Standard OpenTelemetry distributed tracing via Next.js runtime hook in `site/instrumentation.ts`.
   4. Local Prometheus `/api/metrics` scraping endpoint for ad-hoc inspection without requiring local Docker containers.
 - **3-Way Environment Architecture:**

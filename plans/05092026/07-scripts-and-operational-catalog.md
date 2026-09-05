@@ -2,8 +2,17 @@
 
 **File Target:** `plans/05092026/07-scripts-and-operational-catalog.md`  
 **Governing Standard:** `AGENTS.md` (Authority floor: User instruction > live code/fresh command output > `AGENTS.md`)  
-**Execution State:** **FROZEN / PLANNING ONLY** (`NO CODE CHANGE`, `NO AUTO IMPLEMENT`)  
+**Execution State:** **IN PROGRESS.** governance/layout/secrets/ops dry-runs passed. Live `db:apply` not run.  
 **Methodology:** Complete Script Inventory, Central Ops Dispatcher (`run-ops.mjs`), Governance Ratchet Engine, and Cross-Platform Execution Contracts.
+
+## Execution checklist (leave open)
+
+- [x] `check:governance` exit 0
+- [x] `check:layout` exit 0
+- [x] `scan:secrets` exit 0
+- [x] `ops:list` 149 commands; `ops db:apply` / `db:apply:admin` dry exit 0
+- [ ] Live `db:apply` not run
+- [ ] Script inventory vs docs/architecture/scripts.csv not re-audited this session
 
 ---
 

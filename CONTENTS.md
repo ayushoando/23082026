@@ -16,7 +16,7 @@ Use this index to find the canonical document for a task. Start with [onboarding
 | 08 | [`Failures.md`](./Failures.md) | Open blockers only |
 | 09 | [`owners.md`](./owners.md) | Code and document ownership map · playbook |
 | 10 | [`HANDOVER.md`](./HANDOVER.md) | Historical handoff context; verify against live state |
-| 11 | [`plans/PLAN.md`](./plans/PLAN.md) | Active sequence; map at [`plans/client-hub/flowcharts/clients-hub-flow.md`](./plans/client-hub/flowcharts/clients-hub-flow.md) |
+| 11 | [`plans/05092026/README.md`](./plans/05092026/README.md) | Suite index (01–13 + short-plan + phased-remedy). Spine: [`plans/PLAN.md`](./plans/PLAN.md) · map [`plans/client-hub/flowcharts/clients-hub-flow.md`](./plans/client-hub/flowcharts/clients-hub-flow.md) |
 | 12 | [`OBSERVABILITY.md`](./OBSERVABILITY.md) | Cloud observability & telemetry guide |
 
 ## Agents / docs / tooling

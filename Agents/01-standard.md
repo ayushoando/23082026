@@ -15,7 +15,7 @@ Use this procedure for every repository task. The expected outcome is the smalle
 - Repository root only. **No worktrees.**
 - **Agents:** use at most four agents, with disjoint ownership and serial integration.
 - Use **pnpm** from the root only; never install from `site/` or `tech-docs-generator/`.
-- Secrets only in `.env.local` / `site/.env.local` when required.
+- Secrets only in `.env.local` / `site/.env.local`. Templates: root `.env.example`, `site/.env.example`, `tech-docs-generator/.env.example`. Never commit values. Never push `DEV_AUTH_BYPASS` to production.
 - UI work: `http://localhost:3000` only; never `127.0.0.1`.
 - Do not invent product behavior. Every how-to has **Goal · Files · Run · Expect · Evidence · Acceptance**.
 

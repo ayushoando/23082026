@@ -1,4 +1,5 @@
 import { SITE_URL } from "@/lib/siteUrl";
+import { buildCanonicalUrl } from "./seo";
 
 export type RouteClassification =
   | "public"
@@ -19,12 +20,8 @@ export interface SiteRouteMeta {
   notes?: string;
 }
 
-/** Same production/env host as robots, sitemap, and page metadata. */
-const SITE_BASE = SITE_URL.replace(/\/+$/, "");
-
 function canonicalFor(route: string): string {
-  const normalized = route.endsWith("/") ? route : `${route}/`;
-  return `${SITE_BASE}${normalized}`;
+  return buildCanonicalUrl(SITE_URL, route);
 }
 
 export const SITE_ROUTE_CLASSIFICATION: SiteRouteMeta[] = [
@@ -50,33 +47,39 @@ export const SITE_ROUTE_CLASSIFICATION: SiteRouteMeta[] = [
   },
   {
     route: "/tools",
-    classification: "public",
-    audience: "Public visitor / facilities manager / workspace planner",
-    intent: "Overview directory of free office planning tools and calculators",
+    classification: "not-found",
+    audience: "Public visitor",
+    intent: "Retired planning-tools hub — not a public indexable document",
     owner: "Marketing",
     canonicalUrl: canonicalFor("/tools"),
-    primaryAction: "Open a planning tool or calculator",
-    indexable: true,
+    primaryAction: "Return home",
+    indexable: false,
+    notes:
+      "Negative contract: not public-indexable. Exclude from nav, footer, and HTML/XML sitemaps. Source shells may exist; do not invent SEO for a 404.",
   },
   {
     route: "/tools/meeting-room-capacity-calculator",
-    classification: "public",
-    audience: "Public visitor / facilities manager",
-    intent: "Calculate meeting room capacity",
+    classification: "not-found",
+    audience: "Public visitor",
+    intent: "Retired calculator shell — not a public indexable document",
     owner: "Marketing",
     canonicalUrl: canonicalFor("/tools/meeting-room-capacity-calculator"),
-    primaryAction: "Use calculator",
-    indexable: true,
+    primaryAction: "Return home",
+    indexable: false,
+    notes:
+      "Negative contract: not public-indexable. Exclude from nav, footer, and HTML/XML sitemaps.",
   },
   {
     route: "/tools/office-space-calculator",
-    classification: "public",
-    audience: "Public visitor / facilities manager",
-    intent: "Calculate office space needs",
+    classification: "not-found",
+    audience: "Public visitor",
+    intent: "Retired calculator shell — not a public indexable document",
     owner: "Marketing",
     canonicalUrl: canonicalFor("/tools/office-space-calculator"),
-    primaryAction: "Use calculator",
-    indexable: true,
+    primaryAction: "Return home",
+    indexable: false,
+    notes:
+      "Negative contract: not public-indexable. Exclude from nav, footer, and HTML/XML sitemaps.",
   },
   {
     route: "/products/[category]",

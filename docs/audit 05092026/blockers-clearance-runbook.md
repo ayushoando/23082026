@@ -17,7 +17,7 @@ The repository paths were inspected on September 5, 2026. Treat commands and his
 
 ### Current Ledger Status
 
-Do not duplicate blocker identifiers or statuses here. Read [`Failures.md`](../../Failures.md) before running any procedure. At this revision, it records three active blockers: a test-lane blocker, a local-browser-origin blocker, and `AUTH-LOOP-03` (/access redirect loop & sign-out crash); archived cleared incidents are intentionally omitted from this runbook.
+Do not duplicate blocker identifiers or statuses here. Read [`Failures.md`](../../Failures.md) before running any procedure. An empty table is valid. Procedures below are historical RCA; they do not assert a current open row.
 
 ---
 

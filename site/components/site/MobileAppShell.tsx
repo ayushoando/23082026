@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useLayoutEffect, useState, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -22,6 +22,7 @@ import { isPlannerEntryHref } from "@/lib/analytics/plannerEntry";
 import { MOBILE_TABS, activeTabFor } from "@/features/site/data/navigation";
 import { resolveRouteChromeMode } from "@/features/site/data/routeChromeRules";
 import { trackSiteTabSelected } from "@/lib/analytics/siteEvents";
+import { registerGsapPlugins } from "@/lib/helpers/gsapMotion";
 
 const ICONS = { SquaresFour, PencilSimple, UsersThree, ChatCircle, UserCircle } as const;
 
@@ -35,6 +36,12 @@ export function MobileAppShell({
   const active = activeTabFor(pathname);
   const [navOpen, setNavOpen] = useState(false);
   const showSiteFooter = resolveRouteChromeMode(pathname).footer === "full";
+
+  // Parent render runs before child useGSAP; bind `.mobile-app-main` first.
+  registerGsapPlugins();
+  useLayoutEffect(() => {
+    registerGsapPlugins(true);
+  }, [pathname]);
 
   return (
     <div className="mobile-app-shell">

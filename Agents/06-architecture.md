@@ -43,7 +43,7 @@ backing location. Keep it that way (`pnpm run scan:boundaries`).
 - **Proof surfaces**: `/trusted-by` (quiet luxury split-story showcase, metric counter strip, borderless logo roster) and `/clients` (sector showcase with Schema.org `ItemList` JSON-LD).
 
 ## Security architecture
-- **Universal headers**: `site/next.config.js` and `site/next.config.mjs` enforce `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, and strict CSP (`frame-ancestors 'none'`, `form-action 'self'`).
+- **Universal headers**: `site/next.config.js` static `/:path*` headers. No `site/next.config.mjs`. Effective CSP is `site/proxy.ts` (nonces). `X-Frame-Options: DENY`, nosniff, `frame-ancestors 'none'`, `form-action 'self'`.
 - **Edge proxy**: `site/proxy.ts` applies request nonces, CSP, cookie bounce, and sensitive API protections.
 - **Secure cookies**: `site/lib/security/cookies.ts` (`DEFAULT_SECURE_COOKIE_OPTIONS`, `STRICT_SECURE_COOKIE_OPTIONS`) and `site/platform/supabase/server.ts` enforce `httpOnly: true`, `secure: true` in production, `sameSite: "lax" | "strict"`.
 - **Input sanitization**: `site/lib/security/sanitize.ts` (`sanitizeInput`, `sanitizeJsonForScript`) sanitizes customer queries and SSR JSON-LD blocks.

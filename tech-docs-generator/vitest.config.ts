@@ -21,6 +21,12 @@ export default mergeConfig(
       },
     },
     test: {
+      env: {
+        // Match the root Lane 2 config: never let a production NODE_ENV select
+        // the production React build (React.act is absent there, breaking RTL).
+        NODE_ENV: 'test',
+        DEV_AUTH_BYPASS: 'true',
+      },
       // forks is safer than threads on Windows for V8 coverage file merging.
       // Vitest 4 removed `poolOptions`; the former `forks.singleFork: false`
       // is now the default (one fork per file). isolate:true recycles module

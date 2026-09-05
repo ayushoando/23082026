@@ -2,8 +2,17 @@
 
 **File Target:** `plans/05092026/05-tech-docs-generator-spa.md`  
 **Governing Standard:** `AGENTS.md` (Authority floor: User instruction > live code/fresh command output > `AGENTS.md`)  
-**Execution State:** **FROZEN / PLANNING ONLY** (`NO CODE CHANGE`, `NO AUTO IMPLEMENT`)  
+**Execution State:** **IN PROGRESS.** Port 3001 + env example verified. Hosted `oando23.vercel.app` unobserved.  
 **Methodology:** Independent Vite 8 SPA Architecture, 12 Core Documentation Routes, Live Database Schema / ER Diagram Synchronization, and Isolated Test Lane.
+
+## Execution checklist (leave open)
+
+- [x] Port 3001 `strictPort`; outDir `generated-documents/site`
+- [ ] `pnpm --filter oando-tech-docs build` (in flight this session)
+- [ ] `pnpm run test:tech-docs` / `tech-docs:gate` (in flight or unrun)
+- [x] Env template is `tech-docs-generator/.env.example` (public Admin keys only; no service role)
+- [ ] Hosted origin `https://oando23.vercel.app` unobserved this session
+- [ ] Claim-provenance ledger still planning
 
 ---
 

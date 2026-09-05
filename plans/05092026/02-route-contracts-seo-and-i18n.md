@@ -2,8 +2,16 @@
 
 **File Target:** `plans/05092026/02-route-contracts-seo-and-i18n.md`  
 **Governing Standard:** `AGENTS.md` (Authority floor: User instruction > live code/fresh command output > `AGENTS.md`)  
-**Execution State:** **FROZEN / PLANNING ONLY** (`NO CODE CHANGE`, `NO AUTO IMPLEMENT`)  
+**Execution State:** **IN PROGRESS.** `/tools` nonindexable in source. `check:i18n:parity` passed. Not a green gate.  
 **Methodology:** Exhaustive Route Specification, Static SEO Metadata Registry Contract, JSON-LD Schema Architecture, and Bilingual i18n Key Parity.
+
+## Execution checklist (leave open)
+
+- [x] `pnpm run check:i18n:parity` exit 0
+- [x] `/tools` and calculators `indexable: false` / not-found; removed from SEO01 and public nav/sitemaps
+- [x] Runtime locale English-only (`request.ts` COST-S02)
+- [ ] Canonical-host HTTP 200 matrix for every public route (unrun)
+- [ ] Product decision if `/tools` pages should exist vs stay 404
 
 ---
 

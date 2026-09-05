@@ -95,7 +95,7 @@ describe("DashboardClient", () => {
 
     await waitFor(() => {
       expect(signOutFromSupabase).toHaveBeenCalled();
-      expect(replace).toHaveBeenCalledWith("/access");
+      expect(replace).toHaveBeenCalledWith("/access?direct=true");
       expect(refresh).toHaveBeenCalled();
     });
   });

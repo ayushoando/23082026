@@ -52,9 +52,7 @@
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-y: contain;
     padding-top: calc(3.25rem + env(safe-area-inset-top, 0px));
-    padding-bottom: calc(
-      var(--mobile-tab-bar-height) + var(--cookie-consent-bar-height, 0px)
-    );
+    padding-bottom: var(--mobile-tab-bar-height);
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
@@ -74,15 +72,18 @@
   }
 
   /*
-   * Keep consent above the tab bar and reserve its measured height in the
-   * scroll pane, so it does not cover the categories a visitor is browsing.
+   * Keep consent above the tab bar. Extra main padding applies only while the
+   * bar is mounted; 4.5rem covers it before JS sets --cookie-consent-bar-height.
    */
   [data-cookie-consent-bar] {
     bottom: calc(var(--mobile-tab-bar-height) + 1px) !important;
+    z-index: 45;
   }
 
-  html:has([data-cookie-consent-bar]) .site-fab-launcher {
-    display: none;
+  html:has([data-cookie-consent-bar]) .mobile-app-main {
+    padding-bottom: calc(
+      var(--mobile-tab-bar-height) + var(--cookie-consent-bar-height, 4.5rem)
+    );
   }
 
   .mobile-app-bar {

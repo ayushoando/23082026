@@ -1,9 +1,17 @@
 # Oando Subsystem Plan: Security, Observability, and Release Operations
 
 **File Target:** `plans/05092026/12-security-observability-and-release.md`  
-**Execution State:** **FROZEN / PLANNING ONLY** (`NO CODE CHANGE`, `NO AUTO IMPLEMENT`)  
+**Execution State:** **IN PROGRESS.** GA loader gated on env. No Vercel deploy.  
 **Scope:** Effective response headers, CSP/nonces, third-party scripts, security telemetry, metrics, client-error privacy, releases, and incident evidence.  
 **Out of Scope:** Replacing the auth model, changing database data, or deploying infrastructure without separate authorization.
+
+## Execution checklist (leave open)
+
+- [x] GA tag only loads when `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set (`GoogleAnalytics.tsx`)
+- [ ] Effective response CSP vs analytics origin unobserved on canonical host `https://oando.co.in`
+- [ ] `scripts/vercel-env-push.mjs` not run (allowlist; never `DEV_AUTH_BYPASS`)
+- [ ] No `vercel:prod` / `worker:deploy`
+- [ ] Release provenance vs deployed SHA unrun
 
 ---
 

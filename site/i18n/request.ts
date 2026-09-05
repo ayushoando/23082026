@@ -1,25 +1,14 @@
-import { cookies } from "next/headers";
 import { getRequestConfig } from "next-intl/server";
-import { defaultLocale, isLocale, type Locale } from "./config";
-
-async function loadMessages(locale: Locale) {
-  if (locale === "hi") {
-    return (await import("./messages/hi.json")).default;
-  }
-  return (await import("./messages/en.json")).default;
-}
+import { defaultLocale } from "./config";
 
 /**
- * Locale comes from the NEXT_LOCALE cookie set by LanguageSwitcher.
- * Prefixless URLs (`localePrefix: never`) share one path per page.
+ * Static default locale so marketing HTML can be cached (COST-S02).
+ * Do not import next/headers — dynamic request APIs force private, no-store.
  */
 export default getRequestConfig(async () => {
-  const store = await cookies();
-  const raw = store.get("NEXT_LOCALE")?.value;
-  const locale = isLocale(raw) ? raw : defaultLocale;
-  const messages = await loadMessages(locale);
+  const messages = (await import("./messages/en.json")).default;
   return {
-    locale,
+    locale: defaultLocale,
     messages,
   };
 });

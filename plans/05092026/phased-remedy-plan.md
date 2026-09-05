@@ -3,8 +3,23 @@
 **Document:** `plans/05092026/phased-remedy-plan.md`  
 **Governing Standard:** `AGENTS.md` (Authority floor: User instruction > live code/fresh command output > `AGENTS.md` > `Agents/` > `docs/`)  
 **Methodology:** Comprehensive Horizontal and Vertical Subsystem Master Architecture, Deep Technical Specifications, and Actionable Verification Runbooks  
-**Execution State:** **FROZEN / PLANNING ONLY** (`NO CODE CHANGE`, `NO AUTO IMPLEMENT`)  
+**Execution State:** **IN PROGRESS.** Plan 14. Hygiene + dual-lane test ran. `pnpm run gate` and recorded Playwright pass are open. Env: three live `.env.example` files.  
 **Scope:** Repository-wide platform layers across Next.js 16.3.3 engine, FOCSS Tailwind v4 styling, Studio vs Planner isolation, dual-database split, AI & Cloudflare edge infrastructure, dual-lane Vitest test subsystem, Playwright browser gates, test integrity audits, scripts & ops subsystem, asset sizing, and Tech-Docs SPA.
+
+## Execution checklist (leave open)
+
+This is Plan 14. Unchecked = not finished. Observed 2026-09-05 this session only.
+
+- [x] Phase 1.1 four-file Vitest (`htmlSitemap`, `siteSeoAcceptance`, `siteSeoContract`, `providers`) — 51/51
+- [ ] Phase 1.2 `pnpm run release:gate:core`
+- [ ] Phase 1.3 `pnpm run test:browser:gate` — stopped ~230/432; not a pass
+- [x] `Failures.md` empty + `pnpm run check:failures`
+- [x] Phase 2: `check:layout`, `verify:focss`, `scan:boundaries`, `lint`, `test:audit`
+- [x] Phase 3: `check:i18n:parity`, `check:style-tokens`, `check:governance`, `check:docs-all`
+- [x] Phase 4.1 `pnpm run test` — default 4265 pass / 1 skip; tech-docs 224 pass
+- [ ] Phase 4.2 `pnpm run build:site`
+- [ ] Phase 4.3 `pnpm run build:tech-docs`
+- [ ] Phase 4.4 `pnpm run gate` — not run (re-runs the 432-test browser gate)
 
 ---
 
@@ -570,22 +585,22 @@ While Modules 1–9 define the horizontal and vertical engineering infrastructur
 ## 13. Subsystem Module 11: Homepage Multi-Viewport Contract, Auth Loop Remedy & Cloud Telemetry
 
 **Governing Audits:** [`docs/audit 05092026/homepage-and-auth-audit.md`](../../docs/audit%2005092026/homepage-and-auth-audit.md) · [`plans/05092026/short-plan.md`](./short-plan.md)  
-**Ledger Blocker:** `AUTH-LOOP-03` in [`Failures.md`](../../Failures.md)  
+**Ledger:** [`Failures.md`](../../Failures.md) only. Empty table is valid.
 
 ### 13.1 Multi-Viewport Layout Contract (1920, 1440, 1080, 768, 390)
-Empirical auditing identified layout defects across the 5 responsive tiers:
-1. **1920px & 1440px Ultra-Wide & Desktop:** Restore `.home-actions` CTA container in `site/components/home/HomepageHero.tsx` ("Explore Catalog" & "Launch Planner") and relax `max-width: 11ch` clamp on `.home-hero-title-homepage` in `site/focss/site/components/homepage/home-type.css` to allow natural 2-line title wrapping.
-2. **1080px Standard Desktop:** In `site/components/home/WhyChooseUs.tsx`, lower card grid threshold from `xl:grid-cols-4` (1280px barrier) to `lg:grid-cols-4` to prevent 2-slab collapse on 1080px screens.
-3. **768px Tablet:** Reconcile desktop-to-mobile header transition in `site/focss/site/app-shell.css` to prevent navigation overlap.
-4. **390px Mobile:** Provide safe-area padding-bottom (4.5rem) so fixed bottom navigation (56px) and cookie consent banners do not occlude interactive touch targets.
+Live source (not the 2026-09-05 audit body):
+1. **Desktop:** `.home-actions` in `HomepageHero.tsx` with hrefs `/ooplanner` and `/products`. Title `lg+` clamp is `18ch`.
+2. **1080px:** `WhyChooseUs.tsx` uses `lg:grid-cols-4`.
+3. **768px / 390px:** Cookie/FAB/tab stacking lives in `app-shell.css` and `shell-site-fabs.css`. Cookie-visible 390 walk not recorded.
 
-### 13.2 Authentication 307 Loop & Client Sign-Out (`AUTH-LOOP-03`)
-- **`/access` 307 Infinite Loop:** `site/proxy.ts:442-454` checks cookie presence via `hasSessionAuthCookies()` and auto-redirects to `/dashboard`. When tokens are expired/invalid, server guards bounce back to `/access`, causing `ERR_TOO_MANY_REDIRECTS`. Remediation: allow `/access` to render without unverified cookie redirect, and provide local development bypass access.
-- **Client Sign-Out Crash:** In `site/features/shared/dashboard/DashboardClient.tsx:142`, client-side `createAuthClient().auth.signOut()` crashes on missing `NEXT_ADMIN_SUPABASE_URL`. Remediation: delegate sign-out to server action `signOutFromSupabase()`.
+### 13.2 Access and sign-out (source current)
+- **Proxy:** Unauthenticated protected paths 307 **to** `/access`. `/access` is not bounced on cookie names.
+- **Sign-out:** `signOutFromSupabase()` in `site/lib/auth/supabaseServerActions.ts`. No `createAuthClient` in `DashboardClient.tsx`.
+- **Open:** bypass-off browser proof.
 
 ### 13.3 Environment Architecture & Cloud-First Telemetry
-- **3-Way Environment Division:** Partition variables cleanly into `.env.local` / `.env.example` (root workstation 7-section setup), `site/.env.example` (runtime Next.js), and `tech-docs-generator/.env.example` (isolated Vite SPA).
-- **Telemetry Pruning:** Purged all dead APM vendor references (Datadog, New Relic, Traceloop, Cast) and standardized on cloud-first observability: Google Analytics 4 (`@next/third-parties/google`), Vercel Web Analytics & Speed Insights (`@vercel/analytics`, `@vercel/speed-insights`), and standard OpenTelemetry in `site/instrumentation.ts` per [`OBSERVABILITY.md`](../../OBSERVABILITY.md). Local Docker Prometheus/Grafana is optional dev-only.
+- **3-Way Environment Division:** Live files are [`.env.example`](../../.env.example) (copy to `.env.local` and `site/.env.local`; `DEV_AUTH_BYPASS=1`), [`site/.env.example`](../../site/.env.example) (`DEV_AUTH_BYPASS=0`, prod `https://oando.co.in`), [`tech-docs-generator/.env.example`](../../tech-docs-generator/.env.example) (public Admin keys only, `:3001`, `https://oando23.vercel.app`). Tech-docs does **not** use `VITE_ADMIN_*` / `VITE_APP_*`.
+- **Telemetry:** GA4 via `NEXT_PUBLIC_GA_MEASUREMENT_ID` and `GoogleAnalytics.tsx`; Vercel Analytics & Speed Insights; OTEL in `site/instrumentation.ts`. Push path is `scripts/vercel-env-push.mjs` (skips `DEV_AUTH_BYPASS`; allowlist only).
 ## Test reconciliation update (2026-09-05)
 
 ## Dependency-driven execution detail

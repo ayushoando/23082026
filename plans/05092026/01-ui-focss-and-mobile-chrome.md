@@ -3,7 +3,16 @@
 **Document:** `plans/05092026/01-ui-focss-and-mobile-chrome.md`  
 **Governing Standard:** `AGENTS.md` (Authority floor: User instruction > live code/fresh command output > `AGENTS.md` > `Agents/` > `docs/`)  
 **Scope:** FOCSS Semantic Architecture, Tailwind v4 Engine, Style Token Ratchet, Phosphor Icons, GSAP Motion, Mobile Chrome Stacking (<768px).  
-**Constraint:** **Alignment & Polish Only — Strictly No Redesign**.
+**Constraint:** **Alignment & Polish Only — Strictly No Redesign**.  
+**Execution State:** **IN PROGRESS.** `verify:focss` passed. `18ch` / `lg:grid-cols-4` / `.home-actions` in source. Four-viewport walk with cookie bar not recorded.
+
+## Execution checklist (leave open)
+
+- [x] `pnpm run verify:focss` exit 0 (this session)
+- [x] `pnpm run check:style-tokens` exit 0 (200 at baseline)
+- [x] Phone scroller bind `.mobile-app-main`; cookie/FAB/tab CSS updated
+- [ ] Four-viewport walk 1920x1080, 1440x900, 1024x768, 390x844 with cookie bar visible
+- [ ] Desktop 1920x1080 interactive proof after FOCSS edits
 
 ---
 
@@ -138,11 +147,11 @@ Derived from the empirical audit documented in `docs/audit 05092026/homepage-and
 ### 6.1 Viewport Breakpoints & Invariants
 1. **1920px (Desktop Ultrawide / 2XL):**
    - Container max width: `--container-home-max: 82.5rem` (`1320px`) leaves ~300px side gutters.
-   - Title line-clamp relaxation: Relax `max-width: 11ch` on `.home-hero-title-homepage` in `site/focss/site/components/homepage/home-type.css` to allow the headline to span naturally across wide viewports rather than forcing an awkward 3-line word wrap.
+   - Title clamp: live `home-type.css` uses `max-width: 18ch` at `lg+` (was 11ch in the 2026-09-05 audit).
 2. **1440px (Standard Desktop Baseline):**
-   - Hero Action CTAs restoration: In `site/components/home/HomepageHero.tsx`, restore the primary/secondary action buttons container (`.home-actions` with "Explore Catalog" and "Launch Planner").
+   - Hero CTAs: live `HomepageHero.tsx` `.home-actions` hrefs are `/ooplanner` and `/products`. Labels from i18n. Not “Explore Catalog / Launch Planner”.
 3. **1080px (Compact Desktop / FHD):**
-   - Value-props grid threshold: In `site/components/home/WhyChooseUs.tsx:48`, update `xl:grid-cols-4` to `lg:grid-cols-4` so 4 cards maintain a 4-column row between 1024px and 1280px instead of collapsing into 2 wide horizontal slabs.
+   - Value-props grid: live `WhyChooseUs.tsx` uses `lg:grid-cols-4`.
 4. **768px (Tablet Boundary Fence):**
    - Coordinate `app-shell.css` mobile chrome cutoff (`display: none` at `>=768px`) with desktop `SiteHeader` link density to prevent desktop navigation crowding between 768px and 1024px.
 5. **390px (Mobile Standard):**

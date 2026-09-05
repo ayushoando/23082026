@@ -45,6 +45,7 @@ Prefer the root package command when one exists. Use `pnpm run ops <name> [-- ar
 | `startStandalone.cjs` | `start` — standalone server |
 | `loadEnvLocal.cjs` | Root/site `.env.local` loader for Drizzle, seed, DB, Playwright, and Next |
 | `validate-launch-env.mjs` | `launch:env` / `release:gate:fast` |
+| `check-env-persistence.mjs` | Dual-DB + persistence-mode env hygiene (Plan 04; direct `node` run) |
 | `prune-stale-next-types.mjs` | `typecheck`, included by release gates |
 
 ### Quality and release audits
@@ -109,7 +110,7 @@ The SVG generation core and its fixture inputs remain outside this folder becaus
 | `scripts/generate-svg.mjs` | Imported by the SVG smoke wrapper; publish write entrypoint |
 | `scripts/generate-svg/pipelineCore.ts` | Imported by descriptor-SVG publishing code and loaded by the wrapper |
 | `scripts/generate-svg/svgo.config.cjs` | SVG sanitizer configuration |
-| `scripts/generate-svg/_fixtures/*` | JSON inputs read by `smoke-svg-fixtures.mjs`; the directory is copied by `prepare-standalone.cjs` and inspected by its unit contract test |
+| `scripts/generate-svg/_fixtures/*` | JSON inputs read by `smoke-svg-fixtures.mjs`; copied with `pipelineCore.ts` and `svgo.config.cjs` by `prepare-standalone.cjs` (fixtures are membership-classified, not production catalog authority) |
 
 ## Rules
 

@@ -1,7 +1,7 @@
 # Homepage UI & Authentication Subsystem Forensic Audit
 
 **Document:** `docs/audit 05092026/homepage-and-auth-audit.md`  
-**Audited & Published:** 2026-09-05  
+**Audited:** 2026-09-05. Dated findings. Current source and [`Failures.md`](../../Failures.md) win. Env templates: root / `site/` / `tech-docs-generator/` `.env.example`. Hero CTAs, `18ch`, `lg:grid-cols-4`, server sign-out, and `/access` proxy non-bounce are later source changes — re-verify before treating this file as live defects.  
 **Governing Standard:** [`AGENTS.md`](../../AGENTS.md)  
 **Authority Hierarchy:** `User instruction > live code / fresh command output > AGENTS.md > Agents/ > docs/`  
 **Referenced Plans:**

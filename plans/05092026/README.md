@@ -2,8 +2,19 @@
 
 **Directory:** `plans/05092026/`  
 **Governing Standard:** `AGENTS.md` (Authority floor: User instruction > live code/fresh command output > `AGENTS.md` > `Agents/` > `docs/`)  
-**Execution State:** **FROZEN / PLANNING ONLY** (`NO CODE CHANGE`, `NO AUTO IMPLEMENT`)  
+**Execution State:** **IN PROGRESS.** Source changed this session. [`Failures.md`](../../Failures.md) is empty. This suite is **not** a green `pnpm run gate`. Unrun: recorded Playwright pass, `vercel-env-push.mjs`, bypass-off `/access` proof.  
 **Methodology:** Decomposed Multi-File Subsystem Master Architecture, Deep Technical Specifications, and Actionable Verification Runbooks.
+
+## Execution checklist (leave open)
+
+Unchecked = not finished. Do not tick from a commit message or old `summary.json`.
+
+- [x] Named execution of plans 01–16 authorized this session (first batches + selected full checks)
+- [ ] Plan 14 remaining: `pnpm run gate` / `release:gate:core` / recorded browser-gate pass
+- [ ] Plan 16 AUTH-LOOP-03 bypass-off browser proof
+- [x] Each numbered plan 01–13 now has an open execution checklist
+- [ ] `pnpm run gate` not recorded as pass
+- [ ] Interactive 1920/390 homepage + `/access` walk after in-flight builds
 
 ---
 
@@ -13,17 +24,17 @@ This multi-file planning suite provides horizontal and vertical technical bluepr
 
 | File | Subsystem & Scope |
 |------|-------------------|
-| [`short-plan.md`](./short-plan.md) | Focused execution plan: Homepage UI multi-viewport alignment & auth loop fix (`AUTH-LOOP-03`). |
+| [`short-plan.md`](./short-plan.md) | Homepage + access. Source: proxy does not 307 `/access` on cookies; server sign-out; `.home-actions`; `18ch`; `lg:grid-cols-4`. Browser proof still open. |
 | [`phased-remedy-plan.md`](./phased-remedy-plan.md) | Unified master remedy blueprint across all platform layers. |
 | [`01-ui-focss-and-mobile-chrome.md`](./01-ui-focss-and-mobile-chrome.md) | FOCSS 4-zone CSS engine, token ratchet (baseline 200), GSAP `.mobile-app-main` scroller, Phosphor icons, mobile chrome (<768px). |
 | [`02-route-contracts-seo-and-i18n.md`](./02-route-contracts-seo-and-i18n.md) | Static SEO registry (`SEO01_STATIC_METADATA`), XML/HTML sitemaps, and `next-intl` bilingual key parity (861 keys across 26 namespaces). |
 | [`03-interactive-workspaces-studio-planner.md`](./03-interactive-workspaces-studio-planner.md) | Fork boundary isolation (`scan:boundaries`), scale invariants (Studio 0.2 px/mm vs Planner 0.05 px/mm vs PNG 2 px/mm), Dockview shells, Fabric 7 canvas. |
 | [`04-data-persistence-and-cloud-infra.md`](./04-data-persistence-and-cloud-infra.md) | Dual-database topology (Admin vs Products), read-only production filesystem (`EROFS`), mode wrappers, Mastra AI provider chain, Cloudflare Worker proxy & R2 backups. |
 | [`05-tech-docs-generator-spa.md`](./05-tech-docs-generator-spa.md) | Tech-Docs Vite SPA architecture, `https://oando23.vercel.app`, port 3001, 12 core documentation pages, live ER diagram synchronization. |
-| [`06-test-subsystem-and-integrity-audits.md`](./06-test-subsystem-and-integrity-audits.md) | Dual-lane Vitest architecture (780 default files vs 42 tech-docs files), Playwright browser gate matrix, 5 test integrity audits. |
+| [`06-test-subsystem-and-integrity-audits.md`](./06-test-subsystem-and-integrity-audits.md) | Dual-lane Vitest (default + tech-docs). Counts are not clearance. Playwright gate unrecorded as pass. |
 | [`07-scripts-and-operational-catalog.md`](./07-scripts-and-operational-catalog.md) | Complete script inventory (111 root, 56 general, 8 allowlisted AsNeeded), central `run-ops.mjs` dispatcher, governance ratchet. |
 | [`08-standalone-packaging-and-sizing.md`](./08-standalone-packaging-and-sizing.md) | Next.js standalone distribution footprint, asset copy automation (`prepare-standalone.cjs`), Webpack optimizations, bundle externalization. |
-| [`09-blockers-clearance-and-ship-gate.md`](./09-blockers-clearance-and-ship-gate.md) | Sequential blocker clearance protocol for `Failures.md` (`GATE-RECHECK-01` and `BROWSER-ORIGIN-02`), followed by master 4-phase ship gating runbook. |
+| [`09-blockers-clearance-and-ship-gate.md`](./09-blockers-clearance-and-ship-gate.md) | Blocker protocol for [`Failures.md`](../../Failures.md) only. Empty table is valid. Do not copy IDs. |
 | [`10-client-hub-sequence-plan.md`](./10-client-hub-sequence-plan.md) | Client-hub sequence roadmap (relocated from `plans/PLAN.md`), public route maps, flat 8-link header, route-lifecycle contracts, and browser walk. |
 | [`11-admin-access-and-authorization.md`](./11-admin-access-and-authorization.md) | Dedicated authority plan for the access entry, member shells, Admin console, API role/CSRF/rate-limit contracts, and dev-bypass containment. |
 | [`12-security-observability-and-release.md`](./12-security-observability-and-release.md) | Dedicated production-integrity plan for CSP/header ownership, third-party inventory, metrics and error privacy, incident response, and release provenance. |

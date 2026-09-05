@@ -7,7 +7,21 @@
 - [`docs/audit 05092026/homepage-and-auth-audit.md`](../../docs/audit%2005092026/homepage-and-auth-audit.md)  
 - [`01-ui-focss-and-mobile-chrome.md`](./01-ui-focss-and-mobile-chrome.md)  
 - [`02-route-contracts-seo-and-i18n.md`](./02-route-contracts-seo-and-i18n.md)  
-**Ledger Blocker:** `AUTH-LOOP-03` in [`Failures.md`](../../Failures.md)  
+**Ledger:** [`Failures.md`](../../Failures.md) only. Empty table is valid. Do not re-add AUTH-LOOP-03 without a bypass-off `/access` repro.  
+
+## Execution checklist (leave open)
+
+This is Plan 16. Unchecked = not finished.
+
+- [x] `/access` proxy no longer 307s on cookie names (`site/proxy.ts`)
+- [x] Dashboard sign-out does not call `createAuthClient` (`signOutFromSupabase` only)
+- [ ] `/access` cookie-loop proof on `http://localhost:3000` with **bypass off**
+- [ ] Dashboard sign-out lands on `/access` with bypass off (bypass run hung; not production auth)
+- [x] Hero `.home-actions` — live hrefs `/ooplanner` + `/products`
+- [x] Hero title clamp `18ch` at `lg+`
+- [x] WhyChooseUs `lg:grid-cols-4` (4 columns observed at 1080)
+- [ ] Mobile 390 cookie + dock + FAB overlap with cookie bar visible
+- [ ] Do not write AUTH-LOOP-03 into `Failures.md` unless a bypass-off repro exists
 
 ---
 
@@ -42,36 +56,31 @@ This focused plan translates the empirical findings from the multi-viewport home
 
 ## 2. Phase 1: Authentication & Sign-Out Remediation (`AUTH-LOOP-03`)
 
-### Task 1.1: Break `/access` 307 Redirect Loop
-- **File:** `site/proxy.ts` (lines 442–454)
-- **Problem:** `hasSessionAuthCookies()` inspects cookie names for `sb-*-auth-token`. When a visitor has an expired or invalid Supabase cookie, the proxy immediately redirects them to `/dashboard`. The server layout at `site/lib/auth/session.ts` rejects the invalid token and bounces the user back to `/access?next=/dashboard`, creating an infinite HTTP 307 loop (`ERR_TOO_MANY_REDIRECTS`).
-- **Fix:** 
-  1. Do not auto-redirect visits targeting `/access` or `/login` based solely on unverified cookie presence. Allow `/access` to render so the user can re-authenticate.
-  2. In `devAuthBypass.ts` / `proxy.ts`, add an explicit escape so `DEV_AUTH_BYPASS=1` on localhost does not forcibly lock out developers from testing the `/access` interface.
+### Task 1.1: `/access` proxy (source current)
+- **File:** `site/proxy.ts`
+- **Live:** Unauthenticated **protected** paths 307 **to** `/access`. `/access` itself is not bounced on `sb-*-auth-token` cookie names. `?direct=true` exists on `access/page.tsx` for bypass UI.
+- **Open:** Bypass-off cookie-loop browser proof on `http://localhost:3000`.
 
-### Task 1.2: Fix Browser Client Sign-Out Crash
-- **File:** `site/features/shared/dashboard/DashboardClient.tsx` (line 142)
-- **Problem:** `createAuthClient().auth.signOut()` tries to instantiate a Supabase client in the browser requiring `NEXT_ADMIN_SUPABASE_URL`, which is server-only and undefined in browser bundles, throwing an unhandled runtime error.
-- **Fix:** Replace client-side direct sign-out with the Server Action `signOutFromSupabase()` in `site/features/shared/auth/actions.ts`.
+### Task 1.2: Dashboard sign-out (source current)
+- **File:** `site/features/shared/dashboard/DashboardClient.tsx`
+- **Live:** `signOutFromSupabase()` from `site/lib/auth/supabaseServerActions.ts`. No `createAuthClient`. Navigates to `/access?direct=true` with an 8s race. `site/features/shared/auth/actions.ts` does not exist.
+- **Open:** Sign-out landing with **bypass off**.
 
 ---
 
 ## 3. Phase 2: Multi-Viewport Homepage Alignment
 
-### Task 2.1: Restore Primary Hero CTAs (1920px & 1440px)
+### Task 2.1: Hero CTAs (source current)
 - **File:** `site/components/home/HomepageHero.tsx`
-- **Problem:** The primary conversion container `.home-actions` ("Explore Catalog" and "Launch Planner") was inadvertently missing, leaving desktop visitors without immediate entry points.
-- **Fix:** Restore the `.home-actions` block with proper FOCSS button tokens and accessible links to `/products` and `/ooplanner`.
+- **Live:** `.home-actions` exists. Links are `/ooplanner` and `/products`. Labels from i18n (`Get your layout plan` / `Browse products`). Not “Explore Catalog / Launch Planner”. `en.json` `primaryCta.href` is `/planner` and is **not** what the component uses.
 
-### Task 2.2: Relax Hero Title Typography Clamp
-- **File:** `site/focss/site/components/homepage/home-type.css` (line 35)
-- **Problem:** `.home-hero-title-homepage` has `max-width: 11ch`, forcing an aggressive, awkward 3-line word wrap on large screens.
-- **Fix:** Relax the clamp to `max-width: 18ch` or `max-content` with container query responsiveness to permit balanced 2-line desktop rendering.
+### Task 2.2: Title clamp (source current)
+- **File:** `site/focss/site/components/homepage/home-type.css`
+- **Live:** `lg+` `max-width: 18ch` (not 11ch).
 
-### Task 2.3: Lower 1080px Grid Threshold on `WhyChooseUs`
-- **File:** `site/components/home/WhyChooseUs.tsx` (line 48)
-- **Problem:** Card grid uses `xl:grid-cols-4` (1280px barrier). On standard 1080px desktop displays, it collapses into 2 wide horizontal slabs.
-- **Fix:** Change class to `lg:grid-cols-4` so 1080px displays render a balanced 4-column row.
+### Task 2.3: WhyChooseUs (source current)
+- **File:** `site/components/home/WhyChooseUs.tsx`
+- **Live:** `lg:grid-cols-4` (not `xl:grid-cols-4`).
 
 ### Task 2.4: Mobile Chrome & Bottom Dock Clearance (768px & 390px)
 - **Files:** `site/focss/site/app-shell.css`, `site/components/home/CookieConsent.tsx`
@@ -82,12 +91,12 @@ This focused plan translates the empirical findings from the multi-viewport home
 
 ## 4. Phase 3: Telemetry & Environment Discipline
 
-1. **Environment Structure:** Maintain the clean 3-way split:
-   - Root `.env.local` & `.env.example`: Central 7-section developer workstation configuration.
-   - Next.js Site `site/.env.example`: Lean template for Next.js runtime.
-   - Tech-Docs Vite SPA `tech-docs-generator/.env.example`: Minimal public configuration for `:3001`.
-2. **Observability:** Maintain cloud-first posture per [`OBSERVABILITY.md`](../../OBSERVABILITY.md):
-   - Google Analytics 4 (`@next/third-parties/google`)
+1. **Environment Structure:** Three live templates:
+   - [`.env.example`](../../.env.example) → `.env.local` and `site/.env.local`. Default `DEV_AUTH_BYPASS=1`.
+   - [`site/.env.example`](../../site/.env.example) Next runtime. Default `DEV_AUTH_BYPASS=0`. Prod host `https://oando.co.in`.
+   - [`tech-docs-generator/.env.example`](../../tech-docs-generator/.env.example) public Admin anon keys only, port `3001`, prod `https://oando23.vercel.app`.
+2. **Observability:** Cloud-first per [`OBSERVABILITY.md`](../../OBSERVABILITY.md):
+   - Google Analytics 4 (`NEXT_PUBLIC_GA_MEASUREMENT_ID`; live loader is `site/components/analytics/GoogleAnalytics.tsx`, not `@next/third-parties/google`)
    - Vercel Web Analytics & Speed Insights (`@vercel/analytics`, `@vercel/speed-insights`)
    - OpenTelemetry native instrumentation (`site/instrumentation.ts`)
    - Optional local `/api/metrics` Prometheus scraping.
@@ -105,7 +114,7 @@ Before declaring completion:
    - Visit `/access` with and without session cookies; confirm clean rendering and no 307 loops.
    - Trigger sign-out from `/dashboard`; confirm smooth redirection to `/access` without console errors.
    - Check homepage across 1920px, 1440px, 1080px, 768px, and 390px viewports.
-6. Once verified, delete `AUTH-LOOP-03` row from [`Failures.md`](../../Failures.md).
+6. Do not write an AUTH-LOOP row into [`Failures.md`](../../Failures.md) unless a bypass-off repro exists. The table is currently empty.
 ## Test reconciliation update (2026-09-05)
 
 ## Smallest executable follow-up, once authorized

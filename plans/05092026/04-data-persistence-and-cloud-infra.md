@@ -2,8 +2,19 @@
 
 **File Target:** `plans/05092026/04-data-persistence-and-cloud-infra.md`  
 **Governing Standard:** `AGENTS.md` (Authority floor: User instruction > live code/fresh command output > `AGENTS.md`)  
-**Execution State:** **FROZEN / PLANNING ONLY** (`NO CODE CHANGE`, `NO AUTO IMPLEMENT`)  
+**Execution State:** **IN PROGRESS.** Disk writes fail-closed. Env templates reread. No worker deploy.  
 **Methodology:** Dual-Database Separation, Read-Only Production Filesystem Defense (EROFS), Mode-Aware Persistence Wrappers, Mastra AI Provider Fallbacks, and Cloudflare Edge Invariants.
+
+## Execution checklist (leave open)
+
+- [x] Disk writes fail-closed: `plannerStore.ts`, `studioStore.ts`
+- [x] `check-env-persistence.mjs` exit 0
+- [x] Unit: plannerPersistenceMode 23, furnitureCatalogMode 6, mastra providers 13
+- [x] `ops db:apply` / `db:apply:admin` **dry** exit 0 (not applied)
+- [x] Env templates reread: root / `site/` / `tech-docs-generator/` `.env.example`
+- [ ] Worker deploy / R2 backup not run
+- [ ] Recovery worksheet still planning
+- [ ] `vercel-env-push.mjs` not executed (skips `DEV_AUTH_BYPASS`; allowlist only)
 
 ---
 
@@ -149,10 +160,14 @@ The edge worker handles pre-origin routing, performance caching, and security en
 ## 5.1 Environment Architecture & Cloud-First Telemetry
 
 ### The 3-Way Environment Configuration
-To maintain strict hygiene and prevent key leakage across workspaces, environment variables are partitioned into three dedicated scopes:
-1. **Root Workstation (`.env.local` & `.env.example`):** Primary developer workspace configuration structured in 7 canonical sections (Database URLs, Supabase Public Keys, Auth Admin Secrets, Cloudflare & Storage, Site & AI Configuration, Development Flags, Observability).
-2. **Next.js Site (`site/.env.example`):** Minimal pushable template for the Next.js runtime containing public keys and server-only placeholders.
-3. **Tech-Docs Generator (`tech-docs-generator/.env.example`):** Isolated 4-variable template for the Vite documentation SPA on port `:3001` (`VITE_ADMIN_SUPABASE_URL`, `VITE_ADMIN_SUPABASE_ANON_KEY`, `VITE_APP_ENV`, `VITE_APP_URL`).
+
+Live templates (read 2026-09-05), not the older `VITE_ADMIN_*` names:
+
+1. **Root [`.env.example`](../../.env.example)** — copy to `.env.local` and `site/.env.local`. Seven sections. Local default `DEV_AUTH_BYPASS=1`. Origins `localhost:3000` / `:3001`. Dual Supabase refs `erpweaiypimorcunaimz` (Products) and `rxzpznmxbaoxpikowmfc` (Admin). No Bedrock block. Includes E2E email placeholders.
+2. **[`site/.env.example`](../../site/.env.example)** — Next runtime template. Local default `DEV_AUTH_BYPASS=0`. Production origin comment `https://oando.co.in`. Adds Bedrock, `METRICS_AUTH_TOKEN`, `OTEL_EXPORTER_OTLP_ENDPOINT`, `OPENROUTER_API_KEY_BACKUP`.
+3. **[`tech-docs-generator/.env.example`](../../tech-docs-generator/.env.example)** — Vite SPA on `:3001`. Keys: `VITE_PORT`, `NEXT_PUBLIC_TECH_DOCS_URL`, `NEXT_PUBLIC_SITE_URL`, `NEXT_ADMIN_SUPABASE_URL`, `NEXT_ADMIN_SUPABASE_ANON_KEY`, `NEXT_ADMIN_PUBLISHABLE_KEY`. **No service-role or database URLs.** Prod URL comment `https://oando23.vercel.app`.
+
+`scripts/vercel-env-push.mjs` skips `DEV_AUTH_BYPASS` and only adds a named allowlist from `.env.local` (not a full dump). `VERCEL_TECH_STACK_API_TOKEN` / `VERCEL_SITE_API_TOKEN` are in that allowlist.
 
 ### Telemetry & Vendor Hygiene
 Dead APM vendor keys (Datadog, New Relic, Traceloop, Cast) have been purged from environment templates and scripts (`vercel-env-push.mjs`). Observability follows the cloud-first standard in [`OBSERVABILITY.md`](../../OBSERVABILITY.md) (GA4, Vercel Analytics, OpenTelemetry).

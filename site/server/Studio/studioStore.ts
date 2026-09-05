@@ -20,6 +20,7 @@ export const FURNITURE_DIR = path.join(PLATFORM, "shared", "data", "furniture");
 export const UPLOADS_DIR = path.join(PLATFORM, "Studio", "data", "uploads");
 
 export async function ensureStorageDirs(): Promise<void> {
+  assertDevDiskWritable();
   await Promise.all([FURNITURE_DIR, UPLOADS_DIR].map((d) => fs.mkdir(d, { recursive: true })));
 }
 
@@ -261,6 +262,7 @@ export async function persistFurnitureUpload(args: {
   isSvg: boolean;
 }): Promise<Record<string, string>> {
   if (getFurnitureCatalogMode() === "disk") {
+    await ensureStorageDirs();
     const filename = `${args.itemId}_top${args.isSvg ? ".svg" : ".png"}`;
     await writeBytes(path.join(FURNITURE_DIR, filename), args.bytes);
     const urls: Record<string, string> = {};

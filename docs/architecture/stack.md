@@ -141,7 +141,7 @@ has a dominant one.
 | Supabase client | `@supabase/supabase-js` + `@supabase/ssr` | Service-role and request-scoped clients under `site/platform/supabase/` (`@/platform/supabase/*`) |
 | SQL / schema | `drizzle-orm` (7 files), `postgres` (1) | Schema under `site/platform/drizzle/schema/`; drizzle-kit journal at `site/platform/drizzle/migrations/meta/_journal.json`. Ship migrations are raw SQL under `site/platform/supabase/migrations*` |
 | Object storage | `@aws-sdk/client-s3` | 2 files — **R2 backup/ops only**, never a live write path |
-| Analytics & Telemetry | `@vercel/analytics`, `@vercel/speed-insights`, `@next/third-parties/google`, `@opentelemetry/api` | Cloud-first telemetry (Vercel RUM, GA4, OpenTelemetry); see [`../../OBSERVABILITY.md`](../../OBSERVABILITY.md) |
+| Analytics & Telemetry | `@vercel/analytics`, `@vercel/speed-insights`, `@vercel/otel`; GA4 via `GoogleAnalytics.tsx` + `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Not `@next/third-parties/google`. See [`../../OBSERVABILITY.md`](../../OBSERVABILITY.md) |
 | AI | `@mastra/core` (7 files), `@orama/orama` (1) | Retrieval for the advisor surface; vectors via Cloudflare Vectorize REST (no LanceDB dependency) |
 
 ### Declared but not imported
@@ -223,7 +223,7 @@ Planner, Studio and Admin are English-oriented; they are not wired to `next-intl
 
 ## 8. Security at runtime
 
-**Next.js configuration headers:** Root security headers are configured in `site/next.config.js` and re-exported in `site/next.config.mjs`, covering `/:path*` and `/api/:path*`:
+**Next.js configuration headers:** Static headers live in `site/next.config.js` (`/:path*`). There is no `site/next.config.mjs`. Effective document CSP is applied per request in `site/proxy.ts` (nonces), not the unused `site/lib/security/headers.ts`.
 - `X-Frame-Options: DENY` (clickjacking protection across all HTML/API routes)
 - `X-Content-Type-Options: nosniff` (MIME sniffing prevention)
 - `Referrer-Policy: strict-origin-when-cross-origin`
@@ -233,7 +233,7 @@ Planner, Studio and Admin are English-oriented; they are not wired to `next-intl
 - `X-XSS-Protection: 1; mode=block`
 - Universal `Content-Security-Policy`: `default-src 'self'`, `frame-ancestors 'none'`, `form-action 'self'`, `object-src 'none'`, `base-uri 'self'`, with scoped allowlists for Supabase (`*.supabase.co`, `*.supabase.in`), Vercel analytics/insights, Cloudflare, and Google Analytics.
 
-**Edge proxy:** Next 16 uses `site/proxy.ts` (`export async function proxy` plus `export const config.matcher`, not `middleware.ts`). It applies per-request CSP nonces, edge CSP including `frame-ancestors 'none'` and `form-action 'self'`, the protected-page cookie bounce (presence only), maintenance-mode write 503s, and member-only write blocks for sensitive API prefixes.
+**Edge proxy:** Next 16 uses `site/proxy.ts` (`export async function proxy` plus `export const config.matcher`, not `middleware.ts`). It applies per-request CSP nonces, edge CSP including `frame-ancestors 'none'` and `form-action 'self'`, protected-path redirect to `/access` when cookies are absent (not an `/access` cookie bounce), maintenance-mode write 503s, and member-only write blocks for sensitive API prefixes.
 
 **Cookie security:** `site/lib/security/cookies.ts` defines `DEFAULT_SECURE_COOKIE_OPTIONS` and `STRICT_SECURE_COOKIE_OPTIONS` enforcing `httpOnly: true`, `secure: true` (in production), and `sameSite: "lax" | "strict"`. Supabase SSR server client in `site/platform/supabase/server.ts` guarantees session cookie mutations inherit these secure defaults.
 

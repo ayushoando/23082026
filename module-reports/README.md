@@ -11,7 +11,7 @@ These reports expand the executive findings in [`report-source.md`](../report-so
 | Report | Module coverage | Main conclusion |
 | --- | --- | --- |
 | [01 - Architecture and routing](01-architecture-routing.md) | App Router, build configuration, route map, fork boundaries, FOCSS | The shell is coherent, but documentation and route ownership need continual reconciliation. |
-| [02 - Authentication and security](02-authentication-security.md) | Proxy, sessions, roles, CSRF, origin, rate limits, CSP, bypass | Strong layered design; active defect in `/access` proxy loop & sign-out (`AUTH-LOOP-03`); static token remains scheduled debt. |
+| [02 - Authentication and security](02-authentication-security.md) | Proxy, sessions, roles, CSRF, origin, rate limits, CSP, bypass | Dated 2026-09-03. Current source: `/access` is not cookie-bounced; sign-out is `signOutFromSupabase`. Live blockers only in [`Failures.md`](../Failures.md). |
 | [03 - Persistence and data](03-persistence-data.md) | Admin/Products split, mode selectors, stores, assets, migrations | Exclusive persistence is well guarded, with selector inconsistency and storage-doc drift. |
 | [04 - Planner](04-planner.md) | Canvas, canonical API, repositories, revision/idempotency, legacy routes | The canonical pipeline is disciplined, but a CRM caller uses the wrong contract and two APIs remain live. |
 | [05 - Studio](05-studio.md) | Furniture canvas, autosave, catalog, uploads, publishing | The fork is isolated and mode-aware; Supabase publishing has a disk-only top-PNG gap. |

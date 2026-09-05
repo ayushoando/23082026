@@ -2,8 +2,15 @@
 
 **File Target:** `plans/05092026/03-interactive-workspaces-studio-planner.md`  
 **Governing Standard:** `AGENTS.md` (Authority floor: User instruction > live code/fresh command output > `AGENTS.md`)  
-**Execution State:** **FROZEN / PLANNING ONLY** (`NO CODE CHANGE`, `NO AUTO IMPLEMENT`)  
+**Execution State:** **IN PROGRESS.** `scan:boundaries` exit 0 this session. Workspace browser checks unrun.  
 **Methodology:** Strict Fork Isolation, Mathematical Scale Invariants, Fabric 7 Canvas Engine, Dockview Windowing, and Decoupled State Management.
+
+## Execution checklist (leave open)
+
+- [x] `pnpm run scan:boundaries` exit 0 (1032 files, 0 cross-product edges)
+- [x] Planner 0.05 px/mm and Studio 0.2 px/mm left as-is
+- [ ] Authorized Studio and Planner workspace browser checks
+- [ ] Dockview/canvas interactive proof on localhost:3000
 
 ---
 

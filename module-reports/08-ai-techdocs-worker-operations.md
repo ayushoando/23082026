@@ -31,7 +31,7 @@ The cache policy is security-sensitive: changes to private-prefix matching can e
 Observability follows the lean, cloud-first architecture documented in [`OBSERVABILITY.md`](../OBSERVABILITY.md). The platform relies on three decoupled, production-grade telemetry mechanisms without heavyweight agent daemons (New Relic, Datadog, Traceloop, and Cast have been audited and removed from repository dependencies, scripts, and environment templates):
 
 1. **Client Real User Monitoring (RUM) & Core Web Vitals:** `@vercel/analytics` and `@vercel/speed-insights` in [`site/components/analytics/SiteAnalytics.tsx`](../site/components/analytics/SiteAnalytics.tsx) provide production Core Web Vitals tracking (LCP, INP, CLS) without custom script overhead.
-2. **Business & Marketing Analytics:** Google Analytics 4 via `@next/third-parties/google` in [`site/components/analytics/GoogleAnalytics.tsx`](../site/components/analytics/GoogleAnalytics.tsx) activated when `NEXT_PUBLIC_GA_MEASUREMENT_ID` is present.
+2. **Business & Marketing Analytics:** Google Analytics 4 via [`GoogleAnalytics.tsx`](../site/components/analytics/GoogleAnalytics.tsx) when `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set. Not `@next/third-parties/google`.
 3. **Distributed Tracing & APM:** Standard OpenTelemetry via Next.js instrumentation hook in [`site/instrumentation.ts`](../site/instrumentation.ts) (`@opentelemetry/api`, `@opentelemetry/sdk-node`).
 4. **Metrics Endpoint:** Local Prometheus `/api/metrics` scraping endpoint is available for ad-hoc inspection without requiring local Docker containers.
 

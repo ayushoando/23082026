@@ -44,9 +44,17 @@ html:has([data-cookie-consent-bar]) {
     --site-fab-clearance: calc(5.5rem + env(safe-area-inset-bottom, 0px));
   }
 
+  html:has(.mobile-tab-bar) [data-cookie-consent-bar] {
+    bottom: calc(var(--mobile-tab-bar-height, 3.5rem) + 1px);
+    padding-bottom: 0.5rem;
+  }
+
   html:has(.mobile-tab-bar):has([data-cookie-consent-bar]) {
+    --site-fab-bottom: calc(
+      var(--mobile-tab-bar-height, 3.5rem) + var(--cookie-consent-bar-height, 4.5rem) + 0.75rem
+    );
     --site-fab-bottom-raised: calc(
-      var(--mobile-tab-bar-height, 3.5rem) + var(--cookie-consent-bar-height, 0px) + 0.75rem
+      var(--mobile-tab-bar-height, 3.5rem) + var(--cookie-consent-bar-height, 4.5rem) + 0.75rem
     );
     /* See note above — keep footer clearance at the phone base; don't inflate
        it for the transient consent bar (avoids ~200px of dead footer space). */
@@ -55,7 +63,7 @@ html:has([data-cookie-consent-bar]) {
 
 @utility site-fab-anchor {
   position: fixed;
-  z-index: 40;
+  z-index: 50;
 }
 
 @utility site-fab-anchor--left {

@@ -3,9 +3,17 @@
 **File Target:** `plans/05092026/10-client-hub-sequence-plan.md`  
 **Note:** `plans/PLAN.md` now contains a redirect stub pointing here. The original content lives in this file.  
 **Governing Standard:** `AGENTS.md` (Authority floor: User instruction > live code/fresh command output > `AGENTS.md`)  
-**Execution State:** **FROZEN / PLANNING ONLY** (`NO CODE CHANGE`, `NO AUTO IMPLEMENT`)  
+**Execution State:** **IN PROGRESS.** 8-link header + `/tools` off chrome. Browser walk unrun.  
 **Spine:** [`../client-hub/flowcharts/clients-hub-flow.md`](../client-hub/flowcharts/clients-hub-flow.md)  
 **Living HTML Sitemap:** [`../client-hub/flowcharts/non-admin-site-map.html`](../client-hub/flowcharts/non-admin-site-map.html)  
+
+## Execution checklist (leave open)
+
+- [x] Header 8 primary links; `/planner` marketing vs `/ooplanner` workspace
+- [x] `/tools` absent from public header/footer
+- [x] `scan:boundaries` exit 0
+- [ ] Browser walk desktop + phone on localhost:3000 unrun as Plan 10 evidence
+- [ ] Redirect register vs live host still pending
 
 ---
 

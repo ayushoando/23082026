@@ -1,9 +1,17 @@
 # Oando Subsystem Plan: Admin, Access, and Authorization
 
 **File Target:** `plans/05092026/11-admin-access-and-authorization.md`  
-**Execution State:** **FROZEN / PLANNING ONLY** (`NO CODE CHANGE`, `NO AUTO IMPLEMENT`)  
+**Execution State:** **IN PROGRESS.** Source contracts landed. Bypass-off browser proof unrun.  
 **Scope:** The access entry, private member shells, Admin console, protected APIs, and local-development bypass.  
 **Out of Scope:** Planner/Studio product behaviour, database schema changes, and marketing navigation except where a redirect crosses an access boundary.
+
+## Execution checklist (leave open)
+
+- [x] `/access` not 307'd on cookie names
+- [x] Sign-out is `signOutFromSupabase`; no `createAuthClient`
+- [x] `?direct=true` escape; bypass false in production
+- [ ] Bypass-off `/access` cookie-loop browser proof
+- [ ] CSRF / rate-limit / wrong-role API matrix not freshly probed
 
 ---
 
@@ -75,14 +83,10 @@ For each matrix row, compare page and API enforcement. A gap is any of the follo
 - an indexable private route or a public navigation link to an unavailable authority surface;
 - a superficial edge proxy cookie check triggering infinite redirect loops.
 
-### Phase B.1 — Remediation for `/access` 307 Loop & Client Sign-Out (`AUTH-LOOP-03`)
-1. **Edge Proxy Cookie Check Correction (`site/proxy.ts:442-454`):**
-   - Eliminate auto-redirecting visits to `/access` or `/login` based solely on unverified cookie presence (`hasSessionAuthCookies()`).
-   - If a visitor navigates directly to `/access`, allow the page to render. The server page component at `site/app/(site)/access/page.tsx` will independently verify whether an active session exists using the server client and handle validated redirects gracefully.
-   - For local development under `DEV_AUTH_BYPASS=1`, add a bypass escape parameter (e.g. `?direct=true` or host inspection) so developers are not permanently locked out from the `/access` UI on `http://localhost:3000`.
-2. **Client Sign-Out Delegation (`site/features/shared/dashboard/DashboardClient.tsx:142`):**
-   - Replace client-side direct invocation of `createAuthClient().auth.signOut()` (which fails on undefined server-only `NEXT_ADMIN_SUPABASE_URL`) with the server action `signOutFromSupabase()` in `site/features/shared/auth/actions.ts`.
-   - Ensure the server action deletes Supabase session cookies and redirects cleanly to `/access`.
+### Phase B.1 — Access and sign-out (source current)
+1. **Proxy:** `/access` is not 307'd on cookie names. Protected paths without cookies 307 **to** `/access`. `access/page.tsx` uses `?direct=true` to skip session redirect.
+2. **Sign-out:** `DashboardClient` calls `signOutFromSupabase()` from `site/lib/auth/supabaseServerActions.ts`. No `createAuthClient`. Lands on `/access?direct=true`.
+3. **Open:** bypass-off browser proof. Do not copy IDs into [`Failures.md`](../../Failures.md).
 
 ### Phase C — Traceable Admin Operations
 

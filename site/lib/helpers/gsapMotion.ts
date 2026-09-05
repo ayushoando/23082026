@@ -5,6 +5,12 @@ let pluginsRegistered = false;
 let pageScrollerBound = false;
 
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
+/** Matches `app-shell.css` phone layout: `width < theme(--breakpoint-md)` (768px). */
+const PHONE_LAYOUT_QUERY = "(width < 768px)";
+
+function isPhoneLayout(): boolean {
+  return typeof window !== "undefined" && window.matchMedia(PHONE_LAYOUT_QUERY).matches;
+}
 
 /**
  * Phone marketing shell scrolls `.mobile-app-main`, not the window.
@@ -21,13 +27,17 @@ export function gsapPageScroller(from?: Element | null): HTMLElement | undefined
     return undefined;
   }
   const overflowY = getComputedStyle(main).overflowY;
-  if (overflowY !== "auto" && overflowY !== "scroll") {
-    return undefined;
+  if (overflowY === "auto" || overflowY === "scroll") {
+    return main;
   }
-  return main;
+  // Overflow may not be computed yet; phone layout still scrolls this pane.
+  if (isPhoneLayout()) {
+    return main;
+  }
+  return undefined;
 }
 
-function syncPageScroller(): void {
+export function syncPageScroller(): void {
   if (typeof window === "undefined") {
     return;
   }
@@ -35,20 +45,27 @@ function syncPageScroller(): void {
   ScrollTrigger.defaults({ scroller: scroller ?? window });
 }
 
-/** Register GSAP plugins once (client-safe). */
-export function registerGsapPlugins(): void {
-  if (pluginsRegistered || typeof window === "undefined") {
+/** Register GSAP plugins once (client-safe). Re-syncs the page scroller on every call. */
+export function registerGsapPlugins(refreshTriggers = false): void {
+  if (typeof window === "undefined") {
     return;
   }
-  gsap.registerPlugin(ScrollTrigger);
-  pluginsRegistered = true;
+  if (!pluginsRegistered) {
+    gsap.registerPlugin(ScrollTrigger);
+    pluginsRegistered = true;
+  }
   syncPageScroller();
   if (!pageScrollerBound) {
     pageScrollerBound = true;
-    window.addEventListener("resize", () => {
+    const onViewport = () => {
       syncPageScroller();
       ScrollTrigger.refresh();
-    });
+    };
+    window.addEventListener("resize", onViewport);
+    window.matchMedia(PHONE_LAYOUT_QUERY).addEventListener("change", onViewport);
+  }
+  if (refreshTriggers) {
+    ScrollTrigger.refresh();
   }
 }
 

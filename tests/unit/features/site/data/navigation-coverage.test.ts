@@ -108,7 +108,8 @@ describe("SITE_NAV_LINKS", () => {
       "FAQ",
     ]);
     expect(SITE_HEADER_MORE_LINKS).toEqual([]);
-    expect(SITE_HEADER_PRIMARY_LINKS.length + SITE_HEADER_MORE_LINKS.length).toBeLessThanOrEqual(8);
+    expect(SITE_HEADER_PRIMARY_LINKS.length).toBeGreaterThanOrEqual(8);
+    expect(SITE_HEADER_PRIMARY_LINKS.length + SITE_HEADER_MORE_LINKS.length).toBeLessThanOrEqual(9);
     expect(SITE_HEADER_PRIMARY_LINKS).toEqual(SITE_NAV_LINKS);
     const products = SITE_NAV_LINKS.find((l) => l.label === "Products");
     expect(products && "hasMega" in products && products.hasMega).toBe(true);
@@ -227,7 +228,6 @@ describe("SITE_FOOTER_NAV", () => {
       "All Products",
       "Planner",
       "Planner help",
-      "Tools",
     ]);
     const company = SITE_FOOTER_NAV.find((section) => section.heading === "Company");
     expect(company?.links.map((link) => link.label)).toEqual([
@@ -274,6 +274,7 @@ describe("SITE_FOOTER_NAV", () => {
     expect(hrefs.some((h) => /^\/portal(\/|$|\?)/i.test(h))).toBe(false);
     expect(hrefs.some((h) => /^\/dashboard(\/|$|\?)/i.test(h))).toBe(false);
     expect(hrefs.some((h) => /^\/ooplanner(\/|$|\?)/i.test(h))).toBe(false);
+    expect(hrefs.some((h) => /^\/tools(\/|$|\?)/i.test(h))).toBe(false);
     expect(labels.some((l) => /^portal$/i.test(l.trim()))).toBe(false);
     expect(labels.some((l) => /^sign in$/i.test(l.trim()))).toBe(false);
     expect(labels.some((l) => /^member dashboard$/i.test(l.trim()))).toBe(false);

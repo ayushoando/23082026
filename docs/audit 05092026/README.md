@@ -31,9 +31,9 @@ Architecture facts are evidence from the audit date. Current blocker, test, brow
 
 ## Current Operational Reconciliation
 
-At this revision, [`Failures.md`](../../Failures.md) contains two active blockers: a full Vitest run with four failing files, and an unavailable local browser origin. A later authorized four-file recheck passed three files but still found a footer/classification mismatch for the retired `/tools` route. Do not use `results/tests/summary.json` as clearance evidence.
+[`Failures.md`](../../Failures.md) is the only blocker ledger. An empty table is valid. Do not copy IDs here. Do not use `results/tests/summary.json` as clearance.
 
-The route decision is intentionally pending: while the canonical host returns `404`, `/tools` and its calculator paths remain `not-found` and nonindexable. The next approved change must either remove their public references or restore a verified public `200` implementation; it must not invent sitemap entries or SEO titles for dead URLs.
+`/tools` and both calculators are classified `not-found` / nonindexable and are excluded from public header, footer, and sitemaps in current source. Page files may still exist. Canonical host `https://oando.co.in`. Tech-docs SPA default `https://oando23.vercel.app` (dev `:3001`). Env templates: root `.env.example`, `site/.env.example`, `tech-docs-generator/.env.example`.
 
 ---
 

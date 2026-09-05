@@ -9,13 +9,19 @@ import { SITE_URL } from "@/lib/siteUrl";
 
 const BASE_URL = SITE_URL.replace(/\/+$/, "");
 
+/** `/tools` and calculator shells are 404 — never emit as public sitemap URLs. */
+function isPublicSitemapExcludedPath(path: string): boolean {
+  const normalized = path.replace(/\/+$/, "") || "/";
+  return normalized === "/tools" || normalized.startsWith("/tools/");
+}
+
 /** Public marketing/product paths only — never admin/api/private shells. */
 const STATIC_SITEMAP_PATHS = Array.from(
   new Set<string>([
     ...PUBLIC_INDEXABLE_STATIC_PATHS,
     ...PLANNER_MARKETING_SITEMAP_PATHS,
   ]),
-);
+).filter((path) => !isPublicSitemapExcludedPath(path));
 
 function isUuidSegment(segment: string): boolean {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
@@ -105,6 +111,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return entries.filter((entry) => {
     if (seen.has(entry.url)) return false;
     seen.add(entry.url);
+    try {
+      if (isPublicSitemapExcludedPath(new URL(entry.url).pathname)) {
+        return false;
+      }
+    } catch {
+      // loc is produced by sitemapUrl
+    }
     return true;
   });
 }

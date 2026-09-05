@@ -2,8 +2,16 @@
 
 **File Target:** `plans/05092026/06-test-subsystem-and-integrity-audits.md`  
 **Governing Standard:** `AGENTS.md` (Authority floor: User instruction > live code/fresh command output > `AGENTS.md`)  
-**Execution State:** **FROZEN / PLANNING ONLY** (`NO CODE CHANGE`, `NO AUTO IMPLEMENT`)  
+**Execution State:** **IN PROGRESS.** Dual-lane + test:audit passed. Playwright pass not recorded. No test-folder moves.  
 **Methodology:** Dual-Lane Vitest Architecture, Two-Tier Audit Dispatcher, 5 Test Integrity Audits, and Playwright Browser Gate Matrix.
+
+## Execution checklist (leave open)
+
+- [x] Dual-lane configs present; `pnpm run test` both lanes passed earlier this session
+- [x] `test:audit`, `test:audit:fast`, `test:audit:fake-test` exit 0
+- [ ] `test:browser:gate` in flight (~432 tests); not a recorded pass
+- [ ] Test-folder classification/moves not executed
+- [ ] Fresh `results/tests/summary.json` not used as historical clearance
 
 ---
 

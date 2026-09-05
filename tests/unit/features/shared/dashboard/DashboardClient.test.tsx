@@ -65,12 +65,12 @@ describe("DashboardClient", () => {
 
     await waitFor(() => {
       expect(signOutFromSupabase).toHaveBeenCalled();
-      expect(mockReplace).toHaveBeenCalledWith("/access");
+      expect(mockReplace).toHaveBeenCalledWith("/access?direct=true");
       expect(mockRefresh).toHaveBeenCalled();
     });
   });
 
-  it("does not navigate when server sign-out fails", async () => {
+  it("still leaves the dashboard when server sign-out reports failure", async () => {
     vi.mocked(signOutFromSupabase).mockResolvedValueOnce({ success: false });
     render(<DashboardClient userEmail="user@example.com" />);
 
@@ -78,8 +78,7 @@ describe("DashboardClient", () => {
 
     await waitFor(() => {
       expect(signOutFromSupabase).toHaveBeenCalled();
+      expect(mockReplace).toHaveBeenCalledWith("/access?direct=true");
     });
-    expect(mockReplace).not.toHaveBeenCalled();
-    expect(mockRefresh).not.toHaveBeenCalled();
   });
 });

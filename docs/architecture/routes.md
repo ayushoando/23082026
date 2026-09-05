@@ -23,7 +23,7 @@ This reference maps known `site/app/**/page.tsx` and `site/app/api/**/route.ts` 
 
 - `/` → `app/(site)/page.tsx` (marketing home)
 - `/about` → `app/(site)/about/page.tsx`
-- `/access` → `app/(site)/access/page.tsx` (staff/client login; see `AUTH-LOOP-03` in `Failures.md` for edge proxy cookie redirect behavior)
+- `/access` → `app/(site)/access/page.tsx` (staff/client login). Proxy does not 307 `/access` on cookie names. Sign-out uses `signOutFromSupabase`. Live blockers only in [`Failures.md`](../../Failures.md).
 - `/career` → `app/(site)/career/page.tsx`
 - `/choose-product` → `app/(site)/choose-product/page.tsx`
 - `/clients` → `app/(site)/clients/page.tsx` (canonical 116 enterprise client directory & sector showcase with Schema.org ItemList)

@@ -70,9 +70,6 @@ const STATIC_PATH_LABELS: Record<string, string> = {
   "/trusted-by": "Trusted by",
   "/career": "Careers",
   "/planning": "Planning service",
-  "/tools": "Workspace planning tools",
-  "/tools/office-space-calculator": "Office space calculator",
-  "/tools/meeting-room-capacity-calculator": "Meeting room capacity calculator",
   "/faq": "FAQ",
   "/compare": "Compare",
   "/downloads": "Resource desk",
@@ -125,9 +122,6 @@ const COMPANY_SERVICE_PATHS = [
   "/trusted-by",
   "/career",
   "/planning",
-  "/tools",
-  "/tools/office-space-calculator",
-  "/tools/meeting-room-capacity-calculator",
   "/faq",
   "/compare",
   "/downloads",
@@ -166,8 +160,18 @@ function linkForPath(path: string): SitemapLink {
   return { href: path, label: labelForPath(path) };
 }
 
+/** `/tools` and calculator shells are 404 — never emit as public sitemap URLs. */
+function isPublicSitemapExcludedPath(path: string): boolean {
+  const normalized = path.replace(/\/+$/, "") || "/";
+  return normalized === "/tools" || normalized.startsWith("/tools/");
+}
+
 function indexableCompanyPaths(): string[] {
-  return COMPANY_SERVICE_PATHS.filter((path) => PUBLIC_INDEXABLE_STATIC_PATHS.includes(path));
+  return COMPANY_SERVICE_PATHS.filter(
+    (path) =>
+      PUBLIC_INDEXABLE_STATIC_PATHS.includes(path) &&
+      !isPublicSitemapExcludedPath(path),
+  );
 }
 
 function indexableLegalPaths(): string[] {
@@ -256,7 +260,10 @@ export function buildSitemapSections(): SitemapSection[] {
     { heading: "Planner", links: plannerLinks },
     { heading: "Company & service", links: companyLinks },
     { heading: "Legal & policies", links: legalLinks },
-  ];
+  ].map((section) => ({
+    heading: section.heading,
+    links: section.links.filter((link) => !isPublicSitemapExcludedPath(link.href)),
+  }));
 }
 
 export function getHtmlSitemapHrefs(sections: readonly SitemapSection[]): string[] {

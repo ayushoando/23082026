@@ -8,8 +8,9 @@ export function GoogleAnalytics({
   gaId?: string;
   nonce?: string;
 }) {
-  const measurementId =
-    gaId || process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-CTPK6318CR";
+  // Same gate as `getGtmScriptOrigin()` in site/proxy.ts — do not hardcode a
+  // property ID or gtag will load without a matching script-src origin.
+  const measurementId = gaId || process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
   if (!measurementId || process.env.NODE_ENV === "test") {
     return null;

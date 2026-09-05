@@ -2,8 +2,16 @@
 
 **File Target:** `plans/05092026/09-blockers-clearance-and-ship-gate.md`  
 **Governing Standard:** `AGENTS.md` (Authority floor: User instruction > live code/fresh command output > `AGENTS.md`)  
-**Execution State:** **FROZEN / PLANNING ONLY** (`NO CODE CHANGE`, `NO AUTO IMPLEMENT`)  
+**Execution State:** **IN PROGRESS.** `Failures.md` empty. `pnpm run gate` not recorded.  
 **Methodology:** Failures.md Governance Protocol, Evidence-Based Blocker Resolution, Dual-Gate Hierarchy, and End-to-End Release Runbook.
+
+## Execution checklist (leave open)
+
+- [x] `Failures.md` empty; `check:failures` exit 0
+- [x] Preflight: layout, focss, style-tokens, test:audit, governance, secrets
+- [x] Dual-lane `pnpm run test` passed earlier this session
+- [ ] `test:browser:gate` in flight; not a recorded pass
+- [ ] `pnpm run gate` / `release:gate` not run
 
 ---
 
@@ -59,7 +67,7 @@ Enforced by [`scripts/general/check-failures.mjs#L7-L14`](file:///d:/23082026/sc
 
 ## 3. Detailed Resolution Plan for Active Blockers
 
-### Blocker 1: `GATE-RECHECK-01` (Priority: P1)
+### Historical record 1 (not a current `Failures.md` row)
 - **Historical blocker record (superseded below):** Vitest failed on 4 tests: `htmlSitemap.test.ts`, `siteSeoAcceptance.test.ts`, `siteSeoContract.test.ts`, and `providers.test.ts`.
 - **Historical proposed remediation (not current route truth):**
   1. `htmlSitemap.test.ts` & `siteSeoAcceptance.test.ts`: Missing route `/tools` in company service path array. Remedied in `site/features/site/data/htmlSitemap.ts#L128`.
@@ -91,11 +99,11 @@ Enforced by [`scripts/general/check-failures.mjs#L7-L14`](file:///d:/23082026/sc
 - A current-tree `pnpm run test` initially exited `1` with failures in `htmlSitemap.test.ts`, `siteSeoAcceptance.test.ts`, `siteSeoContract.test.ts`, and `providers.test.ts`.
 - The later authorized re-run of exactly those four files passed `htmlSitemap.test.ts`, `siteSeoContract.test.ts`, and `providers.test.ts`. One assertion remains in `siteSeoAcceptance.test.ts`: **expected** footer `/tools` classification `public`; **received** `not-found`.
 - The canonical host had returned `404` for `/tools` and both calculator paths. Treat that as authoritative: the remaining assertion is a public-footer/classification mismatch, not a reason to create pages, manufacture SEO titles, or put dead URLs into sitemaps.
-- Before code changes, a product owner must choose whether `/tools` stays retired (remove all public references) or is restored as a verified canonical `200` route (then reintroduce public SEO). Only after that scoped work and fresh successful required gates may `GATE-RECHECK-01` be removed.
+- `/tools` is `not-found` / nonindexable in current source and off public chrome. Product restore of a public `200` is a separate decision. Not an open `Failures.md` row.
 
 ---
 
-### Blocker 2: `BROWSER-ORIGIN-02` (Priority: P1)
+### Historical record 2 (not a current `Failures.md` row)
 - **Documented Blocker:** Playwright test run failed with `net::ERR_CONNECTION_REFUSED` at `http://localhost:3000`.
 - **Root Cause:**
   In [`config/build/playwright.config.ts#L88-L105`](file:///d:/23082026/config/build/playwright.config.ts#L88-L105), setting `PLAYWRIGHT_BASE_URL` in the environment causes Playwright to treat the server as externally managed (`userProvidedBaseURL = true`) and disables its internal `webServer` spawner. When the test was executed without manually starting the dev server, connection was refused.
@@ -109,20 +117,13 @@ Enforced by [`scripts/general/check-failures.mjs#L7-L14`](file:///d:/23082026/sc
      pnpm run test:browser:gate
      ```
   3. Confirm all 8 specs pass across Chromium, Firefox, and WebKit viewports.
-  4. Delete the `BROWSER-ORIGIN-02` row from [`Failures.md`](file:///d:/23082026/Failures.md).
+  4. Do not write a browser-origin row into [`Failures.md`](../../Failures.md) unless a current `localhost:3000` refusal is observed. The table is empty.
 
 ---
 
-### Blocker 3: `AUTH-LOOP-03` (Priority: P1)
-- **Documented Blocker:** Visiting `/access` with expired/invalid session cookies triggers an infinite HTTP 307 loop (`ERR_TOO_MANY_REDIRECTS`), and signing out from `/dashboard` crashes in the browser due to missing client environment variables.
-- **Root Causes:**
-  1. In `site/proxy.ts:442-454`, `hasSessionAuthCookies()` detects cookie presence and redirects to `/dashboard`. The server layout rejects the invalid cookie and bounces to `/access`, looping indefinitely.
-  2. In `site/features/shared/dashboard/DashboardClient.tsx:142`, client-side `createAuthClient().auth.signOut()` tries to read server-only `NEXT_ADMIN_SUPABASE_URL`.
-- **Clearance Steps:**
-  1. Modify `site/proxy.ts` to allow `/access` to render without unverified cookie redirect, and allow local access under `DEV_AUTH_BYPASS=1`.
-  2. Update `DashboardClient.tsx` to invoke the `signOutFromSupabase()` server action.
-  3. In browser at `http://localhost:3000`, verify `/access` renders with expired cookies and `/dashboard` sign-out succeeds without errors.
-  4. Delete the `AUTH-LOOP-03` row from [`Failures.md`](file:///d:/23082026/Failures.md).
+### Historical RCA (not a current `Failures.md` row)
+
+Source as of this revision: `site/proxy.ts` does **not** 307 `/access` on cookie names. `DashboardClient` calls `signOutFromSupabase()` in `site/lib/auth/supabaseServerActions.ts`, not `createAuthClient()`. Bypass-off browser proof is still required before treating access as production-verified. Do not copy IDs into this file.
 
 ---
 

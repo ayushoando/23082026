@@ -24,7 +24,7 @@ export type SiteNavLink = (typeof SITE_NAV_LINKS)[number];
 /** Desktop + mobile center nav — same flat list. */
 export const SITE_HEADER_PRIMARY_LINKS = SITE_NAV_LINKS;
 
-/** Overflow only — keep empty while `SITE_NAV_LINKS` is already at the 9-link cap. */
+/** Overflow only — keep empty while `SITE_NAV_LINKS` is at the 8-link primary (cap 9). */
 export const SITE_HEADER_MORE_LINKS: readonly { label: string; href: string }[] = [];
 
 export const SITE_CTA_LINKS = [
@@ -130,7 +130,6 @@ export const SITE_FOOTER_NAV = buildFooterNav([
       { href: "/products", label: "All Products" },
       { href: PRODUCT_SUITE.planner.routes.landing, label: "Planner" },
       { href: PRODUCT_SUITE.planner.routes.help, label: "Planner help" },
-      { href: "/tools", label: "Tools" },
     ],
   },
   {

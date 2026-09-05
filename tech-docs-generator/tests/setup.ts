@@ -1,5 +1,10 @@
-import { vi } from 'vitest'
+import { afterEach, vi } from 'vitest'
+import { cleanup } from '@testing-library/react'
 import { MotionGlobalConfig } from 'framer-motion'
+
+afterEach(() => {
+  cleanup()
+})
 
 // Skip WAAPI animations entirely — unmount-time cancels reject unhandled in
 // happy-dom ("AbortError: The animation was canceled") and fail the lane.

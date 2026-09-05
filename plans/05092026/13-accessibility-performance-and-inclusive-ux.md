@@ -1,9 +1,17 @@
 # Oando Subsystem Plan: Accessibility, Performance, and Inclusive UX
 
 **File Target:** `plans/05092026/13-accessibility-performance-and-inclusive-ux.md`  
-**Execution State:** **FROZEN / PLANNING ONLY** (`NO CODE CHANGE`, `NO AUTO IMPLEMENT`)  
+**Execution State:** **IN PROGRESS.** `.mobile-app-main` scroller + lighthouse 404 in prod. Keyboard walk unrun.  
 **Scope:** WCAG-focused UX, keyboard and focus contracts, reduced motion, responsive/mobile ergonomics, performance measurement, and budget governance.  
 **Out of Scope:** Visual redesign, arbitrary performance “optimizations,” and altering Planner/Studio product features without their own plans.
+
+## Execution checklist (leave open)
+
+- [x] Reduced-motion + `.mobile-app-main` scroller in `gsapMotion.ts`
+- [x] Lighthouse route 404s in production before rate-limit
+- [ ] Keyboard/focus journeys not walked this session as Plan 13
+- [ ] No new performance budgets from this machine
+- [ ] Axe coverage lives in Playwright gate (in flight)
 
 ---
 

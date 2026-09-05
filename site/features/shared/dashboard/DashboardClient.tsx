@@ -139,13 +139,14 @@ export function DashboardClient({ userEmail, accessError }: DashboardClientProps
   async function handleSignOut() {
     setIsSigningOut(true);
     try {
-      const result = await signOutFromSupabase();
-      if (!result.success) {
-        setIsSigningOut(false);
-        return;
-      }
+      await Promise.race([
+        signOutFromSupabase(),
+        new Promise<{ success: boolean }>((resolve) => {
+          setTimeout(() => resolve({ success: true }), 8000);
+        }),
+      ]);
       document.cookie = `${PLANNER_GUEST_COOKIE}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC; SameSite=Lax`;
-      router.replace("/access");
+      router.replace("/access?direct=true");
       router.refresh();
     } catch {
       setIsSigningOut(false);

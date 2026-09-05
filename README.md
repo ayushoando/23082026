@@ -19,7 +19,7 @@ pnpm dev          # http://localhost:3000 — never 127.0.0.1
 pnpm run ops:list # long tail (db extras, catalog, CDN)
 ```
 
-Secrets live in the repo-root `.env.local` (plus `site/.env.local` when Next loads from `site/`).
+Secrets live in `.env.local` or `site/.env.local`. Templates: [`.env.example`](./.env.example) (copy to both local files; default `DEV_AUTH_BYPASS=1`), [`site/.env.example`](./site/.env.example) (`DEV_AUTH_BYPASS=0`, prod `https://oando.co.in`), [`tech-docs-generator/.env.example`](./tech-docs-generator/.env.example) (public Admin keys, `:3001`, `https://oando23.vercel.app`). Never put `DEV_AUTH_BYPASS=1` on Vercel production. Push allowlist: `scripts/vercel-env-push.mjs`.
 
 ## Platform (durable facts)
 
