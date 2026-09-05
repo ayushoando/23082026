@@ -130,6 +130,7 @@ export const SITE_FOOTER_NAV = buildFooterNav([
       { href: "/products", label: "All Products" },
       { href: PRODUCT_SUITE.planner.routes.landing, label: "Planner" },
       { href: PRODUCT_SUITE.planner.routes.help, label: "Planner help" },
+      { href: "/tools", label: "Tools" },
     ],
   },
   {

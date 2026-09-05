@@ -227,6 +227,7 @@ describe("SITE_FOOTER_NAV", () => {
       "All Products",
       "Planner",
       "Planner help",
+      "Tools",
     ]);
     const company = SITE_FOOTER_NAV.find((section) => section.heading === "Company");
     expect(company?.links.map((link) => link.label)).toEqual([

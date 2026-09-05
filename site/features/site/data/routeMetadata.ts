@@ -245,6 +245,20 @@ export const TRUSTED_BY_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
   ],
 });
 
+export const TOOLS_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
+  title: "Workspace Planning Tools & Calculators | One&Only",
+  description:
+    "Free office planning tools and workspace calculators. Estimate workstation capacity, calculate meeting room sizes, and evaluate layout requirements before furnishing.",
+  path: "/tools",
+  keywords: [
+    "office planning tools India",
+    "workspace calculators",
+    "office space calculator",
+    "meeting room capacity calculator",
+    "office layout planner",
+  ],
+});
+
 export const OFFICE_SPACE_CALCULATOR_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
   title: "Office Space Calculator | Workstation Capacity | One&Only",
   description:

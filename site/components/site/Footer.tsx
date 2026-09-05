@@ -53,6 +53,7 @@ const FOOTER_LABEL_KEYS: Record<string, string> = {
   Clients: "navigation.clients",
   Planner: "navigation.planner",
   "Planner help": "navigation.plannerHelp",
+  Tools: "navigation.tools",
   "About Us": "navigation.about",
   "Trusted By": "navigation.trustedBy",
   Sustainability: "navigation.sustainability",

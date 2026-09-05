@@ -70,6 +70,7 @@ const STATIC_PATH_LABELS: Record<string, string> = {
   "/trusted-by": "Trusted by",
   "/career": "Careers",
   "/planning": "Planning service",
+  "/tools": "Workspace planning tools",
   "/tools/office-space-calculator": "Office space calculator",
   "/tools/meeting-room-capacity-calculator": "Meeting room capacity calculator",
   "/faq": "FAQ",

@@ -49,6 +49,16 @@ export const SITE_ROUTE_CLASSIFICATION: SiteRouteMeta[] = [
     indexable: true,
   },
   {
+    route: "/tools",
+    classification: "public",
+    audience: "Public visitor / facilities manager / workspace planner",
+    intent: "Overview directory of free office planning tools and calculators",
+    owner: "Marketing",
+    canonicalUrl: canonicalFor("/tools"),
+    primaryAction: "Open a planning tool or calculator",
+    indexable: true,
+  },
+  {
     route: "/tools/meeting-room-capacity-calculator",
     classification: "public",
     audience: "Public visitor / facilities manager",
