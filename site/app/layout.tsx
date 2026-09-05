@@ -5,6 +5,7 @@ import { getHtmlLang } from "@/lib/i18n/htmlLang";
 import { defaultLocale } from "@/i18n/config";
 import { getRequestNonce } from "@/lib/security/requestNonce";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   title: "One&Only",
@@ -42,6 +43,7 @@ export default async function RootLayout({
       >
         {children}
         <GoogleAnalytics nonce={nonce} />
+        <Analytics />
       </body>
     </html>
   );
