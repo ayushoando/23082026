@@ -1,10 +1,11 @@
 // @vitest-environment node
 /**
  * Name-mirror: i18n/request.ts
- * Locale from NEXT_LOCALE cookie (en default, hi when set).
+ * COST-S02 — English-only static locale. No cookies / next/headers.
  */
 import { describe, expect, it, vi } from "vitest";
 import { defaultLocale } from "@/i18n/config";
+import enMessages from "@/i18n/messages/en.json";
 
 type RequestConfigResult = {
   locale: string;
@@ -14,7 +15,6 @@ type RequestConfigResult = {
 type RequestConfigFactory = () => Promise<RequestConfigResult>;
 
 let capturedFactory: RequestConfigFactory | undefined;
-const cookieGet = vi.fn();
 
 vi.mock("next-intl/server", () => ({
   getRequestConfig: (factory: RequestConfigFactory) => {
@@ -23,16 +23,9 @@ vi.mock("next-intl/server", () => ({
   },
 }));
 
-vi.mock("next/headers", () => ({
-  cookies: async () => ({
-    get: cookieGet,
-  }),
-}));
-
 async function loadRequestFactory(): Promise<RequestConfigFactory> {
   capturedFactory = undefined;
   vi.resetModules();
-  cookieGet.mockReset();
   const mod = await import("@/i18n/request");
   const exported = mod.default as RequestConfigFactory;
   expect(typeof exported).toBe("function");
@@ -43,31 +36,31 @@ async function loadRequestFactory(): Promise<RequestConfigFactory> {
 }
 
 describe("i18n/request.ts", () => {
-  it("defaults to English when NEXT_LOCALE is absent", async () => {
+  it("defaults to English with en.json messages (COST-S02)", async () => {
     const factory = await loadRequestFactory();
-    cookieGet.mockReturnValue(undefined);
     const result = await factory();
 
     expect(result.locale).toBe(defaultLocale);
     expect(result.locale).toBe("en");
+    expect(result.messages).toEqual(enMessages);
     expect(result.messages.about).toBeDefined();
   });
 
-  it("loads Hindi messages when NEXT_LOCALE=hi", async () => {
-    const factory = await loadRequestFactory();
-    cookieGet.mockReturnValue({ value: "hi" });
-    const result = await factory();
+  it("still returns English when NEXT_LOCALE=hi (no multi-locale runtime)", async () => {
+    const previous = process.env.NEXT_LOCALE;
+    process.env.NEXT_LOCALE = "hi";
+    try {
+      const factory = await loadRequestFactory();
+      const result = await factory();
 
-    expect(result.locale).toBe("hi");
-    const about = result.messages.about as { heroTitleLead?: string };
-    expect(about.heroTitleLead).toBe("कुशलता से तैयार");
-  });
-
-  it("falls back to English for an unknown cookie value", async () => {
-    const factory = await loadRequestFactory();
-    cookieGet.mockReturnValue({ value: "fr" });
-    const result = await factory();
-
-    expect(result.locale).toBe("en");
+      expect(result.locale).toBe("en");
+      expect(result.messages).toEqual(enMessages);
+    } finally {
+      if (previous === undefined) {
+        delete process.env.NEXT_LOCALE;
+      } else {
+        process.env.NEXT_LOCALE = previous;
+      }
+    }
   });
 });

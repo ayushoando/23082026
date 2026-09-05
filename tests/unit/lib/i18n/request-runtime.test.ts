@@ -1,7 +1,7 @@
 // @vitest-environment node
 /**
- * Locale is prefixless (`localePrefix: never`). HTML language comes from the
- * NEXT_LOCALE cookie via `site/i18n/request.ts`.
+ * COST-S02 — static English-only request config so marketing HTML can be cached.
+ * Do not import next/headers or read NEXT_LOCALE.
  */
 import { readFileSync, existsSync } from "node:fs";
 import path from "node:path";
@@ -15,12 +15,12 @@ const requestPath = path.join(siteRoot, "i18n", "request.ts");
 const rootShimPath = path.resolve(__dirname, "../../../../i18n", "request.ts");
 const source = readFileSync(requestPath, "utf8");
 
-describe("i18n runtime (cookie locale)", () => {
-  it("reads NEXT_LOCALE and can load Hindi messages", () => {
-    expect(source).toMatch(/NEXT_LOCALE/);
-    expect(source).toMatch(/from ["']next\/headers["']/);
-    expect(source).toMatch(/messages\/hi\.json/);
+describe("i18n runtime (COST-S02 English-only)", () => {
+  it("loads static en.json and does not use next/headers or NEXT_LOCALE", () => {
     expect(source).toMatch(/messages\/en\.json/);
+    expect(source).not.toMatch(/NEXT_LOCALE/);
+    expect(source).not.toMatch(/from ["']next\/headers["']/);
+    expect(source).not.toMatch(/messages\/hi\.json/);
   });
 
   it("keeps English as the default locale", () => {

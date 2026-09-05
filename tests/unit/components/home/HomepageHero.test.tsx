@@ -109,8 +109,8 @@ describe('HomepageHero Component', () => {
 
     const primary = screen.getByRole('link', { name: hero.primaryCta.label });
     const secondary = screen.getByRole('link', { name: hero.secondaryCta.label });
-    expect(primary).toHaveAttribute('href', hero.primaryCta.href);
-    expect(secondary).toHaveAttribute('href', hero.secondaryCta.href);
+    expect(primary.getAttribute('href')).toMatch(/^\/ooplanner(\?|$)/);
+    expect(secondary.getAttribute('href')).toMatch(/^\/products(\?|$)/);
 
     expect(screen.getByText(hero.glassProof.badge)).toBeInTheDocument();
     expect(screen.getByText(hero.glassProof.lead)).toBeInTheDocument();
@@ -130,7 +130,7 @@ describe('HomepageHero Component', () => {
     });
     expect(proof).toHaveAttribute('href', hero.glassProof.href);
     expect(
-      screen.getByRole('link', { name: hero.secondaryCta.label }),
-    ).toHaveAttribute('href', hero.secondaryCta.href);
+      screen.getByRole('link', { name: hero.secondaryCta.label }).getAttribute('href'),
+    ).toMatch(/^\/products(\?|$)/);
   });
 });

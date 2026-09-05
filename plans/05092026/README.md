@@ -10,6 +10,7 @@
 Unchecked = not finished. Do not tick from a commit message or old `summary.json`.
 
 - [x] Named execution of plans 01–16 authorized this session (first batches + selected full checks)
+- [ ] Latest `pnpm run test` **exit 1** (6 files). Not dual-lane green.
 - [ ] Plan 14 remaining: `pnpm run gate` / `release:gate:core` / recorded browser-gate pass
 - [ ] Plan 16 AUTH-LOOP-03 bypass-off browser proof
 - [x] Each numbered plan 01–13 now has an open execution checklist

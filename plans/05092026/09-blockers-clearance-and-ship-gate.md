@@ -9,7 +9,7 @@
 
 - [x] `Failures.md` empty; `check:failures` exit 0
 - [x] Preflight: layout, focss, style-tokens, test:audit, governance, secrets
-- [x] Dual-lane `pnpm run test` passed earlier this session
+- [ ] Latest `pnpm run test` this session **exit 1** (6 default-lane files). Tech-docs lane skipped. Not a green dual-lane.
 - [ ] `test:browser:gate` in flight; not a recorded pass
 - [ ] `pnpm run gate` / `release:gate` not run
 

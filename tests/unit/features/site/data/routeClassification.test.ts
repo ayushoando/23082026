@@ -128,8 +128,8 @@ describe("PUBLIC_INDEXABLE_ROUTES derivation", () => {
     expect(PUBLIC_INDEXABLE_ROUTES).not.toContain("/choose-product");
     expect(PUBLIC_INDEXABLE_ROUTES).not.toContain("/brochure");
     expect(PUBLIC_INDEXABLE_ROUTES).not.toContain("/portal");
-    expect(PUBLIC_INDEXABLE_ROUTES).toContain("/tools/meeting-room-capacity-calculator");
-    expect(PUBLIC_INDEXABLE_ROUTES).toContain("/tools/office-space-calculator");
+    expect(PUBLIC_INDEXABLE_ROUTES).not.toContain("/tools/meeting-room-capacity-calculator");
+    expect(PUBLIC_INDEXABLE_ROUTES).not.toContain("/tools/office-space-calculator");
   });
 
   it("exposes concrete static paths without dynamic segments", () => {

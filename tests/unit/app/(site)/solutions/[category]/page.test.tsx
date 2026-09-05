@@ -83,6 +83,8 @@ vi.mock("@/features/site/data/seo", () => ({
     title: { absolute: `${opts.title} | One&Only` },
     description: opts.description,
   }),
+  buildCanonicalUrl: (siteUrl: string, path: string) =>
+    `${siteUrl.replace(/\/+$/, "")}${path.startsWith("/") ? path : `/${path}`}`,
 }));
 
 vi.mock("@/lib/catalog/productStaticParams", () => ({
