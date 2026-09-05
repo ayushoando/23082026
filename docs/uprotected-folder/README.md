@@ -20,25 +20,25 @@
 
 ---
 
-## Confirmed P0 Actions (Still Open)
+## Confirmed P0 Actions
 
-| # | Action | File | Evidence |
+| # | Action | File | Status / Evidence |
 | :--- | :--- | :--- | :--- |
-| 1 | Fix 3 typo secret names in backup sync script | [`scripts/sync-github-backup-secrets.ps1`](file:///d:/23082026/scripts/sync-github-backup-secrets.ps1) | Live grep shows `CLOULD_ACCESS_KEY_ID`, `CLOULDFLARE_S3_SECRET_ACCESS_KEY`, `CLOULDFLARE_S3_URL` still present; CI expects `CLOUDFLARE_R2_*` variants |
-| 2 | Re-audit live sitemap — prior 404 slugs not found in static source | `pnpm run audit:sitemap-health` | `allure`, `caneva`, `flex` etc. not in `productStaticParams.ts` or `sitemap.ts`; source of 404s may be DB catalog |
+| 1 | Fix 3 typo secret names in backup sync script | [`scripts/sync-github-backup-secrets.ps1`](file:///d:/23082026/scripts/sync-github-backup-secrets.ps1) | **RESOLVED** — Live script contains canonical `CLOUDFLARE_R2_ACCESS_KEY_ID`, `CLOUDFLARE_R2_SECRET_ACCESS_KEY`, `CLOUDFLARE_S3_URL`. |
+| 2 | Re-audit live sitemap — prior 404 slugs not found in static source | `pnpm run audit:sitemap-health` | Static route classification and `/tools` entries synced; catalog-driven slugs tracked in DB. |
 
-## Confirmed P1 Actions (Still Open)
+## Confirmed P1 Actions
 
-| # | Action | File |
-| :--- | :--- | :--- |
-| 1 | Add `"react-hooks"` to `plugins` array | [`.oxlintrc.json`](file:///d:/23082026/.oxlintrc.json) |
-| 2 | Add `/repository-graph` route to tech-docs router | [`tech-docs-generator/src/App.tsx`](file:///d:/23082026/tech-docs-generator/src/App.tsx) |
-| 3 | Rewrite `Database.tsx` ER diagram (`users`/`plans`/`leads` all archived) | [`tech-docs-generator/src/pages/Database.tsx`](file:///d:/23082026/tech-docs-generator/src/pages/Database.tsx) |
-| 4 | Delete `scripts/operations-review/` (10 files) | `scripts/operations-review/` |
-| 5 | Delete `scripts/site-ui-content-links-audit/` (26 files) | `scripts/site-ui-content-links-audit/` |
-| 6 | Delete large dead scripts (74 KB) | `merge-recovery-into-majors.mjs`, `five-majors-hash-dedup.mjs` |
-| 7 | Delete 5 dead Python scripts | `rename-plans.py`, `update-plans.py`, `move-checklist.py`, `verify-plans.py`, `audit-repo-state.py` |
-| 8 | Expand `audit-eslint-disable.mjs` SCAN_DIRS to include `site/hooks` and `config/build` | [`scripts/general/audit-eslint-disable.mjs`](file:///d:/23082026/scripts/general/audit-eslint-disable.mjs) |
+| # | Action | File | Status |
+| :--- | :--- | :--- | :--- |
+| 1 | Add `"react-hooks"` to `plugins` array | [`.oxlintrc.json`](file:///d:/23082026/.oxlintrc.json) | **RESOLVED** — `"react-hooks"` active in plugins array; oxlint passes with code 0. |
+| 2 | Add `/repository-graph` route to tech-docs router | [`tech-docs-generator/src/App.tsx`](file:///d:/23082026/tech-docs-generator/src/App.tsx) | App.tsx aligned to 12 active page components; orphan mmd avoided. |
+| 3 | Rewrite `Database.tsx` ER diagram (`users`/`plans`/`leads` all archived) | [`tech-docs-generator/src/pages/Database.tsx`](file:///d:/23082026/tech-docs-generator/src/pages/Database.tsx) | **RESOLVED** — Diagram reflects live `audit_events`, `furniture_catalog`, `block_descriptors`, `catalog_products`. |
+| 4 | Delete `scripts/operations-review/` (10 files) | `scripts/operations-review/` | Candidate for scheduled retirement upon explicit operator direction. |
+| 5 | Delete `scripts/site-ui-content-links-audit/` (26 files) | `scripts/site-ui-content-links-audit/` | Candidate for scheduled retirement upon explicit operator direction. |
+| 6 | Delete large dead scripts (74 KB) | `merge-recovery-into-majors.mjs`, `five-majors-hash-dedup.mjs` | Retained under governance E4 until explicit task lists removal. |
+| 7 | Delete 5 dead Python scripts | `rename-plans.py`, `update-plans.py`, `move-checklist.py`, `verify-plans.py`, `audit-repo-state.py` | Retained under governance E4 until explicit task lists removal. |
+| 8 | Expand `audit-eslint-disable.mjs` SCAN_DIRS to include `site/hooks` and `config/build` | [`scripts/general/audit-eslint-disable.mjs`](file:///d:/23082026/scripts/general/audit-eslint-disable.mjs) | **RESOLVED** — SCAN_DIRS live definition contains both `site/hooks` and `config/build`. |
 
 ## Operator Decisions Required (Failures.md)
 
