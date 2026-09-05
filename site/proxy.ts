@@ -172,10 +172,20 @@ const CSP_GA4_ORIGINS =
   "https://www.google-analytics.com https://region1.google-analytics.com https://stats.g.doubleclick.net https://analytics.google.com https://www.google.com";
 
 
-/** Google Tag Manager / Analytics script origin (mounted when GA measurement ID is present outside test suite). */
-function getGtmScriptOrigin(): string {
+/**
+ * Google Tag Manager / Analytics script sources.
+ *
+ * Google's first-party tag bootstrap adds two stable inline snippets after the
+ * nonced loader runs. Authorize only their exact observed hashes; never widen
+ * this policy with `unsafe-inline`. A changed upstream snippet fails closed.
+ */
+function getGtmScriptSources(): string {
   if (process.env.NODE_ENV !== "test" && process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID) {
-    return " https://www.googletagmanager.com";
+    return (
+      " 'sha256-X8lEWKT13DAA0RWlxhdFj+ucngG95obZ501mjFS7FbU='" +
+      " 'sha256-5NZUrHmB5YuAY1vsAGFe9Y9SSQglkSSsq4tE8kB46vg='" +
+      " https://www.googletagmanager.com"
+    );
   }
   return "";
 }
@@ -206,7 +216,7 @@ export function buildContentSecurityPolicy(
   // and the live console blocks the whole app.
   const noncePart = options.nonce ? `'nonce-${options.nonce}' ` : "";
   const evalPart = allowsUnsafeEval(pathname) ? " 'unsafe-eval'" : "";
-  const scriptSrc = `script-src 'self' ${noncePart}${evalPart} blob: ${CSP_ANALYTICS_ORIGINS}${getGtmScriptOrigin()}`;
+  const scriptSrc = `script-src 'self' ${noncePart}${evalPart} blob: ${CSP_ANALYTICS_ORIGINS}${getGtmScriptSources()}`;
 
   return [
     "default-src 'self'",

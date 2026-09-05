@@ -1,0 +1,34 @@
+- generic [active] [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - main [ref=e3]:
+    - generic [ref=e7]:
+      - generic [ref=e8]:
+        - link "Back to Home" [ref=e10] [cursor=pointer]:
+          - /url: /
+        - generic [ref=e14]:
+          - link "One and Only home" [ref=e15] [cursor=pointer]:
+            - /url: /
+            - img "One and Only Furniture" [ref=e17]
+          - generic [ref=e18]:
+            - generic [ref=e19]:
+              - heading "Welcome to One and Only" [level=1] [ref=e20]
+              - paragraph [ref=e21]: Sign in to access your workspace, or continue as a guest to explore.
+            - generic [ref=e22]:
+              - generic [ref=e23]:
+                - generic [ref=e24]: Email
+                - textbox "Email" [ref=e25]:
+                  - /placeholder: you@company.com
+              - generic [ref=e26]:
+                - generic [ref=e27]: Password
+                - textbox "Password" [ref=e28]:
+                  - /placeholder: Enter your password
+              - button "Sign In" [ref=e29]
+            - generic [ref=e31]:
+              - paragraph [ref=e32]: Don't have an account or just looking around?
+              - link "Continue as Guest" [ref=e33] [cursor=pointer]:
+                - /url: /choose-product/?mode=guest
+      - generic [ref=e41]:
+        - heading "Precision in Planning" [level=2] [ref=e42]
+        - paragraph [ref=e43]: Experience the Oando Suite. Our architectural tools are designed for accuracy, performance, and clear collaboration across teams.
+  - alert [ref=e44]

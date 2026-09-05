@@ -406,6 +406,13 @@ const nextConfig = {
   },
   experimental: {
     optimizePackageImports: ["@phosphor-icons/react", "framer-motion"],
+    // Cloudflare terminates the public request before forwarding it to Vercel,
+    // so Next can observe a different X-Forwarded-Host than the browser Origin.
+    // Keep the allowlist to the canonical public origin; this preserves Next's
+    // Server Action CSRF check while allowing forms served from oando.co.in.
+    serverActions: {
+      allowedOrigins: ["oando.co.in"],
+    },
     useTypeScriptCli: true, // TypeScript 7 uses the project-local tsc CLI (no JS compiler API)
   },
   // Native binary / dynamic-require packages — do not bundle into Turbopack/webpack graph.

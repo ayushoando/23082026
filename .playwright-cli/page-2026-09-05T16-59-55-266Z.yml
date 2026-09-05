@@ -1,0 +1,37 @@
+- generic [active] [ref=f31e1]:
+  - link "Skip to main content" [ref=f31e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - main [ref=f31e3]:
+    - generic [ref=f31e7]:
+      - generic [ref=f31e8]:
+        - link "Back to Home" [ref=f31e10] [cursor=pointer]:
+          - /url: /
+        - generic [ref=f31e14]:
+          - link "One and Only home" [ref=f31e15] [cursor=pointer]:
+            - /url: /
+            - img "One and Only Furniture" [ref=f31e17]
+          - generic [ref=f31e18]:
+            - generic [ref=f31e19]:
+              - heading "Welcome to One and Only" [level=1] [ref=f31e20]
+              - paragraph [ref=f31e21]: Sign in to access your workspace, or continue as a guest to explore.
+            - generic [ref=f31e22]:
+              - generic [ref=f31e23]:
+                - generic [ref=f31e24]: Email
+                - textbox "Email" [ref=f31e25]:
+                  - /placeholder: you@company.com
+                  - text: invalid-audit@example.com
+              - generic [ref=f31e26]:
+                - generic [ref=f31e27]: Password
+                - textbox "Password" [ref=f31e28]:
+                  - /placeholder: Enter your password
+                  - text: invalid-audit-password
+              - alert [ref=f31e45]: Sign-in is temporarily unavailable. Please try again or contact support.
+              - button "Sign In" [ref=f31e29]
+            - generic [ref=f31e31]:
+              - paragraph [ref=f31e32]: Don't have an account or just looking around?
+              - link "Continue as Guest" [ref=f31e33] [cursor=pointer]:
+                - /url: /choose-product/?mode=guest
+      - generic [ref=f31e41]:
+        - heading "Precision in Planning" [level=2] [ref=f31e42]
+        - paragraph [ref=f31e43]: Experience the Oando Suite. Our architectural tools are designed for accuracy, performance, and clear collaboration across teams.
+  - alert [ref=f31e44]
