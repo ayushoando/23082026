@@ -34,7 +34,7 @@ function seedStandaloneTree(tmp: string) {
   writeFile(path.join(tmp, "site/.next/BUILD_ID"), "test-build-id\n");
 }
 
-function runPrepare(tmp: string, extraEnv: NodeJS.ProcessEnv = {}) {
+function runPrepare(tmp: string, extraEnv: Record<string, string | undefined> = {}) {
   return execFileSync(process.execPath, [scriptPath], {
     cwd: tmp,
     encoding: "utf8",

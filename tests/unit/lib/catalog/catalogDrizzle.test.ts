@@ -4,7 +4,7 @@ const { isProductsDatabaseConfigured, mockSelect, createOptionalSupabaseAdminCli
   vi.hoisted(() => ({
     isProductsDatabaseConfigured: vi.fn(),
     mockSelect: vi.fn(),
-    createOptionalSupabaseAdminClient: vi.fn(() => null),
+    createOptionalSupabaseAdminClient: vi.fn<() => unknown>(() => null),
   }));
 
 vi.mock("@/platform/drizzle/databaseUrls", () => ({

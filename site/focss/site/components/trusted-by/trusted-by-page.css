@@ -558,7 +558,7 @@
   font-weight: var(--font-weight-copy-medium);
   letter-spacing: var(--type-letter-label-wide, 0.08em);
   text-transform: uppercase;
-  color: var(--color-accent);
+  color: var(--color-contrast-accent-strong);
 }
 
 .trusted-by-split-card__title {

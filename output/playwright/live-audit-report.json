@@ -1,0 +1,962 @@
+[
+  {
+    "name": "Homepage",
+    "path": "/",
+    "desktop": {
+      "status": 200,
+      "consoleErrors": [],
+      "metadata": {
+        "title": "One&Only | One and Only Furniture | Office Solutions India",
+        "description": "One&Only (One and Only Furniture) — premium ergonomic office furniture for modern workplaces across India. Workstations, seating, storage, tables, and soft seating with planning-led delivery nationwide.",
+        "canonical": "https://oando.co.in/",
+        "h1s": [
+          "Spaces that work harder"
+        ],
+        "hasH1": true,
+        "ogTitle": "One&Only | One and Only Furniture | Office Solutions India",
+        "ldJsonCount": 2,
+        "hasHorizontalOverflow": false,
+        "scrollWidth": 1440,
+        "clientWidth": 1440
+      },
+      "axeViolations": [],
+      "screenshot": "D:\\23082026\\output\\playwright\\live-audit\\_-desktop.png"
+    },
+    "mobile": {
+      "status": 200,
+      "consoleErrors": [],
+      "mobileMetrics": {
+        "hasHorizontalOverflow": false,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "hasBottomTabNav": true,
+        "tabNavHeight": 57,
+        "hasCookieBar": false,
+        "cookieBarBottom": 0,
+        "cookieBarHeight": 0,
+        "fabsCount": 3,
+        "smallTargetsCount": 5,
+        "smallTargetsSample": [
+          {
+            "tag": "BUTTON",
+            "text": "Show project image 1 of 7",
+            "rect": {
+              "width": 36,
+              "height": 44
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Show project image 2 of 7",
+            "rect": {
+              "width": 36,
+              "height": 44
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Show project image 3 of 7",
+            "rect": {
+              "width": 36,
+              "height": 44
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Show project image 4 of 7",
+            "rect": {
+              "width": 36,
+              "height": 44
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Show project image 5 of 7",
+            "rect": {
+              "width": 36,
+              "height": 44
+            }
+          }
+        ]
+      },
+      "axeViolations": [],
+      "screenshot": "D:\\23082026\\output\\playwright\\live-audit\\_-mobile.png"
+    }
+  },
+  {
+    "name": "Products Catalog",
+    "path": "/products",
+    "desktop": {
+      "status": 200,
+      "consoleErrors": [],
+      "metadata": {
+        "title": "Office furniture | One&Only",
+        "description": "Seating, workstations, tables, storage, soft seating, and education.",
+        "canonical": "https://oando.co.in/products/",
+        "h1s": [
+          "Office furniture"
+        ],
+        "hasH1": true,
+        "ogTitle": "Office furniture | One&Only",
+        "ldJsonCount": 2,
+        "hasHorizontalOverflow": false,
+        "scrollWidth": 1440,
+        "clientWidth": 1440
+      },
+      "axeViolations": [],
+      "screenshot": "D:\\23082026\\output\\playwright\\live-audit\\_products-desktop.png"
+    },
+    "mobile": {
+      "status": 200,
+      "consoleErrors": [],
+      "mobileMetrics": {
+        "hasHorizontalOverflow": false,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "hasBottomTabNav": true,
+        "tabNavHeight": 57,
+        "hasCookieBar": false,
+        "cookieBarBottom": 0,
+        "cookieBarHeight": 0,
+        "fabsCount": 0,
+        "smallTargetsCount": 3,
+        "smallTargetsSample": [
+          {
+            "tag": "INPUT",
+            "text": "",
+            "rect": {
+              "width": 16,
+              "height": 16
+            }
+          },
+          {
+            "tag": "A",
+            "text": "Privacy policy",
+            "rect": {
+              "width": 104,
+              "height": 17
+            }
+          },
+          {
+            "tag": "A",
+            "text": "FAQ",
+            "rect": {
+              "width": 30,
+              "height": 40
+            }
+          }
+        ]
+      },
+      "axeViolations": [],
+      "screenshot": "D:\\23082026\\output\\playwright\\live-audit\\_products-mobile.png"
+    }
+  },
+  {
+    "name": "Portfolio Case Studies",
+    "path": "/portfolio",
+    "desktop": {
+      "status": 200,
+      "consoleErrors": [],
+      "metadata": {
+        "title": "Office furniture portfolio | Workplace projects | One&Only",
+        "description": "Office furniture projects and workplace fit-outs for government, finance, manufacturing, and institutions across India.",
+        "canonical": "https://oando.co.in/portfolio/",
+        "h1s": [
+          "Workplace projects."
+        ],
+        "hasH1": true,
+        "ogTitle": "Office furniture portfolio | Workplace projects | One&Only",
+        "ldJsonCount": 3,
+        "hasHorizontalOverflow": false,
+        "scrollWidth": 1440,
+        "clientWidth": 1440
+      },
+      "axeViolations": [],
+      "screenshot": "D:\\23082026\\output\\playwright\\live-audit\\_portfolio-desktop.png"
+    },
+    "mobile": {
+      "status": 200,
+      "consoleErrors": [],
+      "mobileMetrics": {
+        "hasHorizontalOverflow": false,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "hasBottomTabNav": true,
+        "tabNavHeight": 57,
+        "hasCookieBar": false,
+        "cookieBarBottom": 0,
+        "cookieBarHeight": 0,
+        "fabsCount": 3,
+        "smallTargetsCount": 3,
+        "smallTargetsSample": [
+          {
+            "tag": "INPUT",
+            "text": "",
+            "rect": {
+              "width": 16,
+              "height": 16
+            }
+          },
+          {
+            "tag": "A",
+            "text": "Privacy policy",
+            "rect": {
+              "width": 104,
+              "height": 17
+            }
+          },
+          {
+            "tag": "A",
+            "text": "FAQ",
+            "rect": {
+              "width": 30,
+              "height": 40
+            }
+          }
+        ]
+      },
+      "axeViolations": [],
+      "screenshot": "D:\\23082026\\output\\playwright\\live-audit\\_portfolio-mobile.png"
+    }
+  },
+  {
+    "name": "Trusted By Proof",
+    "path": "/trusted-by",
+    "desktop": {
+      "status": 200,
+      "consoleErrors": [],
+      "metadata": {
+        "title": "Office furniture clients in India | One&Only",
+        "description": "Explore selected government, banking, manufacturing, education, and enterprise clients furnished by One&Only across India since 2011.",
+        "canonical": "https://oando.co.in/trusted-by/",
+        "h1s": [
+          "Trusted by"
+        ],
+        "hasH1": true,
+        "ogTitle": "Office furniture clients in India | One&Only",
+        "ldJsonCount": 3,
+        "hasHorizontalOverflow": false,
+        "scrollWidth": 1440,
+        "clientWidth": 1440
+      },
+      "axeViolations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 8,
+          "sampleNode": "<span>Corporate &amp; Retail</span>"
+        }
+      ],
+      "screenshot": "D:\\23082026\\output\\playwright\\live-audit\\_trusted_by-desktop.png"
+    },
+    "mobile": {
+      "status": 200,
+      "consoleErrors": [],
+      "mobileMetrics": {
+        "hasHorizontalOverflow": false,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "hasBottomTabNav": true,
+        "tabNavHeight": 57,
+        "hasCookieBar": false,
+        "cookieBarBottom": 0,
+        "cookieBarHeight": 0,
+        "fabsCount": 3,
+        "smallTargetsCount": 1,
+        "smallTargetsSample": [
+          {
+            "tag": "A",
+            "text": "FAQ",
+            "rect": {
+              "width": 30,
+              "height": 40
+            }
+          }
+        ]
+      },
+      "axeViolations": [],
+      "screenshot": "D:\\23082026\\output\\playwright\\live-audit\\_trusted_by-mobile.png"
+    }
+  },
+  {
+    "name": "Clients Directory",
+    "path": "/clients",
+    "desktop": {
+      "status": 200,
+      "consoleErrors": [],
+      "metadata": {
+        "title": "Client Directory & Sector Showcase | One&Only",
+        "description": "A curated, sector-wise directory of verified client organisations furnished across India since 2011.",
+        "canonical": "https://oando.co.in/clients/",
+        "h1s": [
+          "Our clients."
+        ],
+        "hasH1": true,
+        "ogTitle": "Client Directory & Sector Showcase | One&Only",
+        "ldJsonCount": 4,
+        "hasHorizontalOverflow": false,
+        "scrollWidth": 1440,
+        "clientWidth": 1440
+      },
+      "axeViolations": [],
+      "screenshot": "D:\\23082026\\output\\playwright\\live-audit\\_clients-desktop.png"
+    },
+    "mobile": {
+      "status": 200,
+      "consoleErrors": [],
+      "mobileMetrics": {
+        "hasHorizontalOverflow": false,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "hasBottomTabNav": true,
+        "tabNavHeight": 57,
+        "hasCookieBar": false,
+        "cookieBarBottom": 0,
+        "cookieBarHeight": 0,
+        "fabsCount": 3,
+        "smallTargetsCount": 3,
+        "smallTargetsSample": [
+          {
+            "tag": "INPUT",
+            "text": "",
+            "rect": {
+              "width": 16,
+              "height": 16
+            }
+          },
+          {
+            "tag": "A",
+            "text": "Privacy policy",
+            "rect": {
+              "width": 104,
+              "height": 17
+            }
+          },
+          {
+            "tag": "A",
+            "text": "FAQ",
+            "rect": {
+              "width": 30,
+              "height": 40
+            }
+          }
+        ]
+      },
+      "axeViolations": [],
+      "screenshot": "D:\\23082026\\output\\playwright\\live-audit\\_clients-mobile.png"
+    }
+  },
+  {
+    "name": "About Us",
+    "path": "/about",
+    "desktop": {
+      "status": 200,
+      "consoleErrors": [],
+      "metadata": {
+        "title": "About One&Only | One and Only Furniture India",
+        "description": "Planning, supply, and install for workplaces across India — from brief to handover.",
+        "canonical": "https://oando.co.in/about/",
+        "h1s": [
+          "About us"
+        ],
+        "hasH1": true,
+        "ogTitle": "About One&Only | One and Only Furniture India",
+        "ldJsonCount": 3,
+        "hasHorizontalOverflow": false,
+        "scrollWidth": 1440,
+        "clientWidth": 1440
+      },
+      "axeViolations": [],
+      "screenshot": "D:\\23082026\\output\\playwright\\live-audit\\_about-desktop.png"
+    },
+    "mobile": {
+      "status": 200,
+      "consoleErrors": [],
+      "mobileMetrics": {
+        "hasHorizontalOverflow": false,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "hasBottomTabNav": true,
+        "tabNavHeight": 57,
+        "hasCookieBar": false,
+        "cookieBarBottom": 0,
+        "cookieBarHeight": 0,
+        "fabsCount": 3,
+        "smallTargetsCount": 4,
+        "smallTargetsSample": [
+          {
+            "tag": "A",
+            "text": "Open in Google Maps",
+            "rect": {
+              "width": 125,
+              "height": 15
+            }
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "rect": {
+              "width": 16,
+              "height": 16
+            }
+          },
+          {
+            "tag": "A",
+            "text": "Privacy policy",
+            "rect": {
+              "width": 104,
+              "height": 17
+            }
+          },
+          {
+            "tag": "A",
+            "text": "FAQ",
+            "rect": {
+              "width": 30,
+              "height": 40
+            }
+          }
+        ]
+      },
+      "axeViolations": [],
+      "screenshot": "D:\\23082026\\output\\playwright\\live-audit\\_about-mobile.png"
+    }
+  },
+  {
+    "name": "Contact Us",
+    "path": "/contact",
+    "desktop": {
+      "status": 200,
+      "consoleErrors": [],
+      "metadata": {
+        "title": "Contact One and Only Furniture | Sales | One&Only",
+        "description": "Quotes, planning, and support for commercial workplaces across India.",
+        "canonical": "https://oando.co.in/contact/",
+        "h1s": [
+          "Get in touch."
+        ],
+        "hasH1": true,
+        "ogTitle": "Contact One and Only Furniture | Sales | One&Only",
+        "ldJsonCount": 3,
+        "hasHorizontalOverflow": false,
+        "scrollWidth": 1440,
+        "clientWidth": 1440
+      },
+      "axeViolations": [],
+      "screenshot": "D:\\23082026\\output\\playwright\\live-audit\\_contact-desktop.png"
+    },
+    "mobile": {
+      "status": 200,
+      "consoleErrors": [],
+      "mobileMetrics": {
+        "hasHorizontalOverflow": false,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "hasBottomTabNav": true,
+        "tabNavHeight": 57,
+        "hasCookieBar": false,
+        "cookieBarBottom": 0,
+        "cookieBarHeight": 0,
+        "fabsCount": 3,
+        "smallTargetsCount": 3,
+        "smallTargetsSample": [
+          {
+            "tag": "INPUT",
+            "text": "",
+            "rect": {
+              "width": 16,
+              "height": 16
+            }
+          },
+          {
+            "tag": "A",
+            "text": "Open in Google Maps",
+            "rect": {
+              "width": 125,
+              "height": 15
+            }
+          },
+          {
+            "tag": "A",
+            "text": "FAQ",
+            "rect": {
+              "width": 30,
+              "height": 40
+            }
+          }
+        ]
+      },
+      "axeViolations": [],
+      "screenshot": "D:\\23082026\\output\\playwright\\live-audit\\_contact-mobile.png"
+    }
+  },
+  {
+    "name": "FAQ",
+    "path": "/faq",
+    "desktop": {
+      "status": 200,
+      "consoleErrors": [],
+      "metadata": {
+        "title": "FAQ | Office furniture delivery and installation | One&Only",
+        "description": "Answers on where One&Only delivers, installation, warranty, and multi-site office rollouts across India.",
+        "canonical": "https://oando.co.in/faq/",
+        "h1s": [
+          "Frequently asked questions"
+        ],
+        "hasH1": true,
+        "ogTitle": "FAQ | Office furniture delivery and installation | One&Only",
+        "ldJsonCount": 4,
+        "hasHorizontalOverflow": false,
+        "scrollWidth": 1440,
+        "clientWidth": 1440
+      },
+      "axeViolations": [],
+      "screenshot": "D:\\23082026\\output\\playwright\\live-audit\\_faq-desktop.png"
+    },
+    "mobile": {
+      "status": 200,
+      "consoleErrors": [],
+      "mobileMetrics": {
+        "hasHorizontalOverflow": false,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "hasBottomTabNav": true,
+        "tabNavHeight": 57,
+        "hasCookieBar": false,
+        "cookieBarBottom": 0,
+        "cookieBarHeight": 0,
+        "fabsCount": 3,
+        "smallTargetsCount": 3,
+        "smallTargetsSample": [
+          {
+            "tag": "INPUT",
+            "text": "",
+            "rect": {
+              "width": 16,
+              "height": 16
+            }
+          },
+          {
+            "tag": "A",
+            "text": "Privacy policy",
+            "rect": {
+              "width": 104,
+              "height": 17
+            }
+          },
+          {
+            "tag": "A",
+            "text": "FAQ",
+            "rect": {
+              "width": 30,
+              "height": 40
+            }
+          }
+        ]
+      },
+      "axeViolations": [],
+      "screenshot": "D:\\23082026\\output\\playwright\\live-audit\\_faq-mobile.png"
+    }
+  },
+  {
+    "name": "Career",
+    "path": "/career",
+    "desktop": {
+      "status": 200,
+      "consoleErrors": [],
+      "metadata": {
+        "title": "Careers | Office furniture jobs | One&Only",
+        "description": "Sales, planning, operations, and support for commercial projects across India.",
+        "canonical": "https://oando.co.in/career/",
+        "h1s": [
+          "Careers with us."
+        ],
+        "hasH1": true,
+        "ogTitle": "Careers | Office furniture jobs | One&Only",
+        "ldJsonCount": 4,
+        "hasHorizontalOverflow": false,
+        "scrollWidth": 1440,
+        "clientWidth": 1440
+      },
+      "axeViolations": [],
+      "screenshot": "D:\\23082026\\output\\playwright\\live-audit\\_career-desktop.png"
+    },
+    "mobile": {
+      "status": 200,
+      "consoleErrors": [],
+      "mobileMetrics": {
+        "hasHorizontalOverflow": false,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "hasBottomTabNav": true,
+        "tabNavHeight": 57,
+        "hasCookieBar": false,
+        "cookieBarBottom": 0,
+        "cookieBarHeight": 0,
+        "fabsCount": 3,
+        "smallTargetsCount": 3,
+        "smallTargetsSample": [
+          {
+            "tag": "INPUT",
+            "text": "",
+            "rect": {
+              "width": 16,
+              "height": 16
+            }
+          },
+          {
+            "tag": "A",
+            "text": "Privacy policy",
+            "rect": {
+              "width": 104,
+              "height": 17
+            }
+          },
+          {
+            "tag": "A",
+            "text": "FAQ",
+            "rect": {
+              "width": 30,
+              "height": 40
+            }
+          }
+        ]
+      },
+      "axeViolations": [],
+      "screenshot": "D:\\23082026\\output\\playwright\\live-audit\\_career-mobile.png"
+    }
+  },
+  {
+    "name": "Showrooms",
+    "path": "/showrooms",
+    "desktop": {
+      "status": 200,
+      "consoleErrors": [],
+      "metadata": {
+        "title": "Showrooms | One&Only",
+        "description": "One and Only Furniture showroom in Patna — hours, directions, and signature deliveries from Jagat Trade Centre, Frazer Road.",
+        "canonical": "https://oando.co.in/showrooms/",
+        "h1s": [
+          "Visit us."
+        ],
+        "hasH1": true,
+        "ogTitle": "Showrooms | One&Only",
+        "ldJsonCount": 4,
+        "hasHorizontalOverflow": false,
+        "scrollWidth": 1440,
+        "clientWidth": 1440
+      },
+      "axeViolations": [],
+      "screenshot": "D:\\23082026\\output\\playwright\\live-audit\\_showrooms-desktop.png"
+    },
+    "mobile": {
+      "status": 200,
+      "consoleErrors": [],
+      "mobileMetrics": {
+        "hasHorizontalOverflow": false,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "hasBottomTabNav": true,
+        "tabNavHeight": 57,
+        "hasCookieBar": false,
+        "cookieBarBottom": 0,
+        "cookieBarHeight": 0,
+        "fabsCount": 3,
+        "smallTargetsCount": 4,
+        "smallTargetsSample": [
+          {
+            "tag": "A",
+            "text": "Open in Google Maps",
+            "rect": {
+              "width": 125,
+              "height": 15
+            }
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "rect": {
+              "width": 16,
+              "height": 16
+            }
+          },
+          {
+            "tag": "A",
+            "text": "Privacy policy",
+            "rect": {
+              "width": 104,
+              "height": 17
+            }
+          },
+          {
+            "tag": "A",
+            "text": "FAQ",
+            "rect": {
+              "width": 30,
+              "height": 40
+            }
+          }
+        ]
+      },
+      "axeViolations": [],
+      "screenshot": "D:\\23082026\\output\\playwright\\live-audit\\_showrooms-mobile.png"
+    }
+  },
+  {
+    "name": "After Sales Service",
+    "path": "/service",
+    "desktop": {
+      "status": 200,
+      "consoleErrors": [],
+      "metadata": {
+        "title": "Service | One&Only",
+        "description": "Install, warranty, and care — one team after handover.",
+        "canonical": "https://oando.co.in/service/",
+        "h1s": [
+          "Service & support."
+        ],
+        "hasH1": true,
+        "ogTitle": "Service | One&Only",
+        "ldJsonCount": 3,
+        "hasHorizontalOverflow": false,
+        "scrollWidth": 1440,
+        "clientWidth": 1440
+      },
+      "axeViolations": [],
+      "screenshot": "D:\\23082026\\output\\playwright\\live-audit\\_service-desktop.png"
+    },
+    "mobile": {
+      "status": 200,
+      "consoleErrors": [],
+      "mobileMetrics": {
+        "hasHorizontalOverflow": false,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "hasBottomTabNav": true,
+        "tabNavHeight": 57,
+        "hasCookieBar": false,
+        "cookieBarBottom": 0,
+        "cookieBarHeight": 0,
+        "fabsCount": 3,
+        "smallTargetsCount": 3,
+        "smallTargetsSample": [
+          {
+            "tag": "INPUT",
+            "text": "",
+            "rect": {
+              "width": 16,
+              "height": 16
+            }
+          },
+          {
+            "tag": "A",
+            "text": "Privacy policy",
+            "rect": {
+              "width": 104,
+              "height": 17
+            }
+          },
+          {
+            "tag": "A",
+            "text": "FAQ",
+            "rect": {
+              "width": 30,
+              "height": 40
+            }
+          }
+        ]
+      },
+      "axeViolations": [],
+      "screenshot": "D:\\23082026\\output\\playwright\\live-audit\\_service-mobile.png"
+    }
+  },
+  {
+    "name": "Sustainability",
+    "path": "/sustainability",
+    "desktop": {
+      "status": 200,
+      "consoleErrors": [],
+      "metadata": {
+        "title": "Sustainable office furniture | One&Only",
+        "description": "Durable systems, practical materials, less rework.",
+        "canonical": "https://oando.co.in/sustainability/",
+        "h1s": [
+          "Built for long life."
+        ],
+        "hasH1": true,
+        "ogTitle": "Sustainable office furniture | One&Only",
+        "ldJsonCount": 3,
+        "hasHorizontalOverflow": false,
+        "scrollWidth": 1440,
+        "clientWidth": 1440
+      },
+      "axeViolations": [],
+      "screenshot": "D:\\23082026\\output\\playwright\\live-audit\\_sustainability-desktop.png"
+    },
+    "mobile": {
+      "status": 200,
+      "consoleErrors": [],
+      "mobileMetrics": {
+        "hasHorizontalOverflow": false,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "hasBottomTabNav": true,
+        "tabNavHeight": 57,
+        "hasCookieBar": false,
+        "cookieBarBottom": 0,
+        "cookieBarHeight": 0,
+        "fabsCount": 3,
+        "smallTargetsCount": 3,
+        "smallTargetsSample": [
+          {
+            "tag": "INPUT",
+            "text": "",
+            "rect": {
+              "width": 16,
+              "height": 16
+            }
+          },
+          {
+            "tag": "A",
+            "text": "Privacy policy",
+            "rect": {
+              "width": 104,
+              "height": 17
+            }
+          },
+          {
+            "tag": "A",
+            "text": "FAQ",
+            "rect": {
+              "width": 30,
+              "height": 40
+            }
+          }
+        ]
+      },
+      "axeViolations": [],
+      "screenshot": "D:\\23082026\\output\\playwright\\live-audit\\_sustainability-mobile.png"
+    }
+  },
+  {
+    "name": "Access Sign-In",
+    "path": "/access",
+    "desktop": {
+      "status": 200,
+      "consoleErrors": [],
+      "metadata": {
+        "title": "Sign in | One&Only office furniture planner",
+        "description": "Sign in or continue as a guest to plan office furniture layouts and product selections. Not indexed — account entry only.",
+        "canonical": "https://oando.co.in/access/",
+        "h1s": [
+          "Welcome to One and Only"
+        ],
+        "hasH1": true,
+        "ogTitle": "Sign in | One&Only office furniture planner",
+        "ldJsonCount": 1,
+        "hasHorizontalOverflow": false,
+        "scrollWidth": 1440,
+        "clientWidth": 1440
+      },
+      "axeViolations": [],
+      "screenshot": "D:\\23082026\\output\\playwright\\live-audit\\_access-desktop.png"
+    },
+    "mobile": {
+      "status": 200,
+      "consoleErrors": [],
+      "mobileMetrics": {
+        "hasHorizontalOverflow": false,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "hasBottomTabNav": true,
+        "tabNavHeight": 57,
+        "hasCookieBar": false,
+        "cookieBarBottom": 0,
+        "cookieBarHeight": 0,
+        "fabsCount": 0,
+        "smallTargetsCount": 1,
+        "smallTargetsSample": [
+          {
+            "tag": "A",
+            "text": "One and Only home",
+            "rect": {
+              "width": 140,
+              "height": 36
+            }
+          }
+        ]
+      },
+      "axeViolations": [],
+      "screenshot": "D:\\23082026\\output\\playwright\\live-audit\\_access-mobile.png"
+    }
+  },
+  {
+    "name": "Planning Service",
+    "path": "/planning",
+    "desktop": {
+      "status": 200,
+      "consoleErrors": [],
+      "metadata": {
+        "title": "Planning Service | One&Only",
+        "description": "Workspace planning that balances workflow, budget, and execution timelines.",
+        "canonical": "https://oando.co.in/planning/",
+        "h1s": [
+          "Planning Service —\nFrom intent to install-ready."
+        ],
+        "hasH1": true,
+        "ogTitle": "Planning Service | One&Only",
+        "ldJsonCount": 3,
+        "hasHorizontalOverflow": false,
+        "scrollWidth": 1440,
+        "clientWidth": 1440
+      },
+      "axeViolations": [],
+      "screenshot": "D:\\23082026\\output\\playwright\\live-audit\\_planning-desktop.png"
+    },
+    "mobile": {
+      "status": 200,
+      "consoleErrors": [],
+      "mobileMetrics": {
+        "hasHorizontalOverflow": false,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "hasBottomTabNav": true,
+        "tabNavHeight": 57,
+        "hasCookieBar": false,
+        "cookieBarBottom": 0,
+        "cookieBarHeight": 0,
+        "fabsCount": 3,
+        "smallTargetsCount": 3,
+        "smallTargetsSample": [
+          {
+            "tag": "INPUT",
+            "text": "",
+            "rect": {
+              "width": 16,
+              "height": 16
+            }
+          },
+          {
+            "tag": "A",
+            "text": "Privacy policy",
+            "rect": {
+              "width": 104,
+              "height": 17
+            }
+          },
+          {
+            "tag": "A",
+            "text": "FAQ",
+            "rect": {
+              "width": 30,
+              "height": 40
+            }
+          }
+        ]
+      },
+      "axeViolations": [],
+      "screenshot": "D:\\23082026\\output\\playwright\\live-audit\\_planning-mobile.png"
+    }
+  }
+]

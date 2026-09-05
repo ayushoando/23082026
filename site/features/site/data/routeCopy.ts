@@ -186,22 +186,47 @@ export const FAQ_PAGE_COPY = {
     {
       q: "Which cities do you serve?",
       a: "We deliver commercial office furniture across India, including multi-city and multi-floor rollouts. Logistics are coordinated by our team — no third-party intermediaries.",
+      category: "Delivery & Reach",
     },
     {
       q: "How long does delivery and installation take?",
       a: "Scope and design is completed within 7 working days of brief sign-off. Delivery and installation timelines depend on order volume and are agreed in writing before production begins.",
+      category: "Delivery & Reach",
     },
     {
       q: "Is installation included in the price?",
       a: "Yes. All orders include delivery to site and supervised installation by our team. Post-installation snag support is also covered.",
+      category: "Installation",
     },
     {
       q: "What warranty do you offer?",
       a: "Products carry manufacturer warranty (typically 2–5 years depending on the range). After-sales support is managed by our team directly.",
+      category: "Warranty & Support",
     },
     {
       q: "Can you handle large or phased office rollouts?",
       a: "Yes. We have executed government and corporate rollouts across multiple floors and sites. Share a brief through planning or contact and we will route the right next step.",
+      category: "Commercial & Phased",
+    },
+    {
+      q: "Do you provide space planning and CAD layouts before ordering?",
+      a: "Yes. Our workplace planning studio prepares 2D CAD furniture layouts and 3D visual mockups tailored to your floor plate within 7 working days.",
+      category: "Planning & Design",
+    },
+    {
+      q: "Can finishes, desk sizes, and acoustic fabrics be customized?",
+      a: "Yes. Workstations and meeting tables are available in custom powder-coat frames, engineered laminates, and acoustic fabric screen options to match corporate brand guidelines.",
+      category: "Planning & Design",
+    },
+    {
+      q: "What is your process for snagging and post-handover support?",
+      a: "Our installation leads perform a joint sign-off walk-through on site. Any punch-list or snagging items are addressed within 48 hours under our after-sales guarantee.",
+      category: "Installation",
+    },
+    {
+      q: "Do you support pan-India corporate GST invoicing and credit terms?",
+      a: "Yes. We provide state-specific GST tax invoicing and structured milestone commercial credit for verified corporate enterprises and institutional buyers.",
+      category: "Commercial & Phased",
     },
   ],
 } as const;
