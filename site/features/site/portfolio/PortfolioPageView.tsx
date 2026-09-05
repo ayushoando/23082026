@@ -10,6 +10,7 @@ import { getRequestNonce } from "@/lib/security/requestNonce";
 import { RouteCtaBand } from "@/components/shared/RouteCtaBand";
 import { ContactTeaser } from "@/components/shared/ContactTeaser";
 import { MarketingCtaLink } from "@/components/ui/MarketingCtaLink";
+import { OpenAssistantButton } from "@/features/shared/entry/OpenAssistantButton";
 import { getBusinessStats } from "@/features/crm/businessStats";
 import { buildClientWorkWithPhotos } from "@/features/site/data/clientWorkPhotos";
 import {
@@ -80,6 +81,7 @@ export async function PortfolioPageView() {
         titleLead="Workplace"
         titleAccent="projects."
         subtitle={copy.heroSubtitleTemplate.replace("{clients}", clientsValue)}
+        variant="portfolio"
       />
 
       <HomeSection variant="white" spacing="sm" className="portfolio-index-section border-t-0">
@@ -94,6 +96,11 @@ export async function PortfolioPageView() {
                 {projectCount} documented workplaces and {photoCount} installation photographs,
                 organised for quick review.
               </p>
+              <OpenAssistantButton
+                label="Plan with AI"
+                mode="ai"
+                className="btn btn-primary portfolio-index__ai"
+              />
             </div>
             <nav className="portfolio-index__nav" aria-label="Portfolio project index">
               {clientWork.map((project, index) => (

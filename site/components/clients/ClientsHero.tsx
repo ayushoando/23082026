@@ -20,10 +20,17 @@ export type ClientsHeroProps = {
   titleLead: string;
   titleAccent: string;
   subtitle: string;
+  variant?: "default" | "portfolio";
 };
 
 /** Clients editorial hero — one signature entrance beat (copy stagger). */
-export function ClientsHero({ kicker, titleLead, titleAccent, subtitle }: ClientsHeroProps) {
+export function ClientsHero({
+  kicker,
+  titleLead,
+  titleAccent,
+  subtitle,
+  variant = "default",
+}: ClientsHeroProps) {
   const heroRef = useRef<HTMLElement>(null);
   const [motionReady, setMotionReady] = useState(false);
 
@@ -67,7 +74,7 @@ export function ClientsHero({ kicker, titleLead, titleAccent, subtitle }: Client
   return (
     <section
       ref={heroRef}
-      className="clients-hero"
+      className={`clients-hero${variant === "portfolio" ? " clients-hero--portfolio" : ""}`}
       aria-labelledby="clients-hero-heading"
       data-testid="clients-hero"
     >

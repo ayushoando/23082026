@@ -103,8 +103,6 @@ const nextConfig = {
       { source: "/news", destination: "/about/", permanent: true },
       { source: "/news/", destination: "/about/", permanent: true },
       { source: "/assets/marketing/client-logos/USHA.png", destination: "/assets/marketing/client-logos/usha-international-ltd.png", permanent: true },
-      { source: "/assets/marketing/client-logos/jsw.png", destination: "/assets/marketing/client-logos/JSW.png", permanent: true },
-      { source: "/assets/marketing/client-logos/sonalika.jpg", destination: "/assets/marketing/client-logos/Sonalika.jpg", permanent: true },
       { source: "/gallery", destination: "/portfolio/", permanent: true },
       { source: "/gallery/", destination: "/portfolio/", permanent: true },
       { source: "/projects", destination: "/portfolio/", permanent: true },

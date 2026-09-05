@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { CaretLeft, CaretRight, MagnifyingGlass, X } from "@phosphor-icons/react";
+import { CaretLeft, CaretRight, MagnifyingGlass, Sparkle, X } from "@phosphor-icons/react";
 
 import { HomeSection, HomeSectionInner } from "@/components/home/layout";
 import { ClientBadge, type ClientBadgeData } from "@/components/ClientBadge";
@@ -113,9 +113,6 @@ export function TrustedByPageView({
   quotesTitle,
   quotes,
   sectors,
-  sectorsKicker,
-  sectorsTitle,
-  sectorsDescription,
   ctaKicker,
   ctaTitleLead,
   ctaTitleAccent,
@@ -128,15 +125,18 @@ export function TrustedByPageView({
   const storyRef = useRef<HTMLElement>(null);
   const rosterRef = useRef<HTMLElement>(null);
   const quotesRef = useRef<HTMLElement>(null);
-  const sectorsRef = useRef<HTMLElement>(null);
   const photosRef = useRef<HTMLElement>(null);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [activeSector, setActiveSector] = useState("All");
+  const [showAllClients, setShowAllClients] = useState(false);
   const photoCount = FEATURED_CLIENT_PHOTOS.length;
   const [motionReady, setMotionReady] = useState(false);
-  const visibleClients = activeSector === "All"
+  const filteredClients = activeSector === "All"
     ? clients
     : clients.filter((client) => client.sector === activeSector);
+  const visibleClients = activeSector === "All" && !showAllClients
+    ? filteredClients.slice(0, 12)
+    : filteredClients;
 
   useEffect(() => {
     const id = requestAnimationFrame(() => {
@@ -335,37 +335,6 @@ export function TrustedByPageView({
     { scope: photosRef, dependencies: [motionReady] },
   );
 
-  useGSAP(
-    () => {
-      if (gsapReducedMotion() || !sectorsRef.current) {
-        return;
-      }
-
-      const ctx = gsap.context(() => {
-        const targets = sectorsRef.current?.querySelectorAll("[data-trusted-reveal]");
-        if (!targets?.length) {
-          return;
-        }
-
-        gsap.from(targets, {
-          y: GSAP_SCROLL_REVEAL.y,
-          opacity: GSAP_SCROLL_REVEAL.opacity,
-          duration: GSAP_SCROLL_REVEAL.duration,
-          stagger: GSAP_SCROLL_REVEAL.stagger,
-          ease: GSAP_EASE_OUT,
-          scrollTrigger: {
-            trigger: sectorsRef.current,
-            start: "top 85%",
-            once: true,
-          },
-        });
-      }, sectorsRef);
-
-      return () => ctx.revert();
-    },
-    { scope: sectorsRef, dependencies: [sectors] },
-  );
-
   return (
     <>
       <section
@@ -398,13 +367,13 @@ export function TrustedByPageView({
 
             <div data-trusted-hero-reveal className="trusted-by-hero__actions flex flex-wrap gap-3">
               <MarketingCtaLink
-                href="/clients"
-                label="Sector-wise clients"
+                href="#client-proof"
+                label="Explore client proof"
                 surface="trusted-by-hero"
                 variant="primary"
                 context="hero"
               >
-                Sector-wise clients
+                Explore client proof
               </MarketingCtaLink>
               <MarketingCtaLink
                 href="/portfolio"
@@ -415,6 +384,16 @@ export function TrustedByPageView({
               >
                 {ctaSecondary}
               </MarketingCtaLink>
+              <button
+                type="button"
+                className="btn btn-outline-light trusted-by-hero__ai"
+                onClick={() => window.dispatchEvent(
+                  new CustomEvent("oando-assistant:open", { detail: { tab: "ai" } }),
+                )}
+              >
+                <Sparkle size={18} weight="fill" aria-hidden="true" />
+                Ask AI
+              </button>
             </div>
           </div>
         </div>
@@ -434,13 +413,28 @@ export function TrustedByPageView({
                 {overviewDescription}
               </p>
             </div>
+            {craftQuote ? (
+              <blockquote data-trusted-reveal className="trusted-by-craft-quote">
+                <p className="trusted-by-craft-quote__text">“{craftQuote}”</p>
+                {craftAttribution ? (
+                  <footer className="trusted-by-craft-quote__attribution">
+                    — {craftAttribution}
+                  </footer>
+                ) : null}
+              </blockquote>
+            ) : null}
           </section>
           {businessStats ? (
             <div className="trusted-by-kpi" data-testid="trusted-by-kpi">
               <TrustStrip stats={businessStats} embedded tone="light" />
             </div>
           ) : null}
-          <section ref={rosterRef} className="trusted-by-roster" data-testid="trusted-by-roster">
+          <section
+            id="client-proof"
+            ref={rosterRef}
+            className="trusted-by-roster"
+            data-testid="trusted-by-roster"
+          >
             <div className="trusted-by-roster__header">
               <div>
                 <p data-trusted-reveal className="home-kicker">
@@ -469,7 +463,10 @@ export function TrustedByPageView({
                   type="button"
                   className="trusted-by-roster__filter"
                   aria-pressed={activeSector === sector}
-                  onClick={() => setActiveSector(sector)}
+                  onClick={() => {
+                    setActiveSector(sector);
+                    setShowAllClients(false);
+                  }}
                 >
                   {sector}
                 </button>
@@ -481,7 +478,11 @@ export function TrustedByPageView({
               aria-label={rosterKicker}
             >
               {visibleClients.map((client) => (
-                <div key={client.name} data-trusted-reveal>
+                <div
+                  key={`${activeSector}-${client.name}`}
+                  className="trusted-by-roster__item"
+                  data-trusted-reveal
+                >
                   <ClientBadge
                     name={client.name}
                     sector={client.sector}
@@ -492,7 +493,16 @@ export function TrustedByPageView({
               ))}
             </div>
 
-            <div className="mt-8 text-center" data-trusted-reveal>
+            <div className="trusted-by-roster__actions" data-trusted-reveal>
+              {activeSector === "All" && clients.length > 12 ? (
+                <button
+                  type="button"
+                  className="btn btn-outline"
+                  onClick={() => setShowAllClients((current) => !current)}
+                >
+                  {showAllClients ? "Show curated selection" : `Show all ${clients.length} organisations`}
+                </button>
+              ) : null}
               <MarketingCtaLink
                 href="/clients"
                 variant="outline"
@@ -503,14 +513,6 @@ export function TrustedByPageView({
               </MarketingCtaLink>
             </div>
           </section>
-          {craftQuote ? (
-            <blockquote data-trusted-reveal className="trusted-by-craft-quote">
-              <p className="trusted-by-craft-quote__text">"{craftQuote}"</p>
-              {craftAttribution ? (
-                <footer className="trusted-by-craft-quote__attribution">— {craftAttribution}</footer>
-              ) : null}
-            </blockquote>
-          ) : null}
         </HomeSectionInner>
       </HomeSection>
 
@@ -670,29 +672,6 @@ export function TrustedByPageView({
                 </button>
               </div>
             ) : null}
-          </section>
-        </HomeSectionInner>
-      </HomeSection>
-
-      <HomeSection variant="white" spacing="md" borderY>
-        <HomeSectionInner>
-          <section ref={sectorsRef} className="trusted-by-sectors" data-testid="trusted-by-sectors">
-            <p data-trusted-reveal className="home-kicker">
-              {sectorsKicker}
-            </p>
-            <h2 data-trusted-reveal className="home-heading mt-3 mb-4 max-w-xl">
-              {sectorsTitle}
-            </h2>
-            <p data-trusted-reveal className="page-copy text-body max-w-xl">
-              {sectorsDescription}
-            </p>
-            <ul className="trusted-by-sectors__list">
-              {sectors.map((sector) => (
-                <li key={sector} data-trusted-reveal className="trusted-by-sector-row">
-                  {sector}
-                </li>
-              ))}
-            </ul>
           </section>
         </HomeSectionInner>
       </HomeSection>

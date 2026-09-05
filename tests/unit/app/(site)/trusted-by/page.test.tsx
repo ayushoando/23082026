@@ -1,6 +1,6 @@
 import "@/tests/helpers/nextIntlServerEnMock";
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { TRUSTED_BY_PAGE_COPY } from "@/features/site/data/routeCopy";
 import { TRUSTED_BY_PAGE_METADATA } from "@/features/site/data/routeMetadata";
 import { TRUSTED_BY_CLIENTS } from "@/features/site/data/proof";
@@ -154,6 +154,7 @@ describe("app/(site)/trusted-by/page.tsx", () => {
     // in order, so removing the duplicate rosterKicker cannot drop any sibling prop.
     expect(nonRosterMappings).toHaveLength(27);
     expect(nonRosterMappings).toEqual([
+      "businessStats={stats}",
       "heroTitleLead={copy.heroTitleLead}",
       "heroTitleAccent={copy.heroTitleAccent}",
       "heroSubtitle={copy.heroSubtitle}",
@@ -161,7 +162,6 @@ describe("app/(site)/trusted-by/page.tsx", () => {
       "overviewTitle={copy.overviewTitle}",
       "overviewDescription={copy.overviewDescription}",
       "statsKicker={copy.statsKicker}",
-      "stats={TRUSTED_BY_STATS}",
       "craftQuote={copy.craftQuote}",
       "craftAttribution={copy.craftAttribution}",
       "clients={TRUSTED_BY_CLIENTS}",
@@ -193,12 +193,10 @@ describe("app/(site)/trusted-by/page.tsx", () => {
         ? TRUSTED_BY_PAGE_METADATA.title
         : ((TRUSTED_BY_PAGE_METADATA.title as { absolute?: string })
             ?.absolute ?? String(TRUSTED_BY_PAGE_METADATA.title));
-    expect(titleValue).toMatch(/Trusted by/);
+    expect(titleValue).toMatch(/Office furniture clients in India/);
     expect(titleValue).toMatch(/One&Only/);
     expect(TRUSTED_BY_PAGE_METADATA.openGraph?.url).toMatch(/\/trusted-by\/?$/);
-    expect(TRUSTED_BY_PAGE_METADATA.description).toBe(
-      TRUSTED_BY_PAGE_COPY.heroSubtitle,
-    );
+    expect(TRUSTED_BY_PAGE_METADATA.description).toMatch(/government.*banking/i);
   });
 
   it("renders marketing layout with hero labelled region and editorial copy", async () => {
@@ -278,8 +276,15 @@ describe("app/(site)/trusted-by/page.tsx", () => {
       screen.getByText(TRUSTED_BY_PAGE_COPY.rosterDescription),
     ).toBeInTheDocument();
     const roster = screen.getByTestId("trusted-by-roster");
-    const badges = container.querySelectorAll(".client-badge");
-    expect(badges).toHaveLength(TRUSTED_BY_CLIENTS.length);
+    expect(container.querySelectorAll(".client-badge")).toHaveLength(12);
+    fireEvent.click(
+      within(roster).getByRole("button", {
+        name: `Show all ${TRUSTED_BY_CLIENTS.length} organisations`,
+      }),
+    );
+    expect(container.querySelectorAll(".client-badge")).toHaveLength(
+      TRUSTED_BY_CLIENTS.length,
+    );
     expect(within(roster).getByText("Titan")).toBeInTheDocument();
     expect(within(roster).getByText("HDFC Bank")).toBeInTheDocument();
 
@@ -302,38 +307,19 @@ describe("app/(site)/trusted-by/page.tsx", () => {
     const expectedSectors = Array.from(
       new Set(TRUSTED_BY_CLIENTS.map((c) => c.sector)),
     );
-    expect(screen.getByTestId("trusted-by-sectors")).toBeInTheDocument();
-    expect(
-      screen.getByText(TRUSTED_BY_PAGE_COPY.sectorsKicker),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(TRUSTED_BY_PAGE_COPY.sectorsTitle),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(TRUSTED_BY_PAGE_COPY.sectorsDescription),
-    ).toBeInTheDocument();
-    const sectorRows = container.querySelectorAll(".trusted-by-sector-row");
-    expect(sectorRows).toHaveLength(expectedSectors.length);
     expectedSectors.forEach((sector) => {
-      expect(
-        within(screen.getByTestId("trusted-by-sectors")).getByText(sector),
-      ).toBeInTheDocument();
+      expect(within(roster).getByRole("button", { name: sector })).toHaveAttribute(
+        "aria-pressed",
+        "false",
+      );
     });
-    // Ensure no duplicate sector rendering
-    expect(
-      new Set(Array.from(sectorRows).map((el) => el.textContent?.trim())).size,
-    ).toBe(expectedSectors.length);
   });
 
   it("renders CTA band with computed hrefs, and contact teaser", async () => {
     render(await TrustedByPage());
 
-    expect(
-      screen.queryByText(TRUSTED_BY_PAGE_COPY.craftQuote),
-    ).not.toBeInTheDocument();
-    expect(
-      screen.queryByText(TRUSTED_BY_PAGE_COPY.craftAttribution),
-    ).not.toBeInTheDocument();
+    expect(screen.getByText(`“${TRUSTED_BY_PAGE_COPY.craftQuote}”`)).toBeInTheDocument();
+    expect(screen.getByText(`— ${TRUSTED_BY_PAGE_COPY.craftAttribution}`)).toBeInTheDocument();
 
     const ctaBand = screen.getByTestId("mock-route-cta-band");
     expect(ctaBand).toBeInTheDocument();

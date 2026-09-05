@@ -1,4 +1,30 @@
 /* /clients — executed-work photo portfolio + editorial proof strip + bronze pull-quote band */
+.clients-hero--portfolio {
+  min-height: clamp(28rem, 64vh, 42rem);
+  padding-block-end: clamp(3rem, 8vh, 5rem);
+}
+
+.clients-hero--portfolio .clients-hero__layout {
+  min-height: clamp(20rem, 48vh, 32rem);
+  align-content: end;
+}
+
+.clients-hero--portfolio .clients-hero__copy {
+  max-width: 54rem;
+}
+
+.clients-hero--portfolio .clients-hero__title {
+  font-size: clamp(3.25rem, 7.5vw, 7rem);
+  line-height: 0.94;
+  letter-spacing: -0.045em;
+}
+
+.clients-hero--portfolio .clients-hero__subtitle {
+  max-width: 42rem;
+  font-size: clamp(1.05rem, 1.6vw, 1.3rem);
+  line-height: 1.55;
+}
+
 /* Editorial proof — horizontal metrics row (not centered 3-up KPI wall) */
 .clients-proof-strip {
   border-block: 1px solid color-mix(in srgb, var(--color-bronze-400) 28%, transparent);
@@ -120,6 +146,11 @@
 .portfolio-index__description {
   max-width: 36rem;
   margin-block-start: var(--space-3);
+}
+
+.portfolio-index__ai {
+  gap: var(--space-2);
+  margin-block-start: var(--space-6);
 }
 
 .portfolio-index__nav {

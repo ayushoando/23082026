@@ -114,7 +114,23 @@
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
+  width: 7rem;
+  height: 2.5rem;
   overflow: hidden;
+}
+
+@media (min-width: 40rem) {
+  .footer-logo-marquee__item {
+    width: 8rem;
+    height: 3rem;
+  }
+}
+
+@media (min-width: 48rem) {
+  .footer-logo-marquee__item {
+    width: 11rem;
+    height: 4rem;
+  }
 }
 
 /* fill + object-contain: logos always inside the fixed item box */
