@@ -395,4 +395,16 @@ describe('assetPaths', () => {
     );
     expect(arvoShortSlug.flagship_image).toMatch(/\/image-1\.webp$/);
   });
+
+  it('normalizes legacy PascalCase client logos to canonical kebab-case paths', () => {
+    expect(
+      assetPaths.normalizeAssetPath('/assets/marketing/client-logos/FranklinTempleton.jpg'),
+    ).toBe('/assets/marketing/client-logos/franklin-templeton.jpg');
+    expect(
+      assetPaths.normalizeAssetPath('/assets/marketing/client-logos/Titan.png'),
+    ).toBe('/assets/marketing/client-logos/titan-limited.png');
+    expect(
+      assetPaths.normalizeAssetPath('/assets/marketing/client-logos/USHA.png'),
+    ).toBe('/assets/marketing/client-logos/usha-international-ltd.png');
+  });
 });

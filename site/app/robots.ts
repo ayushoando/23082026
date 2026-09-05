@@ -5,8 +5,25 @@ const BASE_URL = SITE_URL;
 
 export default function robots(): MetadataRoute.Robots {
   const sitemapHost = BASE_URL.replace(/\/+$/, "");
-  // Explicit major crawlers (same rules) — helps Bing/Google discover allow/disallow cleanly.
-  const crawlers = ["*", "Googlebot", "Bingbot", "Googlebot-Image"] as const;
+  // Explicit major crawlers and AI agents (RFC 9309) — grants crawl access for public discovery.
+  const crawlers = [
+    "*",
+    "Googlebot",
+    "Bingbot",
+    "Googlebot-Image",
+    "GPTBot",
+    "ChatGPT-User",
+    "ClaudeBot",
+    "Anthropic-ai",
+    "PerplexityBot",
+    "Meta-ExternalAgent",
+    "Meta-ExternalFetcher",
+    "Applebot-Extended",
+    "Google-Extended",
+    "Amazonbot",
+    "cohere-ai",
+    "Bytespider",
+  ] as const;
 
   return {
     rules: crawlers.map((userAgent) => ({

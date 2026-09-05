@@ -102,7 +102,41 @@ const nextConfig = {
       { source: "/templates/", destination: "/products/", permanent: true },
       { source: "/news", destination: "/about/", permanent: true },
       { source: "/news/", destination: "/about/", permanent: true },
+      // Legacy client logo filenames (renamed to kebab-case) — 308 permanent redirect
+      { source: "/assets/marketing/client-logos/AmbujaNeotia.png", destination: "/assets/marketing/client-logos/ambuja-neotia.png", permanent: true },
+      { source: "/assets/marketing/client-logos/AnnapurnaMicroFinance.jpg", destination: "/assets/marketing/client-logos/annapurna-finance.jpg", permanent: true },
+      { source: "/assets/marketing/client-logos/BIS.jpg", destination: "/assets/marketing/client-logos/bureau-of-indian-standards.jpg", permanent: true },
+      { source: "/assets/marketing/client-logos/BSPHCL.jpg", destination: "/assets/marketing/client-logos/bsphcl.jpg", permanent: true },
+      { source: "/assets/marketing/client-logos/BiharGovernment.jpg", destination: "/assets/marketing/client-logos/government-of-bihar.jpg", permanent: true },
+      { source: "/assets/marketing/client-logos/CanaraBank.jpg", destination: "/assets/marketing/client-logos/canara-bank.jpg", permanent: true },
+      { source: "/assets/marketing/client-logos/CorporationBank.jpg", destination: "/assets/marketing/client-logos/corporation-bank.jpg", permanent: true },
+      { source: "/assets/marketing/client-logos/CRIPumps.jpg", destination: "/assets/marketing/client-logos/cri-pumps.jpg", permanent: true },
+      { source: "/assets/marketing/client-logos/CustomsandCentralExcise.jpg", destination: "/assets/marketing/client-logos/customs-and-central-excise.jpg", permanent: true },
+      { source: "/assets/marketing/client-logos/EsselUtilities.jpg", destination: "/assets/marketing/client-logos/essel-utilities.jpg", permanent: true },
+      { source: "/assets/marketing/client-logos/FHI360.png", destination: "/assets/marketing/client-logos/fhi-360.png", permanent: true },
+      { source: "/assets/marketing/client-logos/FranklinTempleton.jpg", destination: "/assets/marketing/client-logos/franklin-templeton.jpg", permanent: true },
+      { source: "/assets/marketing/client-logos/GDGoenka.jpg", destination: "/assets/marketing/client-logos/gd-goenka.jpg", permanent: true },
+      { source: "/assets/marketing/client-logos/GOILogo.jpg", destination: "/assets/marketing/client-logos/iocl.jpg", permanent: true },
+      { source: "/assets/marketing/client-logos/HDFCLogo.jpg", destination: "/assets/marketing/client-logos/hdfc-limited.jpg", permanent: true },
+      { source: "/assets/marketing/client-logos/HyundaiLogo.jpg", destination: "/assets/marketing/client-logos/hyundai-limited.jpg", permanent: true },
+      { source: "/assets/marketing/client-logos/IDBIBankLogo.png", destination: "/assets/marketing/client-logos/idbi-bank.png", permanent: true },
+      { source: "/assets/marketing/client-logos/IncomeTaxdepartment.png", destination: "/assets/marketing/client-logos/income-tax-department.png", permanent: true },
+      { source: "/assets/marketing/client-logos/JSW.png", destination: "/assets/marketing/client-logos/jsw.png", permanent: true },
+      { source: "/assets/marketing/client-logos/LandT.png", destination: "/assets/marketing/client-logos/l-and-t-finance-limited.png", permanent: true },
+      { source: "/assets/marketing/client-logos/MECON.jpg", destination: "/assets/marketing/client-logos/mecon-limited.jpg", permanent: true },
+      { source: "/assets/marketing/client-logos/MarutiSuzuki.png", destination: "/assets/marketing/client-logos/maruti-suzuki-limited.png", permanent: true },
+      { source: "/assets/marketing/client-logos/ParadeepPhospates.jpg", destination: "/assets/marketing/client-logos/paradeep-phosphates.jpg", permanent: true },
+      { source: "/assets/marketing/client-logos/SAIL.png", destination: "/assets/marketing/client-logos/steel-authority-of-india-limited.png", permanent: true },
+      { source: "/assets/marketing/client-logos/SITICable.png", destination: "/assets/marketing/client-logos/siti-networks.png", permanent: true },
+      { source: "/assets/marketing/client-logos/ShriramTransportFianance.png", destination: "/assets/marketing/client-logos/shriram-commercial-vehicle-finance.png", permanent: true },
+      { source: "/assets/marketing/client-logos/Sonalika.jpg", destination: "/assets/marketing/client-logos/sonalika.jpg", permanent: true },
+      { source: "/assets/marketing/client-logos/SurveyofIndia.jpg", destination: "/assets/marketing/client-logos/survey-of-india.jpg", permanent: true },
+      { source: "/assets/marketing/client-logos/SyndicateBank.png", destination: "/assets/marketing/client-logos/syndicate-bank-limited.png", permanent: true },
+      { source: "/assets/marketing/client-logos/TataMotors.jpg", destination: "/assets/marketing/client-logos/tata-motors.jpg", permanent: true },
+      { source: "/assets/marketing/client-logos/Titan.png", destination: "/assets/marketing/client-logos/titan-limited.png", permanent: true },
       { source: "/assets/marketing/client-logos/USHA.png", destination: "/assets/marketing/client-logos/usha-international-ltd.png", permanent: true },
+      { source: "/assets/marketing/client-logos/UjjivanBank.jpg", destination: "/assets/marketing/client-logos/ujjivan-small-finance-bank.jpg", permanent: true },
+      { source: "/assets/marketing/client-logos/UnitedBankofIndia.png", destination: "/assets/marketing/client-logos/united-bank-limited.png", permanent: true },
       { source: "/gallery", destination: "/portfolio/", permanent: true },
       { source: "/gallery/", destination: "/portfolio/", permanent: true },
       { source: "/projects", destination: "/portfolio/", permanent: true },
@@ -315,6 +349,123 @@ const nextConfig = {
             value: "noindex, nofollow"
           }
         ]
+      },
+      // RFC 8288 & RFC 9727 Section 3 Link response headers on homepage for agent discovery
+      {
+        source: "/",
+        headers: [
+          {
+            key: "Link",
+            value: [
+              '</.well-known/api-catalog>; rel="api-catalog"',
+              '</.well-known/agent-card.json>; rel="service-desc"',
+              '</auth.md>; rel="service-doc"',
+              '</.well-known/agent-skills/index.json>; rel="describedby"',
+            ].join(", "),
+          },
+        ],
+      },
+      // Agent Discovery documents MIME and CORS headers
+      {
+        source: "/.well-known/:path*",
+        headers: [
+          {
+            key: "Access-Control-Allow-Origin",
+            value: "*",
+          },
+          {
+            key: "Access-Control-Allow-Methods",
+            value: "GET, OPTIONS",
+          },
+          {
+            key: "Cache-Control",
+            value: "public, max-age=3600, stale-while-revalidate=86400",
+          },
+        ],
+      },
+      // Extensionless .well-known endpoints require application/json per RFCs
+      {
+        source: "/.well-known/api-catalog",
+        headers: [
+          {
+            key: "Content-Type",
+            value: "application/json; charset=utf-8",
+          },
+          {
+            key: "Access-Control-Allow-Origin",
+            value: "*",
+          },
+        ],
+      },
+      {
+        source: "/.well-known/oauth-protected-resource",
+        headers: [
+          {
+            key: "Content-Type",
+            value: "application/json; charset=utf-8",
+          },
+          {
+            key: "Access-Control-Allow-Origin",
+            value: "*",
+          },
+        ],
+      },
+      {
+        source: "/.well-known/oauth-authorization-server",
+        headers: [
+          {
+            key: "Content-Type",
+            value: "application/json; charset=utf-8",
+          },
+          {
+            key: "Access-Control-Allow-Origin",
+            value: "*",
+          },
+        ],
+      },
+      {
+        source: "/.well-known/openid-configuration",
+        headers: [
+          {
+            key: "Content-Type",
+            value: "application/json; charset=utf-8",
+          },
+          {
+            key: "Access-Control-Allow-Origin",
+            value: "*",
+          },
+        ],
+      },
+      // auth.md & agent skills headers
+      {
+        source: "/auth.md",
+        headers: [
+          {
+            key: "Content-Type",
+            value: "text/markdown; charset=utf-8",
+          },
+          {
+            key: "Access-Control-Allow-Origin",
+            value: "*",
+          },
+          {
+            key: "Cache-Control",
+            value: "public, max-age=3600, stale-while-revalidate=86400",
+          },
+        ],
+      },
+      {
+        source: "/skills/:path*",
+        headers: [
+          {
+            key: "Access-Control-Allow-Origin",
+            value: "*",
+          },
+          {
+            key: "Cache-Control",
+            value: "public, max-age=3600, stale-while-revalidate=86400",
+          },
+        ],
       }
     ];
   },

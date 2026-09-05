@@ -1,0 +1,19 @@
+{
+  "$schema": "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
+  "skills": [
+    {
+      "name": "oando-catalog-discovery",
+      "type": "skill-md",
+      "description": "Search and query One&Only commercial office furniture catalog, product specifications, ergonomic seating, and workstation dimensions.",
+      "url": "https://oando.co.in/skills/catalog-discovery/SKILL.md",
+      "digest": "sha256:0e2af7a386f22d867a25dd5b2617e4f25738c62dafc6c0df512f342419407d14"
+    },
+    {
+      "name": "oando-rfq-enquiry",
+      "type": "skill-md",
+      "description": "Submit commercial requests for quotation (RFQ), enterprise furniture tenders, and space layout requirements.",
+      "url": "https://oando.co.in/skills/rfq-enquiry/SKILL.md",
+      "digest": "sha256:b5a8a90c6a83fd17b38b12134b0c25a33534f85cbb260069ec618874cacb1d56"
+    }
+  ]
+}

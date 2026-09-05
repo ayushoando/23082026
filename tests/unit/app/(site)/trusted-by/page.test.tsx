@@ -66,6 +66,20 @@ vi.mock("@/components/home/layout", () => ({
   ),
 }));
 
+vi.mock("@/features/crm/businessStats", () => ({
+  getBusinessStats: vi.fn(async () => ({
+    stats: {
+      clientOrganisations: 120,
+      projectsDelivered: 500,
+      sectorsServed: 10,
+      locationsServed: 20,
+      yearsExperience: 14,
+      asOfDate: "2026-06-26",
+    },
+    source: "fallback",
+  })),
+}));
+
 vi.mock("@/components/shared/ContactTeaser", () => ({
   ContactTeaser: () => <div data-testid="mock-contact-teaser" />,
 }));

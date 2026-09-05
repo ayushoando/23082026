@@ -570,6 +570,75 @@ const MARKETING_PATH_ALIASES: Readonly<Record<string, string>> = {
     "/assets/marketing/clients/DMRC/dmrc-office-01.webp",
   "/assets/marketing/projects/project-gallery-02.webp":
     "/assets/marketing/clients/Titan/project-gallery-02.webp",
+  // Legacy client logo filenames (PascalCase / historical names)
+  "/assets/marketing/client-logos/AmbujaNeotia.png":
+    "/assets/marketing/client-logos/ambuja-neotia.png",
+  "/assets/marketing/client-logos/AnnapurnaMicroFinance.jpg":
+    "/assets/marketing/client-logos/annapurna-finance.jpg",
+  "/assets/marketing/client-logos/BIS.jpg":
+    "/assets/marketing/client-logos/bureau-of-indian-standards.jpg",
+  "/assets/marketing/client-logos/BSPHCL.jpg":
+    "/assets/marketing/client-logos/bsphcl.jpg",
+  "/assets/marketing/client-logos/BiharGovernment.jpg":
+    "/assets/marketing/client-logos/government-of-bihar.jpg",
+  "/assets/marketing/client-logos/CanaraBank.jpg":
+    "/assets/marketing/client-logos/canara-bank.jpg",
+  "/assets/marketing/client-logos/CorporationBank.jpg":
+    "/assets/marketing/client-logos/corporation-bank.jpg",
+  "/assets/marketing/client-logos/CRIPumps.jpg":
+    "/assets/marketing/client-logos/cri-pumps.jpg",
+  "/assets/marketing/client-logos/CustomsandCentralExcise.jpg":
+    "/assets/marketing/client-logos/customs-and-central-excise.jpg",
+  "/assets/marketing/client-logos/EsselUtilities.jpg":
+    "/assets/marketing/client-logos/essel-utilities.jpg",
+  "/assets/marketing/client-logos/FHI360.png":
+    "/assets/marketing/client-logos/fhi-360.png",
+  "/assets/marketing/client-logos/FranklinTempleton.jpg":
+    "/assets/marketing/client-logos/franklin-templeton.jpg",
+  "/assets/marketing/client-logos/GDGoenka.jpg":
+    "/assets/marketing/client-logos/gd-goenka.jpg",
+  "/assets/marketing/client-logos/GOILogo.jpg":
+    "/assets/marketing/client-logos/iocl.jpg",
+  "/assets/marketing/client-logos/HDFCLogo.jpg":
+    "/assets/marketing/client-logos/hdfc-limited.jpg",
+  "/assets/marketing/client-logos/HyundaiLogo.jpg":
+    "/assets/marketing/client-logos/hyundai-limited.jpg",
+  "/assets/marketing/client-logos/IDBIBankLogo.png":
+    "/assets/marketing/client-logos/idbi-bank.png",
+  "/assets/marketing/client-logos/IncomeTaxdepartment.png":
+    "/assets/marketing/client-logos/income-tax-department.png",
+  "/assets/marketing/client-logos/JSW.png":
+    "/assets/marketing/client-logos/jsw.png",
+  "/assets/marketing/client-logos/LandT.png":
+    "/assets/marketing/client-logos/l-and-t-finance-limited.png",
+  "/assets/marketing/client-logos/MECON.jpg":
+    "/assets/marketing/client-logos/mecon-limited.jpg",
+  "/assets/marketing/client-logos/MarutiSuzuki.png":
+    "/assets/marketing/client-logos/maruti-suzuki-limited.png",
+  "/assets/marketing/client-logos/ParadeepPhospates.jpg":
+    "/assets/marketing/client-logos/paradeep-phosphates.jpg",
+  "/assets/marketing/client-logos/SAIL.png":
+    "/assets/marketing/client-logos/steel-authority-of-india-limited.png",
+  "/assets/marketing/client-logos/SITICable.png":
+    "/assets/marketing/client-logos/siti-networks.png",
+  "/assets/marketing/client-logos/ShriramTransportFianance.png":
+    "/assets/marketing/client-logos/shriram-commercial-vehicle-finance.png",
+  "/assets/marketing/client-logos/Sonalika.jpg":
+    "/assets/marketing/client-logos/sonalika.jpg",
+  "/assets/marketing/client-logos/SurveyofIndia.jpg":
+    "/assets/marketing/client-logos/survey-of-india.jpg",
+  "/assets/marketing/client-logos/SyndicateBank.png":
+    "/assets/marketing/client-logos/syndicate-bank-limited.png",
+  "/assets/marketing/client-logos/TataMotors.jpg":
+    "/assets/marketing/client-logos/tata-motors.jpg",
+  "/assets/marketing/client-logos/Titan.png":
+    "/assets/marketing/client-logos/titan-limited.png",
+  "/assets/marketing/client-logos/USHA.png":
+    "/assets/marketing/client-logos/usha-international-ltd.png",
+  "/assets/marketing/client-logos/UjjivanBank.jpg":
+    "/assets/marketing/client-logos/ujjivan-small-finance-bank.jpg",
+  "/assets/marketing/client-logos/UnitedBankofIndia.png":
+    "/assets/marketing/client-logos/united-bank-limited.png",
   // Brand logos (canonical under brand/logos/)
   "/logo-v2.webp":
     "/assets/marketing/brand/logos/logo-sharp.png",

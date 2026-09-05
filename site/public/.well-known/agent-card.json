@@ -1,0 +1,48 @@
+{
+  "name": "One&Only Commercial Workspaces AI Agent",
+  "version": "1.0.0",
+  "description": "Commercial workspace design, modular workstations, ergonomic seating, and architectural furniture procurement agent for One&Only.",
+  "url": "https://oando.co.in",
+  "documentationUrl": "https://oando.co.in/auth.md",
+  "supportedInterfaces": [
+    {
+      "url": "https://oando.co.in/api/agent/a2a",
+      "transport": "json-rpc-2.0",
+      "protocol": "https"
+    },
+    {
+      "url": "https://oando.co.in/api/customer-queries",
+      "transport": "rest",
+      "protocol": "https"
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "commercial-furniture-catalog",
+      "name": "Catalog Discovery & Specifications",
+      "description": "Browse modular workstation clusters, executive desking, task seating, and collaborative office furniture with exact dimensions and finishes."
+    },
+    {
+      "id": "rfq-procurement",
+      "name": "Quotation & Procurement",
+      "description": "Submit bill of materials, project floor plates, and commercial delivery timelines for corporate workspace fit-outs."
+    },
+    {
+      "id": "workspace-space-planning",
+      "name": "Space Planning & Layout",
+      "description": "Assists designers and facility teams in configuring desk layouts and seat densities."
+    }
+  ],
+  "skills": [
+    {
+      "id": "catalog-browse",
+      "name": "Browse Catalog",
+      "description": "Query products across seating, desking, storage, and acoustic categories."
+    },
+    {
+      "id": "rfq-submit",
+      "name": "Submit Quotation Request",
+      "description": "Submit a commercial RFQ with project requirements, client details, and expected delivery date."
+    }
+  ]
+}

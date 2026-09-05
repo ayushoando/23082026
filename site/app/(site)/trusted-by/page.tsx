@@ -21,9 +21,7 @@ async function loadTrustedByCopy() {
   );
 }
 
-export function generateMetadata(): Metadata {
-  return TRUSTED_BY_PAGE_METADATA;
-}
+export const metadata: Metadata = TRUSTED_BY_PAGE_METADATA;
 
 /** Client proof page — roster, stats, quotes. Photos stay on /clients. */
 export default async function TrustedByPage() {

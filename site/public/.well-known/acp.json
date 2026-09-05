@@ -1,0 +1,22 @@
+{
+  "protocol": {
+    "name": "acp",
+    "version": "1.0.0"
+  },
+  "api_base_url": "https://oando.co.in",
+  "transports": [
+    "http"
+  ],
+  "capabilities": {
+    "services": [
+      "catalog",
+      "quote-request",
+      "space-planning"
+    ]
+  },
+  "endpoints": {
+    "catalog": "https://oando.co.in/products",
+    "quotes": "https://oando.co.in/api/customer-queries",
+    "planner": "https://oando.co.in/ooplanner"
+  }
+}
