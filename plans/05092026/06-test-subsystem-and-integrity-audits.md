@@ -1,4 +1,4 @@
-﻿# Oando Subsystem Remediation Plan: Test Subsystem and Integrity Audits
+# Oando Subsystem Remediation Plan: Test Subsystem and Integrity Audits
 
 **File Target:** `plans/05092026/06-test-subsystem-and-integrity-audits.md`  
 **Governing Standard:** `AGENTS.md` (Authority floor: User instruction > live code/fresh command output > `AGENTS.md`)  
@@ -151,9 +151,11 @@ The platform enforces 5 strict static audits split across two dispatchers:
 
 ### Viewport Matrix & Mobile Scroller Invariant
 - **Test Matrix (`tests/manifests/visual-baselines.json#L20-L25`):**
-  - Desktop: `1440 x 900`
+  - Desktop Wide: `1920 x 1080` (Full HD standard; **MANDATORY INVARIANT: Desktop must ALWAYS include 1920 x 1080**)
+  - Desktop Standard: `1440 x 900` (Laptop baseline)
   - Tablet: `1024 x 768`
   - Mobile: `390 x 844` (iPhone 12/13/14 baseline)
+- **Desktop Viewport Invariant:** All responsive audits, visual baselines, browser suites, and layout verifications evaluating desktop surfaces must **always** include `1920 x 1080`. No desktop verification is complete without `1920 x 1080`.
 - **Mobile Scroller Invariant:**
   - On viewports `< 768px`, page content is rendered inside `<div className="mobile-app-main" tabIndex={-1}>` (`MobileAppShell.tsx#L72`).
   - The viewport scroller is `.mobile-app-main`, **never** `window`.
