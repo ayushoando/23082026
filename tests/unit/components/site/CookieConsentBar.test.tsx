@@ -77,7 +77,7 @@ describe('CookieConsentBar Component', () => {
     expect(container.firstChild).toBeNull();
   });
 
-  it('auto-accepts cookies after 5 seconds if not interacted with', () => {
+  it('does not infer consent when the dialog is left open', () => {
     const dispatchSpy = vi.spyOn(window, 'dispatchEvent');
 
     render(<CookieConsentBar />);
@@ -85,21 +85,15 @@ describe('CookieConsentBar Component', () => {
     expect(screen.getByRole('dialog')).toBeInTheDocument();
 
     act(() => {
-      vi.advanceTimersByTime(5000);
+      vi.advanceTimersByTime(60_000);
     });
 
-    expect(mockCookieStore['oando_cookie_consent']).toBe('accepted');
-    expect(mockCookieStore['oando_seo_source']).toBe('google');
-    expect(mockCookieStore['oando_seo_locale']).toBe('en-US');
-
-    expect(dispatchSpy).toHaveBeenCalledWith(
-      expect.objectContaining({
-        type: 'oando-cookie-consent',
-        detail: { value: 'accepted' },
-      }),
+    expect(mockCookieStore['oando_cookie_consent']).toBeUndefined();
+    expect(mockCookieStore['oando_seo_source']).toBeUndefined();
+    expect(dispatchSpy).not.toHaveBeenCalledWith(
+      expect.objectContaining({ type: 'oando-cookie-consent' }),
     );
-
-    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
 
   it('sets cookies, dispatches event and hides on clicking Accept All', async () => {
@@ -156,16 +150,4 @@ describe('CookieConsentBar Component', () => {
     expect(screen.queryByRole('dialog')).toBeNull();
   });
 
-  it('flushes queued analytics after timed auto-accept', async () => {
-    render(<CookieConsentBar />);
-    revealConsentBar();
-
-    await act(async () => {
-      vi.advanceTimersByTime(5000);
-      await Promise.resolve();
-    });
-
-    expect(mockCookieStore['oando_cookie_consent']).toBe('accepted');
-    expect(flushAnalyticsAfterConsent).toHaveBeenCalled();
-  });
 });

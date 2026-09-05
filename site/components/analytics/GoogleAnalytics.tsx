@@ -1,4 +1,13 @@
+"use client";
+
 import Script from "next/script";
+import { useSyncExternalStore } from "react";
+import { hasAnalyticsConsent } from "@/lib/consent";
+
+function subscribeToConsent(onStoreChange: () => void): () => void {
+  window.addEventListener("oando-cookie-consent", onStoreChange);
+  return () => window.removeEventListener("oando-cookie-consent", onStoreChange);
+}
 
 // Google Analytics 4 (GA4) Tag - Measurement ID: G-CTPK6318CR
 export function GoogleAnalytics({
@@ -8,11 +17,16 @@ export function GoogleAnalytics({
   gaId?: string;
   nonce?: string;
 }) {
-  // Same gate as `getGtmScriptOrigin()` in site/proxy.ts — do not hardcode a
+  // Same gate as `getGtmScriptSources()` in site/proxy.ts — do not hardcode a
   // property ID or gtag will load without a matching script-src origin.
   const measurementId = gaId || process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+  const consentGranted = useSyncExternalStore(
+    subscribeToConsent,
+    hasAnalyticsConsent,
+    () => false,
+  );
 
-  if (!measurementId || process.env.NODE_ENV === "test") {
+  if (!measurementId || process.env.NODE_ENV === "test" || !consentGranted) {
     return null;
   }
 
@@ -35,4 +49,3 @@ export function GoogleAnalytics({
     </>
   );
 }
-

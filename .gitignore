@@ -19,6 +19,7 @@ results/*
 
 # Agent-generated audit reports are local evidence, not repository source.
 agent-reports/
+.playwright-cli/
 
 # Playwright / E2E artifacts (never commit trace bundles)
 playwright-report/

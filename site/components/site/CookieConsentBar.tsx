@@ -3,10 +3,12 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import {
+  CONSENT_ACCEPTED,
+  CONSENT_COOKIE,
+  CONSENT_REJECTED,
+} from "@/lib/consent";
 
-const CONSENT_COOKIE = "oando_cookie_consent";
-const CONSENT_ACCEPTED = "accepted";
-const CONSENT_REJECTED = "rejected";
 const COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 180; // 180 days
 
 const SEO_COOKIE_KEYS = [
@@ -155,24 +157,6 @@ export function CookieConsentBar() {
       document.documentElement.style.removeProperty("--cookie-consent-bar-offset");
     };
   }, [visible]);
-
-  useEffect(() => {
-    if (dismissed || consent || !visible) {return;}
-
-    const timer = window.setTimeout(() => {
-      writeCookie(CONSENT_COOKIE, CONSENT_ACCEPTED, COOKIE_MAX_AGE_SECONDS);
-      setSeoCookies();
-      window.dispatchEvent(
-        new CustomEvent("oando-cookie-consent", { detail: { value: CONSENT_ACCEPTED } }),
-      );
-      void import("@/lib/analytics/siteEvents").then((mod) => {
-        mod.flushAnalyticsAfterConsent();
-      });
-      setDismissed(true);
-    }, 5000);
-
-    return () => window.clearTimeout(timer);
-  }, [consent, dismissed, visible]);
 
   const acceptAll = () => {
     writeCookie(CONSENT_COOKIE, CONSENT_ACCEPTED, COOKIE_MAX_AGE_SECONDS);

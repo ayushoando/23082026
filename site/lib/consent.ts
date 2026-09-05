@@ -19,7 +19,7 @@ export function hasConsentChoice(): boolean {
   return value === CONSENT_ACCEPTED || value === CONSENT_REJECTED;
 }
 
-/** Analytics and conversion events emit only after explicit or timed accept. */
+/** Analytics and conversion events emit only after explicit acceptance. */
 export function hasAnalyticsConsent(): boolean {
   return readCookie(CONSENT_COOKIE) === CONSENT_ACCEPTED;
 }

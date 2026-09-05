@@ -81,7 +81,7 @@ export function ZarazConsentBridge() {
     } else if (cookie === CONSENT_REJECTED) {
       applyZarazConsent(false);
     } else {
-      // No choice yet — deny optional marketing until Accept (or timed accept).
+      // No choice yet — deny optional marketing until explicit acceptance.
       applyZarazConsent(false);
     }
 
