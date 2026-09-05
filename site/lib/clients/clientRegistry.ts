@@ -567,7 +567,7 @@ const ADDITIONAL_SOURCE_CLIENT_RECORDS: SourceClientRecord[] = [
   }),
   source("JSW", "corporates-multinationals", {
     canonicalId: "jsw",
-    logoPath: "/assets/marketing/client-logos/JSW.png",
+    logoPath: "/assets/marketing/client-logos/jsw.png",
   }), // @review
   source("NTPC", "government-public-sector", {
     canonicalId: "ntpc",
@@ -583,7 +583,7 @@ const ADDITIONAL_SOURCE_CLIENT_RECORDS: SourceClientRecord[] = [
   }), // @review
   source("Sonalika International", "corporates-multinationals", {
     canonicalId: "sonalika",
-    logoPath: "/assets/marketing/client-logos/Sonalika.jpg",
+    logoPath: "/assets/marketing/client-logos/sonalika.jpg",
   }), // @review
   source("Tata Steel", "corporates-multinationals", {
     canonicalId: "tata-steel",
@@ -703,7 +703,7 @@ const CANONICAL_OVERRIDES: Readonly<
   },
   sonalika: {
     displayName: "Sonalika",
-    logoPath: "/assets/marketing/client-logos/Sonalika.jpg",
+    logoPath: "/assets/marketing/client-logos/sonalika.jpg",
   },
   cimp: {
     displayName: "Chandragupt Institute of Management (CIMP)",

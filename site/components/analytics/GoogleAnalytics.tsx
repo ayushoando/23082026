@@ -1,8 +1,13 @@
 "use client";
 
 import Script from "next/script";
-import { useSyncExternalStore } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 import { hasAnalyticsConsent } from "@/lib/consent";
+
+type AnalyticsWindow = Window & {
+  dataLayer?: unknown[][];
+  gtag?: (...args: unknown[]) => void;
+};
 
 function subscribeToConsent(onStoreChange: () => void): () => void {
   window.addEventListener("oando-cookie-consent", onStoreChange);
@@ -26,26 +31,32 @@ export function GoogleAnalytics({
     () => false,
   );
 
+  useEffect(() => {
+    if (!measurementId || process.env.NODE_ENV === "test" || !consentGranted) {
+      return;
+    }
+
+    const analyticsWindow = window as AnalyticsWindow;
+    analyticsWindow.dataLayer ??= [];
+    analyticsWindow.gtag ??= (...args: unknown[]) => {
+      analyticsWindow.dataLayer?.push(args);
+    };
+    analyticsWindow.gtag("js", new Date());
+    analyticsWindow.gtag("config", measurementId, {
+      page_path: window.location.pathname,
+    });
+  }, [consentGranted, measurementId]);
+
   if (!measurementId || process.env.NODE_ENV === "test" || !consentGranted) {
     return null;
   }
 
   return (
-    <>
-      <Script
-        id="google-analytics-tag"
-        strategy="afterInteractive"
-        src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
-        nonce={nonce}
-      />
-      <Script
-        id="google-analytics-init"
-        strategy="afterInteractive"
-        nonce={nonce}
-        dangerouslySetInnerHTML={{
-          __html: `window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${measurementId}', { page_path: window.location.pathname });`,
-        }}
-      />
-    </>
+    <Script
+      id="google-analytics-tag"
+      strategy="afterInteractive"
+      src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
+      nonce={nonce}
+    />
   );
 }
