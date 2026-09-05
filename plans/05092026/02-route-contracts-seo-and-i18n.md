@@ -220,4 +220,9 @@ Derived from the forensic audit documented in `docs/audit 05092026/homepage-and-
 ### 7.2 Session Termination & Client Sign-Out Contract
 1. **Server Action Delegation:** Client-side components (such as `site/features/shared/dashboard/DashboardClient.tsx`) must never invoke `createAuthClient().auth.signOut()` directly in browser bundles, as server-only Supabase environment variables (`NEXT_ADMIN_SUPABASE_URL`) are omitted from client bundles and throw unhandled exceptions.
 2. **Standard Handler:** All client sign-out events must invoke the Server Action `signOutFromSupabase()` in `site/lib/auth/supabaseServerActions.ts`.
+## Test reconciliation update (2026-09-05)
+
+Map each navigation target to its source route and classification; separate /planner marketing from /ooplanner workspace journeys. Preserve negative/redirect tests for removed routes rather than recreating pages for stale assertions.
+
+Acceptance: record current path, owner, destination/disposition, preserved assertions, affected commands, and evidence. A filename or age alone is insufficient grounds for retirement. Runtime validation remains pending; this update changes planning documents only.
 

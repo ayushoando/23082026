@@ -119,3 +119,8 @@ Triage order:
 - Performance budgets, if adopted, are reproducible and carry profile/fixture/percentile metadata.
 - No dev-only Lighthouse artifact or local benchmark is represented as production evidence.
 - No quality fix crosses Studio/Planner boundaries or changes product scope without separate authorization.
+## Test reconciliation update (2026-09-05)
+
+Retain intentional browser-profile filters but investigate missing-settings/undo skips. Align baseline naming with browser/viewport identity; retain keyboard, focus, overflow and measured performance assertions.
+
+Acceptance: record current path, owner, destination/disposition, preserved assertions, affected commands, and evidence. A filename or age alone is insufficient grounds for retirement. Runtime validation remains pending; this update changes planning documents only.

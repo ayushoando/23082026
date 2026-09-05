@@ -94,3 +94,8 @@ Cross-cutting rule: distinguish **source presence**, **current `HEAD`**, and **c
 5. **Persistence Safeguards:** Production filesystem is strictly read-only (`EROFS` protection). All writes must route through mode-aware persistence wrappers.
 6. **Dual-Database Split:** Never write Admin entities to Products DB or vice versa. Zero dual-writing permitted.
 7. **Strict Quarantine:** `docs/protected-folder/` is fully quarantined. Never read, search, list, or reference it.
+## Test reconciliation update (2026-09-05)
+
+Coordinate the test cleanup through Plan 06: classify each file, move bounded ownership groups, repair assertions/baselines, then verify discovery and authorized execution. All thirteen domain plans retain ownership of their behavior contracts; historical counts and results are not current clearance evidence.
+
+Acceptance: record current path, owner, destination/disposition, preserved assertions, affected commands, and evidence. A filename or age alone is insufficient grounds for retirement. Runtime validation remains pending; this update changes planning documents only.

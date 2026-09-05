@@ -106,3 +106,8 @@ Before declaring completion:
    - Trigger sign-out from `/dashboard`; confirm smooth redirection to `/access` without console errors.
    - Check homepage across 1920px, 1440px, 1080px, 768px, and 390px viewports.
 6. Once verified, delete `AUTH-LOOP-03` row from [`Failures.md`](../../Failures.md).
+## Test reconciliation update (2026-09-05)
+
+Coordinate the test cleanup through Plan 06: classify each file, move bounded ownership groups, repair assertions/baselines, then verify discovery and authorized execution. All thirteen domain plans retain ownership of their behavior contracts; historical counts and results are not current clearance evidence.
+
+Acceptance: record current path, owner, destination/disposition, preserved assertions, affected commands, and evidence. A filename or age alone is insufficient grounds for retirement. Runtime validation remains pending; this update changes planning documents only.

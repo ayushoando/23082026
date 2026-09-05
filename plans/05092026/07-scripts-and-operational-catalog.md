@@ -143,3 +143,8 @@ pnpm run ops db:apply:admin -- --dry
 1. Never commit a new `.mjs` script into `scripts/AsNeeded/` without simultaneously adding its entry and rationale to [`scripts/AsNeeded/ALLOWLIST.md`](file:///d:/23082026/scripts/AsNeeded/ALLOWLIST.md) and [`docs/architecture/scripts.csv`](file:///d:/23082026/docs/architecture/scripts.csv).
 2. All Node scripts must support Windows paths using `path.resolve` or `fileURLToPath` and avoid hardcoded POSIX forward slashes in filesystem operations.
 3. Every database migration must include a rollback block before running `pnpm run check:governance`.
+## Test reconciliation update (2026-09-05)
+
+Update explicit spec paths in package commands, ops, gates and CI alongside moves. Give capture-only tooling an explicit command; ensure inventory and layout checks discover the intended test roots.
+
+Acceptance: record current path, owner, destination/disposition, preserved assertions, affected commands, and evidence. A filename or age alone is insufficient grounds for retirement. Runtime validation remains pending; this update changes planning documents only.

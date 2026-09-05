@@ -171,3 +171,8 @@ pnpm vitest run tests/unit/lib/catalog/planSymbolPngContract.test.ts
 2. Verify that `scripts/generate-svg` is copied into the standalone distribution.
 3. Confirm that no native `.node` binaries are packaged into client chunks.
 4. Ensure all symbol PNG dimensions adhere to the $2\,\text{px/mm} + 160\,\text{px}$ padding formula.
+## Test reconciliation update (2026-09-05)
+
+Keep baseline images and fixtures separate from disposable captures. Inspect standalone artifact membership after relocation before claiming tests are excluded or package size has improved.
+
+Acceptance: record current path, owner, destination/disposition, preserved assertions, affected commands, and evidence. A filename or age alone is insufficient grounds for retirement. Runtime validation remains pending; this update changes planning documents only.

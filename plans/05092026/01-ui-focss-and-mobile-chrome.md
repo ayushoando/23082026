@@ -147,4 +147,9 @@ Derived from the empirical audit documented in `docs/audit 05092026/homepage-and
    - Coordinate `app-shell.css` mobile chrome cutoff (`display: none` at `>=768px`) with desktop `SiteHeader` link density to prevent desktop navigation crowding between 768px and 1024px.
 5. **390px (Mobile Standard):**
    - Cookie consent banner must stack cleanly above the 56px bottom tab bar (`--mobile-nav-height`) without permanently occluding >15% of the viewport.
+## Test reconciliation update (2026-09-05)
+
+Verify marketing selectors against current components before CSS changes; use measured 375px/768px header, drawer, cookie and FAB assertions plus desktop comparison. Separate capture-only jobs from regression tests and review replacement baselines for the six absent site screenshots.
+
+Acceptance: record current path, owner, destination/disposition, preserved assertions, affected commands, and evidence. A filename or age alone is insufficient grounds for retirement. Runtime validation remains pending; this update changes planning documents only.
 

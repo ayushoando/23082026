@@ -151,3 +151,8 @@ Per [`docs/audit 05092026/tech-stack-audit.md`](../../docs/audit%2005092026/tech
 1. **Authentication Boundary:** `src/lib/supabaseClient.ts` creates an independent in-memory client, but shares the Admin-Supabase public configuration (`NEXT_ADMIN_SUPABASE_URL` and `NEXT_ADMIN_SUPABASE_ANON_KEY`) with the main app.
 2. **Hosted Origin:** Production hostname `https://oando23.vercel.app` is referenced in admin links (`site/lib/admin/techDocsUrl.ts`) but the standalone hosted deployment state remains unobserved.
 3. **Preflight Checks:** Run `pnpm --filter oando-tech-docs build` to confirm clean compilation and `pnpm run test:tech-docs` to ensure Lane 2 passes cleanly.
+## Test reconciliation update (2026-09-05)
+
+Keep tests at tech-docs-generator/tests and reconcile package/root selection, setup, relative imports, fake-test audit and inventory ownership. File counts are not test-case counts; historical 224-case summaries require fresh execution.
+
+Acceptance: record current path, owner, destination/disposition, preserved assertions, affected commands, and evidence. A filename or age alone is insufficient grounds for retirement. Runtime validation remains pending; this update changes planning documents only.

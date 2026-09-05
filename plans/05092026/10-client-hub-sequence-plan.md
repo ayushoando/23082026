@@ -102,3 +102,8 @@
   3. `/planning` and `/planner` landing pages route to `/ooplanner` only when explicitly launching the app
   4. `/access` reached only from Sign in / Account utilities
 - **Leak Prevention:** Continuous validation ensuring unauthenticated sessions do not leak into `/ooplanner`, `/portal`, `/dashboard`, or `/admin`.
+## Test reconciliation update (2026-09-05)
+
+Assign public journey specs to actual route owners. Consolidate duplicate navigation coverage only after identifying retained assertions and maintain explicit transition/outcome checks.
+
+Acceptance: record current path, owner, destination/disposition, preserved assertions, affected commands, and evidence. A filename or age alone is insufficient grounds for retirement. Runtime validation remains pending; this update changes planning documents only.

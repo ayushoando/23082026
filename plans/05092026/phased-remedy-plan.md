@@ -587,3 +587,8 @@ Empirical auditing identified layout defects across the 5 responsive tiers:
 ### 13.3 Environment Architecture & Cloud-First Telemetry
 - **3-Way Environment Division:** Partition variables cleanly into `.env.local` / `.env.example` (root workstation 7-section setup), `site/.env.example` (runtime Next.js), and `tech-docs-generator/.env.example` (isolated Vite SPA).
 - **Telemetry Pruning:** Purged all dead APM vendor references (Datadog, New Relic, Traceloop, Cast) and standardized on cloud-first observability: Google Analytics 4 (`@next/third-parties/google`), Vercel Web Analytics & Speed Insights (`@vercel/analytics`, `@vercel/speed-insights`), and standard OpenTelemetry in `site/instrumentation.ts` per [`OBSERVABILITY.md`](../../OBSERVABILITY.md). Local Docker Prometheus/Grafana is optional dev-only.
+## Test reconciliation update (2026-09-05)
+
+Coordinate the test cleanup through Plan 06: classify each file, move bounded ownership groups, repair assertions/baselines, then verify discovery and authorized execution. All thirteen domain plans retain ownership of their behavior contracts; historical counts and results are not current clearance evidence.
+
+Acceptance: record current path, owner, destination/disposition, preserved assertions, affected commands, and evidence. A filename or age alone is insufficient grounds for retirement. Runtime validation remains pending; this update changes planning documents only.

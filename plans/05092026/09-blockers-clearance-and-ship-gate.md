@@ -198,3 +198,8 @@ pnpm run test:browser:gate
      ```
 3. **Edge Worker Rollback:** If the Cloudflare Worker proxy causes edge routing anomalies:
    - Re-deploy the prior stable worker revision via Cloudflare dashboard or `pnpm run ops worker:deploy`.
+## Test reconciliation update (2026-09-05)
+
+Require discovery reconciliation, failures and justified skips for each affected lane. Screenshot-file existence does not establish visual regression; historical summaries cannot clear Failures.md.
+
+Acceptance: record current path, owner, destination/disposition, preserved assertions, affected commands, and evidence. A filename or age alone is insufficient grounds for retirement. Runtime validation remains pending; this update changes planning documents only.

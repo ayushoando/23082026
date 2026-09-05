@@ -186,3 +186,34 @@ pnpm run test:browser:gate
 2. Confirm a **fresh, current-session** `results/tests/summary.json` records 0 failed tests across both lanes; an archived summary cannot clear a blocker or authorize a commit.
 3. Verify all 5 test integrity audits exit code 0.
 4. Confirm no new `eslint-disable` comments exist outside the 5 authorized hook files.
+## Test reconciliation update (2026-09-05)
+
+### Observed issues and required decisions
+
+The static inventory observed 85 E2E specs and 18 support/assets. Full semantic review of every file and runtime execution remain pending.
+
+| Evidence | Planned action |
+| --- | --- |
+| All 85 specs share the E2E root | Assign Marketing, Admin, Planner and Studio route owners before moving |
+| Helpers/fixtures span root tests, E2E and support directories | Consolidate under owner-specific `tests/support/` folders with consumer updates |
+| Legacy unit paths coexist with `tests/unit/site` | Migrate bounded source groups while preserving other agents' ongoing moves |
+| Landing/navigation screenshot specs assert output-file existence | Classify as capture tooling or replace with meaningful behavioral contracts |
+| Six site visual baselines are missing | Review replacement images or explicitly replace the visual assertions |
+| Manifest baseline root differs from Playwright snapshot template | Adopt one storage contract across manifest, helpers and runner |
+| Snapshot template omits project identity | Separate browser/viewport baselines or constrain the comparison project |
+| Comprehensive Planner specs skip when settings/undo are absent | Required missing controls must fail; justified profile filters can remain |
+
+### Migration sequence and review record
+
+1. Create one disposition row per initial file: path, kind, source/route owner, imports and consumers, assertions, fixture side effects, browser profile, evidence and destination. Use keep, move, repair, retirement candidate or runtime review pending.
+2. Claim disjoint file batches in the shared tree and reread their current contents before edits. Preserve concurrent changes and avoid shared-index cleanup.
+3. Target route specs at `tests/e2e/site/app/(site)/`, `admin/`, `ooplanner/` and `oostudio/`; target shared support at `tests/support/`. Preserve package-local Tech-Docs tests.
+4. Update imports, root calculations, explicit command/CI paths, setup/teardown, snapshot paths and inventory in the same batch. Baseline relocation preserves image bytes.
+5. Repair stale assertions separately from path moves. Retire only with evidence that behavior is obsolete or equivalent coverage survives elsewhere.
+6. With execution authorized, reconcile discovered specs before/after each batch and run affected checks. Record failures, skipped scenarios and reviewed visual differences; regenerate inventories from agreed roots.
+
+Completion requires every initial file to have a disposition, every retained test to remain discoverable, and every required scenario to have execution evidence. Keep hard blockers in `Failures.md`; this plan creates no green status.
+
+Classify every file before moving or retiring it. Preserve route ownership, assertion coverage, fixture isolation and runner selection through the migration sequence below.
+
+Acceptance: record current path, owner, destination/disposition, preserved assertions, affected commands, and evidence. A filename or age alone is insufficient grounds for retirement. Runtime validation remains pending; this update changes planning documents only.

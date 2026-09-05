@@ -124,3 +124,8 @@ The existing Admin smoke coverage is a starting point, not proof that every API 
 - Anonymous, wrong-role, CSRF, origin, rate-limit, and maintenance behaviours have fresh authorized evidence.
 - Development bypass is contained and has no production path.
 - No Planner/Studio boundary is changed as part of authority work without its own scoped plan.
+## Test reconciliation update (2026-09-05)
+
+Classify guest/member/admin profiles and session setup before moving auth tests. Bypass-mode execution cannot prove access control; preserve denied-access, expired-session and sign-out coverage.
+
+Acceptance: record current path, owner, destination/disposition, preserved assertions, affected commands, and evidence. A filename or age alone is insufficient grounds for retirement. Runtime validation remains pending; this update changes planning documents only.

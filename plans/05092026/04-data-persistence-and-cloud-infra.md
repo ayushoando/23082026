@@ -181,3 +181,8 @@ pnpm vitest run tests/unit/lib/catalog/furnitureCatalogMode.test.ts
 # Verify Mastra AI provider chain
 pnpm vitest run tests/unit/lib/ai/mastra/providers.test.ts
 ```
+## Test reconciliation update (2026-09-05)
+
+Inventory filesystem/database writes and cleanup in guestProjectSetup and isolatedAdminSvgPublish helpers before moving them. Preserve mode selection, isolated fixtures and root calculations; credential-dependent skips cannot prove persistence.
+
+Acceptance: record current path, owner, destination/disposition, preserved assertions, affected commands, and evidence. A filename or age alone is insufficient grounds for retirement. Runtime validation remains pending; this update changes planning documents only.

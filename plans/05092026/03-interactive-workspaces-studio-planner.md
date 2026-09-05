@@ -164,3 +164,8 @@ pnpm vitest run tests/unit/lib/catalog/planSymbolPngContract.test.ts
 1. Never import a utility or type across the `Planner` <-> `Studio` boundary.
 2. If both need a mathematical utility, place it in an explicitly neutral location such as `site/lib/geometry/` or `site/lib/catalog/`.
 3. Re-run `pnpm run scan:boundaries` before staging any workspace commit.
+## Test reconciliation update (2026-09-05)
+
+Map open3d, Planner and Studio specs to current implementations. Keep fork-specific helpers separate, compare overlapping comprehensive-audit assertions before consolidation, and replace missing-control skips when the control is required.
+
+Acceptance: record current path, owner, destination/disposition, preserved assertions, affected commands, and evidence. A filename or age alone is insufficient grounds for retirement. Runtime validation remains pending; this update changes planning documents only.

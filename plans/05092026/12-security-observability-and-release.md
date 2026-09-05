@@ -118,3 +118,8 @@ Record a mismatch as a release-provenance incident. Do not change unrelated prod
 - Releases carry a reproducible source-to-canonical-host evidence record.
 - Incidents have scoped rollback conditions that do not weaken authentication, CSP, or privacy controls.
 - No deployment, Cloudflare change, secret rotation, or vendor integration occurs merely to satisfy this plan.
+## Test reconciliation update (2026-09-05)
+
+Reconcile CI and release selection after moves; record revision/browser provenance and external side effects of helpers. Capture-only jobs do not satisfy security or release checks.
+
+Acceptance: record current path, owner, destination/disposition, preserved assertions, affected commands, and evidence. A filename or age alone is insufficient grounds for retirement. Runtime validation remains pending; this update changes planning documents only.
