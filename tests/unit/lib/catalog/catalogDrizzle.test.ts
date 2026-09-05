@@ -1,9 +1,11 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-const { isProductsDatabaseConfigured, mockSelect } = vi.hoisted(() => ({
-  isProductsDatabaseConfigured: vi.fn(),
-  mockSelect: vi.fn(),
-}));
+const { isProductsDatabaseConfigured, mockSelect, createOptionalSupabaseAdminClient } =
+  vi.hoisted(() => ({
+    isProductsDatabaseConfigured: vi.fn(),
+    mockSelect: vi.fn(),
+    createOptionalSupabaseAdminClient: vi.fn(() => null),
+  }));
 
 vi.mock("@/platform/drizzle/databaseUrls", () => ({
   isProductsDatabaseConfigured,
@@ -13,6 +15,10 @@ vi.mock("@/platform/drizzle/productsDb", () => ({
   productsDb: {
     select: mockSelect,
   },
+}));
+
+vi.mock("@/platform/supabase/supabaseAdmin", () => ({
+  createOptionalSupabaseAdminClient,
 }));
 
 import {
@@ -78,9 +84,21 @@ const productRowB: Row = {
 };
 
 describe("catalogDrizzle", () => {
+  const originalVercel = process.env.VERCEL;
+
   beforeEach(() => {
     vi.clearAllMocks();
     isProductsDatabaseConfigured.mockReturnValue(true);
+    createOptionalSupabaseAdminClient.mockReturnValue(null);
+    delete process.env.VERCEL;
+  });
+
+  afterEach(() => {
+    if (originalVercel === undefined) {
+      delete process.env.VERCEL;
+    } else {
+      process.env.VERCEL = originalVercel;
+    }
   });
 
   describe("canQueryCatalogDatabase", () => {
@@ -474,6 +492,37 @@ describe("catalogDrizzle", () => {
     it("returns null when database is not configured", async () => {
       isProductsDatabaseConfigured.mockReturnValue(false);
       await expect(fetchCatalogProductImageRowsLive([String(productRowA.id)])).resolves.toBeNull();
+    });
+  });
+
+  describe("Vercel REST transport", () => {
+    it("reads catalog_products over HTTPS and never opens drizzle", async () => {
+      process.env.VERCEL = "1";
+      const restRow = {
+        ...productRowA,
+        "3d_model": "chair-alpha.glb",
+        model_3d: undefined,
+      };
+      const inFn = vi.fn().mockReturnValue({
+        limit: vi.fn().mockResolvedValue({ data: [restRow], error: null }),
+      });
+      createOptionalSupabaseAdminClient.mockReturnValue({
+        from: vi.fn().mockReturnValue({
+          select: vi.fn().mockReturnValue({ in: inFn }),
+        }),
+      });
+
+      const product = await fetchCatalogProductBySlugLive("chair-alpha");
+      expect(product?.slug).toBe("chair-alpha");
+      expect(product?.["3d_model"]).toBe("chair-alpha.glb");
+      expect(mockSelect).not.toHaveBeenCalled();
+    });
+
+    it("returns null without drizzle when REST client is missing", async () => {
+      process.env.VERCEL = "1";
+      createOptionalSupabaseAdminClient.mockReturnValue(null);
+      await expect(fetchCatalogProductBySlugLive("chair-alpha")).resolves.toBeNull();
+      expect(mockSelect).not.toHaveBeenCalled();
     });
   });
 });

@@ -82,7 +82,7 @@
 
   html:has([data-cookie-consent-bar]) .mobile-app-main {
     padding-bottom: calc(
-      var(--mobile-tab-bar-height) + var(--cookie-consent-bar-height, 4.5rem)
+      var(--mobile-tab-bar-height) + max(4.5rem, var(--cookie-consent-bar-height, 4.5rem))
     );
   }
 

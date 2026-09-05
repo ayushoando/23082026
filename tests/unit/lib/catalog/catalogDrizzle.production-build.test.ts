@@ -19,6 +19,10 @@ vi.mock("@/platform/drizzle/productsDb", () => ({
   },
 }));
 
+vi.mock("@/platform/supabase/supabaseAdmin", () => ({
+  createOptionalSupabaseAdminClient: vi.fn(() => null),
+}));
+
 vi.mock("server-only", () => ({}));
 
 import {

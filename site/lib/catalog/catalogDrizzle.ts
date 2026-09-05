@@ -11,8 +11,13 @@ import {
   catalogProductSpecs,
   catalogProducts,
 } from "@/platform/drizzle/schema/catalog";
+import { createOptionalSupabaseAdminClient } from "@/platform/supabase/supabaseAdmin";
 import { normalizeCatalogProductId } from "@/lib/uuid/normalizeUuid";
+import type { Database } from "@/types/database.types";
 import type { CategoryRow, Product } from "./types";
+
+type CatalogProductRestRow =
+  Database["public"]["Tables"]["catalog_products"]["Row"];
 
 function logCatalogDbUnavailable(context: string, error: unknown): void {
   console.error(`[${context}] Catalog DB unavailable:`, error);
@@ -40,12 +45,67 @@ function rowToProduct(row: typeof catalogProducts.$inferSelect): Product {
   };
 }
 
+function restRowToProduct(row: CatalogProductRestRow): Product {
+  const slug = String(row.slug ?? "").trim();
+  return {
+    ...(row as unknown as Product),
+    id: normalizeCatalogProductId(row.id, slug),
+    slug,
+    "3d_model": row["3d_model"] ?? undefined,
+  };
+}
+
+/** Vercel serverless cannot reliably open Supabase session-mode :5432. */
+function useCatalogRestTransport(): boolean {
+  return process.env.VERCEL === "1";
+}
+
+function slugCandidates(slug: string): string[] {
+  const normalized = String(slug || "").trim().toLowerCase();
+  if (!normalized) {
+    return [];
+  }
+  return [
+    normalized,
+    `oando-seating--${normalized}`,
+    `oando-soft-seating--${normalized}`,
+    `oando-chairs--${normalized}`,
+    `oando-collaborative--${normalized}`,
+    `oando-storage--${normalized}`,
+    `oando-storages--${normalized}`,
+    `oando-workstations--${normalized}`,
+    `oando-tables--${normalized}`,
+    `oando-educational--${normalized}`,
+  ];
+}
+
+function restError(error: { message?: string } | null): Error {
+  return new Error(error?.message || "catalog rest error");
+}
+
 export function canQueryCatalogDatabase(): boolean {
   return isProductsDatabaseConfigured() && !IS_PRODUCTION_BUILD;
 }
 
 export async function fetchCatalogProductsLive(): Promise<Product[] | null> {
   if (!canQueryCatalogDatabase()) {return null;}
+
+  if (useCatalogRestTransport()) {
+    const client = createOptionalSupabaseAdminClient();
+    if (!client) {return null;}
+    const { data, error } = await client
+      .from("catalog_products")
+      .select("*")
+      .order("name");
+    if (error) {
+      if (!isMissingCatalogTableError(restError(error))) {
+        throw restError(error);
+      }
+      logCatalogDbUnavailable("fetchCatalogProductsLive", restError(error));
+      return null;
+    }
+    return (data ?? []).map(restRowToProduct);
+  }
 
   try {
     const rows = await productsDb
@@ -67,6 +127,21 @@ export async function fetchCatalogProductsByCategoryLive(
 ): Promise<Product[] | null> {
   if (!canQueryCatalogDatabase()) {return null;}
 
+  if (useCatalogRestTransport()) {
+    const client = createOptionalSupabaseAdminClient();
+    if (!client) {return null;}
+    const { data, error } = await client
+      .from("catalog_products")
+      .select("*")
+      .eq("category_id", categoryId)
+      .order("name");
+    if (error) {
+      logCatalogDbUnavailable("fetchCatalogProductsByCategoryLive", restError(error));
+      return null;
+    }
+    return (data ?? []).map(restRowToProduct);
+  }
+
   try {
     const rows = await productsDb
       .select()
@@ -83,22 +158,26 @@ export async function fetchCatalogProductsByCategoryLive(
 export async function fetchCatalogProductBySlugLive(slug: string): Promise<Product | null> {
   if (!canQueryCatalogDatabase()) {return null;}
 
-  try {
-    const normalized = String(slug || "").trim().toLowerCase();
-    if (!normalized) {return null;}
-    const candidates = [
-      normalized,
-      `oando-seating--${normalized}`,
-      `oando-soft-seating--${normalized}`,
-      `oando-chairs--${normalized}`,
-      `oando-collaborative--${normalized}`,
-      `oando-storage--${normalized}`,
-      `oando-storages--${normalized}`,
-      `oando-workstations--${normalized}`,
-      `oando-tables--${normalized}`,
-      `oando-educational--${normalized}`,
-    ];
+  const candidates = slugCandidates(slug);
+  if (candidates.length === 0) {return null;}
 
+  if (useCatalogRestTransport()) {
+    const client = createOptionalSupabaseAdminClient();
+    if (!client) {return null;}
+    const { data, error } = await client
+      .from("catalog_products")
+      .select("*")
+      .in("slug", candidates)
+      .limit(1);
+    if (error) {
+      logCatalogDbUnavailable("fetchCatalogProductBySlugLive", restError(error));
+      return null;
+    }
+    const row = data?.[0];
+    return row ? restRowToProduct(row) : null;
+  }
+
+  try {
     const rows = await productsDb
       .select()
       .from(catalogProducts)
@@ -113,6 +192,26 @@ export async function fetchCatalogProductBySlugLive(slug: string): Promise<Produ
 
 export async function fetchCatalogCategoryIdsLive(): Promise<string[] | null> {
   if (!canQueryCatalogDatabase()) {return null;}
+
+  if (useCatalogRestTransport()) {
+    const client = createOptionalSupabaseAdminClient();
+    if (!client) {return null;}
+    const { data, error } = await client
+      .from("catalog_products")
+      .select("category_id")
+      .order("category_id");
+    if (error) {
+      logCatalogDbUnavailable("fetchCatalogCategoryIdsLive", restError(error));
+      return null;
+    }
+    return [
+      ...new Set(
+        (data ?? [])
+          .map((row) => row.category_id)
+          .filter((value): value is string => typeof value === "string" && value.length > 0),
+      ),
+    ];
+  }
 
   try {
     const rows = await productsDb
@@ -134,6 +233,17 @@ export async function fetchCatalogCategoryIdsLive(): Promise<string[] | null> {
 
 export async function fetchCatalogCategoriesLive(): Promise<CategoryRow[] | null> {
   if (!canQueryCatalogDatabase()) {return null;}
+
+  if (useCatalogRestTransport()) {
+    const client = createOptionalSupabaseAdminClient();
+    if (!client) {return null;}
+    const { data, error } = await client.from("catalog_categories").select("*");
+    if (error) {
+      logCatalogDbUnavailable("fetchCatalogCategoriesLive", restError(error));
+      return null;
+    }
+    return (data ?? []) as CategoryRow[];
+  }
 
   try {
     return await productsDb.select().from(catalogCategories);
@@ -162,22 +272,31 @@ export async function fetchCatalogSlugAliasLive(
 ): Promise<CatalogSlugAliasRow | null> {
   if (!canQueryCatalogDatabase()) {return null;}
 
-  try {
-    const normalized = String(aliasSlug || "").trim().toLowerCase();
-    if (!normalized) {return null;}
-    const candidateAliases = [
-      normalized,
-      `oando-seating--${normalized}`,
-      `oando-soft-seating--${normalized}`,
-      `oando-chairs--${normalized}`,
-      `oando-collaborative--${normalized}`,
-      `oando-storage--${normalized}`,
-      `oando-storages--${normalized}`,
-      `oando-workstations--${normalized}`,
-      `oando-tables--${normalized}`,
-      `oando-educational--${normalized}`,
-    ];
+  const candidateAliases = slugCandidates(aliasSlug);
+  if (candidateAliases.length === 0) {return null;}
 
+  if (useCatalogRestTransport()) {
+    const client = createOptionalSupabaseAdminClient();
+    if (!client) {return null;}
+    const { data, error } = await client
+      .from("catalog_product_slug_aliases")
+      .select("alias_slug, canonical_slug")
+      .in("alias_slug", candidateAliases)
+      .eq("is_active", true)
+      .limit(1);
+    if (error) {
+      logCatalogDbUnavailable("fetchCatalogSlugAliasLive", restError(error));
+      return null;
+    }
+    const row = data?.[0];
+    if (!row) {return null;}
+    return {
+      alias_slug: row.alias_slug,
+      canonical_slug: row.canonical_slug,
+    };
+  }
+
+  try {
     const rows = await productsDb
       .select({
         alias_slug: catalogProductSlugAliases.alias_slug,
@@ -203,6 +322,28 @@ export async function fetchCatalogProductsSlugFieldsByCategoryLive(
 ): Promise<Array<Pick<Product, "slug" | "name" | "category_id" | "metadata">> | null> {
   if (!canQueryCatalogDatabase()) {return null;}
 
+  if (useCatalogRestTransport()) {
+    const client = createOptionalSupabaseAdminClient();
+    if (!client) {return null;}
+    const { data, error } = await client
+      .from("catalog_products")
+      .select("slug, name, category_id, metadata")
+      .eq("category_id", categoryId);
+    if (error) {
+      logCatalogDbUnavailable(
+        "fetchCatalogProductsSlugFieldsByCategoryLive",
+        restError(error),
+      );
+      return null;
+    }
+    return (data ?? []).map((row) => ({
+      slug: row.slug ?? "",
+      name: row.name ?? "",
+      category_id: row.category_id ?? "",
+      metadata: (row.metadata ?? null) as Product["metadata"],
+    }));
+  }
+
   try {
     const rows = await productsDb
       .select({
@@ -227,6 +368,32 @@ export async function fetchCatalogProductsSlugFieldsByCategoryLive(
 
 export async function fetchBusinessStatsActiveLive(): Promise<BusinessStatsRow | null> {
   if (!canQueryCatalogDatabase()) {return null;}
+
+  if (useCatalogRestTransport()) {
+    const client = createOptionalSupabaseAdminClient();
+    if (!client) {return null;}
+    const { data, error } = await client
+      .from("business_stats_current")
+      .select(
+        "projects_delivered, client_organisations, sectors_served, locations_served, years_experience, as_of_date",
+      )
+      .eq("is_active", true)
+      .limit(1);
+    if (error) {
+      logCatalogDbUnavailable("fetchBusinessStatsActiveLive", restError(error));
+      return null;
+    }
+    const row = data?.[0];
+    if (!row) {return null;}
+    return {
+      projects_delivered: row.projects_delivered ?? 0,
+      client_organisations: row.client_organisations ?? 0,
+      sectors_served: row.sectors_served ?? 0,
+      locations_served: row.locations_served ?? 0,
+      years_experience: row.years_experience ?? 0,
+      as_of_date: String(row.as_of_date ?? ""),
+    };
+  }
 
   try {
     const rows = await productsDb
@@ -262,6 +429,23 @@ export async function fetchCatalogProductSpecsRowsLive(
 ): Promise<Array<{ product_id: string; specs: Record<string, unknown> | null }> | null> {
   if (!canQueryCatalogDatabase() || productIds.length === 0) {return null;}
 
+  if (useCatalogRestTransport()) {
+    const client = createOptionalSupabaseAdminClient();
+    if (!client) {return null;}
+    const { data, error } = await client
+      .from("catalog_product_specs")
+      .select("product_id, specs")
+      .in("product_id", productIds);
+    if (error) {
+      logCatalogDbUnavailable("fetchCatalogProductSpecsRowsLive", restError(error));
+      return null;
+    }
+    return (data ?? []).map((row) => ({
+      product_id: row.product_id,
+      specs: (row.specs ?? null) as Record<string, unknown> | null,
+    }));
+  }
+
   try {
     const rows = await productsDb
       .select({
@@ -291,6 +475,26 @@ export async function fetchCatalogProductImageRowsLive(
   }> | null
 > {
   if (!canQueryCatalogDatabase() || productIds.length === 0) {return null;}
+
+  if (useCatalogRestTransport()) {
+    const client = createOptionalSupabaseAdminClient();
+    if (!client) {return null;}
+    const { data, error } = await client
+      .from("catalog_product_images")
+      .select("product_id, image_url, image_kind, sort_order")
+      .in("product_id", productIds)
+      .order("sort_order");
+    if (error) {
+      logCatalogDbUnavailable("fetchCatalogProductImageRowsLive", restError(error));
+      return null;
+    }
+    return (data ?? []).map((row) => ({
+      product_id: row.product_id,
+      image_url: row.image_url,
+      image_kind: row.image_kind,
+      sort_order: row.sort_order,
+    }));
+  }
 
   try {
     return await productsDb

@@ -4,9 +4,12 @@
   --site-fab-bottom: calc(1.25rem + env(safe-area-inset-bottom, 0));
   --site-fab-bottom-raised: calc(6.25rem + env(safe-area-inset-bottom, 0px));
   --site-fab-clearance: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+  --site-fab-gap: 1rem;
   --site-fab-side-left: 0px;
   --site-fab-side-right: 0px;
   --site-fab-row-gap: 0.625rem;
+  /* 4.5rem floor: JS may set --cookie-consent-bar-height to 0px before layout. */
+  --cookie-consent-bar-stack: max(4.5rem, var(--cookie-consent-bar-height, 4.5rem));
 }
 
 @media (width >= theme(--breakpoint-sm)) {
@@ -22,8 +25,20 @@ html:has([data-compare-dock]) {
   --site-fab-clearance: calc(12.5rem + env(safe-area-inset-bottom, 0px));
 }
 
+[data-cookie-consent-bar] {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 45;
+}
+
 html:has([data-cookie-consent-bar]) {
-  --site-fab-bottom-raised: calc(7.5rem + env(safe-area-inset-bottom, 0px));
+  --site-fab-bottom: calc(
+    var(--cookie-consent-bar-stack) + var(--site-fab-gap) + env(safe-area-inset-bottom, 0px)
+  );
+  --site-fab-bottom-raised: calc(
+    var(--cookie-consent-bar-stack) + var(--site-fab-gap) + env(safe-area-inset-bottom, 0px)
+  );
   /*
    * Only raise the FAB for the (transient) consent bar — do NOT inflate
    * --site-fab-clearance here. That variable is consumed solely by the footer's
@@ -51,10 +66,10 @@ html:has([data-cookie-consent-bar]) {
 
   html:has(.mobile-tab-bar):has([data-cookie-consent-bar]) {
     --site-fab-bottom: calc(
-      var(--mobile-tab-bar-height, 3.5rem) + var(--cookie-consent-bar-height, 4.5rem) + 0.75rem
+      var(--mobile-tab-bar-height, 3.5rem) + var(--cookie-consent-bar-stack) + var(--site-fab-gap)
     );
     --site-fab-bottom-raised: calc(
-      var(--mobile-tab-bar-height, 3.5rem) + var(--cookie-consent-bar-height, 4.5rem) + 0.75rem
+      var(--mobile-tab-bar-height, 3.5rem) + var(--cookie-consent-bar-stack) + var(--site-fab-gap)
     );
     /* See note above — keep footer clearance at the phone base; don't inflate
        it for the transient consent bar (avoids ~200px of dead footer space). */
@@ -104,11 +119,11 @@ html:has([data-cookie-consent-bar]) {
 }
 
 @utility site-fab-anchor--panel {
-  bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+  bottom: calc(var(--site-fab-bottom) + 4.25rem);
 }
 
 @utility site-fab-anchor--panel-raised {
-  bottom: calc(10.5rem + env(safe-area-inset-bottom, 0px));
+  bottom: calc(var(--site-fab-bottom-raised) + 4.25rem);
 }
 
 .site-fab-row {

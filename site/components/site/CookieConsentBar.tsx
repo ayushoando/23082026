@@ -139,7 +139,9 @@ export function CookieConsentBar() {
     if (!visible || !element) {return;}
 
     const syncHeight = () => {
-      const height = `${Math.ceil(element.getBoundingClientRect().height)}px`;
+      const px = Math.ceil(element.getBoundingClientRect().height);
+      if (px < 1) {return;}
+      const height = `${px}px`;
       document.documentElement.style.setProperty("--cookie-consent-bar-height", height);
       document.documentElement.style.setProperty("--cookie-consent-bar-offset", height);
     };
@@ -204,11 +206,11 @@ export function CookieConsentBar() {
       aria-labelledby="cookie-dialog-title"
       aria-describedby="cookie-dialog-desc"
       data-cookie-consent-bar
-      className={`${consentBarClass} pb-2 md:pb-[max(0.5rem,env(safe-area-inset-bottom,0px))]`}
+      className={`${consentBarClass} md:pb-[max(0.5rem,env(safe-area-inset-bottom,0px))]`}
     >
       <div className="shell-container px-4 py-2.5 sm:px-6 sm:py-3 md:py-4 2xl:px-0">
         <div className="mx-auto flex max-w-6xl min-w-0 flex-col gap-2.5 sm:gap-3 md:flex-row md:items-center md:justify-between md:gap-4">
-          <p id="cookie-dialog-desc" className={`${consentCopyClass} min-w-0 text-pretty sm:text-balance`}>
+          <p id="cookie-dialog-desc" className={`${consentCopyClass} min-w-0 text-balance`}>
             <span id="cookie-dialog-title" className="sr-only">{t("title")}</span>
             <span className="sm:hidden">
               {t("compact")}{" "}
@@ -216,8 +218,12 @@ export function CookieConsentBar() {
             <span className="hidden sm:inline">
               {t("description")}{" "}
             </span>
-            
-          <Link href="/privacy" prefetch={false} className="font-semibold text-primary hover:underline">
+          <Link
+            href="/privacy"
+            prefetch={false}
+            data-tap-exempt
+            className="font-semibold text-primary hover:underline"
+          >
             {t("privacyNotice")}
           </Link>
             .

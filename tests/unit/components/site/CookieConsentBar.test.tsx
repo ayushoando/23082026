@@ -61,7 +61,10 @@ describe('CookieConsentBar Component', () => {
     revealConsentBar();
 
     expect(screen.getByRole('dialog')).toBeInTheDocument();
-    expect(screen.getByText(/privacy notice/i)).toBeInTheDocument();
+    expect(screen.getByRole('dialog')).toHaveAttribute('data-cookie-consent-bar');
+    const privacy = screen.getByRole('link', { name: /privacy notice/i });
+    expect(privacy).toBeInTheDocument();
+    expect(privacy).toHaveAttribute('data-tap-exempt');
     expect(screen.getByRole('button', { name: /Accept all cookies/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Reject non-essential cookies/i })).toBeInTheDocument();
   });
