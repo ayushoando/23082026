@@ -3,9 +3,12 @@ import { createRequire } from "node:module";
 import path from "node:path";
 import { defineConfig, devices } from "@playwright/test";
 
-const require = createRequire(import.meta.url);
-const { loadEnvLocal } = require("../../scripts/general/loadEnvLocal.cjs");
-const { forcePlaywrightBaseURLEnv } = require("./playwrightBaseURL.cjs");
+const cjsRequire =
+  typeof require !== "undefined"
+    ? require
+    : createRequire(path.join(process.cwd(), "package.json"));
+const { loadEnvLocal } = cjsRequire("../../scripts/general/loadEnvLocal.cjs");
+const { forcePlaywrightBaseURLEnv } = cjsRequire("./playwrightBaseURL.cjs");
 
 interface VisualBaselineManifest {
   readonly determinism: {

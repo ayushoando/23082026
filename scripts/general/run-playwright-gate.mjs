@@ -30,7 +30,7 @@ const result = spawnSync(
     ...specs,
     ...process.argv.slice(2),
   ],
-  { cwd: repositoryRoot, stdio: "inherit", env: process.env },
+  { cwd: repositoryRoot, stdio: "inherit", env: process.env, shell: process.platform === "win32" },
 );
 
 if (result.error) throw result.error;

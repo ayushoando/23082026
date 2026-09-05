@@ -93,7 +93,6 @@ Cross-cutting rule: distinguish **source presence**, **current `HEAD`**, and **c
 4. **Boundary Isolation:** Studio and Planner are strictly forked trees with zero cross-imports (`pnpm run scan:boundaries`).
 5. **Persistence Safeguards:** Production filesystem is strictly read-only (`EROFS` protection). All writes must route through mode-aware persistence wrappers.
 6. **Dual-Database Split:** Never write Admin entities to Products DB or vice versa. Zero dual-writing permitted.
-7. **Strict Quarantine:** `docs/protected-folder/` is fully quarantined. Never read, search, list, or reference it.
 ## Test reconciliation update (2026-09-05)
 
 ## Coverage gaps now assigned to concrete deliverables

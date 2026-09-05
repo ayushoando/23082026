@@ -45,7 +45,14 @@ async function isDevBypassActiveForThisRequest(): Promise<boolean> {
     const h = await headers();
     const host =
       h.get("x-forwarded-host")?.split(",")[0]?.trim() || h.get("host");
-    return isDevAuthBypassRequestAllowed(host);
+    if (!isDevAuthBypassRequestAllowed(host)) {
+      return false;
+    }
+    const pathname = h.get("x-pathname") || "";
+    if (pathname === "/access" || pathname.startsWith("/access/")) {
+      return false;
+    }
+    return true;
   } catch {
     return false;
   }

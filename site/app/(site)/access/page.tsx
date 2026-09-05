@@ -19,15 +19,16 @@ export default async function AccessRoute({
 }: {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const user = await getOptionalUser();
   const resolvedSearchParams = searchParams ? await searchParams : undefined;
+  const isDirect = resolvedSearchParams?.direct === "true";
+  const user = isDirect ? null : await getOptionalUser();
   const rawNext =
     typeof resolvedSearchParams?.next === "string"
       ? resolvedSearchParams.next
       : undefined;
   const nextPath = sanitizeNextPath(rawNext);
 
-  if (user) {
+  if (user && !isDirect) {
     // Server-side redirect only — avoids a11y-critical meta-refresh interstitial.
     redirect(nextPath);
   }

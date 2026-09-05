@@ -55,8 +55,7 @@ This master blueprint delivers an exhaustive architectural investigation and pha
    - **Admin Database (`rxzpznmxbaoxpikowmfc`):** Holds plans (`oando_plans`), profiles, handoffs, teams, price books, queries, audit events (`audit_events`), furniture items (`furniture_catalog`), and block descriptors (`block_descriptors`).
    - **Products Database (`erpweaiypimorcunaimz`):** Holds marketing catalog (`catalog_products`, `catalog_product_images`, `catalog_product_specs`), configurators, feature flags, and themes.
 6. **Read-Only Production Filesystem:** Serverless and production runtimes have read-only filesystems. Direct disk writes crash with `EROFS`. Disk writes are permitted only when `DEV_AUTH_BYPASS=1` in non-production. All runtime writes must route through mode-aware persistence wrappers (`writeFurnitureItem`, `savePlannerProject`).
-7. **Absolute Quarantine:** `docs/protected-folder/` (and any nested `protected-folder/`) is completely quarantined. Never read, view, list, grep, import, or reference this directory.
-8. **Blocker Accounting:** All blockers must reside solely in `Failures.md`. Adding or removing rows requires reproducible evidence observed in the current session.
+7. **Blocker Accounting:** All blockers must reside solely in `Failures.md`. Adding or removing rows requires reproducible evidence observed in the current session.
 
 ---
 ## 2. Subsystem Module 1: Full Tech Stack Architecture & Runtime Engines

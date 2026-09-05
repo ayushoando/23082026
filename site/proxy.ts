@@ -436,22 +436,9 @@ export async function proxy(request: NextRequest) {
   // Guest planner cookie never unlocks isProtectedPath pages (admin/crm/ops/…).
   const hasAuthCookies = hasSessionAuthCookies(request.cookies.getAll());
 
-  // Already authenticated (or local dev bypass): leave /access via real HTTP redirect.
-  // Avoids Next's a11y-critical meta-refresh interstitial on document navigations.
-  const accessPath = normalizePathname(pathname);
-  if (accessPath === "/access" && (devAuthBypass || hasAuthCookies)) {
-    const rawNext = request.nextUrl.searchParams.get("next");
-    const dest = sanitizeNextPath(rawNext);
-    const url = request.nextUrl.clone();
-    url.pathname = dest;
-    url.search = "";
-    return finalizeResponse(
-      NextResponse.redirect(url),
-      pathname,
-      maintenanceReadonly,
-      nonce,
-    );
-  }
+  // Unverified cookie redirect for /access removed (AUTH-LOOP-03):
+  // Let /access render so expired/invalid tokens show the sign-in form instead of a 307 loop.
+  // Session validation and verified redirects are handled downstream in page components.
 
   // Short-circuit: no auth cookies on a protected page → /access.
   // Dev bypass (DEV_AUTH_BYPASS=1, non-prod) skips this for local admin work.
@@ -510,6 +497,7 @@ export async function proxy(request: NextRequest) {
   const csp = buildContentSecurityPolicy(pathname, { nonce });
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-nonce", nonce);
+  requestHeaders.set("x-pathname", pathname);
   requestHeaders.set("Content-Security-Policy", csp);
 
   // The actual session validation is handled by getOptionalUser() in session.ts
