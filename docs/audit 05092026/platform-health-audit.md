@@ -95,10 +95,11 @@ Request (oando.co.in)
 
 ## 5. Active Blockers & Remediation Protocol
 
-[`Failures.md`](../../Failures.md) is the sole current-blocker ledger. At this audit update it has two active rows:
+[`Failures.md`](../../Failures.md) is the sole current-blocker ledger. At this audit update it has three active rows:
 
 1. The test-lane blocker: the last full `pnpm run test` reported four failing files. The later targeted recheck passed three but still failed the `/tools` footer/classification assertion. The public route decision must be made before a fresh full-suite clearance attempt.
 2. The browser-origin blocker: the local application was unavailable at `http://localhost:3000`; restart and verify the specified local origin before an authorized browser recheck.
+3. The auth loop & sign-out blocker (`AUTH-LOOP-03`): superficial cookie check on `/access` causing infinite 307 bounces, and client-side sign-out crashing on server-only variables.
 
 Resolution steps are in [`blockers-clearance-runbook.md`](./blockers-clearance-runbook.md). Do not infer a cleared state from archived test output.
 

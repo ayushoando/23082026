@@ -565,3 +565,25 @@ While Modules 1–9 define the horizontal and vertical engineering infrastructur
 1. **Header Modernization:** Phase 1 in `PLAN.md` previously described a legacy "More" dropdown. This has been reconciled with live code (`navigation.ts`), which enforces a flat 8-link bar with `SITE_HEADER_MORE_LINKS: []`.
 2. **SEO & Sitemap Parity:** Canonical-host HTTP status is authoritative over source-file presence. The last observed canonical-host state for `/tools`, `/tools/meeting-room-capacity-calculator`, and `/tools/office-space-calculator` was `404`; their intended classification is therefore `not-found` and nonindexable. They must not enter public navigation, footer links, HTML/XML sitemaps, or a new metadata contract unless a later live `200` verification and product decision explicitly restore them.
 3. **Browser Walk Verification:** Phase 4 directly orchestrates the clearance of `BROWSER-ORIGIN-02` by validating that all 8 Playwright gate specs pass against `http://localhost:3000` with the `.mobile-app-main` scroller active.
+
+---
+
+## 13. Subsystem Module 11: Homepage Multi-Viewport Contract, Auth Loop Remedy & Cloud Telemetry
+
+**Governing Audits:** [`docs/audit 05092026/homepage-and-auth-audit.md`](../../docs/audit%2005092026/homepage-and-auth-audit.md) · [`plans/05092026/short-plan.md`](./short-plan.md)  
+**Ledger Blocker:** `AUTH-LOOP-03` in [`Failures.md`](../../Failures.md)  
+
+### 13.1 Multi-Viewport Layout Contract (1920, 1440, 1080, 768, 390)
+Empirical auditing identified layout defects across the 5 responsive tiers:
+1. **1920px & 1440px Ultra-Wide & Desktop:** Restore `.home-actions` CTA container in `site/components/home/HomepageHero.tsx` ("Explore Catalog" & "Launch Planner") and relax `max-width: 11ch` clamp on `.home-hero-title-homepage` in `site/focss/site/components/homepage/home-type.css` to allow natural 2-line title wrapping.
+2. **1080px Standard Desktop:** In `site/components/home/WhyChooseUs.tsx`, lower card grid threshold from `xl:grid-cols-4` (1280px barrier) to `lg:grid-cols-4` to prevent 2-slab collapse on 1080px screens.
+3. **768px Tablet:** Reconcile desktop-to-mobile header transition in `site/focss/site/app-shell.css` to prevent navigation overlap.
+4. **390px Mobile:** Provide safe-area padding-bottom (4.5rem) so fixed bottom navigation (56px) and cookie consent banners do not occlude interactive touch targets.
+
+### 13.2 Authentication 307 Loop & Client Sign-Out (`AUTH-LOOP-03`)
+- **`/access` 307 Infinite Loop:** `site/proxy.ts:442-454` checks cookie presence via `hasSessionAuthCookies()` and auto-redirects to `/dashboard`. When tokens are expired/invalid, server guards bounce back to `/access`, causing `ERR_TOO_MANY_REDIRECTS`. Remediation: allow `/access` to render without unverified cookie redirect, and provide local development bypass access.
+- **Client Sign-Out Crash:** In `site/features/shared/dashboard/DashboardClient.tsx:142`, client-side `createAuthClient().auth.signOut()` crashes on missing `NEXT_ADMIN_SUPABASE_URL`. Remediation: delegate sign-out to server action `signOutFromSupabase()`.
+
+### 13.3 Environment Architecture & Cloud-First Telemetry
+- **3-Way Environment Division:** Partition variables cleanly into `.env.local` / `.env.example` (root workstation 7-section setup), `site/.env.example` (runtime Next.js), and `tech-docs-generator/.env.example` (isolated Vite SPA).
+- **Telemetry Pruning:** Purged all dead APM vendor references (Datadog, New Relic, Traceloop, Cast) and standardized on cloud-first observability: Google Analytics 4 (`@next/third-parties/google`), Vercel Web Analytics & Speed Insights (`@vercel/analytics`, `@vercel/speed-insights`), and standard OpenTelemetry in `site/instrumentation.ts` per [`OBSERVABILITY.md`](../../OBSERVABILITY.md). Local Docker Prometheus/Grafana is optional dev-only.

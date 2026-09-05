@@ -71,7 +71,11 @@ Define a small event schema for every exporter:
 - failure behaviour;
 - test fixture that demonstrates no cookie, authorization value, secret, raw body, or uncontrolled URL can be emitted.
 
-The `/api/metrics` plan must name the production enablement flag, bearer-token operational owner, scrape identity, and the expected result when metrics are disabled. It must not make local Prometheus/Grafana containers a production dependency.
+The telemetry architecture standardizes on the cloud-first model documented in [`OBSERVABILITY.md`](../../OBSERVABILITY.md):
+- Client Core Web Vitals & RUM: `@vercel/analytics` and `@vercel/speed-insights`.
+- Business Analytics: Google Analytics 4 (`NEXT_PUBLIC_GA_MEASUREMENT_ID`).
+- Distributed Tracing: Standard OpenTelemetry in `site/instrumentation.ts`.
+- Local Metric Scraping: `/api/metrics` is available for ad-hoc Prometheus scraping without requiring local Docker containers (`config/observability/`) or third-party agent daemons.
 
 ---
 

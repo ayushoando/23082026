@@ -17,7 +17,7 @@ The repository paths were inspected on September 5, 2026. Treat commands and his
 
 ### Current Ledger Status
 
-Do not duplicate blocker identifiers or statuses here. Read [`Failures.md`](../../Failures.md) before running any procedure. At this revision, it records one test-lane blocker and one local-browser-origin blocker; archived cleared incidents are intentionally omitted from this runbook.
+Do not duplicate blocker identifiers or statuses here. Read [`Failures.md`](../../Failures.md) before running any procedure. At this revision, it records three active blockers: a test-lane blocker, a local-browser-origin blocker, and `AUTH-LOOP-03` (/access redirect loop & sign-out crash); archived cleared incidents are intentionally omitted from this runbook.
 
 ---
 
@@ -231,7 +231,24 @@ pnpm run test:browser:gate
 
 ---
 
-## 4. Archived Operational Incidents
+## 4. Authentication Loop & Client Sign-Out Blocker (`AUTH-LOOP-03`)
+
+### 4.1 Symptom & Forensic Root Cause
+1. **`/access` 307 Loop:** `site/proxy.ts:442-454` uses `hasSessionAuthCookies()` to bounce requests containing `sb-*-auth-token` cookies directly to `/dashboard`. When tokens are expired or invalid, `site/lib/auth/session.ts` rejects them and bounces back to `/access?next=/dashboard`, triggering `ERR_TOO_MANY_REDIRECTS`.
+2. **Local Dev Lockout:** `DEV_AUTH_BYPASS=1` unconditionally redirects `/access` to `/dashboard`, locking developers out from inspecting or testing the `/access` interface.
+3. **Client Sign-Out Crash:** In `DashboardClient.tsx:142`, `createAuthClient().auth.signOut()` tries to read server-only `NEXT_ADMIN_SUPABASE_URL`, crashing the browser bundle.
+
+### 4.2 Remediation & Clearance Procedure
+1. In `site/proxy.ts`, do not auto-redirect visits to `/access` or `/login` based solely on unverified cookie presence; provide an explicit bypass escape for `DEV_AUTH_BYPASS=1`.
+2. In `DashboardClient.tsx`, replace client `createAuthClient().auth.signOut()` with the server action `signOutFromSupabase()`.
+3. In browser at `http://localhost:3000`:
+   - Verify `/access` renders when session cookies are absent or expired.
+   - Verify signing out from `/dashboard` redirects smoothly to `/access` without console errors.
+4. Delete the `AUTH-LOOP-03` row from [`Failures.md`](../../Failures.md).
+
+---
+
+## 5. Archived Operational Incidents
 
 To prevent duplicate investigations by operators or automated agents, the following blockers are confirmed **RESOLVED and CLEARED**:
 

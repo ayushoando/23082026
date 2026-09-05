@@ -114,6 +114,7 @@ Run only an exact command authorized by the current user and permitted by the en
 | Docs | `Agents/05-documentation.md`, `DOC-MAP.md`, `CONTENTS.md` |
 | Architecture | `Agents/06-architecture.md`, `docs/architecture/product-map.md`, `docs/architecture/stack.md`, `docs/architecture/routes.md` |
 | CSS | `Agents/07-css.md`, `docs/architecture/css.md` |
+| Observability | `OBSERVABILITY.md` |
 | Tech-docs SPA | `tech-docs-generator/README.md` (detail also in product-map § Tech-docs) |
 | Onboarding / ops | `START.md`, `OPERATIONS_RUNBOOK.md`, `README.md`, `Testing-handbook.md` |
 | Plans | [`plans/PLAN.md`](plans/PLAN.md); route map [`plans/client-hub/flowcharts/clients-hub-flow.md`](plans/client-hub/flowcharts/clients-hub-flow.md) |

@@ -348,7 +348,7 @@ The Cloudflare Worker proxy acts as the edge entry point for all traffic arrivin
 ### 8.2 Bindings & Origins
 - `ASSET_BUCKET`: Bound to Cloudflare R2 bucket `oando-asset-cdn`.
 - `CATALOG_VECTORS`: Bound to Cloudflare Vectorize index `catalog-nav`.
-- `VERCEL_ORIGIN`: Configured to `https://oando1408.vercel.app` (or fallback Vercel deployment URL).
+- `VERCEL_ORIGIN`: Configured to `https://23082026.vercel.app` (per `workers/oando-worker-proxy/wrangler.toml`).
 - `PUBLIC_INDEXABLE_HOSTS`: Set to `oando.co.in,www.oando.co.in`.
 
 ### 8.3 Edge Routing Rules & Invariants
@@ -392,6 +392,17 @@ Database backup safety is maintained by an automated pipeline:
   - Weekly backups: Retained for **30 days**.
   - Older backups: Automatically pruned. Tested by 12 passing unit tests in `tests/unit/lib/storage/r2Catalog.test.ts`.
 - **Secrets Synchronization:** Operationalized via `scripts/sync-github-backup-secrets.ps1` using verified canonical secret names: `PRODUCTS_DATABASE_URL`, `SUPABASE_AUTH_DATABASE_URL`, `CLOUDFLARE_S3_URL`, `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_R2_ACCESS_KEY_ID`, `CLOUDFLARE_R2_SECRET_ACCESS_KEY`, and `CLOUDFLARE_R2_CATALOG_BUCKET`.
+
+### 8.6 Cloud-First Telemetry & 3-Way Environment Discipline
+- **Cloud-First Observability ([`OBSERVABILITY.md`](../../OBSERVABILITY.md)):** The platform standardizes on three lean, decoupled telemetry channels without running heavyweight third-party APM daemons:
+  1. Client Core Web Vitals (LCP, INP, CLS) and real user monitoring via `@vercel/analytics` and `@vercel/speed-insights`.
+  2. Business analytics and conversion tracking via Google Analytics 4 (`@next/third-parties/google`).
+  3. Standard OpenTelemetry distributed tracing via Next.js runtime hook in `site/instrumentation.ts`.
+  4. Local Prometheus `/api/metrics` scraping endpoint for ad-hoc inspection without requiring local Docker containers.
+- **3-Way Environment Architecture:**
+  1. Root `.env.local` / `.env.example`: Complete 7-section local developer workstation configuration.
+  2. Next.js Site `site/.env.example`: Lean template for Next.js runtime.
+  3. Tech-Docs SPA `tech-docs-generator/.env.example`: Isolated 4-variable template for `:3001`.
 
 ---
 
