@@ -511,3 +511,48 @@ pnpm run test
 pnpm run build
 pnpm run gate
 ```
+
+---
+
+## 12. Subsystem Module 10: Client-Hub Sequence Plan & Public Route Roadmap
+
+**Governing Plan:** [`plans/05092026/10-client-hub-sequence-plan.md`](./10-client-hub-sequence-plan.md) (relocated from `plans/PLAN.md`)  
+**Spine Route Map:** [`../client-hub/flowcharts/clients-hub-flow.md`](../client-hub/flowcharts/clients-hub-flow.md)  
+**Living HTML Sitemap:** [`../client-hub/flowcharts/non-admin-site-map.html`](../client-hub/flowcharts/non-admin-site-map.html)  
+**Vitest Test Fixtures:** [`../planner-comprehensive-audit/`](../planner-comprehensive-audit/) (16 TypeScript modules directly imported by 50+ Vitest test suites under `tests/unit/planner/`, `tests/integration/planner/`, and `tests/fixtures/`).
+
+### 12.1 Client-Hub 4-Phase Sequence Architecture
+
+While Modules 1–9 define the horizontal and vertical engineering infrastructure, Module 10 defines the **active customer-facing delivery sequence**:
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                   CLIENT-HUB DELIVERY SEQUENCE ROADMAP                 │
+├────────────────────────────────────────────────────────────────────────┤
+│ Phase —: Spine (client-hub/flowcharts/clients-hub-flow.md)             │
+│ • Public route map, customer journeys 1–4, redirect register §4        │
+├────────────────────────────────────────────────────────────────────────┤
+│ Phase 1: Chrome (Header, Footer, Tabs) [Modernized]                    │
+│ • Flat 8-link header (site/features/site/data/navigation.ts)           │
+│ • 5 mobile tabs (<768px): Products, Planner, Quote, Portfolio, Account │
+│ • Footer public boundary: strictly excludes /dashboard, /portal, etc. │
+├────────────────────────────────────────────────────────────────────────┤
+│ Phase 2: Homepage (site/features/site/data/homepage.ts)                │
+│ • Customer journey entrypoint: hero glass proof routes to /trusted-by/ │
+│ • Primary CTA: /planner ("Get your layout plan")                       │
+│ • Cloudflare R2 WebP assets with unoptimized flag                      │
+├────────────────────────────────────────────────────────────────────────┤
+│ Phase 3: Map Equals Code (Redirects & Calculator Indexability)         │
+│ • Permanent 308/301 redirects in next.config.js (news, catalog, etc.)  │
+│ • Calculator routes (/tools/*) live status: indexable: true in SEO     │
+├────────────────────────────────────────────────────────────────────────┤
+│ Phase 4: Browser Walk (Manual & Playwright E2E Verification)           │
+│ • Origin invariant: http://localhost:3000 (never 127.0.0.1)           │
+│ • Resolves BROWSER-ORIGIN-02 via manual dev server bootstrap           │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+### 12.2 Integration of Technical Remedy with Product Sequence
+1. **Header Modernization:** Phase 1 in `PLAN.md` previously described a legacy "More" dropdown. This has been reconciled with live code (`navigation.ts`), which enforces a flat 8-link bar with `SITE_HEADER_MORE_LINKS: []`.
+2. **SEO & Sitemap Parity:** Phase 3 previously assumed `/tools/*` calculators were unindexed placeholders. Live reality proves `/tools/meeting-room-capacity-calculator`, `/tools/office-space-calculator`, and `/tools` are fully indexed (`indexable: true`) and registered in `SEO01_STATIC_METADATA` (`siteSeoContract.ts`), resolving the prior `GATE-RECHECK-01` failure.
+3. **Browser Walk Verification:** Phase 4 directly orchestrates the clearance of `BROWSER-ORIGIN-02` by validating that all 8 Playwright gate specs pass against `http://localhost:3000` with the `.mobile-app-main` scroller active.

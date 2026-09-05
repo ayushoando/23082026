@@ -1,4 +1,4 @@
-﻿# Oando Master Platform Remediation & Architecture Suite (2026-09-05)
+# Oando Master Platform Remediation & Architecture Suite (2026-09-05)
 
 **Directory:** `plans/05092026/`  
 **Governing Standard:** `AGENTS.md` (Authority floor: User instruction > live code/fresh command output > `AGENTS.md` > `Agents/` > `docs/`)  
@@ -23,6 +23,7 @@ This multi-file planning suite provides exhaustive, horizontal and vertical tech
 | [`07-scripts-and-operational-catalog.md`](./07-scripts-and-operational-catalog.md) | Complete script inventory (111 root, 56 general, 8 allowlisted AsNeeded), central `run-ops.mjs` dispatcher, governance ratchet. |
 | [`08-standalone-packaging-and-sizing.md`](./08-standalone-packaging-and-sizing.md) | Next.js standalone distribution footprint, asset copy automation (`prepare-standalone.cjs`), Webpack optimizations, bundle externalization. |
 | [`09-blockers-clearance-and-ship-gate.md`](./09-blockers-clearance-and-ship-gate.md) | Sequential blocker clearance protocol for `Failures.md` (`GATE-RECHECK-01` and `BROWSER-ORIGIN-02`), followed by master 4-phase ship gating runbook. |
+| [`10-client-hub-sequence-plan.md`](./10-client-hub-sequence-plan.md) | Client-hub sequence roadmap (relocated from `plans/PLAN.md`), public route maps, flat 8-link header, indexable calculator contracts, and browser walk. |
 
 ---
 
