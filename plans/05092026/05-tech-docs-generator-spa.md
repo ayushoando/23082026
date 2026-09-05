@@ -10,7 +10,7 @@
 - [x] Port 3001 `strictPort`; outDir `generated-documents/site`
 - [x] `pnpm --filter oando-tech-docs build` exit 0 → `generated-documents/site`
 - [x] `pnpm run test:tech-docs` 42 files / 224 tests; `tech-docs:gate` exit 0 after package-local RTL cleanup
-- [x] Env template is `tech-docs-generator/.env.example` (public Admin keys only; no service role)
+- [x] Env template is `tech-docs-generator/.env.example`: `VITE_PORT`, `NEXT_PUBLIC_TECH_DOCS_URL`, `NEXT_PUBLIC_SITE_URL`, `NEXT_ADMIN_SUPABASE_URL`, `NEXT_ADMIN_SUPABASE_ANON_KEY`, `NEXT_ADMIN_PUBLISHABLE_KEY`. No service role. No `VITE_ADMIN_*`.
 - [ ] Hosted origin `https://oando23.vercel.app` unobserved this session
 - [ ] Claim-provenance ledger still planning
 

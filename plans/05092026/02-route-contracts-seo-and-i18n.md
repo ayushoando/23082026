@@ -226,7 +226,7 @@ Derived from the forensic audit documented in `docs/audit 05092026/homepage-and-
 3. **Canonical Trailing Slash Sanitization:** `/access/` must redirect canonical 308 to `/access`, preserving query parameters (`?next=...`).
 
 ### 7.2 Session Termination & Client Sign-Out Contract
-1. **Server Action Delegation:** Client-side components (such as `site/features/shared/dashboard/DashboardClient.tsx`) must never invoke `createAuthClient().auth.signOut()` directly in browser bundles, as server-only Supabase environment variables (`NEXT_ADMIN_SUPABASE_URL`) are omitted from client bundles and throw unhandled exceptions.
+1. **Server Action Delegation:** Live `DashboardClient` uses `signOutFromSupabase()`. Do not reintroduce `createAuthClient().auth.signOut()` in the browser.
 2. **Standard Handler:** All client sign-out events must invoke the Server Action `signOutFromSupabase()` in `site/lib/auth/supabaseServerActions.ts`.
 ## Test reconciliation update (2026-09-05)
 

@@ -38,10 +38,9 @@ The Tech-Docs test source and support files are package-local at `tech-docs-gene
 | `Failures.md` | Blockers ledger (single source). Empty table is valid |
 | `.env.example` | Root env template. Copy to `.env.local` and `site/.env.local`. Default `DEV_AUTH_BYPASS=1` |
 | `site/.env.example` | Next runtime template. Default `DEV_AUTH_BYPASS=0`. Prod `https://oando.co.in` |
-| `tech-docs-generator/.env.example` | Vite SPA public Admin keys only. Port 3001 / `https://oando23.vercel.app` |
+| `tech-docs-generator/.env.example` | Six public keys: `VITE_PORT`, `NEXT_PUBLIC_TECH_DOCS_URL`, `NEXT_PUBLIC_SITE_URL`, `NEXT_ADMIN_SUPABASE_URL`, `NEXT_ADMIN_SUPABASE_ANON_KEY`, `NEXT_ADMIN_PUBLISHABLE_KEY`. No service role. `:3001` / `https://oando23.vercel.app` |
 | `OPERATIONS_RUNBOOK.md` | Ops order |
 | `Testing-handbook.md` | Testing rules + two-lane contract |
-| `.env.example` / `.env.local` | Env scaffolds / secrets (**`.env.local` only**) |
 | `.oxlintrc.json` / `.vercelignore` / `.gitignore` | Lint / deploy / ignore |
 
 ## Cross-cutting

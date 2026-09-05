@@ -9,7 +9,7 @@
 
 - [x] GA tag only loads when `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set (`GoogleAnalytics.tsx`)
 - [ ] Effective response CSP vs analytics origin unobserved on canonical host `https://oando.co.in`
-- [ ] `scripts/vercel-env-push.mjs` not run (allowlist; never `DEV_AUTH_BYPASS`)
+- [x] Site project `23082026` has 16 production/preview names (launch bar + public URLs). `vercel-env-push.mjs` not used. `DEV_AUTH_BYPASS` not pushed. No deploy.
 - [ ] No `vercel:prod` / `worker:deploy`
 - [ ] Release provenance vs deployed SHA unrun
 

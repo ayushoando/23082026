@@ -8,7 +8,7 @@
 ## Execution checklist (leave open)
 
 - [x] Dual-lane configs present
-- [ ] `pnpm run test` this session: default lane **exit 1** (6 files); tech-docs lane **did not run** (short-circuit). Earlier dual-lane pass is not this rerun.
+- [ ] Full `pnpm run test` this session: default **exit 1** (6 files); tech-docs skipped. Those 6 files then **exit 0** (31 tests) after contract-aligned test edits. Dual-lane rerun still open.
 - [x] `test:audit`, `test:audit:fast`, `test:audit:fake-test` exit 0
 - [ ] `test:browser:gate` in flight (~432 tests); not a recorded pass
 - [ ] Test-folder classification/moves not executed
