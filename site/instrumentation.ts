@@ -1,8 +1,6 @@
 import { registerOTel } from "@vercel/otel";
 import { registerTelemetry } from "ai";
 import { OpenTelemetry } from "@ai-sdk/otel";
-import fs from "node:fs";
-import path from "node:path";
 
 async function loadNewRelicAgent() {
   if (
@@ -13,6 +11,8 @@ async function loadNewRelicAgent() {
   }
 
   if (!process.env.NEW_RELIC_CONFIG_FILE) {
+    const fs = await import(/* webpackIgnore: true */ "node:fs");
+    const path = await import(/* webpackIgnore: true */ "node:path");
     const candidates = [
       path.resolve(process.cwd(), "config/observability/newrelic.cjs"),
       path.resolve(process.cwd(), "../config/observability/newrelic.cjs"),
