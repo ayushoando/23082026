@@ -15,12 +15,12 @@ const requestPath = path.join(siteRoot, "i18n", "request.ts");
 const rootShimPath = path.resolve(__dirname, "../../../../i18n", "request.ts");
 const source = readFileSync(requestPath, "utf8");
 
-describe("i18n runtime (COST-S02 English-only)", () => {
-  it("loads static en.json and does not use next/headers or NEXT_LOCALE", () => {
+describe("i18n runtime (COST-S02 static prefix-based)", () => {
+  it("loads en.json and hi.json without next/headers or NEXT_LOCALE", () => {
     expect(source).toMatch(/messages\/en\.json/);
+    expect(source).toMatch(/messages\/hi\.json/);
     expect(source).not.toMatch(/NEXT_LOCALE/);
     expect(source).not.toMatch(/from ["']next\/headers["']/);
-    expect(source).not.toMatch(/messages\/hi\.json/);
   });
 
   it("keeps English as the default locale", () => {

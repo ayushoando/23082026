@@ -5,42 +5,65 @@ import fs from "node:fs";
 const require = createRequire(import.meta.url);
 require("./general/loadEnvLocal.cjs").loadEnvLocal();
 
-const token = (process.env.VERCEL_TOKEN || "").trim();
-if (!token) {
-  process.stderr.write("VERCEL_TOKEN missing in .env.local\n");
-  process.exit(1);
+// Determine authentication: prefer VERCEL_TOKEN if valid, otherwise use active CLI session
+let tokenArgs = [];
+const rawToken = (process.env.VERCEL_TOKEN || "").trim();
+if (rawToken) {
+  const check = spawnSync("pnpm", ["dlx", "vercel", "whoami", "--token", rawToken], {
+    encoding: "utf8",
+    shell: true,
+  });
+  if (check.status === 0) {
+    tokenArgs = ["--token", rawToken];
+    process.stdout.write("Using valid VERCEL_TOKEN from environment\n");
+  } else {
+    process.stdout.write("VERCEL_TOKEN in .env.local unauthorized; checking active Vercel CLI session...\n");
+  }
 }
 
-const SKIP = new Set(["DEV_AUTH_BYPASS"]);
-const ONLY_ADD = new Set([
-  "GOOGLE_GENERATIVE_AI_API_KEY",
-  "VERCEL_TOKEN",
-  "VERCEL_SITE_API_TOKEN",
-  "VERCEL_TECH_STACK_API_TOKEN",
-  "VERCEL_OIDC_TOKEN",
-  "NEW_RELIC_BROWSER_KEY",
-  "NEW_RELIC_LICENSE_KEY",
-  "NEW_RELIC_APM_ENABLED",
-  "NEW_RELIC_APP_NAME",
-  "OTEL_SERVICE_NAME",
-  "OTEL_EXPORTER_OTLP_PROTOCOL",
-  "OTEL_EXPORTER_OTLP_ENDPOINT",
-  "OTEL_EXPORTER_OTLP_HEADERS",
-]);
+if (tokenArgs.length === 0) {
+  const check = spawnSync("pnpm", ["dlx", "vercel", "whoami"], {
+    encoding: "utf8",
+    shell: true,
+  });
+  if (check.status === 0) {
+    const user = (check.stdout || check.stderr || "").trim().split(/\r?\n/).pop() || "authenticated";
+    process.stdout.write(`Using active Vercel CLI session: ${user}\n`);
+  } else {
+    process.stderr.write("No valid Vercel credentials found. Run `vercel login` or set a valid VERCEL_TOKEN.\n");
+    process.exit(1);
+  }
+}
 
-const raw = fs.readFileSync(
-  new URL("../.env.local", import.meta.url),
-  "utf8",
-);
-const parsed = [];
-for (const line of raw.split(/\r?\n/)) {
+// Load keys from site/.env.example
+const examplePath = new URL("../site/.env.example", import.meta.url);
+const exampleRaw = fs.readFileSync(examplePath, "utf8");
+const exampleKeys = [];
+const defaultMap = new Map();
+
+for (const line of exampleRaw.split(/\r?\n/)) {
   const t = line.trim();
   if (!t || t.startsWith("#")) continue;
   const eq = t.indexOf("=");
   if (eq <= 0) continue;
   const k = t.slice(0, eq).trim();
   if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(k)) continue;
-  let v = t.slice(eq + 1).trim();
+  const defVal = t.slice(eq + 1).trim();
+  exampleKeys.push(k);
+  if (defVal) defaultMap.set(k, defVal);
+}
+
+// NEVER push DEV_AUTH_BYPASS to production
+const SKIP = new Set(["DEV_AUTH_BYPASS"]);
+const targetEnv = process.argv[2] || "production,preview";
+
+const vars = new Map();
+for (const k of exampleKeys) {
+  if (SKIP.has(k)) continue;
+  let v = process.env[k];
+  if (v === undefined || v === "") {
+    v = defaultMap.get(k) || "";
+  }
   if (
     v.length >= 2 &&
     ((v.startsWith('"') && v.endsWith('"')) ||
@@ -48,12 +71,11 @@ for (const line of raw.split(/\r?\n/)) {
   ) {
     v = v.slice(1, -1);
   }
-  if (SKIP.has(k)) continue;
-  if (!ONLY_ADD.has(k)) continue;
   if (!v) continue;
-  parsed.push([k, v]);
+  vars.set(k, v);
 }
-const vars = new Map(parsed);
+
+process.stdout.write(`Prepared ${vars.size} environment variables matching site/.env.example for targets: [${targetEnv}]\n`);
 
 let ok = 0;
 const failed = [];
@@ -67,11 +89,10 @@ for (const [k, v] of vars) {
     "env",
     "add",
     k,
-    "production",
+    targetEnv,
     "--force",
     sensitive ? "--sensitive" : "--no-sensitive",
-    "--token",
-    token,
+    ...tokenArgs,
     "--yes",
   ];
   const r = spawnSync("pnpm", args, {

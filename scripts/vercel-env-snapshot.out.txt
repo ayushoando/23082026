@@ -1,71 +1,9 @@
-STATUS=0
+STATUS=1
 ---STDOUT---
 
- name                                       value                       type      environments                created    
- NEXT_PUBLIC_GA_MEASUREMENT_ID              G-CTPK6318CR                Config    Production, Preview         5h ago     
- GOOGLE_API_KEY                             Hidden                      Secret    Production, Preview         6h ago     
- NEXT_PUBLIC_SITE_URL                       eyJ2IjoidjIiLCJjIj…         Config    Production                  4d ago     
- SITE_URL                                   Hidden                      Secret    Production                  4d ago     
- CAST_API_KEY                               Hidden                      Secret    Production                  4d ago     
- DD_SITE                                    Hidden                      Secret    Production                  4d ago     
- DD_APP_KEY                                 Hidden                      Secret    Production                  4d ago     
- DD_API_KEY                                 Hidden                      Secret    Production                  4d ago     
- VERCEL_API_TOKEN                           Hidden                      Secret    Production                  4d ago     
- CLOUDFLARE_R2_SECRET_ACCESS_KEY            Hidden                      Secret    Production                  4d ago     
- CLOUDFLARE_R2_ACCESS_KEY_ID                Hidden                      Secret    Production                  4d ago     
- NEXT_PUBLIC_ASSET_BASE_URL                 eyJ2IjoidjIiLCJjIj…         Config    Production                  4d ago     
- R2_CATALOG_BUCKET                          Hidden                      Secret    Production                  4d ago     
- CLOUDFLARE_R2_BUCKET                       Hidden                      Secret    Production                  4d ago     
- CLOUDFLARE_R2_CATALOG_BUCKET               Hidden                      Secret    Production                  4d ago     
- CLOUDFLARE_S3_URL                          Hidden                      Secret    Production                  4d ago     
- CLOULDFLARE_ACCESS_KEY_ID                  Hidden                      Secret    Production                  4d ago     
- CLOUDFLARE_API_TOKEN                       Hidden                      Secret    Production                  4d ago     
- CLOUDFLARE_ACCOUNT_ID                      Hidden                      Secret    Production                  4d ago     
- OPS_PORTAL_PASSWORD                        Hidden                      Secret    Production                  4d ago     
- OPS_PORTAL_USER                            Hidden                      Secret    Production                  4d ago     
- PNG_DISK_MIRROR                            Hidden                      Secret    Production                  4d ago     
- SVG_RELEASE_AUTHORITY                      Hidden                      Secret    Production                  4d ago     
- NEXT_PUBLIC_CRM_DEMO_MODE                  eyJ2IjoidjIiLCJjIj…         Config    Production                  4d ago     
- SITE_MAINTENANCE_MODE                      Hidden                      Secret    Production                  4d ago     
- ACTIVE_THEME_ID                            Hidden                      Secret    Production                  4d ago     
- RESEND_API_KEY                             Hidden                      Secret    Production                  4d ago     
- STAFF_NOTIFY_EMAIL                         Hidden                      Secret    Production                  4d ago     
- RESEND_INBOX                               Hidden                      Secret    Production                  4d ago     
- EMAIL_FROM                                 Hidden                      Secret    Production                  4d ago     
- LANCE_DB_URI                               Hidden                      Secret    Production                  4d ago     
- GEMINI_MODEL                               Hidden                      Secret    Production                  4d ago     
- GEMINI_API_KEY                             Hidden                      Secret    Production                  4d ago     
- OPENROUTER_BASE_URL                        Hidden                      Secret    Production                  4d ago     
- OPENROUTER_MODEL                           Hidden                      Secret    Production                  4d ago     
- OPENROUTER_API_KEY                         Hidden                      Secret    Production                  4d ago     
- OPENROUTER_API_KEY_BACKUP                  Hidden                      Secret    Production                  4d ago     
- OPENROUTER_API_KEY_PRIMARY                 Hidden                      Secret    Production                  4d ago     
- PLANNER_DATABASE_URL                       Hidden                      Secret    Production                  4d ago     
- SUPABASE_AUTH_DATABASE_URL                 Hidden                      Secret    Production                  4d ago     
- PRODUCTS_DATABASE_URL                      Hidden                      Secret    Production                  4d ago     
- SUPABASE_ADMIN_SERVICE_ROLE_KEY            Hidden                      Secret    Production                  4d ago     
- NEXT_ADMIN_SUPABASE_ANON_KEY               Hidden                      Secret    Production                  4d ago     
- NEXT_ADMIN_PUBLISHABLE_KEY                 Hidden                      Secret    Production                  4d ago     
- NEXT_ADMIN_SUPABASE_URL                    Hidden                      Secret    Production                  4d ago     
- SUPABASE_AUTH_URL                          Hidden                      Secret    Production                  4d ago     
- SUPABASE_PUBLIC_SERVICE_ROLE_KEY           Hidden                      Secret    Production                  4d ago     
- SUPABASE_SERVICE_ROLE_KEY                  Hidden                      Secret    Production                  4d ago     
- NEXT_PUBLIC_SUPABASE_ANON_KEY              eyJ2IjoidjIiLCJjIj…         Config    Production                  4d ago     
- NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY       eyJ2IjoidjIiLCJjIj…         Config    Production                  4d ago     
- NEXT_PUBLIC_SUPABASE_URL                   eyJ2IjoidjIiLCJjIj…         Config    Production                  4d ago     
- SUPABASE_URL                               Hidden                      Secret    Production                  4d ago     
- E2E_SUPABASE_USER_PASSWORD                 Hidden                      Secret    Production                  4d ago     
- E2E_SUPABASE_USER_EMAIL                    Hidden                      Secret    Production                  4d ago     
- E2E_SUPABASE_ADMIN_PASSWORD                Hidden                      Secret    Production                  4d ago     
- E2E_SUPABASE_ADMIN_EMAIL                   Hidden                      Secret    Production                  4d ago     
- CUSTOMER_QUERIES_ADMIN_TOKEN               Hidden                      Secret    Production                  4d ago     
- ADMIN_TOKEN                                Hidden                      Secret    Production                  4d ago     
- ADMIN_EMAILS                               Hidden                      Secret    Production                  4d ago     
- NEXT_PUBLIC_TECH_DOCS_URL                  eyJ2IjoidjIiLCJjIj…         Config    Production                  4d ago     
-
-
 ---STDERR---
-Vercel CLI 59.11.2 (Node.js 24.19.0)
+Vercel CLI 59.11.7 (Node.js 24.19.0)
 Retrieving project…
-> Environment Variables found for oand-opl/23082026 [314ms]
+Error: Could not retrieve Project Settings. To link your Project, remove the `.vercel` directory and deploy again.
+Learn More: https://vercel.link/cannot-load-project-settings
 

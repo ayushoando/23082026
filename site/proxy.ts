@@ -513,9 +513,22 @@ export async function proxy(request: NextRequest) {
   requestHeaders.set("x-pathname", pathname);
   requestHeaders.set("Content-Security-Policy", csp);
 
+  const isHindi = pathname === "/hi" || pathname.startsWith("/hi/");
+  if (isHindi) {
+    requestHeaders.set("x-locale", "hi");
+    requestHeaders.set("X-NEXT-INTL-LOCALE", "hi");
+    const rawTarget = pathname === "/hi" || pathname === "/hi/" ? "/" : pathname.slice(3);
+    const targetPathname = rawTarget.startsWith("/") ? rawTarget : `/${rawTarget}`;
+    const rewriteUrl = new URL(targetPathname, request.url);
+    rewriteUrl.search = request.nextUrl.search;
+    const response = NextResponse.rewrite(rewriteUrl, {
+      request: { headers: requestHeaders },
+    });
+    return finalizeResponse(response, pathname, maintenanceReadonly, nonce);
+  }
+
   // The actual session validation is handled by getOptionalUser() in session.ts
   // at the page/layout level. The edge proxy just does a fast cookie existence check.
-  // Locales are prefixless (`localePrefix: "never"`). HTML locale is NEXT_LOCALE.
   const response = NextResponse.next({
     request: { headers: requestHeaders },
   });

@@ -5,14 +5,14 @@
  */
 import { describe, expect, it, vi } from "vitest";
 import { defaultLocale } from "@/i18n/config";
-import enMessages from "@/i18n/messages/en.json";
+import hiMessages from "@/i18n/messages/hi.json";
 
 type RequestConfigResult = {
   locale: string;
   messages: Record<string, unknown>;
 };
 
-type RequestConfigFactory = () => Promise<RequestConfigResult>;
+type RequestConfigFactory = (params?: { requestLocale?: Promise<string | undefined> }) => Promise<RequestConfigResult>;
 
 let capturedFactory: RequestConfigFactory | undefined;
 
@@ -38,7 +38,7 @@ async function loadRequestFactory(): Promise<RequestConfigFactory> {
 describe("i18n/request.ts", () => {
   it("defaults to English with en.json messages (COST-S02)", async () => {
     const factory = await loadRequestFactory();
-    const result = await factory();
+    const result = await factory({ requestLocale: Promise.resolve(undefined) });
 
     expect(result.locale).toBe(defaultLocale);
     expect(result.locale).toBe("en");
@@ -46,21 +46,12 @@ describe("i18n/request.ts", () => {
     expect(result.messages.about).toBeDefined();
   });
 
-  it("still returns English when NEXT_LOCALE=hi (no multi-locale runtime)", async () => {
-    const previous = process.env.NEXT_LOCALE;
-    process.env.NEXT_LOCALE = "hi";
-    try {
-      const factory = await loadRequestFactory();
-      const result = await factory();
+  it("returns Hindi with hi.json messages when requestLocale is 'hi'", async () => {
+    const factory = await loadRequestFactory();
+    const result = await factory({ requestLocale: Promise.resolve("hi") });
 
-      expect(result.locale).toBe("en");
-      expect(result.messages).toEqual(enMessages);
-    } finally {
-      if (previous === undefined) {
-        delete process.env.NEXT_LOCALE;
-      } else {
-        process.env.NEXT_LOCALE = previous;
-      }
-    }
+    expect(result.locale).toBe("hi");
+    expect(result.messages).toEqual(hiMessages);
+    expect(result.messages.about).toBeDefined();
   });
 });

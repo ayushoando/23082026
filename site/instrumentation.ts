@@ -35,7 +35,7 @@ export async function register() {
   await loadNewRelicAgent();
 
   registerOTel({
-    serviceName: process.env.OTEL_SERVICE_NAME ?? "oando-web",
+    serviceName: process.env.OTEL_SERVICE_NAME ?? "oando-tech-stack",
   });
 
   registerTelemetry(new OpenTelemetry());

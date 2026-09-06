@@ -1,5 +1,13 @@
 import { afterEach, describe, it, expect, vi } from 'vitest';
 import type { Metadata } from 'next';
+
+vi.mock('@/i18n/routing', () => ({
+  routing: {
+    locales: ['en', 'hi'],
+    defaultLocale: 'en',
+    localePrefix: 'never',
+  },
+}));
 import {
   buildSiteMetadata,
   buildPageMetadata,

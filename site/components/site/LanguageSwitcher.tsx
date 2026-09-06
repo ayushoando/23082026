@@ -32,14 +32,18 @@ export function LanguageSwitcher({
   };
 
   useEffect(() => {
-    function syncFromCookie() {
+    const isHindiPath =
+      window.location.pathname === "/hi" ||
+      window.location.pathname.startsWith("/hi/");
+    if (isHindiPath) {
+      setCurrentLocale("hi");
+    } else {
       const match = document.cookie.match(/(^|;)\s*NEXT_LOCALE\s*=\s*([^;]+)/);
       const cookieLocale = match?.[2];
       if (isLocale(cookieLocale)) {
         setCurrentLocale(cookieLocale);
       }
     }
-    syncFromCookie();
   }, []);
 
   const applyLocale = (nextLocale: string) => {
@@ -49,7 +53,32 @@ export function LanguageSwitcher({
     const secure = window.location.protocol === "https:" ? "; Secure" : "";
     document.cookie = `NEXT_LOCALE=${nextLocale}; path=/; max-age=31536000; SameSite=Lax${secure}`;
     setCurrentLocale(nextLocale);
-    window.location.reload();
+
+    const currentPath = typeof window.location.pathname === "string" ? window.location.pathname : "/";
+    const search = typeof window.location.search === "string" ? window.location.search : "";
+    let targetPath: string;
+
+    if (nextLocale === "hi") {
+      const cleanPath = currentPath.replace(/^\/hi(\/|$)/, "/");
+      targetPath = cleanPath === "/" ? "/hi" : `/hi${cleanPath}`;
+    } else {
+      const stripped = currentPath.replace(/^\/hi(\/|$)/, "$1");
+      targetPath = stripped || "/";
+    }
+
+    const nextUrl = `${targetPath}${search}`;
+    if (typeof window.location.assign === "function") {
+      window.location.assign(nextUrl);
+    } else {
+      try {
+        window.location.href = nextUrl;
+      } catch {
+        // Fallback for environments where location.href assignment is restricted
+      }
+      if (typeof window.location.reload === "function") {
+        window.location.reload();
+      }
+    }
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
