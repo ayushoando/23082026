@@ -64,7 +64,6 @@ See [`docs/README.md`](./docs/README.md) for the full table. Highlights:
 | Product placement + tech-docs | `docs/architecture/product-map.md` |
 | Database (schema, drizzle, ops) | `docs/database/*` |
 | Rules / benchmarks / charter / css-debt | `docs/governance/{rules,benchmarks,charter,focss-stop-drift}.md` |
-| Audit synthesis & platform health (05092026) | `docs/audit 05092026/README.md` · `homepage-and-auth-audit.md` · `tech-stack-audit.md` |
 
 ## Don't mix
 

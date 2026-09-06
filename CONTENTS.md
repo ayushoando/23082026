@@ -27,7 +27,6 @@ Use this index to find the canonical document for a task. Start with [onboarding
 | 13 | [`Agents/INDEX.md`](./Agents/INDEX.md) | Handbooks |
 | 14–20 | [`Agents/01`…`07`](./Agents/) | Session rules |
 | 21 | [`docs/README.md`](./docs/README.md) | Docs index |
-| 21a | [`docs/audit 05092026/`](./docs/audit 05092026/README.md) | Audit synthesis index · `homepage-and-auth-audit.md` · `tech-stack-audit.md` |
 | 22 | [`docs/architecture/layout.md`](./docs/architecture/layout.md) | Repo directory map |
 | 23 | [`docs/architecture/scripts.md`](./docs/architecture/scripts.md) | Full scripts catalog / command documentation map |
 | 24 | [`docs/architecture/product-map.md`](./docs/architecture/product-map.md) | Placement + tech-docs |

@@ -153,8 +153,8 @@ export function CookieConsentBar() {
 
     return () => {
       observer.disconnect();
-      document.documentElement.style.removeProperty("--cookie-consent-bar-height");
-      document.documentElement.style.removeProperty("--cookie-consent-bar-offset");
+      document.documentElement.style.setProperty("--cookie-consent-bar-height", "0px");
+      document.documentElement.style.setProperty("--cookie-consent-bar-offset", "0px");
     };
   }, [visible]);
 
@@ -236,4 +236,3 @@ export function CookieConsentBar() {
     </section>
   );
 }
-

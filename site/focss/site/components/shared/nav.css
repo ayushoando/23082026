@@ -6,7 +6,7 @@
 /*
  * Header breakpoint contract (unlayered — wins over @layer utilities):
  * - < lg: hamburger visible, primary nav hidden (mobile drawer)
- * - ≥ lg (1024px): desktop primary nav + More, hamburger hidden
+ * - ≥ lg (1024px): desktop primary nav (8 links), hamburger hidden
  * Tailwind .inline-flex / .shell-icon-button used to override @utility media hide.
  */
 .site-header__desktop-nav {
@@ -30,17 +30,10 @@
 }
 
 /*
- * ≤1100px (68.75rem): nine links + width-locked search + compact EN|HI
- * crowd the fixed header. Free space without touching the type floor:
- * hide the 9th link (FAQ — the last primary; drawer keeps the full list at
- * MobileNavDrawer) and tighten nav-link padding. Font-size is left at the
- * --type-small floor (0.86rem); readability first, per handover Option 1.
- *
- * Hiding the 9th link alone did not remove the overflow: the right-hand
- * cluster (search + Sign in + EN|HI) carries Tailwind `shrink-0`, so at
- * 1078px it held 322px against 216px of available space and pushed the
- * header to scrollWidth 1196 (118px overflow). Allowing the cluster to
- * shrink is the actual fix; the search input keeps its width-lock.
+ * ≤1100px (68.75rem): eight links + width-locked search + compact EN|HI
+ * crowd the fixed header at narrow desktop widths. Tighten nav-link
+ * padding and let the right cluster shrink to avoid overflow.
+ * Font-size stays at the --type-small floor (0.86rem); readability first.
  */
 @media (width < 68.75rem) {
   /* Tighten header bar + nav-link spacing without touching the type floor. */
@@ -52,20 +45,10 @@
     padding-inline: 0.5rem;
   }
 
-  .site-header__desktop-nav > :nth-child(9) {
-    display: none;
-  }
-
   /* Let the right-hand cluster yield space instead of overflowing the bar.
      Unlayered so it beats the Tailwind `shrink-0` utility on the element. */
   .site-header__right-cluster {
     flex-shrink: 1;
-  }
-
-  /* Keep FAQ reachable: re-show the drawer trigger in the 1024–1099 band
-     where the desktop nav is also visible. Below lg it is already shown. */
-  .site-header__hamburger {
-    display: inline-flex;
   }
 }
 

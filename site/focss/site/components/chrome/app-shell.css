@@ -8,6 +8,7 @@
 @media (width < theme(--breakpoint-md)) {
   :root {
     --mobile-tab-bar-height: calc(3.5rem + env(safe-area-inset-bottom, 0px));
+    --cookie-consent-bar-height: 0px;
     --site-fab-bottom: calc(var(--mobile-tab-bar-height) + 0.75rem);
   }
 

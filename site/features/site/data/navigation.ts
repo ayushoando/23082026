@@ -24,7 +24,7 @@ export type SiteNavLink = (typeof SITE_NAV_LINKS)[number];
 /** Desktop + mobile center nav — same flat list. */
 export const SITE_HEADER_PRIMARY_LINKS = SITE_NAV_LINKS;
 
-/** Overflow only — keep empty while `SITE_NAV_LINKS` is at the 8-link primary (cap 9). */
+/** Overflow only — keep empty while `SITE_NAV_LINKS` fits the 8-link primary. */
 export const SITE_HEADER_MORE_LINKS: readonly { label: string; href: string }[] = [];
 
 export const SITE_CTA_LINKS = [
