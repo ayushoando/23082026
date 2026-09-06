@@ -18,7 +18,8 @@
     "**/results/**",
     "**/site/data/**",
     "**/site/inventory/**",
-    "**/mcp/**"
+    "**/mcp/**",
+    "**/site/lib/analytics/newrelic-agent.template.js"
   ],
   "rules": {
     "eqeqeq": "error",

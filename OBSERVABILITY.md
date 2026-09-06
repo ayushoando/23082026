@@ -24,6 +24,7 @@ flowchart TD
 - Vercel Web Analytics and Speed Insights are mounted by [`site/components/site/SiteAnalytics.tsx`](./site/components/site/SiteAnalytics.tsx).
 - New Relic Browser is mounted by [`site/components/analytics/NewRelicScript.tsx`](./site/components/analytics/NewRelicScript.tsx). It loads the same-origin [`/newrelic.js`](./site/app/newrelic.js/route.ts), which substitutes the browser ingest key at request time; no key is committed in the template.
 - The vendored agent template is [`site/lib/analytics/newrelic-agent.template.js`](./site/lib/analytics/newrelic-agent.template.js). Its AJAX deny list contains only `bam.nr-data.net`, so application hosts remain observable. `capture_payloads: 'none'` and `mask_all_inputs: true` are intentional privacy controls: timing and error metadata are collected, but request/response payloads, headers, and form values are not.
+  > **Lint Suppression Note:** This vendored minified file is explicitly suppressed from oxlint in `.oxlintrc.json` (to prevent minification techniques from triggering `no-unused-expressions` and `eqeqeq`). Authorized by user override. (Agent: Antigravity | Time: 2026-09-06T21:59:03+05:30 | Session ID: b3ee4e9d-1db7-457a-8d6f-a5dc7005a464)
 - CSP keeps the per-request nonce architecture. The only New Relic additions are `https://js-agent.newrelic.com` in `script-src` and `https://bam.nr-data.net` plus `https://*.nr-data.net` in `connect-src`. Do not add `unsafe-inline`, broaden `unsafe-eval`, or add a wildcard.
 
 ## 3. Server OpenTelemetry and AI advisor

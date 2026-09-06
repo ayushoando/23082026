@@ -64,6 +64,15 @@ Confirmed in current source exactly as F-02/F-06 described: <768px locks `html/b
 
 **Files:** `scripts/vercel-env-push.mjs`.
 
+### A-08 — Vendored New Relic Agent Linting — Resolved
+
+**Resolution applied (2026-09-06):**
+- Authorized suppression applied for `site/lib/analytics/newrelic-agent.template.js` in `.oxlintrc.json` `ignorePatterns`. 
+- The minified 75KB vendor code naturally triggers 38 `no-unused-expressions` and `eqeqeq` errors due to standard minification techniques (e.g. comma operators). Fixing these risks breaking the vendor agent, and renaming the extension bypasses tracing incorrectly.
+- Explicit documentation added to `OBSERVABILITY.md` tracking the authorization, agent (Antigravity), timestamp (2026-09-06T21:59:03+05:30), and session ID (b3ee4e9d-1db7-457a-8d6f-a5dc7005a464).
+
+**Files:** `.oxlintrc.json`, `OBSERVABILITY.md`.
+
 ---
 
 ## Remaining Open Verification Tasks
