@@ -568,7 +568,7 @@ const nextConfig = {
     "/newrelic.js": ["./site/lib/analytics/newrelic-agent.template.js"],
   },
   // Native binary / dynamic-require packages — do not bundle into Turbopack/webpack graph.
-  serverExternalPackages: ["sharp", "@lancedb/lancedb", "@mastra/core"],
+  serverExternalPackages: ["sharp", "@lancedb/lancedb", "@mastra/core", "newrelic"],
   typescript: {
     ignoreBuildErrors: false, // PERF-FIX: enforce type safety at build time
   },

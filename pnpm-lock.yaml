@@ -43,14 +43,14 @@ importers:
         specifier: 5.9.1
         version: 5.9.1(@standard-schema/spec@1.1.0)(ajv@8.20.0)(react-hook-form@7.87.0(react@19.2.8))(zod@4.5.4)
       '@mastra/core':
-        specifier: 1.63.2
-        version: 1.63.2(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4)
+        specifier: 1.64.0
+        version: 1.64.0(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4)
       '@mastra/memory':
         specifier: 1.28.1
-        version: 1.28.1(@mastra/core@1.63.2(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4))(supports-color@10.2.2)
+        version: 1.28.1(@mastra/core@1.64.0(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4))(supports-color@10.2.2)
       '@mastra/rag':
         specifier: 2.6.0
-        version: 2.6.0(@mastra/core@1.63.2(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4))(zod@4.5.4)
+        version: 2.6.0(@mastra/core@1.64.0(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4))(zod@4.5.4)
       '@opentelemetry/api':
         specifier: 1.9.1
         version: 1.9.1
@@ -231,7 +231,7 @@ importers:
         version: 2.7.0
       mastra:
         specifier: 1.27.3
-        version: 1.27.3(@hono/node-server@1.19.17(hono@4.13.5))(@mastra/core@1.63.2(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4))(supports-color@10.2.2)(typescript@7.0.2)(zod@4.5.4)
+        version: 1.27.3(@hono/node-server@1.19.17(hono@4.13.5))(@mastra/core@1.64.0(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4))(supports-color@10.2.2)(typescript@7.0.2)(zod@4.5.4)
       oxlint:
         specifier: 1.80.0
         version: 1.80.0(oxlint-tsgolint@7.0.2001)
@@ -284,8 +284,8 @@ importers:
         specifier: 11.12.0
         version: 11.12.0
       mermaid:
-        specifier: 11.16.0
-        version: 11.16.0
+        specifier: 11.16.1
+        version: 11.16.1
       react:
         specifier: 19.2.8
         version: 19.2.8
@@ -404,12 +404,6 @@ packages:
   '@ai-sdk/otel@1.0.91':
     resolution: {integrity: sha512-kh0Hipw122yE08SN1DepqhFyQaXQjD+2XXV1PqanELRK5ewddfWCxnM7dfiQx+amFloGiYnaIMoRBZhp7FkZ0w==}
     engines: {node: '>=22'}
-
-  '@ai-sdk/provider-utils@3.0.30':
-    resolution: {integrity: sha512-NCJ9JKow5ENAgEZxzvEvF20thwDiH+hutvzmrUDbloRX0azpJHNst8+7pZIVryYhLM9wgpT5/ShTSjPTFhkxEQ==}
-    engines: {node: '>=18'}
-    peerDependencies:
-      zod: ^3.25.76 || ^4.1.8
 
   '@ai-sdk/provider-utils@4.0.40':
     resolution: {integrity: sha512-OL5IrpUm9Y8Dwy+w/vvFwPotS6m52O9W0op2oXgXdCROMJIBalBI0oro6OIBYkPxvm5Xg02GSkoQN25RlR0bnw==}
@@ -1760,8 +1754,8 @@ packages:
     resolution: {integrity: sha512-qC72D4+CDdjGqJvkFMMEAtancHUQ7/d/tAiHf64z8MopFDmcrtbcJuerDtFceuAfQJ2pDSfCKCtbqoGBNnwg0w==}
     engines: {node: '>=8'}
 
-  '@mastra/core@1.63.2':
-    resolution: {integrity: sha512-BHVDF4GtQnIqRND/lPVVoTnmoNzZ7+voz+EpI4YSY0W7In6c/EOrmMnshuNQSDJ9NpxQNrwip0WGYpRYwzFirQ==}
+  '@mastra/core@1.64.0':
+    resolution: {integrity: sha512-+fuvDeORYWIb+SJrGQlXQi6r1JCxd05g3SNCDepnO910j4uqxMWf5s22Ta0sRSR5zbKRx2NUZoWPAfQt2xF4hQ==}
     engines: {node: '>=22.13.0'}
     peerDependencies:
       zod: ^3.25.0 || ^4.0.0
@@ -1793,6 +1787,12 @@ packages:
 
   '@mastra/schema-compat@1.3.7':
     resolution: {integrity: sha512-06WfY+j9rulYnDp8CM7pL7JIyrntkMolqmyyb1VJNEzlYTQCIcJcY0SwQiubZv2tztmoYGikszDiRVyXp0E9gA==}
+    engines: {node: '>=22.13.0'}
+    peerDependencies:
+      zod: ^3.25.0 || ^4.0.0
+
+  '@mastra/schema-compat@1.3.8':
+    resolution: {integrity: sha512-uGGQlb/QAIgghHf/FQLfnpHbUMXWWJDFlv0FQ/p0K6TjT8OVdWC9uNPdwQmFYu8Fzut4Z+LmzNkJ5S378/41Ew==}
     engines: {node: '>=22.13.0'}
     peerDependencies:
       zod: ^3.25.0 || ^4.0.0
@@ -5052,8 +5052,8 @@ packages:
     resolution: {integrity: sha512-Sz8FzjzI0kN13GK/6MVEsVzMZEPvOhnmmI1lU5+/1cGOiK3QUahntrNNtdVeihrO7t9JpoH75iMNXg6R6uWflQ==}
     engines: {node: '>=18.0.0'}
 
-  mermaid@11.16.0:
-    resolution: {integrity: sha512-Zvm3kbstgdpvIJPPItlL7fppIZ3kibvc1oZIGxdvk9t6UFz6flv+Jw7FtRGKwfcI8OckmH04LqG6LlS6X4B1pA==}
+  mermaid@11.16.1:
+    resolution: {integrity: sha512-TQsq6u22fAn3rek5VOubrhKPo1g5hwC3FXUN9hiyupTckcYiGuuKGkNQrKYwGJkXUxZdojwRG46gsSCFZMDp4g==}
 
   micromark-core-commonmark@2.0.3:
     resolution: {integrity: sha512-RDBrHEMSxVFLg6xvnXmb1Ayr2WzLAWjeSATAoxwKYJV94TeNavgoIdA0a9ytzDSVzBy2YKFK+emCPOEibLeCrg==}
@@ -6525,13 +6525,6 @@ snapshots:
     transitivePeerDependencies:
       - zod
 
-  '@ai-sdk/provider-utils@3.0.30(zod@4.5.4)':
-    dependencies:
-      '@ai-sdk/provider': 2.0.3
-      '@standard-schema/spec': 1.1.0
-      eventsource-parser: 3.1.1
-      zod: 4.5.4
-
   '@ai-sdk/provider-utils@4.0.40(zod@4.5.4)':
     dependencies:
       '@ai-sdk/provider': 3.0.14
@@ -7614,11 +7607,10 @@ snapshots:
     dependencies:
       '@lukeed/csprng': 1.1.0
 
-  '@mastra/core@1.63.2(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4)':
+  '@mastra/core@1.64.0(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4)':
     dependencies:
       '@a2a-js/sdk-v0_3': '@a2a-js/sdk@0.3.14(@grpc/grpc-js@1.14.4)'
       '@a2a-js/sdk-v1': '@a2a-js/sdk@1.0.1(@grpc/grpc-js@1.14.4)'
-      '@ai-sdk/provider-utils-v5': '@ai-sdk/provider-utils@3.0.30(zod@4.5.4)'
       '@ai-sdk/provider-utils-v6': '@ai-sdk/provider-utils@4.0.40(zod@4.5.4)'
       '@ai-sdk/provider-utils-v7': '@ai-sdk/provider-utils@5.0.13(zod@4.5.4)'
       '@ai-sdk/provider-v5': '@ai-sdk/provider@2.0.3'
@@ -7626,7 +7618,7 @@ snapshots:
       '@ai-sdk/provider-v7': '@ai-sdk/provider@4.0.4'
       '@isaacs/ttlcache': 2.1.5
       '@lukeed/uuid': 2.0.1
-      '@mastra/schema-compat': 1.3.7(zod@4.5.4)
+      '@mastra/schema-compat': 1.3.8(zod@4.5.4)
       '@modelcontextprotocol/server': 2.0.0
       '@sindresorhus/slugify': 2.2.1
       '@standard-schema/spec': 1.1.0
@@ -7660,14 +7652,14 @@ snapshots:
       - utf-8-validate
       - workflow
 
-  '@mastra/deployer@1.64.0(@hono/node-server@1.19.17(hono@4.13.5))(@mastra/core@1.63.2(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4))(supports-color@10.2.2)(typescript@7.0.2)(zod@4.5.4)':
+  '@mastra/deployer@1.64.0(@hono/node-server@1.19.17(hono@4.13.5))(@mastra/core@1.64.0(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4))(supports-color@10.2.2)(typescript@7.0.2)(zod@4.5.4)':
     dependencies:
       '@babel/core': 8.0.1
       '@babel/preset-typescript': 8.0.1(@babel/core@8.0.1)
       '@babel/traverse': 8.0.4
       '@hono/node-ws': 1.3.1(@hono/node-server@1.19.17(hono@4.13.5))(hono@4.13.5)
-      '@mastra/core': 1.63.2(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4)
-      '@mastra/server': 1.64.0(@mastra/core@1.63.2(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4))(zod@4.5.4)
+      '@mastra/core': 1.64.0(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4)
+      '@mastra/server': 1.64.0(@mastra/core@1.64.0(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4))(zod@4.5.4)
       '@optimize-lodash/rollup-plugin': 5.1.0(rollup@4.63.1)
       '@rollup/plugin-commonjs': 29.0.2(rollup@4.63.1)
       '@rollup/plugin-esm-shim': 0.1.8(rollup@4.63.1)
@@ -7698,15 +7690,15 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@mastra/loggers@1.3.1(@mastra/core@1.63.2(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4))':
+  '@mastra/loggers@1.3.1(@mastra/core@1.64.0(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4))':
     dependencies:
-      '@mastra/core': 1.63.2(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4)
+      '@mastra/core': 1.64.0(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4)
       pino: 10.3.1
       pino-pretty: 13.1.3
 
-  '@mastra/memory@1.28.1(@mastra/core@1.63.2(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4))(supports-color@10.2.2)':
+  '@mastra/memory@1.28.1(@mastra/core@1.64.0(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4))(supports-color@10.2.2)':
     dependencies:
-      '@mastra/core': 1.63.2(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4)
+      '@mastra/core': 1.64.0(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4)
       '@mastra/schema-compat': 1.3.7(zod@4.5.4)
       async-mutex: 0.5.0
       diff: 8.0.4
@@ -7719,10 +7711,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@mastra/rag@2.6.0(@mastra/core@1.63.2(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4))(zod@4.5.4)':
+  '@mastra/rag@2.6.0(@mastra/core@1.64.0(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4))(zod@4.5.4)':
     dependencies:
       '@aws-sdk/client-bedrock-agent-runtime': 3.1121.0
-      '@mastra/core': 1.63.2(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4)
+      '@mastra/core': 1.64.0(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4)
       big.js: 7.0.1
       js-tiktoken: 1.0.21
       node-html-better-parser: 1.5.9
@@ -7737,9 +7729,15 @@ snapshots:
       zod: 4.5.4
       zod-from-json-schema: 0.5.6
 
-  '@mastra/server@1.64.0(@mastra/core@1.63.2(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4))(zod@4.5.4)':
+  '@mastra/schema-compat@1.3.8(zod@4.5.4)':
     dependencies:
-      '@mastra/core': 1.63.2(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4)
+      json-schema-to-zod: 2.8.1
+      zod: 4.5.4
+      zod-from-json-schema: 0.5.6
+
+  '@mastra/server@1.64.0(@mastra/core@1.64.0(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4))(zod@4.5.4)':
+    dependencies:
+      '@mastra/core': 1.64.0(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4)
       hono: 4.13.5
       zod: 4.5.4
 
@@ -10462,15 +10460,15 @@ snapshots:
 
   marked@16.4.2: {}
 
-  mastra@1.27.3(@hono/node-server@1.19.17(hono@4.13.5))(@mastra/core@1.63.2(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4))(supports-color@10.2.2)(typescript@7.0.2)(zod@4.5.4):
+  mastra@1.27.3(@hono/node-server@1.19.17(hono@4.13.5))(@mastra/core@1.64.0(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4))(supports-color@10.2.2)(typescript@7.0.2)(zod@4.5.4):
     dependencies:
       '@babel/parser': 8.0.4
       '@babel/types': 8.0.4
       '@clack/prompts': 1.7.0
       '@expo/devcert': 1.2.1(supports-color@10.2.2)
-      '@mastra/core': 1.63.2(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4)
-      '@mastra/deployer': 1.64.0(@hono/node-server@1.19.17(hono@4.13.5))(@mastra/core@1.63.2(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4))(supports-color@10.2.2)(typescript@7.0.2)(zod@4.5.4)
-      '@mastra/loggers': 1.3.1(@mastra/core@1.63.2(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4))
+      '@mastra/core': 1.64.0(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4)
+      '@mastra/deployer': 1.64.0(@hono/node-server@1.19.17(hono@4.13.5))(@mastra/core@1.64.0(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4))(supports-color@10.2.2)(typescript@7.0.2)(zod@4.5.4)
+      '@mastra/loggers': 1.3.1(@mastra/core@1.64.0(@grpc/grpc-js@1.14.4)(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4))
       archiver: 8.0.0
       commander: 14.0.3
       dotenv: 17.4.2
@@ -10606,7 +10604,7 @@ snapshots:
 
   meriyah@6.1.4: {}
 
-  mermaid@11.16.0:
+  mermaid@11.16.1:
     dependencies:
       '@braintree/sanitize-url': 7.1.2
       '@iconify/utils': 3.1.4

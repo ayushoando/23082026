@@ -10,7 +10,9 @@ async function loadNewRelicAgent() {
     return;
   }
 
-  const { default: newrelic } = await import("newrelic");
+  const { default: newrelic } = await import(
+    /* webpackIgnore: true */ "newrelic",
+  );
   const agent = newrelic?.agent;
   if (!agent || agent.collector?.isConnected?.()) {
     return;
