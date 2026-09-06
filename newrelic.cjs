@@ -3,7 +3,7 @@
 // Server APM is opt-in through NEW_RELIC_APM_ENABLED=1.  The Browser agent
 // remains a separate same-origin loader under site/app/newrelic.js/route.ts.
 exports.config = {
-  app_name: [process.env.NEW_RELIC_APP_NAME || 'oando-tech-stack'],
+  app_name: [process.env.NEW_RELIC_APP_NAME || 'oando-web'],
   license_key: process.env.NEW_RELIC_LICENSE_KEY,
   agent_enabled: process.env.NEW_RELIC_APM_ENABLED === '1',
   logging: {

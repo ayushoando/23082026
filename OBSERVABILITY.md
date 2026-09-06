@@ -54,13 +54,13 @@ Keep real values only in `.env.local`, `site/.env.local`, or the corresponding V
 NEW_RELIC_BROWSER_KEY=
 
 # Server OTLP ingest (server-only license key)
-OTEL_SERVICE_NAME=oando-tech-stack
+OTEL_SERVICE_NAME=oando-web
 OTEL_EXPORTER_OTLP_ENDPOINT=https://otlp.nr-data.net:4318
 OTEL_EXPORTER_OTLP_HEADERS=api-key=<ingest-license-key>
 
 # Optional New Relic Node APM hybrid bridge (server-only)
 NEW_RELIC_APM_ENABLED=0
-NEW_RELIC_APP_NAME=oando-tech-stack
+NEW_RELIC_APP_NAME=oando-web
 NEW_RELIC_LICENSE_KEY=
 
 # Production metrics gate

@@ -57,6 +57,7 @@ const WORKSPACE_PATHS = new Set([
 ]);
 const INLINE_STYLE_ALLOWLIST = new Set([
   "app/(site)/opengraph-image.tsx",
+  "app/(site)/twitter-image.tsx",
   "app/(site)/products/[category]/[product]/ProductViewer.tsx",
   "components/home/HomeTrustStrip.tsx",
 ]);
