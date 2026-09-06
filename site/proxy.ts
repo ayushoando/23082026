@@ -171,6 +171,10 @@ const CSP_ANALYTICS_ORIGINS =
 const CSP_GA4_ORIGINS =
   "https://www.google-analytics.com https://region1.google-analytics.com https://stats.g.doubleclick.net https://analytics.google.com https://www.google.com";
 
+/** New Relic Browser Agent CDN and ingest beacon endpoints. */
+const CSP_NEW_RELIC_SCRIPT_ORIGINS = "https://js-agent.newrelic.com";
+const CSP_NEW_RELIC_CONNECT_ORIGINS =
+  "https://bam.nr-data.net https://*.nr-data.net";
 
 /**
  * Google Tag Manager / Analytics script sources.
@@ -216,7 +220,7 @@ export function buildContentSecurityPolicy(
   // and the live console blocks the whole app.
   const noncePart = options.nonce ? `'nonce-${options.nonce}' ` : "";
   const evalPart = allowsUnsafeEval(pathname) ? " 'unsafe-eval'" : "";
-  const scriptSrc = `script-src 'self' ${noncePart}${evalPart} blob: ${CSP_ANALYTICS_ORIGINS}${getGtmScriptSources()}`;
+  const scriptSrc = `script-src 'self' ${noncePart}${evalPart} blob: ${CSP_ANALYTICS_ORIGINS} ${CSP_NEW_RELIC_SCRIPT_ORIGINS}${getGtmScriptSources()}`;
 
   return [
     "default-src 'self'",
@@ -226,7 +230,7 @@ export function buildContentSecurityPolicy(
     // https only — no bare http: images
     "img-src 'self' data: blob: https:",
     "font-src 'self' data: https://fonts.gstatic.com",
-    `connect-src 'self' blob: https://*.supabase.co https://*.supabase.in wss://*.supabase.co https://api.openai.com https://openrouter.ai ${CSP_ANALYTICS_ORIGINS} ${CSP_GA4_ORIGINS}`,
+    `connect-src 'self' blob: https://*.supabase.co https://*.supabase.in wss://*.supabase.co https://api.openai.com https://openrouter.ai ${CSP_ANALYTICS_ORIGINS} ${CSP_GA4_ORIGINS} ${CSP_NEW_RELIC_CONNECT_ORIGINS}`,
     "frame-src 'self' https://www.google.com https://maps.google.com",
     "frame-ancestors 'none'",
     "object-src 'none'",

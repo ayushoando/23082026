@@ -8,6 +8,37 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 <!-- END:nextjs-agent-rules -->
 
+## 0. Read this file first — non-negotiable
+
+- **First action of every session:** read this entire file top to bottom before any command, search, edit, or reply. A summary from memory, another session, or another agent is not a read.
+- **Second action:** open [`Agents/INDEX.md`](./Agents/INDEX.md) and [`Agents/01-standard.md`](./Agents/01-standard.md), then the single handbook row that matches the task (Testing `02`, Browser `03`, Failures `04`, Docs `05`, Architecture `06`, CSS `07`).
+- About to act without reading this file in this session? Stop. Read it first.
+- The user operating rules below are the top floor of this repository. They override every other section, handbook, and governance document here.
+
+### User operating rules
+
+1. Do exactly the stated task. Do not expand scope.
+2. Before acting, state a one-sentence understanding and the exact files or systems you will touch.
+3. Do not browse, search broadly, inspect unrelated files, start services, run builds or tests, use subagents, create branches, or contact external systems unless explicitly requested or strictly required.
+4. Audit, review, explain, diagnose, and status requests are read-only.
+5. Do not edit until the user explicitly requests implementation.
+6. Make the smallest reversible change.
+7. Preserve all existing, messy, uncommitted, and unrelated work.
+8. Never restore files, broadly revert commits, refactor, clean up, or redesign unless explicitly requested.
+9. Fix one page, route, or finding at a time.
+10. Before multi-file edits, list the exact files and intended changes.
+11. If a decision affects cost, safety, design, permissions, or external state, ask one concise question.
+12. Do not claim a test, build, browser check, deployment, or verification you did not actually perform.
+13. If blocked or scope is exceeded, stop immediately and report it plainly.
+14. Use skills and plugins only when necessary and authorized; never to bypass permissions.
+15. At completion, report exactly: what changed, what was verified, what was intentionally not done.
+
+### Mandatory entry reads
+
+- Always: this file, [`Agents/INDEX.md`](./Agents/INDEX.md), [`Agents/01-standard.md`](./Agents/01-standard.md).
+- Task-dependent: the matching row in [§ 9 Handbooks](#9-handbooks), plus [`docs/governance/rules.md`](./docs/governance/rules.md) and the active plan index [`plans/README.md`](./plans/README.md) before any multi-file work.
+- Onboarding (once): [`START.md`](./START.md), [`README.md`](./README.md), [`CONTENTS.md`](./CONTENTS.md), [`DOC-MAP.md`](./DOC-MAP.md), [`Testing-handbook.md`](./Testing-handbook.md).
+
 <!-- markdownlint-disable MD025 -->
 
 ## Process floor
@@ -27,6 +58,15 @@ This document defines the repository-wide execution and safety floor. Current us
 - `wait`, `pause`, `read-only`, `do not write`, and equivalent instructions immediately prohibit edits, generated assets, external mutations, and commands that may write caches, build output, coverage, or test artifacts. This state persists until the user explicitly lifts it.
 - “Finish”, “complete”, or similar terminal language applies only to the current, directly stated task. It never authorizes work across unrelated plans, reports, audits, recovered files, or prior agent output.
 - Before a multi-file change, state the exact intended files. Preserve all unrelated work and never clean, reset, restore, delete, or apply report recommendations unless the user specifically names the targets.
+
+### Agent execution discipline
+
+- Do the directly requested task first. Do not broaden scope through exploratory searches, refactors, cleanup, or speculative fixes.
+- Before acting, state the requested outcome and the exact files or systems expected to change. Make the smallest reversible change that achieves it.
+- Treat review, diagnosis, explanation, and status requests as read-only unless the user also asks for an implementation.
+- Do not use subagents, browser automation, builds, tests, deployments, external services, or generated assets unless the user explicitly authorizes them or they are strictly required by the requested task.
+- When a decision would materially affect the outcome, external state, cost, safety, or design, ask one concise question. Otherwise state the minimal assumption made.
+- Completion reports must distinguish: changed files, verification actually performed, and intentionally unperformed work. If scope is exceeded or an error occurs, stop, state it plainly, and propose the smallest recovery.
 
 ## 2. Work
 
