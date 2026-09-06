@@ -34,8 +34,8 @@
     "gate:observability": "pnpm run scan:secrets",
     "gate:observability:fast": "pnpm run check:launch && pnpm run scan:secrets",
     "gate:browser": "pnpm run test:browser:gate",
-    "release:gate": "pnpm run release:gate:core && pnpm run gate:browser",
-    "release:gate:core": "pnpm run gate:site && pnpm run gate:docs && pnpm run gate:observability",
+    "release:gate": "pnpm run release:gate:core && pnpm run test:browser:gate",
+    "release:gate:core": "pnpm run gate:site && pnpm run gate:docs && pnpm run gate:observability && pnpm run test:coverage:admin",
     "release:gate:fast": "pnpm run gate:site:fast && pnpm run gate:docs && pnpm run gate:observability:fast",
     "verify:focss": "node scripts/AsNeeded/verify-focss.mjs",
     "plan:wave1": "node scripts/general/run-plan-wave1.mjs",
@@ -206,4 +206,4 @@
     "wrangler": "4.127.1"
   },
   "packageManager": "pnpm@11.24.0+sha512.bd27e345e976dcb0be0b7a1228217b049a817e21b1f355c90dbe7dc46671895a8bc1e6d06c24554505ea93ea0b45f489a27ec1bfbc8de6a9659fca0f16fa0000"
-}
+}\n

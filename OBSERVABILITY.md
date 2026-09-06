@@ -32,7 +32,7 @@ flowchart TD
 - [`site/instrumentation.ts`](./site/instrumentation.ts) calls `registerOTel({ serviceName })` and registers the AI SDK OpenTelemetry provider.
 - [`config/observability/newrelic.cjs`](./config/observability/newrelic.cjs) configures the New Relic Node APM hybrid agent. It is loaded only when `NEW_RELIC_APM_ENABLED=1` and `NEXT_RUNTIME=nodejs`; Next's native OTel spans remain the source of truth while the agent bridges them to APM.
 - The hybrid configuration disables the agent's `http`, `next`, and `undici` instrumentations to prevent duplicate Next/fetch spans. It excludes request/response headers and request parameters and disables agent log forwarding; the server license key remains server-only.
-- Configure the exporter with `OTEL_EXPORTER_OTLP_ENDPOINT=https://otlp.nr-data.net:4318` and `OTEL_EXPORTER_OTLP_HEADERS=api-key=<ingest-license-key>` in the local/Vercel environment. The ingest license key is server-only; never put it in browser code or documentation.
+- Direct OTLP exporter variables (`OTEL_EXPORTER_OTLP_ENDPOINT`, etc.) are not used in this architecture. The New Relic Node APM agent intercepts the native OTel spans via its internal bridge and sends them attached to the APM Application entity.
 - [`site/lib/observability/aiMetrics.ts`](./site/lib/observability/aiMetrics.ts) wraps advisor requests, records Prometheus counters/histograms, and creates the privacy-safe `oando.ai_advisor.request` span. The wrapper records provider/fallback/outcome metadata only; it does not record prompts, responses, payloads, or headers.
 - [`site/app/api/Planner/ai-advisor/route.ts`](./site/app/api/Planner/ai-advisor/route.ts) applies the wrapper to both streaming and non-streaming advisor paths.
 
@@ -54,10 +54,8 @@ Keep real values only in `.env.local`, `site/.env.local`, or the corresponding V
 # Browser ingest (public to the browser agent by design; still supplied at runtime)
 NEW_RELIC_BROWSER_KEY=
 
-# Server OTLP ingest (server-only license key)
+# Server OTLP ingest (Not used; New Relic APM agent bridges native OTel spans)
 OTEL_SERVICE_NAME=oando-web
-OTEL_EXPORTER_OTLP_ENDPOINT=https://otlp.nr-data.net:4318
-OTEL_EXPORTER_OTLP_HEADERS=api-key=<ingest-license-key>
 
 # Optional New Relic Node APM hybrid bridge (server-only)
 NEW_RELIC_APM_ENABLED=0

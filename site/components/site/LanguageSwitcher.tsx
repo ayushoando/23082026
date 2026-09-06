@@ -32,9 +32,8 @@ export function LanguageSwitcher({
   };
 
   useEffect(() => {
-    const isHindiPath =
-      window.location.pathname === "/hi" ||
-      window.location.pathname.startsWith("/hi/");
+    const pathname = typeof window !== "undefined" && window.location ? window.location.pathname : "";
+    const isHindiPath = pathname === "/hi" || pathname.startsWith("/hi/");
     if (isHindiPath) {
       setCurrentLocale("hi");
     } else {

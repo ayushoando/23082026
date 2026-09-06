@@ -412,7 +412,7 @@
       },
       "kicker": "पैन-इंडिया · 2011 से",
       "primaryCta": {
-        "href": "/planner",
+        "href": "/ooplanner",
         "label": "लेआउट प्लान लें"
       },
       "secondaryCta": {
@@ -1802,4 +1802,4 @@
       "viewSavedPlans": "सहेजे गए प्लान देखें"
     }
   }
-}
+}\n
