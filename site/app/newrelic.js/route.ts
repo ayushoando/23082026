@@ -13,12 +13,26 @@ import { NextResponse } from "next/server";
  * serves it raw; only this route resolves it.
  */
 
-// Next compiles this handler below `site/.next/.../app/newrelic.js`; walk back
-// to the traced `site/lib` template rather than depending on process.cwd().
-const TEMPLATE_PATH = resolve(
-  __dirname,
-  "../../../../lib/analytics/newrelic-agent.template.js",
-);
+// Next dev places route modules one directory deeper than a traced standalone
+// build. Resolve both module-relative locations rather than relying on cwd.
+const TEMPLATE_PATHS = [
+  resolve(__dirname, "../../../../../lib/analytics/newrelic-agent.template.js"),
+  resolve(__dirname, "../../../../lib/analytics/newrelic-agent.template.js"),
+];
+
+async function readAgentTemplate(): Promise<string> {
+  let lastError: unknown;
+
+  for (const templatePath of TEMPLATE_PATHS) {
+    try {
+      return await readFile(templatePath, "utf8");
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  throw lastError;
+}
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -50,7 +64,7 @@ export async function GET() {
 
   let template: string;
   try {
-    template = await readFile(TEMPLATE_PATH, "utf8");
+    template = await readAgentTemplate();
   } catch (err) {
     console.error("newrelic loader: template read failed", err);
     return new NextResponse("/* newrelic loader unavailable */\n", {
