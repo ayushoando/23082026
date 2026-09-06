@@ -93,3 +93,53 @@ Confirmed in current source exactly as F-02/F-06 described: <768px locks `html/b
 1. Populate the runtime shared-shell ledger first (plan's "Immediate next action") at 1024×768 and 768×1024.
 2. Decide the A-01 contract: either re-couple `NEXT_LOCALE` to request resolution or retire the switcher — this is the highest-leverage fix for the reported i18n symptoms and must be designed against the COST-S02 caching intent before any edit.
 3. Resolve A-02 by product decision (1024 vs 1280 crossover), then align `nav.css` and the `Header.tsx` comment in one slice.
+
+---
+
+# PART 2 — Runtime audit results (same day, authorized browser sweep)
+
+**Method:** agent-browser 0.36.0 (Chrome for Testing 152), named session, against the already-running dev server at `http://localhost:3000`. Every route opened at 6 viewports (1920×1080, 1440×900, 1024×768, 768×1024, 450×950, 390×844): load → title/URL/errors/console capture → screenshot. ~370 valid combos. Evidence: `results/ui-audit-2026-09-06/` (screenshots per route × viewport + `summary.jsonl`, `summary-retry.jsonl`, `summary-dynamic.jsonl`).
+
+**Note:** during the sweep, `main` advanced: `4ad56ef` (retired the planning suite — explains the missing `plans/05092026/`) and `62a42ec` (New Relic APM integration), which is now HEAD. Part 1 findings F-01/F-03/F-07 corrections were checked against the pre-`62a42ec` tree; everything below reflects `62a42ec`.
+
+## R-01 — ROOT CAUSE of the "large UI regression": New Relic APM import breaks webpack compilation (Blocker)
+
+- `site/instrumentation.ts:13` does `await import("newrelic")` (introduced in `62a42ec`, gated at **runtime** by `NEW_RELIC_APM_ENABLED === "1"`).
+- The env gate does **not** gate **compilation**: webpack bundles the dynamic import; the newrelic package's subscriber loader sweeps `lib/subscribers/*` including `README.md` → `Module parse failed: Unexpected character '' (1:1)` (verified in the captured build-error overlay, `results/ui-audit-2026-09-06/products/1920x1080.png`).
+- `NEW_RELIC_APM_ENABLED` is present in **neither** `.env.local` nor `site/.env.local`, so the agent never even runs — the site pays the full compile cost for nothing.
+- **Blast radius (observed, all 6 viewports each):** 25 of 36 audited routes render **blank** (empty title/document, build-error overlay): /products, /planner, /planner/features, /planner/help, /ooplanner, /oostudio, /admin, /portal, /portal/guest, /access (1920 only), /portfolio, /trusted-by, /clients-page siblings — full list in ledger below. 11 routes render normally (/, /about, /career, /choose-product, /clients, /contact, /compare, /dashboard, /downloads, /faq, /offline) — consistent with stale webpack cache compiled before `62a42ec`.
+- **Severity beyond dev:** `next build` would hard-fail on the same module-parse error → **this is a ship blocker**, not a dev-only artifact.
+
+## R-02 — Header right-cluster overflow at 1024×768 (runtime confirmation of A-02)
+
+At 1024×768 the desktop nav renders (8 links, hamburger hidden — matching `nav.css`, contradicting the `Header.tsx` comment), and the right cluster overflows: the search input collides with "Sign in" and the EN|HI toggle clips at the right edge (`results/ui-audit-2026-09-06/home/1024x768.png`).
+
+## R-03 — Mobile shell healthy on compiling pages
+
+Home @ 390×844: app bar (logo/hamburger/search), 5-tab bar (Products/Planner/Quote/Portfolio/Sign in), FABs, hero underlap all correct. Mobile chrome itself is not the regression; pages only fail where compilation fails.
+
+## R-04 — Console evidence
+
+Zero real client-side page errors on every rendered combo. The only `[error]` console lines are server-side newrelic/grpc agent warnings forwarded by Next dev — consistent with R-01, noise on otherwise-blank pages.
+
+## R-05 — Redirects observed
+
+`/login → /access` (canonical member sign-in) and `/solutions → /products` (canonicalization). Both expected; recorded as behavior, not defects.
+
+## Runtime ledger (36 routes × 6 viewports)
+
+| Status | Routes |
+|---|---|
+| Renders (title + content) | /, /about, /career, /choose-product, /clients, /contact, /compare, /dashboard, /downloads, /faq, /offline, /login→/access |
+| BLANK — R-01 build error | /products, /portfolio, /trusted-by, /planner, /planner/features, /planner/help, /ooplanner, /oostudio, /admin, /portal, /portal/guest, /access (1/6), /privacy, /terms, /refund-and-return-policy, /service, /showrooms, /sitemap, /solutions, /sustainability, /quote-cart, /tools, /tools/meeting-room-capacity-calculator, /tools/office-space-calculator, /planning (3/6) |
+| Dynamic detail pages | not swept — script defect (slug resolver returned a string; single-char junk routes captured, excluded from ledger) |
+
+## Proposed repair slice (NOT applied — requires explicit authorization)
+
+Smallest sound change consistent with "no broad revert": externalize the APM agent from the webpack graph in `site/next.config.js` (`serverExternalPackages: ["newrelic"]`) so `instrumentation.ts` keeps its runtime gate but the package is no longer bundled; then re-verify the 25 blank routes at 1024×768 + 390×844 and run an authorized `pnpm run build`. Alternative (product decision): drop the APM loader entirely from `instrumentation.ts`.
+
+## Changed / verified / not done (Part 2)
+
+- **Changed:** only `docs/audit/ui-regression-audit-2026-09-06.md` (this file). No source files touched.
+- **Verified:** browser sweep + screenshots + console capture listed above; read-only git inspection (`git log`, `git show`, `git log -S`).
+- **Not done:** any repair, `pnpm build`/gates, dynamic detail-page sweep (script defect — noted), HI-locale runtime pass (superseded by R-01 blocking most pages), killing or restarting the user's dev server.

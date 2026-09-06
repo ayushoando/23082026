@@ -317,7 +317,7 @@ function makeMonitoringSources(
       [
         "import { registerOTel } from '@vercel/otel';",
         "export function register() {",
-        "  registerOTel({ serviceName: process.env.OTEL_SERVICE_NAME ?? 'oando-next-site' });",
+        "  registerOTel({ serviceName: process.env.OTEL_SERVICE_NAME ?? 'oando-web' });",
         "}",
       ].join("\n"),
     ),
@@ -923,7 +923,7 @@ describe("Monitoring extractor — fixture-based", () => {
     const result = extractMonitoringReview(makeMonitoringSources());
 
     expect(result.otelStatus.registered).toBe(true);
-    expect(result.otelStatus.serviceName).toBe("oando-next-site");
+    expect(result.otelStatus.serviceName).toBe("oando-web");
     expect(result.prometheusMetrics.length).toBeGreaterThan(0);
     expect(result.prometheusScrape.jobName).toBe("oando-site");
     expect(result.grafanaConfig.datasourceName).toBe("Prometheus");

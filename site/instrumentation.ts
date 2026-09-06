@@ -33,7 +33,7 @@ export async function register() {
   await loadNewRelicAgent();
 
   registerOTel({
-    serviceName: process.env.OTEL_SERVICE_NAME ?? "ai-planner-backend",
+    serviceName: process.env.OTEL_SERVICE_NAME ?? "oando-web",
   });
 
   registerTelemetry(new OpenTelemetry());

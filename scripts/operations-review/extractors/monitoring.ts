@@ -199,7 +199,7 @@ function extractOtelStatus(instrumentation: RepositorySource): OtelStatus {
 
   return {
     registered,
-    serviceName: serviceNameMatch?.[1] ?? "oando-next-site",
+    serviceName: serviceNameMatch?.[1] ?? "oando-web",
     source: sourceAt(instrumentation, "register(): registerOTel({ serviceName })"),
   };
 }
@@ -948,7 +948,7 @@ export function extractMonitoringReview(
         "monitoring.otel.registered",
         `OpenTelemetry is registered in site/instrumentation.ts via @vercel/otel registerOTel with fallback service name "${otelStatus.serviceName}"; runtime exporter state is separate evidence.`,
         sources.instrumentation,
-        "register(): registerOTel({ serviceName: process.env.OTEL_SERVICE_NAME ?? \"oando-next-site\" })",
+        "register(): registerOTel({ serviceName: process.env.OTEL_SERVICE_NAME ?? \"oando-web\" })",
       ),
     );
   }

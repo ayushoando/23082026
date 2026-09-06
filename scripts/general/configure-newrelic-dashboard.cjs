@@ -19,7 +19,7 @@ const read = `query($guid:EntityGuid!) { actor { entity(guid:$guid) { ... on Das
   guid name description permissions pages { guid name description widgets {
     id title visualization { id } layout { column row width height } rawConfiguration
   } } } } } }`;
-const scope = "FROM Span WHERE service.name = 'ai-planner-backend'";
+const scope = "FROM Span WHERE service.name = 'oando-web'";
 const advisor = " AND name = 'oando.ai_advisor.request'";
 const definitions = [
   ['Received backend spans', `SELECT count(*) ${scope} SINCE 1 hour ago`, 'viz.billboard'],
@@ -39,7 +39,7 @@ async function main() {
   const widgets = [{
     title: 'Coverage and privacy', visualization: { id: 'viz.markdown' },
     layout: { column: 1, row: 1, width: 12, height: 3 },
-    rawConfiguration: { text: '## Oando backend and AI telemetry\nService: **ai-planner-backend**. Backend charts count spans, not distinct user requests. AI charts use the privacy-safe `oando.ai_advisor.request` span; an empty chart is an instrumentation/traffic gap, not proof of health. No prompts, responses, authorization headers, model payloads, or guessed model costs are displayed. Local and hosted traffic may coexist; use the environment breakdown. Browser monitoring is separate.' },
+    rawConfiguration: { text: '## Oando backend and AI telemetry\nService: **oando-web**. Backend charts count spans, not distinct user requests. AI charts use the privacy-safe `oando.ai_advisor.request` span; an empty chart is an instrumentation/traffic gap, not proof of health. No prompts, responses, authorization headers, model payloads, or guessed model costs are displayed. Local and hosted traffic may coexist; use the environment breakdown. Browser monitoring is separate.' },
   }];
   for (let index = 0; index < definitions.length; index++) {
     const [title, query, visualization] = definitions[index];

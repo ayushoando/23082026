@@ -38,10 +38,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 function getBrowserIngestKey(): string | undefined {
-  return (
-    process.env.NEW_RELIC_BROWSER_KEY?.trim() ??
-    process.env.NEXT_PUBLIC_NEW_RELIC_LICENSE_KEY?.trim()
-  );
+  return process.env.NEW_RELIC_BROWSER_KEY?.trim();
 }
 
 export async function GET() {

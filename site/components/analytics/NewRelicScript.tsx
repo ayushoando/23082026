@@ -7,9 +7,7 @@ import Script from "next/script";
 // Privacy trade-off: timing and error metadata are collected, while payloads and
 // headers remain excluded to avoid capturing credentials or request content.
 export function NewRelicScript({ nonce }: { nonce?: string }) {
-  const browserKey =
-    process.env.NEW_RELIC_BROWSER_KEY ??
-    process.env.NEXT_PUBLIC_NEW_RELIC_LICENSE_KEY;
+  const browserKey = process.env.NEW_RELIC_BROWSER_KEY;
 
   if (process.env.NODE_ENV === "test" || !browserKey) {
     return null;

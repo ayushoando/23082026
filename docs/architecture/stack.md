@@ -141,7 +141,11 @@ has a dominant one.
 | Supabase client | `@supabase/supabase-js` + `@supabase/ssr` | Service-role and request-scoped clients under `site/platform/supabase/` (`@/platform/supabase/*`) |
 | SQL / schema | `drizzle-orm` (7 files), `postgres` (1) | Schema under `site/platform/drizzle/schema/`; drizzle-kit journal at `site/platform/drizzle/migrations/meta/_journal.json`. Ship migrations are raw SQL under `site/platform/supabase/migrations*` |
 | Object storage | `@aws-sdk/client-s3` | 2 files — **R2 backup/ops only**, never a live write path |
-| Analytics & Telemetry | `@vercel/analytics`, `@vercel/speed-insights`, `@vercel/otel`, `@opentelemetry/api`, `newrelic`; GA4, New Relic Browser SPA loader, opt-in Node APM bridge, OTLP export, AI advisor spans, and `/api/metrics` | Browser loader is vendored and served through `/newrelic.js`; Node APM is hybrid/opt-in with duplicate HTTP/Next/undici instrumentation disabled. See [`../../OBSERVABILITY.md`](../../OBSERVABILITY.md) |
+| Vercel analytics | `@vercel/analytics`, `@vercel/speed-insights` | Web Analytics and Speed Insights are mounted in `site/components/site/SiteAnalytics.tsx` |
+| Google analytics | GA4 | GA4 is mounted in `site/components/analytics/GoogleAnalytics.tsx` |
+| New Relic Browser | Vendored SPA agent | Served through `/newrelic.js` with a runtime browser key; CSP allows only the documented New Relic script and beacon origins |
+| Server telemetry | `@vercel/otel`, `@opentelemetry/api`, `newrelic` | OTel exports to New Relic OTLP; the Node APM bridge uses `oando-web` and is opt-in (`NEW_RELIC_APM_ENABLED=0` by default). Duplicate HTTP/Next/undici instrumentations are disabled |
+| AI advisor and metrics | `@ai-sdk/otel`, `@prometheus-io/client` | AI advisor spans and aggregate metrics feed `GET /api/metrics`; payloads and credentials are excluded. See [`../../OBSERVABILITY.md`](../../OBSERVABILITY.md) |
 | AI | `@mastra/core` (7 files), `@orama/orama` (1) | Retrieval for the advisor surface; vectors via Cloudflare Vectorize REST (no LanceDB dependency) |
 
 ### Declared but not imported
