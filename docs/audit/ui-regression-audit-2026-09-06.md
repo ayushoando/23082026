@@ -64,6 +64,8 @@ Confirmed in current source exactly as F-02/F-06 described: <768px locks `html/b
 
 **Files:** `scripts/vercel-env-push.mjs`.
 
+**2026-09-07 follow-up:** The earlier synchronization was intentionally replaced. The helper now reads only `site/.env.local`; after a clean reset, 53 nonblank site-allowlisted variables are present in Vercel Production and Preview has 0 variables. `DEV_AUTH_BYPASS` and local-only test/operator credentials remain excluded, and no local env value was committed.
+
 ### A-08 — Vendored New Relic Agent Linting — Resolved
 
 **Resolution applied (2026-09-06):**
@@ -80,5 +82,4 @@ Confirmed in current source exactly as F-02/F-06 described: <768px locks `html/b
 1. **Full Browser Re-Sweep:** Run browser verification across 36 routes × 6 viewports, including dynamic detail pages (`/products/[slug]`, solutions, features), as Part-2 evidence predates the New Relic APM fix.
 2. **Consent & Locale Matrix:** Execute runtime verification of the full cookie consent bar lifecycle (2.5s delay, transitions, dismiss, resize) and evaluate mobile/desktop layout integrity under Hindi copy expansion.
 3. **Build & Release Gate:** Run an authorized `pnpm run gate` to verify full compilation, test coverage, and standalone output tracing of webpack-ignored runtime imports. Static contract checks (`check:site-ui`) are verified.
-
 

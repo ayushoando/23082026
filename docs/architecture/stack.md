@@ -148,6 +148,8 @@ has a dominant one.
 | AI advisor and metrics | `@ai-sdk/otel`, `@prometheus-io/client` | AI advisor spans and aggregate metrics feed `GET /api/metrics`; payloads and credentials are excluded. See [`../../OBSERVABILITY.md`](../../OBSERVABILITY.md) |
 | AI | `@mastra/core` (7 files), `@orama/orama` (1) | Retrieval for the advisor surface; vectors via Cloudflare Vectorize REST (no LanceDB dependency) |
 
+The Vercel site environment contract is site-scoped: `scripts/vercel-env-push.mjs` reads nonblank entries from `site/.env.local` using `site/.env.example` as its allowlist. Root `.env.local` is not a Vercel site source, and `DEV_AUTH_BYPASS` plus local-only test/operator credentials are excluded.
+
 ### Declared but not imported
 
 Verified by searching every file type under `site/` and `scripts/`:
