@@ -62,7 +62,7 @@ backing location. Keep it that way (`pnpm run scan:boundaries`).
 - **OpenTelemetry**: `site/instrumentation.ts` registers `@vercel/otel` and the AI SDK OpenTelemetry provider; `@opentelemetry/api` supplies the privacy-safe AI advisor span wrapper.
 - **New Relic Browser**: The vendored SPA agent is served through `/newrelic.js` and guarded by the browser-key environment gate. CSP allows only the New Relic script CDN and beacon origins; nonce-based CSP remains required.
 - **AI and metrics**: `site/lib/observability/aiMetrics.ts` emits `oando.ai_advisor.request` spans and Prometheus metrics for both advisor response paths. `/api/metrics` is disabled in production unless explicitly enabled and authenticated.
-- **No server agent dependency**: There is no New Relic server SDK, Datadog, Traceloop, or Cast dependency. New Relic receives browser telemetry and OTLP exports; local Prometheus/Grafana is not required.
+- **Server APM is opt-in**: `newrelic` provides a hybrid Node agent bridge for native Next OTel spans when `NEW_RELIC_APM_ENABLED=1`; duplicate HTTP/Next/undici instrumentation is disabled. No Datadog, Traceloop, or Cast dependency exists, and local Prometheus/Grafana is not required.
 
 ## VS Code Customization
 

@@ -1,6 +1,6 @@
 # Cloud Observability & Telemetry Guide
 
-**Stack:** Next.js 16 (App Router) · Vercel Web Analytics · Vercel Speed Insights · Google Analytics 4 · New Relic Browser (SPA) · OpenTelemetry (`@vercel/otel`) · Prometheus exposition
+**Stack:** Next.js 16 (App Router) · Vercel Web Analytics · Vercel Speed Insights · Google Analytics 4 · New Relic Browser (SPA) · New Relic Node APM hybrid agent · OpenTelemetry (`@vercel/otel`) · Prometheus exposition
 
 This document describes the observability paths that exist in the current source. A local HTTP check is evidence of local behavior only; it is not evidence that the Vercel deployment or a New Relic account is configured.
 
@@ -12,6 +12,7 @@ flowchart TD
     Browser --> Vercel[Vercel Web Analytics + Speed Insights]
     Browser --> NRBrowser[New Relic Browser SPA agent]
     Next[Next.js server] --> OTel[OpenTelemetry via @vercel/otel]
+    Next --> NRApm[New Relic Node APM hybrid agent, opt-in]
     OTel --> NROTLP[New Relic OTLP endpoint]
     Next --> AIProm[AI advisor spans + Prometheus metrics]
     AIProm --> Metrics[GET /api/metrics]
@@ -28,6 +29,8 @@ flowchart TD
 ## 3. Server OpenTelemetry and AI advisor
 
 - [`site/instrumentation.ts`](./site/instrumentation.ts) calls `registerOTel({ serviceName })` and registers the AI SDK OpenTelemetry provider.
+- [`newrelic.cjs`](./newrelic.cjs) configures the New Relic Node APM hybrid agent. It is loaded only when `NEW_RELIC_APM_ENABLED=1` and `NEXT_RUNTIME=nodejs`; Next's native OTel spans remain the source of truth while the agent bridges them to APM.
+- The hybrid configuration disables the agent's `http`, `next`, and `undici` instrumentations to prevent duplicate Next/fetch spans. It excludes request/response headers and request parameters and disables agent log forwarding; the server license key remains server-only.
 - Configure the exporter with `OTEL_EXPORTER_OTLP_ENDPOINT=https://otlp.nr-data.net:4318` and `OTEL_EXPORTER_OTLP_HEADERS=api-key=<ingest-license-key>` in the local/Vercel environment. The ingest license key is server-only; never put it in browser code or documentation.
 - [`site/lib/observability/aiMetrics.ts`](./site/lib/observability/aiMetrics.ts) wraps advisor requests, records Prometheus counters/histograms, and creates the privacy-safe `oando.ai_advisor.request` span. The wrapper records provider/fallback/outcome metadata only; it does not record prompts, responses, payloads, or headers.
 - [`site/app/api/Planner/ai-advisor/route.ts`](./site/app/api/Planner/ai-advisor/route.ts) applies the wrapper to both streaming and non-streaming advisor paths.
@@ -55,6 +58,11 @@ OTEL_SERVICE_NAME=ai-planner-backend
 OTEL_EXPORTER_OTLP_ENDPOINT=https://otlp.nr-data.net:4318
 OTEL_EXPORTER_OTLP_HEADERS=api-key=<ingest-license-key>
 
+# Optional New Relic Node APM hybrid bridge (server-only)
+NEW_RELIC_APM_ENABLED=0
+NEW_RELIC_APP_NAME=ai-planner-backend
+NEW_RELIC_LICENSE_KEY=
+
 # Production metrics gate
 OBSERVABILITY_METRICS_ENABLED=0
 METRICS_AUTH_TOKEN=
@@ -67,4 +75,4 @@ Fresh local checks on 2026-09-06 observed:
 - `/` → `200 text/html; charset=utf-8`.
 - `/newrelic.js` → `200 application/javascript; charset=utf-8`; the placeholder is replaced, the configured deny list/payload/masking settings are present, and no key value is recorded here.
 - `/api/metrics/` → `200 text/plain; version=0.0.4; charset=utf-8`.
-- The full six-viewport browser matrix, console/CSP capture, production Vercel environment, and New Relic account data visibility were not re-run in this documentation update. Vercel CLI authentication was previously unavailable, so production configuration remains unverified. No deploy or external account change was made.
+- The full six-viewport browser matrix, console/CSP capture, production Vercel environment, and New Relic account data visibility were not re-run in this documentation update. The Node APM bridge is opt-in and was not enabled in this local check. Vercel CLI authentication was previously unavailable, so production configuration remains unverified. No deploy or external account change was made.

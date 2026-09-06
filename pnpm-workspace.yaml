@@ -43,6 +43,9 @@ ignoredOptionalDependencies:
 
 allowBuilds:
   # native file watcher; postinstall resolves its prebuilt binding
+  # New Relic Node agent native helpers; required for full server APM metrics
+  '@newrelic/fn-inspect': true
+  '@newrelic/native-metrics': true
   "@parcel/watcher": true
   # Next.js compiler — non-functional without its platform binary
   "@swc/core": true
@@ -61,4 +64,3 @@ allowBuilds:
   # Windows the script exits early and does nothing. Embeddings run through a
   # remote API (see lib/ai/mastra/embedder.ts), so no local ONNX session is ever
   # created — this stays false to keep the CUDA download out of Linux deploys.
-
