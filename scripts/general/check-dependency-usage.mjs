@@ -79,6 +79,14 @@ function normalizedAllowlist(policy, id) {
   return entries;
 }
 
+function normalizedDeferredRemovals(policy, id) {
+  const entries = policy.deferredRemoval?.[id] ?? {};
+  if (!entries || Array.isArray(entries) || typeof entries !== "object") {
+    throw new Error(`Expected deferredRemoval.${id} to be an object in ${POLICY_PATH}`);
+  }
+  return entries;
+}
+
 function collectSource(manifestSpec) {
   const files = manifestSpec.sourcePaths.flatMap((relativePath) =>
     walkFiles(path.join(ROOT, relativePath)),
@@ -94,7 +102,9 @@ function checkManifest(manifestSpec, policy) {
   const sourceFiles = collectSource(manifestSpec);
   const scripts = Object.values(manifest.scripts ?? {}).join("\n");
   const allowlisted = normalizedAllowlist(policy, manifestSpec.id);
+  const deferredRemovals = normalizedDeferredRemovals(policy, manifestSpec.id);
   const candidates = [];
+  const deferred = [];
 
   for (const packageName of packageNames(manifest).sort()) {
     const foundInScript = mentionsPackage(scripts, packageName);
@@ -102,6 +112,10 @@ function checkManifest(manifestSpec, policy) {
       mentionsPackage(content, packageName),
     );
     if (foundInScript || firstSourceUse || allowlisted[packageName]) continue;
+    if (deferredRemovals[packageName]) {
+      deferred.push(packageName);
+      continue;
+    }
     candidates.push(packageName);
   }
 
@@ -109,6 +123,7 @@ function checkManifest(manifestSpec, policy) {
     id: manifestSpec.id,
     scannedFiles: sourceFiles.length,
     candidates,
+    deferred,
   };
 }
 
@@ -122,14 +137,21 @@ function main() {
   const candidates = results.flatMap(({ id, candidates: names }) =>
     names.map((packageName) => `${id}: ${packageName}`),
   );
+  const deferred = results.flatMap(({ id, deferred: names }) =>
+    names.map((packageName) => `${id}: ${packageName}`),
+  );
 
   for (const result of results) {
     console.log(
-      `[deps:unused] ${result.id}: scanned ${result.scannedFiles} source files; ${result.candidates.length} unreviewed candidate(s)`,
+      `[deps:unused] ${result.id}: scanned ${result.scannedFiles} source files; ${result.candidates.length} unreviewed candidate(s), ${result.deferred.length} deferred removal candidate(s)`,
     );
   }
   if (candidates.length === 0) {
-    console.log("[deps:unused] PASS — every declared dependency has source/script evidence or an explicit policy reason.");
+    console.log("[deps:unused] PASS — every declared dependency has source/script evidence, an explicit policy reason, or an owner-deferred removal record.");
+    if (deferred.length > 0) {
+      console.warn("[deps:unused] Deferred removal candidates:");
+      for (const candidate of deferred) console.warn(`  - ${candidate}`);
+    }
     return;
   }
 

@@ -143,3 +143,42 @@ Smallest sound change consistent with "no broad revert": externalize the APM age
 - **Changed:** only `docs/audit/ui-regression-audit-2026-09-06.md` (this file). No source files touched.
 - **Verified:** browser sweep + screenshots + console capture listed above; read-only git inspection (`git log`, `git show`, `git log -S`).
 - **Not done:** any repair, `pnpm build`/gates, dynamic detail-page sweep (script defect — noted), HI-locale runtime pass (superseded by R-01 blocking most pages), killing or restarting the user's dev server.
+
+# PART 3 — Resolution verified (same day, post-fix)
+
+## Fix landed (owner-applied)
+
+Commit `ea1345e` resolved R-01 by marking the dynamic import `/* webpackIgnore: true */` in `site/instrumentation.ts` — webpack no longer parses the `newrelic` graph, so the `Module parse failed` overlay and the 25 blank routes are gone. This supersedes the Part-2 proposed slice (`serverExternalPackages` was **never applied**). The same commit flipped `NEW_RELIC_APM_ENABLED=1` in `.env.example`, i.e. APM is now intended on at runtime via the env gate.
+
+## Post-fix verification (HTTP fetch against the dev server, trailing-slash URLs)
+
+| Route | Status | Title |
+|---|---|---|
+| /products | 200 | "Office furniture | One&Only" — 220 KB content, desktop nav present |
+| /planner | 200 | "Workspace Planner \| Design Your Office Layout \| One&Only" |
+| /ooplanner | 200 | "Planner" |
+| /oostudio | 200 | "Studio — Workspace" |
+| /admin | 200 | "Admin \| One&Only" |
+| /portfolio | 200 | "Office furniture portfolio \| Workplace projects \| One&Only" |
+| /trusted-by | 200 | "Office furniture clients in India \| One&Only" |
+
+Spot-check only (7 of 25 previously-blank routes), not a full re-sweep.
+
+## Dependency remediation (user-approved, same session)
+
+- `@mastra/core` 1.63.2 → **1.64.0** (pinned). 1.63.2 exact-pinned the vulnerable `@ai-sdk/provider-utils@3.0.30` via an npm alias (`@ai-sdk/provider-utils-v5`); no patched 3.x exists; 1.64.0 deletes the alias. `pnpm why` confirms only 4.0.40 / 5.0.13 / 5.0.32 / 5.0.36 remain; **`pnpm audit`: no known vulnerabilities**.
+- `@types/newrelic` 9.14.8 added (devDep, pinned) — clears the `TS7016` on `instrumentation.ts`; **`pnpm run typecheck` passes**.
+
+## Remaining open items
+
+1. **Full post-fix re-sweep** — 36 routes × 6 viewports incl. the never-swept dynamic detail pages (`/products/[slug]`, solutions, features); Part-2 evidence predates the fix.
+2. **A-01 locale contract** — `request.ts` pins `en` unconditionally; `NEXT_LOCALE` never read server-side; Hindi gate unreachable. Needs the caching-vs-cookie decision before any edit.
+3. **R-02 header overflow at 1024×768** — search collides with "Sign in", EN\|HI clipped; needs the 1024-vs-1280 crossover decision, then one CSS slice.
+4. **Consent-state matrix + HI-locale runtime pass** — never exercised (2.5 s delay, dismissed/visible transitions, EN→HI switch).
+5. **`pnpm run gate`** — not run this session; required before ship. `pnpm build` after the webpackIgnore change is also unverified (standalone output tracing of a webpack-ignored runtime import is unproven).
+
+## Changed / verified / not done (Part 3)
+
+- **Changed:** this file (Part 3) only. Source fix and env flip were the owner's commits (`ea1345e`); `@mastra/core` bump + `@types/newrelic` are in `package.json`/lockfile as approved remediation.
+- **Verified:** 7-route post-fix HTTP spot-check; `pnpm why` + `pnpm audit`; `pnpm run typecheck`.
+- **Not done:** full re-sweep, dynamic detail pages, consent matrix, HI pass, `pnpm build`/`gate`, New Relic collector connectivity under `NEW_RELIC_APM_ENABLED=1`.

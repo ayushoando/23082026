@@ -16,7 +16,7 @@
     "observability:down": "docker compose -f config/observability/docker-compose.yml down",
     "observability:logs": "docker compose -f config/observability/docker-compose.yml logs -f",
     "build": "pnpm run build:site && pnpm run build:tech-docs",
-    "build:site": "node scripts/general/check-sharp.js && next build site --webpack && node scripts/general/prepare-standalone.cjs",
+    "build:site": "node scripts/general/check-sharp.js && next build site --webpack && node scripts/general/prepare-standalone.cjs && node scripts/general/check-client-bundle-budget.mjs",
     "build:tech-docs": "pnpm --filter oando-tech-docs build",
     "start": "node scripts/general/startStandalone.cjs",
     "typecheck": "node scripts/general/prune-stale-next-types.mjs && tsc -p site/tsconfig.json --noEmit",

@@ -1,0 +1,15 @@
+{
+  "schema": "oando.client-bundle-budget.v1",
+  "baseline": {
+    "source": "Authorized local production build on Node 24.19.0 / pnpm 11.24.0",
+    "totalJavaScriptBytes": 5561296,
+    "largestJavaScriptChunkBytes": 366459,
+    "javaScriptFileCount": 251
+  },
+  "tolerancePercent": 10,
+  "limits": {
+    "totalJavaScriptBytes": 6117426,
+    "largestJavaScriptChunkBytes": 403105,
+    "javaScriptFileCount": 277
+  }
+}

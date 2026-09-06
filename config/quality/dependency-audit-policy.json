@@ -1,7 +1,28 @@
 {
   "schema": "oando.dependency-audit-policy.v1",
   "allowUnreferenced": {
-    "root": {},
+    "root": {
+      "@tailwindcss/postcss": "Loaded by config/build/postcss.config.mjs.",
+      "@testing-library/dom": "Required peer dependency of @testing-library/react under strict peer enforcement.",
+      "@types/react": "React type declarations supplied to TypeScript and required by the testing-library peer contract.",
+      "@types/react-dom": "React DOM type declarations supplied to TypeScript and required by the testing-library peer contract.",
+      "@vitest/coverage-v8": "Vitest coverage provider selected by the coverage scripts.",
+      "typescript": "Project-local tsc CLI required by site typecheck and Next TypeScript configuration."
+    },
+    "tech-docs-generator": {
+      "@types/node": "Node declarations required by the TypeScript compiler.",
+      "@types/react": "React declarations required by the TypeScript compiler.",
+      "@types/react-dom": "React DOM declarations required by the TypeScript compiler.",
+      "@vitest/coverage-v8": "Vitest coverage provider selected by the workspace coverage scripts.",
+      "postcss": "Vite/PostCSS build integration dependency."
+    }
+  },
+  "deferredRemoval": {
+    "root": {
+      "@types/newrelic": "No direct use found; retained because the owner explicitly deferred dependency removal (item 9).",
+      "@vitest/ui": "No configured UI command found; retained because the owner explicitly deferred dependency removal (item 9).",
+      "esbuild": "No direct source use found; retained because the owner explicitly deferred dependency removal (item 9)."
+    },
     "tech-docs-generator": {}
   }
 }
