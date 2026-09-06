@@ -149,7 +149,7 @@ describe("app/(site)/portfolio/page.tsx — behavior", () => {
 
     // hero subtitle is template-filled with clients value
     const heroSubtitle = CLIENTS_PAGE_COPY.heroSubtitleTemplate.replace("{clients}", "120+");
-    expect(screen.queryByText(heroSubtitle)).not.toBeInTheDocument();
+    expect(screen.getByText(heroSubtitle)).toBeInTheDocument();
 
     expect(screen.getByTestId("kpi-monitor")).toBeInTheDocument();
     expect(screen.getByTestId("kpi-monitor")).toHaveAttribute("data-page", "portfolio");
