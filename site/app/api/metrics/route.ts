@@ -7,8 +7,10 @@ export const dynamic = "force-dynamic";
 /** 8.3: warn once per server instance when metrics are served without a token. */
 let warnedOpenMetrics = false;
 
-function isAuthorizedMetricsRequest(request: Request): boolean {
-  const expectedToken = process.env.METRICS_AUTH_TOKEN?.trim();
+function isAuthorizedMetricsRequest(
+  request: Request,
+  expectedToken: string | undefined,
+): boolean {
   // No token configured: metrics stay open (dev/local default). Once a token
   // is set, every request must present it — closes SEC-H02.
   if (!expectedToken) {
@@ -32,6 +34,8 @@ function isAuthorizedMetricsRequest(request: Request): boolean {
 }
 
 export async function GET(request: Request) {
+  const expectedToken = process.env.METRICS_AUTH_TOKEN?.trim();
+
   if (
     process.env.NODE_ENV === "production" &&
     process.env.OBSERVABILITY_METRICS_ENABLED !== "1"
@@ -39,7 +43,11 @@ export async function GET(request: Request) {
     return new Response("Not Found", { status: 404 });
   }
 
-  if (!isAuthorizedMetricsRequest(request)) {
+  if (process.env.NODE_ENV === "production" && !expectedToken) {
+    return new Response("Metrics endpoint is not configured", { status: 503 });
+  }
+
+  if (!isAuthorizedMetricsRequest(request, expectedToken)) {
     return new Response("Unauthorized", { status: 401 });
   }
 

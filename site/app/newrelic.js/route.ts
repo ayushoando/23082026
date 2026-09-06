@@ -1,45 +1,43 @@
 import { readFile } from "node:fs/promises";
-import path from "node:path";
+import { resolve } from "node:path";
 import { NextResponse } from "next/server";
 
 /**
  * New Relic Browser agent loader.
  *
  * Serves the vendored loader template with the license key substituted from a
- * server-only environment variable, so the key never sits in a committed or
- * public static file.
+ * server environment variable, so the key never sits in a committed or public
+ * static file. Browser ingest keys are public to the browser agent by design.
  *
  * The template lives outside `public/` (site/lib/analytics) so Next never
  * serves it raw; only this route resolves it.
  */
 
-const TEMPLATE_REL = path.join(
-  process.cwd(),
-  "site",
-  "lib",
-  "analytics",
-  "newrelic-agent.template.js",
+// Next compiles this handler below `site/.next/.../app/newrelic.js`; walk back
+// to the traced `site/lib` template rather than depending on process.cwd().
+const TEMPLATE_PATH = resolve(
+  __dirname,
+  "../../../../lib/analytics/newrelic-agent.template.js",
 );
 
 export const runtime = "nodejs";
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
 
-function getLicenseKey(): string {
-  const key = process.env.NEW_RELIC_LICENSE_KEY?.trim();
-  if (!key) {
-    throw new Error("NEW_RELIC_LICENSE_KEY is not set");
-  }
-  return key;
+function getBrowserIngestKey(): string | undefined {
+  return (
+    process.env.NEW_RELIC_BROWSER_KEY?.trim() ??
+    process.env.NEXT_PUBLIC_NEW_RELIC_LICENSE_KEY?.trim()
+  );
 }
 
 export async function GET() {
-  const key = process.env.NEW_RELIC_LICENSE_KEY?.trim();
+  const key = getBrowserIngestKey();
 
   // Key absent (dev without env): serve a no-op so the page never 404s and
   // no agent loads. Do not log or echo the key.
   if (!key) {
     return new NextResponse(
-      "/* New Relic disabled: NEW_RELIC_LICENSE_KEY is not set */\n",
+      "/* New Relic disabled: NEW_RELIC_BROWSER_KEY is not set */\n",
       {
         status: 200,
         headers: {
@@ -52,7 +50,7 @@ export async function GET() {
 
   let template: string;
   try {
-    template = await readFile(TEMPLATE_REL, "utf8");
+    template = await readFile(TEMPLATE_PATH, "utf8");
   } catch (err) {
     console.error("newrelic loader: template read failed", err);
     return new NextResponse("/* newrelic loader unavailable */\n", {

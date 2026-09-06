@@ -564,6 +564,11 @@ const nextConfig = {
     },
     useTypeScriptCli: true, // TypeScript 7 uses the project-local tsc CLI (no JS compiler API)
   },
+  // The New Relic loader route reads the agent template from disk at runtime;
+  // include it in the standalone/server trace so it survives production builds.
+  outputFileTracingIncludes: {
+    "/newrelic.js": ["./site/lib/analytics/newrelic-agent.template.js"],
+  },
   // Native binary / dynamic-require packages — do not bundle into Turbopack/webpack graph.
   serverExternalPackages: ["sharp", "@lancedb/lancedb", "@mastra/core"],
   typescript: {
