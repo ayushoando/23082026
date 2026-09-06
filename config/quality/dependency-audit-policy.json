@@ -1,0 +1,7 @@
+{
+  "schema": "oando.dependency-audit-policy.v1",
+  "allowUnreferenced": {
+    "root": {},
+    "tech-docs-generator": {}
+  }
+}

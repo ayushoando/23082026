@@ -79,8 +79,13 @@ jobs:
         with:
           node-version: 24
           cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm run release:gate:fast
+      - run: pnpm run ci:install
+      - run: pnpm run gate:site:fast
+      - run: pnpm run gate:docs
+      - run: pnpm run gate:observability:fast
+      - run: pnpm run audit:prod
+      - run: pnpm run deps:unused
+      - run: pnpm run deps:duplicates
 
   gate-full:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -93,8 +98,13 @@ jobs:
         with:
           node-version: 24
           cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm run release:gate:core
+      - run: pnpm run ci:install
+      - run: pnpm run gate:site
+      - run: pnpm run gate:docs
+      - run: pnpm run gate:observability
+      - run: pnpm run audit:prod
+      - run: pnpm run deps:unused
+      - run: pnpm run deps:duplicates
 
   browser-matrix:
     name: Browser matrix shard ${{ matrix.shard }}
@@ -111,7 +121,7 @@ jobs:
         with:
           node-version: 24
           cache: pnpm
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm run ci:install
       - run: pnpm exec playwright install --with-deps
       - run: pnpm run test:browser:gate -- --shard=${{ matrix.shard }} --reporter=blob
       - uses: actions/upload-artifact@v4
@@ -133,7 +143,7 @@ jobs:
         with:
           node-version: 24
           cache: pnpm
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm run ci:install
       - uses: actions/download-artifact@v4
         with:
           pattern: playwright-blob-*

@@ -24,7 +24,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y postgresql-client
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm run ci:install
       - name: Upload database backups to R2
         run: pnpm run ops backup:supabase:r2
         env:
