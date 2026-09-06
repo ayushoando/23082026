@@ -31,7 +31,7 @@ import { sanitizeUserInput } from "@/lib/ai/sanitizeUserInput";
 import { PlannerAdvisorRequestSchema } from "@/features/shared/api/schemas";
 import { normalizeClientIp } from "@/lib/clientIp";
 import { rateLimit } from "@/lib/rateLimit";
-import { recordAdvisorRequest, withAiObservability } from "@/lib/observability/aiMetrics";
+import { withAiObservability } from "@/lib/observability/aiMetrics";
 import {
  createPlannerHandler,
  createPlannerRejectedMethodHandler,
@@ -81,6 +81,11 @@ type PlannerAdvisorStreamResult = {
  provider?: string;
 };
 
+type PlannerAdvisorStreamOutcome = {
+ provider?: string;
+ fallback: boolean;
+};
+
 type PlannerAdvisorStreamEvent =
  | { type: "status"; message: string }
  | { type: "delta"; text: string }
@@ -101,7 +106,7 @@ function emitStreamEvent(
 function createStreamResponse(
  executor: (
   controller: ReadableStreamDefaultController<Uint8Array>,
- ) => Promise<void>,
+ ) => Promise<unknown>,
 ): Response {
  return new Response(
   new ReadableStream<Uint8Array>({
@@ -139,8 +144,7 @@ async function streamPlannerAdvisor(
 		role: "system" | "user" | "assistant";
 		content: string;
 	}>,
-): Promise<void> {
-	const startTime = Date.now();
+): Promise<PlannerAdvisorStreamOutcome> {
 	const chain = resolveAdvisorModelChain();
 
 	if (chain.length === 0) {
@@ -148,15 +152,7 @@ async function streamPlannerAdvisor(
 			type: "result",
 			result: { content: FALLBACK_CONTENT, degraded: true },
 		});
-		recordAdvisorRequest({
-			surface: "planner",
-			provider: "unknown",
-			fallbackUsed: true,
-			degraded: true,
-			latencyMs: Date.now() - startTime,
-			fallbackReason: "no_chain",
-		});
-		return;
+		return { fallback: true };
 	}
 
 	const messages = buildMessages(callerMessages);
@@ -191,14 +187,7 @@ async function streamPlannerAdvisor(
 					type: "result",
 					result: { content: content.trim(), provider: target.provider },
 				});
-				recordAdvisorRequest({
-					surface: "planner",
-					provider: target.provider,
-					fallbackUsed: false,
-					degraded: false,
-					latencyMs: Date.now() - startTime,
-				});
-				return;
+				return { provider: target.provider, fallback: false };
 			}
 		} catch (providerErr) {
 			clearTimeout(timeoutId);
@@ -217,14 +206,7 @@ async function streamPlannerAdvisor(
 		type: "result",
 		result: { content: FALLBACK_CONTENT, degraded: true },
 	});
-	recordAdvisorRequest({
-		surface: "planner",
-		provider: "unknown",
-		fallbackUsed: true,
-		degraded: true,
-		latencyMs: Date.now() - startTime,
-		fallbackReason: "provider_error",
-	});
+	return { fallback: true };
 }
 
 // ---------------------------------------------------------------------------
@@ -330,7 +312,16 @@ async function handlePlannerAdvisor(
   return {
    ok: true,
    raw: await createStreamResponse((controller) =>
-    streamPlannerAdvisor(controller, callerMessages),
+    withAiObservability(
+     "planner",
+     () => streamPlannerAdvisor(controller, callerMessages),
+     (result) => ({
+      route: "planner",
+      provider: result.provider ?? "unknown",
+      fallback: result.fallback,
+      durationMs: 0,
+     }),
+    ),
    ),
   };
  }

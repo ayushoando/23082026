@@ -20,7 +20,7 @@ const read = `query($guid:EntityGuid!) { actor { entity(guid:$guid) { ... on Das
     id title visualization { id } layout { column row width height } rawConfiguration
   } } } } } }`;
 const scope = "FROM Span WHERE service.name = 'ai-planner-backend'";
-const ai = " AND (gen_ai.request.model IS NOT NULL OR gen_ai.response.model IS NOT NULL)";
+const advisor = " AND name = 'oando.ai_advisor.request'";
 const definitions = [
   ['Received backend spans', `SELECT count(*) ${scope} SINCE 1 hour ago`, 'viz.billboard'],
   ['Backend span latency (ms)', `SELECT percentile(duration.ms, 50, 95, 99) ${scope} SINCE 1 hour ago`, 'viz.billboard'],
@@ -29,9 +29,9 @@ const definitions = [
   ['Backend spans by environment', `SELECT count(*) ${scope} FACET deployment.environment.name SINCE 1 hour ago`, 'viz.table'],
   ['Backend spans by kind', `SELECT count(*) ${scope} FACET span.kind SINCE 1 hour ago`, 'viz.table'],
   ['Backend HTTP status codes', `SELECT count(*) ${scope} FACET http.status_code SINCE 1 hour ago`, 'viz.table'],
-  ['Received AI model spans — zero means no observed AI coverage', `SELECT count(*) ${scope}${ai} SINCE 1 day ago`, 'viz.billboard'],
-  ['AI model latency (ms)', `SELECT percentile(duration.ms, 50, 95) ${scope}${ai} FACET gen_ai.request.model SINCE 1 day ago`, 'viz.table'],
-  ['AI tokens — requires usage instrumentation', `SELECT sum(gen_ai.usage.input_tokens), sum(gen_ai.usage.output_tokens) ${scope}${ai} SINCE 1 day ago`, 'viz.billboard'],
+  ['Received AI advisor spans — zero means no observed advisor traffic', `SELECT count(*) ${scope}${advisor} SINCE 1 day ago`, 'viz.billboard'],
+  ['AI advisor latency (ms)', `SELECT percentile(duration.ms, 50, 95) ${scope}${advisor} SINCE 1 day ago`, 'viz.billboard'],
+  ['AI advisor outcomes', `SELECT count(*) ${scope}${advisor} FACET oando.ai.provider, oando.ai.fallback SINCE 1 day ago`, 'viz.table'],
 ];
 async function main() {
   const before = (await graph(read, { guid })).actor.entity;
@@ -39,7 +39,7 @@ async function main() {
   const widgets = [{
     title: 'Coverage and privacy', visualization: { id: 'viz.markdown' },
     layout: { column: 1, row: 1, width: 12, height: 3 },
-    rawConfiguration: { text: '## Oando backend and AI telemetry\nService: **ai-planner-backend**. Backend charts count spans, not distinct user requests. AI charts use GenAI attributes; an empty chart is an instrumentation/traffic gap, not proof of health. No prompts, responses, authorization headers, or guessed model costs are displayed. Local and hosted traffic may coexist; use the environment breakdown. Browser monitoring is separate.' },
+    rawConfiguration: { text: '## Oando backend and AI telemetry\nService: **ai-planner-backend**. Backend charts count spans, not distinct user requests. AI charts use the privacy-safe `oando.ai_advisor.request` span; an empty chart is an instrumentation/traffic gap, not proof of health. No prompts, responses, authorization headers, model payloads, or guessed model costs are displayed. Local and hosted traffic may coexist; use the environment breakdown. Browser monitoring is separate.' },
   }];
   for (let index = 0; index < definitions.length; index++) {
     const [title, query, visualization] = definitions[index];

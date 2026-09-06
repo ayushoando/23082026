@@ -113,6 +113,7 @@
     "@mastra/core": "^1.63.2",
     "@mastra/memory": "^1.28.1",
     "@mastra/rag": "^2.6.0",
+    "@opentelemetry/api": "^1.9.1",
     "@orama/orama": "^3.1.18",
     "@phosphor-icons/react": "^2.1.10",
     "@prometheus-io/client": "0.16.0",

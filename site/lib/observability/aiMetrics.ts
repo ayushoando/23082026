@@ -17,8 +17,11 @@
 import "server-only";
 
 import { Counter, Gauge, Histogram, type Registry } from "@prometheus-io/client";
+import { SpanStatusCode, trace } from "@opentelemetry/api";
 
 import { getMetricsRegistry } from "@/lib/observability/metrics";
+
+const aiAdvisorTracer = trace.getTracer("oando.ai-advisor");
 
 // ---------------------------------------------------------------------------
 // Approved label value unions — only pre-approved strings may flow into labels
@@ -290,24 +293,45 @@ export async function withAiObservability<T>(
   observe: (result: T) => AiRequestObservation,
 ): Promise<T> {
   const start = Date.now();
-  const result = await fn();
-  const durationMs = Date.now() - start;
+  const span = aiAdvisorTracer.startSpan("oando.ai_advisor.request");
+  span.setAttribute("oando.ai.surface", route);
 
-  // Best-effort recording — never throws to the caller.
   try {
-    const obs = observe(result);
-    recordAdvisorRequest({
-      surface: obs.route,
-      provider: obs.provider ?? "unknown",
-      fallbackUsed: obs.fallback,
-      degraded: obs.fallback,
-      latencyMs: obs.durationMs > 0 ? obs.durationMs : durationMs,
-      errorClass: obs.error ? "provider" : undefined,
-      retrievalSources: obs.sources as AiRetrievalSource[] | undefined,
-    });
-  } catch {
-    // intentionally swallowed — metric failure must not affect HTTP response
-  }
+    const result = await fn();
+    const durationMs = Date.now() - start;
 
-  return result;
+    // Best-effort recording — never throws to the caller.
+    try {
+      const obs = observe(result);
+      const provider = obs.provider ?? "unknown";
+      const latencyMs = obs.durationMs > 0 ? obs.durationMs : durationMs;
+
+      recordAdvisorRequest({
+        surface: obs.route,
+        provider,
+        fallbackUsed: obs.fallback,
+        degraded: obs.fallback,
+        latencyMs,
+        errorClass: obs.error ? "provider" : undefined,
+        retrievalSources: obs.sources as AiRetrievalSource[] | undefined,
+      });
+
+      // These custom span attributes are deliberately aggregate-only. Do not
+      // add prompts, responses, headers, session IDs, or model payloads here.
+      span.setAttribute("oando.ai.provider", provider);
+      span.setAttribute("oando.ai.fallback", obs.fallback);
+    } catch {
+      // Observability must not affect the advisor result.
+    }
+
+    span.setStatus({ code: SpanStatusCode.OK });
+    return result;
+  } catch (error) {
+    // Do not record the exception: provider errors can contain request data.
+    span.setAttribute("oando.ai.error", true);
+    span.setStatus({ code: SpanStatusCode.ERROR });
+    throw error;
+  } finally {
+    span.end();
+  }
 }

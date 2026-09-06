@@ -51,6 +51,9 @@ importers:
       '@mastra/rag':
         specifier: ^2.6.0
         version: 2.6.0(@mastra/core@1.63.2(ai@7.0.91(zod@4.5.4))(supports-color@10.2.2)(zod@4.5.4))(zod@4.5.4)
+      '@opentelemetry/api':
+        specifier: ^1.9.1
+        version: 1.9.1
       '@orama/orama':
         specifier: ^3.1.18
         version: 3.1.18
