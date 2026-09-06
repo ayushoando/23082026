@@ -17,7 +17,7 @@ These reports expand the executive findings in [`report-source.md`](../report-so
 | [05 - Studio](05-studio.md) | Furniture canvas, autosave, catalog, uploads, publishing | The fork is isolated and mode-aware; Supabase publishing has a disk-only top-PNG gap. |
 | [06 - Admin and CRM](06-admin-crm.md) | Admin shell, plans, analytics, CRM, customer queries, themes | Admin has strong session controls, but theme durability and source telemetry are incomplete. |
 | [07 - Marketing, catalog, and i18n](07-marketing-catalog-i18n.md) | Marketing routes, catalog, locale loading, site styling, shared assets | The public surface is broad and localized for en/hi; docs/comments overstate or understate parts of it. |
-| [08 - AI, tech docs, worker, and operations](08-ai-techdocs-worker-operations.md) | AI advisor, Vectorize, tech-docs SPA, Cloudflare worker, observability | Lean cloud-first observability (GA4, Vercel, OTel); auxiliary systems degrade gracefully; deployment state unverified. |
+| [08 - AI, tech docs, worker, and operations](08-ai-techdocs-worker-operations.md) | AI advisor, Vectorize, tech-docs SPA, Cloudflare worker, observability | Cloud-first observability (GA4, Vercel, New Relic Browser/OTLP, OTel, Prometheus endpoint); auxiliary systems degrade gracefully; deployment state unverified. |
 | [09 - Archived work implementation audit](09-archived-work-implementation-audit.md) | All five requested `.archive/agents-work` areas and live-source cross-checks | The archive artifacts exist, but most are static evidence; runtime work and several Planner follow-ups remain unverified or open. |
 
 ## Validation boundary

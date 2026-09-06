@@ -59,8 +59,10 @@ backing location. Keep it that way (`pnpm run scan:boundaries`).
 ## Observability & Telemetry
 - **Cloud-First Observability**: documented in [`../OBSERVABILITY.md`](../OBSERVABILITY.md).
 - **Client Analytics**: Vercel Web Analytics & Speed Insights (`site/components/analytics/SiteAnalytics.tsx`) and Google Analytics 4 (`site/components/analytics/GoogleAnalytics.tsx`).
-- **OpenTelemetry**: Native Next.js tracing in `site/instrumentation.ts` (`@opentelemetry/api`, `@opentelemetry/sdk-node`).
-- **No Heavyweight Agents**: Zero dependency on Datadog, New Relic, Traceloop, or Cast. Local Docker Prometheus/Grafana is unneeded.
+- **OpenTelemetry**: `site/instrumentation.ts` registers `@vercel/otel` and the AI SDK OpenTelemetry provider; `@opentelemetry/api` supplies the privacy-safe AI advisor span wrapper.
+- **New Relic Browser**: The vendored SPA agent is served through `/newrelic.js` and guarded by the browser-key environment gate. CSP allows only the New Relic script CDN and beacon origins; nonce-based CSP remains required.
+- **AI and metrics**: `site/lib/observability/aiMetrics.ts` emits `oando.ai_advisor.request` spans and Prometheus metrics for both advisor response paths. `/api/metrics` is disabled in production unless explicitly enabled and authenticated.
+- **No server agent dependency**: There is no New Relic server SDK, Datadog, Traceloop, or Cast dependency. New Relic receives browser telemetry and OTLP exports; local Prometheus/Grafana is not required.
 
 ## VS Code Customization
 

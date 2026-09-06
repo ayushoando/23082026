@@ -30,8 +30,8 @@ Use this index to find architecture, database, and governance references that sh
 | Deploy | [`../OPERATIONS_RUNBOOK.md`](../OPERATIONS_RUNBOOK.md) |
 | Security (headers, CSP, cookies, sanitization) | [`architecture/stack.md`](./architecture/stack.md) §8 · [`governance/rules.md`](./governance/rules.md) |
 | Tech-docs package | [`../tech-docs-generator/README.md`](../tech-docs-generator/README.md) |
-| Observability (GA4, Vercel Analytics, OpenTelemetry) | [`../OBSERVABILITY.md`](../OBSERVABILITY.md) |
-| Planning suite | [`../plans/05092026/README.md`](../plans/05092026/README.md) |
+| Observability (GA4, Vercel Analytics, New Relic Browser, OpenTelemetry, `/api/metrics`) | [`../OBSERVABILITY.md`](../OBSERVABILITY.md) |
+| Planning index | [`../plans/README.md`](../plans/README.md) |
 | Blockers | [`../Failures.md`](../Failures.md) |
 
 ## Layout (15 files including this index)

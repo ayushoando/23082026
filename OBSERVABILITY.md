@@ -1,64 +1,70 @@
 # Cloud Observability & Telemetry Guide
 
-**Stack:** Next.js 16 (App Router) · Vercel Web Analytics · Vercel Speed Insights · Google Analytics 4 (GA4) · OpenTelemetry (`@vercel/otel`)
+**Stack:** Next.js 16 (App Router) · Vercel Web Analytics · Vercel Speed Insights · Google Analytics 4 · New Relic Browser (SPA) · OpenTelemetry (`@vercel/otel`) · Prometheus exposition
 
----
+This document describes the observability paths that exist in the current source. A local HTTP check is evidence of local behavior only; it is not evidence that the Vercel deployment or a New Relic account is configured.
 
-## 1. Cloud-First, Zero-Maintenance Architecture
-
-Oando uses a **100% cloud-managed observability architecture**. 
-
-You do **not** need to run Docker containers, install host daemons, or manage local Prometheus/Grafana databases. All monitoring is handled automatically in the cloud across three lightweight layers:
+## 1. Runtime topology
 
 ```mermaid
 flowchart TD
-    UserBrowser["Visitor Browser (oando.co.in)"] --> GA4["Google Analytics 4 (Cloud)<br/>Traffic, Conversions, Visitors"]
-    UserBrowser --> VercelAnalytics["Vercel Web Analytics (Cloud)<br/>Pageviews, Custom UI Events"]
-    UserBrowser --> SpeedInsights["Vercel Speed Insights (Cloud)<br/>Core Web Vitals: LCP, INP, CLS"]
-
-    NextServer["Next.js Server & AI Models"] --> VercelOTel["OpenTelemetry (@vercel/otel)<br/>Route Latency & Gemini AI Token Traces"]
+    Browser[Visitor browser] --> GA4[Google Analytics 4]
+    Browser --> Vercel[Vercel Web Analytics + Speed Insights]
+    Browser --> NRBrowser[New Relic Browser SPA agent]
+    Next[Next.js server] --> OTel[OpenTelemetry via @vercel/otel]
+    OTel --> NROTLP[New Relic OTLP endpoint]
+    Next --> AIProm[AI advisor spans + Prometheus metrics]
+    AIProm --> Metrics[GET /api/metrics]
 ```
 
----
+## 2. Browser analytics and monitoring
 
-## 2. Active Cloud Monitoring Layers
+- Google Analytics is mounted by [`site/components/analytics/GoogleAnalytics.tsx`](./site/components/analytics/GoogleAnalytics.tsx) from [`site/app/layout.tsx`](./site/app/layout.tsx).
+- Vercel Web Analytics and Speed Insights are mounted by [`site/components/site/SiteAnalytics.tsx`](./site/components/site/SiteAnalytics.tsx).
+- New Relic Browser is mounted by [`site/components/analytics/NewRelicScript.tsx`](./site/components/analytics/NewRelicScript.tsx). It loads the same-origin [`/newrelic.js`](./site/app/newrelic.js/route.ts), which substitutes the browser ingest key at request time; no key is committed in the template.
+- The vendored agent template is [`site/lib/analytics/newrelic-agent.template.js`](./site/lib/analytics/newrelic-agent.template.js). Its AJAX deny list contains only `bam.nr-data.net`, so application hosts remain observable. `capture_payloads: 'none'` and `mask_all_inputs: true` are intentional privacy controls: timing and error metadata are collected, but request/response payloads, headers, and form values are not.
+- CSP keeps the per-request nonce architecture. The only New Relic additions are `https://js-agent.newrelic.com` in `script-src` and `https://bam.nr-data.net` plus `https://*.nr-data.net` in `connect-src`. Do not add `unsafe-inline`, broaden `unsafe-eval`, or add a wildcard.
 
-### A. Google Analytics 4 (Business & Traffic)
-- **Component:** [`site/components/analytics/GoogleAnalytics.tsx`](file:///D:/23082026/site/components/analytics/GoogleAnalytics.tsx) mounted in [`site/app/layout.tsx`](file:///D:/23082026/site/app/layout.tsx).
-- **Measurement ID:** `G-CTPK6318CR` (set via `NEXT_PUBLIC_GA_MEASUREMENT_ID`).
-- **What It Tracks:** Visitor traffic, geographic locations, referral sources, marketing attribution, and conversion funnels.
-- **Where to View:** [analytics.google.com](https://analytics.google.com).
+## 3. Server OpenTelemetry and AI advisor
 
-### B. Vercel Web Analytics & Speed Insights (Real-User Performance)
-- **Component:** [`site/components/site/SiteAnalytics.tsx`](file:///D:/23082026/site/components/site/SiteAnalytics.tsx) mounted in marketing layouts.
-- **Packages:** [`@vercel/analytics`](file:///D:/23082026/package.json#L123) and [`@vercel/speed-insights`](file:///D:/23082026/package.json#L125).
-- **What It Tracks:**
-  - Real-world Core Web Vitals: Largest Contentful Paint (LCP), Interaction to Next Paint (INP), and Cumulative Layout Shift (CLS).
-  - Custom UI interaction events via [`site/lib/analytics/emitTransport.ts`](file:///D:/23082026/site/lib/analytics/emitTransport.ts) (consent-gated).
-- **Where to View:** Your Vercel Project Dashboard under the **Analytics** and **Speed Insights** tabs. Zero server setup required.
+- [`site/instrumentation.ts`](./site/instrumentation.ts) calls `registerOTel({ serviceName })` and registers the AI SDK OpenTelemetry provider.
+- Configure the exporter with `OTEL_EXPORTER_OTLP_ENDPOINT=https://otlp.nr-data.net:4318` and `OTEL_EXPORTER_OTLP_HEADERS=api-key=<ingest-license-key>` in the local/Vercel environment. The ingest license key is server-only; never put it in browser code or documentation.
+- [`site/lib/observability/aiMetrics.ts`](./site/lib/observability/aiMetrics.ts) wraps advisor requests, records Prometheus counters/histograms, and creates the privacy-safe `oando.ai_advisor.request` span. The wrapper records provider/fallback/outcome metadata only; it does not record prompts, responses, payloads, or headers.
+- [`site/app/api/Planner/ai-advisor/route.ts`](./site/app/api/Planner/ai-advisor/route.ts) applies the wrapper to both streaming and non-streaming advisor paths.
 
-### C. Backend OpenTelemetry (`@vercel/otel`)
-- **Initialization:** Automatically started by Next.js via [`site/instrumentation.ts`](file:///D:/23082026/site/instrumentation.ts).
-- **What It Tracks:** Server-side request execution times, Supabase database query durations, and Google Gemini / Mastra AI model latency.
-- **Where to View:** Vercel deployment logs and server traces.
+## 4. Prometheus endpoint
 
----
+[`site/app/api/metrics/route.ts`](./site/app/api/metrics/route.ts) serves Prometheus exposition from `GET /api/metrics` (Next may redirect to the trailing-slash form). Locally it returns `text/plain; version=0.0.4` when the route is available.
 
-## 3. What is NOT Needed (No Local Complexity)
+Production safety is deliberate:
 
-- **No Docker Required:** You do **not** need Docker, Prometheus, or Grafana running on your computer to develop, test, or deploy.
-- **No Third-Party Vendor SDKs:** There is **no New Relic, Datadog, Sentry, or PostHog** installed. You don't have to manage third-party license keys or paid monitoring tiers.
-- **No Heavy Client Agents:** Everything runs via native, lightweight Next.js and Google tags that do not degrade browser performance.
+1. Without `OBSERVABILITY_METRICS_ENABLED=1`, production returns `404`.
+2. When enabled, `METRICS_AUTH_TOKEN` is required; requests must use `Authorization: Bearer <token>` or receive `401`.
+3. A production configuration with the flag enabled but no token returns `503`; it is never intentionally unauthenticated.
 
----
+## 5. Environment checklist
 
-## 4. Environment Variables Checklist
-
-For your cloud observability, you only need this single public key:
+Keep real values only in `.env.local`, `site/.env.local`, or the corresponding Vercel environment settings. The committed examples remain blank for secrets.
 
 ```ini
-# Google Analytics 4
-NEXT_PUBLIC_GA_MEASUREMENT_ID=G-CTPK6318CR
+# Browser ingest (public to the browser agent by design; still supplied at runtime)
+NEW_RELIC_BROWSER_KEY=
+
+# Server OTLP ingest (server-only license key)
+OTEL_SERVICE_NAME=ai-planner-backend
+OTEL_EXPORTER_OTLP_ENDPOINT=https://otlp.nr-data.net:4318
+OTEL_EXPORTER_OTLP_HEADERS=api-key=<ingest-license-key>
+
+# Production metrics gate
+OBSERVABILITY_METRICS_ENABLED=0
+METRICS_AUTH_TOKEN=
 ```
 
-Vercel Analytics and Speed Insights configure themselves automatically when deployed to Vercel.
+## 6. Evidence status
+
+Fresh local checks on 2026-09-06 observed:
+
+- `/` → `200 text/html; charset=utf-8`.
+- `/newrelic.js` → `200 application/javascript; charset=utf-8`; the placeholder is replaced, the configured deny list/payload/masking settings are present, and no key value is recorded here.
+- `/api/metrics/` → `200 text/plain; version=0.0.4; charset=utf-8`.
+- The full six-viewport browser matrix, console/CSP capture, production Vercel environment, and New Relic account data visibility were not re-run in this documentation update. Vercel CLI authentication was previously unavailable, so production configuration remains unverified. No deploy or external account change was made.

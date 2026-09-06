@@ -182,7 +182,7 @@ Evidence:
 **Severity:** Medium  
 **Confidence:** Confirmed source change; blocked-resource impact unverified
 
-The CSP was tightened in the same period by removing New Relic script and connect origins from the static and dynamic policies. This may be correct if New Relic was intentionally retired, but any remaining runtime reference could produce console errors or block a client-side dependency.
+The historical CSP tightening removed New Relic script and connect origins from the static and dynamic policies. Current source has deliberately restored the narrow allowances required by the vendored Browser agent (`js-agent.newrelic.com` for `script-src`; `bam.nr-data.net` and `*.nr-data.net` for `connect-src`) while retaining nonce-based CSP. Local endpoint checks now return `/newrelic.js` as JavaScript; production Browser reporting and the full viewport matrix remain unverified.
 
 This is not currently identified as the primary cause of the layout regression. It should be checked during browser evidence collection so CSP errors are not mistaken for i18n or layout failures.
 

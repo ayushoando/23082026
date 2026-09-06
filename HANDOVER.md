@@ -20,7 +20,7 @@ Store credentials only in `.env.local` or `site/.env.local`. Server credentials,
 
 ## Session notes — 2026-09-05
 
-Historical audit notes only. Live blockers: [`Failures.md`](./Failures.md) (empty table is valid). Canonical suite: [`plans/05092026/README.md`](./plans/05092026/README.md). Short-plan: [`plans/05092026/short-plan.md`](./plans/05092026/short-plan.md). Duplicate `docs/plans/05092026/README.md` is a pointer only.
+Historical audit notes only. Live blockers: [`Failures.md`](./Failures.md) (an empty table is valid). Current planning index: [`plans/README.md`](./plans/README.md). The former `plans/05092026` suite and duplicate `docs/plans/05092026` pointer were retired; verify all historical notes against live source.
 
 Current source: `/access` is not cookie-bounced in `proxy.ts`; dashboard sign-out is `signOutFromSupabase`; hero `.home-actions` and `lg:grid-cols-4` / `18ch` exist. Env templates: [`.env.example`](./.env.example), [`site/.env.example`](./site/.env.example), [`tech-docs-generator/.env.example`](./tech-docs-generator/.env.example).
 

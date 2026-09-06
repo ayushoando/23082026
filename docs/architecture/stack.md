@@ -141,7 +141,7 @@ has a dominant one.
 | Supabase client | `@supabase/supabase-js` + `@supabase/ssr` | Service-role and request-scoped clients under `site/platform/supabase/` (`@/platform/supabase/*`) |
 | SQL / schema | `drizzle-orm` (7 files), `postgres` (1) | Schema under `site/platform/drizzle/schema/`; drizzle-kit journal at `site/platform/drizzle/migrations/meta/_journal.json`. Ship migrations are raw SQL under `site/platform/supabase/migrations*` |
 | Object storage | `@aws-sdk/client-s3` | 2 files — **R2 backup/ops only**, never a live write path |
-| Analytics & Telemetry | `@vercel/analytics`, `@vercel/speed-insights`, `@vercel/otel`; GA4 via `GoogleAnalytics.tsx` + `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Not `@next/third-parties/google`. See [`../../OBSERVABILITY.md`](../../OBSERVABILITY.md) |
+| Analytics & Telemetry | `@vercel/analytics`, `@vercel/speed-insights`, `@vercel/otel`, `@opentelemetry/api`; GA4, New Relic Browser SPA loader, OTLP export, AI advisor spans, and `/api/metrics` | Browser loader is vendored and served through `/newrelic.js`; no server New Relic SDK. See [`../../OBSERVABILITY.md`](../../OBSERVABILITY.md) |
 | AI | `@mastra/core` (7 files), `@orama/orama` (1) | Retrieval for the advisor surface; vectors via Cloudflare Vectorize REST (no LanceDB dependency) |
 
 ### Declared but not imported
