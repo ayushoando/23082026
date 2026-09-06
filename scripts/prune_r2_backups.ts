@@ -1,8 +1,8 @@
 /**
  * Backup retention pruning for Cloudflare R2 and local backups:
- *   - Daily backups: kept for max 5 days (age <= 5 days).
- *   - Weekly backups: 1 backup per week kept for up to 30 days (5 < age <= 30 days).
- *   - Older backups (> 30 days): deleted.
+ *   - Daily backups: kept for 7 days (age <= 7 days).
+ *   - Weekly backups: keep the newest backup from at most eight ISO weeks.
+ *   - Older weekly duplicates and weeks beyond the newest eight are deleted.
  *
  * Usage:
  *   pnpm --filter oando-site exec tsx scripts/prune_r2_backups.ts
@@ -21,6 +21,8 @@ const require = createRequire(import.meta.url);
 require("./general/loadEnvLocal.cjs").loadEnvLocal();
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
+const DAILY_RETENTION_DAYS = 7;
+const MAX_WEEKLY_BACKUPS = 8;
 
 export interface BackupItem {
   key: string;
@@ -71,9 +73,8 @@ export function getIsoWeekKey(d: Date): string {
 
 /**
  * Evaluates retention policy:
- * - age <= 5 days: keep daily backups.
- * - 5 < age <= 30 days: keep 1 backup per calendar week.
- * - age > 30 days: delete.
+ * - age <= 7 days: keep daily backups.
+ * - age > 7 days: keep the newest backup from at most eight ISO weeks.
  */
 export function evaluateRetention(
   items: BackupItem[],
@@ -92,21 +93,18 @@ export function evaluateRetention(
   for (const item of sorted) {
     const ageDays = (now.getTime() - item.date.getTime()) / MS_PER_DAY;
 
-    if (ageDays <= 5) {
-      // Keep all daily backups within 5 days
+    if (ageDays <= DAILY_RETENTION_DAYS) {
+      // Keep all daily backups within 7 days.
       toKeep.push(item);
-    } else if (ageDays <= 30) {
-      // 5 to 30 days: keep 1 per week (newest in that week)
+    } else {
+      // Older backups: retain one newest item per ISO week, up to eight weeks.
       const weekKey = getIsoWeekKey(item.date);
-      if (!keptWeeks.has(weekKey)) {
+      if (!keptWeeks.has(weekKey) && keptWeeks.size < MAX_WEEKLY_BACKUPS) {
         keptWeeks.add(weekKey);
         toKeep.push(item);
       } else {
         toDelete.push(item);
       }
-    } else {
-      // Older than 30 days: delete
-      toDelete.push(item);
     }
   }
 
@@ -241,7 +239,7 @@ export async function pruneR2Backups(
       log(`Pruned ${count} old backup objects from s3://${bucket}/.`);
     }
   } else {
-    log(`All ${allToKeep.length} backups are within the retention policy (daily <= 5d, weekly <= 30d).`);
+    log(`All ${allToKeep.length} backups are within the retention policy (daily <= 7d, then <= 8 weekly backups).`);
   }
 
   return { kept: allToKeep.length, deleted: allToDelete.length };

@@ -2,6 +2,12 @@
 export function apexRedirectLocation(requestUrl) {
   const url = typeof requestUrl === "string" ? new URL(requestUrl) : requestUrl;
   const host = url.hostname.toLowerCase();
+  if (host === "oando.in" || host.endsWith(".oando.in")) {
+    const apex = new URL(url.toString());
+    apex.hostname = "oando.co.in";
+    apex.protocol = "https:";
+    return apex.toString();
+  }
   if (!host.startsWith("www.")) {
     return null;
   }

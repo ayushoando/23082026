@@ -11,6 +11,14 @@ zone_name = "oando.co.in"
 pattern = "www.oando.co.in/*"
 zone_name = "oando.co.in"
 
+[[routes]]
+pattern = "oando.in/*"
+zone_name = "oando.in"
+
+[[routes]]
+pattern = "*.oando.in/*"
+zone_name = "oando.in"
+
 [observability.logs]
 enabled = true
 head_sampling_rate = 1
