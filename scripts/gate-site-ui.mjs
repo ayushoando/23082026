@@ -9,12 +9,17 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
-/** @param {string[]} args */
-function run(command, args) {
-  const result = spawnSync(command, args, {
+/** @param {string} command @param {string[]} args @param {{ shell?: boolean }} [opts] */
+function run(command, args, opts = {}) {
+  const useShell = opts.shell ?? process.platform === "win32";
+  const cmd =
+    useShell && /\s/.test(command) && !command.startsWith('"')
+      ? `"${command}"`
+      : command;
+  const result = spawnSync(cmd, args, {
     cwd: ROOT,
     stdio: "inherit",
-    shell: process.platform === "win32",
+    shell: useShell,
   });
   if (result.error) {
     console.error(result.error);
@@ -26,7 +31,7 @@ function run(command, args) {
 
 /** @param {string} rel @param {string[]} args */
 function runNode(rel, args = []) {
-  run(process.execPath, [path.join(ROOT, "scripts", rel), ...args]);
+  run(process.execPath, [path.join(ROOT, "scripts", rel), ...args], { shell: false });
 }
 
 runNode("clean-test-artifacts.mjs");
