@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useRef } from "react";
 import { ArrowLeft } from "@phosphor-icons/react";
 import { useGSAP } from "@gsap/react";
@@ -100,9 +101,13 @@ export function AccessSignInView({
       </div>
 
       <div className="shell-access-visual-side scheme-panel-soft">
-        <div
-          className="shell-access-visual-poster"
-          style={{ backgroundImage: `url(${accessPoster})` }}
+        <Image
+          src={accessPoster}
+          alt=""
+          fill
+          priority
+          sizes="(min-width: 1024px) 50vw, 100vw"
+          className="shell-access-visual-poster object-cover object-center pointer-events-none"
           aria-hidden="true"
         />
         <div className="shell-access-visual-grid" aria-hidden="true">
