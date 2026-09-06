@@ -41,11 +41,32 @@ Confirmed in current source exactly as F-02/F-06 described: <768px locks `html/b
 **Action Required:** Clean up stale language comments and obsolete plan paths.  
 **Files:** `site/components/site/Header.tsx`, `plans/PLAN.md`.
 
+### A-06 — Site UI static contract inline-style violations — Resolved
+
+**Resolution applied (2026-09-06):**
+- Added `app/(site)/twitter-image.tsx` to `INLINE_STYLE_ALLOWLIST` in `scripts/check-site-ui-contract.mjs` (Next.js `@vercel/og` Satori `ImageResponse` requires inline JSX styles, matching `app/(site)/opengraph-image.tsx`).
+- Converted `HomepageHero.tsx` crossfade opacity from inline `style={{ opacity: backgroundVisible ? 1 : 0 }}` to Tailwind utility classes `${backgroundVisible ? "opacity-100" : "opacity-0"}`.
+- Converted `AccessSignInView.tsx` visual poster from inline `style={{ backgroundImage: url(...) }}` `div` to Next.js `<Image fill priority ... />`.
+- Hardened `scripts/gate-site-ui.mjs` on Windows to handle paths containing spaces in `process.execPath` without command truncation.
+- Verified: `node scripts/check-site-ui-contract.mjs --scope=inline-style` passes (`inline-style ok (79 JSX/TSX file(s))`), and the full `check:site-ui` static contract suite passes (`shell ok`, `copy ok`, `inline-style ok`).
+
+**Files:** `scripts/check-site-ui-contract.mjs`, `site/components/home/HomepageHero.tsx`, `site/app/(site)/access/AccessSignInView.tsx`, `scripts/gate-site-ui.mjs`.
+
+### A-07 — Vercel Production & Preview Environment Synchronization — Resolved
+
+**Resolution applied (2026-09-06):**
+- Pushed all 55 environment variables matching `site/.env.example` to Vercel (`ayushs-projects-1/23082026`) across `Production, Preview` environments using `scripts/vercel-env-push.mjs`.
+- Hardened `scripts/vercel-env-push.mjs` to clear invalid/unauthorized `VERCEL_TOKEN` from `process.env` and seamlessly fall back to active Vercel CLI session credentials (`oofpl`).
+- Maintained strict exclusion of `DEV_AUTH_BYPASS` in production environments per repository process floor.
+
+**Files:** `scripts/vercel-env-push.mjs`.
+
 ---
 
 ## Remaining Open Verification Tasks
 
 1. **Full Browser Re-Sweep:** Run browser verification across 36 routes × 6 viewports, including dynamic detail pages (`/products/[slug]`, solutions, features), as Part-2 evidence predates the New Relic APM fix.
 2. **Consent & Locale Matrix:** Execute runtime verification of the full cookie consent bar lifecycle (2.5s delay, transitions, dismiss, resize) and evaluate mobile/desktop layout integrity under Hindi copy expansion.
-3. **Build & Release Gate:** Run an authorized `pnpm run gate` to verify full compilation, test coverage, and standalone output tracing of webpack-ignored runtime imports.
+3. **Build & Release Gate:** Run an authorized `pnpm run gate` to verify full compilation, test coverage, and standalone output tracing of webpack-ignored runtime imports. Static contract checks (`check:site-ui`) are verified.
+
 
