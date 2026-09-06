@@ -17,7 +17,8 @@ if (rawToken) {
     tokenArgs = ["--token", rawToken];
     process.stdout.write("Using valid VERCEL_TOKEN from environment\n");
   } else {
-    process.stdout.write("VERCEL_TOKEN in .env.local unauthorized; checking active Vercel CLI session...\n");
+    process.stdout.write("VERCEL_TOKEN in .env.local unauthorized; clearing from env and falling back to active Vercel CLI session...\n");
+    delete process.env.VERCEL_TOKEN;
   }
 }
 
