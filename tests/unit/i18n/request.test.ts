@@ -5,6 +5,7 @@
  */
 import { describe, expect, it, vi } from "vitest";
 import { defaultLocale } from "@/i18n/config";
+import enMessages from "@/i18n/messages/en.json";
 import hiMessages from "@/i18n/messages/hi.json";
 
 type RequestConfigResult = {

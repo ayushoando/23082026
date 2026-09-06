@@ -1,31 +1,11 @@
-# UI Regression Audit — Open Findings
+# UI Regression Audit — Status & Findings
 
 **Date:** 2026-09-06  
-**Status:** Active open findings (resolved blockers and historical logs pruned)
+**Status:** Active tracking (Open findings & verified resolutions)
 
-## Open Findings
+---
 
-### A-01 — Locale contract resolved via Path B (Static Prefix Routing) — Resolved
-
-**Resolution applied (2026-09-06):**
-- Configured `localePrefix: "as-needed"` in `site/i18n/routing.ts` (`/about` for English, `/hi/about` for Hindi).
-- Updated `site/i18n/request.ts` to consume `requestLocale` provided by Next-intl; loads `messages/hi.json` when `requestLocale === "hi"`, defaulting to `messages/en.json` without dynamic `cookies()` or `headers()` imports, preserving `COST-S02` static edge HTML caching.
-- Updated `site/proxy.ts` to intercept `/hi` and `/hi/*` routes, setting `X-NEXT-INTL-LOCALE: hi` on request headers and rewriting to internal target routes while preserving CSP headers and nonce.
-- Updated `LanguageSwitcher.tsx` to navigate directly between canonical English and `/hi` prefixed URLs.
-- Aligned `site/features/site/data/seo.ts` which emits reciprocal `hreflang` tags (`en-IN` and `hi-IN`) and `og:locale:alternate` for all pages.
-- Aligned test suites (`tests/unit/lib/i18n/request-runtime.test.ts`, `tests/unit/i18n/request.test.ts`, `tests/unit/features/site/data/seo.test.ts`).
-
-**Files:** `site/i18n/routing.ts`, `site/i18n/request.ts`, `site/proxy.ts`, `site/components/site/LanguageSwitcher.tsx`, `tests/unit/lib/i18n/request-runtime.test.ts`, `tests/unit/i18n/request.test.ts`, `tests/unit/features/site/data/seo.test.ts`.
-
-### A-02 — Header comment vs CSS contract drift at 1024–1279px (Medium-High)
-
-- `Header.tsx` (lines ~354–361) claims: desktop nav hidden **below 1280px**, hamburger fills the 768–1279px band.
-- `nav.css` implements: desktop nav visible **≥ 1024px** (`theme(--breakpoint-lg)`), hamburger hidden ≥ 1024px; a `<68.75rem (1100px)` rule tightens spacing and lets the right cluster shrink to avoid overflow.
-- Net current behavior at 1024–1279px: full 8-link desktop nav + search + Sign in + language switcher, with crowding mitigations only below 1100px. The comment documents a different (older?) contract.
-
-**Required decision:** which contract is intended (1024 or 1280 crossover), then align comment/CSS. Runtime check at 1024×768 and 768×1024 required before editing.
-
-**Files:** `site/components/site/Header.tsx`, `site/focss/site/components/shared/nav.css`.
+## Active Open Findings
 
 ### A-03 — Mobile shell + consent/FAB geometry coupling (Medium — confirmed architecture, runtime unverified)
 
@@ -40,6 +20,29 @@ Confirmed in current source exactly as F-02/F-06 described: <768px locks `html/b
 
 **Action Required:** Clean up stale language comments and obsolete plan paths.  
 **Files:** `site/components/site/Header.tsx`, `plans/PLAN.md`.
+
+---
+
+## Resolved Findings
+
+### A-01 — Locale contract severed server-side (Multi-locale restoration via Path B — Static Prefix Routing) — Resolved
+
+**Resolution applied (2026-09-06):**
+- Configured static prefix routing in `site/i18n/routing.ts` (`localePrefix: 'as-needed'`). English routes remain prefixless (e.g. `/about`), while Hindi routes use explicit `/hi` prefix (e.g. `/hi/about`), providing optimal search engine crawling (SEO) and explicit `hreflang` indexing.
+- Updated `site/proxy.ts` to detect `/hi` or `/hi/*` request prefixes, inject `X-NEXT-INTL-LOCALE: hi`, and rewrite internally to target routes (`/hi/about` -> `/about`).
+- Updated `site/i18n/request.ts` to consume `await requestLocale` (populated by Next-intl middleware/proxy header). Avoids dynamic `cookies()` server calls, preserving 100% static edge HTML caching (SSG/ISR with `revalidate = 300`) and satisfying requirement `COST-S02`.
+- Updated `site/components/site/LanguageSwitcher.tsx` to handle `/hi` prefixed navigation across all routes with graceful test-safe fallback.
+- Aligned unit tests in `tests/unit/lib/i18n/request-runtime.test.ts`, `tests/unit/i18n/request.test.ts`, and `tests/unit/features/site/data/seo.test.ts`.
+
+**Files:** `site/i18n/routing.ts`, `site/proxy.ts`, `site/i18n/request.ts`, `site/components/site/LanguageSwitcher.tsx`, `tests/unit/lib/i18n/request-runtime.test.ts`, `tests/unit/i18n/request.test.ts`, `tests/unit/features/site/data/seo.test.ts`.
+
+### A-02 — Header comment vs CSS contract drift at 1024–1279px — Resolved
+
+**Resolution applied (2026-09-06):**
+- Verified live CSS contract in `site/focss/site/components/shared/nav.css`: desktop primary nav is set to display flex at `≥ theme(--breakpoint-lg)` (1024px) with hamburger hidden, supported by `@media (width < 68.75rem)` rules to compress spacing and prevent crowding between 1024px and 1100px. Also confirmed header utilities and `LanguageSwitcher` in `Header.tsx` use `lg:` breakpoint.
+- Updated obsolete comment in `Header.tsx` (lines ~354–361) from claiming a 1280px crossover to correctly reflecting the 1024px (`lg`) crossover contract.
+
+**Files:** `site/components/site/Header.tsx`, `site/focss/site/components/shared/nav.css`.
 
 ### A-06 — Site UI static contract inline-style violations — Resolved
 

@@ -34,7 +34,7 @@ Observability follows the lean, cloud-first architecture documented in [`OBSERVA
 2. **New Relic Browser:** [`NewRelicScript.tsx`](../site/components/analytics/NewRelicScript.tsx) loads the vendored SPA agent from `/newrelic.js`; the runtime CSP allows only the required New Relic origins and the agent excludes payload/header capture.
 3. **Business & Marketing Analytics:** Google Analytics 4 via [`GoogleAnalytics.tsx`](../site/components/analytics/GoogleAnalytics.tsx) when `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set. Not `@next/third-parties/google`.
 4. **Distributed Tracing and AI telemetry:** [`site/instrumentation.ts`](../site/instrumentation.ts) registers `@vercel/otel` and the AI SDK OpenTelemetry provider. [`aiMetrics.ts`](../site/lib/observability/aiMetrics.ts) adds `oando.ai_advisor.request` spans and safe Prometheus metrics for streaming and non-streaming advisor paths; OTLP can export to New Relic with server-only environment credentials.
-5. **Optional Node APM bridge:** [`newrelic.cjs`](../newrelic.cjs) enables the New Relic hybrid agent only when `NEW_RELIC_APM_ENABLED=1`, disables duplicate Next/http/undici instrumentations, and excludes headers/parameters from captured attributes.
+5. **Optional Node APM bridge:** [`config/observability/newrelic.cjs`](../config/observability/newrelic.cjs) enables the New Relic hybrid agent only when `NEW_RELIC_APM_ENABLED=1`, disables duplicate Next/http/undici instrumentations, and excludes headers/parameters from captured attributes.
 6. **Metrics Endpoint:** [`/api/metrics`](../site/app/api/metrics/route.ts) serves Prometheus exposition locally. Production is 404-disabled unless explicitly enabled and returns 401/503 when authentication is missing or invalid.
 
 ## Operational records

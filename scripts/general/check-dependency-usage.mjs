@@ -20,7 +20,7 @@ const MANIFESTS = [
   {
     id: "root",
     manifestPath: path.join(ROOT, "package.json"),
-    sourcePaths: ["site", "scripts", "tests", "config", "newrelic.cjs"],
+    sourcePaths: ["site", "scripts", "tests", "config"],
   },
   {
     id: "tech-docs-generator",
@@ -65,9 +65,9 @@ function mentionsPackage(content, packageName) {
 
 function packageNames(manifest) {
   return Object.keys({
-    ...(manifest.dependencies ?? {}),
-    ...(manifest.devDependencies ?? {}),
-    ...(manifest.optionalDependencies ?? {}),
+    ...manifest.dependencies,
+    ...manifest.devDependencies,
+    ...manifest.optionalDependencies,
   });
 }
 

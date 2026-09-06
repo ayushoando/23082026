@@ -29,7 +29,7 @@ flowchart TD
 ## 3. Server OpenTelemetry and AI advisor
 
 - [`site/instrumentation.ts`](./site/instrumentation.ts) calls `registerOTel({ serviceName })` and registers the AI SDK OpenTelemetry provider.
-- [`newrelic.cjs`](./newrelic.cjs) configures the New Relic Node APM hybrid agent. It is loaded only when `NEW_RELIC_APM_ENABLED=1` and `NEXT_RUNTIME=nodejs`; Next's native OTel spans remain the source of truth while the agent bridges them to APM.
+- [`config/observability/newrelic.cjs`](./config/observability/newrelic.cjs) configures the New Relic Node APM hybrid agent. It is loaded only when `NEW_RELIC_APM_ENABLED=1` and `NEXT_RUNTIME=nodejs`; Next's native OTel spans remain the source of truth while the agent bridges them to APM.
 - The hybrid configuration disables the agent's `http`, `next`, and `undici` instrumentations to prevent duplicate Next/fetch spans. It excludes request/response headers and request parameters and disables agent log forwarding; the server license key remains server-only.
 - Configure the exporter with `OTEL_EXPORTER_OTLP_ENDPOINT=https://otlp.nr-data.net:4318` and `OTEL_EXPORTER_OTLP_HEADERS=api-key=<ingest-license-key>` in the local/Vercel environment. The ingest license key is server-only; never put it in browser code or documentation.
 - [`site/lib/observability/aiMetrics.ts`](./site/lib/observability/aiMetrics.ts) wraps advisor requests, records Prometheus counters/histograms, and creates the privacy-safe `oando.ai_advisor.request` span. The wrapper records provider/fallback/outcome metadata only; it does not record prompts, responses, payloads, or headers.

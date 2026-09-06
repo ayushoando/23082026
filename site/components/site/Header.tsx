@@ -353,11 +353,11 @@ export function SiteHeader() {
 
             {/*
               Tablet / small-laptop menu. The desktop primary nav is hidden below
-              1280px (see .site-header__desktop-nav in nav.css) and the phone
-              MobileAppShell chrome only exists below 768px — leaving a 768–1279px
-              band with no way to reach navigation. This hamburger fills that band;
-              .site-header__hamburger (unlayered) shows it < 1280px and hides it
-              from 1280px up.
+              1024px (see .site-header__desktop-nav in nav.css) and the phone
+              MobileAppShell chrome only exists below 768px — leaving a 768–1023px
+              band where navigation is accessed via drawer. This hamburger fills that band;
+              .site-header__hamburger (unlayered) shows it < 1024px and hides it
+              from 1024px up (lg breakpoint).
             */}
             <button
               type="button"
