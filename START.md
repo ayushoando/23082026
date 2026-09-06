@@ -24,7 +24,7 @@ pnpm dev          # http://localhost:3000 — never 127.0.0.1
 pnpm run ops:list # long tail
 ```
 
-Secrets → repo-root `.env.local` (+ `site/.env.local`). Deploy: `pnpm run vercel:prod` · `pnpm run worker:deploy`. R2: `pnpm run r2:backup`.
+Secrets → repo-root `.env.local` (+ `site/.env.local`). The site-only Vercel environment sync reads `site/.env.local` and never the root file; deploy after a sync: `pnpm run vercel:prod` · `pnpm run worker:deploy`. R2: `pnpm run r2:backup`.
 
 ## 3. Orient (durable reference)
 

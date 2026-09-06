@@ -18,7 +18,7 @@ Use this index to find the canonical document for a task. Start with [onboarding
 | 10 | [`HANDOVER.md`](./HANDOVER.md) | Historical handoff context; verify against live state |
 | 11 | [`plans/README.md`](./plans/README.md) | Active planning index. Spine: [`plans/PLAN.md`](./plans/PLAN.md) · map [`plans/client-hub/flowcharts/clients-hub-flow.md`](./plans/client-hub/flowcharts/clients-hub-flow.md) |
 | 12 | [`OBSERVABILITY.md`](./OBSERVABILITY.md) | Cloud observability & telemetry guide |
-| 12a | [`.env.example`](./.env.example) · [`site/.env.example`](./site/.env.example) · [`tech-docs-generator/.env.example`](./tech-docs-generator/.env.example) | Root default `DEV_AUTH_BYPASS=1` (copy to `.env.local` and `site/.env.local`). Site template default `DEV_AUTH_BYPASS=0`, prod `https://oando.co.in`. Tech-docs six public keys only (`VITE_PORT`, `NEXT_PUBLIC_TECH_DOCS_URL`, `NEXT_PUBLIC_SITE_URL`, `NEXT_ADMIN_SUPABASE_URL`, `NEXT_ADMIN_SUPABASE_ANON_KEY`, `NEXT_ADMIN_PUBLISHABLE_KEY`). Never commit `.env.local`. Never push `DEV_AUTH_BYPASS` to production. |
+| 12a | [`.env.example`](./.env.example) · [`site/.env.example`](./site/.env.example) · [`tech-docs-generator/.env.example`](./tech-docs-generator/.env.example) | Root template is for local tooling; site template is the Vercel sync allowlist (`site/.env.local` source, nonblank entries only, `DEV_AUTH_BYPASS` excluded). Site default `DEV_AUTH_BYPASS=0`, prod `https://oando.co.in`. Tech-docs six public keys only (`VITE_PORT`, `NEXT_PUBLIC_TECH_DOCS_URL`, `NEXT_PUBLIC_SITE_URL`, `NEXT_ADMIN_SUPABASE_URL`, `NEXT_ADMIN_SUPABASE_ANON_KEY`, `NEXT_ADMIN_PUBLISHABLE_KEY`). Never commit either `.env.local`; never push `DEV_AUTH_BYPASS` to production. |
 
 ## Agents / docs / tooling
 

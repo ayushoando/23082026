@@ -19,6 +19,10 @@ Use this runbook to deploy, migrate, seed, back up, and recover the platform fro
 
 `DEV_AUTH_BYPASS` is ignored in production. Don't set `DEV_AUTH_BYPASS_ALLOW_PRODUCTION` (dead).
 
+### Site environment synchronization
+
+`scripts/vercel-env-push.mjs` reads only `site/.env.local`, filters to nonblank names declared in `site/.env.example`, and skips `DEV_AUTH_BYPASS` plus local-only test/operator credentials. Its default target is the linked Vercel site's Production environment; pass an explicit target only when a separate environment is intentionally requested. The root `.env.local` is not read or uploaded, and `.env.local` files must never be committed. Run a new deployment after changing hosted values; an environment update alone does not rebuild an existing deployment.
+
 | DB | Ref | URL env | DB env |
 |----|-----|---------|--------|
 | Products | `erpweaiypimorcunaimz` | `SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_URL` | `PRODUCTS_DATABASE_URL` |

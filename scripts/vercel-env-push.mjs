@@ -3,11 +3,15 @@ import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 
 const require = createRequire(import.meta.url);
-require("./general/loadEnvLocal.cjs").loadEnvLocal();
+const { parse: parseDotenv } = require("dotenv");
+const siteEnvPath = new URL("../site/.env.local", import.meta.url);
+const siteEnvValues = fs.existsSync(siteEnvPath)
+  ? parseDotenv(fs.readFileSync(siteEnvPath, "utf8"))
+  : {};
 
 // Determine authentication: prefer VERCEL_TOKEN if valid, otherwise use active CLI session
 let tokenArgs = [];
-const rawToken = (process.env.VERCEL_TOKEN || "").trim();
+const rawToken = (siteEnvValues.VERCEL_TOKEN || "").trim();
 if (rawToken) {
   const check = spawnSync("pnpm", ["dlx", "vercel", "whoami", "--token", rawToken], {
     encoding: "utf8",
@@ -15,10 +19,9 @@ if (rawToken) {
   });
   if (check.status === 0) {
     tokenArgs = ["--token", rawToken];
-    process.stdout.write("Using valid VERCEL_TOKEN from environment\n");
+    process.stdout.write("Using valid VERCEL_TOKEN from site/.env.local\n");
   } else {
-    process.stdout.write("VERCEL_TOKEN in .env.local unauthorized; clearing from env and falling back to active Vercel CLI session...\n");
-    delete process.env.VERCEL_TOKEN;
+    process.stdout.write("VERCEL_TOKEN in site/.env.local unauthorized; falling back to active Vercel CLI session...\n");
   }
 }
 
@@ -56,12 +59,15 @@ for (const line of exampleRaw.split(/\r?\n/)) {
 
 // NEVER push DEV_AUTH_BYPASS to production
 const SKIP = new Set(["DEV_AUTH_BYPASS"]);
-const targetEnv = process.argv[2] || "production,preview";
+const targetEnvironments = (process.argv[2] || "production")
+  .split(",")
+  .map((env) => env.trim())
+  .filter(Boolean);
 
 const vars = new Map();
 for (const k of exampleKeys) {
   if (SKIP.has(k)) continue;
-  let v = process.env[k];
+  let v = siteEnvValues[k];
   if (v === undefined || v === "") {
     v = defaultMap.get(k) || "";
   }
@@ -76,43 +82,45 @@ for (const k of exampleKeys) {
   vars.set(k, v);
 }
 
-process.stdout.write(`Prepared ${vars.size} environment variables matching site/.env.example for targets: [${targetEnv}]\n`);
+process.stdout.write(`Prepared ${vars.size} environment variables matching site/.env.example for targets: [${targetEnvironments.join(", ")}]\n`);
 
 let ok = 0;
 const failed = [];
 let i = 0;
 for (const [k, v] of vars) {
-  i += 1;
-  const sensitive = !k.startsWith("NEXT_PUBLIC_");
-  const args = [
-    "dlx",
-    "vercel",
-    "env",
-    "add",
-    k,
-    targetEnv,
-    "--force",
-    sensitive ? "--sensitive" : "--no-sensitive",
-    ...tokenArgs,
-    "--yes",
-  ];
-  const r = spawnSync("pnpm", args, {
-    encoding: "utf8",
-    shell: true,
-    input: v + "\n",
-  });
-  const out = `${r.stdout || ""}${r.stderr || ""}`;
-  if (r.status === 0) {
-    ok += 1;
-    process.stdout.write(`[${i}/${vars.size}] OK ${k}\n`);
-  } else {
-    failed.push(k);
-    process.stdout.write(
-      `[${i}/${vars.size}] FAIL ${k} status=${r.status} ${out.slice(-300)}\n`,
-    );
+  for (const targetEnv of targetEnvironments) {
+    i += 1;
+    const sensitive = !k.startsWith("NEXT_PUBLIC_");
+    const args = [
+      "dlx",
+      "vercel",
+      "env",
+      "add",
+      k,
+      targetEnv,
+      "--force",
+      sensitive ? "--sensitive" : "--no-sensitive",
+      ...tokenArgs,
+      "--yes",
+    ];
+    const r = spawnSync("pnpm", args, {
+      encoding: "utf8",
+      shell: true,
+      input: v + "\n",
+    });
+    const out = `${r.stdout || ""}${r.stderr || ""}`;
+    if (r.status === 0) {
+      ok += 1;
+      process.stdout.write(`[${i}/${vars.size * targetEnvironments.length}] OK ${k} (${targetEnv})\n`);
+    } else {
+      failed.push(`${k}/${targetEnv}`);
+      process.stdout.write(
+        `[${i}/${vars.size * targetEnvironments.length}] FAIL ${k} (${targetEnv}) status=${r.status} ${out.slice(-300)}\n`,
+      );
+    }
   }
 }
-process.stdout.write(`\nDONE ok=${ok} failed=${failed.length} total=${vars.size}\n`);
+process.stdout.write(`\nDONE ok=${ok} failed=${failed.length} total=${vars.size * targetEnvironments.length}\n`);
 if (failed.length > 0) {
   process.stdout.write(`FAILED: ${failed.join(" ")}\n`);
   process.exit(1);

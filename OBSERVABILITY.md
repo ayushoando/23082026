@@ -48,7 +48,7 @@ Production safety is deliberate:
 
 ## 5. Environment checklist
 
-Keep real values only in `.env.local`, `site/.env.local`, or the corresponding Vercel environment settings. The committed examples remain blank for secrets.
+Keep real values only in `.env.local`, `site/.env.local`, or the corresponding Vercel environment settings. The site Vercel sync reads only `site/.env.local`; the root file is not a deployment source. The committed examples remain blank for secrets.
 
 ```ini
 # Browser ingest (public to the browser agent by design; still supplied at runtime)
