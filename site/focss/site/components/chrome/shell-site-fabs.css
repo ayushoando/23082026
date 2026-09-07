@@ -64,15 +64,12 @@ html:has([data-cookie-consent-bar]) {
     padding-bottom: 0.5rem;
   }
 
-  html:has(.mobile-tab-bar):has([data-cookie-consent-bar]) {
-    --site-fab-bottom: calc(
-      var(--mobile-tab-bar-height, 3.5rem) + var(--cookie-consent-bar-stack) + var(--site-fab-gap)
-    );
-    --site-fab-bottom-raised: calc(
-      var(--mobile-tab-bar-height, 3.5rem) + var(--cookie-consent-bar-stack) + var(--site-fab-gap)
-    );
-    /* See note above — keep footer clearance at the phone base; don't inflate
-       it for the transient consent bar (avoids ~200px of dead footer space). */
+  /* Suppress FAB when CookieConsentBar is active on mobile viewports (<768px) per R2/R3 */
+  html:has([data-cookie-consent-bar]) .site-fab-launcher,
+  body:has([data-cookie-consent-bar]) .site-fab-launcher,
+  html:has([data-cookie-consent-bar]) .site-fab-anchor,
+  body:has([data-cookie-consent-bar]) .site-fab-anchor {
+    display: none !important;
   }
 }
 

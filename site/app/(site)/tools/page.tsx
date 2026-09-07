@@ -1,6 +1,20 @@
 import Link from "next/link";
 import { ArrowRight, Calculator, Compass, UsersThree } from "@phosphor-icons/react/dist/ssr";
 
+const phIconMap = {
+  calculator: Calculator,
+  usersThree: UsersThree,
+  compass: Compass,
+  arrowRight: ArrowRight,
+} as const;
+
+type PhIconName = keyof typeof phIconMap;
+
+function PhIcon({ name, className, size = 16 }: { name: PhIconName; className?: string; size?: number }) {
+  const Icon = phIconMap[name];
+  return <Icon size={size} className={className} aria-hidden="true" />;
+}
+
 import { HomeMarketingLayout } from "@/components/home/layout";
 import { TOOLS_PAGE_METADATA } from "@/features/site/data/routeMetadata";
 import { buildBreadcrumbJsonLd, buildPageJsonLd } from "@/features/site/data/seo";
@@ -17,7 +31,7 @@ const TOOLS_LIST = [
     kicker: "Capacity & Density",
     description:
       "Estimate workstation capacity, gross floor area, and circulation allowances from room dimensions across open-workspace, focused, and training layouts.",
-    icon: Calculator,
+    icon: "calculator" as const,
     action: "Calculate office space",
   },
   {
@@ -26,7 +40,7 @@ const TOOLS_LIST = [
     kicker: "Meeting & Conference",
     description:
       "Determine attendee capacity, table clearance allowances, and circulation space for boardrooms, collaborative meeting rooms, and training setups.",
-    icon: UsersThree,
+    icon: "usersThree" as const,
     action: "Calculate room capacity",
   },
   {
@@ -35,7 +49,7 @@ const TOOLS_LIST = [
     kicker: "2D / 3D Layout Suite",
     description:
       "Draw true-to-scale floor plans, place real catalog furniture, verify spatial clearances, and generate instant bills of quantities (BOQ) with PDF export.",
-    icon: Compass,
+    icon: "compass" as const,
     action: "Launch floor planner",
   },
 ] as const;
@@ -44,7 +58,7 @@ export default async function ToolsHubPage() {
   const nonce = await getRequestNonce();
   const pageJsonLd = buildPageJsonLd(SITE_URL, {
     path: "/tools",
-    title: "Workspace Planning Tools & Calculators | One&Only",
+    title: "Workspace Planning Tools & Calculators | One and Only",
     description:
       "Free office planning tools and workspace calculators. Estimate workstation capacity, calculate meeting room sizes, and evaluate layout requirements before furnishing.",
     pageType: "CollectionPage",
@@ -83,7 +97,6 @@ export default async function ToolsHubPage() {
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {TOOLS_LIST.map((tool) => {
-              const IconComponent = tool.icon;
               return (
                 <article
                   key={tool.href}
@@ -94,7 +107,7 @@ export default async function ToolsHubPage() {
                       <span className="typ-caption rounded-full bg-surface-subtle px-2.5 py-1 font-medium text-muted">
                         {tool.kicker}
                       </span>
-                      <IconComponent size={24} className="text-primary" aria-hidden="true" />
+                      <PhIcon name={tool.icon} size={24} className="text-primary" />
                     </div>
 
                     <h2 className="typ-h3 text-strong">
@@ -114,10 +127,10 @@ export default async function ToolsHubPage() {
                   <div className="pt-6">
                     <Link
                       href={tool.href}
-                      className="inline-flex min-h-11 items-center gap-2 font-medium text-primary hover:text-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
+                      className="inline-flex min-h-12 items-center gap-2 py-2 font-medium text-primary hover:text-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
                     >
                       <span>{tool.action}</span>
-                      <ArrowRight size={16} aria-hidden="true" />
+                      <PhIcon name="arrowRight" size={16} />
                     </Link>
                   </div>
                 </article>
@@ -136,13 +149,13 @@ export default async function ToolsHubPage() {
             <div className="flex flex-wrap items-center gap-3 shrink-0">
               <Link
                 href="/planning"
-                className="btn-primary inline-flex min-h-11 items-center justify-center px-5 py-2.5 rounded font-medium text-inverse focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                className="btn-primary inline-flex min-h-12 items-center justify-center px-5 py-2.5 rounded font-medium text-inverse focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               >
                 Planning service
               </Link>
               <Link
                 href="/contact"
-                className="btn-secondary inline-flex min-h-11 items-center justify-center px-5 py-2.5 rounded font-medium border border-theme-soft hover:bg-surface-panel focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                className="btn-secondary inline-flex min-h-12 items-center justify-center px-5 py-2.5 rounded font-medium border border-theme-soft hover:bg-surface-panel focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               >
                 Contact team
               </Link>

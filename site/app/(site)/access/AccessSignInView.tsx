@@ -7,6 +7,17 @@ import { ArrowLeft } from "@phosphor-icons/react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
+const phIconMap = {
+  arrowLeft: ArrowLeft,
+} as const;
+
+type PhIconName = keyof typeof phIconMap;
+
+function PhIcon({ name, className, size = 16 }: { name: PhIconName; className?: string; size?: number }) {
+  const Icon = phIconMap[name];
+  return <Icon size={size} className={className} aria-hidden="true" />;
+}
+
 import {
   gsapReducedMotion,
   GSAP_EASE_OUT,
@@ -75,10 +86,10 @@ export function AccessSignInView({
         <div className="shell-access-back">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-sm font-medium text-muted transition-colors hover:text-strong"
+            className="inline-flex min-h-12 items-center gap-2 py-2 text-sm font-medium text-muted transition-colors hover:text-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
           >
-            <ArrowLeft className="h-4 w-4" aria-hidden />
-            {backToHomeLabel}
+            <PhIcon name="arrowLeft" className="h-4 w-4" />
+            <span>{backToHomeLabel}</span>
           </Link>
         </div>
 

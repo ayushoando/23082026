@@ -13,9 +13,28 @@
 }
 
 .shell-access-back {
-  position: absolute;
-  top: 2rem;
-  left: 2rem;
+  position: relative;
+  top: auto;
+  left: auto;
+  padding: 1.5rem 1.5rem 0.5rem;
+  z-index: 10;
+}
+
+.shell-access-back a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 3rem;
+  text-decoration: none;
+}
+
+@media (width >= theme(--breakpoint-md)) {
+  .shell-access-back {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    padding: 0;
+  }
 }
 
 .shell-access-form-wrap {
@@ -23,7 +42,13 @@
   flex: 1;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 1.5rem;
+}
+
+@media (width >= theme(--breakpoint-md)) {
+  .shell-access-form-wrap {
+    padding: 2rem;
+  }
 }
 
 @media (width >= theme(--breakpoint-lg)) {

@@ -6,6 +6,19 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { Minus, Plus, Trash as Trash2 } from "@phosphor-icons/react";
+
+const phIconMap = {
+  minus: Minus,
+  plus: Plus,
+  trash: Trash2,
+} as const;
+
+type PhIconName = keyof typeof phIconMap;
+
+function PhIcon({ name, className, size = 16 }: { name: PhIconName; className?: string; size?: number }) {
+  const Icon = phIconMap[name];
+  return <Icon size={size} className={className} aria-hidden="true" />;
+}
 import { HomeMarketingLayout, HomeSection, HomeSectionInner } from "@/components/home/layout";
 import { MarketingCtaLink } from "@/components/ui/MarketingCtaLink";
 import { useQuoteCart } from "@/lib/store/quoteCart";
@@ -203,7 +216,7 @@ export default function QuoteCartPage() {
                               className="quote-cart-qty__btn"
                               aria-label={`Decrease quantity for ${item.name}`}
                             >
-                              <Minus className="h-4 w-4" />
+                              <PhIcon name="minus" className="h-4 w-4" />
                             </button>
                             <span className="quote-cart-qty__value typ-cta">{item.qty}</span>
                             <button
@@ -212,16 +225,16 @@ export default function QuoteCartPage() {
                               className="quote-cart-qty__btn"
                               aria-label={`Increase quantity for ${item.name}`}
                             >
-                              <Plus className="h-4 w-4" />
+                              <PhIcon name="plus" className="h-4 w-4" />
                             </button>
                           </div>
                           <button
                             type="button"
                             onClick={() => removeItem(item.id)}
-                            className="typ-chip text-muted inline-flex items-center gap-1 hover:text-danger"
+                            className="typ-chip text-muted inline-flex min-h-12 items-center gap-1.5 px-3 py-2 hover:text-danger focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
                           >
-                            <Trash2 className="h-3.5 w-3.5" />
-                            {QUOTE_CART_ROUTE_COPY.removeCta}
+                            <PhIcon name="trash" className="h-3.5 w-3.5" />
+                            <span>{QUOTE_CART_ROUTE_COPY.removeCta}</span>
                           </button>
                         </div>
                       </div>

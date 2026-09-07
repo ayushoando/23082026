@@ -153,6 +153,12 @@
   box-shadow: 0 -4px 24px color-mix(in srgb, var(--surface-inverse) 8%, transparent);
 }
 
+html:has(.mobile-tab-bar) .pdp-mobile-bar,
+body:has(.mobile-tab-bar) .pdp-mobile-bar {
+  bottom: var(--mobile-tab-bar-height, 3.5rem);
+  padding-bottom: var(--space-3);
+}
+
 .pdp-mobile-bar__primary {
   display: inline-flex;
   min-height: var(--control-height-sm);

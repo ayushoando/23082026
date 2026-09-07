@@ -100,7 +100,7 @@ const consentBarClass =
 const consentCopyClass =
   "max-w-3xl text-body md:text-sm md:leading-relaxed [font-size:var(--type-body-size)] [font-weight:375] [letter-spacing:var(--type-letter-copy)] [line-height:1.6]";
 const consentActionBaseClass =
-  "min-h-9 rounded-full px-2.5 font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:min-h-10 sm:px-3 md:min-h-11 md:px-4 md:text-sm [font-size:var(--type-label-size)] sm:[font-size:var(--type-body-size)] [letter-spacing:var(--type-letter-copy)] [line-height:1.6]";
+  "min-h-12 rounded-full px-2.5 font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:min-h-12 sm:px-3 md:min-h-12 md:px-4 md:text-sm [font-size:var(--type-label-size)] sm:[font-size:var(--type-body-size)] [letter-spacing:var(--type-letter-copy)] [line-height:1.6]";
 const consentSecondaryActionClass =
   "border border-muted text-body hover:border-strong hover:text-strong";
 const consentPrimaryActionClass = "bg-primary text-inverse hover:bg-primary/90";

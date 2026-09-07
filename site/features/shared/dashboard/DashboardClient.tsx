@@ -17,6 +17,17 @@ import {
 } from "@/lib/helpers/gsapMotion";
 import { WORKSPACE_HUB_SECTIONS, type WorkspaceHubItem } from "./workspaceHub";
 
+const phIconMap = {
+  arrowRight: ArrowRight,
+} as const;
+
+type PhIconName = keyof typeof phIconMap;
+
+function PhIcon({ name, className, size = 16 }: { name: PhIconName; className?: string; size?: number }) {
+  const Icon = phIconMap[name];
+  return <Icon size={size} className={className} aria-hidden="true" />;
+}
+
 registerGsapPlugins();
 
 interface DashboardClientProps {
@@ -44,7 +55,7 @@ function HubCard({ item }: { item: WorkspaceHubItem }) {
       href={item.href}
       aria-label={`${item.label}: ${item.description}`}
       data-dashboard-card
-      className="workspace-hub-card workspace-hub-card--link group flex h-full min-h-[11rem] flex-col rounded-[1.35rem] border p-5 transition-[border-color,box-shadow,transform] duration-200"
+      className="workspace-hub-card workspace-hub-card--link group flex h-full min-h-44 flex-col rounded-2xl border p-5 transition-all duration-200"
     >
       <div className="flex items-start justify-between gap-3">
         <span
@@ -53,17 +64,17 @@ function HubCard({ item }: { item: WorkspaceHubItem }) {
         >
           <Icon size={18} />
         </span>
-        <ArrowRight
+        <PhIcon
+          name="arrowRight"
           size={16}
           className="workspace-hub-card__arrow shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
-          aria-hidden
         />
       </div>
       <h3 className="workspace-hub-card__title mt-4 text-base font-semibold tracking-tight">
         {item.label}
       </h3>
       <p className="workspace-hub-card__desc mt-2 flex-1 text-sm leading-6">{item.description}</p>
-      <span className="workspace-hub-card__cta mt-4 text-xs font-bold uppercase tracking-[0.1em]">
+      <span className="workspace-hub-card__cta mt-4 text-xs font-bold uppercase tracking-wider">
         Open
       </span>
     </Link>
@@ -169,12 +180,12 @@ export function DashboardClient({ userEmail, accessError }: DashboardClientProps
 
         {/* region, not <header> — suite banner lives in dashboard layout shell */}
         <div
-          className="workspace-hub__hero workspace-hub__hero--media rounded-[2rem] border p-5 sm:p-8 lg:p-10"
+          className="workspace-hub__hero workspace-hub__hero--media rounded-3xl border p-5 sm:p-8 lg:p-10"
           role="region"
           aria-labelledby="dashboard-heading"
         >
           <div className="workspace-hub__hero-ambient" aria-hidden="true" />
-          <div className="relative z-[1] flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div className="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl">
               <div
                 data-dashboard-reveal
@@ -183,7 +194,7 @@ export function DashboardClient({ userEmail, accessError }: DashboardClientProps
               />
               <p
                 data-dashboard-reveal
-                className="workspace-hub__eyebrow text-[0.6875rem] font-semibold uppercase tracking-[0.3em]"
+                className="workspace-hub__eyebrow text-xs font-semibold uppercase tracking-widest"
               >
                 Member workspace
               </p>

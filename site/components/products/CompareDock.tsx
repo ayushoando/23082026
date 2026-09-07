@@ -27,7 +27,10 @@ export function CompareDock() {
       role="region"
       aria-label="Product comparison shortlist"
       data-compare-dock=""
-      className="scheme-panel scheme-border fixed bottom-4 left-1/2 z-40 w-[calc(100%-1rem)] max-w-3xl -translate-x-1/2 rounded-xl border p-3 shadow-theme-float sm:bottom-3"
+      style={{
+        bottom: "calc(var(--mobile-tab-bar-height, 0rem) + 0.75rem)",
+      }}
+      className="scheme-panel scheme-border fixed left-1/2 z-40 w-[calc(100%-1rem)] max-w-3xl -translate-x-1/2 rounded-xl border p-3 shadow-theme-float sm:bottom-3"
     >
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
@@ -44,7 +47,7 @@ export function CompareDock() {
             type="button"
             onClick={clear}
             aria-label="Clear comparison shortlist"
-            className="btn-outline typ-body-sm inline-flex min-h-11 items-center gap-1.5 px-4"
+            className="btn-outline typ-body-sm inline-flex min-h-12 items-center gap-1.5 px-4"
           >
             <Trash2 className="h-3.5 w-3.5" aria-hidden />
             Clear
@@ -59,7 +62,7 @@ export function CompareDock() {
                 surface: "compare-dock",
               })
             }
-            className="btn-primary typ-body-sm inline-flex min-h-11 items-center gap-2 px-4"
+            className="btn-primary typ-body-sm inline-flex min-h-12 items-center gap-2 px-4"
             aria-label={`Compare ${items.length} selected office furniture products`}
           >
             <GitCompareArrows className="h-3.5 w-3.5" aria-hidden />

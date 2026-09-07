@@ -54,20 +54,100 @@
   color: var(--text-subtle);
 }
 
+.workspace-hub__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+@media (width >= theme(--breakpoint-sm)) {
+  .workspace-hub__actions {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-4);
+  }
+}
+
+.workspace-hub__actions-primary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.workspace-hub__primary-btn,
+.workspace-hub__ghost-btn,
+.workspace-hub__sign-out {
+  display: inline-flex;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  padding: 0.75rem 1.5rem;
+  font-size: var(--type-body-size);
+  font-weight: var(--font-weight-copy-semibold);
+  letter-spacing: 0.02em;
+  line-height: 1.3;
+  text-decoration: none;
+  white-space: nowrap;
+  transition-property: background-color, border-color, color, transform, box-shadow;
+  transition-duration: var(--motion-fast);
+  transition-timing-function: var(--ease-standard);
+  cursor: pointer;
+}
+
+.workspace-hub__primary-btn:active,
+.workspace-hub__ghost-btn:active,
+.workspace-hub__sign-out:active {
+  transform: translateY(1px);
+}
+
+.workspace-hub__primary-btn:focus-visible,
+.workspace-hub__ghost-btn:focus-visible,
+.workspace-hub__sign-out:focus-visible {
+  box-shadow: var(--focus-ring);
+  outline: none;
+}
+
 .workspace-hub__primary-btn {
+  border: 1px solid var(--color-primary);
   background: var(--color-primary);
   color: var(--text-inverse);
-  text-decoration: none;
 }
 
 .workspace-hub__primary-btn:hover {
+  background: var(--color-primary-hover, var(--color-bronze-600));
+  border-color: var(--color-primary-hover, var(--color-bronze-600));
   filter: brightness(1.05);
 }
 
 .workspace-hub__ghost-btn {
-  border-color: var(--border-soft);
-  color: var(--text-body);
+  border: 1px solid var(--border-soft);
+  color: var(--text-strong);
   background: var(--surface-page);
+}
+
+.workspace-hub__ghost-btn:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-soft);
+  color: var(--text-strong);
+}
+
+.workspace-hub__sign-out {
+  border: 1px solid var(--border-soft);
+  color: var(--text-muted);
+  background: transparent;
+}
+
+.workspace-hub__sign-out:hover {
+  color: var(--text-strong);
+  border-color: var(--border-strong);
+  background: var(--surface-hover);
+}
+
+.workspace-hub__sign-out:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .workspace-hub__section-title {
@@ -96,7 +176,7 @@
 
 .workspace-hub-card__icon {
   color: var(--color-primary);
-  background: color-mix(in srgb, var(--color-primary) 12%, white);
+  background: color-mix(in srgb, var(--color-primary) 12%, var(--surface-panel));
 }
 
 .workspace-hub-card__title {

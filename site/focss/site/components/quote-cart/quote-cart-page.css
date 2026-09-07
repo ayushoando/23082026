@@ -125,23 +125,29 @@
   align-items: center;
   border: 1px solid color-mix(in srgb, var(--color-bronze-400) 22%, transparent);
   background: var(--surface-panel, var(--color-white-50));
+  border-radius: var(--radius-md);
 }
 
 .quote-cart-qty__btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
+  width: 3rem;
+  height: 3rem;
+  min-width: 3rem;
+  min-height: 3rem;
   color: var(--text-body);
+  transition: color var(--motion-fast) var(--ease-standard), background-color var(--motion-fast) var(--ease-standard);
+  cursor: pointer;
 }
 
 .quote-cart-qty__btn:hover {
   color: var(--text-primary, var(--color-bronze-500));
+  background: var(--surface-soft);
 }
 
 .quote-cart-qty__value {
-  min-width: 2.25rem;
+  min-width: 2.5rem;
   text-align: center;
   font-weight: 600;
   color: var(--text-strong);

@@ -1,4 +1,6 @@
-/* Marketing app shell — phone only (< md). Tablet+ uses fixed SiteHeader (nav.css @ lg / 1024 desktop). */
+:root {
+  --mobile-tab-bar-height: 0rem;
+}
 
 .mobile-app-bar,
 .mobile-tab-bar {
@@ -81,6 +83,10 @@
     z-index: 45;
   }
 
+  [data-compare-dock] {
+    bottom: calc(var(--mobile-tab-bar-height, 3.5rem) + 0.75rem) !important;
+  }
+
   html:has([data-cookie-consent-bar]) .mobile-app-main {
     padding-bottom: calc(
       var(--mobile-tab-bar-height) + max(4.5rem, var(--cookie-consent-bar-height, 4.5rem))
@@ -130,10 +136,10 @@
   .mobile-app-bar__menu,
   .mobile-app-bar__search {
     display: inline-flex;
-    height: 2.75rem;
-    width: 2.75rem;
-    min-height: 2.75rem;
-    min-width: 2.75rem;
+    height: 3rem;
+    width: 3rem;
+    min-height: 3rem;
+    min-width: 3rem;
     align-items: center;
     justify-content: center;
     color: var(--text-strong);

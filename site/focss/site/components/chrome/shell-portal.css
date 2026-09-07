@@ -65,7 +65,7 @@
   top: 4rem;
   z-index: 10;
   border-bottom: 0.0625rem solid var(--border-soft);
-  background: color-mix(in srgb, white 95%, transparent);
+  background: color-mix(in srgb, var(--surface-page) 95%, transparent);
   -webkit-backdrop-filter: blur(0.75rem);
   backdrop-filter: blur(12px);
 }
@@ -75,7 +75,7 @@
 .shell-portal-input {
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-lg);
-  background: white;
+  background: var(--surface-panel);
   color: var(--text-body);
   transition: border-color var(--motion-fast) var(--ease-standard),
               box-shadow var(--motion-fast) var(--ease-standard);
@@ -124,7 +124,7 @@
   overflow: hidden;
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-lg);
-  background: white;
+  background: var(--surface-panel);
   transition: border-color var(--motion-fast) var(--ease-standard),
               box-shadow var(--motion-fast) var(--ease-standard);
 }
@@ -146,7 +146,7 @@
 .shell-portal-panel {
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-xl);
-  background: white;
+  background: var(--surface-panel);
   box-shadow: var(--shadow-soft);
 }
 
@@ -160,7 +160,7 @@
   overflow: hidden;
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-xl);
-  background: white;
+  background: var(--surface-panel);
   box-shadow: var(--shadow-soft);
 }
 

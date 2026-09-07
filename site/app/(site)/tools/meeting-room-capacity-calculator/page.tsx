@@ -75,7 +75,7 @@ export default async function MeetingRoomCapacityCalculatorPage() {
         dangerouslySetInnerHTML={{ __html: sanitizeJsonForScript(breadcrumbJsonLd) }}
       />
       <section className="home-section" aria-labelledby="tool-heading">
-        <div className="home-section__inner">
+        <div className="home-shell-xl">
           <p className="home-kicker">Free planning tool</p>
           <h1 id="tool-heading" className="home-heading">
             Meeting Room Capacity Calculator

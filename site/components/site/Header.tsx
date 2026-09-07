@@ -366,7 +366,7 @@ export function SiteHeader() {
               aria-controls="mobile-nav-drawer"
               aria-haspopup="dialog"
               onClick={() => setNavDrawerOpen(true)}
-              className="site-header__hamburger shell-icon-button ml-1 h-10 w-10 shrink-0 items-center justify-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="site-header__hamburger shell-icon-button ml-1 h-12 w-12 shrink-0 items-center justify-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               <List size={24} weight="bold" aria-hidden="true" />
             </button>

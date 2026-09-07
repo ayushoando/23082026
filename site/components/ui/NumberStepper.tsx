@@ -1,8 +1,21 @@
 "use client";
 
+import { Minus, Plus } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { cn } from "@/lib/utils";
+
+const phIconMap = {
+  minus: Minus,
+  plus: Plus,
+} as const;
+
+type PhIconName = keyof typeof phIconMap;
+
+function PhIcon({ name, className, size = 14 }: { name: PhIconName; className?: string; size?: number }) {
+  const Icon = phIconMap[name];
+  return <Icon size={size} className={className} aria-hidden="true" />;
+}
 
 type NumberStepperProps = {
   id?: string;
@@ -47,7 +60,7 @@ function NumberStepper({
         aria-label="Decrease"
         onClick={() => emit(clamp(value - step))}
       >
-        −
+        <PhIcon name="minus" size={14} />
       </Button>
       <Input
         id={id}
@@ -67,7 +80,7 @@ function NumberStepper({
         aria-label="Increase"
         onClick={() => emit(clamp(value + step))}
       >
-        +
+        <PhIcon name="plus" size={14} />
       </Button>
     </div>
   );
