@@ -30,7 +30,8 @@ supabase/.temp/
 
 # Agent / Grok session tooling (not product source)
 .superpowers/
-.agents/
+.agents/*
+!.agents/skills/
 
 # Claude Code — not used; AGENTS.md is the agent front door
 .claude/
