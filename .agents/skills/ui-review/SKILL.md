@@ -7,6 +7,8 @@ description: "Execute or review UI redesigns and implementations under zero-comp
 
 Use this skill when designing, redesigning, restyling, auditing, or reviewing any user interface route or component in the Oando platform (`site/app/(site)/`, `site/components/`). This standard is **merciless, exhaustive, and uncompromising**: elevate visual rhythm, ergonomics, and brand distinction with **zero room for escape**, zero tolerance for arbitrary styles, and zero leniency for desktop-only validation.
 
+- **Scope Discipline:** Do exactly the stated task. Do not expand scope, refactor adjacent code, or make opportunistic improvements. Make the smallest reversible change that achieves the requested outcome. If scope is exceeded, stop and report it.
+
 ---
 
 ## 1. The 4-Phase Evidence-Led Redesign Protocol
@@ -51,7 +53,7 @@ Any occurrence of the following triggers an **immediate FAIL** verdict:
 3. **The Window Scroller Trap on Mobile:** In `<768px` viewports, page content scrolls inside `<div className="mobile-app-main">`. If GSAP ScrollTrigger, parallax, or intersection observers bind to `window`, animations freeze permanently at `opacity: 0`.
 4. **Ad-hoc Inline SVGs & Icon Chaos:** Using raw `<svg>` elements or mixing icon sets. The platform standard is strictly `@phosphor-icons/react` with consistent weight (`regular`, `bold`, or `fill`).
 5. **Hardcoded Strings (i18n Bypass):** Any user-visible text in JSX not routed through `useTranslations()` from `next-intl`.
-6. **Sub-44px Touch Targets:** Clickable/tappable elements (buttons, links, tab items, dropdown items) with hit boxes smaller than $44 \times 44\text{ px}$ (standard 48px) on touch viewports.
+6. **Sub-44px Touch Targets:** Clickable/tappable elements (buttons, links, tab items, dropdown items) with hit boxes smaller than 44×44 px (standard 48px) on touch viewports.
 7. **Contrast & Illegibility Violations:** Text or interactive controls failing WCAG 2.2 AA minimum contrast ratios (4.5:1 for normal text, 3:1 for large text/icons).
 8. **Layout Shift (CLS) & Missing Aspect Ratios:** Unsized images or dynamic content causing cumulative layout shift during page hydration (CLS must equal 0).
 
@@ -68,8 +70,8 @@ The repository isolates CSS into 4 independent zones under `site/focss/`:
 ### Strict Token Evaluation Rules
 - **Color Tokens:** Must map to `@focss` theme variables (`--color-surface-*`, `--color-text-*`, `--color-border-*`, `--color-brand-*`). Never commit raw hex, `hsl()`, or `rgb()`.
 - **Typography Weights:** Must strictly consume semantic font weight tokens (`--font-weight-medium: 500`, `--font-weight-semibold: 600`).
-- **Zone Boundaries:** Components in `planner/` must NEVER import `base/scan.css` or cross-import from `studio/` (`scan:boundaries`).
-- **Style Token Ratchet:** Verified via `node scripts/general/check-style-tokens.mjs`. Debt baseline is locked at 200 findings across 57 files. New styling violations are strictly forbidden.
+- **Zone Boundaries:** Components in `planner/` must NEVER import `base/scan.css` or cross-import from `studio/` (`pnpm run scan:boundaries`).
+- **Style Token Ratchet:** Verified via `pnpm run check:style-tokens`. Debt baseline is locked at 200 findings across 57 files. New styling violations are strictly forbidden.
 
 ---
 
@@ -80,7 +82,7 @@ On viewports `< 768px`, the mobile application shell activates (`site/components
 ### Mobile Chrome Invariants
 - **Bottom Tab Bar (5 Tabs):**
   - Canonical tabs: `products` (`/products`), `planner` (`/planner`), `quote` (`/contact`), `portfolio` (`/portfolio`), and `account` (`/access`).
-  - Height: exactly $64\text{ px}$ plus `env(safe-area-inset-bottom)`.
+  - Height: exactly 64 px plus `env(safe-area-inset-bottom)`.
   - Content Offset: page containers must apply bottom padding (`pb-20` or `--mobile-bar-height`) so interactive buttons (e.g. submit, checkout, zoom) are never concealed behind the navigation bar.
 - **Top Header & Drawer:**
   - Sticky header must have explicit `z-index` coordination (`z-header: 40`, `z-drawer: 50`, `z-modal: 60`).
@@ -95,9 +97,9 @@ On viewports `< 768px`, the mobile application shell activates (`site/components
 
 - **Touch Ergonomics:** All clickable items must have `min-h-[44px]` (ideally `min-h-[48px]`) and `min-w-[44px]` touch targets, or utilize pseudo-element hit area expansion (`after:absolute after:-inset-2`).
 - **Color Contrast Ratios:**
-  - Normal text ($< 18\text{ pt}$ or $< 14\text{ pt}$ bold): $\ge 4.5:1$.
-  - Large text ($\ge 18\text{ pt}$ or $\ge 14\text{ pt}$ bold): $\ge 3.0:1$.
-  - Graphical UI components & state borders: $\ge 3.0:1$.
+  - Normal text (<18 pt or <14 pt bold): ≥ 4.5:1.
+  - Large text (≥18 pt or ≥14 pt bold): ≥ 3.0:1.
+  - Graphical UI components & state borders: ≥ 3.0:1.
 - **Keyboard Navigation & Focus Management:**
   - Interactive elements must show a distinct, high-contrast focus ring (`focus-visible:ring-2 focus-visible:ring-brand-primary`).
   - Tab order must follow logical visual reading rhythm.
@@ -130,7 +132,7 @@ On viewports `< 768px`, the mobile application shell activates (`site/components
   - All text must consume `useTranslations(namespace)`.
   - Both `site/i18n/messages/en.json` and `site/i18n/messages/hi.json` must maintain 100% key and placeholder parity (`pnpm run check:i18n:parity`).
 - **Non-Latin Typography Fallbacks:**
-  - Devanagari text must render legibly without clipping ascenders or descenders (`line-height` safety margin $\ge 1.4$).
+  - Devanagari text must render legibly without clipping ascenders or descenders (line-height safety margin ≥ 1.4).
   - Font families must include standard Indian system fallbacks (`system-ui`, `sans-serif`).
 
 ---
@@ -139,15 +141,17 @@ On viewports `< 768px`, the mobile application shell activates (`site/components
 
 ```powershell
 # 1. Verify style tokens remain within baseline cap
-node scripts/general/check-style-tokens.mjs
+pnpm run check:style-tokens
 
 # 2. Verify site UI contracts and route integrity
-node scripts/check-site-ui-contract.mjs
-node scripts/check-homepage-dialect.mjs
+pnpm run check:site-ui
 
 # 3. Verify 100% key parity for all added translation strings
-node scripts/check-i18n-key-parity.mjs
+pnpm run check:i18n:parity
 
 # 4. Verify TypeScript builds without errors
 pnpm run check:layout
+
+# 5. Run the full site-ui gate
+pnpm run gate:site-ui
 ```

@@ -16,6 +16,7 @@ Under `AGENTS.md` Rule 1, truth is non-negotiable:
 - **No Circular Meta-Audits:** Tests that only test the audit framework itself, mock datasets, or reconciliation checkpoints are flagged as **stale toys** and rejected.
 - **No Regressive Recovery Loops:** Audits must drive forward progress to release quality. Passive recovery reports and circular worktree audits are forbidden.
 - **No Hand-Waving or Deferred Quality:** "Will be addressed in Phase B" or "minor styling deviation" are treated as unresolved defects.
+- **Scope Discipline:** Do exactly the stated task. Do not expand scope, refactor adjacent code, or make opportunistic improvements. Make the smallest reversible change that achieves the requested outcome. If scope is exceeded, stop and report it.
 
 ---
 
@@ -58,7 +59,7 @@ Under `AGENTS.md` Rule 1, truth is non-negotiable:
 - Any command or agent interaction referencing the quarantined directory constitutes an immediate **CRITICAL SECURITY BREACH**.
 
 ### Pillar 4: Architectural Boundaries & Persistence Guardrails
-- **Fork Boundary Isolation (`scripts/scan-boundaries.mjs`):**
+- **Fork Boundary Isolation (`pnpm run scan:boundaries`):**
   - Verify zero cross-imports between `site/**/Planner` and `site/**/Studio`.
   - Verify FOCSS zone isolation (`site/focss/planner/entry.css` must never import `base/scan.css`).
 - **Persistence Mode & EROFS Prevention:**
@@ -71,15 +72,15 @@ Under `AGENTS.md` Rule 1, truth is non-negotiable:
   - Zero dual-writing permitted.
 
 ### Pillar 5: Test Subsystem Truth & Anti-Cheat Audits
-- **Hollow Tests (`scripts/general/audit-hollow-tests.mjs`):**
+- **Hollow Tests (`pnpm run test:audit`):**
   - Rejects `expect(true).toBe(true)`, sole `toBeTruthy()`, sole `toBeDefined()`, empty `catch {}` blocks, or zero-assertion `it()` blocks.
-- **Fake Tests (`tech-docs-generator/scripts/fake-test-audit.mjs`):**
+- **Fake Tests (`pnpm run test:audit:fake-test`):**
   - Rejects tests mocking the unit under test (`vi.mock` + `extract[A-Z]`).
-  - Asserts `expectCount >= itCount`.
-- **Gate Skips (`scripts/general/audit-gate-skips.mjs`):**
+  - Asserts expectCount ≥ itCount.
+- **Gate Skips (`pnpm run test:audit`):**
   - Scans for unauthorized `test.skip`, `it.skip`, `describe.skip`, `.only`, `istanbul ignore`, `v8 ignore`.
   - Any skips must match active, unexpired entries in `tests/manifests/skip-exceptions.json`.
-- **ESLint Suppressions (`scripts/general/audit-eslint-disable.mjs`):**
+- **ESLint Suppressions (`pnpm run test:audit`):**
   - Exactly **5 permitted files** across the entire repository for `react-hooks/exhaustive-deps`:
     1. `site/hooks/Studio/useStudioFabric.ts`
     2. `site/hooks/Planner/usePlannerFabric.ts`
@@ -89,7 +90,7 @@ Under `AGENTS.md` Rule 1, truth is non-negotiable:
   - Any additional `eslint-disable` comment is an automatic failure.
 
 ### Pillar 6: Security, Secrets & Cloud Infrastructure
-- **Secret Scanning (`scripts/general/scan_secrets.mjs`):**
+- **Secret Scanning (`pnpm run scan:secrets`):**
   - Scans for exposed API keys, private tokens, or credentials in tracked files.
 - **Service-Role Key Isolation (Finding 9.3):**
   - Asserts that `SUPABASE_ADMIN_SERVICE_ROLE_KEY` is never exposed to client-side `NEXT_PUBLIC_` variables via `assertNotServiceRoleKey`.
@@ -97,7 +98,7 @@ Under `AGENTS.md` Rule 1, truth is non-negotiable:
   - Verified served directly from edge proxy cache without origin leakage.
 
 ### Pillar 7: `Failures.md` Governance Floor
-- Governed by `scripts/general/check-failures.mjs`.
+- Governed by `pnpm run check:failures`.
 - **Forbidden Terms:** Any line in `Failures.md` containing `resolved`, `closed`, `pass`, `passed`, `truth snapshot`, `history`, `historical`, or `[x]` triggers an immediate hard CI failure.
 - **The Only Valid Clearance:** A blocker is resolved **strictly by deleting its entire row** after fresh, authorized command output confirms the fix.
 
@@ -121,7 +122,7 @@ pnpm run check:layout
 pnpm run scan:boundaries
 
 # 3. Check Failures.md governance purity
-node scripts/general/check-failures.mjs
+pnpm run check:failures
 
 # 4. Check governance debt ratchet (all 6 metrics must be 0)
 pnpm run check:governance
@@ -137,7 +138,7 @@ pnpm run test:audit:fake-test
 pnpm run scan:secrets
 
 # 8. Verify root markdown documentation links
-node scripts/general/check-root-markdown-links.mjs
+pnpm run check:docs-all
 
 # 9. Verify full TypeScript compilation across tests and site
 pnpm run typecheck

@@ -18,6 +18,8 @@ $$\text{User Instruction} > \text{Live Code / Fresh Command Output} > \text{AGEN
 
 A plan does not earn authority by being lengthy, academic, or elaborate. A plan is judged solely by whether it executes the **exact stated task**, makes the **smallest sound change**, protects **unrelated work**, preserves **architectural invariants**, and proves its outcome with **fresh, reproducible command evidence**.
 
+- **Scope Discipline:** Do exactly the stated task. Do not expand scope, refactor adjacent code, or make opportunistic improvements. Make the smallest reversible change that achieves the requested outcome. If scope is exceeded, stop and report it.
+
 ---
 
 ## 2. The 6 Thermonuclear Review Gates

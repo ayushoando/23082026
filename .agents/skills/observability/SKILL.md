@@ -18,6 +18,7 @@ $$\text{User Instruction} > \text{Live Code / Fresh Command Output} > \text{AGEN
 
 - **Claim Isolation:** A local HTTP 200 response proves local route behavior only. It does **not** prove that a New Relic account is ingesting data or that Vercel production environment variables are active. Do not claim remote ingestion without authorized account proof.
 - **Zero Credential Exposure:** Telemetry ingest keys and license keys must never appear in logs, console output, commits, pull requests, or documentation.
+- **Scope Discipline:** Do exactly the stated task. Do not expand scope, refactor adjacent code, or make opportunistic improvements. Make the smallest reversible change that achieves the requested outcome. If scope is exceeded, stop and report it.
 - **Runtime Topology:**
   ```mermaid
   flowchart TD
@@ -54,7 +55,7 @@ $$\text{User Instruction} > \text{Live Code / Fresh Command Output} > \text{AGEN
 ### Law 1: Zero Credential Exposure & Continuous Secret Scanning
 - `NEW_RELIC_LICENSE_KEY` (OTLP / APM server ingest) and `NEW_RELIC_BROWSER_KEY` (browser agent key) are strictly confidential secrets.
 - Secrets belong exclusively in `.env.local` or `site/.env.local` (both gitignored). Never place values in root `.env.example` or `site/.env.example`.
-- **Pre-Commit Enforcement:** Any observability change must pass `node scripts/general/scan_secrets.mjs` with zero findings.
+- **Pre-Commit Enforcement:** Any observability change must pass `pnpm run scan:secrets` with zero findings.
 
 ### Law 2: Same-Origin Browser SPA Agent & Privacy Masking Invariants
 - Browser telemetry is mounted by [`site/components/analytics/NewRelicScript.tsx`](file:///d:/23082026/site/components/analytics/NewRelicScript.tsx).
@@ -87,9 +88,9 @@ $$\text{User Instruction} > \text{Live Code / Fresh Command Output} > \text{AGEN
 ### Law 6: Prometheus Exposition Endpoint Tri-State Security Gate
 - Route [`site/app/api/metrics/route.ts`](file:///d:/23082026/site/app/api/metrics/route.ts) exposes metrics in `text/plain; version=0.0.4` format.
 - In production, it is protected by a strict tri-state security barrier:
-  1. `OBSERVABILITY_METRICS_ENABLED=0` $\rightarrow$ Returns **404 Not Found**.
-  2. `OBSERVABILITY_METRICS_ENABLED=1` without `Authorization: Bearer <METRICS_AUTH_TOKEN>` $\rightarrow$ Returns **401 Unauthorized**.
-  3. `OBSERVABILITY_METRICS_ENABLED=1` with missing token in environment $\rightarrow$ Returns **503 Service Unavailable**.
+  1. `OBSERVABILITY_METRICS_ENABLED=0` → Returns **404 Not Found**.
+  2. `OBSERVABILITY_METRICS_ENABLED=1` without `Authorization: Bearer <METRICS_AUTH_TOKEN>` → Returns **401 Unauthorized**.
+  3. `OBSERVABILITY_METRICS_ENABLED=1` with missing token in environment → Returns **503 Service Unavailable**.
 - The metrics route is never exposed unauthenticated in production.
 
 ---
@@ -123,10 +124,10 @@ Execute this verification sequence after changing telemetry or observability con
 
 ```powershell
 # 1. Run secret scanner to guarantee zero exposed license keys
-node scripts/general/scan_secrets.mjs
+pnpm run scan:secrets
 
 # 2. Check governance and linter suppression rules
-node scripts/general/check-governance.mjs
+pnpm run check:governance
 
 # 3. Local route verification on http://localhost:3000 (when dev server is active)
 # Verify same-origin browser agent loads with 200 and key substitution
@@ -137,4 +138,7 @@ curl -I http://localhost:3000/api/metrics
 
 # 4. Verify instrumentation builds without type errors
 pnpm run check:layout
+
+# 5. Run the observability gate
+pnpm run gate:observability
 ```

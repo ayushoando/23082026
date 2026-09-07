@@ -17,10 +17,11 @@ $$\text{User Instruction} > \text{Live Code / Fresh Command Output} > \text{AGEN
 - **No Aspirational Documentation:** Never document an intended feature or future state as current truth. If code is pending or mock, explicitly label it as such.
 - **Evidence-Backed Metrics:** Never write numbers from memory.
   - Test counts must match `results/tests/summary.json`.
-  - Style token findings must match `node scripts/general/check-style-tokens.mjs`.
+  - Style token findings must match `pnpm run check:style-tokens`.
   - Script counts must match physical filesystem inventory (`scripts/`).
 - **No Circular Meta-Documentation:** Do not create documentation for temporary audit frameworks or internal agent scaffolding that distract from production architecture.
 - **Preserve Unrelated Work:** Maintain existing comments, frontmatter, and unrelated markdown sections intact.
+- **Scope Discipline:** Do exactly the stated task. Do not expand scope, refactor adjacent code, or make opportunistic improvements. Make the smallest reversible change that achieves the requested outcome. If scope is exceeded, stop and report it.
 
 ---
 
@@ -32,19 +33,19 @@ $$\text{User Instruction} > \text{Live Code / Fresh Command Output} > \text{AGEN
 
 ### Law 2: 100% Markdown Link Integrity
 - Every markdown link (`[label](path/to/file.md)`) must resolve to a valid file on disk.
-- Enforced by `node scripts/general/check-root-markdown-links.mjs`.
+- Enforced by `pnpm run check:docs-all` (which includes root markdown link checking).
 - **Linux CI Case Sensitivity:** Linux filesystems are case-sensitive. Always write exact filenames (e.g. `README.md`, `Failures.md`, `CONTENTS.md`, never `Readme.md` or `failures.md`).
 - Anchors (`#heading-id`) must correspond to actual markdown headings in the target file.
 
 ### Law 3: Root Surface Purity & Document Cap
-- Enforced by `scripts/general/check-repo-layout.mjs` and `scripts/general/root-surface-purity.mjs`.
+- Enforced by `pnpm run check:layout` and `pnpm run check:docs-all`.
 - **Pinned Root Documents Only:**
   `AGENTS.md`, `CONTENTS.md`, `DOC-MAP.md`, `Failures.md`, `OPERATIONS_RUNBOOK.md`, `README.md`, `START.md`, `Testing-handbook.md`.
 - **Session Docs Cap:** Maximum of 3 temporary session/handover documents at repository root (e.g. `HANDOVER.md`).
 - **Forbidden at Root:** Never place scratch scripts, test dumps, audit logs, or ad-hoc markdown files directly in the repository root.
 
 ### Law 4: `Failures.md` Strict Governance
-- Enforced by `scripts/general/check-failures.mjs`.
+- Enforced by `pnpm run check:failures`.
 - `Failures.md` is the sole repository record of hard blockers.
 - **Forbidden Words:** Any line containing `resolved`, `closed`, `pass`, `passed`, `truth snapshot`, `history`, `historical`, or `[x]` triggers an immediate hard CI failure.
 - **Clearance Law:** Blockers are cleared **strictly by deleting the entire row** after an authorized rerun passes with exit code 0.
@@ -92,12 +93,12 @@ Whenever application structure changes, all synchronizing registries must be upd
 │    • Escape all literal dollar signs ($ -> \$)                         │
 ├────────────────────────────────────────────────────────────────────────┤
 │ 3. Automated Link & Layout Verification:                               │
-│    • node scripts/general/check-root-markdown-links.mjs                │
-│    • node scripts/general/check-repo-layout.mjs                        │
-│    • node scripts/general/check-failures.mjs                           │
-│    • node scripts/general/check-active-docs.mjs                        │
-│    • node scripts/general/check-plans-purity.mjs                       │
-│    • node scripts/general/check-docs-purity.mjs                        │
+│    • pnpm run check:layout                                             │
+│    • pnpm run check:failures                                           │
+│    • pnpm run check:active-docs                                        │
+│    • pnpm run check:plans-purity                                       │
+│    • pnpm run check:docs-purity                                        │
+│    • pnpm run check:docs-all  (composite of the above)                 │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -108,22 +109,22 @@ Whenever application structure changes, all synchronizing registries must be upd
 Execute this verification suite after any documentation change to ensure thermonuclear compliance:
 
 ```powershell
-# 1. Verify all markdown links in root doc chain resolve on disk
-node scripts/general/check-root-markdown-links.mjs
+# 1. Verify repository layout and document cap rules
+pnpm run check:layout
 
-# 2. Verify repository layout and document cap rules
-node scripts/general/check-repo-layout.mjs
+# 2. Verify Failures.md keyword governance
+pnpm run check:failures
 
-# 3. Verify Failures.md keyword governance
-node scripts/general/check-failures.mjs
+# 3. Verify plans purity (plans/ exists, no stray reports)
+pnpm run check:plans-purity
 
-# 4. Verify plans purity (plans/ exists, no stray reports)
-node scripts/general/check-plans-purity.mjs
+# 4. Verify documentation suite integrity
+pnpm run check:active-docs
+pnpm run check:docs-purity
 
-# 5. Verify documentation suite integrity
-node scripts/general/check-active-docs.mjs
-node scripts/general/check-docs-purity.mjs
-
-# 6. Run composite doc gate
+# 5. Run composite doc gate (all individual checks above + root markdown links)
 pnpm run check:docs-all
+
+# 6. Run full doc gate (includes docs:check)
+pnpm run gate:docs
 ```

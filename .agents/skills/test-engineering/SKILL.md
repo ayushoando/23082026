@@ -20,7 +20,8 @@ $$\text{User Instruction} > \text{Live Code / Fresh Command Output} > \text{AGEN
   1. **Default Site Lane:** Configured via [`tests/vitest.config.ts`](file:///d:/23082026/tests/vitest.config.ts) (using `happy-dom`, maps `@/` to `site/`).
   2. **Tech-Docs SPA Lane:** Configured via `tests/vitest.tech-docs.config.ts`.
   *A green summary on one lane does not constitute a passed suite. Both lanes must pass.*
-- **Playwright Local Origin Invariant:** All E2E browser tests and local URL claims must target `http://localhost:3000` (never `127.0.0.1`). Mobile viewport tests must use $390 \times 844\text{ px}$.
+- **Playwright Local Origin Invariant:** All E2E browser tests and local URL claims must target `http://localhost:3000` (never `127.0.0.1`). Mobile viewport tests must use 390×844 px.
+- **Scope Discipline:** Do exactly the stated task. Do not expand scope, refactor adjacent code, or make opportunistic improvements. Make the smallest reversible change that achieves the requested outcome. If scope is exceeded, stop and report it.
 
 ---
 
@@ -42,7 +43,7 @@ Every test file in `tests/` is audited by continuous static analysis ratchets. V
 
 ---
 
-### Law 1: Anti-Hollow Assertions (`scripts/general/audit-hollow-tests.mjs`)
+### Law 1: Anti-Hollow Assertions (`pnpm run test:audit`)
 - **Forbidden Patterns:**
   - `expect(true).toBe(true)` or `expect(false).toBe(false)`
   - Sole `expect(x).toBeTruthy()` or `expect(x).toBeDefined()` without asserting value or structure
@@ -50,15 +51,15 @@ Every test file in `tests/` is audited by continuous static analysis ratchets. V
   - `it()` or `test()` blocks with 0 assertions
 - **Thermonuclear Standard:** Every test must assert concrete values, DOM element presence, mutation results, or specific error messages (`toThrowError(...)`).
 
-### Law 2: Anti-Fake Testing (`tech-docs-generator/scripts/fake-test-audit.mjs`)
+### Law 2: Anti-Fake Testing (`pnpm run test:audit:fake-test`)
 - **Forbidden Pattern:** Mocking the exact function or module you are claiming to test (e.g. `vi.mock('@/lib/solver')` inside `solver.test.ts`).
-- **Assertion Ratio Invariant:** Every test file must satisfy $\text{expectCount} \ge \text{itCount}$. Mocking away business logic to achieve artificial green badges is treated as falsification.
+- **Assertion Ratio Invariant:** Every test file must satisfy expectCount ≥ itCount. Mocking away business logic to achieve artificial green badges is treated as falsification.
 
-### Law 3: Zero Unallowlisted Skips (`scripts/general/audit-gate-skips.mjs`)
+### Law 3: Zero Unallowlisted Skips (`pnpm run test:audit`)
 - **Forbidden:** Adding `.skip`, `.only`, `test.todo()`, `/* istanbul ignore */`, or `/* v8 ignore */` to bypass failing tests.
 - **Allowed Exception:** A test may be skipped **only** if it has an active, unexpired tracking entry in `tests/manifests/skip-exceptions.json`.
 
-### Law 4: Strict 5-File Cap on ESLint Suppressions (`audit-eslint-disable.mjs`)
+### Law 4: Strict 5-File Cap on ESLint Suppressions (`pnpm run test:audit`)
 - Exactly **5 files** in the entire codebase are permitted to suppress `react-hooks/exhaustive-deps`:
   1. `site/hooks/Studio/useStudioFabric.ts`
   2. `site/hooks/Planner/usePlannerFabric.ts`
@@ -67,7 +68,7 @@ Every test file in `tests/` is audited by continuous static analysis ratchets. V
   5. `site/hooks/Planner/usePlannerSessionWarning.ts`
 - Adding `eslint-disable` to any test or component file outside this list triggers an immediate gate failure.
 
-### Law 5: API Route Safety (`scripts/general/audit-api-route-safety.mjs`)
+### Law 5: API Route Safety (`pnpm run test:audit`)
 - Route handler tests in `site/app/api/` must verify:
   - Unauthenticated requests receive `401 Unauthorized` or `404 Not Found`.
   - Malformed payloads receive `400 Bad Request`.
@@ -122,5 +123,5 @@ pnpm run test:audit:fake-test
 pnpm run typecheck:tests
 
 # 4. Verify full Vitest suite across both lanes
-node scripts/run-full-vitest.mjs
+pnpm run test
 ```

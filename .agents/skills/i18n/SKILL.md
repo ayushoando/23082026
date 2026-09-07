@@ -19,7 +19,8 @@ $$\text{User Instruction} > \text{Live Code / Fresh Command Output} > \text{AGEN
   - Source English: [`site/i18n/messages/en.json`](file:///d:/23082026/site/i18n/messages/en.json)
   - Target Hindi: [`site/i18n/messages/hi.json`](file:///d:/23082026/site/i18n/messages/hi.json)
 - **Manifest of Record:** [`site/i18n/marketing-parity-manifest.json`](file:///d:/23082026/site/i18n/marketing-parity-manifest.json) tracks all 26 official marketing namespaces and 29 consumer component paths.
-- **Automated Enforcement:** Parity is verified by physical file inspection and [`scripts/check-i18n-key-parity.mjs`](file:///d:/23082026/scripts/check-i18n-key-parity.mjs). An unverified translation claim is invalid.
+- **Automated Enforcement:** Parity is verified by physical file inspection and `pnpm run check:i18n:parity`. An unverified translation claim is invalid.
+- **Scope Discipline:** Do exactly the stated task. Do not expand scope, refactor adjacent code, or make opportunistic improvements. Make the smallest reversible change that achieves the requested outcome. If scope is exceeded, stop and report it.
 
 ---
 
@@ -79,7 +80,7 @@ $$\text{User Instruction} > \text{Live Code / Fresh Command Output} > \text{AGEN
 ### Law 7: Mandatory Automated Parity & Vitest Test Verification
 - A translation is never accepted on visual inspection alone.
 - Every modification to `en.json` or `hi.json` must be validated by running the automated parity gate:
-  `node scripts/check-i18n-key-parity.mjs`
+  `pnpm run check:i18n:parity`
   `pnpm run check:site-ui`
 - Vitest i18n unit tests must pass with 100% success rate:
   `tests/unit/i18n/messages.test.ts`
@@ -106,7 +107,7 @@ $$\text{User Instruction} > \text{Live Code / Fresh Command Output} > \text{AGEN
 │    • Update site/i18n/messages/hi.json in the identical location       │
 ├────────────────────────────────────────────────────────────────────────┤
 │ 4. Automated Parity Verification:                                      │
-│    • node scripts/check-i18n-key-parity.mjs                            │
+│    • pnpm run check:i18n:parity                                        │
 │    • pnpm exec vitest run tests/unit/i18n/messages.test.ts             │
 │    • pnpm run check:site-ui                                            │
 └────────────────────────────────────────────────────────────────────────┘
@@ -120,16 +121,15 @@ Run these commands to certify that an i18n change meets the thermonuclear standa
 
 ```powershell
 # 1. Run deep key parity check between en.json and hi.json
-node scripts/check-i18n-key-parity.mjs
+pnpm run check:i18n:parity
 
 # 2. Run composite site-ui contract verification (routes, JSX, i18n, dialects)
-node scripts/check-site-ui-contract.mjs
-node scripts/check-homepage-dialect.mjs
+pnpm run check:site-ui
 
 # 3. Run i18n unit tests under Vitest with site configuration
 pnpm exec vitest run tests/unit/i18n/messages.test.ts --config tests/vitest.config.ts
 pnpm exec vitest run tests/unit/lib/i18n/parity.test.ts --config tests/vitest.config.ts
 
 # 4. Run the full site-ui gate
-pnpm run check:site-ui
+pnpm run gate:site-ui
 ```

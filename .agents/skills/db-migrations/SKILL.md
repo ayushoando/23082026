@@ -21,6 +21,7 @@ $$\text{User Instruction} > \text{Live Code / Fresh Command Output} > \text{AGEN
   - **Admin Database** (`rxzpznmxbaoxpikowmfc`): Plans (`oando_plans`), profiles, teams, handoffs, price books, furniture items (`furniture_catalog`), and block descriptors.
   - **Products Database** (`erpweaiypimorcunaimz`): Public marketing catalog, configurator 3D models, themes, and feature flags.
 - **No Dual-Write:** Never write to both Supabase and disk simultaneously. Persistence mode selector decides exclusively based on environment.
+- **Scope Discipline:** Do exactly the stated task. Do not expand scope, refactor adjacent code, or make opportunistic improvements. Make the smallest reversible change that achieves the requested outcome. If scope is exceeded, stop and report it.
 
 ---
 
@@ -57,8 +58,8 @@ $$\text{User Instruction} > \text{Live Code / Fresh Command Output} > \text{AGEN
 
 ### Law 2: Strict Dual-Database Partitioning & Routing
 - Route tables strictly according to ownership:
-  - User profiles, staff handoffs, floor plans, furniture definitions $\rightarrow$ **Admin Database** (`rxzpznmxbaoxpikowmfc`).
-  - Marketing products, 3D assets, global themes $\rightarrow$ **Products Database** (`erpweaiypimorcunaimz`).
+  - User profiles, staff handoffs, floor plans, furniture definitions → **Admin Database** (`rxzpznmxbaoxpikowmfc`).
+  - Marketing products, 3D assets, global themes → **Products Database** (`erpweaiypimorcunaimz`).
 - Never mix tables across database instances.
 
 ### Law 3: Mandatory Dry-Run Preflight Before Applying
@@ -152,5 +153,5 @@ pnpm run db:types
 pnpm run typecheck
 
 # 4. Verify secret scanning ensures no service keys leaked
-node scripts/general/scan_secrets.mjs
+pnpm run scan:secrets
 ```
