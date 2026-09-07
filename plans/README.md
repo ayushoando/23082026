@@ -9,5 +9,6 @@ The active planning index and sequence spine are [`PLAN.md`](./PLAN.md) and [`cl
 | [`PLAN.md`](./PLAN.md) | Living Master Plan | Contains pointers to the master platform remediation suite and key flowcharts. |
 | [`recovery-audit-format.md`](./recovery-audit-format.md) | Recovery audit format | Evidence-led format for auditing damaged or partially restored work. |
 | [`client-hub/`](./client-hub/) | Sequence Spine | Living public route map ([`flowcharts/clients-hub-flow.md`](./client-hub/flowcharts/clients-hub-flow.md)) and visual sitemap. |
+| [`uirecovery/`](./uirecovery/README.md) | UI Recovery Suite | Multi-subfolder step-by-step reporting suite across surveys, testing, milestones M1–M5, and verification gates. |
 
 Canonical Planner test fixtures and performance budgets live cleanly under `tests/fixtures/planner/` and `tests/e2e/helpers/`.

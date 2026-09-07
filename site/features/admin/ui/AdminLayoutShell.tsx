@@ -157,7 +157,7 @@ export default function AdminLayoutShell({
                 href="/"
                 className="shell-admin-brand"
                 onClick={closeMobile}
-                aria-label="One&Only home"
+                aria-label="One and Only home"
               >
                 {/* Same wordmark as homepage Header (/logo-v2.webp) */}
                 <OneAndOnlyLogo

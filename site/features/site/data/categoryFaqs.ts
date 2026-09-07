@@ -6,12 +6,12 @@ export interface CategoryFaqItem {
 export const CATEGORY_FAQS: Record<string, CategoryFaqItem[]> = {
   workstations: [
     {
-      question: "Are One&Only modular workstations customizable for different office layouts?",
+      question: "Are One and Only modular workstations customizable for different office layouts?",
       answer:
-        "Yes. One&Only modular workstations are built on flexible frame architectures supporting 120-degree pods, linear benching, back-to-back clusters, and height-adjustable desking with integrated cable management.",
+        "Yes. One and Only modular workstations are built on flexible frame architectures supporting 120-degree pods, linear benching, back-to-back clusters, and height-adjustable desking with integrated cable management.",
     },
     {
-      question: "What quality certifications and standards do One&Only workstations meet?",
+      question: "What quality certifications and standards do One and Only workstations meet?",
       answer:
         "Our commercial workstations comply with BIFMA X5.5 desk standards, ISO 9001 quality management, and ISO 14001 environmental benchmarks, utilizing high-grade pre-laminated boards and CRCA steel frames.",
     },
@@ -21,19 +21,19 @@ export const CATEGORY_FAQS: Record<string, CategoryFaqItem[]> = {
         "Standard workstation systems ship within 10 to 14 business days across major hubs in India including Patna, Bengaluru, Delhi NCR, Mumbai, and Hyderabad, with dedicated on-site installation support.",
     },
     {
-      question: "What warranty coverage is included with One&Only workstations?",
+      question: "What warranty coverage is included with One and Only workstations?",
       answer:
         "All commercial workstations include a comprehensive 5-year structural manufacturer warranty covering frames, raceways, structural joins, and desk surfaces.",
     },
   ],
   seating: [
     {
-      question: "How do One&Only ergonomic office chairs support posture and spine alignment?",
+      question: "How do One and Only ergonomic office chairs support posture and spine alignment?",
       answer:
         "Our task and executive chairs feature multi-point dynamic lumbar support, synchronized tilt mechanisms, adjustable 3D/4D armrests, and breathable high-tensile mesh designed for 8+ hours of continuous ergonomic seating.",
     },
     {
-      question: "Are One&Only office chairs BIFMA certified?",
+      question: "Are One and Only office chairs BIFMA certified?",
       answer:
         "Yes, our task and executive seating collections undergo rigorous BIFMA X5.1 structural and durability testing, rated for commercial users up to 135 kg (300 lbs).",
     },
@@ -50,7 +50,7 @@ export const CATEGORY_FAQS: Record<string, CategoryFaqItem[]> = {
   ],
   tables: [
     {
-      question: "Do One&Only conference and meeting tables support integrated AV and power modules?",
+      question: "Do One and Only conference and meeting tables support integrated AV and power modules?",
       answer:
         "Yes. All conference and boardroom tables feature integrated flip-top pop-up power boxes, HDMI/USB-C pass-through raceways, and concealed under-table cable management.",
     },
@@ -67,29 +67,29 @@ export const CATEGORY_FAQS: Record<string, CategoryFaqItem[]> = {
   ],
   storage: [
     {
-      question: "What types of commercial office storage systems does One&Only produce?",
+      question: "What types of commercial office storage systems does One and Only produce?",
       answer:
         "Our portfolio includes mobile pedestals with anti-tilt castors, metal storage credenzas, sliding-door tambour units, full-height filing cabinets, and modular lockers.",
     },
     {
-      question: "Do One&Only storage units feature central locking mechanisms?",
+      question: "Do One and Only storage units feature central locking mechanisms?",
       answer:
         "Yes. All drawer pedestals and filing cabinets are equipped with heavy-duty central locking systems, master keys, and optional digital keypad locks.",
     },
     {
-      question: "What steel gauge is used in One&Only metal storage units?",
+      question: "What steel gauge is used in One and Only metal storage units?",
       answer:
         "We utilize 0.8mm to 1.2mm cold-rolled close annealed (CRCA) prime steel with electrostatic anti-corrosive powder coating for superior longevity.",
     },
   ],
   solutions: [
     {
-      question: "Does One&Only offer complete 2D/3D workspace planning services?",
+      question: "Does One and Only offer complete 2D/3D workspace planning services?",
       answer:
         "Yes. Our in-house design team provides turnkey 2D layout planning, 3D space rendering, and interactive floor plans tailored to headcount, department workflows, and acoustic requirements.",
     },
     {
-      question: "Can One&Only furnish large-scale enterprise offices across India?",
+      question: "Can One and Only furnish large-scale enterprise offices across India?",
       answer:
         "Yes, we deliver and install turnkey commercial furniture for offices ranging from 50 to 5,000+ workstations nationwide, supported by dedicated project managers.",
     },

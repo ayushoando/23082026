@@ -44,7 +44,7 @@ export default async function DownloadsPage() {
   ]);
   const downloadsJsonLd = buildPageJsonLd(SITE_URL, {
     path: "/downloads",
-    title: `${copy.heroTitle} | One&Only`,
+    title: `${copy.heroTitle} | One and Only`,
     description: copy.heroSubtitle,
     pageType: "WebPage",
   });

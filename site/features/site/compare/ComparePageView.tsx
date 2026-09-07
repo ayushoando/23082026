@@ -31,7 +31,7 @@ import { sanitizeJsonForScript } from "@/lib/security/sanitize";
 const COMPARE_PAGE_JSON_LD = buildPageJsonLd(SITE_URL, {
   path: "/compare",
   title:
-    "Compare office furniture | One&Only",
+    "Compare office furniture | One and Only",
   description: COMPARE_ROUTE_COPY.description,
   pageType: "WebPage",
 });

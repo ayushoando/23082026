@@ -302,7 +302,7 @@
         "q": "Can you handle large or phased office rollouts?"
       }
     ],
-    "metadataDescription": "Answers on where One&Only delivers, installation, warranty, and multi-site office rollouts across India.",
+    "metadataDescription": "Answers on where One and Only delivers, installation, warranty, and multi-site office rollouts across India.",
     "metadataTitle": "FAQ | Office furniture delivery and installation"
   },
   "gallery": {
@@ -680,8 +680,8 @@
         "One and Only is operated by One and Only Furniture Private Limited (\"OOFPL\"). This policy explains what personal data we collect, how we use it, and what cookies we set when you browse our website or submit an enquiry.",
         "Personal information includes data that can identify or contact you, such as your name, company, email address, phone number, IP address, and any enquiry details you share through our forms."
       ],
-      "metadataDescription": "How One&Only handles enquiry data, cookies, and records for furniture planning and commercial support across India.",
-      "metadataTitle": "Privacy Policy | One&Only",
+      "metadataDescription": "How One and Only handles enquiry data, cookies, and records for furniture planning and commercial support across India.",
+      "metadataTitle": "Privacy Policy | One and Only",
       "overviewDescription": "We collect only the information needed to respond to project requests, route support conversations, and maintain service records around active client relationships.",
       "overviewKicker": "Privacy and consent",
       "overviewTitle": "A practical privacy policy for active workspace enquiries.",
@@ -707,7 +707,7 @@
       "ctaTitleLead": "Need a replacement or refund",
       "heroSubtitle": "Terms for returns, replacements, cancellations, and refunds.",
       "heroTitle": "Refund and return policy",
-      "metadataDescription": "Refund, return, replacement, and cancellation policy for One&Only.",
+      "metadataDescription": "Refund, return, replacement, and cancellation policy for One and Only.",
       "metadataTitle": "Refund and Return Policy",
       "overviewDescription": "This policy sets the expectations for product damage reporting, replacement handling, cancellation timing, and the conditions under which refunds are processed.",
       "overviewKicker": "Returns and replacement terms",
@@ -1009,7 +1009,7 @@
           "q": "Can you handle large or phased office rollouts?"
         }
       ],
-      "metadataDescription": "Answers on where One&Only delivers, installation, warranty, and multi-site office rollouts across India.",
+      "metadataDescription": "Answers on where One and Only delivers, installation, warranty, and multi-site office rollouts across India.",
       "metadataTitle": "FAQ | Office furniture delivery and installation"
     },
     "planning": {
@@ -1174,8 +1174,8 @@
     },
     "sitemap": {
       "kicker": "Site index",
-      "metadataDescription": "HTML sitemap of public One&Only pages — products, solutions, planning, service, planner, and company routes.",
-      "metadataTitle": "Sitemap | One&Only office furniture routes",
+      "metadataDescription": "HTML sitemap of public One and Only pages — products, solutions, planning, service, planner, and company routes.",
+      "metadataTitle": "Sitemap | One and Only office furniture routes",
       "subtitle": "Public routes for products, planning, planner, company, and policies.",
       "title": "Sitemap"
     },
@@ -1801,5 +1801,80 @@
       "signedInLabel": "Signed-in workspace",
       "viewSavedPlans": "View saved plans"
     }
+  },
+  "compare": {
+    "kicker": "Compare office furniture",
+    "title": "Compare selected workspace options",
+    "bodyHeading": "Specification review",
+    "bodyPopulatedHint": "Read the shortlist side by side.",
+    "description": "Compare up to four office furniture products — category, materials, warranty, certification, and features — before you request a quote or BOQ. Built for shortlists across India.",
+    "countLabel": "Comparing {count} products",
+    "mobileHint": "Swipe horizontally on smaller screens to read every specification column.",
+    "browseCta": "Browse products",
+    "resourceDeskCta": "Open Resource Desk",
+    "primaryCta": "Request quote",
+    "viewProductCta": "View product",
+    "addToQuoteCta": "Add to quote cart",
+    "emptyTitle": "Your comparison shortlist is empty",
+    "emptyDescription": "Add up to 4 products from product or category pages (use Compare on each card). Return here to review materials, warranty, and features side by side before planning or quote.",
+    "emptyPrimaryCta": "Browse products",
+    "emptySecondaryCta": "Open Resource Desk",
+    "emptyPlannerCta": "Open guest planner",
+    "emptyShortlistKicker": "Empty shortlist",
+    "emptySteps": [
+      "Select up to 4 office furniture products",
+      "Review materials, warranty, and features",
+      "Request quote or continue to planner"
+    ],
+    "jumpCategoryLabel": "Jump into a category",
+    "selectionStatusLabel": "Selection status",
+    "specColumnLabel": "Specification",
+    "tableCaption": "Side-by-side specification comparison of selected office furniture products",
+    "selectionEmptyHint": "Add products from category or product pages to build this comparison. Your shortlist syncs when you open Compare from the dock.",
+    "ctaKicker": "Next commercial step",
+    "ctaTitle": "Move from shortlist to quote or planning",
+    "ctaDescription": "Request a quote with this comparison in mind, or open the Resource Desk when documentation is the next blocker."
+  },
+  "quoteCart": {
+    "kicker": "Quote cart",
+    "title": "Quote cart built for procurement follow-through.",
+    "description": "Keep shortlisted products, quantities, and the next planning or documentation step together before you contact sales.",
+    "browseCta": "Browse products",
+    "compareCta": "Compare selected",
+    "resourceDeskCta": "Open Resource Desk",
+    "planningCta": "Request planning call",
+    "primaryCta": "Submit quote request",
+    "summaryTitle": "Request summary",
+    "summaryDescription": "Use the quote lane when the shortlist is ready, Planning when the layout still needs work, and the Resource Desk when documentation is the next blocker.",
+    "summaryQuantityLabel": "Selected quantity",
+    "summaryProductsLabel": "Unique products",
+    "summaryCompareHint": "Need a side-by-side review first?",
+    "summaryDeskHint": "Need packs, technical sheets, or warranty references?",
+    "emptyTitle": "Your quote cart is empty.",
+    "emptyDescription": "Add products from category or product pages to keep procurement options together before you request pricing or documentation.",
+    "emptyPrimaryCta": "Browse products",
+    "emptySecondaryCta": "Open Resource Desk",
+    "clearCta": "Clear all",
+    "removeCta": "Remove"
+  },
+  "tools": {
+    "kicker": "Free Planning Tools",
+    "title": "Workspace Planning Tools & Calculators",
+    "description": "Estimate capacity, map floor densities, and evaluate furniture requirements before ordering. Fast, planning-led calculations for commercial offices and institutions.",
+    "comprehensivePlanningTitle": "Need comprehensive workplace planning?",
+    "comprehensivePlanningDescription": "Our planning team produces detailed 2D/3D layouts, electrical/data clearances, and turnkey bill of quantities for multi-city commercial rollouts.",
+    "planningServiceCta": "Planning service",
+    "contactTeamCta": "Contact team",
+    "officeSpaceCalculatorTitle": "Office Space Calculator",
+    "officeSpaceCalculatorDescription": "Turn a rectangular room into a first-pass workspace capacity estimate. Choose a planning preset to see gross area, allowance for circulation, usable planning area, and an indicative workstation count.",
+    "meetingRoomCalculatorTitle": "Meeting Room Capacity Calculator",
+    "meetingRoomCalculatorDescription": "Test a meeting room's first-pass capacity before the detailed layout work begins. Choose a room setup to compare gross area, planning circulation, usable room area, and an indicative attendee count.",
+    "presetsLabel": "Planning preset",
+    "grossAreaLabel": "Gross floor area",
+    "circulationLabel": "Circulation allowance",
+    "usableAreaLabel": "Usable area",
+    "capacityResultLabel": "Estimated capacity",
+    "faqHeading": "Planning questions",
+    "disclaimer": "This tool supports early workspace planning only. A final layout must be verified against actual site constraints."
   }
 }

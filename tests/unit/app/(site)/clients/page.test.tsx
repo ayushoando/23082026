@@ -36,7 +36,7 @@ describe("app/(site)/clients/page.tsx", () => {
     expect(parsed["@context"]).toBe("https://schema.org");
     expect(parsed["@type"]).toBe("ItemList");
     expect(parsed["@id"]).toContain("/clients/#clients-directory");
-    expect(parsed.name).toBe("One&Only Enterprise & Institutional Client Directory");
+    expect(parsed.name).toBe("One and Only Enterprise & Institutional Client Directory");
     expect(parsed.description).toContain("Verified workplace installations");
     expect(parsed.numberOfItems).toBe(116);
     expect(parsed.itemListElement).toHaveLength(116);

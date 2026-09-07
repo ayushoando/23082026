@@ -70,7 +70,7 @@ export function resolveProviderChain(): ResolvedProvider[] {
       baseURL: "https://openrouter.ai/api/v1",
       defaultHeaders: {
         "HTTP-Referer": SITE_URL,
-        "X-Title": "One&Only",
+        "X-Title": "One and Only",
       },
       model: DEFAULT_OPENROUTER_MODEL,
     });
@@ -84,7 +84,7 @@ export function resolveProviderChain(): ResolvedProvider[] {
       baseURL: "https://openrouter.ai/api/v1",
       defaultHeaders: {
         "HTTP-Referer": SITE_URL,
-        "X-Title": "One&Only",
+        "X-Title": "One and Only",
       },
       model: DEFAULT_OPENROUTER_MODEL,
     });

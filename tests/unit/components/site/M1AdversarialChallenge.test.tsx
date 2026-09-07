@@ -268,10 +268,10 @@ describe("Milestone 1 Empirical Verification Suite", () => {
       useProductCompare.setState({
         items: [
           {
+            id: "aeron-chair",
             productUrlKey: "aeron-chair",
             name: "Aeron Ergonomic Chair",
-            category: "chairs",
-            priceStartingAt: 1200,
+            categoryId: "chairs",
           },
         ],
       });

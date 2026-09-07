@@ -36,7 +36,7 @@ describe("GlobalNavHeader", () => {
   it("renders suite branding and main nav links", () => {
     render(<GlobalNavHeader />);
     expect(
-      screen.getByLabelText(/One&Only workspace - Go to dashboard/i),
+      screen.getByLabelText(/One and Only workspace - Go to dashboard/i),
     ).toHaveAttribute("href", "/dashboard");
     expect(
       screen.getByRole("img", { name: /One and Only Furniture/i }),

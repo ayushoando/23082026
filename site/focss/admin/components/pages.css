@@ -1,4 +1,4 @@
-﻿/* Admin page layout â€” page chrome, header, sections, eyebrow.
+/* Admin page layout â€” page chrome, header, sections, eyebrow.
  * Depends on: admin-primitives.css */
 
 /* Parametric preview rules live in locked/svg/svg-preview.css */
@@ -202,7 +202,7 @@
   .admin-page__actions .admin-btn--primary {
     width: 100%;
     justify-content: center;
-    min-height: 2.75rem; /* ≥44px tap target */
+    min-height: 3rem; /* ≥48px tap target */
   }
 
   /* Panels never force page-level horizontal scroll */
@@ -417,7 +417,7 @@
   table[data-phone-layout="cards-priority"] td[data-label="Actions"] .admin-btn {
     flex: 1 1 calc(50% - 0.25rem);
     justify-content: center;
-    min-height: 2.75rem; /* ≥44px */
+    min-height: 3rem; /* ≥48px */
     min-width: 0;
   }
 
@@ -432,7 +432,7 @@
     overflow-x: visible;
   }
 
-  /* Catalog paging: full-width â‰¥44px controls under the card list */
+  /* Catalog paging: full-width â‰¥48px controls under the card list */
   .admin-catalog-paging {
     flex-direction: column;
     align-items: stretch;
@@ -443,7 +443,7 @@
   .admin-catalog-paging .admin-btn {
     width: 100%;
     justify-content: center;
-    min-height: 2.75rem; /* ≥44px */
+    min-height: 3rem; /* ≥48px */
   }
 
   /* Family / group headers stay full-width labels, not cards */

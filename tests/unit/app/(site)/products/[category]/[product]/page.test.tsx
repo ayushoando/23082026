@@ -108,7 +108,7 @@ const buildProductJsonLdMock = vi.fn(
 vi.mock('@/features/site/data/seo', () => ({
   buildBreadcrumbJsonLd: () => ({ '@type': 'BreadcrumbList' }),
   buildPageMetadata: (_base: string, opts: { title: string; description: string }) => ({
-    title: { absolute: `${opts.title} | One&Only` },
+    title: { absolute: `${opts.title} | One and Only` },
     description: opts.description,
   }),
   buildProductJsonLd: (base: string, input: ProductJsonLdInput) =>
@@ -199,7 +199,7 @@ describe('ProductPage Route', () => {
       const meta = await generateMetadata({
         params: Promise.resolve({ category: 'seating', product: 'some-product' }),
       });
-      expect(meta.title).toEqual({ absolute: 'Super Chair | One&Only' });
+      expect(meta.title).toEqual({ absolute: 'Super Chair | One and Only' });
       expect(meta.description).toBe('A great chair');
     });
   });

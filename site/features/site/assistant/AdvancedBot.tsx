@@ -125,7 +125,7 @@ export function AdvancedBot() {
 
   const summary = useMemo(() => {
     const lines: string[] = [];
-    lines.push("Enquiry for One&Only via Website Bot");
+    lines.push("Enquiry for One and Only via Website Bot");
     if (state.useCase) {
       lines.push(
         `Product family / project type: ${useCaseSummaryLabels[state.useCase]}`,
@@ -151,13 +151,13 @@ export function AdvancedBot() {
 
   const whatsappUrl = useMemo(() => {
     return buildWhatsAppHref(
-      `One&Only workspace enquiry via website bot\n\n${summary}`,
+      `One and Only workspace enquiry via website bot\n\n${summary}`,
     );
   }, [summary]);
 
   const mailtoUrl = useMemo(() => {
     return buildMailtoHref(
-      "One&Only workspace enquiry via website bot",
+      "One and Only workspace enquiry via website bot",
       summary,
     );
   }, [summary]);

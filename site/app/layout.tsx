@@ -8,7 +8,7 @@ import { NewRelicScript } from "@/components/analytics/NewRelicScript";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 
 export const metadata: Metadata = {
-  title: "One&Only",
+  title: "One and Only",
 };
 
 export default async function RootLayout({

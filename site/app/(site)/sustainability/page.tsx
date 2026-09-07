@@ -33,7 +33,7 @@ export default async function SustainabilityPage() {
   ]);
   const sustainabilityJsonLd = buildPageJsonLd(SITE_URL, {
     path: "/sustainability",
-    title: `${copy.heroTitle} | One&Only`,
+    title: `${copy.heroTitle} | One and Only`,
     description: copy.heroSubtitle,
     pageType: "WebPage",
   });

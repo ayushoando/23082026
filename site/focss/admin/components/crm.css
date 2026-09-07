@@ -63,7 +63,7 @@
 .crm-panel-action {
   display: inline-flex;
   align-items: center;
-  min-height: 2.75rem;
+  min-height: 3rem;
   padding-inline: 0.5rem;
   font-size: var(--type-small-size);
   font-weight: 600;
@@ -78,7 +78,7 @@
 
 @media (max-width: 48rem) {
   .crm-subnav__link {
-    min-height: 2.75rem;
+    min-height: 3rem;
   }
 }
 

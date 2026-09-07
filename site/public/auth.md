@@ -1,6 +1,6 @@
-# auth.md ? One&Only Agent Registration & Authorization
+# auth.md — One and Only Agent Registration & Authorization
 
-This document specifies authentication, authorization, and discovery protocols for autonomous AI agents, enterprise procurement tools, and space-planning assistants interacting with the One&Only commercial workspace platform (`https://oando.co.in`).
+This document specifies authentication, authorization, and discovery protocols for autonomous AI agents, enterprise procurement tools, and space-planning assistants interacting with the One and Only commercial workspace platform (`https://oando.co.in`).
 
 ## 1. Agent Audience & Scope
 
@@ -9,7 +9,7 @@ This document specifies authentication, authorization, and discovery protocols f
 
 ## 2. Discovery Endpoints
 
-One&Only publishes standard discovery documents per RFC 8414, RFC 9727, RFC 8288, and the Agent Skills / ACP specifications:
+One and Only publishes standard discovery documents per RFC 8414, RFC 9727, RFC 8288, and the Agent Skills / ACP specifications:
 
 - **OAuth Protected Resource Metadata (PRM)**: `https://oando.co.in/.well-known/oauth-protected-resource`
 - **OAuth Authorization Server Metadata**: `https://oando.co.in/.well-known/oauth-authorization-server`

@@ -1,12 +1,10 @@
-# One&Only (One and Only Furniture) — oando.co.in
+# One and Only (One and Only Furniture) — oando.co.in
 
-> One&Only, also searched as One and Only Furniture / One and Only Patna, supplies premium ergonomic office furniture for modern workplaces across India. Planning-led workstations, seating, storage, tables, and soft seating for commercial projects nationwide. HQ and showroom in Patna (Jagat Trade Centre, Frazer Road).
+> One and Only, also searched as One and Only Furniture / One and Only Patna, supplies premium ergonomic office furniture for modern workplaces across India. Planning-led workstations, seating, storage, tables, and soft seating for commercial projects nationwide. HQ and showroom in Patna (Jagat Trade Centre, Frazer Road).
 
 ## Brand aliases (same company)
 
-- One&Only
 - One and Only
-- One & Only
 - One and Only Furniture
 - One and Only Furniture Private Limited
 - One and Only Patna
@@ -41,7 +39,7 @@
 
 ## Local
 
-- [Patna showroom]([REDACTED]/showrooms/): One and Only Furniture / One&Only at Jagat Trade Centre, Frazer Road, Patna 800001, Bihar, India
+- [Patna showroom](https://oando.co.in/showrooms/): One and Only Furniture at Jagat Trade Centre, Frazer Road, Patna 800001, Bihar, India
 
 ## Crawl policy
 

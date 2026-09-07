@@ -7,7 +7,7 @@ import { SITE_URL } from "@/lib/siteUrl";
 
 /**
  * Private member hub — noindex, correct canonical, absolute title
- * (avoids "Dashboard | One&Only | One&Only" from root title template).
+ * (avoids "Dashboard | One and Only | One and Only" from root title template).
  * Session is required at the layout so nested dashboard routes cannot skip auth.
  */
 export const metadata: Metadata = buildPageMetadata(SITE_URL, {

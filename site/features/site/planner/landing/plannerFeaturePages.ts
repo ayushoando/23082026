@@ -42,11 +42,11 @@ export const PLANNER_FEATURE_PAGES: PlannerFeaturePage[] = [
     tagline: "Real furniture, real sizes",
     icon: Layers3,
     summary:
-      "Pick desks, benches, storage, and meeting tables from the One&Only catalog — every item drops in at its actual dimensions.",
+      "Pick desks, benches, storage, and meeting tables from the One and Only catalog — every item drops in at its actual dimensions.",
     bullets: [
       "Search and filter by product family — workstations, storage, meeting tables",
       "Drag from the library or click to place items on your floor plan",
-      "Every symbol matches a real One&Only product, not generic clip art",
+      "Every symbol matches a real One and Only product, not generic clip art",
       "Resize, rotate, and adjust seating count from the side panel",
     ],
     helpSectionId: "catalog-and-blocks",

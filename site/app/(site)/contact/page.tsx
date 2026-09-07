@@ -37,7 +37,7 @@ export default async function ContactPage({
 
   const contactJsonLd = buildPageJsonLd(SITE_URL, {
     path: "/contact",
-    title: "Contact office furniture sales | India | One&Only",
+    title: "Contact office furniture sales | India | One and Only",
     description: t("heroSubtitle"),
     pageType: "ContactPage",
   });

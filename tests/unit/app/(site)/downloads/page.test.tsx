@@ -126,7 +126,7 @@ describe("app/(site)/downloads/page.tsx", () => {
         ? DOWNLOADS_PAGE_METADATA.title
         : ((DOWNLOADS_PAGE_METADATA.title as { absolute?: string })?.absolute ?? String(DOWNLOADS_PAGE_METADATA.title));
     expect(titleValue).toMatch(/Resource Desk/);
-    expect(titleValue).toMatch(/One&Only/);
+    expect(titleValue).toMatch(/One and Only/);
     expect(DOWNLOADS_PAGE_METADATA.openGraph?.url).toMatch(/\/downloads\/?$/);
     expect(DOWNLOADS_PAGE_METADATA.description).toBe(DOWNLOADS_PAGE_COPY.metadataDescription);
   });

@@ -1,7 +1,19 @@
 "use client";
 
 import { Component, type ErrorInfo, type ReactNode } from "react";
+import { Warning } from "@phosphor-icons/react";
 import { logClientError } from "@/lib/errorLogger";
+
+const phIconMap = {
+  warning: Warning,
+} as const;
+
+type PhIconName = keyof typeof phIconMap;
+
+function PhIcon({ name, className, size = 32 }: { name: PhIconName; className?: string; size?: number }) {
+  const Icon = phIconMap[name];
+  return <Icon size={size} className={className} aria-hidden="true" />;
+}
 
 interface SiteErrorBoundaryProps {
   children: ReactNode;
@@ -69,19 +81,7 @@ export class SiteErrorBoundary extends Component<
 
           {/* Error Illustration Icon */}
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-warning/10 text-warning mb-6">
-            <svg
-              className="h-8 w-8 text-warning"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-              />
-            </svg>
+            <PhIcon name="warning" size={32} className="h-8 w-8 text-warning" />
           </div>
 
           <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
@@ -101,13 +101,13 @@ export class SiteErrorBoundary extends Component<
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
             <button
               onClick={this.handleReload}
-              className="inline-flex items-center justify-center rounded-xl bg-background px-5 py-3 text-sm font-semibold text-[var(--color-ocean-boat-blue-900)] transition-all hover:bg-background/90 active:scale-[0.98] shadow-md shadow-white/5"
+              className="inline-flex min-h-12 items-center justify-center rounded-xl bg-background px-5 py-3 text-sm font-semibold text-[var(--color-ocean-boat-blue-900)] transition-all hover:bg-background/90 active:scale-[0.98] shadow-md shadow-white/5"
             >
               Reload Page
             </button>
             <button
               onClick={this.handleGoHome}
-              className="inline-flex items-center justify-center rounded-xl bg-[color:var(--overlay-panel-10)] px-5 py-3 text-sm font-semibold text-white/90 transition-all hover:bg-[color:var(--overlay-panel-12)] active:scale-[0.98] border border-white/10"
+              className="inline-flex min-h-12 items-center justify-center rounded-xl bg-[color:var(--overlay-panel-10)] px-5 py-3 text-sm font-semibold text-white/90 transition-all hover:bg-[color:var(--overlay-panel-12)] active:scale-[0.98] border border-white/10"
             >
               Go to Homepage
             </button>

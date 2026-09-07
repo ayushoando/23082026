@@ -11,6 +11,7 @@ export const PINNED_ROOT_MD = new Set([
   "CONTENTS.md",
   "DOC-MAP.md",
   "Failures.md",
+  "OBSERVABILITY.md",
   "OPERATIONS_RUNBOOK.md",
   "README.md",
   "START.md",

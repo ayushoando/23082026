@@ -1,4 +1,4 @@
-.oostudio-root .app-root { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+.oostudio-root .app-root { display: flex; flex-direction: column; height: 100vh; height: 100dvh; overflow: hidden; }
 
 .oostudio-root .topbar {
   height: var(--shell-topbar-h);

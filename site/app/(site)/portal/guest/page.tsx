@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import GuestPortalPageView from "@/features/site/portal/GuestPortalPageView";
 
 export const metadata: Metadata = {
-  title: "Guest portal | One&Only",
+  title: "Guest portal | One and Only",
   robots: { index: false, follow: false },
 };
 

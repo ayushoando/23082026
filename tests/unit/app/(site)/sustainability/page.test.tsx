@@ -99,7 +99,7 @@ describe("app/(site)/sustainability/page.tsx — behavior", () => {
         ? SUSTAINABILITY_PAGE_METADATA.title
         : ((SUSTAINABILITY_PAGE_METADATA.title as { absolute?: string })?.absolute ?? String(SUSTAINABILITY_PAGE_METADATA.title));
     expect(titleValue).toMatch(/Sustainable|Sustainability/);
-    expect(titleValue).toMatch(/One&Only/);
+    expect(titleValue).toMatch(/One and Only/);
     expect(SUSTAINABILITY_PAGE_METADATA.openGraph?.url).toMatch(/\/sustainability\/?$/);
     expect(SUSTAINABILITY_PAGE_METADATA.description).toBe(SUSTAINABILITY_PAGE_COPY.heroSubtitle);
   });

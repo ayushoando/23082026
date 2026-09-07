@@ -5,7 +5,7 @@ export type SiteSocialLink = {
 };
 
 export const SITE_CONTACT = {
-  brandName: "One&Only",
+  brandName: "One and Only",
   /** Spoken / search form used in address blocks and local SEO copy. */
   brandNameSpoken: "One and Only Furniture",
   salesPhone: "+91 98356 30940",

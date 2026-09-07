@@ -170,7 +170,7 @@ export function CustomerQueryForm({ intent, source }: CustomerQueryFormProps) {
         onSubmit={form.handleSubmit(onSubmit)}
         noValidate
         toolname="submitContactEnquiry"
-        tooldescription="Submit a workplace furniture project enquiry to One&Only sales. Requires name, message, consent, and either email or phone."
+        tooldescription="Submit a workplace furniture project enquiry to One and Only sales. Requires name, message, consent, and either email or phone."
       >
         {contextCopy ? (
           <div className="contact-form-context">
@@ -413,7 +413,7 @@ export function CustomerQueryForm({ intent, source }: CustomerQueryFormProps) {
                       : "contact-consent-hint"
                   }
                   data-testid="contact-form-consent"
-                  toolparamdescription="Must be true. Confirms consent for One&Only to use contact details to respond."
+                  toolparamdescription="Must be true. Confirms consent for One and Only to use contact details to respond."
                 />
                 <span>
                   I agree that One and Only may use these details to respond to my

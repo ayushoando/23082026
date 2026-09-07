@@ -294,7 +294,7 @@ export function MobileNavDrawer({ open, onClose, variant = "header" }: MobileNav
               role="search"
               aria-label={t("mobile.searchForm")}
               toolname="searchProductsMobile"
-              tooldescription="Search the One&Only product catalog from the mobile navigation drawer."
+              tooldescription="Search the One and Only product catalog from the mobile navigation drawer."
               toolautosubmit=""
               onSubmit={(event) => {
                 event.preventDefault();

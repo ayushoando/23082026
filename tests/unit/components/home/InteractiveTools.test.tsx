@@ -25,13 +25,13 @@ describe('InteractiveTools Component', () => {
     expect(screen.getByTestId('mock-tools-showcase')).toBeInTheDocument();
     expect(screen.getByText('Title: Design your - workspace')).toBeInTheDocument();
     expect(screen.getByText('Kicker: Workspace planning')).toBeInTheDocument();
-    expect(screen.getByText(/Launch planner/)).toBeInTheDocument();
+    expect(screen.getByText(/^CTA: Launch Planner/)).toBeInTheDocument();
   });
 
   it('Launch planner CTA targets planner marketing landing', () => {
     render(<InteractiveTools />);
     expect(
-      screen.getByText('CTA: Launch planner (/planner)'),
+      screen.getByText('CTA: Launch Planner (/planner)'),
     ).toBeInTheDocument();
   });
 

@@ -1,4 +1,4 @@
-# One&Only (oando.co.in) - security disclosure contact (RFC 9116)
+# One and Only (oando.co.in) - security disclosure contact (RFC 9116)
 # Prefer responsible disclosure for security issues only (not sales or support).
 
 Contact: mailto:sales@oando.co.in

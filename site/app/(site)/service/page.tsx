@@ -40,7 +40,7 @@ export default async function ServicePage() {
   ]);
   const serviceJsonLd = buildPageJsonLd(SITE_URL, {
     path: "/service",
-    title: `${copy.heroTitle} | One&Only`,
+    title: `${copy.heroTitle} | One and Only`,
     description: copy.heroSubtitle,
     pageType: "WebPage",
   });

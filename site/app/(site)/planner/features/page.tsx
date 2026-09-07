@@ -10,7 +10,7 @@ export const metadata = PLANNER_FEATURES_PAGE_METADATA;
 const PAGE_JSON_LD = buildPageJsonLd(SITE_URL, {
   path: "/planner/features",
   title: "Planner Features",
-  description: "Capability overview for the One&Only workspace planner.",
+  description: "Capability overview for the One and Only workspace planner.",
   pageType: "CollectionPage",
 });
 

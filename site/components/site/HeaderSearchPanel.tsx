@@ -60,7 +60,7 @@ export function HeaderSearchPanel({
         aria-label={t("formLabel")}
         suppressHydrationWarning
         toolname="searchProducts"
-        tooldescription="Search the One&Only product catalog by keyword (chairs, workstations, tables, storage)."
+        tooldescription="Search the One and Only product catalog by keyword (chairs, workstations, tables, storage)."
         toolautosubmit=""
         onSubmit={(event) => {
           event.preventDefault();

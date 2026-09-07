@@ -175,7 +175,7 @@ export const FAQ_PAGE_COPY = {
     "Delivery, installation, warranty, and how we work across India. If your question is not listed, contact the team.",
   metadataTitle: "FAQ | Office furniture delivery and installation",
   metadataDescription:
-    "Answers on where One&Only delivers, installation, warranty, and multi-site office rollouts across India.",
+    "Answers on where One and Only delivers, installation, warranty, and multi-site office rollouts across India.",
   ctaKicker: "Still need a person",
   ctaTitleLead: "Ask the",
   ctaTitleAccent: "team.",
@@ -929,7 +929,7 @@ export const LEGAL_PAGE_COPY = {
   },
   refund: {
     metadataTitle: "Refund and Return Policy",
-    metadataDescription: "Refund, return, replacement, and cancellation policy for One&Only.",
+    metadataDescription: "Refund, return, replacement, and cancellation policy for One and Only.",
     heroTitle: "Refund and return policy",
     heroSubtitle: "Terms for returns, replacements, cancellations, and refunds.",
     overviewKicker: "Returns and replacement terms",
@@ -1009,7 +1009,7 @@ export const PRODUCTS_PAGE_COPY = {
 } as const;
 
 export const CATEGORY_ROUTE_COPY = {
-  metadataSuffix: "One&Only",
+  metadataSuffix: "One and Only",
   metadataTail: "{category} from One and Only — photos and specs.",
   browseAllCta: "Browse all categories",
   resourceDeskCta: "Open Resource Desk",

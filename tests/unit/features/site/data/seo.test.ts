@@ -196,7 +196,7 @@ describe('resolveDocumentTitle', () => {
   });
 
   it('does not double-append when brand is already embedded mid-title', () => {
-    const about = 'About One&Only | Office furniture Patna';
+    const about = 'About One and Only | Office furniture Patna';
     expect(resolveDocumentTitle(about)).toBe(about);
     expect(countBrandPipeSegments(about)).toBe(0);
   });
@@ -614,13 +614,13 @@ describe('buildProductJsonLd', () => {
 describe('resolveDocumentTitle brand-only collapse', () => {
   it('falls back when the remaining title is empty or a pure brand alias', () => {
     expect(resolveDocumentTitle('Oando')).toBe(SITE_BRAND.defaultTitle);
-    expect(resolveDocumentTitle('One&Only')).toBe(SITE_BRAND.defaultTitle);
+    expect(resolveDocumentTitle('One and Only')).toBe(SITE_BRAND.defaultTitle);
     expect(resolveDocumentTitle(` | ${SITE_BRAND.titleSuffix}`)).toBe(SITE_BRAND.defaultTitle);
-    expect(resolveDocumentTitle('One and Only | One&Only')).toBe(SITE_BRAND.defaultTitle);
+    expect(resolveDocumentTitle('One and Only | One and Only')).toBe(SITE_BRAND.defaultTitle);
   });
 
   it('falls back when every pipe segment is a brand alias', () => {
-    expect(resolveDocumentTitle('One&Only | One and Only | Oando | OneandOnly')).toBe(
+    expect(resolveDocumentTitle('One and Only | One and Only | Oando | OneandOnly')).toBe(
       SITE_BRAND.defaultTitle,
     );
   });
@@ -916,7 +916,7 @@ describe('buildClientsItemListJsonLd', () => {
     expect(ld['@context']).toBe('https://schema.org');
     expect(ld['@type']).toBe('ItemList');
     expect(ld['@id']).toBe('https://example.com/clients/#clients-directory');
-    expect(ld.name).toBe('One&Only Enterprise & Institutional Client Directory');
+    expect(ld.name).toBe('One and Only Enterprise & Institutional Client Directory');
     expect(ld.description).toContain('Verified workplace installations');
     expect(ld.numberOfItems).toBe(116);
     expect(ld.itemListElement).toHaveLength(116);

@@ -54,7 +54,7 @@ export function MarketingCtaLink({
       label={label}
       surface={surface}
       className={cn(
-        "inline-flex min-h-11",
+        "inline-flex min-h-12",
         VARIANT_CLASS[variant],
         context === "hero" ? HERO_CONTEXT_CLASS[variant] : undefined,
         className,

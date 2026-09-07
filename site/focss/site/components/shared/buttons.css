@@ -16,7 +16,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  min-height: 2.75rem;
+  min-height: 3rem;
   padding-inline: 1.5rem;
   border-radius: var(--radius-pill);
   border: 0.0625rem solid var(--color-primary);
@@ -40,7 +40,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  min-height: 2.75rem;
+  min-height: 3rem;
   padding-inline: 1.5rem;
   border-radius: var(--radius-pill);
   border: 1px solid var(--border-muted);
@@ -64,7 +64,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  min-height: 2.75rem;
+  min-height: 3rem;
   padding-inline: 1.5rem;
   border-radius: var(--radius-pill);
   border: 1px solid var(--border-inverse);
@@ -88,7 +88,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  min-height: 2.75rem;
+  min-height: 3rem;
   padding-inline: 1.5rem;
   border-radius: var(--radius-pill);
   border: 1px solid var(--border-contrast-accent);
@@ -114,7 +114,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  min-height: 2.75rem;
+  min-height: 3rem;
   padding-inline: 1.5rem;
   border-radius: var(--radius-pill);
   border: 1px solid var(--border-inverse);

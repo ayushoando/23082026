@@ -6,13 +6,13 @@ import { OneAndOnlyLogo } from '@/components/ui/Logo'
 
 /**
  * Shared chrome for every auth screen (login / signup / forgot / reset / verify).
- * Centered card with the real One&Only wordmark — same brand asset as Header/admin.
+ * Centered card with the real One and Only wordmark — same brand asset as Header/admin.
  */
 export function AuthShell({
   children,
   /**
    * Browser tab title for this auth screen, e.g. "Sign in" or
-   * "Create account". The shell appends "— One&Only" so the
+   * "Create account". The shell appends "— One and Only" so the
    * suffix stays consistent with the rest of the app.
    */
   documentTitle,
@@ -20,14 +20,14 @@ export function AuthShell({
   children: ReactNode
   documentTitle?: string
 }) {
-  useDocumentTitle(documentTitle ? `${documentTitle} — One&Only` : null)
+  useDocumentTitle(documentTitle ? `${documentTitle} — One and Only` : null)
   return (
     <div className="min-h-screen flex flex-col bg-blueprint-grid">
       <header className="px-6 pt-6 sm:pt-8">
         <Link
           href="/"
           className="inline-flex items-center gap-2.5 font-semibold tracking-tight text-heading"
-          aria-label="One&Only home"
+          aria-label="One and Only home"
         >
           <OneAndOnlyLogo variant="orange" className="h-8 max-w-[10rem]" />
         </Link>

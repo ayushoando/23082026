@@ -491,7 +491,7 @@
   .admin-toolbar .admin-field__control,
   .admin-toolbar select.admin-field__control,
   .admin-toolbar input.admin-field__control {
-    min-height: 2.75rem; /* â‰¥44px taps */
+    min-height: 3rem; /* ≥48px taps */
   }
 
   .admin-catalog-row-actions {
@@ -500,7 +500,7 @@
 
   .admin-catalog-row-actions .admin-btn {
     flex: 1 1 calc(50% - 0.2rem);
-    min-height: 2.75rem;
+    min-height: 3rem;
     justify-content: center;
   }
 
@@ -510,7 +510,7 @@
 
   .admin-empty__actions .admin-btn {
     flex: 1 1 100%;
-    min-height: 2.75rem;
+    min-height: 3rem;
     justify-content: center;
   }
 }

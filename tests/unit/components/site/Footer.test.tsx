@@ -28,9 +28,9 @@ vi.mock("@/components/site/LanguageSwitcher", () => ({
 }));
 
 function expectMinTapTarget(el: HTMLElement) {
-  // Footer uses site-footer__link with py-1 for text links and min-h-11 for legal links.
-  // Both approaches meet the ≥44 px threshold.
-  expect(el.className).toMatch(/site-footer__|min-h-11/);
+  // Footer uses site-footer__link with py-1 for text links and min-h-12 for legal links.
+  // Both approaches meet the ≥48 px threshold.
+  expect(el.className).toMatch(/site-footer__|min-h-12/);
 }
 
 describe("SiteFooter Component", () => {
@@ -118,7 +118,7 @@ describe("SiteFooter Component", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("uses ≥44px tap targets on contact, nav, social, and legal links (mobile readability)", () => {
+  it("uses ≥48px tap targets on contact, nav, social, and legal links (mobile readability)", () => {
     render(<SiteFooter />);
 
     expectMinTapTarget(
@@ -132,7 +132,7 @@ describe("SiteFooter Component", () => {
     for (const social of SITE_SOCIAL_LINKS) {
       const socialLink = screen.getByRole("link", { name: social.label });
       expectMinTapTarget(socialLink);
-      expect(socialLink.className).toMatch(/w-11/);
+      expect(socialLink.className).toMatch(/min-w-12/);
     }
 
     for (const col of SITE_FOOTER_NAV) {

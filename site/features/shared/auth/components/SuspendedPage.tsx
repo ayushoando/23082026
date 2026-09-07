@@ -35,7 +35,7 @@ export function SuspendedPage() {
         </p>
         <p className="mt-3 text-ui-13 text-muted">
           If this looks wrong, please contact whoever manages your
-          One&Only account at your organisation. They can reach a
+          One and Only account at your organisation. They can reach a
           platform admin to review the decision.
         </p>
         <div className="mt-6 flex flex-col gap-2 w-full">

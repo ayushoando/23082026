@@ -4,7 +4,7 @@ import { buildPageMetadata } from "@/features/site/data/seo";
 import { PortalShell } from "@/features/site/portal/PortalShell";
 import { SITE_URL } from "@/lib/siteUrl";
 
-/** Absolute title — avoids "Portal | One&Only | One&Only" from root title template. */
+/** Absolute title — avoids "Portal | One and Only | One and Only" from root title template. */
 export const metadata: Metadata = buildPageMetadata(SITE_URL, {
   title: "Portal",
   description:

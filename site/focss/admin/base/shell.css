@@ -131,6 +131,7 @@ html:has(.shell-admin-layout) body .shell-admin-layout {
   .shell-admin-layout {
     /* Measured ~88px two-row topbar — drawer/backdrop inset must match (not 4rem). */
     --admin-header-height: 5.5rem;
+    --admin-topbar-control-h: 3rem;
   }
 
   .shell-admin-topbar {
@@ -340,8 +341,8 @@ html:has(.shell-admin-layout) body .shell-admin-layout {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 2.75rem; /* Ã¢â€°Â¥44px */
-  min-height: 2.75rem;
+  min-width: 3rem; /* >=48px */
+  min-height: 3rem;
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-pill);
   background: var(--surface-soft);
@@ -422,7 +423,11 @@ html:has(.shell-admin-layout) body .shell-admin-layout {
   }
 
   .shell-admin-nav-link {
-    min-height: 2.75rem; /* Ã¢â€°Â¥44px phone taps */
+    min-height: 3rem; /* ≥48px phone taps */
+  }
+
+  .shell-admin-nav-group__toggle {
+    min-height: 3rem; /* ≥48px phone taps */
   }
 }
 

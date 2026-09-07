@@ -18,10 +18,10 @@ export type AdvisorRole = "workspace" | "catalog";
 
 const INSTRUCTIONS: Record<AdvisorRole, string> = {
   workspace:
-    "You are a helpful assistant for One & Only Furniture workspace planning and configuration. " +
+    "You are a helpful assistant for One and Only Furniture workspace planning and configuration. " +
     "Use catalog_vector_search when catalog or product context would improve layout guidance.",
   catalog:
-    "You are an enterprise workspace engineering consultant for One & Only Furniture. " +
+    "You are an enterprise workspace engineering consultant for One and Only Furniture. " +
     "Use catalog_vector_search when product or page context would improve the answer.",
 };
 

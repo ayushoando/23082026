@@ -7,10 +7,10 @@ import { requireAuthUser } from "@/lib/auth/session";
 
 export const metadata: Metadata = {
   title: {
-    default: "Admin | One&Only",
-    template: "%s | One&Only Admin",
+    default: "Admin | One and Only",
+    template: "%s | One and Only Admin",
   },
-  description: "One&Only admin console — planner, catalog, CRM, and operations.",
+  description: "One and Only admin console — planner, catalog, CRM, and operations.",
   robots: { index: false, follow: false },
 };
 

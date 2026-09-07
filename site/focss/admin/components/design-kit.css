@@ -81,7 +81,7 @@
 .design-kit-nav a {
   display: inline-flex;
   align-items: center;
-  min-height: 2.75rem;
+  min-height: 3rem;
   padding-inline: var(--space-3);
   border: var(--dk-rule);
   border-radius: var(--radius-pill);

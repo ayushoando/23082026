@@ -32,7 +32,7 @@ async function loadShowroomsCopy() {
 export async function generateMetadata(): Promise<Metadata> {
   const copy = await loadShowroomsCopy();
   return buildPageMetadata(SITE_URL, {
-    title: `${copy.heroTitle} | One&Only`,
+    title: `${copy.heroTitle} | One and Only`,
     description: copy.heroSubtitle,
     path: "/showrooms",
   });
@@ -45,7 +45,7 @@ export default async function ShowroomsPage() {
   ]);
   const showroomsJsonLd = buildPageJsonLd(SITE_URL, {
     path: "/showrooms",
-    title: `${copy.heroTitle} | One&Only`,
+    title: `${copy.heroTitle} | One and Only`,
     description: copy.heroSubtitle,
     pageType: "WebPage",
   });

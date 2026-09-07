@@ -208,7 +208,7 @@ describe("app/(site)/trusted-by/page.tsx", () => {
         : ((TRUSTED_BY_PAGE_METADATA.title as { absolute?: string })
             ?.absolute ?? String(TRUSTED_BY_PAGE_METADATA.title));
     expect(titleValue).toMatch(/Office furniture clients in India/);
-    expect(titleValue).toMatch(/One&Only/);
+    expect(titleValue).toMatch(/One and Only/);
     expect(TRUSTED_BY_PAGE_METADATA.openGraph?.url).toMatch(/\/trusted-by\/?$/);
     expect(TRUSTED_BY_PAGE_METADATA.description).toMatch(/government.*banking/i);
   });

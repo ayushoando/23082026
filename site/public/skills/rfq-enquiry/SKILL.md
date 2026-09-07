@@ -5,7 +5,7 @@ description: Submit commercial requests for quotation (RFQ), enterprise furnitur
 
 # RFQ & Project Enquiry Skill
 
-This skill allows AI agents representing commercial buyers, architects, or general contractors to submit requests for quotation and enterprise fit-out enquiries to One&Only.
+This skill allows AI agents representing commercial buyers, architects, or general contractors to submit requests for quotation and enterprise fit-out enquiries to One and Only.
 
 ## Submission Endpoint
 

@@ -5,7 +5,7 @@ import { SITE_URL } from "@/lib/siteUrl";
 import { sanitizeNextPath } from "@/lib/auth/plannerRedirect";
 
 export const metadata: Metadata = buildPageMetadata(SITE_URL, {
-  title: "Sign in | One&Only",
+  title: "Sign in | One and Only",
   description: "Redirect to workspace sign-in.",
   path: "/login",
   indexable: false,

@@ -15,7 +15,7 @@ export function InteractiveTools() {
       title={{ lead: t("tools.titleLead"), accent: t("tools.titleAccent") }}
       description={t("tools.description")}
       primaryCta={{
-        label: HOMEPAGE_PLANNER_SUITE_CONTENT.launchLabel,
+        label: t("plannerSuite.launchLabel"),
         href: HOMEPAGE_PLANNER_SUITE_CONTENT.launchHref,
       }}
       demoHref="/ooplanner"

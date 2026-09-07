@@ -30,14 +30,14 @@ import { SITE_URL } from "@/lib/siteUrl";
  * are not listed here.
  */
 
-export const ABOUT_PAGE_TITLE = "About One&Only | One and Only Furniture India";
+export const ABOUT_PAGE_TITLE = "About | One and Only Furniture India";
 
 export const ABOUT_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
   title: ABOUT_PAGE_TITLE,
   description: ABOUT_PAGE_COPY.heroSubtitle,
   path: "/about",
   keywords: [
-    "about One&Only",
+    "about One and Only",
     "about One and Only Furniture",
     "One and Only Furniture Patna",
     "office furniture India",
@@ -64,25 +64,25 @@ export const SOLUTIONS_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
 });
 
 export const CONTACT_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
-  title: "Contact One and Only Furniture | Sales | One&Only",
+  title: "Contact One and Only Furniture | Sales | One and Only",
   description: CONTACT_PAGE_COPY.heroSubtitle,
   path: "/contact",
   image: "/assets/marketing/hero/slides/TVS3-Oneandonly-bright.webp",
   keywords: [
     "contact One and Only Furniture",
-    "contact One&Only",
+    "contact One and Only",
     "One and Only Patna contact",
     "office furniture quote India",
     "office furniture dealer contact",
     "Steelcase Featherlite Humanscale contact",
     "workspace planning enquiry",
     "quote request office furniture",
-    "sales contact One&Only",
+    "sales contact One and Only",
   ],
 });
 
 export const SUSTAINABILITY_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
-  title: "Sustainable office furniture | One&Only",
+  title: "Sustainable office furniture | One and Only",
   description: SUSTAINABILITY_PAGE_COPY.heroSubtitle,
   path: "/sustainability",
   image: "/assets/marketing/hero/pages/Other3-oneandonly-bright.webp",
@@ -95,7 +95,7 @@ export const SUSTAINABILITY_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL
 });
 
 export const SERVICE_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
-  title: `${SERVICE_PAGE_COPY.heroTitle} | One&Only`,
+  title: `${SERVICE_PAGE_COPY.heroTitle} | One and Only`,
   description: SERVICE_PAGE_COPY.heroSubtitle,
   path: "/service",
   /** Same family hero as planning / privacy / downloads for visual parity. */
@@ -109,7 +109,7 @@ export const SERVICE_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
 });
 
 export const PLANNING_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
-  title: `${PLANNING_PAGE_COPY.heroTitle} | One&Only`,
+  title: `${PLANNING_PAGE_COPY.heroTitle} | One and Only`,
   description: PLANNING_PAGE_COPY.heroSubtitle,
   path: "/planning",
   keywords: [
@@ -121,7 +121,7 @@ export const PLANNING_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
 });
 
 export const FAQ_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
-  title: `${FAQ_PAGE_COPY.metadataTitle} | One&Only`,
+  title: `${FAQ_PAGE_COPY.metadataTitle} | One and Only`,
   description: FAQ_PAGE_COPY.metadataDescription,
   path: "/faq",
   keywords: [
@@ -133,35 +133,35 @@ export const FAQ_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
 });
 
 export const DOWNLOADS_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
-  title: `${DOWNLOADS_PAGE_COPY.metadataTitle} | One&Only`,
+  title: `${DOWNLOADS_PAGE_COPY.metadataTitle} | One and Only`,
   description: DOWNLOADS_PAGE_COPY.metadataDescription,
   path: "/downloads",
   keywords: [
     "product catalogs office furniture",
     "technical sheets furniture",
     "planning references workspace",
-    "resource desk One&Only",
+    "resource desk One and Only",
   ],
 });
 
 export const TERMS_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
-  title: "Terms & Conditions | One&Only office furniture",
+  title: "Terms & Conditions | One and Only office furniture",
   description:
-    "Website, quotation, delivery, warranty, and support terms for One&Only office furniture across India.",
+    "Website, quotation, delivery, warranty, and support terms for One and Only office furniture across India.",
   path: "/terms",
   alternates: false,
   image: "/assets/marketing/hero/pages/Other3-oneandonly-bright.webp",
 });
 
 export const REFUND_POLICY_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
-  title: `${LEGAL_PAGE_COPY.refund.metadataTitle} | One&Only`,
+  title: `${LEGAL_PAGE_COPY.refund.metadataTitle} | One and Only`,
   description: LEGAL_PAGE_COPY.refund.metadataDescription,
   path: "/refund-and-return-policy",
   alternates: false,
 });
 
 export const COMPARE_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
-  title: "Compare office furniture | One&Only",
+  title: "Compare office furniture | One and Only",
   description: COMPARE_ROUTE_COPY.description,
   path: "/compare",
   keywords: [
@@ -174,7 +174,7 @@ export const COMPARE_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
 });
 
 export const QUOTE_CART_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
-  title: `${QUOTE_CART_ROUTE_COPY.title} | One&Only`,
+  title: `${QUOTE_CART_ROUTE_COPY.title} | One and Only`,
   description: QUOTE_CART_ROUTE_COPY.description,
   path: "/quote-cart",
   alternates: false,
@@ -182,15 +182,15 @@ export const QUOTE_CART_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
 });
 
 export const SHOWROOMS_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
-  title: "One and Only Furniture showroom Patna | One&Only",
+  title: "One and Only Furniture showroom Patna | One and Only",
   description:
-    "Visit One&Only (One and Only Furniture) showroom in Patna — Jagat Trade Centre, Frazer Road. See seating, workstations, and finishes before you brief the planning team.",
+    "Visit One and Only (One and Only Furniture) showroom in Patna — Jagat Trade Centre, Frazer Road. See seating, workstations, and finishes before you brief the planning team.",
   path: "/showrooms",
   image: "/assets/marketing/hero/pages/Other3-oneandonly-bright.webp",
   keywords: [
     "One and Only Furniture Patna",
     "One and Only Patna",
-    "One&Only Patna showroom",
+    "One and Only Patna showroom",
     "One and Only showroom",
     "office furniture showroom Patna",
     "office furniture showroom Bihar",
@@ -201,7 +201,7 @@ export const SHOWROOMS_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
 });
 
 export const CLIENTS_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
-  title: "Office furniture portfolio | Workplace projects | One&Only",
+  title: "Office furniture portfolio | Workplace projects | One and Only",
   description:
     "Office furniture projects and workplace fit-outs for government, finance, manufacturing, and institutions across India.",
   path: "/portfolio",
@@ -219,7 +219,7 @@ export const CLIENTS_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
 export const PORTFOLIO_PAGE_METADATA = CLIENTS_PAGE_METADATA;
 
 export const CLIENT_DIRECTORY_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
-  title: "Client Directory & Sector Showcase | One&Only",
+  title: "Client Directory & Sector Showcase | One and Only",
   description:
     "A curated, sector-wise directory of verified client organisations furnished across India since 2011.",
   path: "/clients",
@@ -233,9 +233,9 @@ export const CLIENT_DIRECTORY_PAGE_METADATA: Metadata = buildPageMetadata(SITE_U
 });
 
 export const TRUSTED_BY_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
-  title: "Office furniture clients in India | One&Only",
+  title: "Office furniture clients in India | One and Only",
   description:
-    "Explore selected government, banking, manufacturing, education, and enterprise clients furnished by One&Only across India since 2011.",
+    "Explore selected government, banking, manufacturing, education, and enterprise clients furnished by One and Only across India since 2011.",
   path: "/trusted-by",
   image: "/assets/marketing/clients/Titan/titan-hero.webp",
   keywords: [
@@ -247,7 +247,7 @@ export const TRUSTED_BY_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
 });
 
 export const TOOLS_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
-  title: "Workspace Planning Tools & Calculators | One&Only",
+  title: "Workspace Planning Tools & Calculators | One and Only",
   description:
     "Free office planning tools and workspace calculators. Estimate workstation capacity, calculate meeting room sizes, and evaluate layout requirements before furnishing.",
   path: "/tools",
@@ -261,7 +261,7 @@ export const TOOLS_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
 });
 
 export const OFFICE_SPACE_CALCULATOR_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
-  title: "Office Space Calculator | Workstation Capacity | One&Only",
+  title: "Office Space Calculator | Workstation Capacity | One and Only",
   description:
     "Estimate office workspace capacity from room dimensions. Compare planning presets for gross area, circulation allowance, usable area, and indicative workstation counts.",
   path: "/tools/office-space-calculator",
@@ -275,7 +275,7 @@ export const OFFICE_SPACE_CALCULATOR_PAGE_METADATA: Metadata = buildPageMetadata
 });
 
 export const MEETING_ROOM_CAPACITY_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
-  title: "Meeting Room Capacity Calculator | One&Only",
+  title: "Meeting Room Capacity Calculator | One and Only",
   description:
     "Estimate meeting room capacity from room dimensions. Compare boardroom, collaboration, and training presets for usable area and indicative attendee counts.",
   path: "/tools/meeting-room-capacity-calculator",
@@ -289,7 +289,7 @@ export const MEETING_ROOM_CAPACITY_PAGE_METADATA: Metadata = buildPageMetadata(S
 });
 
 export const ACCESS_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
-  title: "Sign in | One&Only office furniture planner",
+  title: "Sign in | One and Only office furniture planner",
   description:
     "Sign in or continue as a guest to plan office furniture layouts and product selections. Not indexed — account entry only.",
   path: "/access",
@@ -300,7 +300,7 @@ export const ACCESS_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
 export const CHOOSE_PRODUCT_PAGE_METADATA: Metadata = buildPageMetadata(
   SITE_URL,
   {
-    title: "Choose planner entry | Office furniture workspace | One&Only",
+    title: "Choose planner entry | Office furniture workspace | One and Only",
     description:
       "Start the office furniture planner as guest or signed-in member. Layout, catalog placement, and BOQ export for commercial workspaces across India. Workspace entry — not indexed.",
     path: "/choose-product",
@@ -310,7 +310,7 @@ export const CHOOSE_PRODUCT_PAGE_METADATA: Metadata = buildPageMetadata(
 );
 
 export const CAREER_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
-  title: "Careers | Office furniture jobs | One&Only",
+  title: "Careers | Office furniture jobs | One and Only",
   description: CAREER_PAGE_COPY.heroSubtitle,
   path: "/career",
   keywords: [
@@ -320,11 +320,11 @@ export const CAREER_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
     "workspace planning jobs",
     "furniture sales jobs India",
     "furniture operations careers",
-    "One&Only careers",
+    "One and Only careers",
   ],
 });
 
-export const TEMPLATES_PAGE_FALLBACK_TITLE = "Workspace Templates | One&Only";
+export const TEMPLATES_PAGE_FALLBACK_TITLE = "Workspace Templates | One and Only";
 
 export const PRODUCTS_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
   title: `${PRODUCTS_PAGE_COPY.headlineLead} ${PRODUCTS_PAGE_COPY.headlineAccent}`,
@@ -333,7 +333,7 @@ export const PRODUCTS_PAGE_METADATA: Metadata = buildPageMetadata(SITE_URL, {
   image: "/assets/marketing/ui/categories/workstations-clean.webp",
   keywords: [
     "One and Only Furniture products",
-    "One&Only furniture catalog",
+    "One and Only furniture catalog",
     "office furniture products India",
     "workstations chairs tables storage",
     "office furniture catalog India",
@@ -360,7 +360,7 @@ export const PLANNER_LANDING_PAGE_METADATA: Metadata = buildPageMetadata(SITE_UR
     "office space planning",
     "2D floor plan",
     "3D office planner",
-    "One&Only planner",
+    "One and Only planner",
   ],
 });
 

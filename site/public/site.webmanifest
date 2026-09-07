@@ -1,7 +1,7 @@
 {
-  "name": "One&Only — One and Only Furniture",
-  "short_name": "One&Only",
-  "description": "One&Only (One and Only Furniture) — premium ergonomic office furniture for modern workplaces across India. Patna showroom and pan-India delivery.",
+  "name": "One and Only Furniture",
+  "short_name": "One and Only",
+  "description": "One and Only Furniture — premium ergonomic office furniture for modern workplaces across India. Patna showroom and pan-India delivery.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0b1f33",

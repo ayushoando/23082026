@@ -96,7 +96,7 @@ describe("app/(site)/service/page.tsx — behavior", () => {
         ? SERVICE_PAGE_METADATA.title
         : ((SERVICE_PAGE_METADATA.title as { absolute?: string })?.absolute ?? String(SERVICE_PAGE_METADATA.title));
     expect(titleValue).toMatch(/Service/);
-    expect(titleValue).toMatch(/One&Only/);
+    expect(titleValue).toMatch(/One and Only/);
     expect(SERVICE_PAGE_METADATA.openGraph?.url).toMatch(/\/service\/?$/);
     expect(SERVICE_PAGE_METADATA.description).toBe(SERVICE_PAGE_COPY.heroSubtitle);
     expect((SERVICE_PAGE_METADATA.alternates as { canonical?: string })?.canonical ?? SERVICE_PAGE_METADATA.openGraph?.url).toBeDefined();

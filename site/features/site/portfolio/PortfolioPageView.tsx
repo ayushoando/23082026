@@ -50,7 +50,7 @@ export async function PortfolioPageView() {
   const photoCount = clientWork.reduce((total, project) => total + project.photos.length, 0);
   const portfolioJsonLd = buildPageJsonLd(SITE_URL, {
     path: "/portfolio",
-    title: `Workplace Projects & Portfolio | One&Only`,
+    title: `Workplace Projects & Portfolio | One and Only`,
     description: copy.heroSubtitle,
     pageType: "CollectionPage",
   });

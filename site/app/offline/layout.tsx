@@ -3,7 +3,7 @@ import "@/app/(site)/globals.css";
 import { SITE_VIEWPORT } from "@/lib/siteViewport";
 
 export const metadata: Metadata = {
-  title: "Offline | One&Only",
+  title: "Offline | One and Only",
   description: "You are currently offline.",
   robots: { index: false, follow: false },
 };

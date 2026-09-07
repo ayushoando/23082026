@@ -167,7 +167,7 @@ serve(async (req) => {
       .insert({
         office_id: officeId,
         created_by: caller.id,
-        title: 'One&Only assistant chat',
+        title: 'One and Only assistant chat',
       })
       .select('id, office_id, created_by')
       .single()
@@ -206,7 +206,7 @@ serve(async (req) => {
   const history = ((historyRows ?? []) as MessageRow[]).reverse()
 
   const systemPrompt = [
-    'You are the One&Only assistant for office furniture planning and layout guidance.',
+    'You are the One and Only assistant for office furniture planning and layout guidance.',
     'Your job is to give concise, practical office-layout and workplace-operations guidance.',
     'Prioritize safe, reversible, step-by-step suggestions and call out assumptions explicitly.',
     'When giving layout advice, mention concrete element moves (desks, rooms, circulation, meeting spaces).',

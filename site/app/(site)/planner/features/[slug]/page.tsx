@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: PageProps) {
     title: `${feature.title} — Workspace Planner`,
     description: feature.summary,
     path: `/planner/features/${slug}`,
-    keywords: [feature.title, "workspace planner", "One&Only"],
+    keywords: [feature.title, "workspace planner", "One and Only"],
   });
 }
 

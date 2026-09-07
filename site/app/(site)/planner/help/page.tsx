@@ -11,7 +11,7 @@ export const metadata = PLANNER_HELP_PAGE_METADATA;
 const PAGE_JSON_LD = buildPageJsonLd(SITE_URL, {
   path: "/planner/help",
   title: "Planner Help — Workspace Layout Guide",
-  description: "Help center for the One&Only workspace planner.",
+  description: "Help center for the One and Only workspace planner.",
   pageType: "WebPage",
 });
 

@@ -34,7 +34,7 @@ export default async function TrustedByPage() {
 
   const trustedByJsonLd = buildPageJsonLd(SITE_URL, {
     path: "/trusted-by",
-    title: `${copy.heroTitle} | One&Only`,
+    title: `${copy.heroTitle} | One and Only`,
     description: copy.heroSubtitle,
     pageType: "WebPage",
   });

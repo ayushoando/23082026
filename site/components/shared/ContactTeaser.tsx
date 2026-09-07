@@ -289,7 +289,7 @@ export function ContactTeaser() {
                 data-testid="home-contact-teaser-form"
                 noValidate
                 toolname="submitHomepageBrief"
-                tooldescription="Submit a short project brief from the homepage to One&Only. Requires name, city, message, consent, and either email or phone."
+                tooldescription="Submit a short project brief from the homepage to One and Only. Requires name, city, message, consent, and either email or phone."
               >
                 {/* Honeypot: hidden from humans; bots that autofill "website" are silently accepted without DB write. */}
                 <div className="hidden" aria-hidden="true">
@@ -500,7 +500,7 @@ export function ContactTeaser() {
                               : "contact-teaser-consent-hint"
                           }
                           data-testid="contact-teaser-consent"
-                          toolparamdescription="Must be true. Confirms consent for One&Only to use contact details to respond."
+                          toolparamdescription="Must be true. Confirms consent for One and Only to use contact details to respond."
                         />
                         <span>
                           {t("contact.form.consentText")}{" "}

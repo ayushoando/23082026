@@ -60,14 +60,14 @@ describe("RouteCtaBand Component", () => {
     expect(link2).toHaveClass("btn-outline-light"); // default variant
   });
 
-  it("declares ≥44px tap floor and stacks actions full-width on phone", () => {
+  it("declares ≥48px tap floor and stacks actions full-width on phone", () => {
     const { container } = render(<RouteCtaBand {...props} />);
 
     const link1 = screen.getByRole("link", { name: "Consult Now" });
     const link2 = screen.getByRole("link", { name: "View Portfolio" });
-    expect(link1.className).toMatch(/min-h-11/);
+    expect(link1.className).toMatch(/min-h-12/);
     expect(link1.className).toMatch(/w-full/);
-    expect(link2.className).toMatch(/min-h-11/);
+    expect(link2.className).toMatch(/min-h-12/);
     expect(link2.className).toMatch(/w-full/);
 
     const actionRow = container.querySelector(".flex.w-full");

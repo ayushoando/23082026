@@ -149,7 +149,7 @@ describe("SEO Standards Audit: Schema.org Rich Results Compliance", () => {
   it("buildFaqJsonLd produces valid FAQPage schema for commercial category hubs", () => {
     const faqSchema = buildFaqJsonLd(TEST_SITE_URL, "/products/workstations", [
       {
-        question: "Are One&Only workstations BIFMA certified?",
+        question: "Are One and Only workstations BIFMA certified?",
         answer: "Yes, our workstations meet BIFMA X5.5 commercial performance standards.",
       },
     ]);
@@ -160,7 +160,7 @@ describe("SEO Standards Audit: Schema.org Rich Results Compliance", () => {
     expect(faqSchema.mainEntity).toHaveLength(1);
     expect(faqSchema.mainEntity[0]).toEqual({
       "@type": "Question",
-      name: "Are One&Only workstations BIFMA certified?",
+      name: "Are One and Only workstations BIFMA certified?",
       acceptedAnswer: {
         "@type": "Answer",
         text: "Yes, our workstations meet BIFMA X5.5 commercial performance standards.",
@@ -175,7 +175,7 @@ describe("SEO Standards Audit: Schema.org Rich Results Compliance", () => {
     expect(itemList["@context"]).toBe("https://schema.org");
     expect(itemList["@type"]).toBe("ItemList");
     expect(itemList["@id"]).toBe("https://oando.co.in/clients/#clients-directory");
-    expect(itemList.name).toBe("One&Only Enterprise & Institutional Client Directory");
+    expect(itemList.name).toBe("One and Only Enterprise & Institutional Client Directory");
     expect(itemList.numberOfItems).toBe(116);
     expect(itemList.itemListElement).toHaveLength(116);
 

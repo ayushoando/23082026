@@ -80,7 +80,7 @@ vi.mock("@/components/shared/ContactTeaser", () => ({
 
 vi.mock("@/features/site/data/seo", () => ({
   buildPageMetadata: (_url: string, opts: { title: string; description: string }) => ({
-    title: { absolute: `${opts.title} | One&Only` },
+    title: { absolute: `${opts.title} | One and Only` },
     description: opts.description,
   }),
   buildCanonicalUrl: (siteUrl: string, path: string) =>
@@ -121,7 +121,7 @@ describe("SolutionsCategoryPage Route", () => {
       const meta = await generateMetadata({
         params: Promise.resolve({ category: "seating" }),
       });
-      expect(meta.title).toEqual({ absolute: "Seating Solutions | One&Only" });
+      expect(meta.title).toEqual({ absolute: "Seating Solutions | One and Only" });
       expect(meta.description).toContain("Planning-led ergonomic seating");
     });
 

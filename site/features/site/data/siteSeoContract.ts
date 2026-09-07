@@ -76,9 +76,9 @@ export const SEO01_STATIC_METADATA: ReadonlyArray<{
   {
     path: "/sitemap",
     metadata: buildPageMetadata(SITE_URL, {
-      title: "Sitemap | One&Only office furniture routes",
+      title: "Sitemap | One and Only office furniture routes",
       description:
-        "HTML sitemap of public One&Only pages — products, solutions, planning, service, planner, and company routes.",
+        "HTML sitemap of public One and Only pages — products, solutions, planning, service, planner, and company routes.",
       path: "/sitemap",
     }),
   },

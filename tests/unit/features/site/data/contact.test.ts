@@ -13,7 +13,7 @@ import {
 
 describe("contact site-data helper", () => {
   it("should have correct contact constants", () => {
-    expect(SITE_CONTACT.brandName).toBe("One&Only");
+    expect(SITE_CONTACT.brandName).toBe("One and Only");
     expect(SUPPORT_PHONE_DIGITS).toBe("919031022875");
     expect(SALES_PHONE_DIGITS).toBe("919835630940");
   });

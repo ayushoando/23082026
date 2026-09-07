@@ -1,5 +1,5 @@
 /* App shell chrome — scoped to OO zones */
-.ooplanner-root .app-root { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+.ooplanner-root .app-root { display: flex; flex-direction: column; height: 100vh; height: 100dvh; overflow: hidden; }
 
 /* Top bar */
 .ooplanner-root .topbar {

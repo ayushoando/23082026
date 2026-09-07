@@ -54,7 +54,7 @@ export function GlobalNavHeader() {
         <Link
           href="/dashboard"
           className="shell-global-nav__brand"
-          aria-label="One&Only workspace - Go to dashboard"
+          aria-label="One and Only workspace - Go to dashboard"
         >
           <OneAndOnlyLogo
             variant="orange"

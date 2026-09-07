@@ -242,7 +242,7 @@ function isPureBrandSegment(segment: string): boolean {
 }
 
 /**
- * Count pure brand pipe segments (`| One&Only`).
+ * Count pure brand pipe segments (`| One and Only`).
  * Used by SF-02 unit contracts — more than one is a double-brand title.
  */
 export function countBrandPipeSegments(title: string): number {
@@ -263,7 +263,7 @@ export function normalizeSiteOrigin(siteUrl: string): string {
 
 /**
  * Collapse repeated brand suffixes and produce one document title.
- * Prevents "Workstations | One&Only | One&Only" from template + manual suffix.
+ * Prevents "Workstations | One and Only | One and Only" from template + manual suffix.
  * Result has at most one pure brand pipe segment (defaultTitle leads with brand once).
  */
 export function resolveDocumentTitle(rawTitle: string): string {
@@ -299,7 +299,7 @@ export function resolveDocumentTitle(rawTitle: string): string {
   const body = bodyParts.join(" | ");
   if (body === SITE_BRAND.defaultTitle) {return SITE_BRAND.defaultTitle;}
 
-  // Brand already present as a non-pure segment ("About One&Only", "…One&Only Patna").
+  // Brand already present as a non-pure segment ("About One and Only", "…One and Only Patna").
   // Do not append a second pure brand suffix.
   const brandAsSubstring = new RegExp(escaped, "i");
   if (bodyParts.some((part) => brandAsSubstring.test(part))) {
@@ -551,7 +551,7 @@ export function buildClientsItemListJsonLd(
     "@context": "https://schema.org",
     "@type": "ItemList",
     "@id": `${pageUrl}#clients-directory`,
-    name: "One&Only Enterprise & Institutional Client Directory",
+    name: "One and Only Enterprise & Institutional Client Directory",
     description:
       "Verified workplace installations across financial institutions, public sector departments, education, and multinationals.",
     numberOfItems: clients.length,
@@ -607,7 +607,7 @@ export function buildCareerJobsJsonLd(
         title: job.title,
         description:
           job.description ||
-          `${job.title} (${job.department}) at One&Only — office furniture careers across India. Location: ${job.location}.`,
+          `${job.title} (${job.department}) at One and Only — office furniture careers across India. Location: ${job.location}.`,
         // datePosted is mandatory for Google job rich results — real dates only.
         datePosted: job.postedDate,
         employmentType: "FULL_TIME",

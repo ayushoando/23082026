@@ -13,38 +13,36 @@ import {
 } from "@/features/site/data/contact";
 import { SITE_FOOTER_NAV, SITE_SOCIAL_LINKS } from "@/features/site/data/navigation";
 
-import { Envelope, Phone } from "@phosphor-icons/react";
+import { Envelope, FacebookLogo, Phone, YoutubeLogo } from "@phosphor-icons/react";
 
-function FacebookIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="site-footer__social-icon h-5 w-5" aria-hidden="true">
-      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-    </svg>
-  );
+const phIconMap = {
+  facebook: FacebookLogo,
+  youtube: YoutubeLogo,
+  phone: Phone,
+  envelope: Envelope,
+} as const;
+
+type PhIconName = keyof typeof phIconMap;
+
+function PhIcon({ name, className, size = 20 }: { name: PhIconName; className?: string; size?: number }) {
+  const Icon = phIconMap[name];
+  return <Icon size={size} className={className} aria-hidden="true" />;
 }
 
-function YouTubeIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="site-footer__social-icon h-5 w-5" aria-hidden="true">
-      <path d="M23.5 6.2a3.1 3.1 0 0 0-2.2-2.2C19.4 3.5 12 3.5 12 3.5s-7.4 0-9.3.5A3.1 3.1 0 0 0 .5 6.2 32 32 0 0 0 0 12a32 32 0 0 0 .5 5.8 3.1 3.1 0 0 0 2.2 2.2c1.9.5 9.3.5 9.3.5s7.4 0 9.3-.5a3.1 3.1 0 0 0 2.2-2.2A32 32 0 0 0 24 12a32 32 0 0 0-.5-5.8zM9.6 15.5V8.5L15.8 12 9.6 15.5z" />
-    </svg>
-  );
-}
-
-const SOCIAL_ICON_MAP: Record<string, () => React.JSX.Element> = {
-  facebook: FacebookIcon,
-  youtube: YouTubeIcon,
+const SOCIAL_ICON_NAMES: Record<string, PhIconName> = {
+  facebook: "facebook",
+  youtube: "youtube",
 };
 
 /** Shared focus + hover chrome for footer controls. */
 const footerInteractiveClass =
   "rounded transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary";
 
-/** ≥44px text links (phone, email, nav, legal). */
-const footerTextLinkClass = `site-footer__link ${footerInteractiveClass} inline-flex min-h-11 items-center gap-2 py-1`;
+/** ≥48px text links (phone, email, nav, legal). */
+const footerTextLinkClass = `site-footer__link ${footerInteractiveClass} inline-flex min-h-12 items-center gap-2 py-1`;
 
-/** Social targets — ≥44×44; inverse-muted icons (see `.site-footer__social` in FOCSS). */
-const footerSocialClass = `site-footer__social ${footerInteractiveClass} inline-flex min-h-11 min-w-11 items-center justify-center`;
+/** Social targets — ≥48×48; inverse-muted icons (see `.site-footer__social` in FOCSS). */
+const footerSocialClass = `site-footer__social ${footerInteractiveClass} inline-flex min-h-12 min-w-12 items-center justify-center`;
 
 const FOOTER_LABEL_KEYS: Record<string, string> = {
   "All Products": "navigation.allProducts",
@@ -111,19 +109,19 @@ export function SiteFooter() {
                 href={toTelHref(SITE_CONTACT.supportPhone)}
                 className={`site-footer__contact-line ${footerTextLinkClass} text-sm`}
               >
-                <Phone size={16} className="shrink-0 text-primary" aria-hidden="true" />
+                <PhIcon name="phone" size={16} className="shrink-0 text-primary" />
                 <span>+91 90310 22875</span>
               </a>
               <a
                 href={buildMailtoHref()}
                 className={`site-footer__contact-line ${footerTextLinkClass} text-sm`}
               >
-                <Envelope size={16} className="shrink-0 text-primary" aria-hidden="true" />
+                <PhIcon name="envelope" size={16} className="shrink-0 text-primary" />
                 <span>{SITE_CONTACT.salesEmail}</span>
               </a>
               <div className="site-footer__social-row flex flex-wrap items-center gap-2 pt-2">
                 {SITE_SOCIAL_LINKS.map((social) => {
-                  const Icon = SOCIAL_ICON_MAP[social.id];
+                  const iconName = SOCIAL_ICON_NAMES[social.id];
                   return (
                     <a
                       key={social.id}
@@ -133,7 +131,7 @@ export function SiteFooter() {
                       rel="noopener noreferrer"
                       className={footerSocialClass}
                     >
-                      {Icon ? <Icon /> : null}
+                      {iconName ? <PhIcon name={iconName} size={20} className="site-footer__social-icon h-5 w-5" /> : null}
                     </a>
                   );
                 })}
@@ -181,28 +179,28 @@ export function SiteFooter() {
             <Link
               href="/refund-and-return-policy"
               prefetch={false}
-              className={`site-footer__legal ${footerInteractiveClass} inline-flex min-h-11 items-center`}
+              className={`site-footer__legal ${footerInteractiveClass} inline-flex min-h-12 items-center`}
             >
               {t("footer.refundPolicy")}
             </Link>
             <Link
               href="/privacy"
               prefetch={false}
-              className={`site-footer__legal ${footerInteractiveClass} inline-flex min-h-11 items-center`}
+              className={`site-footer__legal ${footerInteractiveClass} inline-flex min-h-12 items-center`}
             >
               {t("footer.privacyPolicy")}
             </Link>
             <Link
               href="/terms"
               prefetch={false}
-              className={`site-footer__legal ${footerInteractiveClass} inline-flex min-h-11 items-center`}
+              className={`site-footer__legal ${footerInteractiveClass} inline-flex min-h-12 items-center`}
             >
               {t("footer.terms")}
             </Link>
             <Link
               href="/sitemap"
               prefetch={false}
-              className={`site-footer__legal ${footerInteractiveClass} inline-flex min-h-11 items-center`}
+              className={`site-footer__legal ${footerInteractiveClass} inline-flex min-h-12 items-center`}
             >
               {t("footer.sitemap")}
             </Link>

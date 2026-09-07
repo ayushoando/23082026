@@ -28,7 +28,7 @@ export default async function CareerPage() {
 
   const careerPageJsonLd = buildPageJsonLd(SITE_URL, {
     path: "/career",
-    title: "Careers | Office furniture jobs India | One&Only",
+    title: "Careers | Office furniture jobs India | One and Only",
     description: t("heroSubtitle"),
     pageType: "WebPage",
   });

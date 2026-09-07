@@ -1,11 +1,11 @@
 ---
 name: oando-catalog-discovery
-description: Search and query One&Only commercial office furniture catalog, product specifications, ergonomic seating, and workstation dimensions.
+description: Search and query One and Only commercial office furniture catalog, product specifications, ergonomic seating, and workstation dimensions.
 ---
 
 # Catalog Discovery Skill
 
-This skill allows AI agents to discover, browse, and inspect commercial office furniture manufactured by One&Only.
+This skill allows AI agents to discover, browse, and inspect commercial office furniture manufactured by One and Only.
 
 ## Endpoints
 

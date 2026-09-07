@@ -13,7 +13,7 @@ import { SITE_URL } from "@/lib/siteUrl";
  * Must own chrome + absolute noindex title so we never emit homepage dual titles.
  */
 export const metadata: Metadata = buildPageMetadata(SITE_URL, {
-  title: "Page Not Found (404) | One&Only",
+  title: "Page Not Found (404) | One and Only",
   description:
     "The page you were looking for could not be found. Browse our office furniture catalog, workspace planner, or contact our team for help.",
   path: "/404",

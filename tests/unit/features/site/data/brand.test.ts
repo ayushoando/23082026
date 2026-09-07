@@ -7,10 +7,10 @@ import { SITE_BRAND } from "@/features/site/data/brand";
 
 describe("SITE_BRAND", () => {
   it("defines company identity, default title, and OG image path", () => {
-    expect(SITE_BRAND.companyName).toBe("One&Only");
-    expect(SITE_BRAND.siteName).toBe("One&Only");
-    expect(SITE_BRAND.titleSuffix).toBe("One&Only");
-    expect(SITE_BRAND.defaultTitle).toContain("One&Only");
+    expect(SITE_BRAND.companyName).toBe("One and Only");
+    expect(SITE_BRAND.siteName).toBe("One and Only");
+    expect(SITE_BRAND.titleSuffix).toBe("One and Only");
+    expect(SITE_BRAND.defaultTitle).toContain("One and Only");
     expect(SITE_BRAND.defaultTitle).toMatch(/One and Only Furniture/i);
     expect(SITE_BRAND.description).toMatch(/India/i);
     expect(SITE_BRAND.description).toMatch(/One and Only Furniture/i);

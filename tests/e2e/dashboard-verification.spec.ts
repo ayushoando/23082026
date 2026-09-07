@@ -78,9 +78,9 @@ test.describe("Dashboard verification", () => {
       await expect(header).toBeVisible({ timeout: 15_000 });
 
       // Branding: real wordmark + Suite chip (sm+)
-      const brandLink = page.getByLabel(/One&Only workspace/i);
+      const brandLink = page.getByLabel(/One and Only workspace/i);
       await expect(brandLink).toBeVisible();
-      await expect(brandLink.getByRole("img", { name: /One&Only/i })).toBeVisible();
+      await expect(brandLink.getByRole("img", { name: /One and Only/i })).toBeVisible();
 
       if (viewport.width >= 640) {
         await expect(brandLink).toContainText("Suite");

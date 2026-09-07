@@ -508,7 +508,7 @@ function buildSystemPrompt(
   contextSummary: string,
   productList: string,
 ) {
-  return `You are an enterprise workspace engineering consultant for One & Only Furniture.
+  return `You are an enterprise workspace engineering consultant for One and Only Furniture.
 Recommend 3 to 5 specific products from the catalog.
 Consider team size, industry, budget sensitivity, location context, and ergonomic needs.
 Only use the live catalog below.

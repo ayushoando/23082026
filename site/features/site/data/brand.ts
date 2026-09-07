@@ -2,15 +2,15 @@
  * Brand authority for titles, OG, and structured data.
  *
  * Visible UI uses `displayName` ("One and Only"). Search titles, OG, and
- * schema stay on `companyName` ("One&Only") plus the spaced alternate names.
+ * schema stay on `companyName` ("One and Only").
  */
 export const SITE_BRAND = {
   /** Spoken / on-page mark (logo alt, header, footer, body copy). */
   displayName: "One and Only",
   /** SEO / schema mark. Do not use this in visible marketing chrome. */
-  companyName: "One&Only",
-  titleSuffix: "One&Only",
-  siteName: "One&Only",
+  companyName: "One and Only",
+  titleSuffix: "One and Only",
+  siteName: "One and Only",
   utilityTagline: "",
   /** Registered / legal entity name used in policies and schema. */
   legalName: "One and Only Furniture Private Limited",
@@ -20,44 +20,35 @@ export const SITE_BRAND = {
    */
   alternateNames: [
     "One and Only",
-    "One & Only",
     "One and Only Furniture",
-    "One & Only Furniture",
     "OneandOnly",
     "One and Only Furniture Patna",
     "One and Only Patna",
-    "One&Only Patna",
-    "One&Only Furniture",
     "Oando",
     "OandO",
     "oando furniture",
   ],
   /**
-   * Homepage + root document title: keep One&Only first, then the
+   * Homepage + root document title: keep One and Only first, then the
    * spoken/search form so SERPs match common queries.
    */
   defaultTitle:
-    "One&Only | One and Only Furniture | Office Solutions India",
+    "One and Only Furniture | Office Solutions India",
   description:
-    "One&Only (One and Only Furniture) — premium ergonomic office furniture for modern workplaces across India. Workstations, seating, storage, tables, and soft seating with planning-led delivery nationwide.",
+    "One and Only (One and Only Furniture) — premium ergonomic office furniture for modern workplaces across India. Workstations, seating, storage, tables, and soft seating with planning-led delivery nationwide.",
   organizationDescription:
-    "One&Only, also known as One and Only Furniture, supplies planning-led office furniture systems for modern workplaces across India, multi-city rollouts, and enterprise projects.",
+    "One and Only, also known as One and Only Furniture, supplies planning-led office furniture systems for modern workplaces across India, multi-city rollouts, and enterprise projects.",
   localBusinessDescription:
-    "One and Only Furniture (One&Only) — premium ergonomic office furniture for commercial workplaces across India. Patna showroom and HQ at Jagat Trade Centre, Frazer Road. Authorized dealer for Steelcase, Featherlite, Humanscale, and other leading office furniture brands.",
+    "One and Only Furniture (One and Only) — premium ergonomic office furniture for commercial workplaces across India. Patna showroom and HQ at Jagat Trade Centre, Frazer Road. Authorized dealer for Steelcase, Featherlite, Humanscale, and other leading office furniture brands.",
   /**
    * Shared keyword set for root metadata (and pages that merge brand terms).
    * Prefer natural phrases people actually search.
    */
   brandKeywords: [
-    "One&Only",
     "One and Only",
-    "One & Only",
     "One and Only Furniture",
-    "One & Only Furniture",
     "One and Only Furniture Patna",
     "One and Only Patna",
-    "One&Only Patna",
-    "One&Only Furniture",
     "oando",
     "oando furniture",
     "office furniture India",

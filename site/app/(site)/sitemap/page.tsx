@@ -13,7 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: t("metadataTitle"),
     description: t("metadataDescription"),
     path: "/sitemap",
-    keywords: ["sitemap", "One&Only pages", "office furniture site map"],
+    keywords: ["sitemap", "One and Only pages", "office furniture site map"],
   });
 }
 

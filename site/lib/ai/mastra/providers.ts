@@ -84,7 +84,7 @@ function pushOpenRouterTarget(
     apiKey,
     headers: {
       "HTTP-Referer": SITE_URL,
-      "X-Title": "One&Only",
+      "X-Title": "One and Only",
     },
   });
 }

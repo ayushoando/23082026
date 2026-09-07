@@ -31,10 +31,10 @@ describe("AuthShell", () => {
       </AuthShell>,
     );
 
-    expect(screen.getByRole("link", { name: "One&Only home" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "One and Only home" })).toBeInTheDocument();
     expect(screen.getByAltText("One and Only Furniture")).toBeInTheDocument();
     expect(screen.getByText("Auth body")).toBeInTheDocument();
-    expect(document.title).toBe("Sign in — One&Only");
+    expect(document.title).toBe("Sign in — One and Only");
 
     unmount();
 

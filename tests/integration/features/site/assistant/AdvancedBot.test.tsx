@@ -72,7 +72,7 @@ describe("AdvancedBot", () => {
     );
     expect(emailLink).toHaveAttribute(
       "href",
-      expect.stringContaining("subject=One%26Only+workspace+enquiry+via+website+bot"),
+      expect.stringContaining("subject=One+and+Only+workspace+enquiry+via+website+bot"),
     );
   });
 

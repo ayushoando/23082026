@@ -41,7 +41,7 @@ export async function ClientsPageView() {
   const clientsValue = formatKpiValuePlus(stats.clientOrganisations);
   const clientsJsonLd = buildPageJsonLd(SITE_URL, {
     path: "/clients",
-    title: `Client Directory & Sector Showcase | One&Only`,
+    title: `Client Directory & Sector Showcase | One and Only`,
     description: copy.heroSubtitle,
     pageType: "CollectionPage",
   });

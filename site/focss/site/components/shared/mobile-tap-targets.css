@@ -111,8 +111,8 @@
     min-height: var(--control-height-sm);
   }
 
-  /* MOB-TAP: generic icon-button floor — exclude carousel / hero pagination */
-  :where(button:where([aria-label]):not(.home-showcase-dot):not(.home-hero-progress-btn)) {
+  /* MOB-TAP: generic icon-button floor — exclude carousel pagination */
+  :where(button:where([aria-label]):not(.home-showcase-dot)) {
     min-width: var(--control-height-sm);
     min-height: var(--control-height-sm);
   }
@@ -132,7 +132,7 @@
   }
 
   :where(.admin-btn--md) {
-    min-height: var(--control-height-sm);
+    min-height: 3rem;
   }
 
   :where(.site-footer__legal) {

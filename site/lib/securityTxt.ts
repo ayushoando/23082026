@@ -4,7 +4,7 @@
  * - site/public/security.txt
  * - workers/oando-worker-proxy (edge fallback)
  */
-export const SECURITY_TXT_BODY = `# One&Only (oando.co.in) - security disclosure contact (RFC 9116)
+export const SECURITY_TXT_BODY = `# One and Only (oando.co.in) - security disclosure contact (RFC 9116)
 # Prefer responsible disclosure for security issues only (not sales or support).
 
 Contact: mailto:sales@oando.co.in

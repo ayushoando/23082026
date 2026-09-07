@@ -40,7 +40,7 @@ export default async function PlanningPage() {
   ]);
   const planningJsonLd = buildPageJsonLd(SITE_URL, {
     path: "/planning",
-    title: `${copy.heroTitle} | One&Only`,
+    title: `${copy.heroTitle} | One and Only`,
     description: copy.heroSubtitle,
     pageType: "WebPage",
   });

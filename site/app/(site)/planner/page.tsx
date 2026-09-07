@@ -23,7 +23,7 @@ const BREADCRUMB_JSON_LD = buildBreadcrumbJsonLd(SITE_URL, [
 const SOFTWARE_APP_JSON_LD = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  name: "One&Only Workspace Planner",
+  name: "One and Only Workspace Planner",
   url: `${SITE_URL}/planner`,
   applicationCategory: "BusinessApplication",
   operatingSystem: "Web",

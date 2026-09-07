@@ -92,40 +92,46 @@ describe("prune_r2_backups", () => {
       expect(toDelete.map((i) => i.key)).toEqual(["dump-weekA-old.dump"]);
     });
 
-    it("deletes all backups older than 30 days", () => {
-      const items: BackupItem[] = [
-        { key: "dump-31d.dump", date: new Date(now.getTime() - 31 * msInDay) },
-        { key: "dump-60d.dump", date: new Date(now.getTime() - 60 * msInDay) },
-        { key: "dump-100d.dump", date: new Date(now.getTime() - 100 * msInDay) },
-      ];
+    it("deletes backups beyond the eight newest weekly backups", () => {
+      // 10 backups across 10 distinct weeks older than 7 days
+      const items: BackupItem[] = Array.from({ length: 10 }, (_, i) => ({
+        key: `dump-week-${i + 2}.dump`,
+        date: new Date(now.getTime() - (i + 2) * 7 * msInDay),
+      }));
 
       const { toKeep, toDelete } = evaluateRetention(items, now);
-      expect(toKeep.length).toBe(0);
-      expect(toDelete.length).toBe(3);
+      expect(toKeep.length).toBe(8);
+      expect(toDelete.length).toBe(2);
+      expect(toDelete.map((i) => i.key)).toEqual(["dump-week-10.dump", "dump-week-11.dump"]);
     });
 
     it("handles a mixed realistic lifecycle across all tiers", () => {
       const items: BackupItem[] = [
-        // Daily tier (age <= 5d) -> all 3 kept
+        // Daily tier (age <= 7d) -> all kept
         { key: "dump-1d.dump", date: new Date(now.getTime() - 1 * msInDay) },
         { key: "dump-2d.dump", date: new Date(now.getTime() - 2 * msInDay) },
         { key: "dump-3d.dump", date: new Date(now.getTime() - 3 * msInDay) },
+        { key: "dump-6d.dump", date: new Date(now.getTime() - 6 * msInDay) },
 
-        // Weekly tier (5d < age <= 30d):
-        // Week 1 (8d and 9d ago): keep newest (8d)
+        // Weekly tier (age > 7d):
+        // Week 1 (8d and 9d ago): keep newest (8d), delete older duplicate (9d)
         { key: "dump-8d.dump", date: new Date(now.getTime() - 8 * msInDay) },
         { key: "dump-9d.dump", date: new Date(now.getTime() - 9 * msInDay) },
-        // Week 2 (16d ago): keep 1
+        // Weeks 2-8 (one per week): all 7 kept
         { key: "dump-16d.dump", date: new Date(now.getTime() - 16 * msInDay) },
-        // Week 3 (23d ago): keep 1
         { key: "dump-23d.dump", date: new Date(now.getTime() - 23 * msInDay) },
+        { key: "dump-30d.dump", date: new Date(now.getTime() - 30 * msInDay) },
+        { key: "dump-37d.dump", date: new Date(now.getTime() - 37 * msInDay) },
+        { key: "dump-44d.dump", date: new Date(now.getTime() - 44 * msInDay) },
+        { key: "dump-51d.dump", date: new Date(now.getTime() - 51 * msInDay) },
+        { key: "dump-58d.dump", date: new Date(now.getTime() - 58 * msInDay) },
 
-        // Expired tier (age > 30d): delete both
-        { key: "dump-32d.dump", date: new Date(now.getTime() - 32 * msInDay) },
-        { key: "dump-50d.dump", date: new Date(now.getTime() - 50 * msInDay) },
+        // Expired tier (beyond 8 weekly backups): deleted
+        { key: "dump-65d.dump", date: new Date(now.getTime() - 65 * msInDay) },
+        { key: "dump-72d.dump", date: new Date(now.getTime() - 72 * msInDay) },
 
         // Protected item: always kept
-        { key: "backups/catalog/catalog-latest.json", date: new Date(now.getTime() - 40 * msInDay) },
+        { key: "backups/catalog/catalog-latest.json", date: new Date(now.getTime() - 90 * msInDay) },
       ];
 
       const { toKeep, toDelete } = evaluateRetention(items, now);
@@ -133,13 +139,14 @@ describe("prune_r2_backups", () => {
       expect(toKeep.map((i) => i.key)).toContain("dump-1d.dump");
       expect(toKeep.map((i) => i.key)).toContain("dump-2d.dump");
       expect(toKeep.map((i) => i.key)).toContain("dump-3d.dump");
+      expect(toKeep.map((i) => i.key)).toContain("dump-6d.dump");
       expect(toKeep.map((i) => i.key)).toContain("dump-8d.dump");
       expect(toKeep.map((i) => i.key)).toContain("dump-16d.dump");
       expect(toKeep.map((i) => i.key)).toContain("dump-23d.dump");
 
       expect(toDelete.map((i) => i.key)).toContain("dump-9d.dump");
-      expect(toDelete.map((i) => i.key)).toContain("dump-32d.dump");
-      expect(toDelete.map((i) => i.key)).toContain("dump-50d.dump");
+      expect(toDelete.map((i) => i.key)).toContain("dump-65d.dump");
+      expect(toDelete.map((i) => i.key)).toContain("dump-72d.dump");
       expect(toDelete.map((i) => i.key)).not.toContain("backups/catalog/catalog-latest.json");
     });
   });
@@ -164,6 +171,7 @@ describe("prune_r2_backups", () => {
           return {
             Contents: [
               { Key: "backups/products/pgdump-products-20260701000000.dump", Size: 100 },
+              { Key: "backups/products/pgdump-products-20260701120000.dump", Size: 100 },
             ],
             IsTruncated: false,
           };

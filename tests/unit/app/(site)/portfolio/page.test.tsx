@@ -122,7 +122,7 @@ describe("app/(site)/portfolio/page.tsx — behavior", () => {
       typeof CLIENTS_PAGE_METADATA.title === "string"
         ? CLIENTS_PAGE_METADATA.title
         : ((CLIENTS_PAGE_METADATA.title as { absolute?: string })?.absolute ?? String(CLIENTS_PAGE_METADATA.title));
-    expect(titleValue).toMatch(/One&Only/);
+    expect(titleValue).toMatch(/One and Only/);
     expect(CLIENTS_PAGE_METADATA.openGraph?.url).toMatch(/\/portfolio\/?$/);
     expect(CLIENTS_PAGE_METADATA.description).toBeDefined();
     expect((CLIENTS_PAGE_METADATA.alternates as { canonical?: string })?.canonical).toMatch(/\/portfolio\/?$/);

@@ -34,7 +34,7 @@ import {
 describe("routeMetadata site-data", () => {
   it("should have correct metadata build outcomes", () => {
     expect(ABOUT_PAGE_METADATA.title).toMatch(
-      /About One&Only|One and Only Furniture|Office furniture|Steelcase|Featherlite|Humanscale/i,
+      /About One and Only|One and Only Furniture|Office furniture|Steelcase|Featherlite|Humanscale/i,
     );
     expect(ABOUT_PAGE_METADATA.alternates?.canonical).toBe(
       "https://mock-site-url.com/about",
